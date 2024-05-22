@@ -52,11 +52,44 @@
       "outputs": [],
       "executor": "nx:noop"
     },
+    "build:locales": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run build:locales",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev": {
+      "dependsOn": ["storybook", "stencil:dev", "cem:dev"]
+    },
+    "stencil:dev": {
+      "dependsOn": ["^build", "build:locales"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "cem:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cem analyze --watch",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "wait-on:dist": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "wait-on dist"
+      }
+    },
     "storybook": {
       "executor": "@nx/storybook:storybook",
+      "dependsOn": ["^wait-on:dist"],
       "options": {
         "port": 4400,
-        "configDir": "packages/atomic/.storybook"
+        "configDir": "{workspaceRoot}/packages/atomic/.storybook"
       },
       "configurations": {
         "ci": {
@@ -67,9 +100,10 @@
     "build-storybook": {
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
+      "cwd": "{projectRoot}",
       "options": {
         "outputDir": "dist/storybook/atomic",
-        "configDir": "packages/atomic/.storybook"
+        "configDir": ".storybook"
       },
       "configurations": {
         "ci": {

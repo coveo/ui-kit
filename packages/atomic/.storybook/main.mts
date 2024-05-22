@@ -5,7 +5,11 @@ import {mergeConfig} from 'vite';
 const config: StorybookConfig = {
   stories: ['../src/**/*.new.stories.@(js|jsx|ts|tsx|mdx)'],
   staticDirs: ['../dist'],
-  addons: ['@storybook/addon-essentials', '@storybook/addon-interactions', '@whitespace/storybook-addon-html'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@whitespace/storybook-addon-html',
+  ],
   framework: {
     name: '@storybook/web-components-vite',
     options: {},
@@ -14,7 +18,6 @@ const config: StorybookConfig = {
   viteFinal: async (config) =>
     mergeConfig(config, {
       plugins: [nxViteTsPaths()],
-
     }),
 };
 

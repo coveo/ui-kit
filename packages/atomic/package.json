@@ -27,7 +27,7 @@
     "clean": "rimraf -rf dist/*",
     "build": "nx build",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
-    "dev": "npm run build:locales && node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
+    "dev": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
@@ -127,7 +127,8 @@
     "tslib": "^2.3.0",
     "typescript": "5.4.5",
     "vite": "5.2.11",
-    "vite-plugin-cem": "0.8.0"
+    "vite-plugin-cem": "0.8.0",
+    "wait-on": "7.2.0"
   },
   "peerDependencies": {
     "@coveo/headless": "2.63.5"
