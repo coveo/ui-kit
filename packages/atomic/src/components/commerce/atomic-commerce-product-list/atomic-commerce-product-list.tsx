@@ -193,7 +193,7 @@ export class AtomicCommerceProductList
           numberOfPlaceholders={this.productState.products.length}
         ></ResultsPlaceholdersGuard>
         <ItemDisplayGuard
-          firstRequestExecuted={!!this.searchState.responseId}
+          firstRequestExecuted={!!this.productState.responseId}
           hasItems={this.productState.products.length > 0}
         >
           {this.display === 'table'
