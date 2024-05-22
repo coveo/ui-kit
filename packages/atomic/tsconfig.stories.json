@@ -16,7 +16,7 @@
       }
     ],
     "paths": {
-      "atomic-storybook/*": [".storybook/*"]
+      "atomic-storybook/*": ["./.storybook/*"]
     }
   },
   "include": ["**/*.stories.tsx"]
