@@ -1,108 +1,80 @@
 import '@coveo/atomic/dist/atomic/atomic.esm.js';
-import type {HTMLAtomicSearchInterface} from '@coveo/atomic/dist/types/components';
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+import '@coveo/atomic/dist/atomic/themes/coveo.css';
+import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj} from '@storybook/web-components';
-//     `,
-//   }
-// );
-// export default {
-//   ...defaultModuleExport,
-//   title: 'Atomic/Breadbox',
-//   id: 'atomic-breadbox',
-// };
-// export const Default = exportedStory;
-// import type {Meta, StoryObj} from '@storybook/';
-import {html} from 'lit-html';
-import '../../../../dist/atomic/themes/coveo.css';
+import {html} from 'lit/static-html.js';
+import {within} from 'shadow-dom-testing-library';
 
-// const {defaultModuleExport, exportedStory};
-//   'atomic-breadbox',
-//   {},
-//   {
-//     additionalMarkup: () => html`
-{
-  /* <div style="margin:20px 0">
-Select facet value(s) to see the Breadbox component. */
-}
+const {decorator, play} = wrapInSearchInterface();
 
-// This default export determines where your story goes in the story list
 const meta: Meta = {
   component: 'atomic-breadbox',
   title: 'Atomic/Breadbox',
   id: 'atomic-breadbox',
   loaders: [async () => {}],
-  render: (args, context) => {
-    const shadowPartArgs = [];
-    const attributeControls = [];
-    for (const argKey of Object.keys(args)) {
-      switch (context.argTypes[argKey].table.category) {
-        case 'css shadow parts':
-          shadowPartArgs.push(argKey);
-          break;
-        case 'attribute':
-          attributeControls.push(argKey);
-          break;
-      }
-    }
-    return html` <style>
-        ${shadowPartArgs
-          .map(
-            (arg) =>
-              `atomic-breadbox::part(${arg}) {${Object.entries(args[arg])
-                .map(([key, value]) => `${key}: ${value}`)
-                .join(';')}}`
-          )
-          .join('\n')}
-      </style>
-      <atomic-breadbox
-        ${attributeControls.map((arg) => `${arg}="${args[arg]}"`).join('\n')}
-      ></atomic-breadbox>`;
-  },
-  decorators: [
-    (story) => html`
-      <atomic-search-interface>
-        ${story()}
-        <div style="margin:20px 0">
-          Select facet value(s) to see the Breadbox component.
-        </div>
-        <div style="display: flex; justify-content: flex-start;">
-          <atomic-facet
-            field="objecttype"
-            style="flex-grow:1"
-            label="Object type"
-          ></atomic-facet>
-          <atomic-facet
-            field="filetype"
-            style="flex-grow:1"
-            label="File type"
-          ></atomic-facet>
-          <atomic-facet
-            field="source"
-            style="flex-grow:1"
-            label="Source"
-          ></atomic-facet>
-        </div>
-      </atomic-search-interface>
-    `,
-  ],
+  render: renderComponent,
+  decorators: [decorator],
   parameters: {
     controls: {expanded: true, hideNoControlsWarning: true},
   },
-  play: async ({canvasElement}) => {
-    const searchInterface =
-      canvasElement.querySelector<HTMLAtomicSearchInterface>(
-        'atomic-search-interface'
-      );
-    await searchInterface!.initialize({
-      ...getSampleSearchEngineConfiguration(),
-    });
-    await searchInterface!.executeFirstSearch();
-  },
+  play,
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const FirstStory: Story = {
+  name: 'atomic-breadbox',
   args: {},
+  decorators: [
+    (story) => html`
+      ${story()}
+      <div style="margin:20px 0">
+        Select facet value(s) to see the Breadbox component.
+      </div>
+      <div style="display: flex; justify-content: flex-start;">
+        <atomic-facet
+          field="objecttype"
+          style="flex-grow:1"
+          label="Object type"
+        ></atomic-facet>
+        <atomic-facet
+          field="filetype"
+          style="flex-grow:1"
+          label="File type"
+        ></atomic-facet>
+        <atomic-facet
+          field="source"
+          style="flex-grow:1"
+          label="Source"
+        ></atomic-facet>
+      </div>
+    `,
+  ],
+  play: async (context) => {
+    await play(context);
+    const {canvasElement, step} = context;
+    const canvas = within(canvasElement);
+    await step('Wait for the facet values to render', async () => {
+      await waitFor(
+        () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
+        {
+          timeout: 30e3,
+        }
+      );
+    });
+    await step('Select a facet value', async () => {
+      const facet = canvas.getByShadowTitle('People');
+      await userEvent.click(facet);
+      await waitFor(
+        () =>
+          expect(
+            canvas.getByShadowTitle('Object type: People')
+          ).toBeInTheDocument(),
+        {timeout: 30e3}
+      );
+    });
+  },
 };
