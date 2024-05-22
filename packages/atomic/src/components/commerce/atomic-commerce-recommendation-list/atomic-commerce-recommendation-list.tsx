@@ -68,7 +68,7 @@ export class AtomicCommerceRecommendationList
 {
   @InitializeBindings() public bindings!: CommerceBindings;
   public recommendations!: Recommendations;
-  private loadingFlag = randomID('firstProductLoaded-');
+  private loadingFlag = randomID('firstRecommendationLoaded-');
   private itemRenderingFunction: ItemRenderingFunction;
   private nextNewProductTarget?: FocusTargetController;
   private productTemplateProvider!: ProductTemplateProvider;
