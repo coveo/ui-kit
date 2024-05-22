@@ -98,12 +98,13 @@
       }
     },
     "build-storybook": {
+      "dependsOn": ["cached:build:stencil"],
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "cwd": "{projectRoot}",
       "options": {
         "outputDir": "dist/storybook/atomic",
-        "configDir": ".storybook"
+        "configDir": "{workspaceRoot}/packages/atomic/.storybook"
       },
       "configurations": {
         "ci": {

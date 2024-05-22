@@ -15,15 +15,12 @@ export function cemPlugin() {
         if (declaration.kind !== 'class') {
           continue;
         }
-        declaration.members = declaration.members?.filter(
-          (m) => m.privacy !== 'private'
-        );
         const keptAttributes = [];
         for (const attribute of declaration.attributes || []) {
           const memberLike = declaration.members.find(
             (member) => attribute.fieldName === member.name
           );
-          if (!memberLike) {
+          if (!memberLike || memberLike.privacy === 'private') {
             continue;
           }
           keptAttributes.push(attribute);
@@ -35,6 +32,7 @@ export function cemPlugin() {
         }
         declaration.attributes =
           keptAttributes.length > 0 ? keptAttributes : undefined;
+        declaration.members = [];
       }
 
       const wrappedFinalExports = {exports: []};

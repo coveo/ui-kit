@@ -16,6 +16,7 @@
     ".storybook/*.ts",
     ".storybook/*.tsx",
     ".storybook/*.jsx",
-    ".storybook/register.tsx"
+    ".storybook/register.tsx",
+    ".storybook/main.mts"
   ]
 }
