@@ -15,7 +15,7 @@ import {buildSearchParameterManager} from '../parameter-manager/headless-search-
  *
  * @param engine - The commerce engine.
  * @param props - The configurable `UrlManager` properties.
- * @returns A `UrlManager` sub-controller instance.
+ * @returns A `UrlManager` sub-controller.
  */
 export function buildSearchUrlManager(
   engine: CommerceEngine,

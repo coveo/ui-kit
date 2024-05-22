@@ -164,7 +164,7 @@ export function buildProductListingSubControllers(
 }
 
 /**
- * Builds the sub-controllers for the search and product listing use cases.
+ * Builds the sub-controllers for the commerce search and product listing use cases.
  *
  * @param engine - The commerce engine.
  * @param subControllerProps - The properties for the search and product listing sub-controllers.
@@ -227,7 +227,7 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
 /**
  * Builds the `InteractiveProduct` and `Pagination` sub-controllers for a commerce engine.
  * @param engine - The commerce engine.
- * @param subControllerProps - The properties for the base sub-controllers.
+ * @param subControllerProps - The properties for the `InteractiveProduct` and `Pagination` sub-controllers.
  * @returns The `InteractiveProduct` and `Pagination` sub-controllers.
  */
 export function buildBaseSubControllers(
