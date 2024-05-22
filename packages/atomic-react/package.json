@@ -27,7 +27,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "recommendation/"
+    "recommendation/",
+    "commerce/"
   ],
   "dependencies": {
     "@coveo/atomic": "2.65.4"
