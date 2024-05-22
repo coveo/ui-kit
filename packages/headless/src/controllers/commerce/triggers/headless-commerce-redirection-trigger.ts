@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
 import {TriggerSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
@@ -20,7 +21,7 @@ export function buildRedirectionTrigger(
 
   const controller = buildController(engine);
 
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   let previousRedirectTo = getState().triggers.redirectTo;
 
