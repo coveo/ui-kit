@@ -1,3 +1,4 @@
+import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart';
 import {stateKey} from '../state-key';
 import {
   buildCommerceEngine,
@@ -38,14 +39,12 @@ describe('buildCommerceEngine', () => {
     const items = [
       {
         productId: 'product-id',
-        sku: 'product-id-1',
         quantity: 2,
         name: 'product-name-1',
         price: 100,
       },
       {
         productId: 'product-id',
-        sku: 'product-id-2',
         quantity: 4,
         name: 'product-name-2',
         price: 25,
@@ -57,12 +56,12 @@ describe('buildCommerceEngine', () => {
     initEngine();
 
     expect(engine[stateKey].cart.cartItems).toEqual(
-      items.map((item) => item.sku)
+      items.map((item) => createCartKey(item))
     );
 
     expect(engine[stateKey].cart.cart).toEqual({
-      [items[0].sku]: items[0],
-      [items[1].sku]: items[1],
+      [createCartKey(items[0])]: items[0],
+      [createCartKey(items[1])]: items[1],
     });
   });
 });

@@ -51,7 +51,7 @@ describe('commerce common actions', () => {
           },
           cart: [
             {
-              sku: product.sku,
+              productId: product.productId,
               quantity: product.quantity,
             },
           ],

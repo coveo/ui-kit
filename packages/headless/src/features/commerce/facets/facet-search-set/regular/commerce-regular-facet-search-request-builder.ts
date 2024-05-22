@@ -9,7 +9,13 @@ export const buildFacetSearchRequest = async (
 ): Promise<CommerceFacetSearchRequest> => {
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const query = state.commerceQuery?.query;
+  let query = state.commerceQuery?.query;
+
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-911 Handle field suggestions without having to pass in the search context.
+  if (query === undefined) {
+    query = '';
+  }
 
   const {
     url,

@@ -8,7 +8,7 @@ import {AtomicRecsInterface} from '../stencil-generated/index';
 
 type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
 /**
- * The properties of the AtomicSearchInterface component
+ * The properties of the AtomicRecsInterface component
  */
 interface WrapperProps
   extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {

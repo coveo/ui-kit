@@ -18,6 +18,7 @@ import {
   FetchQuerySuggestionsActionCreatorPayload,
   idDefinition,
 } from '../../query-suggest/query-suggest-actions';
+import {getProductsFromCartState} from '../context/cart/cart-state';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   CommerceContextSection &
@@ -78,7 +79,7 @@ export const buildQuerySuggestRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
+      cart: getProductsFromCartState(state.cart),
     },
   };
 };

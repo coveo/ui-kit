@@ -283,6 +283,7 @@ describe('querySuggest slice', () => {
             id,
             responseId,
             query: 'abc',
+            fieldSuggestionsFacets: [],
           },
           '',
           {

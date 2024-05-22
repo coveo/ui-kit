@@ -25,6 +25,12 @@ describe('sub-controllers', () => {
   const mockFetchMoreProductsActionCreator = jest.fn();
   const mockFacetResponseSelector = jest.fn();
   const mockIsFacetLoadingResponseSelector = jest.fn();
+  const mockRequestIdSelector = jest.fn();
+  const mockParameterManagerBuilder = jest.fn();
+  const mockSerializer = {
+    serialize: jest.fn(),
+    deserialize: jest.fn(),
+  };
 
   beforeEach(() => {
     engine = buildMockCommerceEngine(buildMockCommerceState());
@@ -44,6 +50,9 @@ describe('sub-controllers', () => {
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
+        requestIdSelector: mockRequestIdSelector,
+        parameterManagerBuilder: mockParameterManagerBuilder,
+        serializer: mockSerializer,
       });
     });
 
@@ -78,6 +87,9 @@ describe('sub-controllers', () => {
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
+        requestIdSelector: mockRequestIdSelector,
+        parameterManagerBuilder: mockParameterManagerBuilder,
+        serializer: mockSerializer,
       });
     });
 

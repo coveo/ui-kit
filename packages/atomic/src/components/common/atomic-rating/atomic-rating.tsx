@@ -61,3 +61,19 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
     </div>
   );
 };
+
+export const computeNumberOfStars = (
+  value: unknown,
+  field: string
+): number | null => {
+  if (value === null) {
+    return null;
+  }
+  const valueAsNumber = parseFloat(`${value}`);
+  if (Number.isNaN(valueAsNumber)) {
+    throw new Error(
+      `Could not parse "${value}" from field "${field}" as a number.`
+    );
+  }
+  return valueAsNumber;
+};

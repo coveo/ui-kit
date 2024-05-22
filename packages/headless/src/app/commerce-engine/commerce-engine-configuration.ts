@@ -12,7 +12,7 @@ import {
 /**
  * The commerce engine configuration options.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;
@@ -54,7 +54,6 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
           quantity: 1,
           price: 100,
           productId: 'sample-product-id',
-          sku: 'sample-sku',
         },
       ],
     },

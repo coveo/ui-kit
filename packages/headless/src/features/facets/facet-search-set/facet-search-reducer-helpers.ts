@@ -1,6 +1,7 @@
 import {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
+import {FieldSuggestionsFacet} from '../../commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {FacetSearchOptions} from './facet-search-request-options';
 
 export type FacetSearchState<T extends FacetSearchResponse> = {
@@ -140,6 +141,105 @@ export function handleCommerceFacetSearchFulfilled<
   search.isLoading = false;
   if ('success' in response) {
     search.response = response.success;
+  }
+}
+
+export function handleCommerceFacetFieldSuggestionsFulfilled<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    facetId: string;
+    response: CommerceAPIResponse<T>;
+  },
+  requestId: string,
+  buildEmptyResponse: () => T
+) {
+  const {facetId, response} = payload;
+  let search = state[facetId];
+
+  if (!search) {
+    handleFacetSearchRegistration(state, {facetId}, buildEmptyResponse);
+    search = state[facetId];
+  } else if (search.requestId !== requestId) {
+    return;
+  }
+
+  search.isLoading = false;
+  if ('success' in response) {
+    search.response = response.success;
+  }
+}
+
+export function handleCommerceFetchQuerySuggestionsFulfilledForRegularFacet<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    fieldSuggestionsFacets: {facetId: string; type: string}[];
+    query: string | undefined;
+  },
+  requestId: string,
+  buildEmptyResponse: () => T
+) {
+  if (!payload.fieldSuggestionsFacets) {
+    return;
+  }
+
+  for (const fieldSuggestionFacet of payload.fieldSuggestionsFacets) {
+    if (
+      fieldSuggestionFacet.facetId in state ||
+      fieldSuggestionFacet.type !== 'regular'
+    ) {
+      continue;
+    }
+
+    state[fieldSuggestionFacet.facetId] = {
+      options: {
+        ...defaultFacetSearchOptions,
+        query: payload.query ?? '',
+      },
+      isLoading: false,
+      response: buildEmptyResponse(),
+      initialNumberOfValues: defaultFacetSearchOptions.numberOfValues,
+      requestId,
+    };
+  }
+}
+
+export function handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet<
+  T extends FacetSearchResponse,
+>(
+  state: FacetSearchSetState<T>,
+  payload: {
+    fieldSuggestionsFacets: FieldSuggestionsFacet[];
+    query: string | undefined;
+  },
+  requestId: string,
+  buildEmptyResponse: () => T
+) {
+  if (!payload.fieldSuggestionsFacets) {
+    return;
+  }
+
+  for (const fieldSuggestionFacet of payload.fieldSuggestionsFacets) {
+    if (
+      fieldSuggestionFacet.facetId in state ||
+      fieldSuggestionFacet.type !== 'hierarchical'
+    ) {
+      continue;
+    }
+
+    state[fieldSuggestionFacet.facetId] = {
+      options: {
+        ...defaultFacetSearchOptions,
+        query: payload.query ?? '',
+      },
+      isLoading: false,
+      response: buildEmptyResponse(),
+      initialNumberOfValues: defaultFacetSearchOptions.numberOfValues,
+      requestId,
+    };
   }
 }
 

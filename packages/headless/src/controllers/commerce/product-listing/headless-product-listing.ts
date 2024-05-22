@@ -8,21 +8,26 @@ import {
   fetchProductListing,
   fetchMoreProducts,
 } from '../../../features/commerce/product-listing/product-listing-actions';
-import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
+import {
+  requestIdSelector,
+  responseIdSelector,
+} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
+import {productListingSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
 import {
-  buildSearchAndListingsSubControllers,
+  buildProductListingSubControllers,
   SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
+import {buildProductListingParameterManager} from './parameter-manager/headless-product-listing-parameter-manager';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
@@ -62,12 +67,15 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
-  const subControllers = buildSearchAndListingsSubControllers(engine, {
+  const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
     fetchProductsActionCreator: fetchProductListing,
     fetchMoreProductsActionCreator: fetchMoreProducts,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    requestIdSelector,
+    parameterManagerBuilder: buildProductListingParameterManager,
+    serializer: productListingSerializer,
   });
 
   return {

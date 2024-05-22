@@ -1,6 +1,7 @@
 import {Ec} from '@coveo/relay-event-types';
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine';
+import {CartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
 import {getCurrency} from '../context-selector';
 import {CartState} from './cart-state';
 
@@ -31,11 +32,11 @@ export const getECPurchasePayload = (
 export const itemsSelector = createSelector(
   (cartState: CartState) => cartState.cart,
   (cartState: CartState) => cartState.cartItems,
-  (cart, cartItems) => cartItems.map((id: string) => cart[id])
+  (cart, cartItems) => cartItems.map((key: CartKey) => cart[key])
 );
 
 const productQuantitySelector = createSelector(itemsSelector, (items) =>
-  items.map(({quantity, sku, ...product}) => ({
+  items.map(({quantity, ...product}) => ({
     quantity,
     product,
   }))

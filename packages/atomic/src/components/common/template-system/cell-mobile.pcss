@@ -1,6 +1,6 @@
 @import '../../../global/polyfills.pcss';
 
-@define-mixin cell-result-mobile {
+@define-mixin cell-result-mobile map(post-css-map-for-sections, variables) {
   grid-template-areas:
     'badges'
     'visual'
@@ -15,42 +15,42 @@
 
   /* == Density styles == */
   &.density-comfortable {
-    atomic-result-section-visual {
+    $(section-visual) {
       margin-bottom: 1rem;
     }
 
-    atomic-result-section-badges {
+    $(section-badges) {
       @mixin set-font-size var(--atomic-text-sm);
 
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-actions {
+    $(section-actions) {
       @mixin set-font-size var(--atomic-text-base);
 
       margin-top: 1.25rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title {
+    $(section-title) {
       @mixin set-font-size var(--atomic-text-lg);
 
       max-height: 3rem;
       @mixin line-clamp 2;
     }
 
-    atomic-result-section-title-metadata {
+    $(section-title-metadata) {
       @mixin set-font-size var(--atomic-text-sm);
       margin-top: 0.475rem;
     }
 
-    atomic-result-section-emphasized {
+    $(section-emphasized) {
       font-weight: 500;
       @mixin set-font-size var(--atomic-text-2xl);
     }
 
-    atomic-result-section-excerpt {
+    $(section-excerpt) {
       @mixin set-font-size var(--atomic-text-base);
 
       margin-top: 1.25rem;
@@ -58,7 +58,7 @@
       @mixin line-clamp 2;
     }
 
-    atomic-result-section-bottom-metadata {
+    $(section-bottom-metadata) {
       @mixin set-font-size var(--atomic-text-sm);
 
       margin-top: 1rem;
@@ -67,42 +67,42 @@
   }
 
   &.density-normal {
-    atomic-result-section-visual {
+    $(section-visual) {
       margin-bottom: 0.75rem;
     }
 
-    atomic-result-section-badges {
+    $(section-badges) {
       @mixin set-font-size var(--atomic-text-sm);
 
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-actions {
+    $(section-actions) {
       @mixin set-font-size var(--atomic-text-base);
 
       margin-top: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title {
+    $(section-title) {
       @mixin set-font-size var(--atomic-text-lg);
 
       max-height: 3rem;
       @mixin line-clamp 2;
     }
 
-    atomic-result-section-title-metadata {
+    $(section-title-metadata) {
       @mixin set-font-size var(--atomic-text-sm);
       margin-top: 0.475rem;
     }
 
-    atomic-result-section-emphasized {
+    $(section-emphasized) {
       font-weight: 500;
       @mixin set-font-size var(--atomic-text-2xl);
     }
 
-    atomic-result-section-excerpt {
+    $(section-excerpt) {
       @mixin set-font-size var(--atomic-text-base);
 
       margin-top: 1rem;
@@ -110,7 +110,7 @@
       @mixin line-clamp 2;
     }
 
-    atomic-result-section-bottom-metadata {
+    $(section-bottom-metadata) {
       @mixin set-font-size var(--atomic-text-sm);
 
       margin-top: 0.75rem;
@@ -119,42 +119,42 @@
   }
 
   &.density-compact {
-    atomic-result-section-visual {
+    $(section-visual) {
       margin-bottom: 0.5rem;
     }
 
-    atomic-result-section-badges {
+    $(section-badges) {
       @mixin set-font-size var(--atomic-text-sm);
 
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-actions {
+    $(section-actions) {
       @mixin set-font-size var(--atomic-text-base);
 
       margin-top: 0.75rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title {
+    $(section-title) {
       @mixin set-font-size var(--atomic-text-lg);
 
       max-height: 3rem;
       @mixin line-clamp 2;
     }
 
-    atomic-result-section-title-metadata {
+    $(section-title-metadata) {
       @mixin set-font-size var(--atomic-text-sm);
       margin-top: 0.475rem;
     }
 
-    atomic-result-section-emphasized {
+    $(section-emphasized) {
       font-weight: 500;
       @mixin set-font-size var(--atomic-text-2xl);
     }
 
-    atomic-result-section-excerpt {
+    $(section-excerpt) {
       @mixin set-font-size var(--atomic-text-base);
 
       margin-top: 0.75rem;
@@ -162,7 +162,7 @@
       @mixin line-clamp 1;
     }
 
-    atomic-result-section-bottom-metadata {
+    $(section-bottom-metadata) {
       @mixin set-font-size var(--atomic-text-sm);
 
       margin-top: 0.5rem;
@@ -172,21 +172,21 @@
 
   /* == Image styles == */
   &.image-small {
-    atomic-result-section-visual {
+    $(section-visual) {
       @mixin aspect-ratio-h 1 / 1, 9rem;
       width: 100%;
     }
   }
 
   &.image-icon {
-    atomic-result-section-visual {
+    $(section-visual) {
       width: 2rem;
       height: 2rem;
     }
   }
 
   &.image-none {
-    atomic-result-section-visual {
+    $(section-visual) {
       display: none;
     }
   }

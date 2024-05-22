@@ -8,6 +8,7 @@ import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/s
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload';
+import {FieldSuggestionsOrderState} from '../field-suggestions-order/field-suggestions-order-state';
 import {buildCategoryFacetSearchRequest} from './category/commerce-category-facet-search-request-builder';
 import {StateNeededForAnyFacetSearch} from './commerce-facet-search-state';
 import {buildFacetSearchRequest} from './regular/commerce-regular-facet-search-request-builder';
@@ -38,13 +39,15 @@ const getExecuteFacetSearchThunkPayloadCreator =
   async (facetId: string, {getState, extra: {apiClient, validatePayload}}) => {
     const state = getState();
     validatePayload(facetId, requiredNonEmptyString);
-    const req = isRegularFacetSearchState(state, facetId)
-      ? buildFacetSearchRequest(facetId, state, isFieldSuggestionsRequest)
-      : buildCategoryFacetSearchRequest(
-          facetId,
-          state,
-          isFieldSuggestionsRequest
-        );
+    const req =
+      isRegularFacetSearchState(state, facetId) ||
+      isRegularFieldSuggestionsState(state, facetId)
+        ? buildFacetSearchRequest(facetId, state, isFieldSuggestionsRequest)
+        : buildCategoryFacetSearchRequest(
+            facetId,
+            state,
+            isFieldSuggestionsRequest
+          );
 
     const response = await apiClient.facetSearch(await req);
 
@@ -71,8 +74,10 @@ export const executeCommerceFieldSuggest = createAsyncThunk<
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
   >
 >(
-  'commerce/facetSearch/executeSearch', // We use the same action type because this action is meant to be handled by reducers the same way.
-  getExecuteFacetSearchThunkPayloadCreator(true)
+  'commerce/facetSearch/facetFieldSuggest',
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-911 Handle field suggestions without having to pass in the search context.
+  getExecuteFacetSearchThunkPayloadCreator(false)
 );
 
 export const isRegularFacetSearchState = (
@@ -83,5 +88,18 @@ export const isRegularFacetSearchState = (
     'facetSearchSet' in s &&
     s.facetSearchSet[facetId] !== undefined &&
     s.commerceFacetSet[facetId] !== undefined
+  );
+};
+
+export const isRegularFieldSuggestionsState = (
+  s: StateNeededForAnyFacetSearch,
+  facetId: string
+): s is StateNeededForRegularFacetSearch => {
+  if (!('fieldSuggestionsOrder' in s)) {
+    return false;
+  }
+
+  return (s.fieldSuggestionsOrder as FieldSuggestionsOrderState).some(
+    (facet) => facet.facetId === facetId && facet.type === 'regular'
   );
 };

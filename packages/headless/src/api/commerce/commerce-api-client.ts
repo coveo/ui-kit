@@ -93,6 +93,20 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
+  async productSuggestions(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search/productSuggest');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
   async querySuggest(
     req: QuerySuggestRequest
   ): Promise<CommerceAPIResponse<QuerySuggestSuccessResponse>> {

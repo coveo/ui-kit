@@ -29,7 +29,7 @@ describe('quantic-refine-content', () => {
       visitRefineContent();
 
       scope('when loading the page', () => {
-        Expect.displayFiltersTitle();
+        Expect.displayFiltersTitle(true);
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager();
         Expect.displayDuplicatedNumericFacet();
@@ -75,7 +75,7 @@ describe('quantic-refine-content', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayFiltersTitle();
+        Expect.displayFiltersTitle(false);
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager();
         Expect.displayDuplicatedNumericFacet();
@@ -98,7 +98,7 @@ describe('quantic-refine-content', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayFiltersTitle();
+        Expect.displayFiltersTitle(true);
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager(false);
         Expect.displayDuplicatedNumericFacet();

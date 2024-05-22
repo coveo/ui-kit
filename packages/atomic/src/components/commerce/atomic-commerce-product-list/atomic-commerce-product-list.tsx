@@ -167,7 +167,7 @@ export class AtomicCommerceProductList
           numberOfPlaceholders={this.productState.products.length}
         ></ResultsPlaceholdersGuard>
         <ItemDisplayGuard
-          firstRequestExecuted={!this.productState.isLoading}
+          firstRequestExecuted={!!this.searchState.responseId}
           hasItems={this.productState.products.length > 0}
         >
           {this.display === 'table'
@@ -226,20 +226,20 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          // TODO: add back once the interactive result is implemented
+          // TODO KIT-3149: add back once the interactive result is implemented
           //{...propsForAtomicProduct.interactiveResult}
-          // TODO: Remove these back once the interactive result is implemented
+          // TODO KIT-3149: Remove these back once the interactive result is implemented
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
           select={function (): void {
-            throw new Error('Function not implemented.');
+            throw new Error('Function not implemented. TODO KIT-3149');
           }}
           beginDelayedSelect={function (): void {
-            throw new Error('Function not implemented.');
+            throw new Error('Function not implemented. TODO KIT-3149');
           }}
           cancelPendingSelect={function (): void {
-            throw new Error('Function not implemented.');
+            throw new Error('Function not implemented. TODO KIT-3149');
           }}
         >
           <atomic-product {...this} {...propsForAtomicProduct}></atomic-product>

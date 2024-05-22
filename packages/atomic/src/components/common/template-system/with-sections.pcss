@@ -1,17 +1,17 @@
-@define-mixin result-with-sections {
+@define-mixin result-with-sections map(post-css-map-for-sections, variables) {
   display: grid;
   justify-items: stretch;
 
   /* == Common styles == */
-  atomic-result-section-visual {
+  $(section-visual) {
     grid-area: visual;
   }
 
-  atomic-result-section-badges {
+  $(section-badges) {
     grid-area: badges;
   }
 
-  atomic-result-section-actions {
+  $(section-actions) {
     grid-area: actions;
 
     atomic-result-quickview {
@@ -19,55 +19,55 @@
     }
   }
 
-  atomic-result-section-title {
+  $(section-title) {
     grid-area: title;
     color: var(--atomic-on-background);
   }
 
-  atomic-result-section-title-metadata {
+  $(section-title-metadata) {
     grid-area: title-metadata;
   }
 
-  atomic-result-section-emphasized {
+  $(section-emphasized) {
     grid-area: emphasized;
   }
 
-  atomic-result-section-excerpt {
+  $(section-excerpt) {
     grid-area: excerpt;
     color: var(--atomic-neutral-dark);
   }
 
-  atomic-result-section-bottom-metadata {
+  $(section-bottom-metadata) {
     grid-area: bottom-metadata;
     color: var(--atomic-neutral-dark);
   }
 
-  atomic-result-section-children {
+  $(section-children) {
     grid-area: children;
   }
 
-  atomic-result-section-badges,
-  atomic-result-section-actions {
+  $(section-badges),
+  $(section-actions) {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
   }
 
-  atomic-result-section-visual,
-  atomic-result-section-badges,
-  atomic-result-section-actions,
-  atomic-result-section-title,
-  atomic-result-section-title-metadata,
-  atomic-result-section-emphasized,
-  atomic-result-section-excerpt,
-  atomic-result-section-bottom-metadata {
+  $(section-visual),
+  $(section-badges),
+  $(section-actions),
+  $(section-title),
+  $(section-title-metadata),
+  $(section-emphasized),
+  $(section-excerpt),
+  $(section-bottom-metadata) {
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   &.image-icon {
-    atomic-result-section-visual {
+    $(section-visual) {
       border-radius: var(--atomic-border-radius);
     }
   }

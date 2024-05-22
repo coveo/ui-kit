@@ -44,6 +44,15 @@ const outputIIFERecs = ({minify}) => ({
   plugins: minify ? [terser()] : [],
 });
 
+/** @returns {import('rollup').OutputOptions} */
+const outputIIFECommerce = ({minify}) => ({
+  file: `dist/iife/atomic-react/commerce${minify ? '.min' : ''}.js`,
+  format: 'iife',
+  name: 'CoveoAtomicReactCommerce',
+  globals,
+  plugins: minify ? [terser()] : [],
+});
+
 const plugins = [
   nodePolyfills(),
   typescript({tsconfig: 'tsconfig.iife.json'}),
@@ -70,6 +79,15 @@ export default defineConfig([
   {
     input: 'src/recommendation.index.ts',
     output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
+    external: commonExternal,
+    plugins,
+  },
+  {
+    input: 'src/commerce.index.ts',
+    output: [
+      outputIIFECommerce({minify: true}),
+      outputIIFECommerce({minify: false}),
+    ],
     external: commonExternal,
     plugins,
   },

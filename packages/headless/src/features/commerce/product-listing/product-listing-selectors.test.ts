@@ -5,6 +5,7 @@ import {
   isLoadingSelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  requestIdSelector,
   responseIdSelector,
 } from './product-listing-selectors';
 
@@ -26,6 +27,25 @@ describe('commerce product listing selectors', () => {
   it('#responseIdSelector should return an empty string when the responseId value is not set', () => {
     const state = buildMockCommerceState();
     expect(responseIdSelector(state)).toBe('');
+  });
+
+  it('#requestIdSelector should return the requestId value from the product listing section', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [],
+        isLoading: false,
+        error: null,
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+    expect(requestIdSelector(state)).toEqual('some-request-id');
+  });
+
+  it('#requestIdSelector should return an empty string when the requestId value is not set', () => {
+    const state = buildMockCommerceState();
+    expect(requestIdSelector(state)).toBe('');
   });
 
   it('#numberOfProductsSelector should return the number of products in the product listing section', () => {

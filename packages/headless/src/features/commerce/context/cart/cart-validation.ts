@@ -8,9 +8,8 @@ import {
 import {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
-export const updateItemPayloadDefinition = {
+export const itemPayloadDefinition = {
   productId: requiredNonEmptyString,
-  sku: requiredNonEmptyString,
   quantity: new NumberValue({
     required: true,
     min: 0,
@@ -22,7 +21,7 @@ export const updateItemPayloadDefinition = {
 export const setItemsPayloadDefinition = new ArrayValue({
   each: new RecordValue({
     values: {
-      ...updateItemPayloadDefinition,
+      ...itemPayloadDefinition,
     },
   }),
 });

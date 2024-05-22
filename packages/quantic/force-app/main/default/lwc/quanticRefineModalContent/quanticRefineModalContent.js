@@ -240,6 +240,10 @@ export default class QuanticRefineModalContent extends LightningElement {
     return facetData;
   }
 
+  get shouldDisplayFiltersTitle() {
+    return this.someFacetsRendered && !this.hideSort;
+  }
+
   /**
    * Extracts properties of a given HTML element.
    * @param {HTMLElement} element

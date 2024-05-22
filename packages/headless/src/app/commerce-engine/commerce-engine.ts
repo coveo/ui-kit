@@ -27,7 +27,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {stateKey} from '../state-key';
+import {redactEngine, stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -60,7 +60,7 @@ export type CommerceEngineState =
 /**
  * The engine for powering commerce experiences.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
@@ -81,7 +81,7 @@ export interface CommerceEngine<State extends object = {}>
 /**
  * The commerce engine options.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -94,9 +94,10 @@ export interface CommerceEngineOptions
 /**
  * Creates a commerce engine instance.
  *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function buildCommerceEngine(
   options: CommerceEngineOptions
@@ -127,7 +128,7 @@ export function buildCommerceEngine(
     engine.dispatch(setItems(options.configuration.cart.items));
   }
 
-  return {
+  return redactEngine({
     ...engine,
 
     get [stateKey]() {
@@ -147,7 +148,7 @@ export function buildCommerceEngine(
       const action = executeSearch();
       internalEngine.dispatch(action);
     },
-  };
+  });
 }
 
 function validateConfiguration(

@@ -1,8 +1,12 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions';
-import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
+import {
+  requestIdSelector,
+  responseIdSelector,
+} from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
+import {productListingSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -14,6 +18,7 @@ import {
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
 import {buildProductListing, ProductListing} from './headless-product-listing';
+import {buildProductListingParameterManager} from './parameter-manager/headless-product-listing-parameter-manager';
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;
@@ -29,19 +34,22 @@ describe('headless product-listing', () => {
   });
 
   it('uses sub-controllers', () => {
-    const buildSearchAndListingsSubControllers = jest.spyOn(
+    const buildProductListingSubControllers = jest.spyOn(
       SubControllers,
-      'buildSearchAndListingsSubControllers'
+      'buildProductListingSubControllers'
     );
 
     buildProductListing(engine);
 
-    expect(buildSearchAndListingsSubControllers).toHaveBeenCalledWith(engine, {
+    expect(buildProductListingSubControllers).toHaveBeenCalledWith(engine, {
       responseIdSelector,
       fetchProductsActionCreator: ProductListingActions.fetchProductListing,
       fetchMoreProductsActionCreator: ProductListingActions.fetchMoreProducts,
       facetResponseSelector,
       isFacetLoadingResponseSelector,
+      requestIdSelector,
+      parameterManagerBuilder: buildProductListingParameterManager,
+      serializer: productListingSerializer,
     });
   });
 
