@@ -18,14 +18,14 @@ import {
 import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice';
 import {fetchQuerySuggestions} from './query-suggest-actions';
 
-/**
- * The query suggest action creators for commerce.
- */
 export type BaseQuerySuggestActionCreators = Omit<
   QuerySuggestActionCreators,
   'fetchQuerySuggestions'
 >;
 
+/**
+ * The query suggest action creators for commerce.
+ */
 export interface CommerceQuerySuggestActionCreators
   extends BaseQuerySuggestActionCreators {
   /**
