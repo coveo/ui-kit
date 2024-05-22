@@ -297,7 +297,7 @@ export class AtomicCommerceRecommendationList
 
   private get hasNoProducts() {
     return (
-      this.augmentedRecommendationListState.firstRequestExecuted &&
+      !this.recommendationsState.isLoading &&
       this.augmentedRecommendationListState.products.length === 0
     );
   }
