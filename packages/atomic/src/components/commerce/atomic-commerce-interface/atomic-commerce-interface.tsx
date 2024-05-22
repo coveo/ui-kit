@@ -5,12 +5,13 @@ import {
   Unsubscribe,
   UrlManager,
   buildSearch,
-  buildSearchUrlManager,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   updateQuery,
   CommerceEngine,
   CommerceEngineConfiguration,
   buildCommerceEngine,
+  buildProductListing,
+  ProductListing,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -62,7 +63,7 @@ export class AtomicCommerceInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
   private urlManager!: UrlManager;
-  private searchStatus!: Search;
+  private searchStatus!: Search | ProductListing;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
@@ -80,7 +81,8 @@ export class AtomicCommerceInterface
    */
   @Prop({reflect: true, mutable: true}) public type:
     | 'search'
-    | 'product-listing' = 'search';
+    | 'product-listing'
+    | 'recommendations' = 'search';
 
   /**
    * Whether analytics should be enabled.
@@ -352,7 +354,7 @@ export class AtomicCommerceInterface
       return;
     }
 
-    this.urlManager = buildSearchUrlManager(this.engine!, {
+    this.urlManager = this.searchStatus.urlManager({
       initialState: {fragment: this.fragment},
     });
 
@@ -364,7 +366,11 @@ export class AtomicCommerceInterface
   }
 
   private initSearchStatus() {
-    this.searchStatus = buildSearch(this.engine!);
+    if (this.type === 'product-listing') {
+      this.searchStatus = buildProductListing(this.engine!);
+    } else if (this.type === 'search') {
+      this.searchStatus = buildSearch(this.engine!);
+    }
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
       if (
         !this.searchStatus.state.isLoading &&

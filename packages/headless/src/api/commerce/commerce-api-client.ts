@@ -23,6 +23,7 @@ import {
 } from './search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
 import {CommerceSearchRequest} from './search/request';
+import {SearchCommerceSuccessResponse} from './search/response';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(
@@ -80,8 +81,22 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
 
   async search(
     req: CommerceSearchRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
     const requestOptions = buildRequest(req, 'search');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  async productSuggestions(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search/productSuggest');
     return this.query({
       ...requestOptions,
       requestParams: {

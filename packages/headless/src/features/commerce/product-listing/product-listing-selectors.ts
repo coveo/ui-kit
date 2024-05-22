@@ -12,6 +12,11 @@ export const responseIdSelector = createSelector(
   (responseId) => responseId
 );
 
+export const requestIdSelector = createSelector(
+  (state: CommerceEngineState) => state.productListing.requestId,
+  (requestId) => requestId
+);
+
 export const numberOfProductsSelector = createSelector(
   (state: Partial<ProductListingV2Section>) =>
     state.productListing?.products.length || 0,
@@ -29,4 +34,9 @@ export const moreProductsAvailableSelector = createSelector(
 export const isLoadingSelector = createSelector(
   (state: Partial<ProductListingV2Section>) => state.productListing?.isLoading,
   (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
+);
+
+export const errorSelector = createSelector(
+  (state: Partial<ProductListingV2Section>) => state.productListing?.error,
+  (error) => error
 );

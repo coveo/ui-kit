@@ -9,6 +9,7 @@ export interface CommerceSearchState {
   responseId: string;
   products: Product[];
   facets: AnyFacetResponse[];
+  queryExecuted: string;
 }
 
 export const getCommerceSearchInitialState = (): CommerceSearchState => ({
@@ -18,4 +19,5 @@ export const getCommerceSearchInitialState = (): CommerceSearchState => ({
   responseId: '',
   products: [],
   facets: [],
+  queryExecuted: '',
 });

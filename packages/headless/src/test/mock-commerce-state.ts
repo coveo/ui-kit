@@ -1,6 +1,7 @@
 import {getCartInitialState} from '../features/commerce/context/cart/cart-state';
 import {getContextInitialState} from '../features/commerce/context/context-state';
 import {getCommerceFacetSetInitialState} from '../features/commerce/facets/facet-set/facet-set-state';
+import {getFieldSuggestionsOrderInitialState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {getInstantProductsInitialState} from '../features/commerce/instant-products/instant-products-state';
 import {getCommercePaginationInitialState} from '../features/commerce/pagination/pagination-state';
 import {getProductListingV2InitialState} from '../features/commerce/product-listing/product-listing-state';
@@ -10,6 +11,7 @@ import {getCommerceSearchInitialState} from '../features/commerce/search/search-
 import {getCommerceSortInitialState} from '../features/commerce/sort/sort-state';
 import {getCommerceStandaloneSearchBoxSetInitialState} from '../features/commerce/standalone-search-box-set/standalone-search-box-set-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
+import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
@@ -39,10 +41,12 @@ export function buildMockCommerceState(
     querySuggest: getQuerySuggestSetInitialState(),
     querySet: getQuerySetInitialState(),
     cart: getCartInitialState(),
+    didYouMean: getDidYouMeanInitialState(),
     instantProducts: getInstantProductsInitialState(),
     commerceStandaloneSearchBoxSet:
       getCommerceStandaloneSearchBoxSetInitialState(),
     triggers: getTriggerInitialState(),
+    fieldSuggestionsOrder: getFieldSuggestionsOrderInitialState(),
     version: 'unit-testing-version',
     ...config,
   };

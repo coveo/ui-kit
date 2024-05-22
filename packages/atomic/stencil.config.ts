@@ -9,6 +9,7 @@ import {readFileSync} from 'fs';
 import path from 'path';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
+import postcssMap from 'postcss-map';
 import mixins from 'postcss-mixins';
 import postcssNesting from 'postcss-nested';
 import html from 'rollup-plugin-html';
@@ -69,6 +70,7 @@ export const config: Config = {
       includeDefineCustomElements: true,
       excludeComponents: [
         'atomic-result-template',
+        'atomic-product-template',
         'atomic-recs-result-template',
         'atomic-field-condition',
       ],
@@ -138,6 +140,11 @@ export const config: Config = {
     postcss({
       plugins: [
         atImport(),
+        postcssMap({
+          maps: [
+            'src/components/common/template-system/post-css-map-for-sections.yaml',
+          ],
+        }),
         mixins(),
         tailwindNesting(),
         tailwind(),

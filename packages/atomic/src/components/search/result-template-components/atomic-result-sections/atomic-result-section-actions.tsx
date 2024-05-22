@@ -1,5 +1,5 @@
 import {Element, Component} from '@stencil/core';
-import {hideEmptySection} from '../../../../utils/result-section-utils';
+import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
  * This section allows the information seeker to perform an action on an item without having to view its details.

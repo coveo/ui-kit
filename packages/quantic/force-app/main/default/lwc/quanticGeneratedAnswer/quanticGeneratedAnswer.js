@@ -49,7 +49,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Search
  * @example
- * <c-quantic-generated-answer engine-id={engineId} answer-style="step"></c-quantic-generated-answer>
+ * <c-quantic-generated-answer engine-id={engineId} answer-style="step" with-toggle collapsible></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
   /**
@@ -91,6 +91,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api collapsible = false;
+  /**
+   * Whether the generated answer can be toggled on or off.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api withToggle = false;
 
   labels = {
     generatedAnswerForYou,
@@ -144,10 +151,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
-    this.template.addEventListener(
-      'quantic__generatedanswertoggle',
-      this.handleGeneratedAnswerToggle
-    );
+    if (this.withToggle) {
+      this.template.addEventListener(
+        'quantic__generatedanswertoggle',
+        this.handleGeneratedAnswerToggle
+      );
+    }
   }
 
   renderedCallback() {
@@ -181,12 +190,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   buildHeadlessGeneratedAnswerController(engine) {
-    const storedGeneratedAnswerData = this.readStoredData();
-    const storedGeneratedAnswerVisibility =
-      storedGeneratedAnswerData?.isVisible;
+    let initialVisibility = true;
+    if (this.withToggle) {
+      const storedGeneratedAnswerData = this.readStoredData();
+      if (storedGeneratedAnswerData?.isVisible === false) {
+        initialVisibility = false;
+      }
+    }
+
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
-        isVisible: storedGeneratedAnswerVisibility === false ? false : true,
+        isVisible: initialVisibility,
         responseFormat: {answerStyle: this.answerStyle},
       },
       fieldsToIncludeInCitations: this.citationFields,
@@ -203,10 +217,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
-    this.template.removeEventListener(
-      'quantic__generatedanswertoggle',
-      this.handleGeneratedAnswerToggle
-    );
+    if (this.withToggle) {
+      this.template.removeEventListener(
+        'quantic__generatedanswertoggle',
+        this.handleGeneratedAnswerToggle
+      );
+    }
   }
 
   updateState() {
@@ -322,6 +338,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerToggle = (event) => {
     event.stopPropagation();
+    if (!this.withToggle) {
+      return;
+    }
     if (this.isVisible) {
       this.generatedAnswer.hide();
       this.writeStoredDate({isVisible: false});
@@ -488,16 +507,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get rephraseButtonsCssClass() {
     return `slds-var-m-top_small slds-grid ${
-      this.multilineFooter ? '' : 'slds-grid_align-end'
+      this.multilineFooter
+        ? 'generated-answer__rephrase--width'
+        : 'slds-grid_align-end'
     }`;
   }
 
   get shouldShowDisclaimer() {
     return this.isVisible && !this.isStreaming;
-  }
-
-  get disclaimerCssClass() {
-    return `generated-answer__disclaimer slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small ${this.multilineFooter ? '' : 'slds-text-align_right'}`;
   }
 
   get toggleCollapseAnswerIcon() {
