@@ -158,6 +158,13 @@
       'visual children        children        children';
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(6, auto) minmax(0, 1fr);
+
+    $(section-children) {
+      .product-child {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
   }
 
   &.image-large.density-comfortable,
@@ -188,7 +195,8 @@
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(7, minmax(0, min-content));
 
-    $(section-visual) {
+    $(section-visual),
+    $(section-children) .child-product {
       width: 2rem;
       height: 2rem;
     }

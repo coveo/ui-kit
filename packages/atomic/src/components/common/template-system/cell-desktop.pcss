@@ -4,6 +4,7 @@
   grid-template-areas:
     'badges'
     'visual'
+    'children'
     'title'
     'title-metadata'
     'emphasized'
@@ -11,7 +12,7 @@
     'bottom-metadata'
     'actions';
   grid-template-columns: 100%;
-  grid-template-rows: repeat(8, auto);
+  grid-template-rows: repeat(9, auto);
 
   /* == Density styles == */
   &.density-comfortable {
@@ -211,6 +212,13 @@
       width: 100%;
     }
 
+    $(section-children) {
+      .product-child {
+        @mixin aspect-ratio-h 1 / 1, auto;
+        width: 33%;
+      }
+    }
+
     $(section-badges) {
       margin-bottom: 1rem;
     }
@@ -221,10 +229,18 @@
       @mixin aspect-ratio-h 1 / 1, 14rem;
       width: 100%;
     }
+
+    $(section-children) {
+      .product-child {
+        @mixin aspect-ratio-h 1 / 1, auto;
+        width: 16.65%;
+      }
+    }
   }
 
   &.image-icon {
-    $(section-visual) {
+    $(section-visual),
+    $(section-children) .product-child {
       width: 2rem;
       height: 2rem;
     }
