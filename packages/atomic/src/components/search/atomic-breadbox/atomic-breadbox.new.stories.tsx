@@ -1,11 +1,11 @@
-import '@coveo/atomic/dist/atomic/atomic.esm.js';
-import '@coveo/atomic/dist/atomic/themes/coveo.css';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import '../../../../dist/atomic/atomic.esm.js';
+import '../../../../dist/atomic/themes/coveo.css';
 
 const {decorator, play} = wrapInSearchInterface();
 
