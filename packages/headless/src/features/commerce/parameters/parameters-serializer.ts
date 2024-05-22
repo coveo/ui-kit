@@ -7,10 +7,10 @@ import {
 } from '../../search-parameters/search-parameter-serializer';
 import {serialize as coreSerialize} from '../../search-parameters/search-parameter-serializer';
 import {
-  CommerceSearchParameters,
   Parameters,
-} from './search-parameter-actions';
+} from './parameters-actions';
 import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameter-actions';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;

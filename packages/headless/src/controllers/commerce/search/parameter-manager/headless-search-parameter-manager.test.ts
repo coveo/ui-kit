@@ -1,8 +1,4 @@
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters,
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -11,9 +7,13 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {ParameterManager} from '../../core/parameter-manager/headless-core-parameter-manager';
 import {buildSearchParameterManager} from './headless-search-parameter-manager';
+import {
+  CommerceSearchParameters,
+  restoreSearchParameters
+} from '../../../../features/commerce/search-parameters/search-parameters-actions';
 
 jest.mock(
-  '../../../../features/commerce/search-parameters/search-parameter-actions'
+  '../../../../features/commerce/parameters/parameters-actions'
 );
 jest.mock('../../../../features/commerce/search/search-actions');
 

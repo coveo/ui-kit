@@ -1,6 +1,6 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
-import {Parameters as ManagedParameters} from './search-parameter-actions';
+import {Parameters as ManagedParameters} from './parameters-actions';
 import {getFacets} from '../../parameter-manager/parameter-manager-selectors';
 import {
   AnyFacetRequest, CategoryFacetRequest,
@@ -16,7 +16,7 @@ import {getCommerceSortInitialState} from '../sort/sort-state';
 
 export function initialParametersSelector(
   state: CommerceEngine[typeof stateKey]
-): Required<Omit<ManagedParameters, 'perPage'>> & Pick<ManagedParameters, 'perPage'> {
+): Required<ManagedParameters> {
   return {
     page: state.commercePagination.principal.page ?? getCommercePaginationInitialSlice().page,
     perPage: state.commercePagination.principal.perPage ?? getCommercePaginationInitialSlice().perPage,

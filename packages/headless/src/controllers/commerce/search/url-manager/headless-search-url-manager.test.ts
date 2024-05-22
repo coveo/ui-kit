@@ -1,6 +1,5 @@
 import {stateKey} from '../../../../app/state-key';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
-import {restoreSearchParameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -10,9 +9,10 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {UrlManager} from '../../../url-manager/headless-url-manager';
 import {buildSearchUrlManager} from './headless-search-url-manager';
+import * as Actions from '../../../../features/commerce/search-parameters/search-parameters-actions';
 
 jest.mock(
-  '../../../../features/commerce/search-parameters/search-parameter-actions'
+  '../../../../features/commerce/parameters/parameters-actions'
 );
 jest.mock('../../../../features/commerce/search/search-actions');
 
@@ -50,9 +50,9 @@ describe('search url manager', () => {
       });
     });
 
-    it('dispatches #restoreProductListingParameters', () => {
+    it('dispatches #restoreSearchParameters', () => {
       const mockedRestoreSearchParametersAction = jest.mocked(
-        restoreSearchParameters
+        Actions.restoreSearchParameters
       );
       expect(mockedRestoreSearchParametersAction).toHaveBeenCalled();
     });
@@ -62,10 +62,10 @@ describe('search url manager', () => {
       expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
     });
 
-    it('initial #restoreActionCreator should parse the "active" fragment', () => {
+    it('initial #restoreSearchParameters should parse the "active" fragment', () => {
       initUrlManager('q=some%20query');
       const mockedRestoreProductListingParametersAction = jest.mocked(
-        restoreSearchParameters
+        Actions.restoreSearchParameters
       );
       expect(
         mockedRestoreProductListingParametersAction

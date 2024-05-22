@@ -1,7 +1,7 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {searchSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
+import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import * as SearchActions from '../../../features/commerce/search/search-actions';
 import {
   requestIdSelector,

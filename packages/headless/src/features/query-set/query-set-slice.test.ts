@@ -1,17 +1,16 @@
 import {buildMockSearch} from '../../test/mock-search';
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters as commerceRestoreSearchParameters
-} from '../commerce/search-parameters/search-parameter-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {restoreSearchParameters, SearchParameters} from '../search-parameters/search-parameter-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {executeSearch} from '../search/search-actions';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {querySetReducer} from './query-set-slice';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+import {
+  restoreSearchParameters as commerceRestoreSearchParameters
+} from '../commerce/search-parameters/search-parameters-actions';
 
 describe('querySet slice', () => {
   let state: QuerySetState;

@@ -2,11 +2,6 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
 import {getCommerceQueryInitialState} from '../../../../features/commerce/query/query-state';
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters,
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {searchParametersDefinition} from '../../../../features/commerce/search-parameters/search-parameter-schema';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {ParameterManager} from '../../core/parameter-manager/headless-core-parameter-manager';
@@ -20,7 +15,12 @@ import {
 import {
   activeParametersSelector as coreActiveParametersSelector,
   initialParametersSelector
-} from '../../../../features/commerce/search-parameters/search-parameter-selectors';
+} from '../../../../features/commerce/parameters/parameters-selectors';
+import {
+  CommerceSearchParameters,
+  restoreSearchParameters
+} from '../../../../features/commerce/search-parameters/search-parameters-actions';
+import {searchParametersDefinition} from '../../../../features/commerce/search-parameters/search-parameters-schema';
 
 /**
  * Creates a `ParameterManager` controller instance for commerce search.

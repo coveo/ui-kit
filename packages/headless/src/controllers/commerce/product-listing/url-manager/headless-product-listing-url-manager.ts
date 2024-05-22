@@ -1,5 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {productListingSerializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+import {productListingSerializer} from '../../../../features/commerce/parameters/parameters-serializer';
 import {loadReducerError} from '../../../../utils/errors';
 import {
   UrlManager,

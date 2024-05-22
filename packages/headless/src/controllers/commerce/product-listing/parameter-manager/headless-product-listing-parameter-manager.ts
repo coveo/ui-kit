@@ -1,6 +1,5 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingParametersDefinition} from '../../../../features/commerce/search-parameters/search-parameter-schema';
 import {
   buildCoreParameterManager,
   ParameterManager,
@@ -13,7 +12,8 @@ import {
 import {
   activeParametersSelector,
   initialParametersSelector
-} from '../../../../features/commerce/search-parameters/search-parameter-selectors';
+} from '../../../../features/commerce/parameters/parameters-selectors';
+import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
 
 /**
  * Creates a `ParameterManager` controller instance for commerce listings.
@@ -28,7 +28,7 @@ export function buildProductListingParameterManager(
 ): ParameterManager<ProductListingParameters> {
   return buildCoreParameterManager(engine, {
     ...props,
-    parametersDefinition: productListingParametersDefinition,
+    parametersDefinition,
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
     fetchProductsActionCreator: fetchProductListing,

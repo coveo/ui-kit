@@ -13,7 +13,7 @@ import {
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {productListingSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,

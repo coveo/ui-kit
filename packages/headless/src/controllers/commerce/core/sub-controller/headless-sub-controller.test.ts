@@ -9,14 +9,16 @@ import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
 import * as CoreInteractiveProduct from '../product-list/headless-core-interactive-product';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
+import * as CoreUrlManager from '../url-manager/headless-core-url-manager';
 import {
-  BaseSolutionTypeSubControllers,
+BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
   buildSearchAndListingsSubControllers,
   buildSearchSubControllers,
   SearchAndListingSubControllers,
   SearchSubControllers,
 } from './headless-sub-controller';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
 
 describe('sub-controllers', () => {
   let engine: MockedCommerceEngine;
@@ -65,6 +67,8 @@ describe('sub-controllers', () => {
       expect(subControllers).toHaveProperty('sort');
       expect(subControllers).toHaveProperty('facetGenerator');
       expect(subControllers).toHaveProperty('breadcrumbManager');
+      expect(subControllers).toHaveProperty('urlManager');
+      expect(subControllers).toHaveProperty('parameterManager');
     });
 
     it('#didYouMean builds did you mean controller', () => {
@@ -78,7 +82,7 @@ describe('sub-controllers', () => {
   });
 
   describe('#buildSearchAndListingsSubControllers', () => {
-    let subControllers: SearchAndListingSubControllers;
+    let subControllers: SearchAndListingSubControllers<Parameters>;
 
     beforeEach(() => {
       subControllers = buildSearchAndListingsSubControllers(engine, {
@@ -130,6 +134,35 @@ describe('sub-controllers', () => {
       expect(breadcrumbManager).toEqual(
         buildCoreBreadcrumbManager.mock.results[0].value
       );
+    });
+
+    it('#urlManager builds url manager', () => {
+      const buildCoreUrlManager = jest.spyOn(CoreUrlManager, 'buildCoreUrlManager');
+
+      const props = {
+        initialState: {fragment: 'q=windmill'},
+      };
+
+      const urlManager = subControllers.urlManager(props);
+
+      expect(urlManager).toEqual(buildCoreUrlManager.mock.results[0].value);
+      expect(buildCoreUrlManager).toHaveBeenCalledWith(engine, {
+        ...props,
+        requestIdSelector: mockRequestIdSelector,
+        parameterManagerBuilder: mockParameterManagerBuilder,
+        serializer: mockSerializer,
+      });
+    });
+
+    it('#parameterManager builds parameter manager', () => {
+      const props = {
+        initialState: {parameters: {}},
+      };
+
+      const parameterManager = subControllers.parameterManager(props);
+
+      expect(parameterManager).toEqual(mockParameterManagerBuilder.mock.results[0].value);
+      expect(mockParameterManagerBuilder).toHaveBeenCalledWith(engine, props);
     });
   });
 

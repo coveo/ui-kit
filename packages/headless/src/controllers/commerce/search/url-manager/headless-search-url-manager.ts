@@ -1,6 +1,6 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {queryReducer as commerceQuery} from '../../../../features/commerce/query/query-slice';
-import {searchSerializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+import {searchSerializer} from '../../../../features/commerce/parameters/parameters-serializer';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../../utils/errors';
 import {

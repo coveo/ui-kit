@@ -1,6 +1,3 @@
-import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../utils/validate-payload';
-import {searchParametersDefinition,} from './search-parameter-schema';
 import {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request';
 import {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request';
 import {SortCriterion} from '../sort/sort';
@@ -41,20 +38,4 @@ export interface Parameters {
    */
   perPage?: number;
 }
-
-/**
- * The parameters affecting the search response.
- */
-export interface CommerceSearchParameters extends Parameters {
-  /**
-   * The query.
-   */
-  q?: string;
-}
-
-export const restoreSearchParameters = createAction(
-  'commerce/searchParameters/restore',
-  (payload: CommerceSearchParameters) =>
-    validatePayload(payload, searchParametersDefinition)
-);
 

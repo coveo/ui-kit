@@ -5,11 +5,10 @@ import {
 import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
-  CommerceSearchParameters,
   Parameters,
 
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+} from '../../../../features/commerce/parameters/parameters-actions';
+import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer';
 import {
   buildDidYouMean,
   DidYouMean,
@@ -54,21 +53,23 @@ import {
 import {
   ProductListingParameters
 } from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
+import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions';
 
 export interface BaseSolutionTypeSubControllers {
   interactiveProduct: (props: InteractiveProductProps) => InteractiveProduct;
   pagination: (props?: PaginationProps) => Pagination;
 }
 
-export interface SearchAndListingSubControllers
+export interface SearchAndListingSubControllers<P extends Parameters>
   extends BaseSolutionTypeSubControllers {
   sort: (props?: SortProps) => Sort;
   facetGenerator: () => FacetGenerator;
   breadcrumbManager: () => BreadcrumbManager;
   urlManager: (props: UrlManagerProps) => UrlManager;
+  parameterManager: (props: ParameterManagerProps<P>) => ParameterManager<P>;
 }
 
-export interface SearchSubControllers extends SearchAndListingSubControllers {
+export interface SearchSubControllers extends SearchAndListingSubControllers<CommerceSearchParameters> {
   didYouMean: () => DidYouMean;
 }
 
@@ -79,7 +80,7 @@ interface BaseSubControllerProps {
   slotId?: string;
 }
 
-export interface SearchAndListingSubControllerProps<T extends Parameters>
+export interface SearchAndListingSubControllerProps<P extends Parameters>
   extends BaseSubControllerProps {
   facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
@@ -91,9 +92,9 @@ export interface SearchAndListingSubControllerProps<T extends Parameters>
   requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
   parameterManagerBuilder: (
     engine: CommerceEngine,
-    props: ParameterManagerProps<T>
-  ) => ParameterManager<T>;
-  serializer: Serializer<T>;
+    props: ParameterManagerProps<P>
+  ) => ParameterManager<P>;
+  serializer: Serializer<P>;
 }
 
 export function buildSearchSubControllers(
@@ -111,14 +112,14 @@ export function buildSearchSubControllers(
 export function buildProductListingSubControllers(
   engine: CommerceEngine,
   subControllerProps: SearchAndListingSubControllerProps<ProductListingParameters>
-): SearchAndListingSubControllers {
+): SearchAndListingSubControllers<ProductListingParameters> {
   return buildSearchAndListingsSubControllers(engine, subControllerProps);
 }
 
 export function buildSearchAndListingsSubControllers<P extends Parameters>(
   engine: CommerceEngine,
   subControllerProps: SearchAndListingSubControllerProps<P>
-): SearchAndListingSubControllers {
+): SearchAndListingSubControllers<P> {
   const {
     fetchProductsActionCreator,
     facetResponseSelector,
@@ -166,6 +167,9 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
         serializer,
       });
     },
+    parameterManager(props: ParameterManagerProps<P>) {
+      return parameterManagerBuilder(engine, props);
+    }
   };
 }
 

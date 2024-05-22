@@ -1,9 +1,5 @@
 import {stateKey} from '../../../../app/state-key';
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters,
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {searchSerializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+import {searchSerializer} from '../../../../features/commerce/parameters/parameters-serializer';
 import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
@@ -12,9 +8,13 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {buildSearchParameterManager} from '../../search/parameter-manager/headless-search-parameter-manager';
 import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager';
+import {
+  CommerceSearchParameters,
+  restoreSearchParameters
+} from '../../../../features/commerce/search-parameters/search-parameters-actions';
 
 jest.mock(
-  '../../../../features/commerce/search-parameters/search-parameter-actions'
+  '../../../../features/commerce/parameters/parameters-actions'
 );
 jest.mock('../../../../features/commerce/search/search-actions');
 

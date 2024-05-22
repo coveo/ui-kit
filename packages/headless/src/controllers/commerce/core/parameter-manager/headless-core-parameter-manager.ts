@@ -4,7 +4,7 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {
   Parameters
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+} from '../../../../features/commerce/parameters/parameters-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
@@ -50,7 +50,7 @@ export interface CoreParameterManagerProps<T extends Parameters>
   enrichParameters(
     state: CommerceEngine[typeof stateKey],
     activeParams: T
-  ): Required<Omit<T, 'perPage'>> & Pick<T, 'perPage'>;
+  ): Required<T>;
 }
 
 export interface ParameterManagerInitialState<T> {

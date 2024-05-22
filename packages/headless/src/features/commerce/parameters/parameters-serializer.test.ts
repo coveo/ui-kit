@@ -1,7 +1,8 @@
-import {searchSerializer} from './search-parameter-serializer';
+import {searchSerializer} from './parameters-serializer';
 import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
 import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range';
-import {CommerceSearchParameters} from './search-parameter-actions';
+
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',

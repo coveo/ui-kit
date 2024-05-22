@@ -12,7 +12,7 @@ import {
 } from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 
 jest.mock(
-  '../../../../features/commerce/search-parameters/search-parameter-actions'
+  '../../../../features/commerce/parameters/parameters-actions'
 );
 jest.mock(
   '../../../../features/commerce/product-listing/product-listing-actions'

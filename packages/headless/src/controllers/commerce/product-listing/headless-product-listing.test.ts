@@ -6,7 +6,7 @@ import {
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
-import {productListingSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
