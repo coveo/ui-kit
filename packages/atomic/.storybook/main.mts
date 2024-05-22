@@ -4,7 +4,7 @@ import {mergeConfig} from 'vite';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.new.stories.@(js|jsx|ts|tsx|mdx)'],
-  staticDirs: ['../dist'],
+  staticDirs: [{from: '../dist/atomic', to: './assets'}],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
