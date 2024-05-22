@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "composite": true,
+    "jsxFactory": "React.createElement"
+  },
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
+  "include": [
+    "src/**/*.stories.ts",
+    "src/**/*.stories.js",
+    "src/**/*.stories.jsx",
+    "src/**/*.stories.tsx",
+    "src/**/*.stories.mdx",
+    ".storybook/*.js",
+    ".storybook/*.ts",
+    ".storybook/*.tsx",
+    ".storybook/*.jsx",
+    ".storybook/register.tsx"
+  ],
+}
