@@ -85,20 +85,22 @@ export class AtomicProductChildren
 
   private renderChild(child: ChildProduct) {
     return (
-      <div class="inline-block">
-        <button
-          class={`w-8 h-8${child.permanentid === this.activeChildId ? ' box-border rounded border border-primary ' : ' '}bg-contain bg-no-repeat`}
-          title={child.ec_name}
-          style={{backgroundImage: `url(${child.ec_images![0]})`}}
-          data-src={child.ec_thumbnails![0]}
-          onMouseEnter={() =>
-            this.onSelectChild(child.permanentid, this.product.permanentid)
-          }
-          onClick={() =>
-            this.onSelectChild(child.permanentid, this.product.permanentid)
-          }
-        ></button>
-      </div>
+      <button
+        class={`product-child${child.permanentid === this.activeChildId ? ' box-border rounded border border-primary ' : ' '}bg-contain bg-no-repeat`}
+        title={child.ec_name}
+        style={{backgroundImage: `url(${child.ec_images![0]})`}}
+        data-src={child.ec_thumbnails![0]}
+        onKeyPress={(e) =>
+          e.key === 'Enter' &&
+          this.onSelectChild(child.permanentid, this.product.permanentid)
+        }
+        onMouseEnter={() =>
+          this.onSelectChild(child.permanentid, this.product.permanentid)
+        }
+        onTouchStart={() =>
+          this.onSelectChild(child.permanentid, this.product.permanentid)
+        }
+      ></button>
     );
   }
 
@@ -109,12 +111,12 @@ export class AtomicProductChildren
 
     return (
       <div>
-        <div class="font-semibold text-neutral-dark mb-2">
+        <div class="my-2 font-semibold text-neutral-dark">
           <atomic-commerce-text
             value={this.bindings.i18n.t(this.label)}
           ></atomic-commerce-text>
         </div>
-        {this.children.map((child) => this.renderChild(child))}
+        <div>{this.children.map((child) => this.renderChild(child))}</div>
       </div>
     );
   }
