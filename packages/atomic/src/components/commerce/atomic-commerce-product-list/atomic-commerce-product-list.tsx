@@ -162,16 +162,13 @@ export class AtomicCommerceProductList
     event.stopPropagation();
     const {parentPermanentId, childPermanentId} = event.detail;
 
-    switch (this.bindings.interfaceElement.type) {
-      case 'product-listing':
-        this.productListing.promoteChildToParent(
-          parentPermanentId,
-          childPermanentId
-        );
-        break;
-      case 'search':
-        this.search.promoteChildToParent(parentPermanentId, childPermanentId);
-        break;
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.productListing.promoteChildToParent(
+        childPermanentId,
+        parentPermanentId
+      );
+    } else if (this.bindings.interfaceElement.type === 'search') {
+      this.search.promoteChildToParent(childPermanentId, parentPermanentId);
     }
   }
 
