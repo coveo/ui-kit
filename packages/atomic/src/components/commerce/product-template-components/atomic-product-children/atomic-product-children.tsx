@@ -17,6 +17,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {filterProtocol} from '../../../../utils/xss-utils';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 
@@ -88,8 +89,12 @@ export class AtomicProductChildren
   private validateProps() {
     new Schema({
       label: new StringValue(),
+      field: new StringValue(),
+      fallback: new StringValue(),
     }).validate({
       label: this.label,
+      field: this.field,
+      fallback: this.fallback,
     });
   }
 
@@ -105,10 +110,18 @@ export class AtomicProductChildren
     const value = ProductTemplatesHelpers.getProductProperty(child, this.field);
 
     if (!value && this.fallback) {
-      return this.fallback;
+      return filterProtocol(this.fallback);
     }
 
-    return Array.isArray(value) ? value[0] : value;
+    if (typeof value === 'string') {
+      return filterProtocol(value);
+    }
+
+    if (Array.isArray(value) && typeof value[0] === 'string') {
+      return filterProtocol(value[0]);
+    }
+
+    return filterProtocol(this.fallback ?? '');
   }
 
   private get activeChildClasses() {
@@ -135,6 +148,7 @@ export class AtomicProductChildren
         <img
           class="aspect-square p-1"
           src={this.getImageUrl(child)}
+          alt={child.ec_name}
           loading="lazy"
         />
       </button>
