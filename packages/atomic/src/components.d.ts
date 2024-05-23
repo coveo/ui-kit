@@ -864,10 +864,12 @@ export namespace Components {
         "answerStyle": GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -999,10 +1001,12 @@ export namespace Components {
         "answerStyle": InsightGeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -5974,10 +5978,12 @@ declare namespace LocalJSX {
         "answerStyle"?: GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -6106,10 +6112,12 @@ declare namespace LocalJSX {
         "answerStyle"?: InsightGeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
