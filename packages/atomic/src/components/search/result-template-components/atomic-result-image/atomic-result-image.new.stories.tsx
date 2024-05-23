@@ -1,5 +1,3 @@
-import '@coveo/atomic/dist/atomic/atomic.esm.js';
-import '@coveo/atomic/dist/atomic/themes/coveo.css';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInResult} from '@coveo/atomic/storybookUtils/result-wrapper';
 import type {Meta, StoryObj} from '@storybook/web-components';

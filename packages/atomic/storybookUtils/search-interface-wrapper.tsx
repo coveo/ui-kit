@@ -14,6 +14,7 @@ export const wrapInSearchInterface = (): {
     </atomic-search-interface>
   `,
   play: async ({canvasElement, step}) => {
+    await customElements.whenDefined('atomic-search-interface');
     const canvas = within(canvasElement);
     const searchInterface =
       await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(

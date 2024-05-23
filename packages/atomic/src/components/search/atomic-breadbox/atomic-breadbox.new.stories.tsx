@@ -4,8 +4,6 @@ import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
-import '../../../../dist/atomic/atomic.esm.js';
-import '../../../../dist/atomic/themes/coveo.css';
 
 const {decorator, play} = wrapInSearchInterface();
 
