@@ -3,7 +3,6 @@ import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
-import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {searchSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
@@ -40,7 +39,7 @@ export interface Search
   /**
    * Executes the first search.
    */
-  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
+  executeFirstSearch(): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Search` controller.
@@ -55,6 +54,11 @@ export interface SearchState {
   responseId: string;
 }
 
+/**
+ * Builds a `Search` controller for the given commerce engine.
+ * @param engine - The commerce engine.
+ * @returns A `Search` controller.
+ */
 export function buildSearch(engine: CommerceEngine): Search {
   if (!loadBaseSearchReducers(engine)) {
     throw loadReducerError;

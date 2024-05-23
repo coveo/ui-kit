@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -30,11 +32,13 @@ import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, Re
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -58,7 +62,7 @@ export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, Re
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -268,6 +272,15 @@ export namespace Components {
         "facet": RegularFacet;
     }
     /**
+     * Internal component made to be integrated in a NumericFacet.
+     */
+    interface AtomicCommerceFacetNumberInput {
+        "bindings": Bindings;
+        "facet": NumericFacet;
+        "label": string;
+        "range"?: Range;
+    }
+    /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      */
@@ -354,6 +367,15 @@ export namespace Components {
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
     interface AtomicCommerceLoadMoreProducts {
+    }
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
+    interface AtomicCommerceNumericFacet {
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "facet": NumericFacet;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -833,10 +855,12 @@ export namespace Components {
         "answerStyle": GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -968,10 +992,12 @@ export namespace Components {
         "answerStyle": InsightGeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -2150,7 +2176,7 @@ export namespace Components {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
-        "bindings": Bindings;
+        "bindings": Bindings1;
         "open": boolean;
     }
     /**
@@ -3088,6 +3114,10 @@ export namespace Components {
         "togglePopover": () => Promise<void>;
     }
 }
+export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicCommerceFacetNumberInputElement;
+}
 export interface AtomicCommercePagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommercePagerElement;
@@ -3262,6 +3292,26 @@ declare global {
         prototype: HTMLAtomicCommerceFacetElement;
         new (): HTMLAtomicCommerceFacetElement;
     };
+    interface HTMLAtomicCommerceFacetNumberInputElementEventMap {
+        "atomic/numberInputApply": any;
+    }
+    /**
+     * Internal component made to be integrated in a NumericFacet.
+     */
+    interface HTMLAtomicCommerceFacetNumberInputElement extends Components.AtomicCommerceFacetNumberInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicCommerceFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceFacetNumberInputElement, ev: AtomicCommerceFacetNumberInputCustomEvent<HTMLAtomicCommerceFacetNumberInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicCommerceFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceFacetNumberInputElement, ev: AtomicCommerceFacetNumberInputCustomEvent<HTMLAtomicCommerceFacetNumberInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicCommerceFacetNumberInputElement: {
+        prototype: HTMLAtomicCommerceFacetNumberInputElement;
+        new (): HTMLAtomicCommerceFacetNumberInputElement;
+    };
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
@@ -3292,6 +3342,15 @@ declare global {
     var HTMLAtomicCommerceLoadMoreProductsElement: {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
+    };
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
+    interface HTMLAtomicCommerceNumericFacetElement extends Components.AtomicCommerceNumericFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceNumericFacetElement: {
+        prototype: HTMLAtomicCommerceNumericFacetElement;
+        new (): HTMLAtomicCommerceNumericFacetElement;
     };
     interface HTMLAtomicCommercePagerElementEventMap {
         "atomic/scrollToTop": any;
@@ -5010,10 +5069,12 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
+        "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
+        "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
@@ -5385,6 +5446,16 @@ declare namespace LocalJSX {
         "facet": RegularFacet;
     }
     /**
+     * Internal component made to be integrated in a NumericFacet.
+     */
+    interface AtomicCommerceFacetNumberInput {
+        "bindings": Bindings;
+        "facet": NumericFacet;
+        "label": string;
+        "onAtomic/numberInputApply"?: (event: AtomicCommerceFacetNumberInputCustomEvent<any>) => void;
+        "range"?: Range;
+    }
+    /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
      */
@@ -5453,6 +5524,15 @@ declare namespace LocalJSX {
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      */
     interface AtomicCommerceLoadMoreProducts {
+    }
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
+    interface AtomicCommerceNumericFacet {
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "facet": NumericFacet;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -5914,10 +5994,12 @@ declare namespace LocalJSX {
         "answerStyle"?: GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -6046,10 +6128,12 @@ declare namespace LocalJSX {
         "answerStyle"?: InsightGeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -7152,7 +7236,7 @@ declare namespace LocalJSX {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
-        "bindings": Bindings;
+        "bindings": Bindings1;
         "onAtomic/relevanceInspector/close"?: (event: AtomicRelevanceInspectorCustomEvent<any>) => void;
         "open"?: boolean;
     }
@@ -8079,10 +8163,12 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-facet": AtomicCommerceFacet;
+        "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
+        "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
@@ -8296,6 +8382,10 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
+             * Internal component made to be integrated in a NumericFacet.
+             */
+            "atomic-commerce-facet-number-input": LocalJSX.AtomicCommerceFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetNumberInputElement>;
+            /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
              */
@@ -8306,6 +8396,10 @@ declare module "@stencil/core" {
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            /**
+             * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+             */
+            "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
              */

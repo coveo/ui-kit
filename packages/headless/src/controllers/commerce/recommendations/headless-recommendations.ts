@@ -63,7 +63,10 @@ export interface RecommendationsOptions {
   productId?: string;
 }
 
-interface RecommendationsProps {
+export interface RecommendationsProps {
+  /**
+   * The options for the `Recommendations` controller.
+   */
   options: RecommendationsOptions;
 }
 
