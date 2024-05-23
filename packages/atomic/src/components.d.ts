@@ -1641,6 +1641,14 @@ export namespace Components {
     }
     interface AtomicProductChildren {
         /**
+          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+         */
+        "fallback": string;
+        /**
+          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+         */
+        "field": string;
+        /**
           * The non-localized label to display for the product children section.
          */
         "label": string;
@@ -1660,7 +1668,7 @@ export namespace Components {
      */
     interface AtomicProductImage {
         /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback": string;
         /**
@@ -6680,6 +6688,14 @@ declare namespace LocalJSX {
     }
     interface AtomicProductChildren {
         /**
+          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+         */
+        "fallback"?: string;
+        /**
+          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+         */
+        "field"?: string;
+        /**
           * The non-localized label to display for the product children section.
          */
         "label"?: string;
@@ -6700,7 +6716,7 @@ declare namespace LocalJSX {
      */
     interface AtomicProductImage {
         /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback"?: string;
         /**
