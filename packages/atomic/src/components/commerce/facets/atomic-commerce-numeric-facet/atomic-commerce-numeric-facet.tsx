@@ -61,7 +61,7 @@ export class AtomicCommerceNumericFacet
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
   /**
-   * The field whose values you want to display in the facet.
+   * The numeric facet controller instance.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
 

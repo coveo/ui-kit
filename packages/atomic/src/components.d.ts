@@ -373,7 +373,7 @@ export namespace Components {
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
     }
@@ -5494,7 +5494,7 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
     }
