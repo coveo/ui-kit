@@ -73,7 +73,12 @@ export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
 
 export const PagerPageButtons: FunctionalComponent = (_, children) => {
   return (
-    <div part="page-buttons" role="radiogroup" class="contents">
+    <div
+      part="page-buttons"
+      role="radiogroup"
+      aria-label="Pagination"
+      class="contents"
+    >
       {...children}
     </div>
   );
