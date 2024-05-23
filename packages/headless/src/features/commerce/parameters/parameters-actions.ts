@@ -1,6 +1,5 @@
 import {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request';
 import {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request';
-import {SortCriterion} from '../sort/sort';
 
 export interface Parameters {
   /**
@@ -26,7 +25,9 @@ export interface Parameters {
   /**
    * The sort expression to order returned results by.
    */
-  sortCriteria?: SortCriterion;
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-907: Handle sort and pagination
+  //sortCriteria?: SortCriterion;
 
   /**
    * The zero-based index of the active page.
@@ -36,6 +37,7 @@ export interface Parameters {
   /**
    * The number of results per page.
    */
-  perPage?: number;
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-907: Handle sort and pagination
+  //perPage?: number;
 }
-

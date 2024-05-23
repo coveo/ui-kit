@@ -1,3 +1,7 @@
+import {
+  ProductListingParameters,
+  restoreProductListingParameters,
+} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -5,11 +9,14 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {ParameterManager} from '../../core/parameter-manager/headless-core-parameter-manager';
 import {buildProductListingParameterManager} from './headless-product-listing-parameter-manager';
-import * as Actions from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
+
+jest.mock(
+  '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions'
+);
 
 describe('product listing parameter manager', () => {
   let engine: MockedCommerceEngine;
-  let productListingParameterManager: ParameterManager<Actions.ProductListingParameters>;
+  let productListingParameterManager: ParameterManager<ProductListingParameters>;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -35,7 +42,7 @@ describe('product listing parameter manager', () => {
 
   it('dispatches #restoreProductListingParameters on init', () => {
     const mockedRestoreProductListingParametersAction = jest.mocked(
-      Actions.restoreProductListingParameters
+      restoreProductListingParameters
     );
     expect(mockedRestoreProductListingParametersAction).toHaveBeenCalledWith(
       {}

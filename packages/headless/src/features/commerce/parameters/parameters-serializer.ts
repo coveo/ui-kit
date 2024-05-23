@@ -1,16 +1,15 @@
 import {
   castUnknownObject,
-  delimiter, isValidKey,
+  delimiter,
+  isValidKey,
   preprocessObjectPairs,
   serializePair,
   splitOnFirstEqual,
 } from '../../search-parameters/search-parameter-serializer';
 import {serialize as coreSerialize} from '../../search-parameters/search-parameter-serializer';
-import {
-  Parameters,
-} from './parameters-actions';
 import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameter-actions';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
+import {Parameters} from './parameters-actions';
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
@@ -24,27 +23,26 @@ export const searchSerializer: Serializer<CommerceSearchParameters> = {
 
 export const productListingSerializer = {
   serialize,
-  deserialize: () => ({}) as ProductListingParameters,
+  deserialize,
 } as Serializer<ProductListingParameters>;
 
-type FacetSearchParameters = keyof Pick<
-  CommerceSearchParameters,
-  'f' | 'cf' | 'nf' | 'df'
->;
+type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'df'>;
 
 type FacetKey = keyof typeof supportedFacetParameters;
-const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
+const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
   cf: true,
   nf: true,
   df: true,
 };
 
+// eslint-disable-next-line @cspell/spellchecker
+// TODO CAPI-907: Handle sort and pagination
 function serialize(parameters: CommerceSearchParameters): string {
   return coreSerialize(serializePair)(parameters);
 }
 
-function deserialize(fragment: string): CommerceSearchParameters {
+function deserialize<T extends Parameters>(fragment: string): T {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map(splitOnFirstEqual)
@@ -52,7 +50,7 @@ function deserialize(fragment: string): CommerceSearchParameters {
     .filter(isValidPair)
     .map(cast);
 
-  return keyValuePairs.reduce((acc: CommerceSearchParameters, pair) => {
+  return keyValuePairs.reduce((acc: Partial<T>, pair) => {
     const [key, val] = pair;
 
     if (keyHasObjectValue(key)) {
@@ -61,14 +59,14 @@ function deserialize(fragment: string): CommerceSearchParameters {
     }
 
     return {...acc, [key]: val};
-  }, {});
+  }, {}) as T;
 }
 
 export function keyHasObjectValue(key: string): key is FacetKey {
   return key in supportedFacetParameters;
 }
 
-function isValidPair<K extends keyof CommerceSearchParameters>(
+function isValidPair<K extends keyof Parameters>(
   pair: string[]
 ): pair is [K, string] {
   const validKey = isValidKey(pair[0]);
@@ -76,14 +74,14 @@ function isValidPair<K extends keyof CommerceSearchParameters>(
   return validKey && lengthOfTwo;
 }
 
-function cast<K extends keyof CommerceSearchParameters>(
-  pair: [K, string]
-): [K, unknown] {
+function cast<K extends keyof Parameters>(pair: [K, string]): [K, unknown] {
   const [key, value] = pair;
 
-  if (key === 'page' || key === 'perPage') {
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-907: Handle sort and pagination
+  /*if (key === 'page' || key === 'perPage') {
     return [key, parseInt(value)];
-  }
+  }*/
 
   if (keyHasObjectValue(key)) {
     return [key, castUnknownObject(value)];

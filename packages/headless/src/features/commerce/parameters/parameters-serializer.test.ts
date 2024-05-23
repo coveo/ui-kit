@@ -1,8 +1,7 @@
-import {searchSerializer} from './parameters-serializer';
-import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
 import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range';
-
+import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
+import {searchSerializer} from './parameters-serializer';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',
@@ -66,9 +65,7 @@ describe('searchSerializer', () => {
 
     it('deserializes a string with special characters', () => {
       someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-        const result = deserialize(
-          `q=${encodeURIComponent(char)}&enableQuerySyntax=true`
-        );
+        const result = deserialize(`q=${encodeURIComponent(char)}`);
         expect(result).toEqual({q: char});
       });
     });
@@ -94,7 +91,9 @@ describe('searchSerializer', () => {
         }),
       ],
     };
-    const parameters: Required<Omit<CommerceSearchParameters, 'sortCriteria' | 'page' | 'perPage'>>  = {
+    const parameters: Required<
+      Omit<CommerceSearchParameters, 'sortCriteria' | 'page' | 'perPage'>
+    > = {
       q: 'some query',
       f,
       cf,

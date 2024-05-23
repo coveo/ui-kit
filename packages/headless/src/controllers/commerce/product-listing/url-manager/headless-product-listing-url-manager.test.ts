@@ -1,3 +1,4 @@
+import {restoreProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
@@ -7,12 +8,9 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {UrlManager} from '../../../url-manager/headless-url-manager';
 import {buildProductListingUrlManager} from './headless-product-listing-url-manager';
-import {
-  restoreProductListingParameters
-} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 
 jest.mock(
-  '../../../../features/commerce/parameters/parameters-actions'
+  '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions'
 );
 jest.mock(
   '../../../../features/commerce/product-listing/product-listing-actions'

@@ -1,4 +1,5 @@
 import {buildMockSearch} from '../../test/mock-search';
+import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
@@ -8,9 +9,6 @@ import {executeSearch} from '../search/search-actions';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {querySetReducer} from './query-set-slice';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
-import {
-  restoreSearchParameters as commerceRestoreSearchParameters
-} from '../commerce/search-parameters/search-parameters-actions';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -113,19 +111,34 @@ describe('querySet slice', () => {
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
-    const nextState = querySetReducer(state, action({q: 'world'}));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const nextState = querySetReducer(state, (action as any)({q: 'world'}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 
   it.each([
-    {action: restoreSearchParameters},
-    {action: commerceRestoreSearchParameters},
+    {
+      action: restoreSearchParameters,
+    },
+    {
+      action: commerceRestoreSearchParameters,
+    },
   ])('does not modify query on #$action, when "q" not defined', ({action}) => {
     registerQueryWithId('foo', 'foo');
     registerQueryWithId('bar', 'bar');
 
     const expectedQuerySet = {foo: 'foo', bar: 'bar'};
-    const nextState = querySetReducer(state, action({}));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const nextState = querySetReducer(state, (action as any)({}));
+    expect(nextState).toEqual(expectedQuerySet);
+  });
+
+  it('does not modify query on #$action, when "q" not defined', () => {
+    registerQueryWithId('foo', 'foo');
+    registerQueryWithId('bar', 'bar');
+
+    const expectedQuerySet = {foo: 'foo', bar: 'bar'};
+    const nextState = querySetReducer(state, restoreSearchParameters({}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 

@@ -4,6 +4,8 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {
   fetchProductListing,
   fetchMoreProducts,
@@ -13,7 +15,6 @@ import {
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -34,7 +35,7 @@ import {buildProductListingParameterManager} from './parameter-manager/headless-
  */
 export interface ProductListing
   extends Controller,
-    SearchAndListingSubControllers {
+    SearchAndListingSubControllers<Parameters> {
   /**
    * Fetches the product listing.
    */
