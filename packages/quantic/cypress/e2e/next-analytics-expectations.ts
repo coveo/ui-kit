@@ -21,10 +21,6 @@ async function validateEventWithEventAPI(request: {
     },
   });
 
-  if (response.status !== 200) {
-    throw new Error('Event validation request failed');
-  }
-
   const parsedResponse = (await response.json())[0];
 
   parsedResponse?.errors?.forEach(
