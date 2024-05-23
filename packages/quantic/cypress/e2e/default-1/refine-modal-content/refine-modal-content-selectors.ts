@@ -67,7 +67,5 @@ export const RefineContentSelectors: RefineContentSelector = {
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
-    RefineContentSelectors.get().find(
-      '.filters-header .slds-text-heading_small'
-    ),
+    RefineContentSelectors.get().find('[data-cy="filters-title"]'),
 };
