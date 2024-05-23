@@ -1,3 +1,4 @@
+import {stateKey} from '../../../app/state-key';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
@@ -61,7 +62,7 @@ describe('RedirectionTrigger', () => {
   it('when the #engine.state.triggers.redirectTo is updated to the empty string, does not call the listener', () => {
     const listener = jest.fn();
     redirectionTrigger.subscribe(listener);
-    engine.state.triggers!.redirectTo = '';
+    engine[stateKey].triggers!.redirectTo = '';
     const [firstListener] = registeredListeners();
     firstListener();
 
@@ -72,7 +73,7 @@ describe('RedirectionTrigger', () => {
     const listener = jest.fn();
 
     redirectionTrigger.subscribe(listener);
-    engine.state.triggers!.redirectTo = 'https://www.coveo.com';
+    engine[stateKey].triggers!.redirectTo = 'https://www.coveo.com';
     const [firstListener] = registeredListeners();
     firstListener();
 
