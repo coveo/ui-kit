@@ -477,7 +477,7 @@ describe('Generated Answer Test Suites', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
             GeneratedAnswerSelectors.citation()
-              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
+              .invoke('removeAttr', 'target')
               .click();
           });
 
