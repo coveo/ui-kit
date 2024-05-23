@@ -12,3 +12,4 @@ LICENSE.md
 **/.next/**
 **/www/**
 scripts/deploy/execute-deployment-pipeline.mjs
+**/staticresources/**
