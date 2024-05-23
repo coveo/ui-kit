@@ -1,10 +1,15 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+import {
+  SearchEngineConfiguration,
+  getSampleSearchEngineConfiguration,
+} from '@coveo/headless';
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import type * as _ from '../src/components.d.ts';
 
-export const wrapInSearchInterface = (): {
+export const wrapInSearchInterface = (
+  config?: Partial<SearchEngineConfiguration>
+): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
@@ -23,6 +28,7 @@ export const wrapInSearchInterface = (): {
     await step('Render the Search Interface', async () => {
       await searchInterface!.initialize({
         ...getSampleSearchEngineConfiguration(),
+        ...config,
       });
     });
     await step('Execute the first search', async () => {
