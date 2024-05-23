@@ -39,7 +39,7 @@ export class AtomicProductImage implements InitializableComponent {
   @Prop({reflect: true}) field: string = 'ec_thumbnails';
 
   /**
-   * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+   * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
    */
   @Prop({reflect: true}) fallback: string =
     // eslint-disable-next-line @cspell/spellchecker
@@ -99,12 +99,12 @@ export class AtomicProductImage implements InitializableComponent {
 
   private validateUrl(url: string | undefined) {
     if (!url) {
-      const message = `Image for ${this.product.ec_name} is missing. Please review your indexation. You might want to add a "fallback" property.`;
+      const message = `Image for ${this.product.ec_name} is missing. Please review your indexing. You might want to add a "fallback" property.`;
       return this.handleMissingFallback(message);
     }
 
     if (typeof url !== 'string') {
-      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
+      const message = `Expected "${this.field}" to be a text field. Please review your indexing. You might want to add a "fallback" property.`;
       return this.handleMissingFallback(message);
     }
 
