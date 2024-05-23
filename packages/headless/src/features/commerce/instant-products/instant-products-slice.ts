@@ -62,7 +62,11 @@ export const instantProductsReducer = createReducer(
       })
       .addCase(promoteChildToParent, (state, action) => {
         const cache = state[action.payload.id].cache[action.payload.query];
+        if (!cache) {
+          return;
+        }
         const products = cache.products;
+
         const currentParentIndex = products.findIndex(
           (product) => product.permanentid === action.payload.parentPermanentId
         );
