@@ -41,11 +41,11 @@ export class FacetNumberInput {
   })
   private applyInput!: EventEmitter;
 
-  public connectedCallback() {
-    const range = this.getRangeCallback();
-    this.start = range?.start;
-    this.end = range?.end;
-  }
+  // public connectedCallback() {
+  // const range = this.getRangeCallback(); // TODO: need to be a controller for input filter only
+  // this.start = range?.start;
+  // this.end = range?.end;
+  // }
 
   private apply() {
     if (!this.startRef.validity.valid || !this.endRef.validity.valid) {

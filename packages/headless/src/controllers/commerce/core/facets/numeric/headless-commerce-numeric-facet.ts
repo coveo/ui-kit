@@ -1,6 +1,5 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
-import {numericFacetSelectedValuesSelector} from '../../../../../features/commerce/facets/numeric-facet-set/numeric-facet-selectors';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -113,9 +112,10 @@ export function buildCommerceNumericFacet(
 
     get state() {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
-      console.log('Run');
       const numberOfSelectedValues =
-        numericFacetSelectedValuesSelector(engine, facetId).length || 0;
+        coreController.state.values.filter(
+          (value) => value.state === 'selected'
+        ).length || 0;
 
       if (response?.type === 'numericalRange') {
         return {
