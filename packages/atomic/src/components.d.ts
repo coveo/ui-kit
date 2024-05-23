@@ -24,12 +24,12 @@ import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -54,12 +54,12 @@ export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -1403,6 +1403,61 @@ export namespace Components {
         "container"?: HTMLElement;
         "isOpen": boolean;
         "source"?: HTMLElement;
+    }
+    /**
+     * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
+     */
+    interface AtomicIpxRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ItemDisplayDensity1;
+        /**
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "display": ItemDisplayBasicLayout1;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ItemTarget1;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ItemDisplayImageSize1;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * Moves to the next page, when the carousel is activated.
+         */
+        "nextPage": () => Promise<void>;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations": number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * Moves to the previous page, when the carousel is activated.
+         */
+        "previousPage": () => Promise<void>;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-ipx-recs-list in your page.
+         */
+        "recommendation": string;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction1) => Promise<void>;
     }
     interface AtomicIpxRefineModal {
         /**
@@ -3951,6 +4006,15 @@ declare global {
         prototype: HTMLAtomicIpxModalElement;
         new (): HTMLAtomicIpxModalElement;
     };
+    /**
+     * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
+     */
+    interface HTMLAtomicIpxRecsListElement extends Components.AtomicIpxRecsList, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRecsListElement: {
+        prototype: HTMLAtomicIpxRecsListElement;
+        new (): HTMLAtomicIpxRecsListElement;
+    };
     interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicIpxRefineModalElement: {
@@ -5138,6 +5202,7 @@ declare global {
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
+        "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
@@ -6510,6 +6575,48 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
+    }
+    /**
+     * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
+     */
+    interface AtomicIpxRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ItemDisplayDensity1;
+        /**
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "display"?: ItemDisplayBasicLayout1;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ItemTarget1;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ItemDisplayImageSize1;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations"?: number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-ipx-recs-list in your page.
+         */
+        "recommendation"?: string;
     }
     interface AtomicIpxRefineModal {
         /**
@@ -8232,6 +8339,7 @@ declare namespace LocalJSX {
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
         "atomic-ipx-modal": AtomicIpxModal;
+        "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
@@ -8551,6 +8659,10 @@ declare module "@stencil/core" {
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
+            /**
+             * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
+             */
+            "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             /**
