@@ -174,7 +174,7 @@ export class AtomicProductImage implements InitializableComponent {
       if (Array.isArray(value)) {
         return value.map((v) => `${v}`.trim());
       }
-      return value as string;
+      return (value as string).trim();
     }
     return null;
   }
