@@ -2,7 +2,14 @@ import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface({
+  search: {
+    preprocessSearchResponseMiddleware: (res) => {
+      res.body.results = [];
+      return res;
+    },
+  },
+});
 
 const meta: Meta = {
   title: 'Atomic/NoResults',
