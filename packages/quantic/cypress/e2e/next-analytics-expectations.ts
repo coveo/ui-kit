@@ -20,13 +20,18 @@ async function validateEventWithEventAPI(request: {
       'Content-Type': 'application/json',
     },
   });
+
+  if (response.status !== 200) {
+    throw new Error('Event validation request failed');
+  }
+
   const parsedResponse = (await response.json())[0];
 
   parsedResponse?.errors?.forEach(
     (error: {message: string; type: string; path: string}) => {
       Cypress.log({
         name: 'Event protocol validation',
-        displayName: 'EP validation',
+        displayName: '❌❌❌ EP validation ❌❌❌',
         message: error.message,
         consoleProps: () => error,
       });
