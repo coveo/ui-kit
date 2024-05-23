@@ -85,12 +85,12 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "wait-on dist"
+        "command": "wait-on dist/atomic"
       }
     },
     "storybook": {
       "executor": "@nx/storybook:storybook",
-      "dependsOn": ["^wait-on:dist"],
+      "dependsOn": ["wait-on:dist"],
       "options": {
         "port": 4400,
         "configDir": "{workspaceRoot}/packages/atomic/.storybook"
