@@ -57,8 +57,8 @@ export const queryExecutedFromResponseSelector = (
   state: CommerceQuerySection,
   response: SearchCommerceSuccessResponse
 ) => {
-  if (response.queryCorrection?.correctedQuery !== undefined) {
-    return response.queryCorrection?.correctedQuery;
+  if (!isNullOrUndefined(response.queryCorrection?.correctedQuery)) {
+    return response.queryCorrection.correctedQuery;
   }
 
   return querySelector(state);
