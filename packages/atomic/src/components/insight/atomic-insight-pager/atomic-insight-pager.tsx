@@ -93,7 +93,7 @@ export class AtomicInsightPager
             this.focusOnFirstResultAndScrollToTop();
           }}
         />
-        <PagerPageButtons>
+        <PagerPageButtons label={this.bindings.i18n.t('pagination')}>
           {this.pagerState.currentPages.map((pageNumber) => {
             return (
               <PagerPageButton

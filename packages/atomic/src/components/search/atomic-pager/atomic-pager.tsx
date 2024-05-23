@@ -110,7 +110,7 @@ export class AtomicPager implements InitializableComponent {
               this.focusOnFirstResultAndScrollToTop();
             }}
           />
-          <PagerPageButtons>
+          <PagerPageButtons label={this.bindings.i18n.t('pagination')}>
             {this.pagerState.currentPages.map((pageNumber) => {
               return (
                 <PagerPageButton

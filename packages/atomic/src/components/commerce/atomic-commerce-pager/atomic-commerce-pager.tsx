@@ -122,7 +122,7 @@ export class AtomicCommercePager
               this.focusOnFirstResultAndScrollToTop();
             }}
           />
-          <PagerPageButtons>
+          <PagerPageButtons label={this.bindings.i18n.t('pagination')}>
             {pagesRange.map((pageNumber) => {
               return (
                 <PagerPageButton

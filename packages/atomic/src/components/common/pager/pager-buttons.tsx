@@ -17,6 +17,10 @@ export interface PagerPageButtonProps
   text: string;
 }
 
+export interface PagerPageButtonsProps {
+  label: string;
+}
+
 export const PagerPreviousButton: FunctionalComponent<
   PagerNavigationButtonProps
 > = (props) => {
@@ -71,12 +75,15 @@ export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
   );
 };
 
-export const PagerPageButtons: FunctionalComponent = (_, children) => {
+export const PagerPageButtons: FunctionalComponent<PagerPageButtonsProps> = (
+  props,
+  children
+) => {
   return (
     <div
       part="page-buttons"
       role="radiogroup"
-      aria-label="Pagination"
+      aria-label={props.label}
       class="contents"
     >
       {...children}
