@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -35,7 +35,7 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -267,7 +267,14 @@ export namespace Components {
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -371,9 +378,13 @@ export namespace Components {
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -5401,7 +5412,14 @@ declare namespace LocalJSX {
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5488,9 +5506,13 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
