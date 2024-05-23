@@ -26,7 +26,7 @@ import {
  */
 @Component({
   tag: 'atomic-result',
-  styleUrl: '../../common/result/result.pcss',
+  styleUrl: 'atomic-result.pcss',
   shadow: true,
 })
 export class AtomicResult {
