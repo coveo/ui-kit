@@ -109,10 +109,6 @@ export class AtomicProductChildren
   private getImageUrl(child: ChildProduct) {
     const value = ProductTemplatesHelpers.getProductProperty(child, this.field);
 
-    if (!value && this.fallback) {
-      return filterProtocol(this.fallback);
-    }
-
     if (typeof value === 'string') {
       return filterProtocol(value);
     }
@@ -121,7 +117,7 @@ export class AtomicProductChildren
       return filterProtocol(value[0]);
     }
 
-    return filterProtocol(this.fallback ?? '');
+    return filterProtocol(this.fallback);
   }
 
   private get activeChildClasses() {
