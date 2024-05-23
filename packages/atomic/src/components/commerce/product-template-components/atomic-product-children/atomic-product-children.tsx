@@ -51,6 +51,8 @@ export class AtomicProductChildren
 
   /**
    * The non-localized label to display for the product children section.
+   *
+   * Set this to an empty string if you do not want to render the label at all.
    */
   @Prop() public label: string = 'available-in';
 
@@ -139,6 +141,16 @@ export class AtomicProductChildren
     );
   }
 
+  private renderLabel() {
+    return (
+      <div class="my-2 font-semibold text-neutral-dark">
+        <atomic-commerce-text
+          value={this.bindings.i18n.t(this.label)}
+        ></atomic-commerce-text>
+      </div>
+    );
+  }
+
   public render() {
     if (this.children.length === 0) {
       return null;
@@ -146,11 +158,7 @@ export class AtomicProductChildren
 
     return (
       <div>
-        <div class="my-2 font-semibold text-neutral-dark">
-          <atomic-commerce-text
-            value={this.bindings.i18n.t(this.label)}
-          ></atomic-commerce-text>
-        </div>
+        {this.label.trim() !== '' && this.renderLabel()}
         <div>{this.children.map((child) => this.renderChild(child))}</div>
       </div>
     );

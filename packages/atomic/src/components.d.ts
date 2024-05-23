@@ -1649,7 +1649,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The non-localized label to display for the product children section.
+          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
          */
         "label": string;
     }
@@ -6696,7 +6696,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * The non-localized label to display for the product children section.
+          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
          */
         "label"?: string;
         "onAtomic/selectChildProduct"?: (event: AtomicProductChildrenCustomEvent<SelectChildProductEventArgs>) => void;
