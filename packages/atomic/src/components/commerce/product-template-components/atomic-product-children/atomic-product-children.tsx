@@ -1,5 +1,9 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Product, ChildProduct} from '@coveo/headless/commerce';
+import {
+  Product,
+  ChildProduct,
+  ProductTemplatesHelpers,
+} from '@coveo/headless/commerce';
 import {
   Component,
   h,
@@ -45,13 +49,24 @@ export class AtomicProductChildren
 
   public error!: Error;
 
-  // TODO: We could leverage the totalNumberOfRelatedProducts property on the Product to show the number of available
-  // children (e.g., ...and 3 more). This would require some UX design though.
-
   /**
    * The non-localized label to display for the product children section.
    */
   @Prop() public label: string = 'available-in';
+
+  /**
+   * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.
+   *
+   * This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+   */
+  @Prop({reflect: true}) field: string = 'ec_thumbnails';
+
+  /**
+   * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+   */
+  @Prop({reflect: true}) fallback: string =
+    // eslint-disable-next-line @cspell/spellchecker
+    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="gray"%3E%3C/rect%3E%3C/svg%3E';
 
   @Event({
     eventName: 'atomic/selectChildProduct',
@@ -84,15 +99,28 @@ export class AtomicProductChildren
     });
   }
 
+  private getImageUrl(child: ChildProduct) {
+    const value = ProductTemplatesHelpers.getProductProperty(child, this.field);
+
+    if (!value && this.fallback) {
+      return this.fallback;
+    }
+
+    return Array.isArray(value) ? value[0] : value;
+  }
+
+  private get activeChildClasses() {
+    return ' box-border rounded border border-primary ';
+  }
+
+  // TODO: We could leverage the totalNumberOfRelatedProducts property on the Product to show the number of available children (e.g., ...and 3 more). This would require some UX design however.
   private renderChild(child: ChildProduct) {
     return (
       <button
-        class={`product-child${child.permanentid === this.activeChildId ? ' box-border rounded border border-primary ' : ' '}bg-contain bg-no-repeat`}
+        class={`product-child${child.permanentid === this.activeChildId ? this.activeChildClasses : ' '}`}
         title={child.ec_name}
-        style={{backgroundImage: `url(${child.ec_images![0]})`}}
-        data-src={child.ec_thumbnails![0]}
-        onKeyPress={(e) =>
-          e.key === 'Enter' &&
+        onKeyPress={(event) =>
+          event.key === 'Enter' &&
           this.onSelectChild(child.permanentid, this.product.permanentid)
         }
         onMouseEnter={() =>
@@ -101,7 +129,13 @@ export class AtomicProductChildren
         onTouchStart={() =>
           this.onSelectChild(child.permanentid, this.product.permanentid)
         }
-      ></button>
+      >
+        <img
+          class="aspect-square p-1"
+          src={this.getImageUrl(child)}
+          loading="lazy"
+        />
+      </button>
     );
   }
 
