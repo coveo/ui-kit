@@ -6,10 +6,6 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {
-  corePromoteChildToParentDefinition,
-  CorePromoteChildToParentActionCreatorPayload,
-} from '../../../controllers/commerce/core/common';
-import {
   CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections';
@@ -203,8 +199,18 @@ export const fetchInstantProducts = createAsyncThunk<
   }
 );
 
+export interface PromoteChildToParentActionCreatorPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
+};
+
 export const promoteChildToParent = createAction(
   'commerce/search/promoteChildToParent',
-  (payload: CorePromoteChildToParentActionCreatorPayload) =>
-    validatePayload(payload, corePromoteChildToParentDefinition)
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

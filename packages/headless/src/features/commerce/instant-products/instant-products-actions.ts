@@ -1,8 +1,5 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  corePromoteChildToParentDefinition,
-  CorePromoteChildToParentActionCreatorPayload,
-} from '../../../controllers/commerce/core/common';
 import {
   validatePayload,
   requiredEmptyAllowedString,
@@ -29,10 +26,6 @@ export interface UpdateInstantProductQueryActionCreatorPayload
 
 export interface ClearExpiredInstantProductsActionCreatorPayload
   extends CoreInstantProductActionCreatorPayload {}
-
-export interface PromoteInstantProductChildToParentActionCreatorPayload
-  extends UpdateInstantProductQueryActionCreatorPayload,
-    CorePromoteChildToParentActionCreatorPayload {}
 
 const instantProductsIdDefinition = {
   id: requiredNonEmptyString,
@@ -61,13 +54,20 @@ export const clearExpiredProducts = createAction(
     validatePayload(payload, instantProductsIdDefinition)
 );
 
-const promoteInstantProductChildToParentDefinition = {
-  ...corePromoteChildToParentDefinition,
+export interface PromoteChildToParentActionCreatorPayload
+  extends UpdateInstantProductQueryActionCreatorPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
   ...instantProductsQueryDefinition,
 };
 
 export const promoteChildToParent = createAction(
   'commerce/instantProducts/promoteChildToParent',
-  (payload: PromoteInstantProductChildToParentActionCreatorPayload) =>
-    validatePayload(payload, promoteInstantProductChildToParentDefinition)
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

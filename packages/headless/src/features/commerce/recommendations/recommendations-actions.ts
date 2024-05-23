@@ -1,3 +1,4 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -5,10 +6,6 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
-import {
-  corePromoteChildToParentDefinition,
-  CorePromoteChildToParentActionCreatorPayload,
-} from '../../../controllers/commerce/core/common';
 import {RecommendationsSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
@@ -128,11 +125,20 @@ export const registerRecommendationsSlot = createAction(
     validatePayload(payload, recommendationsSlotDefinition)
 );
 
+export interface PromoteChildToParentActionCreatorPayload
+  extends SlotIdPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
+  ...recommendationsSlotDefinition,
+};
+
 export const promoteChildToParent = createAction(
   'commerce/recommendations/promoteChildToParent',
-  (payload: CorePromoteChildToParentActionCreatorPayload & SlotIdPayload) =>
-    validatePayload(payload, {
-      ...corePromoteChildToParentDefinition,
-      ...recommendationsSlotDefinition,
-    })
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

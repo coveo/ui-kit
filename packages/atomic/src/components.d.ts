@@ -27,6 +27,7 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -56,6 +57,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -1673,7 +1675,7 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface AtomicProduct {
         /**
@@ -1718,6 +1720,20 @@ export namespace Components {
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    interface AtomicProductChildren {
+        /**
+          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+         */
+        "fallback": string;
+        /**
+          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+         */
+        "field": string;
+        /**
+          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
+         */
+        "label": string;
+    }
     interface AtomicProductDescription {
         /**
           * The name of the description field to use.
@@ -1733,7 +1749,7 @@ export namespace Components {
      */
     interface AtomicProductImage {
         /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback": string;
         /**
@@ -3213,6 +3229,10 @@ export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
 }
+export interface AtomicProductChildrenCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicProductChildrenElement;
+}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -4142,13 +4162,30 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
     var HTMLAtomicProductElement: {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
+    };
+    interface HTMLAtomicProductChildrenElementEventMap {
+        "atomic/selectChildProduct": SelectChildProductEventArgs;
+    }
+    interface HTMLAtomicProductChildrenElement extends Components.AtomicProductChildren, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicProductChildrenElement: {
+        prototype: HTMLAtomicProductChildrenElement;
+        new (): HTMLAtomicProductChildrenElement;
     };
     interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
     }
@@ -5182,6 +5219,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
@@ -6794,7 +6832,7 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface AtomicProduct {
         /**
@@ -6839,6 +6877,21 @@ declare namespace LocalJSX {
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    interface AtomicProductChildren {
+        /**
+          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+         */
+        "fallback"?: string;
+        /**
+          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+         */
+        "field"?: string;
+        /**
+          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
+         */
+        "label"?: string;
+        "onAtomic/selectChildProduct"?: (event: AtomicProductChildrenCustomEvent<SelectChildProductEventArgs>) => void;
+    }
     interface AtomicProductDescription {
         /**
           * The name of the description field to use.
@@ -6854,7 +6907,7 @@ declare namespace LocalJSX {
      */
     interface AtomicProductImage {
         /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback"?: string;
         /**
@@ -8303,6 +8356,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
@@ -8659,9 +8713,10 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * The `atomic-product` component is used internally by the `atomic-product-list` component.
+             * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            "atomic-product-children": LocalJSX.AtomicProductChildren & JSXBase.HTMLAttributes<HTMLAtomicProductChildrenElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.
