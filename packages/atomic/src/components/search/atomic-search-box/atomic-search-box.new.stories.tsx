@@ -20,5 +20,5 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-breadbox',
+  name: 'atomic-search-box',
 };
