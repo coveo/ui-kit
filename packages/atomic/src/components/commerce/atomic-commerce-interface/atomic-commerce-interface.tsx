@@ -12,6 +12,8 @@ import {
   buildCommerceEngine,
   buildProductListing,
   ProductListing,
+  Context,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -67,6 +69,7 @@ export class AtomicCommerceInterface
 {
   private urlManager!: UrlManager;
   private searchStatus!: Search | ProductListing;
+  private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
@@ -188,10 +191,6 @@ export class AtomicCommerceInterface
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
@@ -200,6 +199,8 @@ export class AtomicCommerceInterface
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
+
+    this.context.setLanguage(this.language);
     this.commonInterfaceHelper.onLanguageChange();
   }
 
@@ -383,6 +384,10 @@ export class AtomicCommerceInterface
     });
   }
 
+  private initContext() {
+    this.context = buildContext(this.engine!);
+  }
+
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
 
@@ -406,6 +411,7 @@ export class AtomicCommerceInterface
 
     this.initSearchStatus();
     this.initUrlManager();
+    this.initContext();
     this.initialized = true;
   }
 
