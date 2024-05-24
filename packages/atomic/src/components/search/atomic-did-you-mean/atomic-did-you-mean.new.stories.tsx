@@ -13,6 +13,7 @@ const {decorator, play} = wrapInSearchInterface({
             {
               offset: 0,
               length: 4,
+              // eslint-disable-next-line @cspell/spellchecker
               originalWord: 'tset',
               correctedWord: 'test',
             },
