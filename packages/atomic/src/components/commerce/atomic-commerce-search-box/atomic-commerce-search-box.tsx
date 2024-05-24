@@ -232,7 +232,7 @@ export class AtomicCommerceSearchBox
     }
     const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
       value,
-      enableQuerySyntax: this.enableQuerySyntax,
+      enableQuerySyntax: false,
     };
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
