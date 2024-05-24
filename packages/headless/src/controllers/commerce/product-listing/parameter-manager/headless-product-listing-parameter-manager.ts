@@ -1,19 +1,19 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
+import {
+  activeParametersSelector,
+  initialParametersSelector,
+} from '../../../../features/commerce/parameters/parameters-selectors';
+import {
+  ProductListingParameters,
+  restoreProductListingParameters,
+} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   buildCoreParameterManager,
   ParameterManager,
   ParameterManagerProps,
 } from '../../core/parameter-manager/headless-core-parameter-manager';
-import {
-  ProductListingParameters,
-  restoreProductListingParameters
-} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
-import {
-  activeParametersSelector,
-  initialParametersSelector
-} from '../../../../features/commerce/parameters/parameters-selectors';
-import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
 
 /**
  * Creates a `ParameterManager` controller instance for commerce listings.

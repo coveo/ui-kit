@@ -30,13 +30,13 @@ export function getFacets<Value, Request, Parameters>(
   section: Record<string, {request: Request}> | undefined,
   facetIsEnabled: (facetId: string) => boolean,
   valuesSelector: (request: Request) => Value[],
-  out: keyof Parameters,
+  out: keyof Parameters
 ) {
   if (section === undefined) {
     return {};
   }
 
-  const facets = (Object.entries(section!))
+  const facets = Object.entries(section!)
     .filter(([facetId]) => facetIsEnabled(facetId))
     .map(([facetId, {request}]) => {
       const selectedValues = valuesSelector(request);

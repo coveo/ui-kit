@@ -1,17 +1,21 @@
-import {CommerceFacetSetState} from './facet-set-state';
-import {Parameters} from '../../parameters/parameters-actions';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
-import {
-  AnyFacetValueRequest,
-  CategoryFacetRequest, CategoryFacetValueRequest,
-  DateFacetRequest,
-  NumericFacetRequest,
-  RegularFacetRequest
-} from './interfaces/request';
 import {FacetValueRequest} from '../../../facets/facet-set/interfaces/request';
 import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
+import {Parameters} from '../../parameters/parameters-actions';
+import {CommerceFacetSetState} from './facet-set-state';
+import {
+  AnyFacetValueRequest,
+  CategoryFacetRequest,
+  CategoryFacetValueRequest,
+  DateFacetRequest,
+  NumericFacetRequest,
+  RegularFacetRequest,
+} from './interfaces/request';
 
-export function restoreFromParameters(state: CommerceFacetSetState, action: { payload: Parameters }) {
+export function restoreFromParameters(
+  state: CommerceFacetSetState,
+  action: {payload: Parameters}
+) {
   if (action.payload.f) {
     restoreRegularFacets(state, action.payload.f);
   }
@@ -26,35 +30,39 @@ export function restoreFromParameters(state: CommerceFacetSetState, action: { pa
   }
 }
 
-function restoreRegularFacets(state: CommerceFacetSetState, parameterFacets: Record<string, string[]>) {
-  const regularFacetIds = Object.keys(state)
-    .filter((id) => state[id]?.request.type === 'regular');
+function restoreRegularFacets(
+  state: CommerceFacetSetState,
+  parameterFacets: Record<string, string[]>
+) {
+  const regularFacetIds = Object.keys(state).filter(
+    (id) => state[id]?.request.type === 'regular'
+  );
 
-  regularFacetIds
-    .forEach((id) => {
-      const request = state[id]!.request as RegularFacetRequest;
-      const selectedValues = parameterFacets[id] || [];
-      const activeValueCount = selectedValues.length;
-      const idleValues = request.values.filter(
-        (facetValue) =>
-          !selectedValues.includes(facetValue.value)
-      );
+  regularFacetIds.forEach((id) => {
+    const request = state[id]!.request as RegularFacetRequest;
+    const selectedValues = parameterFacets[id] || [];
+    const activeValueCount = selectedValues.length;
+    const idleValues = request.values.filter(
+      (facetValue) => !selectedValues.includes(facetValue.value)
+    );
 
-      request.values = [
-        ...selectedValues.map(buildSelectedFacetValueRequest),
-        ...idleValues.map(restoreFacetValueToIdleState),
-      ] as FacetValueRequest[];
-      request.preventAutoSelect = activeValueCount > 0;
-      request.numberOfValues = Math.max(
-        activeValueCount,
-        request.numberOfValues
-      );
-    });
+    request.values = [
+      ...selectedValues.map(buildSelectedFacetValueRequest),
+      ...idleValues.map(restoreFacetValueToIdleState),
+    ] as FacetValueRequest[];
+    request.preventAutoSelect = activeValueCount > 0;
+    request.numberOfValues = Math.max(activeValueCount, request.numberOfValues);
+  });
 }
 
-function restoreRangeFacets<T extends (NumericFacetRequest | DateFacetRequest)>(state: CommerceFacetSetState, parameterFacets: Record<string, T['values']>, type: 'dateRange' | 'numericalRange') {
-  const numericFacetIds = Object.keys(state)
-    .filter((id) => state[id]?.request.type === type);
+function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
+  state: CommerceFacetSetState,
+  parameterFacets: Record<string, T['values']>,
+  type: 'dateRange' | 'numericalRange'
+) {
+  const numericFacetIds = Object.keys(state).filter(
+    (id) => state[id]?.request.type === type
+  );
 
   type Range = T['values'][number];
   numericFacetIds.forEach((id) => {
@@ -80,7 +88,10 @@ function restoreRangeFacets<T extends (NumericFacetRequest | DateFacetRequest)>(
   });
 }
 
-function restoreCategoryFacets(state: CommerceFacetSetState, parameterFacets: Record<string, string[]>) {
+function restoreCategoryFacets(
+  state: CommerceFacetSetState,
+  parameterFacets: Record<string, string[]>
+) {
   Object.keys(state).forEach((id) => {
     const request = state[id]!.request as CategoryFacetRequest;
     const path = parameterFacets[id] || [];
@@ -100,7 +111,10 @@ export function restoreFacetValueToIdleState(
   return {...facetValue, state: 'idle'};
 }
 
-function findRange<T extends (NumericRangeRequest | DateRangeRequest)>(values: T[], value: T) {
+function findRange<T extends NumericRangeRequest | DateRangeRequest>(
+  values: T[],
+  value: T
+) {
   const {start, end} = value;
   return values.find((range) => range.start === start && range.end === end);
 }
@@ -115,7 +129,10 @@ export function selectPath(
   request.preventAutoSelect = true;
 }
 
-export function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
+export function buildCurrentValuesFromPath(
+  path: string[],
+  retrieveCount: number
+) {
   if (!path.length) {
     return [];
   }
