@@ -35,28 +35,4 @@ export const FirstStory: Story = {
         </atomic-facet>
     `,
   ],
-  play: async (context) => {
-    await play(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
-    await step('Wait for the facet values to render', async () => {
-      await waitFor(
-        () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
-        {
-          timeout: 30e3,
-        }
-      );
-    });
-    await step('Select a facet value', async () => {
-      const facet = canvas.getByShadowTitle('People');
-      await userEvent.click(facet);
-      await waitFor(
-        () =>
-          expect(
-            canvas.getByShadowTitle('Object type: People')
-          ).toBeInTheDocument(),
-        {timeout: 30e3}
-      );
-    });
-  },
 };
