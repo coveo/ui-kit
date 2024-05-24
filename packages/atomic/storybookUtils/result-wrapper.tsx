@@ -62,6 +62,7 @@ export const wrapInResult = (
           }
         </style>
       </atomic-search-interface>
+      <div style="hidden">${unsafeHTML(tempResultTemplate.innerHTML)}</div>
     `;
   },
   play: async ({canvasElement, step}) => {
