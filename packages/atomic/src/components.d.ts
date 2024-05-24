@@ -352,8 +352,7 @@ export namespace Components {
           * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
          */
         "type": | 'search'
-    | 'product-listing'
-    | 'recommendations';
+    | 'product-listing';
     }
     interface AtomicCommerceLayout {
         /**
@@ -5473,8 +5472,7 @@ declare namespace LocalJSX {
           * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
          */
         "type"?: | 'search'
-    | 'product-listing'
-    | 'recommendations';
+    | 'product-listing';
     }
     interface AtomicCommerceLayout {
         /**

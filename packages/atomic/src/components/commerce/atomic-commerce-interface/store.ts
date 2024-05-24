@@ -1,9 +1,9 @@
 import {
   CommerceEngine,
+  Selectors,
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
-  responseIdSelectorFromEngine,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -48,7 +48,9 @@ export interface FacetInfoMap {
     | (FacetInfo & FacetValueFormat<DateFacetValue>);
 }
 
-export function createAtomicCommerceStore(): AtomicCommerceStore {
+export function createAtomicCommerceStore(
+  type: 'search' | 'product-listing'
+): AtomicCommerceStore {
   const commonStore = createAtomicCommonStore<AtomicStoreData>({
     loadingFlags: [],
     facets: {},
@@ -82,7 +84,16 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
     },
 
     getUniqueIDFromEngine(engine: CommerceEngine): string {
-      return responseIdSelectorFromEngine(engine);
+      switch (type) {
+        case 'search':
+          return Selectors.Search.responseIdSelectorFromEngine(engine);
+        case 'product-listing':
+          return Selectors.ProductListing.responseIdSelectorFromEngine(engine);
+        default:
+          throw new Error(
+            `getUniqueIDFromEngine not implemented for this interface type, ${type}`
+          );
+      }
     },
   };
 }
