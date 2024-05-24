@@ -113,7 +113,7 @@ export class AtomicCommerceRecommendationInterface
   @Prop({reflect: true}) public language = 'en';
 
   /**
-   * Whether analytics should be enabled.
+   * Whether to enable analytics.
    */
   @Prop({reflect: true}) public analytics = true;
 
