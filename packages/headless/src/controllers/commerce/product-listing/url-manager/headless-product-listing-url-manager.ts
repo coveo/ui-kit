@@ -10,11 +10,11 @@ import {buildProductListingParameterManager} from '../parameter-manager/headless
 import {loadProductListingReducer} from '../utils/load-product-listing-reducers';
 
 /**
- * Creates a `UrlManager` controller instance.
+ * Creates a `UrlManager` sub-controller.
  *
- * @param engine - The headless commerce engine.
- * @param props - The configurable `UrlManager` properties.
- * @returns A `UrlManager` controller instance.
+ * @param engine - The commerce engine.
+ * @param props - The properties for the `UrlManager` sub-controller.
+ * @returns A `UrlManager` sub-controller.
  */
 export function buildProductListingUrlManager(
   engine: CommerceEngine,

@@ -10,11 +10,13 @@ export const fromAnalyticsStateToAnalyticsParams = async (
   eventDescription?: EventDescription
 ): Promise<AnalyticsParam> => {
   const isNextAnalytics = s.analyticsMode === 'next';
+  const isDefaultReferrer = s.originLevel3 === 'default';
   return {
     analytics: {
       clientId: await getVisitorID(s),
       clientTimestamp: new Date().toISOString(),
-      documentReferrer: s.originLevel3,
+      documentReferrer:
+        isNextAnalytics && isDefaultReferrer ? null : s.originLevel3,
       originContext: s.originContext,
       ...(eventDescription && {
         actionCause: eventDescription.actionCause,
