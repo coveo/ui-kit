@@ -694,7 +694,7 @@ export namespace Components {
         "min"?: string;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -3507,7 +3507,7 @@ declare global {
         new (): HTMLAtomicFacetDateInputElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -5798,7 +5798,7 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -8408,7 +8408,7 @@ declare module "@stencil/core" {
              */
             "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
