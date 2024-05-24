@@ -12,6 +12,7 @@ sarifs
 **.cy.ts.mp4
 .cspellcache
 scripts/translation-gpt/temporary.json
+.nx
 
 # CI Release
 topology.json
