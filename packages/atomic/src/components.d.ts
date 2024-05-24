@@ -432,7 +432,7 @@ export namespace Components {
          */
         "CspNonce"?: string;
         /**
-          * Whether analytics should be enabled.
+          * Whether to enable analytics.
          */
         "analytics": boolean;
         /**
@@ -5669,7 +5669,7 @@ declare namespace LocalJSX {
          */
         "CspNonce"?: string;
         /**
-          * Whether analytics should be enabled.
+          * Whether to enable analytics.
          */
         "analytics"?: boolean;
         /**
