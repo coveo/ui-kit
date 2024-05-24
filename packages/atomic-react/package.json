@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "2.9.4",
+  "version": "2.9.5",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "recommendation/"
+    "recommendation/",
+    "commerce/"
   ],
   "dependencies": {
     "@coveo/atomic": "2.65.4"

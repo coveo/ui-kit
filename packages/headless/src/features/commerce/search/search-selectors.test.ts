@@ -1,8 +1,10 @@
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {buildMockProduct} from '../../../test/mock-product';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  queryExecutedFromResponseSelector,
   requestIdSelector,
   responseIdSelector,
 } from './search-selectors';
@@ -123,5 +125,33 @@ describe('commerce search selectors', () => {
       },
     });
     expect(moreProductsAvailableSelector(state)).toBe(false);
+  });
+
+  it('#queryExecutedFromResponseSelector should return the corrected query when it is set in the response', () => {
+    const state = buildMockCommerceState({
+      commerceQuery: {
+        query: 'original query',
+      },
+    });
+    const response = {
+      queryCorrection: {
+        correctedQuery: 'corrected query',
+      },
+    } as SearchCommerceSuccessResponse;
+    expect(queryExecutedFromResponseSelector(state, response)).toEqual(
+      'corrected query'
+    );
+  });
+
+  it('#queryExecutedFromResponseSelector should return the original query when the corrected query is not set in the response', () => {
+    const state = buildMockCommerceState({
+      commerceQuery: {
+        query: 'original query',
+      },
+    });
+    const response = {} as SearchCommerceSuccessResponse;
+    expect(queryExecutedFromResponseSelector(state, response)).toEqual(
+      'original query'
+    );
   });
 });

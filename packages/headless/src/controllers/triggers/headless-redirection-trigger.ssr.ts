@@ -1,11 +1,13 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {
-  RedirectionTrigger,
-  buildRedirectionTrigger,
-} from './headless-redirection-trigger';
+import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger';
+import {buildRedirectionTrigger} from './headless-redirection-trigger';
 
-export * from './headless-redirection-trigger';
+export {buildRedirectionTrigger} from './headless-redirection-trigger';
+export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+} from '../core/triggers/headless-core-redirection-trigger';
 
 export interface RedirectionTriggerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, RedirectionTrigger> {}
