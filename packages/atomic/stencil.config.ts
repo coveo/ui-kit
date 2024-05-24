@@ -28,33 +28,6 @@ function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
     .filter((m) => m !== null)
     .flatMap((m) => m![1]);
 }
-/*
-const commerceComponents = readdirSync('src/components/commerce', {
-  recursive: true,
-})
-  .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
-  .filter((m) => m !== null)
-  .flatMap((m) => m![1]);
-
-const searchComponents = readdirSync('src/components/search', {
-  recursive: true,
-})
-  .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
-  .filter((m) => m !== null)
-  .flatMap((m) => m![1]);
-
-const recommendationsComponents = readdirSync(
-  'src/components/recommendations',
-  {
-    recursive: true,
-  }
-)
-  .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
-  .filter((m) => m !== null)
-  .flatMap((m) => m![1]);
-
-console.log(commerceComponents, searchComponents);*/
-
 function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
