@@ -1749,7 +1749,7 @@ export namespace Components {
      */
     interface AtomicProductImage {
         /**
-          * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback": string;
         /**
@@ -6911,7 +6911,7 @@ declare namespace LocalJSX {
      */
     interface AtomicProductImage {
         /**
-          * A fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
          */
         "fallback"?: string;
         /**
