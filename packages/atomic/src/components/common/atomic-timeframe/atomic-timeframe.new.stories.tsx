@@ -1,9 +1,7 @@
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
-import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
-import {within} from 'shadow-dom-testing-library';
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -27,12 +25,8 @@ export const FirstStory: Story = {
   name: 'atomic-timeframe',
   args: {unit: 'year'},
   decorators: [
-    (story) => html`  
-        <atomic-timeframe-facet
-          field="date"
-        >
-        ${story()}
-        </atomic-timeframe-facet>
+    (story) => html`
+      <atomic-timeframe-facet field="date"> ${story()} </atomic-timeframe-facet>
     `,
   ],
 };
