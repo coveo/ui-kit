@@ -17,7 +17,6 @@ const meta: Meta = {
   component: 'atomic-result-image',
   title: 'Atomic/ResultList/ResultImage',
   id: 'atomic-result-image',
-  loaders: [async () => {}],
   render: renderComponent,
   decorators: [decorator],
   parameters: {
