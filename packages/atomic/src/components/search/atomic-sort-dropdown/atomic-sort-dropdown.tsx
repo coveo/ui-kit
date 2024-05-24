@@ -25,6 +25,8 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 /**
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
  *
+ * @slot default - The `atomic-sort-expression` of the dropdown are slotted in.
+ *
  * @part label - The "Sort by" label of the `<select>` element.
  * @part select-parent - The `<select>` element parent.
  * @part select - The `<select>` element of the dropdown list.
