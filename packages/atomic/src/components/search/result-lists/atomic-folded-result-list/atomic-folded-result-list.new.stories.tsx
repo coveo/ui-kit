@@ -1,20 +1,37 @@
-import defaultStory from 'atomic-storybook/default-story';
-import {html} from 'lit-html';
+import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import type {Meta, StoryObj} from '@storybook/web-components';
 
-const {defaultModuleExport, exportedStory} = defaultStory(
-  'atomic-folded-result-list',
-  {},
-  {
-    engineConfig: {
-      preprocessRequest: (r) => {
-        const parsed = JSON.parse(r.body as string);
-        parsed.aq = '@source==("iNaturalistTaxons")';
-        parsed.fieldsToInclude = [...(parsed.fieldsToInclude || []), 'source'];
-        r.body = JSON.stringify(parsed);
-        return r;
-      },
-    },
-    additionalChildMarkup: () => html`
+const {decorator, play} = wrapInSearchInterface({
+  preprocessRequest: (r) => {
+    const parsed = JSON.parse(r.body as string);
+    parsed.aq = '@source==("iNaturalistTaxons")';
+    parsed.fieldsToInclude = [...(parsed.fieldsToInclude || []), 'source'];
+    r.body = JSON.stringify(parsed);
+    return r;
+  },
+});
+
+const meta: Meta = {
+  component: 'atomic-folded-result-list',
+  title: 'Atomic/FoldedResultList',
+  id: 'atomic-folded-result-list',
+
+  render: renderComponent,
+  decorators: [decorator],
+  parameters: {
+    controls: {expanded: true, hideNoControlsWarning: true},
+  },
+  play,
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const Default: Story = {
+  name: 'atomic-folded-result-list',
+  args: {
+    default: `
       <atomic-result-template>
         <template>
           <atomic-result-section-visual>
@@ -127,12 +144,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
         </template>
       </atomic-result-template>
     `,
-  }
-);
-
-export default {
-  ...defaultModuleExport,
-  title: 'Atomic/FoldedResultList',
-  id: 'atomic-folded-result-list',
+  },
 };
-export const Default = exportedStory;
