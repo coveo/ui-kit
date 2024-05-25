@@ -3,23 +3,14 @@ import {wrapInResult} from '@coveo/atomic/storybookUtils/result-wrapper';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import type {Meta, StoryObj} from '@storybook/web-components';
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult({
-  search: {
-    preprocessSearchResponseMiddleware: (res) => {
-      res.body.results.forEach(
-        (r) => (r.raw['randomimage'] = 'https://picsum.photos/200')
-      );
-      return res;
-    },
-  },
-});
+const {decorator: resultDecorator, engineConfig} = wrapInResult();
 const {decorator: searchInterfaceDecorator, play} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
-  component: 'atomic-result-image',
-  title: 'Atomic/ResultList/ResultImage',
-  id: 'atomic-result-image',
+  component: 'atomic-result-printable-uri',
+  title: 'Atomic/ResultList/ResultPrintableUri',
+  id: 'atomic-result-printable-uri',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],
   parameters: {
@@ -31,9 +22,6 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const FirstStory: Story = {
-  name: 'atomic-result-image',
-  args: {
-    field: 'randomimage',
-  },
+export const Default: Story = {
+  name: 'atomic-result-printable-uri',
 };

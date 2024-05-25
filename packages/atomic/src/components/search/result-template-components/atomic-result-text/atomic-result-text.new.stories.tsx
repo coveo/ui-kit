@@ -6,9 +6,7 @@ import type {Meta, StoryObj} from '@storybook/web-components';
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
-      res.body.results.forEach(
-        (r) => (r.raw['randomimage'] = 'https://picsum.photos/200')
-      );
+      res.body.results.forEach((r) => (r.excerpt = 'Some Text content'));
       return res;
     },
   },
@@ -17,9 +15,9 @@ const {decorator: searchInterfaceDecorator, play} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
-  component: 'atomic-result-image',
-  title: 'Atomic/ResultList/ResultImage',
-  id: 'atomic-result-image',
+  component: 'atomic-result-text',
+  title: 'Atomic/ResultList/ResultText',
+  id: 'atomic-result-text',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],
   parameters: {
@@ -31,9 +29,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const FirstStory: Story = {
-  name: 'atomic-result-image',
-  args: {
-    field: 'randomimage',
-  },
+export const Default: Story = {
+  name: 'atomic-result-text',
+  args: {field: 'excerpt'},
 };

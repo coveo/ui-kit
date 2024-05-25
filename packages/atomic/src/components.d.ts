@@ -2442,7 +2442,6 @@ export namespace Components {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -4552,7 +4551,6 @@ declare global {
     };
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
@@ -7490,7 +7488,6 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -8807,7 +8804,6 @@ declare module "@stencil/core" {
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             /**
              * The `atomic-result-number` component renders the value of a number result field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
              */
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             /**
