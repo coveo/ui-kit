@@ -11,7 +11,7 @@ import {
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.
  * This allows the Stencil component to fetch the current result from its rendered parent, the `atomic-result` component.
  *
- * Example:
+ * @example
  * @ResultContext() private result!: Result;
  *
  * For more information and examples, view the "Utilities" section of the readme.

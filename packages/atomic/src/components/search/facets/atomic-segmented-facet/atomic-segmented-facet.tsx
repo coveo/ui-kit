@@ -89,7 +89,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
 
   /**
    * The required facets and values for this facet to be displayed.
-   * Examples:
+   * @example
    * ```html
    * <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>
    *
@@ -113,7 +113,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    * If you specify a list of values for this option, the facet only uses these values (if they are available in
    * the current result set).
    *
-   * Example:
+   * @example
    *
    * The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the
    * current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use
@@ -137,7 +137,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    *
    * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
    *
-   * Example:
+   * @example
    *
    * The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.
    *

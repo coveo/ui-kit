@@ -113,7 +113,7 @@ export class AtomicSearchInterface
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
    * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
    *
-   * Example: "America/Montreal"
+   * @example "America/Montreal"
    */
   @Prop({reflect: true}) public timezone?: string;
 
@@ -156,7 +156,7 @@ export class AtomicSearchInterface
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
-   * Example: "/mypublicpath/languages"
+   * @example "/mypublicpath/languages"
    *
    */
   @Prop({reflect: true}) public languageAssetsPath = './lang';
@@ -164,7 +164,7 @@ export class AtomicSearchInterface
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
    *
-   * Example: "/mypublicpath/icons"
+   * @example "/mypublicpath/icons"
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
@@ -186,7 +186,7 @@ export class AtomicSearchInterface
    * Otherwise you may see console errors such as
    *  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]
    *  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-   * @example:
+   * @example
    * ```html
    * <script nonce="<YOUR_GENERATED_NONCE>">
    *  import {setNonce} from '@coveo/atomic';
