@@ -4,22 +4,21 @@ import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interfa
 import type {Meta, StoryObj} from '@storybook/web-components';
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
-  search: {
-    preprocessSearchResponseMiddleware: (res) => {
-      res.body.results.forEach(
-        (r) => (r.raw['randomimage'] = 'https://picsum.photos/200')
-      );
-      return res;
-    },
+  preprocessRequest: (r) => {
+    const request = JSON.parse(r.body!.toString());
+    request.cq =
+      '@language=French @language=Portuguese @language=German @language=Arabic @language=Japanese @language=English';
+    r.body = JSON.stringify(request);
+    return r;
   },
 });
 const {decorator: searchInterfaceDecorator, play} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
-  component: 'atomic-result-image',
-  title: 'Atomic/ResultList/ResultImage',
-  id: 'atomic-result-image',
+  component: 'atomic-result-multi-value-text',
+  title: 'Atomic/ResultList/ResultMultiValueText',
+  id: 'atomic-result-multi-value-text',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],
   parameters: {
@@ -31,9 +30,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const FirstStory: Story = {
-  name: 'atomic-result-image',
-  args: {
-    field: 'randomimage',
-  },
+export const Default: Story = {
+  name: 'atomic-result-multi-value-text',
+  args: {field: 'language'},
 };

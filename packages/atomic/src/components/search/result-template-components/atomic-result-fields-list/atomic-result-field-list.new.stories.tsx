@@ -1,11 +1,31 @@
-import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
-import {html} from 'lit-html';
+import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+import {wrapInResult} from '@coveo/atomic/storybookUtils/result-wrapper';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import type {Meta, StoryObj} from '@storybook/web-components';
 
-const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'atomic-result-fields-list',
-  {},
-  {
-    additionalChildMarkup: () => html`
+const {decorator: resultDecorator, engineConfig} = wrapInResult();
+const {decorator: searchInterfaceDecorator, play} =
+  wrapInSearchInterface(engineConfig);
+
+const meta: Meta = {
+  component: 'atomic-result-fields-list',
+  title: 'Atomic/ResultList/ResultFieldsList',
+  id: 'atomic-result-fields-list',
+  render: renderComponent,
+  decorators: [resultDecorator, searchInterfaceDecorator],
+  parameters: {
+    controls: {expanded: true, hideNoControlsWarning: true},
+  },
+  play,
+};
+
+export default meta;
+type Story = StoryObj;
+
+export const Default: Story = {
+  name: 'atomic-result-fields-list',
+  args: {
+    default: `
       <style>
         .field {
           display: inline-flex;
@@ -59,12 +79,5 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
         <atomic-result-date></atomic-result-date>
       </span>
     `,
-  }
-);
-
-export default {
-  ...defaultModuleExport,
-  title: 'Atomic/ResultList/ResultFieldsList',
-  id: 'atomic-result-fields-list',
+  },
 };
-export const Default = exportedStory;

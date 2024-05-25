@@ -7,7 +7,7 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
       res.body.results.forEach(
-        (r) => (r.raw['randomimage'] = 'https://picsum.photos/200')
+        (r) => (r.excerpt = '<div>Some HTML content</div>')
       );
       return res;
     },
@@ -17,9 +17,9 @@ const {decorator: searchInterfaceDecorator, play} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
-  component: 'atomic-result-image',
-  title: 'Atomic/ResultList/ResultImage',
-  id: 'atomic-result-image',
+  component: 'atomic-result-html',
+  title: 'Atomic/ResultList/ResultHtml',
+  id: 'atomic-result-html',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],
   parameters: {
@@ -31,9 +31,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const FirstStory: Story = {
-  name: 'atomic-result-image',
-  args: {
-    field: 'randomimage',
-  },
+export const Default: Story = {
+  name: 'atomic-result-html',
+  args: {field: 'excerpt'},
 };
