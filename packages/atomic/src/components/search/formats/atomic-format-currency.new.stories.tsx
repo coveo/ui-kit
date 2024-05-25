@@ -39,7 +39,7 @@ export const Result: Story = {
     (story) => html`
       <style>
         atomic-numeric-facet {
-          display: hidden;
+          display: none;
         }
       </style>
       <atomic-numeric-facet field="sncost"></atomic-numeric-facet>
