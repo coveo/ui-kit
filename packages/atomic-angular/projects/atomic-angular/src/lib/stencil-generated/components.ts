@@ -1647,10 +1647,7 @@ import type { RedirectionPayload as IAtomicSearchBoxRedirectionPayload } from '@
 
 export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
   /**
-   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
-
-Example:
-```html
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event. @example ```html
 <script>
   document.querySelector('atomic-search-box').addEventListener((e) => {
     e.preventDefault();
