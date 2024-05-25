@@ -5,9 +5,9 @@ import type {Meta, StoryObj} from '@storybook/web-components';
 const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
-  component: 'atomic-category-facet',
-  title: 'Atomic/CategoryFacet',
-  id: 'atomic-category-facet',
+  component: 'atomic-segmented-facet',
+  title: 'Atomic/SegmentedFacet',
+  id: 'atomic-segmented-facet',
 
   render: renderComponent,
   decorators: [decorator],
@@ -21,12 +21,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  name: 'atomic-category-facet',
+  name: 'atomic-segmented-facet',
   args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
+    field: 'objecttype',
+    label: 'Object Type',
   },
 };
