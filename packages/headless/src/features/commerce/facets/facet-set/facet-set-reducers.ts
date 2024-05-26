@@ -1,21 +1,24 @@
-import {FacetValueRequest} from '../../../facets/facet-set/interfaces/request';
 import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request';
 import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
 import {Parameters} from '../../parameters/parameters-actions';
 import {CommerceFacetSetState} from './facet-set-state';
 import {
-  AnyFacetValueRequest,
   CategoryFacetRequest,
   CategoryFacetValueRequest,
   DateFacetRequest,
   NumericFacetRequest,
   RegularFacetRequest,
 } from './interfaces/request';
+import {RegularFacetValue} from './interfaces/response';
 
 export function restoreFromParameters(
   state: CommerceFacetSetState,
   action: {payload: Parameters}
 ) {
+  for (const facetId of Object.keys(state)) {
+    delete state[facetId];
+  }
+
   if (action.payload.f) {
     restoreRegularFacets(state, action.payload.f);
   }
@@ -34,25 +37,32 @@ function restoreRegularFacets(
   state: CommerceFacetSetState,
   parameterFacets: Record<string, string[]>
 ) {
-  const regularFacetIds = Object.keys(state).filter(
-    (id) => state[id]?.request.type === 'regular'
-  );
-
-  regularFacetIds.forEach((id) => {
-    const request = state[id]!.request as RegularFacetRequest;
-    const selectedValues = parameterFacets[id] || [];
-    const activeValueCount = selectedValues.length;
-    const idleValues = request.values.filter(
-      (facetValue) => !selectedValues.includes(facetValue.value)
-    );
-
-    request.values = [
-      ...selectedValues.map(buildSelectedFacetValueRequest),
-      ...idleValues.map(restoreFacetValueToIdleState),
-    ] as FacetValueRequest[];
-    request.preventAutoSelect = activeValueCount > 0;
-    request.numberOfValues = Math.max(activeValueCount, request.numberOfValues);
-  });
+  const entries = Object.entries(parameterFacets);
+  for (const [facetId, values] of entries) {
+    state[facetId] = {
+      request: {
+        facetId,
+        field: facetId,
+        // TODO: Simplify facet schema to only require necessary properties
+        numberOfValues: 10,
+        isFieldExpanded: false,
+        preventAutoSelect: false,
+        initialNumberOfValues: 10,
+        displayName: '',
+        type: 'regular',
+        values: values.map((value): RegularFacetValue => {
+          return {
+            value,
+            state: 'selected',
+            isAutoSelected: false,
+            isSuggested: false,
+            numberOfResults: 10,
+            moreValuesAvailable: true,
+          };
+        }),
+      } as RegularFacetRequest,
+    };
+  }
 }
 
 function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
@@ -60,63 +70,69 @@ function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
   parameterFacets: Record<string, T['values']>,
   type: 'dateRange' | 'numericalRange'
 ) {
-  const numericFacetIds = Object.keys(state).filter(
-    (id) => state[id]?.request.type === type
-  );
-
-  type Range = T['values'][number];
-  numericFacetIds.forEach((id) => {
-    const request = state[id]!.request as T;
-    const rangesToSelect = parameterFacets[id] || [];
-
-    request.values.forEach((range) => {
-      const found = !!findRange<Range>(rangesToSelect, range);
-      range.state = found ? 'selected' : 'idle';
-      return range;
-    });
-
-    const missingRanges = rangesToSelect.filter(
-      (range) => !findRange<Range>(request.values, range)
-    );
-    const currentValues = request.values as Range[];
-    currentValues.push(...missingRanges);
-
-    request.numberOfValues = Math.max(
-      request.numberOfValues,
-      currentValues.length
-    );
-  });
+  const entries = Object.entries(parameterFacets);
+  for (const [facetId, values] of entries) {
+    state[facetId] = {
+      request: {
+        facetId,
+        field: facetId,
+        // TODO: Simplify facet schema to only require necessary properties
+        numberOfValues: 10,
+        isFieldExpanded: false,
+        preventAutoSelect: false,
+        initialNumberOfValues: 10,
+        displayName: '',
+        type,
+        values: values.map((value) => {
+          const rangeValue = {
+            start: value.start,
+            end: value.end,
+            endInclusive: value.endInclusive,
+            state: 'selected',
+            isAutoSelected: false,
+            isSuggested: false,
+            numberOfResults: 10,
+            moreValuesAvailable: true,
+          };
+          switch (type) {
+            case 'dateRange':
+              return rangeValue as DateRangeRequest;
+            case 'numericalRange':
+              return rangeValue as NumericRangeRequest;
+          }
+        }),
+      },
+    };
+  }
 }
 
 function restoreCategoryFacets(
   state: CommerceFacetSetState,
   parameterFacets: Record<string, string[]>
 ) {
-  Object.keys(state).forEach((id) => {
-    const request = state[id]!.request as CategoryFacetRequest;
-    const path = parameterFacets[id] || [];
-    if (path.length || request.values.length) {
-      selectPath(request, path, state[id]!.request.initialNumberOfValues);
-    }
-  });
+  const entries = Object.entries(parameterFacets);
+  for (const [facetId, path] of entries) {
+    state[facetId] = {
+      request: {
+        facetId,
+        field: facetId,
+        // TODO: Simplify facet schema to only require necessary properties
+        numberOfValues: 10,
+        isFieldExpanded: false,
+        preventAutoSelect: false,
+        initialNumberOfValues: 10,
+        displayName: '',
+        type: 'hierarchical',
+        values: [],
+        delimitingCharacter: '|',
+      } as CategoryFacetRequest,
+    };
+    selectPath(state[facetId].request as CategoryFacetRequest, path, 10);
+  }
 }
 
 export function buildSelectedFacetValueRequest(rawValue: string) {
   return {state: 'selected', value: rawValue};
-}
-
-export function restoreFacetValueToIdleState(
-  facetValue: AnyFacetValueRequest
-): AnyFacetValueRequest {
-  return {...facetValue, state: 'idle'};
-}
-
-function findRange<T extends NumericRangeRequest | DateRangeRequest>(
-  values: T[],
-  value: T
-) {
-  const {start, end} = value;
-  return values.find((range) => range.start === start && range.end === end);
 }
 
 export function selectPath(
