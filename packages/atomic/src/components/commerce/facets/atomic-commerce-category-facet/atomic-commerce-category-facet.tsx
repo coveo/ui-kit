@@ -71,7 +71,8 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   public facetState!: CategoryFacetState;
   @State() public error!: Error;
 
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
+
   private resultIndexToFocusOnShowMore = 0;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
