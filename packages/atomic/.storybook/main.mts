@@ -5,11 +5,6 @@ import {mergeConfig} from 'vite';
 const config: StorybookConfig = {
   stories: ['../src/**/*.new.stories.@(js|jsx|ts|tsx|mdx)'],
   staticDirs: [{from: '../dist/atomic', to: './assets'}],
-  previewHead: (head) => `
-    ${head}
-    <script type="module" src="../dist/atomic/atomic.esm.js"></script>
-    <link rel="stylesheet" href="../dist/atomic/themes/coveo.css">
-  `,
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',

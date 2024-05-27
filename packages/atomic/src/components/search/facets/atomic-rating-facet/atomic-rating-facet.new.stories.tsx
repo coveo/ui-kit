@@ -24,7 +24,7 @@ type Story = StoryObj;
 export const Default: Story = {
   name: 'atomic-rating-facet',
   args: {
-    field: 'ec_rating',
+    field: 'snrating',
   },
   decorators: [facetDecorator],
 };

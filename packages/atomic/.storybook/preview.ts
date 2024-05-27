@@ -1,3 +1,5 @@
+import '@coveo/atomic/dist/atomic/atomic.esm.js';
+import '@coveo/atomic/dist/atomic/themes/coveo.css';
 import {setCustomElementsManifest} from '@storybook/web-components';
 import customElements from '../custom-elements.json';
 
@@ -11,6 +13,11 @@ export const parameters = {
       tabWidth: 4,
       useTabs: false,
       htmlWhitespaceSensitivity: 'ignore',
+    },
+  },
+  options: {
+    storySort: {
+      method: 'alphabetical-by-kind',
     },
   },
 };

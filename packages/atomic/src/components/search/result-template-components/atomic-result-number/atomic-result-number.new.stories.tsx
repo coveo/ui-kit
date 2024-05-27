@@ -31,7 +31,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  name: 'atomic-result-date',
+  name: 'atomic-result-number',
   args: {
     default: `
       <span style="font-weight: bold; margin-right: 0.25rem;">File size:</span>
