@@ -92,7 +92,7 @@ describe('searchSerializer', () => {
       ],
     };
     const parameters: Required<
-      Omit<CommerceSearchParameters, 'sortCriteria' | 'page' | 'perPage'>
+      Omit<CommerceSearchParameters, 'sort' | 'page' | 'perPage'>
     > = {
       q: 'some query',
       f,

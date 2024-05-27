@@ -2,7 +2,10 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {CommerceFacetSetSection} from '../../../state/state-sections';
 import {findActiveValueAncestry} from '../../facets/category-facet-set/category-facet-utils';
-import {getFacets} from '../../parameter-manager/parameter-manager-selectors';
+import {
+  getFacets,
+  getSortCriteria,
+} from '../../parameter-manager/parameter-manager-selectors';
 import {FacetType} from '../facets/facet-set/interfaces/common';
 import {
   AnyFacetRequest,
@@ -11,7 +14,11 @@ import {
   NumericFacetRequest,
   RegularFacetRequest,
 } from '../facets/facet-set/interfaces/request';
-import {getCommercePaginationInitialSlice} from '../pagination/pagination-state';
+import {
+  CommercePaginationState,
+  getCommercePaginationInitialSlice,
+} from '../pagination/pagination-state';
+import {getCommerceSortInitialState} from '../sort/sort-state';
 import {Parameters as ManagedParameters} from './parameters-actions';
 
 export function initialParametersSelector(
@@ -21,10 +28,12 @@ export function initialParametersSelector(
     page:
       state.commercePagination.principal.page ??
       getCommercePaginationInitialSlice().page,
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-907: Handle sort and pagination
-    // perPage: state.commercePagination.principal.perPage ?? getCommercePaginationInitialSlice().perPage,
-    // sortCriteria: state.commerceSort.appliedSort ?? getCommerceSortInitialState().appliedSort,
+    perPage:
+      state.commercePagination.principal.perPage ??
+      getCommercePaginationInitialSlice().perPage,
+    sortCriteria:
+      state.commerceSort.appliedSort ??
+      getCommerceSortInitialState().appliedSort,
     cf: {},
     nf: {},
     df: {},
@@ -36,9 +45,21 @@ export function activeParametersSelector(
   state: CommerceEngine[typeof stateKey]
 ): ManagedParameters {
   return {
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-907: Handle sort and pagination
-    //...getSortCriteria(state?.commerceSort, (s) => s.appliedSort, getCommerceSortInitialState().appliedSort),
+    ...getPage(
+      state?.commercePagination,
+      (s) => s.principal.page,
+      getCommercePaginationInitialSlice().page
+    ),
+    ...getPerPage(
+      state?.commercePagination,
+      (s) => s.principal.perPage,
+      getCommercePaginationInitialSlice().perPage
+    ),
+    ...getSortCriteria(
+      state?.commerceSort,
+      (s) => s.appliedSort,
+      getCommerceSortInitialState().appliedSort
+    ),
     ...getFacets(
       state?.commerceFacetSet,
       facetIsOfType(state, 'regular'),
@@ -74,6 +95,34 @@ export function enrichedParametersSelector(
     ...initialParametersSelector(state),
     ...activeParams,
   };
+}
+
+export function getPage(
+  section: CommercePaginationState | undefined,
+  pageSelector: (section: CommercePaginationState) => number,
+  initialState: number
+) {
+  if (section === undefined) {
+    return {};
+  }
+
+  const page = pageSelector(section);
+  const shouldInclude = page !== initialState;
+  return shouldInclude ? {page} : {};
+}
+
+export function getPerPage(
+  section: CommercePaginationState | undefined,
+  perPageSelector: (section: CommercePaginationState) => number,
+  initialState: number
+) {
+  if (section === undefined) {
+    return {};
+  }
+
+  const perPage = perPageSelector(section);
+  const shouldInclude = perPage !== initialState;
+  return shouldInclude ? {perPage} : {};
 }
 
 export function getSelectedValues(request: AnyFacetRequest) {
