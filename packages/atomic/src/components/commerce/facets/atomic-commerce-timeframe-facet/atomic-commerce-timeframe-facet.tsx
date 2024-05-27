@@ -1,24 +1,11 @@
 import {
-  buildDateFacet,
-  buildDateFilter,
-  buildDateRange,
-  buildFacetConditionsManager,
-  buildSearchStatus,
   DateFacet,
-  DateFilter,
-  DateRangeRequest,
+  buildDateRange,
   deserializeRelativeDate,
-  RangeFacetSortCriterion,
-  loadDateFacetSetActions,
-  SearchStatus,
-  SearchStatusState,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
   NumericFacetState,
   ListingSummary,
+  loadDateFacetSetActions,
   SearchSummary,
-  buildListingSummary,
-  buildSearchSummary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -27,9 +14,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {parseDependsOn} from '../../../common/facets/depends-on';
+import {CommerceTimeframeFacetCommon} from '../../../common/facets/comerce-timeframe-facet-common';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 @Component({
@@ -44,35 +30,37 @@ export class AtomicCommerceTimeframeFacet
   public facetForDateRange?: DateFacet;
   public facetForDatePicker?: DateFacet;
 
-  private timeframeFacetCommon?: TimeframeFacetCommon;
-  public filter?: DateFilter;
-  public searchStatus!: SearchStatus;
+  private timeframeFacetCommon?: CommerceTimeframeFacetCommon;
+  // public filter?: DateFilter;
   @Element() private host!: HTMLElement;
+
+  /**
+   * The summary controller instance.
+   */
+  @Prop() summary!: SearchSummary | ListingSummary;
+  /**
+   * The numeric facet controller instance.
+   */
+  @Prop() public facet!: DateFacet;
 
   @BindStateToController('facet')
   @State()
   public facetState!: NumericFacetState;
-
-  public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
-  private summary!: ListingSummary | SearchSummary;
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
 
   private withDatePicker = false;
-  private headingLevel = 0;
-  private filterFacetCount = true;
-  private injectionDepth = 1000;
+  // private filterFacetCount = true;
+  // private injectionDepth = 1000;
   private min?: string;
   private max?: string;
-  private sortCriteria: RangeFacetSortCriterion = 'descending';
+  // private sortCriteria: RangeFacetSortCriterion = 'descending';
 
   private headerFocus?: FocusTargetController;
 
-  @Prop({reflect: true}) public facet!: DateFacet;
-
   private get state() {
-    return this.facet.state;
+    return this.facet.state; // TODO: update to facetState!
   }
 
   private get displayName() {
@@ -87,86 +75,48 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public initialize() {
-    this.initializeSummary();
-    this.timeframeFacetCommon = new TimeframeFacetCommon({
+    this.timeframeFacetCommon = new CommerceTimeframeFacetCommon({
       facetId: this.displayName,
       host: this.host,
       bindings: this.bindings,
       label: this.displayName,
       field: this.state.field,
-      headingLevel: this.headingLevel,
-      dependsOn: parseDependsOn(this.dependsOn) && this.dependsOn,
+      headingLevel: 0,
+      // dependsOn: parseDependsOn(this.dependsOn) && this.dependsOn,
       withDatePicker: this.withDatePicker,
-      setFacetId: (id: string) => (this.displayName = id),
-      buildDependenciesManager: () =>
-        buildFacetConditionsManager(this.bindings.engine, {
-          facetId:
-            this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
-          conditions: parseDependsOn<
-            FacetValueRequest | CategoryFacetValueRequest
-          >(this.dependsOn),
-        }),
+      // setFacetId: (id: string) => (this.facet.state.facetId = id),
+      // buildDependenciesManager: () =>
+      //   buildFacetConditionsManager(this.bindings.engine, {
+      //     facetId:
+      //       this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
+      //     conditions: parseDependsOn<
+      //       FacetValueRequest | CategoryFacetValueRequest
+      //     >(this.dependsOn),
+      //   }),
       buildDateRange,
-      getSearchStatusState: () => this.searchStatusState,
+      getSummaryState: () => this.summary.state,
       deserializeRelativeDate,
-      initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
-      initializeFacetForDateRange: (values: DateRangeRequest[]) =>
-        this.initializeFacetForDateRange(values),
-      initializeFilter: () => this.initializeFilter(),
+      // initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
+      // initializeFacetForDateRange: (values: DateRangeRequest[]) =>
+      //   this.initializeFacetForDateRange(values),
+      // initializeFilter: () => this.initializeFilter(),
       min: this.min,
       max: this.max,
-      sortCriteria: this.sortCriteria,
+      facet: this.facet,
+      // sortCriteria: this.facet.state.s,
     });
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private initializeSummary() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.summary = buildListingSummary(this.bindings.engine);
-    } else {
-      this.summary = buildSearchSummary(this.bindings.engine);
-    }
-  }
+  // private initializeFilter() {
+  //   this.filter = buildDateFilter(this.bindings.engine, {
+  //     options: {
+  //       facetId: `${this.displayName}_input`,
+  //       field: this.state.field,
+  //     },
+  //   });
 
-  private initializeFacetForDatePicker() {
-    this.facetForDatePicker = buildDateFacet(this.bindings.engine, {
-      options: {
-        facetId: `${this.displayName}_input_range`,
-        numberOfValues: 1,
-        generateAutomaticRanges: true,
-        field: this.state.field,
-        filterFacetCount: this.filterFacetCount,
-        injectionDepth: this.injectionDepth,
-      },
-    });
-    return this.facetForDatePicker;
-  }
-
-  private initializeFacetForDateRange(values: DateRangeRequest[]) {
-    this.facetForDateRange = buildDateFacet(this.bindings.engine, {
-      options: {
-        facetId: this.displayName,
-        field: this.state.field,
-        currentValues: values,
-        generateAutomaticRanges: false,
-        sortCriteria: this.sortCriteria,
-        filterFacetCount: this.filterFacetCount,
-        injectionDepth: this.injectionDepth,
-      },
-    });
-    return this.facetForDateRange;
-  }
-
-  private initializeFilter() {
-    this.filter = buildDateFilter(this.bindings.engine, {
-      options: {
-        facetId: `${this.displayName}_input`,
-        field: this.state.field,
-      },
-    });
-
-    return this.filter;
-  }
+  //   return this.filter;
+  // }
 
   @Listen('atomic/dateInputApply')
   public applyDateInput() {
@@ -179,6 +129,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public render() {
+    const {hasError, firstSearchExecuted} = this.summary.state;
     if (!this.timeframeFacetCommon) {
       return (
         <FacetPlaceholder
@@ -188,8 +139,8 @@ export class AtomicCommerceTimeframeFacet
       );
     }
     return this.timeframeFacetCommon.render({
-      hasError: this.searchStatusState.hasError,
-      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
+      hasError: hasError,
+      firstSearchExecuted: firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       headerFocus: this.focusTarget,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),

@@ -28,6 +28,7 @@ export type {Product} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
+export * from './features/commerce/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
@@ -132,6 +133,7 @@ export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   DateFacet,
   DateFacetState,
@@ -255,3 +257,9 @@ export type {FieldSuggestionsGenerator} from './controllers/commerce/field-sugge
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 
 export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';
+
+// Types & Helpers
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date';

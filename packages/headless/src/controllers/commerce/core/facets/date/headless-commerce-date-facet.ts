@@ -3,6 +3,7 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -27,6 +28,8 @@ export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
   state: DateFacetState;
 } & FacetControllerType<'dateRange'>;
+
+export {buildDateRange};
 
 /**
  * @internal
