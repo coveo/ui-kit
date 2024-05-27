@@ -133,8 +133,7 @@ export namespace Components {
          */
         "delimitingCharacter": string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -206,18 +205,15 @@ export namespace Components {
      */
     interface AtomicColorFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).
-          * @example The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues": string[] | string;
         /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
-          * @example The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
          */
         "customSort": string[] | string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -318,7 +314,7 @@ export namespace Components {
     interface AtomicCommerceInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -344,8 +340,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example : "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -361,8 +356,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example : "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -693,18 +687,15 @@ export namespace Components {
      */
     interface AtomicFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).
-          * @example The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues": string[] | string;
         /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
-          * @example The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
          */
         "customSort": string[] | string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -1084,7 +1075,7 @@ export namespace Components {
     interface AtomicInsightInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...]. When using a nonce, the first import of Atomic should be to import & call the `setNonce` function with the generated nonce value.
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -1114,8 +1105,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example : "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -1131,8 +1121,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example : "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -1158,8 +1147,7 @@ export namespace Components {
     }
     interface AtomicInsightNumericFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -1367,8 +1355,7 @@ export namespace Components {
          */
         "maximumHeight": number;
         /**
-          * Sets the style of the snippet.
-          * @example : ```ts smartSnippet.snippetStyle = ` b { color: blue; } `; ```
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -1382,8 +1369,7 @@ export namespace Components {
          */
         "headingLevel": number;
         /**
-          * Sets the style of the snippets.
-          * @example : ```ts smartSnippet.snippetStyle = ` b { color: blue; } `; ```
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -1409,8 +1395,7 @@ export namespace Components {
     }
     interface AtomicInsightTimeframeFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -1661,8 +1646,7 @@ export namespace Components {
      */
     interface AtomicNumericFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -1980,8 +1964,7 @@ export namespace Components {
      */
     interface AtomicRatingFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -2040,8 +2023,7 @@ export namespace Components {
      */
     interface AtomicRatingRangeFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -2100,7 +2082,7 @@ export namespace Components {
     interface AtomicRecsInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -2125,8 +2107,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example : "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -2142,8 +2123,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example : "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -2163,8 +2143,7 @@ export namespace Components {
          */
         "searchHub"?: string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example : "America/Montreal"
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -2828,8 +2807,7 @@ export namespace Components {
          */
         "suggestionTimeout": number;
         /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.
-          * @example ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
+          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
          */
         "textarea": boolean;
     }
@@ -2901,7 +2879,7 @@ export namespace Components {
     interface AtomicSearchInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -2935,8 +2913,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -2952,8 +2929,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -2981,8 +2957,7 @@ export namespace Components {
          */
         "searchHub"?: string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example "America/Montreal"
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -3000,18 +2975,15 @@ export namespace Components {
      */
     interface AtomicSegmentedFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).
-          * @example The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues": string[] | string;
         /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
-          * @example The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-segmented-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-segmented-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-segmented-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-segmented-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
          */
         "customSort": string[] | string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -3079,8 +3051,7 @@ export namespace Components {
         "snippetCollapsedHeight"?: number;
         "snippetMaximumHeight"?: number;
         /**
-          * Sets the style of the snippet.
-          * @example ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -3104,8 +3075,7 @@ export namespace Components {
          */
         "maximumHeight": number;
         /**
-          * Sets the style of the snippet.
-          * @example : ```ts expandableAnswer.snippetStyle = ` b { color: blue; } `; ```
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -3142,8 +3112,7 @@ export namespace Components {
          */
         "headingLevel": number;
         /**
-          * Sets the style of the snippets.
-          * @example ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -3215,8 +3184,7 @@ export namespace Components {
      */
     interface AtomicTimeframeFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -5498,8 +5466,7 @@ declare namespace LocalJSX {
          */
         "delimitingCharacter"?: string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -5571,18 +5538,15 @@ declare namespace LocalJSX {
      */
     interface AtomicColorFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).
-          * @example The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string[] | string;
         /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
-          * @example The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
          */
         "customSort"?: string[] | string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -5684,7 +5648,7 @@ declare namespace LocalJSX {
     interface AtomicCommerceInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -5700,8 +5664,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example : "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -5709,8 +5672,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example : "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -5894,8 +5856,7 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
-          * @example : ```html <script> document.querySelector('atomic-commerce-search-box').addEventListener((e) => { e.preventDefault(); // handle redirection }); </script> ... <atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box> ```
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-commerce-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box> ```
          */
         "onRedirect"?: (event: AtomicCommerceSearchBoxCustomEvent<RedirectionPayload>) => void;
         /**
@@ -6014,18 +5975,15 @@ declare namespace LocalJSX {
      */
     interface AtomicFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).
-          * @example The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string[] | string;
         /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
-          * @example The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
          */
         "customSort"?: string[] | string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -6402,7 +6360,7 @@ declare namespace LocalJSX {
     interface AtomicInsightInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...]. When using a nonce, the first import of Atomic should be to import & call the `setNonce` function with the generated nonce value.
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -6422,8 +6380,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example : "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -6431,8 +6388,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example : "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -6458,8 +6414,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightNumericFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -6656,8 +6611,7 @@ declare namespace LocalJSX {
          */
         "maximumHeight"?: number;
         /**
-          * Sets the style of the snippet.
-          * @example : ```ts smartSnippet.snippetStyle = ` b { color: blue; } `; ```
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -6672,8 +6626,7 @@ declare namespace LocalJSX {
          */
         "headingLevel"?: number;
         /**
-          * Sets the style of the snippets.
-          * @example : ```ts smartSnippet.snippetStyle = ` b { color: blue; } `; ```
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -6695,8 +6648,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightTimeframeFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -6934,8 +6886,7 @@ declare namespace LocalJSX {
      */
     interface AtomicNumericFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -7239,8 +7190,7 @@ declare namespace LocalJSX {
      */
     interface AtomicRatingFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -7299,8 +7249,7 @@ declare namespace LocalJSX {
      */
     interface AtomicRatingRangeFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -7359,7 +7308,7 @@ declare namespace LocalJSX {
     interface AtomicRecsInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -7379,8 +7328,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example : "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -7388,8 +7336,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example : "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -7409,8 +7356,7 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example : "America/Montreal"
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -8034,8 +7980,7 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
-          * @example ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
          */
         "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
         /**
@@ -8051,8 +7996,7 @@ declare namespace LocalJSX {
          */
         "suggestionTimeout"?: number;
         /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.
-          * @example ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
+          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
          */
         "textarea"?: boolean;
     }
@@ -8119,7 +8063,7 @@ declare namespace LocalJSX {
     interface AtomicSearchInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example ```html <script nonce="<YOUR_GENERATED_NONCE>">  import {setNonce} from '@coveo/atomic';  setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
+          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
          */
         "CspNonce"?: string;
         /**
@@ -8143,8 +8087,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example "/mypublicpath/icons"
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -8152,8 +8095,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example "/mypublicpath/languages"
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -8181,8 +8123,7 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example "America/Montreal"
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -8200,18 +8141,15 @@ declare namespace LocalJSX {
      */
     interface AtomicSegmentedFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).
-          * @example The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string[] | string;
         /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
-          * @example The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-segmented-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-segmented-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-segmented-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-segmented-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
          */
         "customSort"?: string[] | string;
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -8279,8 +8217,7 @@ declare namespace LocalJSX {
         "snippetCollapsedHeight"?: number;
         "snippetMaximumHeight"?: number;
         /**
-          * Sets the style of the snippet.
-          * @example ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -8313,8 +8250,7 @@ declare namespace LocalJSX {
         "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
         "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         /**
-          * Sets the style of the snippet.
-          * @example : ```ts expandableAnswer.snippetStyle = ` b { color: blue; } `; ```
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -8355,8 +8291,7 @@ declare namespace LocalJSX {
          */
         "headingLevel"?: number;
         /**
-          * Sets the style of the snippets.
-          * @example ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -8428,8 +8363,7 @@ declare namespace LocalJSX {
      */
     interface AtomicTimeframeFacet {
         /**
-          * The required facets and values for this facet to be displayed.
-          * @example ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**

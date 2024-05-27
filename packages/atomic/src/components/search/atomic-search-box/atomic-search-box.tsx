@@ -189,7 +189,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
    * When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part.
    * The buttons within the search box are likely to need adjusting as well.
    *
-   * @example
+   * Example:
    * ```css
    * <style>
    *   atomic-search-box::part(textarea),
@@ -212,7 +212,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
-   * @example
+   * Example:
    * ```html
    * <script>
    *   document.querySelector('atomic-search-box').addEventListener((e) => {

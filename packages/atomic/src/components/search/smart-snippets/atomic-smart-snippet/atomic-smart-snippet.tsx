@@ -89,7 +89,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   /**
    * Sets the style of the snippet.
    *
-   * @example
+   * Example:
    * ```ts
    * smartSnippet.snippetStyle = `
    *   b {

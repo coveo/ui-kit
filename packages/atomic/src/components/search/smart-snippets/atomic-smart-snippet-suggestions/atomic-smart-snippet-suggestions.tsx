@@ -75,7 +75,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
   /**
    * Sets the style of the snippets.
    *
-   * @example
+   * Example:
    * ```ts
    * smartSnippet.snippetStyle = `
    *   b {

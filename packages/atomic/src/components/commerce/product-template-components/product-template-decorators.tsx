@@ -11,7 +11,7 @@ import {
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for product template components.
  * This allows the Stencil component to fetch the current product from its rendered parent, the `atomic-product` component.
  *
- * @example:
+ * Example:
  * ```
  * @ProductContext() private product!: Product;
  * ```

@@ -40,7 +40,7 @@ export class AtomicSmartSnippetExpandableAnswer {
   /**
    * Sets the style of the snippet.
    *
-   * @example:
+   * Example:
    * ```ts
    * expandableAnswer.snippetStyle = `
    *   b {

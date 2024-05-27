@@ -172,7 +172,7 @@ export class AtomicColorFacet implements InitializableComponent {
 
   /**
    * The required facets and values for this facet to be displayed.
-   * @example
+   * Examples:
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
    *
@@ -197,7 +197,8 @@ export class AtomicColorFacet implements InitializableComponent {
    * If you specify a list of values for this option, the facet only uses these values (if they are available in
    * the current result set).
    *
-   * @example
+   * Example:
+   *
    * The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the
    * current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use
    * them.
@@ -220,7 +221,8 @@ export class AtomicColorFacet implements InitializableComponent {
    *
    * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
    *
-   * @example
+   * Example:
+   *
    * The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.
    *
    * If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.

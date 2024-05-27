@@ -55,7 +55,7 @@ export class AtomicInsightSmartSnippet
   /**
    * Sets the style of the snippet.
    *
-   * @example:
+   * Example:
    * ```ts
    * smartSnippet.snippetStyle = `
    *   b {
