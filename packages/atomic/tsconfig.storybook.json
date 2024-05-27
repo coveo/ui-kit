@@ -3,10 +3,11 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "composite": true,
-    "jsxFactory": "React.createElement"
+    "jsxFactory": "h"
   },
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": [
+    "src/**/*.d.ts",
     "src/**/*.stories.ts",
     "src/**/*.stories.js",
     "src/**/*.stories.jsx",
