@@ -212,13 +212,6 @@
       width: 100%;
     }
 
-    $(section-children) {
-      .product-child {
-        @mixin aspect-ratio-h 1 / 1, auto;
-        width: 33%;
-      }
-    }
-
     $(section-badges) {
       margin-bottom: 1rem;
     }
@@ -228,21 +221,6 @@
     $(section-visual) {
       @mixin aspect-ratio-h 1 / 1, 14rem;
       width: 100%;
-    }
-
-    $(section-children) {
-      .product-child {
-        @mixin aspect-ratio-h 1 / 1, auto;
-        width: 16.65%;
-      }
-    }
-  }
-
-  &.image-icon {
-    $(section-visual),
-    $(section-children) .product-child {
-      width: 2rem;
-      height: 2rem;
     }
   }
 
