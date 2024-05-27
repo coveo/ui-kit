@@ -33,3 +33,4 @@ src/generated
 cypress/screenshots/*
 
 headless/
+dist-storybook/
