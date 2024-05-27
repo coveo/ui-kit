@@ -57,7 +57,6 @@ export const AtomicResultChildrenTemplate = /*@__PURE__*/createReactComponent<JS
 export const AtomicResultDate = /*@__PURE__*/createReactComponent<JSX.AtomicResultDate, HTMLAtomicResultDateElement>('atomic-result-date');
 export const AtomicResultFieldsList = /*@__PURE__*/createReactComponent<JSX.AtomicResultFieldsList, HTMLAtomicResultFieldsListElement>('atomic-result-fields-list');
 export const AtomicResultHtml = /*@__PURE__*/createReactComponent<JSX.AtomicResultHtml, HTMLAtomicResultHtmlElement>('atomic-result-html');
-export const AtomicResultIcon = /*@__PURE__*/createReactComponent<JSX.AtomicResultIcon, HTMLAtomicResultIconElement>('atomic-result-icon');
 export const AtomicResultImage = /*@__PURE__*/createReactComponent<JSX.AtomicResultImage, HTMLAtomicResultImageElement>('atomic-result-image');
 export const AtomicResultLink = /*@__PURE__*/createReactComponent<JSX.AtomicResultLink, HTMLAtomicResultLinkElement>('atomic-result-link');
 export const AtomicResultList = /*@__PURE__*/createReactComponent<JSX.AtomicResultList, HTMLAtomicResultListElement>('atomic-result-list');
