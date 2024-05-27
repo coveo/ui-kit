@@ -102,7 +102,7 @@
     },
     "storybook": {
       "executor": "@nx/storybook:storybook",
-      "dependsOn": ["wait-on:dist"],
+      "dependsOn": ["wait-on:dist", "list-assets"],
       "options": {
         "port": 4400,
         "configDir": "{workspaceRoot}/packages/atomic/.storybook"
@@ -113,8 +113,15 @@
         }
       }
     },
+    "list-assets": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/list-assets.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
     "build-storybook": {
-      "dependsOn": ["cached:build:stencil", "cem:build"],
+      "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "cwd": "{projectRoot}",
