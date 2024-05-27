@@ -1,17 +1,8 @@
 import {
   PlatformEnvironment,
-  LogLevel,
-  Search,
-  Unsubscribe,
-  UrlManager,
-  buildSearch,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-  updateQuery,
   CommerceEngine,
   CommerceEngineConfiguration,
-  buildCommerceEngine,
-  buildProductListing,
-  ProductListing,
   Context,
   buildContext,
 } from '@coveo/headless/commerce';
@@ -28,52 +19,38 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {
-  SafeStorage,
-  StandaloneSearchBoxData,
-  StorageItems,
-} from '../../../utils/local-storage-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
-import {getAnalyticsConfig} from './analytics-config';
-import {AtomicCommerceStore, createAtomicCommerceStore} from './store';
-
-const FirstSearchExecutedFlag = 'firstSearchExecuted';
+import {
+  AtomicCommerceRecommendationStore,
+  createAtomicCommerceRecommendationStore,
+} from './store';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
-  AtomicCommerceStore,
+  AtomicCommerceRecommendationStore,
   HTMLAtomicCommerceInterfaceElement
 > &
   NonceBindings;
 
 /**
  * @internal
- * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
- * (with the exception of `atomic-commerce-recommendation-list`, which must be have
- * `atomic-commerce-recommendation-interface` as a parent). It handles the headless search engine and localization
- * configurations.
+ * The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
  */
 @Component({
-  tag: 'atomic-commerce-interface',
-  styleUrl: 'atomic-commerce-interface.pcss',
+  tag: 'atomic-commerce-recommendation-interface',
+  styleUrl: 'atomic-commerce-recommendation-interface.pcss',
   shadow: true,
   assetsDirs: ['lang'],
 })
-export class AtomicCommerceInterface
+export class AtomicCommerceRecommendationInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
-  private urlManager!: UrlManager;
-  private searchStatus!: Search | ProductListing;
-  private context!: Context;
-  private unsubscribeUrlManager: Unsubscribe = () => {};
-  private unsubscribeSearchStatus: Unsubscribe = () => {};
-  private initialized = false;
-  private store = createAtomicCommerceStore();
+  private store = createAtomicCommerceRecommendationStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   @Element() public host!: HTMLAtomicCommerceInterfaceElement;
@@ -81,48 +58,20 @@ export class AtomicCommerceInterface
   @State() public error?: Error;
 
   /**
-   * The type of the interface.
-   * - 'search': Indicates that the interface is used for Search.
-   * - 'product-listing': Indicates that the interface is used for Product listing.
-   */
-  @Prop({reflect: true, mutable: true}) public type:
-    | 'search'
-    | 'product-listing' = 'search';
-
-  /**
-   * Whether analytics should be enabled.
-   */
-  @Prop({reflect: true}) public analytics = true;
-
-  /**
-   * The severity level of the messages to log in the console.
-   */
-  @Prop({reflect: true}) public logLevel?: LogLevel;
-
-  /**
-   * the commerce interface i18next instance.
+   * The commerce interface i18next instance.
    */
   @Prop() public i18n: i18n = i18next.createInstance();
 
   /**
-   * the commerce interface language.
-   */
-  @Prop({reflect: true}) public language = 'en';
-
-  /**
    * The commerce interface headless engine.
    */
-  @Prop({mutable: true}) public engine?: CommerceEngine;
+  @Prop({mutable: true}) public engine!: CommerceEngine;
 
   /**
-   * Whether the state should be reflected in the URL parameters.
+   * The CSS selector for the container the interface will scroll back to.
    */
-  @Prop({reflect: true}) public reflectStateInUrl = true;
-
-  /**
-   * The CSS selector for the container where the interface will scroll back to.
-   */
-  @Prop({reflect: true}) public scrollContainer = 'atomic-commerce-interface';
+  @Prop({reflect: true}) public scrollContainer =
+    'atomic-commerce-recommendation-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -159,19 +108,33 @@ export class AtomicCommerceInterface
   @Prop({reflect: true}) public CspNonce?: string;
 
   /**
-   * A reference clone of the interface i18next instance.
+   * The commerce interface language.
    */
+  @Prop({reflect: true}) public language = 'en';
+
+  /**
+   * Whether to enable analytics.
+   */
+  @Prop({reflect: true}) public analytics = true;
+
   private i18nClone!: i18n;
+
+  private contextController!: Context;
 
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomic'
     );
+
+    if (!this.commonInterfaceHelper.engineIsCreated()) {
+      return;
+    }
+
+    this.contextController = buildContext(this.bindings.engine);
   }
 
   public connectedCallback() {
-    this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -200,19 +163,14 @@ export class AtomicCommerceInterface
       return;
     }
 
-    this.context.setLanguage(this.language);
+    this.contextController.setLanguage(this.language);
+
     this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
     this.store.set('iconAssetsPath', this.iconAssetsPath);
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
-    window.removeEventListener('hashchange', this.onHashChange);
   }
 
   @Listen('atomic/initializeComponent')
@@ -234,54 +192,10 @@ export class AtomicCommerceInterface
   }
 
   /**
-   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
-   */
-  @Method() public initialize(options: CommerceInitializationOptions) {
-    return this.internalInitialization(() => this.initEngine(options));
-  }
-
-  /**
-   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
    */
   @Method() public initializeWithEngine(engine: CommerceEngine) {
     return this.internalInitialization(() => (this.engine = engine));
-  }
-
-  /**
-   *
-   * Executes the first search after initializing connection to the headless search engine.
-   */
-  @Method() public async executeFirstSearch() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
-    if (!this.initialized) {
-      console.error(
-        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
-        this.host
-      );
-      return;
-    }
-
-    const safeStorage = new SafeStorage();
-
-    const standaloneSearchBoxData =
-      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA,
-        null
-      );
-
-    if (!standaloneSearchBoxData) {
-      this.engine.executeFirstSearch();
-      return;
-    }
-
-    safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
-    const {value} = standaloneSearchBoxData;
-    this.engine!.dispatch(updateQuery({query: value}));
-    this.engine.executeFirstSearch();
   }
 
   /**
@@ -319,28 +233,6 @@ export class AtomicCommerceInterface
     };
   }
 
-  private initEngine(options: CommerceInitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
-    try {
-      this.engine = buildCommerceEngine({
-        configuration: {
-          ...options,
-          analytics: analyticsConfig,
-        },
-        loggerOptions: {
-          level: this.logLevel,
-        },
-      });
-    } catch (error) {
-      this.error = error as Error;
-      throw error;
-    }
-  }
-
-  private get fragment() {
-    return window.location.hash.slice(1);
-  }
-
   private initAriaLive() {
     if (
       Array.from(this.host.children).some(
@@ -352,67 +244,8 @@ export class AtomicCommerceInterface
     this.host.prepend(document.createElement('atomic-aria-live'));
   }
 
-  private initUrlManager() {
-    if (!this.reflectStateInUrl) {
-      return;
-    }
-
-    this.urlManager = this.searchStatus.urlManager({
-      initialState: {fragment: this.fragment},
-    });
-
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
-      this.updateHash()
-    );
-
-    window.addEventListener('hashchange', this.onHashChange);
-  }
-
-  private initSearchStatus() {
-    if (this.type === 'product-listing') {
-      this.searchStatus = buildProductListing(this.engine!);
-    } else {
-      this.searchStatus = buildSearch(this.engine!);
-    }
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
-      if (
-        !this.searchStatus.state.isLoading &&
-        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
-      ) {
-        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
-      }
-    });
-  }
-
-  private initContext() {
-    this.context = buildContext(this.engine!);
-  }
-
-  private updateHash() {
-    const newFragment = this.urlManager.state.fragment;
-
-    if (!this.searchStatus.state.isLoading) {
-      history.replaceState(null, document.title, `#${newFragment}`);
-      this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
-
-      return;
-    }
-
-    history.pushState(null, document.title, `#${newFragment}`);
-    this.bindings.engine.logger.info(`History pushState #${newFragment}`);
-  }
-
-  private onHashChange = () => {
-    this.urlManager.synchronize(this.fragment);
-  };
-
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-
-    this.initSearchStatus();
-    this.initUrlManager();
-    this.initContext();
-    this.initialized = true;
   }
 
   private addResourceBundle(
