@@ -1143,6 +1143,27 @@ export declare interface AtomicResultHtml extends Components.AtomicResultHtml {}
 
 
 @ProxyCmp({
+})
+@Component({
+  selector: 'atomic-result-icon',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicResultIcon {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
+
+
+@ProxyCmp({
   inputs: ['fallback', 'field']
 })
 @Component({
