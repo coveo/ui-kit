@@ -11,7 +11,7 @@ const meta: Meta = {
   component: 'atomic-breadbox',
   title: 'Atomic/Breadbox',
   id: 'atomic-breadbox',
-  loaders: [async () => {}],
+
   render: renderComponent,
   decorators: [decorator],
   parameters: {

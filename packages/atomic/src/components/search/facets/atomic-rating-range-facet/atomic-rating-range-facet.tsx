@@ -138,7 +138,7 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
 
   /**
    * The required facets and values for this facet to be displayed.
-   * Examples:
+   * @example
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
    *

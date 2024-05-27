@@ -47,7 +47,11 @@
       }
     },
     "build": {
-      "dependsOn": ["cached:build:stencil", "validate:definitions"],
+      "dependsOn": [
+        "cached:build:stencil",
+        "validate:definitions",
+        "build-storybook"
+      ],
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"
@@ -60,6 +64,7 @@
           "node ./scripts/split-locales.mjs",
           "node ./scripts/copy-dayjs-locales.mjs"
         ],
+        "parallel": false,
         "cwd": "{projectRoot}"
       }
     },
@@ -107,7 +112,7 @@
       "outputs": ["{options.outputDir}"],
       "cwd": "{projectRoot}",
       "options": {
-        "outputDir": "dist/storybook/atomic",
+        "outputDir": "{workspaceRoot}/packages/atomic/dist-storybook",
         "configDir": "{workspaceRoot}/packages/atomic/.storybook"
       },
       "configurations": {

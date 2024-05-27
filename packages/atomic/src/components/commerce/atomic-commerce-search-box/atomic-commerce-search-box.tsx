@@ -187,7 +187,7 @@ export class AtomicCommerceSearchBox
   /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
-   * Example:
+   * @example:
    * ```html
    * <script>
    *   document.querySelector('atomic-commerce-search-box').addEventListener((e) => {

@@ -1,16 +1,18 @@
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInResult} from '@coveo/atomic/storybookUtils/result-wrapper';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import type {Meta, StoryObj} from '@storybook/web-components';
 
-const {decorator, play} = wrapInResult();
+const {decorator: resultDecorator, engineConfig} = wrapInResult();
+const {decorator: searchInterfaceDecorator, play} =
+  wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
   component: 'atomic-result-icon',
   title: 'Atomic/ResultList/ResultIcon',
   id: 'atomic-result-icon',
-
   render: renderComponent,
-  decorators: [decorator],
+  decorators: [resultDecorator, searchInterfaceDecorator],
   parameters: {
     controls: {expanded: true, hideNoControlsWarning: true},
   },
