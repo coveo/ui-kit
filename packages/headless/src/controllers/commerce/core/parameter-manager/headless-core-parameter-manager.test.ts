@@ -1,15 +1,18 @@
 import {SchemaValidationError} from '@coveo/bueno';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
+import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {buildRelevanceSortCriterion} from '../../../../features/sort/sort';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {buildMockCommerceEngine, MockedCommerceEngine,} from '../../../../test/mock-engine-v2';
+import {
+  buildMockCommerceEngine,
+  MockedCommerceEngine,
+} from '../../../../test/mock-engine-v2';
 import {
   buildCoreParameterManager,
   CoreParameterManagerProps,
   ParameterManager,
 } from './headless-core-parameter-manager';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
-import {buildRelevanceSortCriterion} from '../../../../features/sort/sort';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
 
 describe('parameter manager', () => {
   let engine: MockedCommerceEngine;
@@ -93,9 +96,7 @@ describe('parameter manager', () => {
           page: 2,
         };
         parameterManager.synchronize(parameters);
-        expect(mockRestoreActionCreator).toHaveBeenCalledWith({
-          page: 2,
-        });
+        expect(mockRestoreActionCreator).toHaveBeenCalledWith(parameters);
       });
 
       it('dispatches #fetchProductsActionCreator', () => {
@@ -109,12 +110,14 @@ describe('parameter manager', () => {
     it('contains #parameters', () => {
       const parameters = {
         nf: {
-          rating: [{
-            state: 'selected' as FacetValueState,
-            start: 4,
-            end: 5,
-            endInclusive: true,
-          }],
+          rating: [
+            {
+              state: 'selected' as FacetValueState,
+              start: 4,
+              end: 5,
+              endInclusive: true,
+            },
+          ],
         },
         page: 1,
         perPage: 2,
@@ -125,20 +128,19 @@ describe('parameter manager', () => {
               start: '2010/01/01',
               end: '2011/01/01',
               endInclusive: false,
-            }
-          ]
+            },
+          ],
         },
         f: {
           size: ['small', 'medium'],
         },
         sortCriteria: buildRelevanceSortCriterion(),
         cf: {
-          'category': ['electronics']
-        }
+          category: ['electronics'],
+        },
       };
 
-      mockActiveParametersSelector
-        .mockReturnValue(parameters)
+      mockActiveParametersSelector.mockReturnValue(parameters);
 
       expect(parameterManager.state.parameters).toEqual(parameters);
     });
