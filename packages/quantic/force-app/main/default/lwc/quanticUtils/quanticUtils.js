@@ -31,6 +31,8 @@ import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 /** @typedef {import("coveo").Result} Result */
 
+export * from './markdownUtils';
+
 export class Debouncer {
   _timeout;
 

@@ -388,6 +388,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.citations;
   }
 
+  get answerContentFormat() {
+    return this?.state?.answerContentFormat;
+  }
+
   get shouldDisplayCitations() {
     const hasCitations = !!this.citations?.length;
     return hasCitations && !this.isAnswerCollapsed;
