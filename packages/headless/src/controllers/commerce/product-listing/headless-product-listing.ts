@@ -5,7 +5,13 @@ import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
+import {
+  activeParametersSelector,
+  enrichedParametersSelector,
+} from '../../../features/commerce/parameters/parameters-selectors';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 import {
   fetchProductListing,
   fetchMoreProducts,
@@ -28,7 +34,6 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
-import {buildProductListingParameterManager} from './parameter-manager/headless-product-listing-parameter-manager';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
@@ -75,8 +80,11 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
-    parameterManagerBuilder: buildProductListingParameterManager,
     serializer: productListingSerializer,
+    parametersDefinition,
+    activeParametersSelector,
+    restoreActionCreator: restoreProductListingParameters,
+    enrichParameters: enrichedParametersSelector,
   });
 
   return {

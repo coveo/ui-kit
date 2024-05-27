@@ -1,3 +1,5 @@
+import {SchemaDefinition} from '@coveo/bueno';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -31,6 +33,7 @@ import {
   PaginationProps,
 } from '../pagination/headless-core-commerce-pagination';
 import {
+  buildCoreParameterManager,
   ParameterManager,
   ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager';
@@ -128,11 +131,14 @@ export interface SearchAndListingSubControllerProps<P extends Parameters>
     state: CommerceEngine[typeof stateKey]
   ) => boolean;
   requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
-  parameterManagerBuilder: (
-    engine: CommerceEngine,
-    props: ParameterManagerProps<P>
-  ) => ParameterManager<P>;
   serializer: Serializer<P>;
+  parametersDefinition: SchemaDefinition<Required<P>>;
+  activeParametersSelector: (state: CommerceEngine[typeof stateKey]) => P;
+  restoreActionCreator: (parameters: P) => UnknownAction;
+  enrichParameters: (
+    state: CommerceEngine[typeof stateKey],
+    activeParams: P
+  ) => Required<P>;
 }
 
 /**
@@ -184,8 +190,11 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
-    parameterManagerBuilder,
     serializer,
+    parametersDefinition,
+    activeParametersSelector,
+    restoreActionCreator,
+    enrichParameters,
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
@@ -222,12 +231,20 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
       return buildCoreUrlManager(engine, {
         ...props,
         requestIdSelector,
-        parameterManagerBuilder,
+        parameterManagerBuilder: (_engine, props) =>
+          this.parameterManager(props),
         serializer,
       });
     },
     parameterManager(props: ParameterManagerProps<P>) {
-      return parameterManagerBuilder(engine, props);
+      return buildCoreParameterManager(engine, {
+        ...props,
+        parametersDefinition,
+        activeParametersSelector,
+        restoreActionCreator,
+        fetchProductsActionCreator,
+        enrichParameters,
+      });
     },
   };
 }

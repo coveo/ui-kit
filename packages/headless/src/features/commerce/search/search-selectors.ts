@@ -1,13 +1,24 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {
   CommercePaginationSection,
   CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections';
+import {getQ} from '../../parameter-manager/parameter-manager-selectors';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
+import {
+  activeParametersSelector as coreActiveParametersSelector,
+  enrichedParametersSelector as coreEnrichedParametersSelector,
+} from '../parameters/parameters-selectors';
+import {getCommerceQueryInitialState} from '../query/query-state';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
 
 export const responseIdSelector = createSelector(
   (state: CommerceEngineState) => state.commerceSearch.responseId,
@@ -63,3 +74,26 @@ export const queryExecutedFromResponseSelector = (
 
   return querySelector(state);
 };
+
+export const activeParametersSelector = (
+  state: CommerceEngine[typeof stateKey]
+): CommerceSearchParameters => {
+  return {
+    ...getQ(
+      state?.commerceQuery,
+      (s) => s.query,
+      getCommerceQueryInitialState().query
+    ),
+    ...coreActiveParametersSelector(state),
+  };
+};
+
+export function enrichedParametersSelector(
+  state: CommerceEngine[typeof stateKey],
+  activeParams: CommerceSearchParameters
+) {
+  return {
+    q: getCommerceQueryInitialState().query!,
+    ...coreEnrichedParametersSelector(state, activeParams),
+  };
+}

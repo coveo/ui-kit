@@ -6,11 +6,15 @@ import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
+import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
+import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema';
 import {
   executeSearch,
   fetchMoreProducts,
 } from '../../../features/commerce/search/search-actions';
 import {
+  activeParametersSelector,
+  enrichedParametersSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors';
@@ -28,7 +32,6 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
-import {buildSearchParameterManager} from './parameter-manager/headless-search-parameter-manager';
 
 export interface Search extends Controller, SearchSubControllers {
   /**
@@ -69,8 +72,11 @@ export function buildSearch(engine: CommerceEngine): Search {
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
-    parameterManagerBuilder: buildSearchParameterManager,
     serializer: searchSerializer,
+    parametersDefinition: searchParametersDefinition,
+    restoreActionCreator: restoreSearchParameters,
+    activeParametersSelector,
+    enrichParameters: enrichedParametersSelector,
   });
 
   return {

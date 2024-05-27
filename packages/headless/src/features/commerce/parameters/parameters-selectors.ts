@@ -66,6 +66,16 @@ export function activeParametersSelector(
   };
 }
 
+export function enrichedParametersSelector(
+  state: CommerceEngine[typeof stateKey],
+  activeParams: ManagedParameters
+) {
+  return {
+    ...initialParametersSelector(state),
+    ...activeParams,
+  };
+}
+
 export function getSelectedValues(request: AnyFacetRequest) {
   return (request as RegularFacetRequest).values
     .filter((fv) => fv.state === 'selected')
