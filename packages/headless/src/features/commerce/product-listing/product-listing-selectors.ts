@@ -11,8 +11,10 @@ import {
 } from '../../../state/state-sections';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
 
-// TODO: duplicate selector since the state is no longer accessible externally
-// TODO: KIT-???? Update all other selectors to use the engine as a parameter
+/**
+ * Duplicate selector since the state is no longer accessible externally
+ * TODO: KIT-3199: Update all other selectors to use the engine as a parameter
+ */
 export const responseIdSelectorFromEngine = createSelector(
   (engine: CommerceEngine) => engine[stateKey].productListing.responseId,
   (responseId) => responseId
@@ -21,6 +23,11 @@ export const responseIdSelectorFromEngine = createSelector(
 export const responseIdSelector = createSelector(
   (state: CommerceEngineState) => state.productListing.responseId,
   (responseId) => responseId
+);
+
+export const requestIdSelector = createSelector(
+  (state: CommerceEngineState) => state.productListing.requestId,
+  (requestId) => requestId
 );
 
 export const numberOfProductsSelector = createSelector(

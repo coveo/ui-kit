@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -35,7 +35,7 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -264,10 +264,31 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCommerceCategoryFacet {
+        /**
+          * The numeric facet controller instance.
+         */
+        "facet": CategoryFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -366,8 +387,18 @@ export namespace Components {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
     interface AtomicCommerceNumericFacet {
+        /**
+          * The numeric facet controller instance.
+         */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -847,10 +878,12 @@ export namespace Components {
         "answerStyle": GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -982,10 +1015,12 @@ export namespace Components {
         "answerStyle": InsightGeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -1727,6 +1762,28 @@ export namespace Components {
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
          */
         "ratingDetailsField"?: string;
+    }
+    interface AtomicProductSectionActions {
+    }
+    interface AtomicProductSectionBadges {
+    }
+    interface AtomicProductSectionBottomMetadata {
+    }
+    interface AtomicProductSectionChildren {
+    }
+    interface AtomicProductSectionDescription {
+    }
+    interface AtomicProductSectionEmphasized {
+    }
+    interface AtomicProductSectionMetadata {
+    }
+    interface AtomicProductSectionName {
+    }
+    interface AtomicProductSectionVisual {
+        /**
+          * How large or small the visual section of product using this template should be.
+         */
+        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     interface AtomicProductTemplate {
         /**
@@ -3232,6 +3289,16 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface HTMLAtomicCommerceCategoryFacetElement extends Components.AtomicCommerceCategoryFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceCategoryFacetElement: {
+        prototype: HTMLAtomicCommerceCategoryFacetElement;
+        new (): HTMLAtomicCommerceCategoryFacetElement;
+    };
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
@@ -3291,6 +3358,9 @@ declare global {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
     interface HTMLAtomicCommerceNumericFacetElement extends Components.AtomicCommerceNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicCommerceNumericFacetElement: {
@@ -4092,6 +4162,60 @@ declare global {
     var HTMLAtomicProductRatingElement: {
         prototype: HTMLAtomicProductRatingElement;
         new (): HTMLAtomicProductRatingElement;
+    };
+    interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionActionsElement: {
+        prototype: HTMLAtomicProductSectionActionsElement;
+        new (): HTMLAtomicProductSectionActionsElement;
+    };
+    interface HTMLAtomicProductSectionBadgesElement extends Components.AtomicProductSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionBadgesElement: {
+        prototype: HTMLAtomicProductSectionBadgesElement;
+        new (): HTMLAtomicProductSectionBadgesElement;
+    };
+    interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionBottomMetadataElement: {
+        prototype: HTMLAtomicProductSectionBottomMetadataElement;
+        new (): HTMLAtomicProductSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionChildrenElement: {
+        prototype: HTMLAtomicProductSectionChildrenElement;
+        new (): HTMLAtomicProductSectionChildrenElement;
+    };
+    interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionDescriptionElement: {
+        prototype: HTMLAtomicProductSectionDescriptionElement;
+        new (): HTMLAtomicProductSectionDescriptionElement;
+    };
+    interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionEmphasizedElement: {
+        prototype: HTMLAtomicProductSectionEmphasizedElement;
+        new (): HTMLAtomicProductSectionEmphasizedElement;
+    };
+    interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionMetadataElement: {
+        prototype: HTMLAtomicProductSectionMetadataElement;
+        new (): HTMLAtomicProductSectionMetadataElement;
+    };
+    interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionNameElement: {
+        prototype: HTMLAtomicProductSectionNameElement;
+        new (): HTMLAtomicProductSectionNameElement;
+    };
+    interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicProductSectionVisualElement: {
+        prototype: HTMLAtomicProductSectionVisualElement;
+        new (): HTMLAtomicProductSectionVisualElement;
     };
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
@@ -4942,6 +5066,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5034,6 +5159,15 @@ declare global {
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
+        "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
+        "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
+        "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
+        "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
+        "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
+        "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
+        "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
+        "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
+        "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -5304,10 +5438,31 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCommerceCategoryFacet {
+        /**
+          * The numeric facet controller instance.
+         */
+        "facet": CategoryFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5389,8 +5544,18 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    /**
+     * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     */
     interface AtomicCommerceNumericFacet {
+        /**
+          * The numeric facet controller instance.
+         */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -5852,10 +6017,12 @@ declare namespace LocalJSX {
         "answerStyle"?: GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -5984,10 +6151,12 @@ declare namespace LocalJSX {
         "answerStyle"?: InsightGeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * @default false
          */
         "collapsible"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
         "withToggle"?: boolean;
     }
@@ -6685,6 +6854,28 @@ declare namespace LocalJSX {
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
          */
         "ratingDetailsField"?: string;
+    }
+    interface AtomicProductSectionActions {
+    }
+    interface AtomicProductSectionBadges {
+    }
+    interface AtomicProductSectionBottomMetadata {
+    }
+    interface AtomicProductSectionChildren {
+    }
+    interface AtomicProductSectionDescription {
+    }
+    interface AtomicProductSectionEmphasized {
+    }
+    interface AtomicProductSectionMetadata {
+    }
+    interface AtomicProductSectionName {
+    }
+    interface AtomicProductSectionVisual {
+        /**
+          * How large or small the visual section of product using this template should be.
+         */
+        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     interface AtomicProductTemplate {
         /**
@@ -7979,6 +8170,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -8071,6 +8263,15 @@ declare namespace LocalJSX {
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
+        "atomic-product-section-actions": AtomicProductSectionActions;
+        "atomic-product-section-badges": AtomicProductSectionBadges;
+        "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
+        "atomic-product-section-children": AtomicProductSectionChildren;
+        "atomic-product-section-description": AtomicProductSectionDescription;
+        "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
+        "atomic-product-section-metadata": AtomicProductSectionMetadata;
+        "atomic-product-section-name": AtomicProductSectionName;
+        "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
@@ -8185,6 +8386,11 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+             */
+            "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
+            /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
@@ -8203,6 +8409,9 @@ declare module "@stencil/core" {
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            /**
+             * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+             */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -8420,6 +8629,15 @@ declare module "@stencil/core" {
              * The `atomic-product-rating` element renders a star rating.
              */
             "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
+            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
+            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
+            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
+            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
+            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
+            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
+            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
+            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
+            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
