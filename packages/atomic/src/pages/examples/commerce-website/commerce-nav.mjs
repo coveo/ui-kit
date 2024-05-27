@@ -116,18 +116,18 @@ if (!isOnSearchPage()) {
       );
     }
   } else {
+    standaloneSearchBox.innerHTML = `
+      <atomic-commerce-interface type="search">
+        ${standaloneSearchBoxHTML}
+      </atomic-commerce-interface>`;
+
+    document.body
+      .querySelector('main')
+      .insertAdjacentElement('afterbegin', standaloneSearchBox);
+
     const script = document.createElement('script');
     script.type = 'module';
     script.src = './init-standalone-search-box.js';
-    document.head.insertAdjacentElement('beforeend', script);
-
-    standaloneSearchBox.innerHTML = `
-      <atomic-commerce-interface type="search">
-        <atomic-commerce-layout>
-          ${standaloneSearchBoxHTML}
-        </atomic-commerce-layout>
-      </atomic-commerce-interface>`;
-
-    document.body.insertAdjacentElement('afterbegin', standaloneSearchBox);
+    document.body.insertAdjacentElement('beforeend', script);
   }
 }

@@ -9,12 +9,12 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {commerceEngineConfig} from './engine.mjs';
+      import {commerceEngine} from './engine.mjs';
 
       (async () => {
         await customElements.whenDefined('atomic-commerce-interface');
-        const commerceInterface = document.querySelector('atomic-commerce-interface');
-        await commerceInterface.initialize(commerceEngineConfig);
+        const commerceInterface = document.querySelector('atomic-commerce-recommendation-interface');
+        await commerceInterface.initializeWithEngine(commerceEngine);
       })();
     </script>
     <style>
@@ -34,7 +34,7 @@
     <h1>Cart</h1>
     <main>
       <section>
-        <atomic-commerce-interface type="recommendations">
+        <atomic-commerce-recommendation-interface>
           <atomic-commerce-layout>
             <atomic-layout-section section="main">
               <atomic-commerce-recommendation-list
@@ -65,7 +65,7 @@
               </atomic-commerce-recommendation-list>
             </atomic-layout-section>
           </atomic-commerce-layout>
-        </atomic-commerce-interface>
+        </atomic-commerce-recommendation-interface>
       </section>
     </main>
     <script src="../../header.js" type="text/javascript"></script>

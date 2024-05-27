@@ -12,6 +12,8 @@ import {
   buildCommerceEngine,
   buildProductListing,
   ProductListing,
+  Context,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -51,7 +53,10 @@ export type CommerceBindings = CommonBindings<
 
 /**
  * @internal
- * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
+ * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
+ * (with the exception of `atomic-commerce-recommendation-list`, which must be have
+ * `atomic-commerce-recommendation-interface` as a parent). It handles the headless search engine and localization
+ * configurations.
  */
 @Component({
   tag: 'atomic-commerce-interface',
@@ -64,6 +69,7 @@ export class AtomicCommerceInterface
 {
   private urlManager!: UrlManager;
   private searchStatus!: Search | ProductListing;
+  private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
@@ -81,8 +87,7 @@ export class AtomicCommerceInterface
    */
   @Prop({reflect: true, mutable: true}) public type:
     | 'search'
-    | 'product-listing'
-    | 'recommendations' = 'search';
+    | 'product-listing' = 'search';
 
   /**
    * Whether analytics should be enabled.
@@ -188,10 +193,6 @@ export class AtomicCommerceInterface
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
@@ -200,6 +201,8 @@ export class AtomicCommerceInterface
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
+
+    this.context.setLanguage(this.language);
     this.commonInterfaceHelper.onLanguageChange();
   }
 
@@ -373,7 +376,7 @@ export class AtomicCommerceInterface
     }
     if (this.type === 'product-listing') {
       this.searchStatus = buildProductListing(this.engine!);
-    } else if (this.type === 'search') {
+    } else {
       this.searchStatus = buildSearch(this.engine!);
     }
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -384,6 +387,10 @@ export class AtomicCommerceInterface
         this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
       }
     });
+  }
+
+  private initContext() {
+    this.context = buildContext(this.engine!);
   }
 
   private updateHash() {
@@ -409,6 +416,7 @@ export class AtomicCommerceInterface
 
     this.initSearchStatus();
     this.initUrlManager();
+    this.initContext();
     this.initialized = true;
   }
 

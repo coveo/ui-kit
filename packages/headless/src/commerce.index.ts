@@ -245,7 +245,7 @@ export type {
   RedirectionTriggerState,
 } from './controllers/core/triggers/headless-core-redirection-trigger';
 
-export {buildRedirectionTrigger} from './controllers/triggers/headless-redirection-trigger';
+export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
 
 export type {
   FieldSuggestions,
