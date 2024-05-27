@@ -171,9 +171,6 @@ export class AtomicCommerceInterface
   }
 
   public connectedCallback() {
-    if (this.type !== 'recommendations') {
-      this.store.setLoadingFlag(FirstSearchExecutedFlag);
-    }
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -355,10 +352,6 @@ export class AtomicCommerceInterface
   }
 
   private initUrlManager() {
-    if (!this.reflectStateInUrl || this.type === 'recommendations') {
-      return;
-    }
-
     this.urlManager = this.searchStatus.urlManager({
       initialState: {fragment: this.fragment},
     });
@@ -371,9 +364,6 @@ export class AtomicCommerceInterface
   }
 
   private initSearchStatus() {
-    if (this.type === 'recommendations') {
-      return;
-    }
     if (this.type === 'product-listing') {
       this.searchStatus = buildProductListing(this.engine!);
     } else {
