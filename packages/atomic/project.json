@@ -60,6 +60,7 @@
           "node ./scripts/split-locales.mjs",
           "node ./scripts/copy-dayjs-locales.mjs"
         ],
+        "parallel": false,
         "cwd": "{projectRoot}"
       }
     },

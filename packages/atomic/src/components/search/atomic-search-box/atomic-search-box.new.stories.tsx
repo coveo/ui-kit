@@ -5,10 +5,9 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
+  component: 'atomic-search-box',
   title: 'Atomic/Searchbox',
   id: 'atomic-search-box',
-  component: 'atomic-search-box',
-  loaders: [async () => {}],
   render: renderComponent,
   decorators: [decorator],
   parameters: {

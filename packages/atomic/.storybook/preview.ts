@@ -5,7 +5,8 @@ setCustomElementsManifest(customElements);
 
 export const parameters = {
   html: {
-    root: '#code-root', // default: #root
+    root: '#code-root',
+    removeComments: true,
     prettier: {
       tabWidth: 4,
       useTabs: false,
