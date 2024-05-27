@@ -15,8 +15,13 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
-import {NoResultsCommon} from '../../common/no-results/no-results-common';
+import {Cancel} from '../../common/no-items/cancel';
+import {NoItemsContainer} from '../../common/no-items/container';
+import {NoItemsGuard} from '../../common/no-items/guard';
+import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
+import {NoItems} from '../../common/no-items/no-items';
+import {SearchTips} from '../../common/no-items/tips';
+import {getSummary} from '../../common/no-items/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -64,32 +69,30 @@ export class AtomicNoResults {
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
-  private renderCancel() {
-    if (!this.historyState.past.length) {
-      return;
-    }
-
-    return (
-      <Button
-        style="primary"
-        part="cancel-button"
-        text={this.bindings.i18n.t('cancel-last-action')}
-        onClick={() => this.history.backOnNoResults()}
-        class="font-bold px-2.5 py-3 my-3"
-      ></Button>
-    );
-  }
-
   public render() {
+    const {
+      bindings: {i18n},
+    } = this;
+    this.ariaMessage = getSummary(
+      i18n,
+      this.querySummaryState.query,
+      this.searchStatusState.hasResults
+    );
+
     return (
-      <NoResultsCommon
-        bindings={this.bindings}
-        querySummaryState={this.querySummaryState}
-        searchStatusState={this.searchStatusState}
-        setAriaLive={(msg) => (this.ariaMessage = msg)}
-      >
-        {this.enableCancelLastAction && this.renderCancel()}
-      </NoResultsCommon>
+      <NoItemsGuard {...this.searchStatusState}>
+        <NoItemsContainer>
+          <MagnifyingGlass />
+          <NoItems query={this.querySummaryState.query} i18n={i18n} />
+          <SearchTips i18n={i18n} />
+          {this.enableCancelLastAction && this.historyState.past.length ? (
+            <Cancel
+              i18n={i18n}
+              onClick={() => this.history.backOnNoResults()}
+            />
+          ) : null}
+        </NoItemsContainer>
+      </NoItemsGuard>
     );
   }
 }
