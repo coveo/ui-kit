@@ -29,6 +29,7 @@ import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-red
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
+  updateDateFacetValues,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
@@ -331,6 +332,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        // TODO: KIT-???? remove this function and do not accept numberOfResults in the payload
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
@@ -343,6 +345,18 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.numberOfValues = numberOfValues;
+      })
+      .addCase(updateDateFacetValues, (state, action) => {
+        const {facetId, values} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request || !ensureDateFacetRequest(request)) {
+          return;
+        }
+
+        // TODO: KIT-???? remove this function and do not accept numberOfResults in the payload
+        request.values = convertToDateRangeRequests(values);
+        request.numberOfValues = values.length; // TODO: ensure this returns the right amount of values
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
