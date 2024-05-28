@@ -116,7 +116,10 @@
     "list-assets": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/list-assets.mjs",
+        "command": [
+          "node ./scripts/create-generated-folder.mjs",
+          "node ./scripts/list-assets.mjs"
+        ],
         "cwd": "{projectRoot}"
       }
     },
