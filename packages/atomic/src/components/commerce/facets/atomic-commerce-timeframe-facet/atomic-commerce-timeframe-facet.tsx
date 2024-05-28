@@ -1,11 +1,11 @@
 import {
   DateFacet,
   deserializeRelativeDate,
-  NumericFacetState,
   ListingSummary,
   loadDateFacetSetActions,
   SearchSummary,
   DateFacetValue,
+  DateFacetState,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -55,27 +55,23 @@ export class AtomicCommerceTimeframeFacet
 
   @BindStateToController('facet')
   @State()
-  public facetState!: NumericFacetState;
+  public facetState?: DateFacetState;
   @State() public error!: Error;
 
   @State() private isCollapsed = false;
   @State() private range?: Range; // TODO: move outside this class (should be in the parent component)
 
-  private withDatePicker = false;
-  // private filterFacetCount = true;
-  // private injectionDepth = 1000;
   private min?: string;
   private max?: string;
-  // private sortCriteria: RangeFacetSortCriterion = 'descending';
 
   private headerFocus?: FocusTargetController;
 
   private get state() {
-    return this.facet.state; // TODO: update to facetState!
+    return this.facetState; // TODO: update to facetState!
   }
 
   private get displayName() {
-    return this.state.displayName || 'no-label';
+    return this.state?.displayName || 'no-label';
   }
 
   private get focusTarget(): FocusTargetController {
@@ -117,7 +113,6 @@ export class AtomicCommerceTimeframeFacet
 
   private get valuesToRender() {
     return (
-      // this.facetForDateRange?.state.values.filter(
       this.facet?.state.values.filter(
         (value) => value.numberOfResults || value.state !== 'idle'
       ) || []
@@ -168,10 +163,8 @@ export class AtomicCommerceTimeframeFacet
     }
 
     return (
-      this.facet?.state.values.filter(
-        // this.facetForDateRange?.state.values.filter(
-        ({state}) => state === 'selected'
-      ).length || 0
+      this.facet?.state.values.filter(({state}) => state === 'selected')
+        .length || 0
     );
   }
 
@@ -183,7 +176,6 @@ export class AtomicCommerceTimeframeFacet
     if (this.host.isConnected) {
       return;
     }
-    // this.dependenciesManager?.stopWatching();
   }
 
   private get isHidden() {
@@ -193,7 +185,7 @@ export class AtomicCommerceTimeframeFacet
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.state.facetId!,
+      facetId: this.facet.state?.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
@@ -307,8 +299,6 @@ export class AtomicCommerceTimeframeFacet
         label={this.displayName}
         facet={this.facet}
         range={this.range}
-        // filter={this.filter!}
-        // filterState={(this.filter || {})!.state as unknown as DateFilterState} // TODO: revisit
       ></atomic-commerce-facet-date-input>
     );
   }
