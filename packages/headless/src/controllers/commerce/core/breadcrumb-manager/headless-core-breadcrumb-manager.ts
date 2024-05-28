@@ -11,10 +11,15 @@ import {
   AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
+  CategoryFacetResponse,
+  DateFacetResponse,
+  NumericFacetResponse,
+  RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
+import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../features/facets/facet-set/facet-set-actions';
@@ -122,7 +127,7 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
   [facetTypeWithoutExcludeAction]: {
-    toggleSelectActionCreator: toggleSelectCategoryFacetValue,
+    toggleSelectActionCreator: deselectAllFacetValues,
   },
 };
 
@@ -150,7 +155,16 @@ export function buildCoreBreadcrumbManager(
     facetDisplayName: facet.displayName,
     field: facet.field,
     type: facet.type,
-    values: facet.values
+    values:
+      facet.type === 'hierarchical'
+        ? getValuesForCategoryFacet(facet)
+        : getValuesForNonCategoryFacet(facet),
+  });
+
+  const getValuesForNonCategoryFacet = (
+    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse
+  ) => {
+    return facet.values
       .filter((value) => value.state !== 'idle')
       .map((selection) => ({
         value: selection,
@@ -176,8 +190,30 @@ export function buildCoreBreadcrumbManager(
             dispatch(options.fetchProductsActionCreator());
           }
         },
-      })),
-  });
+      }));
+  };
+
+  const getValuesForCategoryFacet = (facet: CategoryFacetResponse) => {
+    const ancestry = findActiveValueAncestry(facet.values);
+    const activeValue =
+      ancestry.length > 0 ? ancestry[ancestry.length - 1] : undefined;
+
+    if (activeValue === undefined) {
+      return [];
+    }
+
+    return [
+      {
+        value: activeValue,
+        deselect: () => {
+          dispatch(
+            actions['hierarchical'].toggleSelectActionCreator(facet.facetId)
+          );
+          dispatch(options.fetchProductsActionCreator());
+        },
+      },
+    ];
+  };
 
   const commerceFacetSelector = createSelector(
     (state: CommerceEngineState) => state.facetOrder,

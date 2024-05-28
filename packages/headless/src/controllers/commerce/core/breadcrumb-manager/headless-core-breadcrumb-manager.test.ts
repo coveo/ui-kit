@@ -10,10 +10,10 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../features/facets/facet-set/facet-set-actions';
@@ -81,7 +81,7 @@ describe('core breadcrumb manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
 
     options = {
       facetResponseSelector,
@@ -199,48 +199,49 @@ describe('core breadcrumb manager', () => {
   });
 
   describe('category facet breadcrumbs', () => {
-    const breadcrumb = {
-      value: 'Shoes',
-      path: ['Shoes'],
+    const breadcrumb: CategoryFacetValue = {
+      value: 'Sandals',
+      path: ['Shoes', 'Sandals'],
       children: [],
       state: 'selected',
-    } as unknown as CategoryFacetValue;
+      moreValuesAvailable: false,
+      isAutoSelected: false,
+      isLeafValue: true,
+      isSuggested: false,
+      numberOfResults: 10,
+    };
 
     beforeEach(() => {
+      initEngine();
       setFacetsState(
         buildMockCategoryFacetResponse({
           facetId,
           values: [
             {
-              value: 'Hats',
-              path: ['Hats'],
+              value: 'Caps',
+              path: ['Hats', 'Caps'],
               children: [],
               state: 'idle',
               moreValuesAvailable: false,
-              numberOfResults: 10,
+              isAutoSelected: false,
               isLeafValue: true,
+              numberOfResults: 10,
             },
             breadcrumb,
           ] as CategoryFacetValue[],
         })
       );
+      initBreadcrumbManager();
     });
 
     it('generates breadcrumbs', () => {
       expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    describe('#deselect when facet is selected', () =>
-      generateDeselectionTestCases(breadcrumb)(
-        'selected',
-        toggleSelectCategoryFacetValue
-      ));
-
-    it('#deselect does not exclude when facet is excluded', () => {
-      breadcrumb.state = 'excluded';
+    it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-
-      expect(fetchProductsActionCreator).not.toHaveBeenCalled();
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
