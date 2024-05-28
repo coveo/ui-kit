@@ -1,7 +1,7 @@
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import {userEvent} from '@storybook/test';
-import type {Meta, StoryObj} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
 
@@ -23,9 +23,8 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
 
-export const FirstStory: Story = {
+export const Default: Story = {
   name: 'atomic-search-box-recent-queries',
   play: async (context) => {
     await play(context);

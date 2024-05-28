@@ -1,6 +1,6 @@
 import {wrapInRecommendationInterface} from '@coveo/atomic/storybookUtils/recs-interface-wrapper';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import type {Meta, StoryObj} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit-html/static.js';
 
 const {decorator, play} = wrapInRecommendationInterface();
@@ -19,7 +19,6 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
 
 export const Default: Story = {
   name: 'atomic-recs-list',
