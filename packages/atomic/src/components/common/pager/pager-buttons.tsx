@@ -1,10 +1,12 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {i18n} from 'i18next';
 import {Button, ButtonProps} from '../button';
 import {RadioButton, RadioButtonProps} from '../radio-button';
 
 export interface PagerNavigationButtonProps
   extends Omit<ButtonProps, 'style' | 'part' | 'class'> {
   icon: string;
+  i18n: i18n;
 }
 
 export interface PagerPageButtonProps
@@ -18,7 +20,7 @@ export interface PagerPageButtonProps
 }
 
 export interface PagerPageButtonsProps {
-  label: string;
+  i18n: i18n;
 }
 
 export const PagerPreviousButton: FunctionalComponent<
@@ -27,6 +29,7 @@ export const PagerPreviousButton: FunctionalComponent<
   return (
     <Button
       {...props}
+      ariaLabel={props.i18n.t('previous')}
       style="outline-primary"
       part="previous-button"
       class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
@@ -83,7 +86,7 @@ export const PagerPageButtons: FunctionalComponent<PagerPageButtonsProps> = (
     <div
       part="page-buttons"
       role="radiogroup"
-      aria-label={props.label}
+      aria-label={props.i18n.t('pagination')}
       class="contents"
     >
       {...children}
