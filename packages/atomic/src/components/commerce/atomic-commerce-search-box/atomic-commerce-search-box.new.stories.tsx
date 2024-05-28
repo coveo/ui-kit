@@ -20,3 +20,14 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-commerce-search-box',
 };
+
+export const RichSearchBox: Story = {
+  name: 'With suggestions and recent queries',
+  args: {
+    default: ` <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      <atomic-commerce-search-box-instant-products
+        image-size="small"
+      ></atomic-commerce-search-box-instant-products>`,
+  },
+};
