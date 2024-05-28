@@ -81,7 +81,7 @@ describe('core breadcrumb manager', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
 
     options = {
       facetResponseSelector,
@@ -200,8 +200,8 @@ describe('core breadcrumb manager', () => {
 
   describe('category facet breadcrumbs', () => {
     const breadcrumb: CategoryFacetValue = {
-      value: 'Sandals',
-      path: ['Shoes', 'Sandals'],
+      value: 'Shoes',
+      path: ['Shoes'],
       children: [],
       state: 'selected',
       moreValuesAvailable: false,
@@ -212,26 +212,22 @@ describe('core breadcrumb manager', () => {
     };
 
     beforeEach(() => {
-      initEngine();
       setFacetsState(
         buildMockCategoryFacetResponse({
           facetId,
           values: [
             {
-              value: 'Caps',
-              path: ['Hats', 'Caps'],
+              value: 'Hats',
+              path: ['Hats'],
               children: [],
               state: 'idle',
               moreValuesAvailable: false,
-              isAutoSelected: false,
               isLeafValue: true,
-              numberOfResults: 10,
             },
             breadcrumb,
           ] as CategoryFacetValue[],
         })
       );
-      initBreadcrumbManager();
     });
 
     it('generates breadcrumbs', () => {
