@@ -14,6 +14,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
 import {Hidden} from '../../common/hidden';
+import {QueryCorrectionGuard} from '../../common/query-correction/guard';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -171,7 +172,16 @@ export class AtomicDidYouMean implements InitializableComponent {
   }
 
   public render() {
-    if (this.didYouMeanState?.hasQueryCorrection) {
+    const hasCorrection =
+      this.didYouMeanState?.hasQueryCorrection ||
+      this.queryTriggerState?.wasQueryModified ||
+      false;
+    return (
+      <QueryCorrectionGuard
+        hasCorrection={hasCorrection}
+      ></QueryCorrectionGuard>
+    );
+    /*if (this.didYouMeanState?.hasQueryCorrection) {
       if (this.didYouMeanState.wasAutomaticallyCorrected) {
         return this.renderDidYouMeanAutomaticallyCorrected();
       }
@@ -182,6 +192,6 @@ export class AtomicDidYouMean implements InitializableComponent {
       return this.renderQueryTriggerAutomaticallyCorrected();
     }
 
-    return <Hidden></Hidden>;
+    return <Hidden></Hidden>;*/
   }
 }
