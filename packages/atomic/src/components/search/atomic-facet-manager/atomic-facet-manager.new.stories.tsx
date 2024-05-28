@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-facet-manager',
-  title: 'Atomic/Breadbox',
+  title: 'Atomic/FacetManager',
   id: 'atomic-facet-manager',
 
   render: renderComponent,
