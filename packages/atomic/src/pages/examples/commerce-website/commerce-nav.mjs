@@ -83,18 +83,18 @@ if (!isOnSearchPage()) {
       standaloneSearchBox
     );
   } else {
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.src = './init-standalone-search-box.js';
-    document.head.insertAdjacentElement('beforeend', script);
-
     standaloneSearchBox.innerHTML = `
-      <atomic-commerce-interface id="standaloneSearchBox" type="search">
+      <atomic-commerce-interface type="search">
         ${standaloneSearchBoxHTML}
       </atomic-commerce-interface>`;
 
     document.body
       .querySelector('main')
       .insertAdjacentElement('afterbegin', standaloneSearchBox);
+
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = './init-standalone-search-box.js';
+    document.body.insertAdjacentElement('beforeend', script);
   }
 }

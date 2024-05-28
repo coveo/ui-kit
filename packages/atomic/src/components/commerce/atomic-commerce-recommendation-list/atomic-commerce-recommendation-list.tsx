@@ -289,6 +289,13 @@ export class AtomicCommerceRecommendationList
     return this.hasPagination && this.augmentedRecommendationListState.hasItems;
   }
 
+  private get hasNoProducts() {
+    return (
+      !this.recommendationsState.isLoading &&
+      this.augmentedRecommendationListState.products.length === 0
+    );
+  }
+
   private getAtomicProductProps(recommendation: Product) {
     return {
       interactiveProduct: this.recommendations.interactiveProduct({
@@ -397,6 +404,10 @@ export class AtomicCommerceRecommendationList
   }
 
   public render() {
+    if (this.hasNoProducts) {
+      this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      return;
+    }
     return (
       <Fragment>
         {this.renderHeading()}

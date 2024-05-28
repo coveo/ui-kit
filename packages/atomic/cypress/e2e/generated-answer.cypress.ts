@@ -423,6 +423,7 @@ describe('Generated Answer Test Suites', () => {
           mockStreamResponse(streamId, testCitationsPayload);
           setupGeneratedAnswer(streamId);
           cy.wait(getStreamInterceptAlias(streamId));
+          cy.wait(1000);
         });
 
         it('should display the citation link', () => {
@@ -476,9 +477,7 @@ describe('Generated Answer Test Suites', () => {
         describe('when a citation is clicked', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
-            GeneratedAnswerSelectors.citation()
-              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
-              .click();
+            GeneratedAnswerSelectors.citation().click();
           });
 
           it('should log an openGeneratedAnswerSource click event', () => {

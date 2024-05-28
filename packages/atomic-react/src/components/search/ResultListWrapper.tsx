@@ -3,7 +3,7 @@ import type {Result} from '@coveo/headless';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicResultList} from './stencil-generated';
+import {AtomicResultList} from '../stencil-generated/search';
 
 /**
  * The properties of the AtomicResultList component
