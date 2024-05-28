@@ -20,6 +20,15 @@ import {
 import {getCommerceQueryInitialState} from '../query/query-state';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
 
+/**
+ * Duplicate selector since the state is no longer accessible externally
+ * TODO: KIT-3199: Update all other selectors to use the engine as a parameter
+ */
+export const responseIdSelectorFromEngine = createSelector(
+  (engine: CommerceEngine) => engine[stateKey].commerceSearch.responseId,
+  (responseId) => responseId
+);
+
 export const responseIdSelector = createSelector(
   (state: CommerceEngineState) => state.commerceSearch.responseId,
   (responseId) => responseId

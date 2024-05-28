@@ -118,7 +118,7 @@ export class AtomicCommerceProductList
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
       this.productListing.refresh();
-    } else if (this.bindings.interfaceElement.type === 'search') {
+    } else {
       this.search = buildSearch(this.bindings.engine);
     }
 
