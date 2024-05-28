@@ -40,25 +40,25 @@ export function activeParametersSelector(
     // TODO CAPI-907: Handle sort and pagination
     //...getSortCriteria(state?.commerceSort, (s) => s.appliedSort, getCommerceSortInitialState().appliedSort),
     ...getFacets(
-      state?.commerceFacetSet,
+      state.commerceFacetSet,
       facetIsOfType(state, 'regular'),
       getSelectedValues,
       'f'
     ),
     ...getFacets(
-      state?.commerceFacetSet,
+      state.commerceFacetSet,
       facetIsOfType(state, 'hierarchical'),
       getSelectedCategoryValues,
       'cf'
     ),
     ...getFacets(
-      state?.commerceFacetSet,
+      state.commerceFacetSet,
       facetIsOfType(state, 'dateRange'),
       getSelectedRangeValues,
       'df'
     ),
     ...getFacets(
-      state?.commerceFacetSet,
+      state.commerceFacetSet,
       facetIsOfType(state, 'numericalRange'),
       getSelectedRangeValues,
       'nf'

@@ -1,6 +1,17 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
+import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response';
+import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
+import {
+  BaseFacetValueRequest,
+  CurrentValues,
+} from '../../../features/facets/facet-api/request';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {
+  getQ,
+  getSortCriteria,
+  getFacets,
+} from '../../../features/parameter-manager/parameter-manager-selectors';
 import {getQueryInitialState} from '../../../features/query/query-state';
 import {
   restoreSearchParameters,
@@ -15,14 +26,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {
-  getQ,
-  getSortCriteria,
-  getFacets,
-} from '../../../features/parameter-manager/parameter-manager-selectors';
-import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response';
-import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
-import {BaseFacetValueRequest, CurrentValues} from '../../../features/facets/facet-api/request';
 
 export type {SearchParameters};
 
@@ -132,11 +135,20 @@ export function getCoreActiveSearchParameters(
 ): SearchParameters {
   const state = engine.state;
   return {
-    ...getQ(state?.query, (s) => s.q, getQueryInitialState().q),
+    ...getQ(state.query, (s) => s.q, getQueryInitialState().q),
     ...getTab(state),
-    ...getSortCriteria(state?.sortCriteria, (sortCriteria) => sortCriteria, getSortCriteriaInitialState()),
-    ...getFacets(state?.facetSet, facetIsEnabled(state), getSelectedValues, 'f'),
-    ...getFacets(state?.facetSet, facetIsEnabled(state), getExcludedValues, 'fExcluded'),
+    ...getSortCriteria(
+      state.sortCriteria,
+      (sortCriteria) => sortCriteria,
+      getSortCriteriaInitialState()
+    ),
+    ...getFacets(state.facetSet, facetIsEnabled(state), getSelectedValues, 'f'),
+    ...getFacets(
+      state.facetSet,
+      facetIsEnabled(state),
+      getExcludedValues,
+      'fExcluded'
+    ),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
@@ -146,8 +158,8 @@ export function getCoreActiveSearchParameters(
 
 function facetIsEnabled(state: CoreEngine['state']) {
   return (facetId: string) => {
-    return state.facetOptions?.facets[facetId]?.enabled ?? true
-  }
+    return state.facetOptions?.facets[facetId]?.enabled ?? true;
+  };
 }
 
 function getTab(state: Partial<SearchParametersState>) {
@@ -179,27 +191,49 @@ function validateTab(
 }
 
 export function getSelectedValues(request: FacetRequest) {
-  return request.currentValues.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
+  return request.currentValues
+    .filter((fv) => fv.state === 'selected')
+    .map((fv) => fv.value);
 }
 
-export function getSelectedRangeValues(request: CurrentValues<BaseFacetValueRequest>) {
+export function getSelectedRangeValues(
+  request: CurrentValues<BaseFacetValueRequest>
+) {
   return request.currentValues.filter((fv) => fv.state === 'selected');
 }
 
 function getExcludedValues(request: FacetRequest) {
-  return request.currentValues.filter((fv) => fv.state === 'excluded').map((fv) => fv.value);
+  return request.currentValues
+    .filter((fv) => fv.state === 'excluded')
+    .map((fv) => fv.value);
 }
 
 function getCategoryFacets(state: CoreEngine['state']) {
-  return getFacets(state?.categoryFacetSet, facetIsEnabled(state), (request) => findActiveValueAncestry(request.currentValues).map(v => v.value), 'cf')
+  return getFacets(
+    state.categoryFacetSet,
+    facetIsEnabled(state),
+    (request) =>
+      findActiveValueAncestry(request.currentValues).map((v) => v.value),
+    'cf'
+  );
 }
 
 function getNumericFacets(state: CoreEngine['state']) {
-  return getFacets(state?.numericFacetSet, facetIsEnabled(state), getSelectedRangeValues, 'nf')
+  return getFacets(
+    state.numericFacetSet,
+    facetIsEnabled(state),
+    getSelectedRangeValues,
+    'nf'
+  );
 }
 
 function getDateFacets(state: CoreEngine['state']) {
-  return getFacets(state?.dateFacetSet, facetIsEnabled(state), getSelectedRangeValues, 'df')
+  return getFacets(
+    state.dateFacetSet,
+    facetIsEnabled(state),
+    getSelectedRangeValues,
+    'df'
+  );
 }
 
 function getAutomaticFacets(state: Partial<SearchParametersState>) {
@@ -218,5 +252,7 @@ function getAutomaticFacets(state: Partial<SearchParametersState>) {
 }
 
 function getSelectedResponseValues(response: AutomaticFacetResponse) {
-  return response.values.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
+  return response.values
+    .filter((fv) => fv.state === 'selected')
+    .map((fv) => fv.value);
 }
