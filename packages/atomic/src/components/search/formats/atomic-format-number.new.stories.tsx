@@ -1,3 +1,4 @@
+import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInResult} from '@coveo/atomic/storybookUtils/result-wrapper';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
@@ -25,9 +26,7 @@ const meta: Meta = {
 
   render: renderComponent,
   decorators: [searchInterfaceDecorator],
-  parameters: {
-    controls: {expanded: true, hideNoControlsWarning: true},
-  },
+  parameters,
   play,
 };
 

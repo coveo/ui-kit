@@ -1,3 +1,4 @@
+import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
@@ -22,9 +23,7 @@ const meta: Meta = {
 
   render: renderComponent,
   decorators: [decorator],
-  parameters: {
-    controls: {expanded: true, hideNoControlsWarning: true},
-  },
+  parameters,
   play,
   argTypes: {
     icon: {
@@ -87,7 +86,6 @@ export const Default: Story = {
 
 export const AllIcons: Story = {
   name: 'All available icons',
-  args: {},
   decorators: [
     () =>
       html` <style>

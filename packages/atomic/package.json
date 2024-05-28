@@ -26,7 +26,7 @@
   "scripts": {
     "clean": "rimraf -rf dist/*",
     "build": "nx build",
-    "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
+    "build:locales": "npx nx build:locales atomic",
     "dev": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "npm run build:locales && stencil test --spec",

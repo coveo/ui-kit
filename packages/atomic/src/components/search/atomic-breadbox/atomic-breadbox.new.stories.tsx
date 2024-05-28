@@ -1,3 +1,4 @@
+import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import {userEvent, waitFor, expect} from '@storybook/test';
@@ -14,9 +15,7 @@ const meta: Meta = {
 
   render: renderComponent,
   decorators: [decorator],
-  parameters: {
-    controls: {expanded: true, hideNoControlsWarning: true},
-  },
+  parameters,
   play,
 };
 
@@ -24,7 +23,6 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-breadbox',
-  args: {},
   decorators: [
     (story) => html`
       ${story()}

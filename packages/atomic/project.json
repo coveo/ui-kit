@@ -62,7 +62,8 @@
         "commands": [
           "node ./scripts/create-generated-folder.mjs",
           "node ./scripts/split-locales.mjs",
-          "node ./scripts/copy-dayjs-locales.mjs"
+          "node ./scripts/copy-dayjs-locales.mjs",
+          "node ./scripts/list-assets.mjs"
         ],
         "parallel": false,
         "cwd": "{projectRoot}"
@@ -102,7 +103,7 @@
     },
     "storybook": {
       "executor": "@nx/storybook:storybook",
-      "dependsOn": ["wait-on:dist", "list-assets"],
+      "dependsOn": ["wait-on:dist"],
       "options": {
         "port": 4400,
         "configDir": "{workspaceRoot}/packages/atomic/.storybook"
@@ -113,18 +114,8 @@
         }
       }
     },
-    "list-assets": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": [
-          "node ./scripts/create-generated-folder.mjs",
-          "node ./scripts/list-assets.mjs"
-        ],
-        "cwd": "{projectRoot}"
-      }
-    },
     "build-storybook": {
-      "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
+      "dependsOn": ["cached:build:stencil", "cem:build"],
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "cwd": "{projectRoot}",

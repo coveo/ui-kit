@@ -1,3 +1,4 @@
+import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@coveo/atomic/storybookUtils/recs-interface-wrapper';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
@@ -12,9 +13,7 @@ const meta: Meta = {
 
   render: renderComponent,
   decorators: [decorator],
-  parameters: {
-    controls: {expanded: true, hideNoControlsWarning: true},
-  },
+  parameters,
   play,
 };
 

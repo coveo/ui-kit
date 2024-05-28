@@ -1,3 +1,4 @@
+import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
@@ -41,9 +42,7 @@ const meta: Meta = {
   id: 'atomic-smart-snippet',
   render: renderComponent,
   decorators: [decorator],
-  parameters: {
-    controls: {expanded: true, hideNoControlsWarning: true},
-  },
+  parameters,
   play,
 };
 
