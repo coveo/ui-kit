@@ -96,13 +96,13 @@ export const paginationReducer = createReducer(
 
         state.recommendations[slotId] = getCommercePaginationInitialSlice();
       })
+      .addCase(restoreSearchParameters, handleRestoreParameters)
+      .addCase(restoreProductListingParameters, handleRestoreParameters)
       .addCase(deselectAllFacetValues, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
       .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
-      .addCase(restoreSearchParameters, handleRestoreParameters)
-      .addCase(restoreProductListingParameters, handleRestoreParameters)
       .addCase(setContext, handlePaginationReset)
       .addCase(setView, handlePaginationReset)
       .addCase(setUser, handlePaginationReset);

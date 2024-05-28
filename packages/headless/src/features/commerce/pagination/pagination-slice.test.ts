@@ -11,8 +11,10 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameter-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
 import {
   nextPage,
@@ -204,6 +206,48 @@ describe('pagination slice', () => {
         fetchRecommendations.fulfilled(response, '', {slotId})
       ).recommendations[slotId]
     ).toEqual(pagination);
+  });
+
+  describe.each([
+    {
+      action: restoreSearchParameters,
+      actionName: 'restoreSearchParameters',
+    },
+    {
+      action: restoreProductListingParameters,
+      actionName: 'restoreProductListingParameters',
+    },
+  ])('$actionName', ({action}) => {
+    it('restores principal pagination page', () => {
+      const parameters = {
+        page: 2,
+      };
+
+      const finalState = paginationReducer(state, action(parameters));
+
+      expect(finalState.principal.page).toBe(parameters.page);
+    });
+
+    it('restores principal pagination perPage', () => {
+      const parameters = {
+        perPage: 11,
+      };
+
+      const finalState = paginationReducer(state, action(parameters));
+
+      expect(finalState.principal.perPage).toBe(parameters.perPage);
+    });
+
+    it('does not restore principal pagination when parameters are not defined', () => {
+      const parameters = {
+        page: undefined,
+        perPage: undefined,
+      };
+
+      const finalState = paginationReducer(state, action(parameters));
+
+      expect(finalState.principal).toBe(state.principal);
+    });
   });
 
   describe.each([
