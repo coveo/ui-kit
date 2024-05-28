@@ -1,4 +1,6 @@
 import {
+  CommerceEngine,
+  Selectors,
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
@@ -46,7 +48,9 @@ export interface FacetInfoMap {
     | (FacetInfo & FacetValueFormat<DateFacetValue>);
 }
 
-export function createAtomicCommerceStore(): AtomicCommerceStore {
+export function createAtomicCommerceStore(
+  type: 'search' | 'product-listing'
+): AtomicCommerceStore {
   const commonStore = createAtomicCommonStore<AtomicStoreData>({
     loadingFlags: [],
     facets: {},
@@ -78,6 +82,19 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
       return !window.matchMedia(
         makeDesktopQuery(commonStore.state.mobileBreakpoint)
       ).matches;
+    },
+
+    getUniqueIDFromEngine(engine: CommerceEngine): string {
+      switch (type) {
+        case 'search':
+          return Selectors.Search.responseIdSelectorFromEngine(engine);
+        case 'product-listing':
+          return Selectors.ProductListing.responseIdSelectorFromEngine(engine);
+        default:
+          throw new Error(
+            `getUniqueIDFromEngine not implemented for this interface type, ${type}`
+          );
+      }
     },
   };
 }
