@@ -49,7 +49,7 @@ export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   | 'isFieldExpanded'
   | 'preventAutoSelect'
 > & {
-  displayName: string;
+  displayName?: string;
   type: Type;
   values: Value[];
   initialNumberOfValues: number;
@@ -70,7 +70,7 @@ export type AnyFacetRequest = Pick<
   | 'isFieldExpanded'
   | 'preventAutoSelect'
 > & {
-  displayName: string;
+  displayName?: string;
   type: FacetType;
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
