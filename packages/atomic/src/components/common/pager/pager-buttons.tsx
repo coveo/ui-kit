@@ -49,6 +49,7 @@ export const PagerNextButton: FunctionalComponent<
   return (
     <Button
       {...props}
+      ariaLabel={props.i18n.t('next')}
       style="outline-primary"
       part="next-button"
       class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
