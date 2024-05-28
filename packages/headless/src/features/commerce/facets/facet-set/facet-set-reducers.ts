@@ -1,3 +1,4 @@
+import {FacetValueState} from '../../../facets/facet-api/value';
 import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request';
 import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
 import {Parameters} from '../../parameters/parameters-actions';
@@ -41,24 +42,12 @@ function restoreRegularFacets(
   for (const [facetId, values] of entries) {
     state[facetId] = {
       request: {
-        facetId,
-        field: facetId,
-        // eslint-disable-next-line @cspell/spellchecker
-        // TODO CAPI-966: Simplify facet schema to only require necessary properties
-        numberOfValues: 10,
-        isFieldExpanded: false,
-        preventAutoSelect: false,
-        initialNumberOfValues: 10,
-        displayName: '',
+        ...restoreFacet(facetId),
         type: 'regular',
         values: values.map((value): RegularFacetValue => {
           return {
+            ...restoreFacetValue(),
             value,
-            state: 'selected',
-            isAutoSelected: false,
-            isSuggested: false,
-            numberOfResults: 10,
-            moreValuesAvailable: true,
           };
         }),
       } as RegularFacetRequest,
@@ -75,26 +64,14 @@ function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
   for (const [facetId, values] of entries) {
     state[facetId] = {
       request: {
-        facetId,
-        field: facetId,
-        // eslint-disable-next-line @cspell/spellchecker
-        // TODO CAPI-966: Simplify facet schema to only require necessary properties
-        numberOfValues: 10,
-        isFieldExpanded: false,
-        preventAutoSelect: false,
-        initialNumberOfValues: 10,
-        displayName: '',
+        ...restoreFacet(facetId),
         type,
         values: values.map((value) => {
           const rangeValue = {
             start: value.start,
             end: value.end,
             endInclusive: value.endInclusive,
-            state: 'selected',
-            isAutoSelected: false,
-            isSuggested: false,
-            numberOfResults: 10,
-            moreValuesAvailable: true,
+            ...restoreFacetValue(),
           };
           switch (type) {
             case 'dateRange':
@@ -116,22 +93,41 @@ function restoreCategoryFacets(
   for (const [facetId, path] of entries) {
     state[facetId] = {
       request: {
-        facetId,
-        field: facetId,
-        // eslint-disable-next-line @cspell/spellchecker
-        // TODO CAPI-966: Simplify facet schema to only require necessary properties
-        numberOfValues: 10,
-        isFieldExpanded: false,
-        preventAutoSelect: false,
-        initialNumberOfValues: 10,
-        displayName: '',
+        ...restoreFacet(facetId),
         type: 'hierarchical',
         values: [],
+        // eslint-disable-next-line @cspell/spellchecker
+        // TODO CAPI-966: Remove delimitingCharacter
         delimitingCharacter: '|',
       } as CategoryFacetRequest,
     };
     selectPath(state[facetId].request as CategoryFacetRequest, path, 10);
   }
+}
+
+function restoreFacet(facetId: string) {
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-966: Only set facet field
+  return {
+    facetId,
+    field: facetId,
+    numberOfValues: 10,
+    isFieldExpanded: false,
+    preventAutoSelect: false,
+    initialNumberOfValues: 10,
+  };
+}
+
+function restoreFacetValue() {
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO CAPI-966: Only set facet value state
+  return {
+    state: 'selected' as FacetValueState,
+    isAutoSelected: false,
+    isSuggested: false,
+    numberOfResults: 10,
+    moreValuesAvailable: true,
+  };
 }
 
 export function buildSelectedFacetValueRequest(rawValue: string) {
