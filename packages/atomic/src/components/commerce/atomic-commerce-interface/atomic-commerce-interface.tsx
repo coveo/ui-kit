@@ -73,7 +73,7 @@ export class AtomicCommerceInterface
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
-  private store = createAtomicCommerceStore();
+  private store: AtomicCommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   @Element() public host!: HTMLAtomicCommerceInterfaceElement;
@@ -168,6 +168,7 @@ export class AtomicCommerceInterface
       this,
       'CoveoAtomic'
     );
+    this.store = createAtomicCommerceStore(this.type);
   }
 
   public connectedCallback() {
