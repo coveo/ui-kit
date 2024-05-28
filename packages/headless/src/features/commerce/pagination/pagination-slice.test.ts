@@ -218,23 +218,15 @@ describe('pagination slice', () => {
       actionName: 'restoreProductListingParameters',
     },
   ])('$actionName', ({action}) => {
-    it('restores principal pagination page', () => {
+    it('restores principal pagination', () => {
       const parameters = {
         page: 2,
-      };
-
-      const finalState = paginationReducer(state, action(parameters));
-
-      expect(finalState.principal.page).toBe(parameters.page);
-    });
-
-    it('restores principal pagination perPage', () => {
-      const parameters = {
         perPage: 11,
       };
 
       const finalState = paginationReducer(state, action(parameters));
 
+      expect(finalState.principal.page).toBe(parameters.page);
       expect(finalState.principal.perPage).toBe(parameters.perPage);
     });
 
