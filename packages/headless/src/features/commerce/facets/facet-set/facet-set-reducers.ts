@@ -43,7 +43,8 @@ function restoreRegularFacets(
       request: {
         facetId,
         field: facetId,
-        // TODO: Simplify facet schema to only require necessary properties
+        // eslint-disable-next-line @cspell/spellchecker
+        // TODO CAPI-966: Simplify facet schema to only require necessary properties
         numberOfValues: 10,
         isFieldExpanded: false,
         preventAutoSelect: false,
@@ -76,7 +77,8 @@ function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
       request: {
         facetId,
         field: facetId,
-        // TODO: Simplify facet schema to only require necessary properties
+        // eslint-disable-next-line @cspell/spellchecker
+        // TODO CAPI-966: Simplify facet schema to only require necessary properties
         numberOfValues: 10,
         isFieldExpanded: false,
         preventAutoSelect: false,
@@ -116,7 +118,8 @@ function restoreCategoryFacets(
       request: {
         facetId,
         field: facetId,
-        // TODO: Simplify facet schema to only require necessary properties
+        // eslint-disable-next-line @cspell/spellchecker
+        // TODO CAPI-966: Simplify facet schema to only require necessary properties
         numberOfValues: 10,
         isFieldExpanded: false,
         preventAutoSelect: false,
