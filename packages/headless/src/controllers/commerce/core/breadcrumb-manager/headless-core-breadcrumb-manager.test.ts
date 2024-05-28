@@ -16,6 +16,7 @@ import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
+  updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -270,6 +271,13 @@ describe('core breadcrumb manager', () => {
 
       it('dispatches #fetchProductsActionCreator', () => {
         expect(fetchProductsActionCreator).toHaveBeenCalled();
+      });
+
+      it('dispatches #updateFreezeCurrentValues', () => {
+        expect(updateFreezeCurrentValues).toHaveBeenCalledWith({
+          facetId,
+          freezeCurrentValues: false,
+        });
       });
     };
   }
