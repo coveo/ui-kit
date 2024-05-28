@@ -87,7 +87,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   ) {
     return (
       <LocalizedString
-        bindings={this.bindings}
+        i18n={this.bindings.i18n}
         key={key}
         params={{query: <b part="highlight">{query}</b>}}
       />
@@ -111,7 +111,7 @@ export class AtomicDidYouMean implements InitializableComponent {
           part="search-instead-for"
         >
           <LocalizedString
-            bindings={this.bindings}
+            i18n={this.bindings.i18n}
             key="search-instead-for"
             params={{
               query: (
@@ -153,7 +153,7 @@ export class AtomicDidYouMean implements InitializableComponent {
     return (
       <p class="text-on-background" part="did-you-mean">
         <LocalizedString
-          bindings={this.bindings}
+          i18n={this.bindings.i18n}
           key="did-you-mean"
           params={{
             query: (
