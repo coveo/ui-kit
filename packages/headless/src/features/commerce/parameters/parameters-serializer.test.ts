@@ -1,6 +1,7 @@
 import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range';
 import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
+import {buildFieldsSortCriterion, SortDirection} from '../sort/sort';
 import {searchSerializer} from './parameters-serializer';
 
 const someSpecialCharactersThatNeedsEncoding = [
@@ -91,14 +92,21 @@ describe('searchSerializer', () => {
         }),
       ],
     };
-    const parameters: Required<
-      Omit<CommerceSearchParameters, 'sortCriteria' | 'page' | 'perPage'>
-    > = {
+    const page = 4;
+    const perPage = 96;
+    const sortCriteria = buildFieldsSortCriterion([
+      {name: 'author', direction: SortDirection.Ascending},
+      {name: 'created', direction: SortDirection.Descending},
+    ]);
+    const parameters: Required<CommerceSearchParameters> = {
       q: 'some query',
       f,
       cf,
       nf,
       df,
+      page,
+      perPage,
+      sortCriteria,
     };
 
     const serialized = serialize(parameters);

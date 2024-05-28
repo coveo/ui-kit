@@ -23,11 +23,11 @@ import {
   TriggerSection,
 } from './state-sections';
 
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-907: Handle sort and pagination
-export type CommerceSearchParametersState = CommerceQuerySection &
-  CommerceFacetSetSection;
-export type CommerceProductListingParametersState = CommerceFacetSetSection;
+export type CommerceProductListingParametersState = CommerceFacetSetSection &
+  CommerceSortSection &
+  CommercePaginationSection;
+export type CommerceSearchParametersState =
+  CommerceProductListingParametersState & CommerceQuerySection;
 
 export type CommerceAppState = ConfigurationSection &
   CommerceStandaloneSearchBoxSection &
