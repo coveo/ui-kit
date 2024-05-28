@@ -60,7 +60,9 @@ import {
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameter-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
 import * as CommerceFacetReducers from './facet-set-reducer-helpers';
 import {
@@ -2319,6 +2321,238 @@ describe('commerceFacetSetReducer', () => {
       for (const facetId in finalState) {
         expect(finalState[facetId].request.values.length).toBe(0);
       }
+    });
+  });
+
+  describe.each([
+    {
+      actionName: '#restoreSearchParameters',
+      action: restoreSearchParameters,
+    },
+    {
+      actionName: '#restoreProductListingParameters',
+      action: restoreProductListingParameters,
+    },
+  ])('$actionName', ({action}: {action: ActionCreator}) => {
+    it('clears current facets', () => {
+      const facetId = 'some_facet_to_remove';
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          facetId,
+          values: [buildMockCommerceRegularFacetValue({state: 'selected'})],
+        }),
+      });
+
+      const finalState = commerceFacetSetReducer(state, action({}));
+
+      expect(finalState).toEqual({});
+    });
+
+    it('populates regular facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          f: {
+            regular_facet_1: ['1a', '1b'],
+            regular_facet_2: ['2a'],
+          },
+        })
+      );
+
+      const firstRequest = finalState['regular_facet_1'].request;
+      expect(firstRequest.type).toEqual('regular');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: '1a',
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            value: '1b',
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['regular_facet_2'].request;
+      expect(secondRequest.type).toEqual('regular');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: '2a',
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
+    it('populates numeric facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          nf: {
+            numeric_facet_1: [
+              {
+                start: 1,
+                end: 10,
+                endInclusive: false,
+              },
+              {
+                start: 15,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+            numeric_facet_2: [
+              {
+                start: 11,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+          },
+        })
+      );
+
+      const firstRequest = finalState['numeric_facet_1'].request;
+      expect(firstRequest.type).toEqual('numericalRange');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 1,
+            end: 10,
+            endInclusive: false,
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            start: 15,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['numeric_facet_2'].request;
+      expect(secondRequest.type).toEqual('numericalRange');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 11,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
+    it('populates date facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          df: {
+            date_facet_1: [
+              {
+                start: '2020/10/01',
+                end: '2020/11/01',
+                endInclusive: false,
+              },
+              {
+                start: '2021/10/01',
+                end: '2022/10/01',
+                endInclusive: true,
+              },
+            ],
+            date_facet_2: [
+              {
+                start: '1997/10/01',
+                end: '1998/10/01',
+                endInclusive: true,
+              },
+            ],
+          },
+        })
+      );
+
+      const firstRequest = finalState['date_facet_1'].request;
+      expect(firstRequest.type).toEqual('dateRange');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: '2020/10/01',
+            end: '2020/11/01',
+            endInclusive: false,
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            start: '2021/10/01',
+            end: '2022/10/01',
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['date_facet_2'].request;
+      expect(secondRequest.type).toEqual('dateRange');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: '1997/10/01',
+            end: '1998/10/01',
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
+    it('populates hierarchical facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          cf: {
+            category_facet_1: ['Home', 'Kitchen', 'Utensils'],
+            category_facet_2: ['Electronics'],
+          },
+        })
+      );
+
+      const firstRequest = finalState['category_facet_1'].request;
+      expect(firstRequest.type).toEqual('hierarchical');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: 'Home',
+            state: 'idle',
+            children: expect.arrayContaining([
+              expect.objectContaining({
+                value: 'Kitchen',
+                state: 'idle',
+                children: expect.arrayContaining([
+                  expect.objectContaining({
+                    value: 'Utensils',
+                    state: 'selected',
+                  }),
+                ]),
+              }),
+            ]),
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['category_facet_2'].request;
+      expect(secondRequest.type).toEqual('hierarchical');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: 'Electronics',
+            state: 'selected',
+            children: [],
+          }),
+        ])
+      );
     });
   });
 });

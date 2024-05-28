@@ -11,7 +11,14 @@ import {
   CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections';
+import {getQ} from '../../parameter-manager/parameter-manager-selectors';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
+import {
+  activeParametersSelector as coreActiveParametersSelector,
+  enrichedParametersSelector as coreEnrichedParametersSelector,
+} from '../parameters/parameters-selectors';
+import {getCommerceQueryInitialState} from '../query/query-state';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
 
 /**
  * Duplicate selector since the state is no longer accessible externally
@@ -76,3 +83,26 @@ export const queryExecutedFromResponseSelector = (
 
   return querySelector(state);
 };
+
+export const activeParametersSelector = (
+  state: CommerceEngine[typeof stateKey]
+): CommerceSearchParameters => {
+  return {
+    ...getQ(
+      state?.commerceQuery,
+      (s) => s.query,
+      getCommerceQueryInitialState().query
+    ),
+    ...coreActiveParametersSelector(state),
+  };
+};
+
+export function enrichedParametersSelector(
+  state: CommerceEngine[typeof stateKey],
+  activeParams: CommerceSearchParameters
+) {
+  return {
+    q: getCommerceQueryInitialState().query!,
+    ...coreEnrichedParametersSelector(state, activeParams),
+  };
+}

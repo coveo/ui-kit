@@ -24,9 +24,10 @@ import {
 } from './state-sections';
 
 // eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-546: Handle only the query param for now. Add facets, sort, pagination later.
-export type CommerceSearchParametersState = CommerceQuerySection;
-export type CommerceProductListingParametersState = {};
+// TODO CAPI-907: Handle sort and pagination
+export type CommerceSearchParametersState = CommerceQuerySection &
+  CommerceFacetSetSection;
+export type CommerceProductListingParametersState = CommerceFacetSetSection;
 
 export type CommerceAppState = ConfigurationSection &
   CommerceStandaloneSearchBoxSection &
