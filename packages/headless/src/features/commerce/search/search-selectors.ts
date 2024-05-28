@@ -1,13 +1,26 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {
   CommercePaginationSection,
   CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
+
+/**
+ * Duplicate selector since the state is no longer accessible externally
+ * TODO: KIT-3199: Update all other selectors to use the engine as a parameter
+ */
+export const responseIdSelectorFromEngine = createSelector(
+  (engine: CommerceEngine) => engine[stateKey].commerceSearch.responseId,
+  (responseId) => responseId
+);
 
 export const responseIdSelector = createSelector(
   (state: CommerceEngineState) => state.commerceSearch.responseId,
@@ -57,8 +70,8 @@ export const queryExecutedFromResponseSelector = (
   state: CommerceQuerySection,
   response: SearchCommerceSuccessResponse
 ) => {
-  if (response.queryCorrection?.correctedQuery !== undefined) {
-    return response.queryCorrection?.correctedQuery;
+  if (!isNullOrUndefined(response.queryCorrection?.correctedQuery)) {
+    return response.queryCorrection.correctedQuery;
   }
 
   return querySelector(state);

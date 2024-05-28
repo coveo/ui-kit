@@ -1,4 +1,5 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+import * as Selectors from './selectors/commerce-selectors.index';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -34,7 +35,7 @@ export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
 
 // Selectors
-export {responseIdSelectorFromEngine} from './features/commerce/product-listing/product-listing-selectors';
+export {Selectors};
 
 // Controllers
 export type {
@@ -242,6 +243,13 @@ export type {
   NotifyTriggerState,
 } from './controllers/core/triggers/headless-core-notify-trigger';
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
+
+export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+} from './controllers/core/triggers/headless-core-redirection-trigger';
+
+export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
 
 export type {
   FieldSuggestions,
