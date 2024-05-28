@@ -48,13 +48,13 @@ export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   | 'numberOfValues'
   | 'isFieldExpanded'
   | 'preventAutoSelect'
-  | 'freezeCurrentValues'
 > & {
   displayName: string;
   type: Type;
   values: Value[];
   initialNumberOfValues: number;
   numberOfValues?: number;
+  freezeCurrentValues?: boolean;
 };
 
 export type AnyFacetValueRequest =
@@ -70,13 +70,13 @@ export type AnyFacetRequest = Pick<
   | 'numberOfValues'
   | 'isFieldExpanded'
   | 'preventAutoSelect'
-  | 'freezeCurrentValues'
 > & {
   displayName: string;
   type: FacetType;
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
   numberOfValues?: number;
+  freezeCurrentValues?: boolean;
 } & Partial<CategoryFacetDelimitingCharacter & NumericFacetExtraProperties>;
 
 type MappedFacetRequest = {
