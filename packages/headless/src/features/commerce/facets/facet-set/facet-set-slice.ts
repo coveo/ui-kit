@@ -39,10 +39,18 @@ import {
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameter-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
 import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
 import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
+import {
+  buildCategoryFacetValueRequest,
+  buildSelectedFacetValueRequest,
+  restoreFromParameters,
+  selectPath,
+} from './facet-set-reducers';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
@@ -57,13 +65,6 @@ import {
 } from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
 import {AnyFacetResponse} from './interfaces/response';
-import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameter-actions';
-import {
-  buildCategoryFacetValueRequest,
-  buildSelectedFacetValueRequest,
-  restoreFromParameters, selectPath
-} from './facet-set-reducers';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
@@ -277,7 +278,10 @@ export const commerceFacetSetReducer = createReducer(
         );
 
         if (!existingValue) {
-          insertNewValue(facetRequest, buildSelectedFacetValueRequest(rawValue) as AnyFacetValueRequest);
+          insertNewValue(
+            facetRequest,
+            buildSelectedFacetValueRequest(rawValue) as AnyFacetValueRequest
+          );
           return;
         }
 

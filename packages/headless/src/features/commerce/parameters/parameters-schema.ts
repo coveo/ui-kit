@@ -8,5 +8,4 @@ export const parametersDefinition = {
   sortCriteria: new RecordValue(),
   page: new NumberValue({min: 0}),
   perPage: new NumberValue({min: 1}),
-}
-
+};

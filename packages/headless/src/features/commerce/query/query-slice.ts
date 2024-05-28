@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {updateQuery} from './query-actions';
 import {getCommerceQueryInitialState} from './query-state';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 
 export const queryReducer = createReducer(
   getCommerceQueryInitialState(),

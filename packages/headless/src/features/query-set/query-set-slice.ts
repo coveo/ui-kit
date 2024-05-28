@@ -1,5 +1,9 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {
+  CommerceSearchParameters,
+  restoreSearchParameters as commerceRestoreSearchParameters,
+} from '../commerce/search-parameters/search-parameters-actions';
 import {change} from '../history/history-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {
@@ -9,10 +13,6 @@ import {
 import {executeSearch} from '../search/search-actions';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters as commerceRestoreSearchParameters
-} from '../commerce/search-parameters/search-parameters-actions';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),
