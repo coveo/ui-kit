@@ -69,6 +69,22 @@ describe('headless product-listing', () => {
     });
   });
 
+  it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
+    const promoteChildToParent = jest.spyOn(
+      ProductListingActions,
+      'promoteChildToParent'
+    );
+    const childPermanentId = 'childPermanentId';
+    const parentPermanentId = 'parentPermanentId';
+
+    productListing.promoteChildToParent(childPermanentId, parentPermanentId);
+
+    expect(promoteChildToParent).toHaveBeenCalledWith({
+      childPermanentId,
+      parentPermanentId,
+    });
+  });
+
   it('refresh dispatches #fetchProductListing', () => {
     const fetchProductListing = jest.spyOn(
       ProductListingActions,

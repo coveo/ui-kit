@@ -1,3 +1,4 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -122,4 +123,22 @@ export const registerRecommendationsSlot = createAction(
   'commerce/recommendations/registerSlot',
   (payload: SlotIdPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)
+);
+
+export interface PromoteChildToParentActionCreatorPayload
+  extends SlotIdPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
+  ...recommendationsSlotDefinition,
+};
+
+export const promoteChildToParent = createAction(
+  'commerce/recommendations/promoteChildToParent',
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

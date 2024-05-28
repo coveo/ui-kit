@@ -69,8 +69,22 @@ describe('headless search', () => {
     });
   });
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-244: Handle analytics
+  it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
+    const promoteChildToParent = jest.spyOn(
+      SearchActions,
+      'promoteChildToParent'
+    );
+    const childPermanentId = 'childPermanentId';
+    const parentPermanentId = 'parentPermanentId';
+
+    search.promoteChildToParent(childPermanentId, parentPermanentId);
+
+    expect(promoteChildToParent).toHaveBeenCalledWith({
+      childPermanentId,
+      parentPermanentId,
+    });
+  });
+
   it('executeFirstSearch dispatches #executeSearch', () => {
     const executeSearch = jest.spyOn(SearchActions, 'executeSearch');
 
