@@ -23,6 +23,51 @@ export const getProductProperty = (product: Product, property: string) => {
 };
 
 /**
+ * Extracts the required properties from standard lookup fields for the purpose of recording analytics events on
+ * end-user interactions with a product.
+ *
+ * The properties are:
+ *
+ * - name: The displayed name of the product. The function will attempt to extract the name from the ec_name field first, then from the ec_product_id field, and finally from the permanentid field.
+ * - price: The displayed price of the product. This function will attempt to extract the price from the ec_promo_price field first, and then from the ec_price field.
+ * - productId: The unique ID of the product. This function will attempt to extrat the ID from the ec_product_id field first, and then from the permanentid field.
+ *
+ * If any of the required properties can't be extracted from the standard lookup fields, a warning message will be generated.
+ *
+ * @param product (Product) - The target product.
+ * @returns (Record<string, unknown>) An object containing the required properties for logging analytics events, as well as a warning message if any of the required properties are missing.
+ */
+export const getRequiredProductPropertiesForAnalytics = (product: Product) => {
+  const productId = getProductIdFromStandardLookupFields(product);
+  const productName = getProductNameFromStandardLookupFields(product);
+  const productPrice = getProductPriceFromStandardLookupFields(product);
+  const warnings: string[] = [];
+  if (productId.warning) {
+    warnings.push(productId.warning);
+  }
+  if (productName.warning) {
+    warnings.push(productName.warning);
+  }
+  if (productPrice.warning) {
+    warnings.push(productPrice.warning);
+  }
+
+  const properties = {
+    productId: productId.value,
+    name: productName.value,
+    price: productPrice.value,
+    warning:
+      warnings.length === 0
+        ? undefined
+        : `Some of the properties required for logging analytics events are missing for product '${product.permanentid}':
+    \n- ${warnings.join('\n- ')}
+    \nReview the configuration of the above 'ec_'-prefixed fields in your index, and make sure they contain the correct metadata.`,
+  };
+
+  return properties;
+};
+
+/**
  * Creates a condition that verifies if the specified fields are defined.
  * @param fieldNames (string[]) - A list of fields that must be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is defined.
@@ -99,8 +144,88 @@ const getFieldValuesFromProduct = (fieldName: string, product: Product) => {
   return isArray(rawValue) ? rawValue : [rawValue];
 };
 
+const getFirstValidStringFieldValueFromProduct = (
+  fieldNames: string[],
+  product: Product
+) => {
+  const rawValues = fieldNames.map((fieldName) =>
+    getProductProperty(product, fieldName)
+  );
+
+  const value = rawValues.find((value) => typeof value === 'string');
+
+  if (value === undefined) {
+    return value;
+  }
+
+  return value as string;
+};
+
+const getCouldNotRetrievePropertyWarning = (
+  property: string,
+  lookupFields: string[]
+) =>
+  `'${property}' could not be retrieved from field${lookupFields.length > 1 ? 's' : ''} '${lookupFields.join("', '")}'.`;
+
+const getFirstValidNumberFieldValueFromProduct = (
+  fieldNames: string[],
+  product: Product
+) => {
+  const rawValues = fieldNames.map((fieldName) =>
+    getProductProperty(product, fieldName)
+  );
+
+  const value = rawValues.find((value) => typeof value === 'number');
+
+  if (value === undefined) {
+    return value;
+  }
+
+  return value as number;
+};
+
+export const getProductNameFromStandardLookupFields = (product: Product) => {
+  const lookupFields = ['ec_name', 'ec_product_id', 'permanentid'];
+  const value = getFirstValidStringFieldValueFromProduct(lookupFields, product);
+  let warning;
+  if (!value) {
+    warning = getCouldNotRetrievePropertyWarning('name', lookupFields);
+  }
+  return {
+    warning,
+    value,
+  };
+};
+
+export const getProductPriceFromStandardLookupFields = (product: Product) => {
+  const lookupFields = ['ec_promo_price', 'ec_price'];
+  const value = getFirstValidNumberFieldValueFromProduct(lookupFields, product);
+  let warning;
+  if (!value) {
+    warning = getCouldNotRetrievePropertyWarning('price', lookupFields);
+  }
+  return {
+    warning,
+    value,
+  };
+};
+
+export const getProductIdFromStandardLookupFields = (product: Product) => {
+  const lookupFields = ['ec_product_id', 'permanentid'];
+  const value = getFirstValidStringFieldValueFromProduct(lookupFields, product);
+  let warning;
+  if (!value) {
+    warning = getCouldNotRetrievePropertyWarning('productId', lookupFields);
+  }
+  return {
+    warning,
+    value,
+  };
+};
+
 export const ProductTemplatesHelpers = {
   getProductProperty,
+  getRequiredProductPropertiesForAnalytics,
   fieldsMustBeDefined,
   fieldsMustNotBeDefined,
   fieldMustMatch,
