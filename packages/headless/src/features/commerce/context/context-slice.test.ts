@@ -1,4 +1,4 @@
-import {setContext, setUser, SetUserPayload, setView} from './context-actions';
+import {setContext, setUser, setView} from './context-actions';
 import {contextReducer} from './context-slice';
 import {CommerceContextState, getContextInitialState} from './context-state';
 
@@ -42,15 +42,8 @@ describe('context-slice', () => {
       const user = {
         userAgent: 'some-user-agent',
         userIp: 'some-user-ip',
-        email: 'email@example.org',
-        userId: 'userId',
       };
       expect(contextReducer(state, setUser(user)).user).toEqual(user);
-    });
-
-    it('throws when no userId nor email are provided', () => {
-      const user = {} as SetUserPayload;
-      expect('error' in setUser(user)).toBe(true);
     });
   });
 

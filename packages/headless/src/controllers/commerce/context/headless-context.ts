@@ -23,15 +23,7 @@ export interface ContextOptions {
   view: View;
 }
 
-interface UserId {
-  userId: string;
-}
-
-interface Email {
-  email: string;
-}
-
-export type User = (UserId | Email | (UserId & Email)) & {
+export type User = {
   userIp?: string;
   userAgent?: string;
 };
