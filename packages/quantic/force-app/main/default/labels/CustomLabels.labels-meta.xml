@@ -296,7 +296,8 @@
   </labels>
   <labels>
     <fullName>quantic_NoEndpointsDesc</fullName>
-    <value>You will need to add sources in your index, or wait for the created sources to finish indexing.</value>
+    <value>You will need to add sources in your index, or wait for the created sources to finish
+      indexing.</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Add sources in your index, or wait for the created sources to finish indexing.</shortDescription>
@@ -376,11 +377,13 @@
     <value>You may want to try using different keywords, or checking for spelling mistakes.</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>You may want to try using different keywords, or checking for spelling mistakes.</shortDescription>
+    <shortDescription>You may want to try using different keywords, or checking for spelling
+      mistakes.</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_NoResultsWithFilters</fullName>
-    <value>You may want to try using different keywords, checking for spelling mistakes or select fewer filters.</value>
+    <value>You may want to try using different keywords, checking for spelling mistakes or select
+      fewer filters.</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Check for spelling mistakes or select fewer filters.</shortDescription>
@@ -1136,7 +1139,8 @@
   </labels>
   <labels>
     <fullName>quantic_InvalidNumberOfAutoOpenedDocuments</fullName>
-    <value>The number of automatically opened document suggestions must be an integer greater that 0.</value>
+    <value>The number of automatically opened document suggestions must be an integer greater that
+      0.</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Invalid number of automatically opened document suggestions.</shortDescription>
@@ -1409,14 +1413,14 @@
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerOn</fullName>
-    <value>Generated answer ON</value>
+    <value>ON</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer ON</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerOff</fullName>
-    <value>Generated answer OFF</value>
+    <value>OFF</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer OFF</shortDescription>
