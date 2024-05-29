@@ -213,16 +213,19 @@ export class AtomicCommerceProductList
     const position =
       pagination.state.page * pagination.state.pageSize + index + 1;
 
-    const controller = parentController.interactiveProduct({
-      options: {
-        position,
-        product: {
-          name: name ?? '',
-          price: price ?? -1,
-          productId: productId ?? '',
-        },
-      },
-    });
+    const controller =
+      name === undefined || price === undefined || productId === undefined
+        ? undefined
+        : parentController.interactiveProduct({
+            options: {
+              position,
+              product: {
+                name,
+                price,
+                productId,
+              },
+            },
+          });
 
     return {
       controller,
@@ -252,8 +255,9 @@ export class AtomicCommerceProductList
 
   private renderAsGrid() {
     return this.productState.products.map((product, i) => {
-      const propsForAtomicProduct = this.getPropsForAtomicProduct(product, i);
-      const analyticsWarning = propsForAtomicProduct.interactiveProduct.warning;
+      const {interactiveProduct, ...restOfPropsForAtomicProduct} =
+        this.getPropsForAtomicProduct(product, i);
+      const analyticsWarning = interactiveProduct.warning;
       return (
         <DisplayGrid
           item={{
@@ -261,27 +265,30 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          {...propsForAtomicProduct.interactiveProduct}
+          {...interactiveProduct.controller}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
           select={() => {
             analyticsWarning
               ? this.logWarning(analyticsWarning)
-              : propsForAtomicProduct.interactiveProduct.controller.select();
+              : interactiveProduct.controller?.select();
           }}
           beginDelayedSelect={() => {
             analyticsWarning
               ? this.logWarning(analyticsWarning)
-              : propsForAtomicProduct.interactiveProduct.controller.beginDelayedSelect();
+              : interactiveProduct.controller?.beginDelayedSelect();
           }}
           cancelPendingSelect={() => {
             analyticsWarning
               ? this.logWarning(analyticsWarning)
-              : propsForAtomicProduct.interactiveProduct.controller.cancelPendingSelect();
+              : interactiveProduct.controller?.cancelPendingSelect();
           }}
         >
-          <atomic-product {...this} {...propsForAtomicProduct}></atomic-product>
+          <atomic-product
+            interactiveProduct={interactiveProduct.controller}
+            {...restOfPropsForAtomicProduct}
+          ></atomic-product>
         </DisplayGrid>
       );
     });

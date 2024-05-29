@@ -49,7 +49,7 @@ export class AtomicProduct {
    * The InteractiveProduct item.
    * @internal
    */
-  @Prop() interactiveProduct!: InteractiveProduct;
+  @Prop() interactiveProduct?: InteractiveProduct;
 
   /**
    * Global Atomic state.

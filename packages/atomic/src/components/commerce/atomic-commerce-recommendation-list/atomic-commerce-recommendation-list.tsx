@@ -308,16 +308,19 @@ export class AtomicCommerceRecommendationList
     const position = this.productsPerPage
       ? this.currentPage * this.productsPerPage + index + 1
       : index + 1;
-    const controller = this.recommendations.interactiveProduct({
-      options: {
-        position,
-        product: {
-          name: name ?? '',
-          price: price ?? -1,
-          productId: productId ?? '',
-        },
-      },
-    });
+    const controller =
+      name === undefined || price === undefined || productId === undefined
+        ? undefined
+        : this.recommendations.interactiveProduct({
+            options: {
+              position,
+              product: {
+                name: name ?? '',
+                price: price ?? -1,
+                productId: productId ?? '',
+              },
+            },
+          });
 
     return {
       controller,
@@ -358,7 +361,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private renderAsGrid(product: Product, i: number) {
-    const {interactiveProduct, ...restOfAtomicProductProps} =
+    const {interactiveProduct, ...restOfPropsForAtomicProduct} =
       this.getAtomicProductProps(product, i);
     const analyticsWarning = interactiveProduct.warning;
     return (
@@ -371,17 +374,17 @@ export class AtomicCommerceRecommendationList
         select={() =>
           analyticsWarning
             ? this.logWarning(analyticsWarning)
-            : interactiveProduct.controller.select()
+            : interactiveProduct.controller?.select()
         }
         beginDelayedSelect={() =>
           analyticsWarning
             ? this.logWarning(analyticsWarning)
-            : interactiveProduct.controller.beginDelayedSelect()
+            : interactiveProduct.controller?.beginDelayedSelect()
         }
         cancelPendingSelect={() =>
           analyticsWarning
             ? this.logWarning(analyticsWarning)
-            : interactiveProduct.controller.cancelPendingSelect()
+            : interactiveProduct.controller?.cancelPendingSelect()
         }
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)
@@ -389,7 +392,7 @@ export class AtomicCommerceRecommendationList
       >
         <atomic-product
           interactiveProduct={interactiveProduct.controller}
-          {...restOfAtomicProductProps}
+          {...restOfPropsForAtomicProduct}
         ></atomic-product>
       </DisplayGrid>
     );
