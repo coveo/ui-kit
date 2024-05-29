@@ -1,8 +1,6 @@
 import {
   RegularFacet,
   RegularFacetState,
-  buildListingSummary,
-  buildSearchSummary,
   SearchSummary,
   ListingSummary,
 } from '@coveo/headless/commerce';
@@ -59,9 +57,15 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 })
 export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
-  public summary!: SearchSummary | ListingSummary;
   @Element() private host!: HTMLElement;
 
+  /**
+   * The Summary controller instance.
+   */
+  @Prop() summary!: SearchSummary | ListingSummary;
+  /**
+   * The facet controller instance.
+   */
   @Prop() public facet!: RegularFacet;
 
   @BindStateToController('facet')
@@ -79,7 +83,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    this.initSummary();
     this.initAriaLive();
     this.initPopover();
     this.registerFacet();
@@ -293,14 +296,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
       hasValues: () => !!this.facet.state.values.length,
       numberOfActiveValues: () => this.activeValues.length,
     });
-  }
-
-  private initSummary() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.summary = buildListingSummary(this.bindings.engine);
-    } else {
-      this.summary = buildSearchSummary(this.bindings.engine);
-    }
   }
 
   private initAriaLive() {
