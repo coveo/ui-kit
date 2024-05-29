@@ -338,12 +338,10 @@ export class TimeframeFacetCommon {
         bindings={this.props.bindings}
         label={this.props.label}
         facetId={this.filter!.state!.facetId}
-        // filter={this.filter!}
         rangeGetter={() => this.filter!.state.range}
         rangeSetter={(request: DateRangeRequest) => {
           this.filter!.setRange(request);
         }}
-        // filterState={this.filter!.state!}
       ></atomic-facet-date-input>
     );
   }

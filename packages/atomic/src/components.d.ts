@@ -5,10 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateRangeRequest as DateRangeRequest1, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, DateFacetValue, DateRangeRequest, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
-import { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
-import { InputDateRange } from "./components/commerce/facets/facet-date-input/atomic-commerce-facet-date-input";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CategoryFacet, CommerceEngine, DateFacet, DateFacetValue, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -18,7 +16,8 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-import { InputDateRange as InputDateRange1 } from "./components/common/facets/facet-date-input/facet-date-input";
+import { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
+import { InputDateRange } from "./components/common/facets/facet-date-input/facet-date-input";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
@@ -36,10 +35,8 @@ import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interf
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateRangeRequest as DateRangeRequest1, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, DateFacetValue, DateRangeRequest, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
-export { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
-export { InputDateRange } from "./components/commerce/facets/facet-date-input/atomic-commerce-facet-date-input";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, DateFacetValue, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -49,7 +46,8 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-export { InputDateRange as InputDateRange1 } from "./components/common/facets/facet-date-input/facet-date-input";
+export { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
+export { InputDateRange } from "./components/common/facets/facet-date-input/facet-date-input";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
@@ -293,18 +291,6 @@ export namespace Components {
           * The Summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
-    }
-    /**
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicCommerceFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "rangeGetter": () => InputDateRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -743,8 +729,8 @@ export namespace Components {
         "label": string;
         "max"?: string;
         "min"?: string;
-        "rangeGetter": () => InputDateRange1 | undefined;
-        "rangeSetter": (range: DateRangeRequest1) => void;
+        "rangeGetter": () => InputDateRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -3151,10 +3137,6 @@ export namespace Components {
         "togglePopover": () => Promise<void>;
     }
 }
-export interface AtomicCommerceFacetDateInputCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicCommerceFacetDateInputElement;
-}
 export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommerceFacetNumberInputElement;
@@ -3338,26 +3320,6 @@ declare global {
     var HTMLAtomicCommerceFacetElement: {
         prototype: HTMLAtomicCommerceFacetElement;
         new (): HTMLAtomicCommerceFacetElement;
-    };
-    interface HTMLAtomicCommerceFacetDateInputElementEventMap {
-        "atomic/dateInputApply": any;
-    }
-    /**
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface HTMLAtomicCommerceFacetDateInputElement extends Components.AtomicCommerceFacetDateInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicCommerceFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceFacetDateInputElement, ev: AtomicCommerceFacetDateInputCustomEvent<HTMLAtomicCommerceFacetDateInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicCommerceFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceFacetDateInputElement, ev: AtomicCommerceFacetDateInputCustomEvent<HTMLAtomicCommerceFacetDateInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicCommerceFacetDateInputElement: {
-        prototype: HTMLAtomicCommerceFacetDateInputElement;
-        new (): HTMLAtomicCommerceFacetDateInputElement;
     };
     interface HTMLAtomicCommerceFacetNumberInputElementEventMap {
         "atomic/numberInputApply": any;
@@ -5126,7 +5088,6 @@ declare global {
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
-        "atomic-commerce-facet-date-input": HTMLAtomicCommerceFacetDateInputElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
@@ -5523,19 +5484,6 @@ declare namespace LocalJSX {
           * The Summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
-    }
-    /**
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicCommerceFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "onAtomic/dateInputApply"?: (event: AtomicCommerceFacetDateInputCustomEvent<any>) => void;
-        "rangeGetter": () => InputDateRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5940,8 +5888,8 @@ declare namespace LocalJSX {
         "max"?: string;
         "min"?: string;
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
-        "rangeGetter": () => InputDateRange1 | undefined;
-        "rangeSetter": (range: DateRangeRequest1) => void;
+        "rangeGetter": () => InputDateRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -8257,7 +8205,6 @@ declare namespace LocalJSX {
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-facet": AtomicCommerceFacet;
-        "atomic-commerce-facet-date-input": AtomicCommerceFacetDateInput;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
@@ -8481,10 +8428,6 @@ declare module "@stencil/core" {
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
-            /**
-             * Internal component made to be integrated in a TimeframeFacet.
-             */
-            "atomic-commerce-facet-date-input": LocalJSX.AtomicCommerceFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetDateInputElement>;
             /**
              * Internal component made to be integrated in a NumericFacet.
              */
