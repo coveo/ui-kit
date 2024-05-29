@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -27,6 +27,7 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -35,7 +36,7 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -56,6 +57,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -266,10 +268,31 @@ export namespace Components {
     interface AtomicCommerceDidYouMean {
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCommerceCategoryFacet {
+        /**
+          * The category facet controller instance.
+         */
+        "facet": CategoryFacet;
+        /**
+          * The summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -374,9 +397,13 @@ export namespace Components {
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -1717,7 +1744,7 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface AtomicProduct {
         /**
@@ -1761,6 +1788,20 @@ export namespace Components {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductChildren {
+        /**
+          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+         */
+        "fallback": string;
+        /**
+          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+         */
+        "field": string;
+        /**
+          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
+         */
+        "label": string;
     }
     interface AtomicProductDescription {
         /**
@@ -3261,6 +3302,10 @@ export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
 }
+export interface AtomicProductChildrenCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicProductChildrenElement;
+}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -3371,6 +3416,16 @@ declare global {
     var HTMLAtomicCommerceDidYouMeanElement: {
         prototype: HTMLAtomicCommerceDidYouMeanElement;
         new (): HTMLAtomicCommerceDidYouMeanElement;
+    };
+    /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface HTMLAtomicCommerceCategoryFacetElement extends Components.AtomicCommerceCategoryFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceCategoryFacetElement: {
+        prototype: HTMLAtomicCommerceCategoryFacetElement;
+        new (): HTMLAtomicCommerceCategoryFacetElement;
     };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -4208,13 +4263,30 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
     var HTMLAtomicProductElement: {
         prototype: HTMLAtomicProductElement;
         new (): HTMLAtomicProductElement;
+    };
+    interface HTMLAtomicProductChildrenElementEventMap {
+        "atomic/selectChildProduct": SelectChildProductEventArgs;
+    }
+    interface HTMLAtomicProductChildrenElement extends Components.AtomicProductChildren, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicProductChildrenElement: {
+        prototype: HTMLAtomicProductChildrenElement;
+        new (): HTMLAtomicProductChildrenElement;
     };
     interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
     }
@@ -5161,7 +5233,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
-        "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
+        "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5251,6 +5323,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product": HTMLAtomicProductElement;
+        "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
@@ -5538,10 +5611,31 @@ declare namespace LocalJSX {
     interface AtomicCommerceDidYouMean {
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCommerceCategoryFacet {
+        /**
+          * The category facet controller instance.
+         */
+        "facet": CategoryFacet;
+        /**
+          * The summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5629,9 +5723,13 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -6897,7 +6995,7 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-product-list` component.
+     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
      */
     interface AtomicProduct {
         /**
@@ -6941,6 +7039,21 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductChildren {
+        /**
+          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
+         */
+        "fallback"?: string;
+        /**
+          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
+         */
+        "field"?: string;
+        /**
+          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
+         */
+        "label"?: string;
+        "onAtomic/selectChildProduct"?: (event: AtomicProductChildrenCustomEvent<SelectChildProductEventArgs>) => void;
     }
     interface AtomicProductDescription {
         /**
@@ -8323,7 +8436,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
-        "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
+        "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -8413,6 +8526,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product": AtomicProduct;
+        "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
@@ -8542,6 +8656,11 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
+            /**
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+             */
+            "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
@@ -8772,9 +8891,10 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * The `atomic-product` component is used internally by the `atomic-product-list` component.
+             * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            "atomic-product-children": LocalJSX.AtomicProductChildren & JSXBase.HTMLAttributes<HTMLAtomicProductChildrenElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.
