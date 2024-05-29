@@ -25,7 +25,7 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
-export type {Product} from './api/commerce/common/product';
+export type {Product, ChildProduct} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
@@ -263,3 +263,12 @@ export type {FieldSuggestionsGenerator} from './controllers/commerce/field-sugge
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 
 export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';
+
+export type {
+  ParameterManager,
+  ParameterManagerState,
+  ParameterManagerProps,
+  ParameterManagerInitialState,
+} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
+export type {Parameters} from './features/commerce/parameters/parameters-actions';
+export type {SearchParameters} from './features/search-parameters/search-parameter-actions';

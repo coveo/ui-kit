@@ -1,4 +1,8 @@
-import {searchSerializer} from './search-parameter-serializer';
+import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range';
+import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
+import {buildFieldsSortCriterion, SortDirection} from '../sort/sort';
+import {searchSerializer} from './parameters-serializer';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',
@@ -62,9 +66,7 @@ describe('searchSerializer', () => {
 
     it('deserializes a string with special characters', () => {
       someSpecialCharactersThatNeedsEncoding.forEach((char) => {
-        const result = deserialize(
-          `q=${encodeURIComponent(char)}&enableQuerySyntax=true`
-        );
+        const result = deserialize(`q=${encodeURIComponent(char)}`);
         expect(result).toEqual({q: char});
       });
     });
@@ -76,8 +78,35 @@ describe('searchSerializer', () => {
   });
 
   it('can serialize and deserialize all search parameters', () => {
-    const parameters = {
+    const f = {author: ['a', 'b']};
+    const cf = {geography: ['a', 'b']};
+    const nf = {
+      size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+    };
+    const df = {
+      created: [
+        buildDateRange({
+          start: '2010/01/01@05:00:00',
+          end: '2011/01/01@05:00:00',
+          state: 'selected',
+        }),
+      ],
+    };
+    const page = 4;
+    const perPage = 96;
+    const sortCriteria = buildFieldsSortCriterion([
+      {name: 'author', direction: SortDirection.Ascending},
+      {name: 'created', direction: SortDirection.Descending},
+    ]);
+    const parameters: Required<CommerceSearchParameters> = {
       q: 'some query',
+      f,
+      cf,
+      nf,
+      df,
+      page,
+      perPage,
+      sortCriteria,
     };
 
     const serialized = serialize(parameters);
