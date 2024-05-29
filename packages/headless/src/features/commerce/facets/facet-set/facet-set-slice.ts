@@ -22,6 +22,7 @@ import {
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
+  updateFreezeCurrentValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
@@ -96,6 +97,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'select');
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -196,6 +198,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleExcludeNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -271,6 +274,7 @@ export const commerceFacetSetReducer = createReducer(
 
         const {rawValue} = value;
 
+        facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
@@ -301,6 +305,7 @@ export const commerceFacetSetReducer = createReducer(
 
         const {rawValue} = value;
 
+        facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
@@ -370,6 +375,16 @@ export const commerceFacetSetReducer = createReducer(
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
+      .addCase(updateFreezeCurrentValues, (state, action) => {
+        const {facetId, freezeCurrentValues} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.freezeCurrentValues = freezeCurrentValues;
+      })
       .addCase(deselectAllFacetValues, (state, action) => {
         const facetId = action.payload;
         const request = state[facetId]?.request;
@@ -524,6 +539,7 @@ function updateStateFromFacetResponse(
   facetRequest.type = facetResponse.type;
   facetRequest.values =
     getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
+  facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
   if (
     facetResponse.type === 'hierarchical' &&

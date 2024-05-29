@@ -54,6 +54,7 @@ export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   values: Value[];
   initialNumberOfValues: number;
   numberOfValues?: number;
+  freezeCurrentValues?: boolean;
 };
 
 export type AnyFacetValueRequest =
@@ -75,6 +76,7 @@ export type AnyFacetRequest = Pick<
   values: AnyFacetValueRequest[];
   initialNumberOfValues: number;
   numberOfValues?: number;
+  freezeCurrentValues?: boolean;
 } & Partial<CategoryFacetDelimitingCharacter & NumericFacetExtraProperties>;
 
 type MappedFacetRequest = {

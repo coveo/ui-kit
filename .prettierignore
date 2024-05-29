@@ -13,3 +13,4 @@ LICENSE.md
 **/www/**
 scripts/deploy/execute-deployment-pipeline.mjs
 **/staticresources/**
+/.nx/cache

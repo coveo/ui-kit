@@ -43,6 +43,7 @@ import {
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
+  updateFreezeCurrentValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
@@ -585,6 +586,25 @@ describe('commerceFacetSetReducer', () => {
             expect(finalState[facetId]?.request.preventAutoSelect).toBe(false);
           });
 
+          it('sets #freezeCurrentValues to false', () => {
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                type,
+                freezeCurrentValues: true,
+              }),
+            });
+
+            const facet = facetResponseBuilder({
+              facetId,
+            });
+            const action = buildQueryAction([facet]);
+
+            const finalState = commerceFacetSetReducer(state, action);
+            expect(finalState[facetId]?.request.freezeCurrentValues).toBe(
+              false
+            );
+          });
+
           it('response containing unregistered facet ids does not throw', () => {
             const facet = facetResponseBuilder({
               facetId,
@@ -735,6 +755,27 @@ describe('commerceFacetSetReducer', () => {
             const finalState = commerceFacetSetReducer(state, action);
 
             expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+          });
+
+          it('sets #freezeCurrentValues to true', () => {
+            const facetValue = buildMockCommerceRegularFacetValue({
+              value: 'TED',
+            });
+            const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.freezeCurrentValues).toBe(true);
           });
         });
 
@@ -1895,6 +1936,42 @@ describe('commerceFacetSetReducer', () => {
         expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
       });
 
+      it('when facet is found is state, sets #preventAutoSelect to true', () => {
+        const facetId = 'regular_facet_id';
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            type: 'regular',
+            values: [],
+          }),
+        });
+
+        const action = actionToDispatch({
+          facetId,
+          value: buildMockFacetSearchResult(),
+        });
+        const finalState = commerceFacetSetReducer(state, action);
+
+        expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+      });
+
+      it('when facet is found is state, sets #freezeCurrentValues to true', () => {
+        const facetId = 'regular_facet_id';
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            type: 'regular',
+            values: [],
+          }),
+        });
+
+        const action = actionToDispatch({
+          facetId,
+          value: buildMockFacetSearchResult(),
+        });
+        const finalState = commerceFacetSetReducer(state, action);
+
+        expect(finalState[facetId]?.request.freezeCurrentValues).toBe(true);
+      });
+
       it('when facet request type is invalid (i.e., is not "regular"), does not throw', () => {
         const facetId = 'date_range_facet_id';
         state[facetId] = buildMockCommerceFacetSlice({
@@ -2197,6 +2274,24 @@ describe('commerceFacetSetReducer', () => {
     expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
   });
 
+  it('#updateFreezeCurrentValues updates freezeCurrentValues for specified facet', () => {
+    const facetId = '1';
+    const anotherFacetId = '2';
+    state[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({freezeCurrentValues: true}),
+    });
+    state[anotherFacetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({freezeCurrentValues: true}),
+    });
+
+    const finalState = commerceFacetSetReducer(
+      state,
+      updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
+    );
+
+    expect(finalState[facetId]!.request.freezeCurrentValues).toBe(false);
+    expect(finalState[anotherFacetId]!.request.freezeCurrentValues).toBe(true);
+  });
   describe('#deselectAllFacetValues', () => {
     it('when called on an unregistered facet id, does not throw', () => {
       const action = deselectAllFacetValues('1');

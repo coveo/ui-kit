@@ -10,6 +10,7 @@ import {
   Component,
   Element,
   Fragment,
+  Listen,
   Method,
   Prop,
   State,
@@ -42,6 +43,7 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
@@ -197,6 +199,17 @@ export class AtomicCommerceRecommendationList
     });
   }
 
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+
+    this.recommendations.promoteChildToParent(
+      childPermanentId,
+      parentPermanentId
+    );
+  }
+
   public get focusTarget() {
     if (!this.nextNewProductTarget) {
       this.nextNewProductTarget = new FocusTargetController(this);
@@ -241,13 +254,6 @@ export class AtomicCommerceRecommendationList
       return;
     }
     if (this.augmentedRecommendationListState.hasError) {
-      return;
-    }
-
-    if (
-      this.augmentedRecommendationListState.firstRequestExecuted &&
-      !this.augmentedRecommendationListState.hasItems
-    ) {
       return;
     }
 

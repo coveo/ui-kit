@@ -22,6 +22,7 @@ import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
+  updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -176,6 +177,12 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
+            dispatch(
+              updateFreezeCurrentValues({
+                facetId: facet.facetId,
+                freezeCurrentValues: false,
+              })
+            );
             dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&
@@ -185,6 +192,12 @@ export function buildCoreBreadcrumbManager(
               actions[facet.type].toggleExcludeActionCreator!({
                 facetId: facet.facetId,
                 selection,
+              })
+            );
+            dispatch(
+              updateFreezeCurrentValues({
+                facetId: facet.facetId,
+                freezeCurrentValues: false,
               })
             );
             dispatch(options.fetchProductsActionCreator());
