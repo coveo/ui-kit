@@ -138,6 +138,7 @@ export type {
   DateFacet,
   DateFacetState,
 } from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter';
 export type {
   FacetType,
   FacetValueRequest,

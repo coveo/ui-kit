@@ -1,10 +1,12 @@
-import {buildDateRange, DateRangeRequest} from '@coveo/headless';
+import {
+  buildDateRange,
+  DateFilterRange,
+  DateRangeRequest,
+} from '@coveo/headless';
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {AnyBindings} from '../../../../components';
 import {parseDate} from '../../../../utils/date-utils';
 import {Button} from '../../../common/button';
-
-export type InputDateRange = {start: Date | string; end: Date | string}; // TODO: check if should convert back to string
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.
@@ -21,7 +23,7 @@ export class FacetDateInput {
   private endRef!: HTMLInputElement;
 
   @Prop() public bindings!: AnyBindings;
-  @Prop() public rangeGetter!: () => InputDateRange | undefined; // TODO: change to DateFacetValue
+  @Prop() public rangeGetter!: () => DateFilterRange | undefined;
   @Prop() public rangeSetter!: (range: DateRangeRequest) => void;
   @Prop() public facetId!: string;
   @Prop() public label!: string;

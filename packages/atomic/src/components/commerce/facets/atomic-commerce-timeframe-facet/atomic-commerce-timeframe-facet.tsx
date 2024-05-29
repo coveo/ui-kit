@@ -1,5 +1,6 @@
 import {
   DateFacet,
+  DateFilterRange,
   deserializeRelativeDate,
   ListingSummary,
   loadDateFacetSetActions,
@@ -27,7 +28,6 @@ import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-valu
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import {InputDateRange} from '../facet-date-input/atomic-commerce-facet-date-input';
 
 @Component({
   tag: 'atomic-commerce-timeframe-facet',
@@ -58,11 +58,7 @@ export class AtomicCommerceTimeframeFacet
   @State() public error!: Error;
 
   @State() private isCollapsed = false;
-  @State() private inputRange?: InputDateRange;
-  @Prop() public range?: Pick<DateFacetValue, 'start' | 'end'>;
-
-  private min?: string;
-  private max?: string;
+  @State() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
 
@@ -86,7 +82,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   @Listen('atomic/dateInputApply')
-  public applyDateInput({detail}: CustomEvent<InputDateRange>) {
+  public applyDateInput({detail}: CustomEvent<DateFilterRange>) {
     this.inputRange = {start: detail.start, end: detail.end};
 
     this.displayName &&
@@ -274,8 +270,6 @@ export class AtomicCommerceTimeframeFacet
   private renderDateInput() {
     return (
       <atomic-facet-date-input
-        min={this.min}
-        max={this.max}
         bindings={this.bindings}
         label={this.displayName}
         rangeGetter={() => this.inputRange}
