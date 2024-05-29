@@ -315,9 +315,9 @@ export class AtomicCommerceRecommendationList
             options: {
               position,
               product: {
-                name: name ?? '',
-                price: price ?? -1,
-                productId: productId ?? '',
+                name,
+                price,
+                productId,
               },
             },
           });
