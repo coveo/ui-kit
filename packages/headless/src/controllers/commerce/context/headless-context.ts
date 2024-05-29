@@ -24,7 +24,6 @@ export interface ContextOptions {
 }
 
 export type User = {
-  userIp?: string;
   userAgent?: string;
 };
 

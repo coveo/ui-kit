@@ -41,7 +41,6 @@ describe('context-slice', () => {
     it('should allow to set the user', () => {
       const user = {
         userAgent: 'some-user-agent',
-        userIp: 'some-user-ip',
       };
       expect(contextReducer(state, setUser(user)).user).toEqual(user);
     });

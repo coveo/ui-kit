@@ -43,7 +43,6 @@ export interface ViewParams {
 }
 
 export type UserParams = {
-  userIp?: string;
   userAgent?: string;
 };
 

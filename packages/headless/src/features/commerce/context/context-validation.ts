@@ -20,7 +20,6 @@ export const viewDefinition = {
 };
 
 export const userDefinition = {
-  userIp: nonEmptyString,
   userAgent: nonEmptyString,
 };
 
