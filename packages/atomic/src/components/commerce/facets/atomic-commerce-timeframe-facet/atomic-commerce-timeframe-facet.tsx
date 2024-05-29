@@ -85,17 +85,6 @@ export class AtomicCommerceTimeframeFacet
     this.registerFacetToStore();
   }
 
-  // private initializeFilter() {
-  //   this.filter = buildDateFilter(this.bindings.engine, {
-  //     options: {
-  //       facetId: `${this.displayName}_input`,
-  //       field: this.state.field,
-  //     },
-  //   });
-
-  //   return this.filter;
-  // }
-
   @Listen('atomic/dateInputApply')
   public applyDateInput() {
     this.displayName &&
@@ -143,14 +132,12 @@ export class AtomicCommerceTimeframeFacet
         isLoading,
       },
       facetValues: this.facet?.state?.values || [],
-      // facetValues: this.facetForDatePicker?.state?.values || [],
       hasInput: true,
     });
   }
 
   private get hasValues() {
     if (this.facet?.state.values.length) {
-      // if (this.facetForDatePicker?.state.values.length) {
       return true;
     }
 
@@ -200,12 +187,6 @@ export class AtomicCommerceTimeframeFacet
       hasValues: () => this.hasValues,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });
-
-    // if (this.filter) {
-    //   // TODO: WTF!!!!!??
-    //   this.bindings.store.state.dateFacets[this.filter.state.facetId] =
-    //     this.bindings.store.state.dateFacets[this.facetId!];
-    // }
   }
 
   private formatFacetValue(facetValue: DateFacetValue) {
@@ -245,8 +226,7 @@ export class AtomicCommerceTimeframeFacet
         isSelected={isSelected}
         numberOfResults={facetValue.numberOfResults}
         i18n={this.bindings.i18n}
-        // onClick={() => this.facetForDateRange!.toggleSingleSelect(facetValue)}
-        onClick={() => this.facet!.toggleSingleSelect(facetValue)}
+        onClick={() => this.facet.toggleSingleSelect(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -278,7 +258,6 @@ export class AtomicCommerceTimeframeFacet
             this.facet.setRanges([]);
             return;
           }
-          // this.facetForDateRange?.deselectAll();
           this.facet.deselectAll();
         }}
         numberOfActiveValues={this.numberOfSelectedValues}

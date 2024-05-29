@@ -86,6 +86,10 @@ export function buildCommerceDateFacet(
       dispatch(fetchProductsActionCreator());
     },
 
+    get state() {
+      return coreController.state;
+    },
+
     type: 'dateRange',
   };
 }
