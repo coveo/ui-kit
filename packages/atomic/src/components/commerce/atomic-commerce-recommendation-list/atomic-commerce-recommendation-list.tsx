@@ -1,6 +1,7 @@
 import {NumberValue} from '@coveo/bueno';
 import {
   Product,
+  ProductTemplatesHelpers,
   Recommendations,
   RecommendationsState,
   buildRecommendations,
@@ -296,19 +297,37 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private getAtomicProductProps(recommendation: Product) {
-    return {
-      interactiveProduct: this.recommendations.interactiveProduct({
-        options: {
-          product: {
-            ...recommendation,
-            name: recommendation.ec_name ?? '',
-            price: this.getPrice(recommendation),
-            productId: recommendation.permanentid,
-          },
-          position: this.currentIndex,
+  private logWarning(message: string) {
+    this.bindings.engine.logger.warn(message);
+  }
+
+  private getInteractiveProduct(product: Product, index: number) {
+    const {name, price, productId, warning} =
+      ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
+
+    const position = this.productsPerPage
+      ? this.currentPage * this.productsPerPage + index + 1
+      : index + 1;
+    const controller = this.recommendations.interactiveProduct({
+      options: {
+        position,
+        product: {
+          name: name ?? '',
+          price: price ?? -1,
+          productId: productId ?? '',
         },
-      }),
+      },
+    });
+
+    return {
+      controller,
+      warning,
+    };
+  }
+
+  private getAtomicProductProps(recommendation: Product, position: number) {
+    return {
+      interactiveProduct: this.getInteractiveProduct(recommendation, position),
       product: recommendation,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
@@ -326,20 +345,6 @@ export class AtomicCommerceRecommendationList
     };
   }
 
-  private getPrice(recommendation: Product) {
-    if (recommendation.ec_price === undefined) {
-      return 0;
-    }
-
-    if (recommendation.ec_promo_price === undefined) {
-      return recommendation.ec_price;
-    }
-
-    return recommendation.ec_promo_price > recommendation.ec_price
-      ? recommendation.ec_promo_price
-      : recommendation.ec_price;
-  }
-
   private computeListDisplayClasses() {
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
@@ -353,7 +358,9 @@ export class AtomicCommerceRecommendationList
   }
 
   private renderAsGrid(product: Product, i: number) {
-    const atomicProductProps = this.getAtomicProductProps(product);
+    const {interactiveProduct, ...restOfAtomicProductProps} =
+      this.getAtomicProductProps(product, i);
+    const analyticsWarning = interactiveProduct.warning;
     return (
       <DisplayGrid
         item={{
@@ -361,12 +368,29 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
-        {...atomicProductProps.interactiveProduct}
+        select={() =>
+          analyticsWarning
+            ? this.logWarning(analyticsWarning)
+            : interactiveProduct.controller.select()
+        }
+        beginDelayedSelect={() =>
+          analyticsWarning
+            ? this.logWarning(analyticsWarning)
+            : interactiveProduct.controller.beginDelayedSelect()
+        }
+        cancelPendingSelect={() =>
+          analyticsWarning
+            ? this.logWarning(analyticsWarning)
+            : interactiveProduct.controller.cancelPendingSelect()
+        }
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)
         }
       >
-        <atomic-product {...atomicProductProps}></atomic-product>
+        <atomic-product
+          interactiveProduct={interactiveProduct.controller}
+          {...restOfAtomicProductProps}
+        ></atomic-product>
       </DisplayGrid>
     );
   }
