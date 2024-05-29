@@ -1,3 +1,6 @@
+import {SchemaDefinition} from '@coveo/bueno';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
+import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -7,8 +10,10 @@ import * as DidYouMean from '../../search/did-you-mean/headless-did-you-mean';
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
+import * as CoreParameterManager from '../parameter-manager/headless-core-parameter-manager';
 import * as CoreInteractiveProduct from '../product-list/headless-core-interactive-product';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
+import * as CoreUrlManager from '../url-manager/headless-core-url-manager';
 import {
   BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
@@ -26,7 +31,10 @@ describe('sub-controllers', () => {
   const mockFacetResponseSelector = jest.fn();
   const mockIsFacetLoadingResponseSelector = jest.fn();
   const mockRequestIdSelector = jest.fn();
-  const mockParameterManagerBuilder = jest.fn();
+  const mockParametersDefinition = {};
+  const mockActiveParametersSelector = jest.fn();
+  const mockRestoreActionCreator = jest.fn();
+  const mockEnrichParameters = jest.fn();
   const mockSerializer = {
     serialize: jest.fn(),
     deserialize: jest.fn(),
@@ -51,8 +59,13 @@ describe('sub-controllers', () => {
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
-        parameterManagerBuilder: mockParameterManagerBuilder,
         serializer: mockSerializer,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+          Required<CommerceSearchParameters>
+        >,
+        activeParametersSelector: mockActiveParametersSelector,
+        restoreActionCreator: mockRestoreActionCreator,
+        enrichParameters: mockEnrichParameters,
       });
     });
 
@@ -65,6 +78,8 @@ describe('sub-controllers', () => {
       expect(subControllers).toHaveProperty('sort');
       expect(subControllers).toHaveProperty('facetGenerator');
       expect(subControllers).toHaveProperty('breadcrumbManager');
+      expect(subControllers).toHaveProperty('urlManager');
+      expect(subControllers).toHaveProperty('parameterManager');
     });
 
     it('#didYouMean builds did you mean controller', () => {
@@ -78,7 +93,7 @@ describe('sub-controllers', () => {
   });
 
   describe('#buildSearchAndListingsSubControllers', () => {
-    let subControllers: SearchAndListingSubControllers;
+    let subControllers: SearchAndListingSubControllers<Parameters>;
 
     beforeEach(() => {
       subControllers = buildSearchAndListingsSubControllers(engine, {
@@ -88,8 +103,13 @@ describe('sub-controllers', () => {
         facetResponseSelector: mockFacetResponseSelector,
         isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
         requestIdSelector: mockRequestIdSelector,
-        parameterManagerBuilder: mockParameterManagerBuilder,
         serializer: mockSerializer,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+          Required<Parameters>
+        >,
+        activeParametersSelector: mockActiveParametersSelector,
+        restoreActionCreator: mockRestoreActionCreator,
+        enrichParameters: mockEnrichParameters,
       });
     });
 
@@ -131,6 +151,54 @@ describe('sub-controllers', () => {
         buildCoreBreadcrumbManager.mock.results[0].value
       );
     });
+
+    it('#urlManager builds url manager', () => {
+      mockSerializer.deserialize.mockReturnValue({});
+      const buildCoreUrlManager = jest.spyOn(
+        CoreUrlManager,
+        'buildCoreUrlManager'
+      );
+
+      const props = {
+        initialState: {fragment: 'q=windmill'},
+      };
+
+      const urlManager = subControllers.urlManager(props);
+
+      expect(urlManager).toEqual(buildCoreUrlManager.mock.results[0].value);
+      expect(buildCoreUrlManager).toHaveBeenCalledWith(engine, {
+        ...props,
+        requestIdSelector: mockRequestIdSelector,
+        parameterManagerBuilder: expect.any(Function),
+        serializer: mockSerializer,
+      });
+    });
+
+    it('#parameterManager builds parameter manager', () => {
+      const buildCoreParameterManager = jest.spyOn(
+        CoreParameterManager,
+        'buildCoreParameterManager'
+      );
+      const props = {
+        initialState: {parameters: {}},
+      };
+
+      const parameterManager = subControllers.parameterManager(props);
+
+      expect(parameterManager).toEqual(
+        buildCoreParameterManager.mock.results[0].value
+      );
+      expect(buildCoreParameterManager).toHaveBeenCalledWith(engine, {
+        ...props,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+          Required<Parameters>
+        >,
+        activeParametersSelector: mockActiveParametersSelector,
+        restoreActionCreator: mockRestoreActionCreator,
+        fetchProductsActionCreator: mockFetchProductsActionCreator,
+        enrichParameters: mockEnrichParameters,
+      });
+    });
   });
 
   describe('#buildBaseSubControllers', () => {
@@ -163,9 +231,7 @@ describe('sub-controllers', () => {
         },
       };
 
-      const interactiveProduct = subControllers.interactiveProduct({
-        ...props,
-      });
+      const interactiveProduct = subControllers.interactiveProduct(props);
 
       expect(interactiveProduct).toEqual(
         buildCoreInteractiveProductMock.mock.results[0].value

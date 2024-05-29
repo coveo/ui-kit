@@ -48,7 +48,7 @@ describe('pagination slice', () => {
       recommendations: {},
       principal: {
         page: 0,
-        perPage: undefined,
+        perPage: 0,
         totalEntries: 0,
         totalPages: 0,
       },
