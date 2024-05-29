@@ -3,7 +3,6 @@ import {
   DateFilterRange,
   deserializeRelativeDate,
   ListingSummary,
-  loadDateFacetSetActions,
   SearchSummary,
   DateFacetValue,
   DateFacetState,
@@ -29,6 +28,12 @@ import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
+/**
+ * A facet is a list of values for a certain field occurring in the results.
+ * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+ *
+ * @internal
+ */
 @Component({
   tag: 'atomic-commerce-timeframe-facet',
   styleUrl: './atomic-commerce-timeframe-facet.pcss',
@@ -48,7 +53,7 @@ export class AtomicCommerceTimeframeFacet
    */
   @Prop() summary!: SearchSummary | ListingSummary;
   /**
-   * The numeric facet controller instance.
+   * The date facet controller instance.
    */
   @Prop() public facet!: DateFacet;
 
@@ -84,13 +89,6 @@ export class AtomicCommerceTimeframeFacet
   @Listen('atomic/dateInputApply')
   public applyDateInput({detail}: CustomEvent<DateFilterRange>) {
     this.inputRange = {start: detail.start, end: detail.end};
-
-    this.displayName &&
-      this.bindings.engine.dispatch(
-        loadDateFacetSetActions(
-          this.bindings.engine
-        ).deselectAllDateFacetValues(this.displayName)
-      );
   }
 
   private get valuesToRender() {
@@ -191,7 +189,7 @@ export class AtomicCommerceTimeframeFacet
     try {
       const startDate = deserializeRelativeDate(facetValue.start);
       const relativeDate =
-        startDate.period === 'past' // TODO: is this still possible even if it is coming from the api
+        startDate.period === 'past'
           ? startDate
           : deserializeRelativeDate(facetValue.end);
 

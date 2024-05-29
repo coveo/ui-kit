@@ -101,7 +101,7 @@ export class FacetNumberInput {
           aria-label={minAria}
           required
           min={Number.MIN_SAFE_INTEGER}
-          max={domain?.max || this.end}
+          max={domain!.max}
           value={this.range?.start}
           onInput={(e) =>
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
@@ -119,7 +119,7 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={maxAria}
           required
-          min={domain?.min || this.start}
+          min={domain!.min}
           max={Number.MAX_SAFE_INTEGER}
           value={this.range?.end}
           onInput={(e) =>

@@ -650,9 +650,13 @@ export namespace Components {
          */
         "value": string;
     }
+    /**
+     * A facet is a list of values for a certain field occurring in the results.
+     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     */
     interface AtomicCommerceTimeframeFacet {
         /**
-          * The numeric facet controller instance.
+          * The date facet controller instance.
          */
         "facet": DateFacet;
         /**
@@ -3620,6 +3624,10 @@ declare global {
         prototype: HTMLAtomicCommerceTextElement;
         new (): HTMLAtomicCommerceTextElement;
     };
+    /**
+     * A facet is a list of values for a certain field occurring in the results.
+     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     */
     interface HTMLAtomicCommerceTimeframeFacetElement extends Components.AtomicCommerceTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicCommerceTimeframeFacetElement: {
@@ -5949,9 +5957,13 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
+    /**
+     * A facet is a list of values for a certain field occurring in the results.
+     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     */
     interface AtomicCommerceTimeframeFacet {
         /**
-          * The numeric facet controller instance.
+          * The date facet controller instance.
          */
         "facet": DateFacet;
         /**
@@ -8732,6 +8744,10 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
+            /**
+             * A facet is a list of values for a certain field occurring in the results.
+             * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+             */
             "atomic-commerce-timeframe-facet": LocalJSX.AtomicCommerceTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceTimeframeFacetElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.

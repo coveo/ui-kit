@@ -75,7 +75,7 @@ export function buildCommerceDateFacet(
   return {
     ...coreController,
 
-    // TODO: KIT-???? do not accept DateFacetValue as the argument as it expose unnecessary properties
+    // TODO: KIT-3226 do not accept DateFacetValue as the argument as it expose unnecessary properties
     setRanges(ranges: DateFacetValue[]) {
       dispatch(
         updateDateFacetValues({

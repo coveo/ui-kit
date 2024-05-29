@@ -1,6 +1,9 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
+  RegularFacet,
+  CategoryFacet,
   DateFacet,
+  NumericFacet,
   FacetGeneratorState,
   buildProductListing,
   buildSearch,
@@ -9,9 +12,6 @@ import {
   buildSearchSummary,
   ListingSummary,
   SearchSummary,
-  CategoryFacet,
-  NumericFacet,
-  RegularFacet,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, Host, State, Prop} from '@stencil/core';
 import {
