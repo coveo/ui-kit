@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
+import {queryReducer as query} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
 import {updateIgnoreQueryTrigger} from '../../../features/commerce/triggers/triggers-actions';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
@@ -51,6 +52,6 @@ export function buildQueryTrigger(engine: CommerceEngine): QueryTrigger {
 function loadQueryTriggerReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine<TriggerSection> {
-  engine.addReducers({triggers});
+  engine.addReducers({triggers, query});
   return true;
 }
