@@ -84,7 +84,8 @@
       }
     },
     "dev": {
-      "dependsOn": ["storybook", "stencil:dev", "cem:dev"]
+      "dependsOn": ["storybook", "stencil:dev", "cem:dev"],
+      "executor": "nx:noop"
     },
     "stencil:dev": {
       "dependsOn": ["^build", "build:locales"],
@@ -116,31 +117,20 @@
       }
     },
     "storybook": {
-      "executor": "@nx/storybook:storybook",
+      "executor": "nx:run-commands",
       "dependsOn": ["wait-on:dist"],
       "options": {
-        "port": 4400,
-        "configDir": "{workspaceRoot}/packages/atomic/.storybook"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
+        "cwd": "{projectRoot}",
+        "command": "npx storybook dev -p 4400"
       }
     },
     "build-storybook": {
       "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
-      "executor": "@nx/storybook:build",
+      "executor": "nx:run-commands",
       "outputs": ["{options.outputDir}"],
-      "cwd": "{projectRoot}",
       "options": {
-        "outputDir": "{workspaceRoot}/packages/atomic/dist-storybook",
-        "configDir": "{workspaceRoot}/packages/atomic/.storybook"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
+        "cwd": "{projectRoot}",
+        "command": "npx storybook build"
       }
     },
     "test-storybook": {
