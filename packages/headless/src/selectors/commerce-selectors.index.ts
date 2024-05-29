@@ -11,7 +11,7 @@ export namespace ProductListing {
   export const responseIdSelector = wrap(PLSelectors.responseIdSelector);
 }
 
-function wrap<
+function wrapWithAccessFromEngine<
   SelectorFunction extends (
     state: CommerceEngine[typeof stateKey]
   ) => ReturnType<SelectorFunction>,
