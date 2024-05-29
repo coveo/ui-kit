@@ -1,6 +1,8 @@
 import {Product} from '../../../api/commerce/common/product';
 import {getRequiredProductPropertiesForAnalytics} from './product-templates-helpers';
 
+// TODO KIT-3230: test all other exported product-templates-helpers functions.
+
 describe('#getRequiredProductPropertiesForAnalytics', () => {
   describe('when primary lookup fields are defined as first class citizens on the product', () => {
     it('when primary lookup fields contain values of the expected types, sets productId, name, and price to the looked up values and generates no warning', () => {
