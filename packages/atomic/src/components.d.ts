@@ -5,11 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateRangeRequest as DateRangeRequest1, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CategoryFacet, CommerceEngine, DateFacet, DateFacetValue, DateRangeRequest, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+import { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
+import { InputDateRange } from "./components/commerce/facets/facet-date-input/atomic-commerce-facet-date-input";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
-import { Range } from "./components/commerce/facets/facet-date-input/atomic-commerce-facet-date-input";
-import { Range as Range1 } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
+import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -17,9 +18,10 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-import { AnyBindings } from "./components/common/interface/bindings";
-import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+import { InputDateRange as InputDateRange1 } from "./components/common/facets/facet-date-input/facet-date-input";
+import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -29,17 +31,17 @@ import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-import { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateRangeRequest as DateRangeRequest1, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, DateFacetValue, DateRangeRequest, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+export { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
+export { InputDateRange } from "./components/commerce/facets/facet-date-input/atomic-commerce-facet-date-input";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
-export { Range } from "./components/commerce/facets/facet-date-input/atomic-commerce-facet-date-input";
-export { Range as Range1 } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
+export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -47,9 +49,10 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-export { AnyBindings } from "./components/common/interface/bindings";
-export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+export { InputDateRange as InputDateRange1 } from "./components/common/facets/facet-date-input/facet-date-input";
+export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -59,7 +62,6 @@ export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-export { i18nCompatibilityVersion as i18nCompatibilityVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -296,12 +298,13 @@ export namespace Components {
      * Internal component made to be integrated in a TimeframeFacet.
      */
     interface AtomicCommerceFacetDateInput {
-        "bindings": Bindings;
-        "facet": DateFacet;
+        "bindings": AnyBindings;
+        "facetId": string;
         "label": string;
         "max"?: string;
         "min"?: string;
-        "range"?: Range;
+        "rangeGetter": () => InputDateRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -310,7 +313,7 @@ export namespace Components {
         "bindings": Bindings;
         "facet": NumericFacet;
         "label": string;
-        "range"?: Range1;
+        "range"?: Range;
     }
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -626,6 +629,7 @@ export namespace Components {
           * The numeric facet controller instance.
          */
         "facet": DateFacet;
+        "range"?: Pick<DateFacetValue, 'start' | 'end'>;
         /**
           * The summary controller instance.
          */
@@ -735,11 +739,12 @@ export namespace Components {
      */
     interface AtomicFacetDateInput {
         "bindings": AnyBindings;
-        "filter": DateFilter;
-        "filterState": DateFilterState;
+        "facetId": string;
         "label": string;
         "max"?: string;
         "min"?: string;
+        "rangeGetter": () => InputDateRange1 | undefined;
+        "rangeSetter": (range: DateRangeRequest1) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -754,7 +759,7 @@ export namespace Components {
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
+        "bindings": AnyBindings1;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -5523,13 +5528,14 @@ declare namespace LocalJSX {
      * Internal component made to be integrated in a TimeframeFacet.
      */
     interface AtomicCommerceFacetDateInput {
-        "bindings": Bindings;
-        "facet": DateFacet;
+        "bindings": AnyBindings;
+        "facetId": string;
         "label": string;
         "max"?: string;
         "min"?: string;
         "onAtomic/dateInputApply"?: (event: AtomicCommerceFacetDateInputCustomEvent<any>) => void;
-        "range"?: Range;
+        "rangeGetter": () => InputDateRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5539,7 +5545,7 @@ declare namespace LocalJSX {
         "facet": NumericFacet;
         "label": string;
         "onAtomic/numberInputApply"?: (event: AtomicCommerceFacetNumberInputCustomEvent<any>) => void;
-        "range"?: Range1;
+        "range"?: Range;
     }
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -5819,6 +5825,7 @@ declare namespace LocalJSX {
           * The numeric facet controller instance.
          */
         "facet": DateFacet;
+        "range"?: Pick<DateFacetValue, 'start' | 'end'>;
         /**
           * The summary controller instance.
          */
@@ -5928,12 +5935,13 @@ declare namespace LocalJSX {
      */
     interface AtomicFacetDateInput {
         "bindings": AnyBindings;
-        "filter": DateFilter;
-        "filterState": DateFilterState;
+        "facetId": string;
         "label": string;
         "max"?: string;
         "min"?: string;
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
+        "rangeGetter": () => InputDateRange1 | undefined;
+        "rangeSetter": (range: DateRangeRequest1) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -5948,7 +5956,7 @@ declare namespace LocalJSX {
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
+        "bindings": AnyBindings1;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;

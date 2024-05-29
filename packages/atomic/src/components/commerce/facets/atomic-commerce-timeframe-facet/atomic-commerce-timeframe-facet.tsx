@@ -6,6 +6,7 @@ import {
   SearchSummary,
   DateFacetValue,
   DateFacetState,
+  DateRangeRequest,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -26,8 +27,7 @@ import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-valu
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-
-export type Range = {start: Date; end: Date}; // TODO: find a better type (maybe re-use the one from the other component)
+import {InputDateRange} from '../facet-date-input/atomic-commerce-facet-date-input';
 
 @Component({
   tag: 'atomic-commerce-timeframe-facet',
@@ -41,7 +41,6 @@ export class AtomicCommerceTimeframeFacet
   public facetForDateRange?: DateFacet;
   public facetForDatePicker?: DateFacet;
 
-  // public filter?: DateFilter;
   @Element() private host!: HTMLElement;
 
   /**
@@ -59,7 +58,8 @@ export class AtomicCommerceTimeframeFacet
   @State() public error!: Error;
 
   @State() private isCollapsed = false;
-  @State() private range?: Range; // TODO: move outside this class (should be in the parent component)
+  @State() private inputRange?: InputDateRange;
+  @Prop() public range?: Pick<DateFacetValue, 'start' | 'end'>;
 
   private min?: string;
   private max?: string;
@@ -67,7 +67,7 @@ export class AtomicCommerceTimeframeFacet
   private headerFocus?: FocusTargetController;
 
   private get state() {
-    return this.facetState; // TODO: update to facetState!
+    return this.facetState;
   }
 
   private get displayName() {
@@ -86,18 +86,15 @@ export class AtomicCommerceTimeframeFacet
   }
 
   @Listen('atomic/dateInputApply')
-  public applyDateInput() {
+  public applyDateInput({detail}: CustomEvent<InputDateRange>) {
+    this.inputRange = {start: detail.start, end: detail.end};
+
     this.displayName &&
       this.bindings.engine.dispatch(
         loadDateFacetSetActions(
           this.bindings.engine
         ).deselectAllDateFacetValues(this.displayName)
       );
-  }
-
-  @Listen('atomic/numberInputApply')
-  public applyNumberInput({detail}: CustomEvent<Range>) {
-    this.range = {start: detail.start, end: detail.end};
   }
 
   private get valuesToRender() {
@@ -145,7 +142,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   private get numberOfSelectedValues() {
-    if (this.range) {
+    if (this.hasInputRange) {
       return 1;
     }
 
@@ -156,7 +153,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   private get hasInputRange() {
-    return !!this.range;
+    return !!this.inputRange;
   }
 
   public disconnectedCallback() {
@@ -167,6 +164,11 @@ export class AtomicCommerceTimeframeFacet
 
   private get isHidden() {
     return !this.shouldRenderFacet;
+  }
+
+  private resetRange() {
+    this.inputRange = undefined;
+    this.facet.setRanges([]);
   }
 
   private registerFacetToStore() {
@@ -254,8 +256,8 @@ export class AtomicCommerceTimeframeFacet
         label={this.displayName}
         onClearFilters={() => {
           this.focusTarget.focusAfterSearch();
-          if (this.range) {
-            this.facet.setRanges([]);
+          if (this.hasInputRange) {
+            this.resetRange();
             return;
           }
           this.facet.deselectAll();
@@ -271,14 +273,28 @@ export class AtomicCommerceTimeframeFacet
 
   private renderDateInput() {
     return (
-      <atomic-commerce-facet-date-input // TODO: try to re-use same component
+      <atomic-facet-date-input
         min={this.min}
         max={this.max}
         bindings={this.bindings}
         label={this.displayName}
-        facet={this.facet}
-        range={this.range}
-      ></atomic-commerce-facet-date-input>
+        rangeGetter={() => this.inputRange}
+        facetId={this.facet.state.facetId}
+        rangeSetter={({start, end, endInclusive}: DateRangeRequest) => {
+          this.facet.setRanges([
+            {
+              start,
+              end,
+              endInclusive,
+              isAutoSelected: false,
+              isSuggested: false,
+              numberOfResults: 0,
+              moreValuesAvailable: false,
+              state: 'selected',
+            },
+          ]);
+        }}
+      ></atomic-facet-date-input>
     );
   }
 

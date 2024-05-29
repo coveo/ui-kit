@@ -1,10 +1,10 @@
-import {buildDateRange, DateFacet} from '@coveo/headless/commerce';
+import {buildDateRange, DateRangeRequest} from '@coveo/headless/commerce';
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
+import {AnyBindings} from '../../../../components';
 import {parseDate} from '../../../../utils/date-utils';
 import {Button} from '../../../common/button';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
-export type Range = {start: Date; end: Date}; // TODO: find a better type
+export type InputDateRange = {start: Date; end: Date}; // TODO: check if should convert back to string
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.
@@ -15,17 +15,16 @@ export type Range = {start: Date; end: Date}; // TODO: find a better type
   shadow: false,
 })
 export class FacetDateInput {
+  @State() private start?: Date;
+  @State() private end?: Date;
   private startRef!: HTMLInputElement;
   private endRef!: HTMLInputElement;
 
-  @State() private start?: Date;
-  @State() private end?: Date;
-
-  @Prop() public bindings!: Bindings;
-
+  @Prop() public bindings!: AnyBindings;
+  @Prop() public rangeGetter!: () => InputDateRange | undefined; // TODO: change to DateFacetValue
+  @Prop() public rangeSetter!: (range: DateRangeRequest) => void;
+  @Prop() public facetId!: string;
   @Prop() public label!: string;
-  @Prop() public range?: Range;
-  @Prop() public facet!: DateFacet;
   @Prop() public min?: string;
   @Prop() public max?: string;
 
@@ -35,8 +34,9 @@ export class FacetDateInput {
   private applyInput!: EventEmitter;
 
   public connectedCallback() {
-    this.start = this.range ? parseDate(this.range.start).toDate() : undefined;
-    this.end = this.range ? parseDate(this.range.end).toDate() : undefined;
+    const range = this.rangeGetter();
+    this.start = range ? parseDate(range.start).toDate() : undefined;
+    this.end = range ? parseDate(range.end).toDate() : undefined;
   }
 
   private apply() {
@@ -44,22 +44,17 @@ export class FacetDateInput {
       return;
     }
 
-    this.applyInput.emit();
+    this.applyInput.emit({
+      start: this.start,
+      end: this.end,
+    });
 
-    const facetValue = buildDateRange({
+    const rangeRequest = buildDateRange({
       start: this.start!,
       end: this.end!.setHours(23, 59, 59, 999),
     });
 
-    this.facet.setRanges([
-      {
-        ...facetValue,
-        isAutoSelected: false,
-        isSuggested: false,
-        numberOfResults: 0,
-        moreValuesAvailable: false,
-      },
-    ]);
+    this.rangeSetter(rangeRequest);
   }
 
   private formattedDateValue(date?: string | Date) {
@@ -70,7 +65,6 @@ export class FacetDateInput {
   }
 
   render() {
-    const {facetId} = this.facet.state;
     const label = this.bindings.i18n.t(this.label);
     const startLabel = this.bindings.i18n.t('start');
     const endLabel = this.bindings.i18n.t('end');
@@ -87,6 +81,8 @@ export class FacetDateInput {
     const pattern =
       '^(1[4-9]\\d{2}|2\\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
 
+    const range = this.rangeGetter();
+
     return (
       <form
         class="grid gap-2 grid-cols-min-1fr mt-4 px-2"
@@ -99,12 +95,12 @@ export class FacetDateInput {
         <label
           part="input-label"
           class={labelClasses}
-          htmlFor={`${facetId}_start`}
+          htmlFor={`${this.facetId}_start`}
         >
           {startLabel}:
         </label>
         <input
-          id={`${facetId}_start`}
+          id={`${this.facetId}_start`}
           part="input-start"
           type="date"
           ref={(ref) => (this.startRef = ref!)}
@@ -116,7 +112,7 @@ export class FacetDateInput {
           // API/Index minimum supported date
           min={this.min || this.formattedDateValue('1401-01-01')}
           max={this.end ? this.formattedDateValue(this.end) : this.max}
-          value={this.formattedDateValue(this.range?.start)}
+          value={this.formattedDateValue(range?.start)}
           onInput={(e) =>
             (this.start = parseDate(
               (e.target as HTMLInputElement).value
@@ -126,12 +122,12 @@ export class FacetDateInput {
         <label
           part="input-label"
           class={labelClasses}
-          htmlFor={`${facetId}_end`}
+          htmlFor={`${this.facetId}_end`}
         >
           {endLabel}:
         </label>
         <input
-          id={`${facetId}_end`}
+          id={`${this.facetId}_end`}
           part="input-end"
           type="date"
           ref={(ref) => (this.endRef = ref!)}
@@ -142,7 +138,7 @@ export class FacetDateInput {
           required
           min={this.min || this.formattedDateValue(this.start)}
           max={this.max}
-          value={this.formattedDateValue(this.range?.end)}
+          value={this.formattedDateValue(range?.end)}
           onInput={(e) =>
             (this.end = parseDate(
               (e.target as HTMLInputElement).value
