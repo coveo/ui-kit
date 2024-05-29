@@ -50,6 +50,7 @@ import {
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -258,6 +259,17 @@ export class AtomicCommerceSearchBox
         this.suggestionBindings
       );
     }
+  }
+
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+    this.bindings.store.state.activeProductChild = {
+      parentPermanentId,
+      childPermanentId,
+    };
+    this.suggestionManager.forceUpdate();
   }
 
   public componentWillRender() {

@@ -21,6 +21,7 @@ const productSectionTags = new Set([
   'atomic-product-section-emphasized',
   'atomic-product-section-description',
   'atomic-product-section-bottom-metadata',
+  'atomic-product-section-children',
 ] as const);
 
 const allTags = new Set([...resultSectionTags, ...productSectionTags]);

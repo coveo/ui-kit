@@ -94,7 +94,7 @@ export const serialize =
       .join(delimiter);
   };
 
-function serializePair(pair: [string, unknown]) {
+export function serializePair(pair: [string, unknown]) {
   const [key, val] = pair;
 
   if (!isValidKey(key)) {
@@ -139,7 +139,7 @@ export function isRangeFacetObject(
   return allEntriesAreValid(obj, isRangeValue);
 }
 
-function isObject(obj: unknown): obj is object {
+export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
 }
 
@@ -155,7 +155,7 @@ function allEntriesAreValid(
   return invalidEntries.length === 0;
 }
 
-function serializeFacets(key: string, facets: Record<string, string[]>) {
+export function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(
       ([facetId, values]) =>
@@ -166,7 +166,7 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
     .join(delimiter);
 }
 
-function serializeRangeFacets(
+export function serializeRangeFacets(
   key: string,
   facets: Record<string, RangeValueRequest[]>
 ) {
@@ -212,7 +212,7 @@ export function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-function preprocessObjectPairs(pair: string[]) {
+export function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
   const result = facetSearchParamRegex.exec(key);
 
@@ -334,7 +334,7 @@ export function cast<K extends SearchParameterKey>(
   return [key, decode ? decodeURIComponent(value) : value];
 }
 
-function castUnknownObject(value: string) {
+export function castUnknownObject(value: string) {
   const jsonParsed: UnknownObject = JSON.parse(value);
   const ret: UnknownObject = {};
   Object.entries(jsonParsed).forEach((entry) => {
