@@ -516,11 +516,6 @@ export class AtomicCommerceSearchBox
   }
 
   private renderSuggestions() {
-    console.log(
-      'suggestions rendering',
-      this.suggestionManager.suggestions.length
-    );
-    console.log('suggestions rendering', this.suggestionManager.hasSuggestions);
     if (!this.suggestionManager.hasSuggestions) {
       return null;
     }
@@ -668,27 +663,23 @@ export class AtomicCommerceSearchBox
       <Host>
         {this.renderAbsolutePositionSpacer()}
         {[
-          <SearchBoxWrapper
-            disabled={isDisabled}
-            textArea={true}
-            onFocusOut={(event) =>
-              !(event.relatedTarget instanceof Node) ||
-              (event.currentTarget instanceof Node &&
-                !event.currentTarget.contains(event.relatedTarget) &&
-                this.suggestionManager.clearSuggestions())
-            }
-          >
-            {this.renderTextBox(searchLabel)}
-            <Submit
-              bindings={this.bindings}
-              disabled={isDisabled}
-              onClick={() => {
-                this.searchBox.submit();
-                this.suggestionManager.clearSuggestions();
-              }}
-              title={searchLabel}
-            />
-            {this.renderSuggestions()}
+          <SearchBoxWrapper disabled={isDisabled} textArea={true}>
+            <atomic-focus-detector
+              style={{display: 'contents'}}
+              onFocusExit={() => this.suggestionManager.clearSuggestions()}
+            >
+              {this.renderTextBox(searchLabel)}
+              <Submit
+                bindings={this.bindings}
+                disabled={isDisabled}
+                onClick={() => {
+                  this.searchBox.submit();
+                  this.suggestionManager.clearSuggestions();
+                }}
+                title={searchLabel}
+              />
+              {this.renderSuggestions()}
+            </atomic-focus-detector>
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>

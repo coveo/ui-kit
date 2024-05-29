@@ -706,22 +706,23 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       <Host>
         {this.textarea ? this.renderAbsolutePositionSpacer() : null}
         {[
-          <SearchBoxWrapper
-            onFocusOut={() => this.suggestionManager.clearSuggestions()}
-            disabled={isDisabled}
-            textArea={this.textarea}
-          >
-            {this.renderTextBox(searchLabel)}
-            <Submit
-              bindings={this.bindings}
-              disabled={isDisabled}
-              onClick={() => {
-                this.searchBox.submit();
-                this.suggestionManager.clearSuggestions();
-              }}
-              title={searchLabel}
-            />
-            {this.renderSuggestions()}
+          <SearchBoxWrapper disabled={isDisabled} textArea={this.textarea}>
+            <atomic-focus-detector
+              style={{display: 'contents'}}
+              onFocusExit={() => this.suggestionManager.clearSuggestions()}
+            >
+              {this.renderTextBox(searchLabel)}
+              <Submit
+                bindings={this.bindings}
+                disabled={isDisabled}
+                onClick={() => {
+                  this.searchBox.submit();
+                  this.suggestionManager.clearSuggestions();
+                }}
+                title={searchLabel}
+              />
+              {this.renderSuggestions()}
+            </atomic-focus-detector>
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>
