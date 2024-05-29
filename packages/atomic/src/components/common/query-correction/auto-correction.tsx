@@ -1,19 +1,32 @@
 import {FunctionalComponent, h, Fragment} from '@stencil/core';
+import {i18n} from 'i18next';
+import {LocalizedString} from '../../../utils/jsx-utils';
 
-export const AutoCorrection: FunctionalComponent = () => {
+interface AutoCorrectionProps {
+  i18n: i18n;
+  originalQuery: string;
+  correctedTo: string;
+}
+export const AutoCorrection: FunctionalComponent<AutoCorrectionProps> = ({
+  i18n,
+  correctedTo,
+  originalQuery,
+}) => {
   return (
     <Fragment>
       <p class="text-on-background mb-1" part="no-results">
-        {this.withQuery(
-          'no-results-for-did-you-mean',
-          this.didYouMeanState!.originalQuery
-        )}
+        <LocalizedString
+          i18n={i18n}
+          key={'no-results-for-did-you-mean'}
+          params={{query: <b part="highlight">{originalQuery}</b>}}
+        />
       </p>
       <p class="text-on-background" part="auto-corrected">
-        {this.withQuery(
-          'query-auto-corrected-to',
-          this.didYouMeanState!.wasCorrectedTo
-        )}
+        <LocalizedString
+          i18n={i18n}
+          key={'query-auto-corrected-to'}
+          params={{query: <b part="highlight">{correctedTo}</b>}}
+        />
       </p>
     </Fragment>
   );
