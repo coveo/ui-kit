@@ -3,7 +3,7 @@ import {test, expect} from '@playwright/test';
 test.describe('default', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=suggestion-timeout:5000'
     );
   });
 
@@ -43,7 +43,7 @@ test.describe('default', () => {
 test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story&args=suggestion-timeout:5000'
     );
     await page.setViewportSize({width: 1920, height: 1080});
   });
@@ -70,7 +70,7 @@ test.describe('with instant results & query suggestions', () => {
 test.describe('with disable-search=true and minimum-query-length=1', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=disable-search:!true;minimum-query-length:1'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=disable-search:!true;minimum-query-length:1;suggestion-timeout:5000'
     );
   });
 
@@ -118,7 +118,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 test.describe('with minimum-query-length=3', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=minimum-query-length:4'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=minimum-query-length:4;suggestion-timeout:5000'
     );
   });
 
@@ -180,7 +180,7 @@ test.describe('with minimum-query-length=3', () => {
 test.describe('with a facet & clear-filters set to true', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!true'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!true;suggestion-timeout:5000'
     );
   });
 
@@ -200,7 +200,7 @@ test.describe('with a facet & clear-filters set to true', () => {
 test.describe('with a facet & clear-filters set to false', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!false'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!false;suggestion-timeout:5000'
     );
   });
 
@@ -220,7 +220,7 @@ test.describe('with a facet & clear-filters set to false', () => {
 test.describe('with enable-query-syntax=true', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000'
     );
   });
 

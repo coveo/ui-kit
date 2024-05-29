@@ -42,3 +42,5 @@ dist-storybook/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+storybook-static/
