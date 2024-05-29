@@ -1,0 +1,23 @@
+import {test as base} from '@playwright/test';
+import {AtomicCommerceLoadMoreProductsLocators as LoadMore} from '../../atomic-commerce-load-more-products/e2e/pageObject';
+import {AtomicCommerceFacetsLocators as Facets} from '../../facets/atomic-commerce-facets/e2e/pageObject';
+import {AtomicCommerceSearchBoxLocators as SearchBox} from './pageObject';
+
+type MyFixtures = {
+  searchBox: SearchBox;
+  facets: Facets;
+  loadMore: LoadMore;
+};
+
+export const test = base.extend<MyFixtures>({
+  searchBox: async ({page}, use) => {
+    await use(new SearchBox(page));
+  },
+  facets: async ({page}, use) => {
+    await use(new Facets(page));
+  },
+  loadMore: async ({page}, use) => {
+    await use(new LoadMore(page));
+  },
+});
+export {expect} from '@playwright/test';
