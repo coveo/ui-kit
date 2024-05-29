@@ -4,11 +4,15 @@ import * as PLSelectors from '../features/commerce/product-listing/product-listi
 import * as SearchSelectors from '../features/commerce/search/search-selectors';
 
 export namespace Search {
-  export const responseIdSelector = wrap(SearchSelectors.responseIdSelector);
+  export const responseIdSelector = wrapWithAccessFromEngine(
+    SearchSelectors.responseIdSelector
+  );
 }
 
 export namespace ProductListing {
-  export const responseIdSelector = wrap(PLSelectors.responseIdSelector);
+  export const responseIdSelector = wrapWithAccessFromEngine(
+    PLSelectors.responseIdSelector
+  );
 }
 
 function wrapWithAccessFromEngine<
