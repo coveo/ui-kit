@@ -1739,7 +1739,7 @@ export namespace Components {
         /**
           * The InteractiveProduct item.
          */
-        "interactiveProduct": InteractiveProduct;
+        "interactiveProduct"?: InteractiveProduct;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -6901,7 +6901,7 @@ declare namespace LocalJSX {
         /**
           * The InteractiveProduct item.
          */
-        "interactiveProduct": InteractiveProduct;
+        "interactiveProduct"?: InteractiveProduct;
         "loadingFlag"?: string;
         /**
           * The product item.
