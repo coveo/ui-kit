@@ -33,7 +33,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../utils/utils';
+import {isFocusingOut, once, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
@@ -663,23 +663,24 @@ export class AtomicCommerceSearchBox
       <Host>
         {this.renderAbsolutePositionSpacer()}
         {[
-          <SearchBoxWrapper disabled={isDisabled} textArea={true}>
-            <atomic-focus-detector
-              style={{display: 'contents'}}
-              onFocusExit={() => this.suggestionManager.clearSuggestions()}
-            >
-              {this.renderTextBox(searchLabel)}
-              <Submit
-                bindings={this.bindings}
-                disabled={isDisabled}
-                onClick={() => {
-                  this.searchBox.submit();
-                  this.suggestionManager.clearSuggestions();
-                }}
-                title={searchLabel}
-              />
-              {this.renderSuggestions()}
-            </atomic-focus-detector>
+          <SearchBoxWrapper
+            disabled={isDisabled}
+            textArea={true}
+            onFocusOut={(event) =>
+              isFocusingOut(event) && this.suggestionManager.clearSuggestions()
+            }
+          >
+            {this.renderTextBox(searchLabel)}
+            <Submit
+              bindings={this.bindings}
+              disabled={isDisabled}
+              onClick={() => {
+                this.searchBox.submit();
+                this.suggestionManager.clearSuggestions();
+              }}
+              title={searchLabel}
+            />
+            {this.renderSuggestions()}
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>

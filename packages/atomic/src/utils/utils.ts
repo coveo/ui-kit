@@ -170,6 +170,14 @@ export function getFocusedElement(
   return activeElement;
 }
 
+export function isFocusingOut(event: FocusEvent) {
+  return (
+    !(event.relatedTarget instanceof Node) ||
+    (event.currentTarget instanceof Node &&
+      !event.currentTarget.contains(event.relatedTarget))
+  );
+}
+
 export async function defer() {
   return new Promise<void>((resolve) => setTimeout(resolve, 10));
 }
