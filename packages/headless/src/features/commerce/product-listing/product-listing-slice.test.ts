@@ -4,6 +4,7 @@ import {buildFetchProductListingV2Response} from '../../../test/mock-product-lis
 import {
   fetchMoreProducts,
   fetchProductListing,
+  promoteChildToParent,
 } from './product-listing-actions';
 import {productListingV2Reducer} from './product-listing-slice';
 import {
@@ -129,5 +130,74 @@ describe('product-listing-v2-slice', () => {
     const pendingAction = fetchMoreProducts.pending('');
     const finalState = productListingV2Reducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
+  });
+
+  describe('on #promoteChildToParent', () => {
+    const childPermanentId = 'child-id';
+    const parentPermanentId = 'parent-id';
+    let action: ReturnType<typeof promoteChildToParent>;
+
+    beforeEach(() => {
+      action = promoteChildToParent({
+        childPermanentId,
+        parentPermanentId,
+      });
+    });
+
+    it('when parent does not exist, it does not change the state', () => {
+      const finalState = productListingV2Reducer(state, action);
+
+      expect(finalState).toEqual(state);
+    });
+
+    it('when child does not exist, it does not change the state', () => {
+      state.products = [
+        buildMockProduct({permanentid: parentPermanentId, children: []}),
+      ];
+
+      const finalState = productListingV2Reducer(state, action);
+
+      expect(finalState).toEqual(state);
+    });
+
+    it('when both parent and child exist, promotes the child to parent', () => {
+      const childProduct = buildMockProduct({
+        permanentid: childPermanentId,
+        additionalFields: {test: 'test'},
+        clickUri: 'child-uri',
+        ec_brand: 'child brand',
+        ec_category: 'child category',
+        ec_description: 'child description',
+        ec_gender: 'child gender',
+        ec_images: ['child image'],
+        ec_in_stock: false,
+        ec_item_group_id: 'child item group id',
+        ec_name: 'child name',
+        ec_product_id: 'child product id',
+        ec_promo_price: 1,
+        ec_rating: 1,
+        ec_shortdesc: 'child short description',
+        ec_thumbnails: ['child thumbnail'],
+        ec_price: 2,
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+      });
+
+      state.products = [parentProduct];
+
+      const finalState = productListingV2Reducer(state, action);
+
+      expect(finalState.products).toEqual([
+        buildMockProduct({
+          ...childProduct,
+          children: parentProduct.children,
+          totalNumberOfChildren: parentProduct.totalNumberOfChildren,
+        }),
+      ]);
+    });
   });
 });

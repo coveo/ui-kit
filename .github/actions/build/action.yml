@@ -9,7 +9,7 @@ runs:
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: nx-cache
       with:
-        path: node_modules/.cache/nx
+        path: .nx/cache
         key: nx-${{ github.sha }}
     - if: steps.nx-cache.outputs.cache-hit != 'true'
       run: npm run build

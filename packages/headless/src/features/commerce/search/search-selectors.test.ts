@@ -1,10 +1,14 @@
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildMockCommerceEngine} from '../../../test/mock-engine-v2';
 import {buildMockProduct} from '../../../test/mock-product';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  queryExecutedFromResponseSelector,
   requestIdSelector,
   responseIdSelector,
+  responseIdSelectorFromEngine,
 } from './search-selectors';
 
 describe('commerce search selectors', () => {
@@ -26,6 +30,23 @@ describe('commerce search selectors', () => {
   it('#responseIdSelector should return an empty string when the responseId value is not set', () => {
     const state = buildMockCommerceState();
     expect(responseIdSelector(state)).toBe('');
+  });
+
+  it('#responseIdSelectorFromEngine should return the responseId value from the product listing section', () => {
+    const state = buildMockCommerceState({
+      commerceSearch: {
+        responseId: 'some-response-id',
+        products: [],
+        isLoading: false,
+        error: null,
+        requestId: 'some-request-id',
+        facets: [],
+        queryExecuted: '',
+      },
+    });
+
+    const engine = buildMockCommerceEngine(state);
+    expect(responseIdSelectorFromEngine(engine)).toEqual('some-response-id');
   });
 
   it('#requestIdSelector should return the requestId value from the search section', () => {
@@ -123,5 +144,33 @@ describe('commerce search selectors', () => {
       },
     });
     expect(moreProductsAvailableSelector(state)).toBe(false);
+  });
+
+  it('#queryExecutedFromResponseSelector should return the corrected query when it is set in the response', () => {
+    const state = buildMockCommerceState({
+      commerceQuery: {
+        query: 'original query',
+      },
+    });
+    const response = {
+      queryCorrection: {
+        correctedQuery: 'corrected query',
+      },
+    } as SearchCommerceSuccessResponse;
+    expect(queryExecutedFromResponseSelector(state, response)).toEqual(
+      'corrected query'
+    );
+  });
+
+  it('#queryExecutedFromResponseSelector should return the original query when the corrected query is not set in the response', () => {
+    const state = buildMockCommerceState({
+      commerceQuery: {
+        query: 'original query',
+      },
+    });
+    const response = {} as SearchCommerceSuccessResponse;
+    expect(queryExecutedFromResponseSelector(state, response)).toEqual(
+      'original query'
+    );
   });
 });

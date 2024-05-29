@@ -50,6 +50,7 @@ import {
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -175,16 +176,6 @@ export class AtomicCommerceSearchBox
   @Prop({reflect: true}) public clearFilters = true;
 
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
-   * You should only enable query syntax in the search box if you have good reasons to do so, as it
-   * requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised
-   * by the search box behaviour.
-   *
-   * When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
-   */
-  @Prop({reflect: true}) public enableQuerySyntax = false;
-
-  /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
    * Example:
@@ -242,7 +233,7 @@ export class AtomicCommerceSearchBox
     }
     const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
       value,
-      enableQuerySyntax: this.enableQuerySyntax,
+      enableQuerySyntax: false,
     };
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
@@ -268,6 +259,17 @@ export class AtomicCommerceSearchBox
         this.suggestionBindings
       );
     }
+  }
+
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+    this.bindings.store.state.activeProductChild = {
+      parentPermanentId,
+      childPermanentId,
+    };
+    this.suggestionManager.forceUpdate();
   }
 
   public componentWillRender() {

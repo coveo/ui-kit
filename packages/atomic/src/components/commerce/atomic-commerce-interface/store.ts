@@ -1,9 +1,9 @@
 import {
   CommerceEngine,
+  Selectors,
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
-  responseIdSelectorFromEngine,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -32,12 +32,12 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   currentQuickviewPosition: number;
+  activeProductChild: {parentPermanentId: string; childPermanentId: string};
 }
 
 export interface AtomicCommerceStore
   extends AtomicCommonStore<AtomicStoreData> {
   getAllFacets(): FacetInfoMap;
-
   isMobile(): boolean;
 }
 
@@ -48,7 +48,9 @@ export interface FacetInfoMap {
     | (FacetInfo & FacetValueFormat<DateFacetValue>);
 }
 
-export function createAtomicCommerceStore(): AtomicCommerceStore {
+export function createAtomicCommerceStore(
+  type: 'search' | 'product-listing'
+): AtomicCommerceStore {
   const commonStore = createAtomicCommonStore<AtomicStoreData>({
     loadingFlags: [],
     facets: {},
@@ -61,6 +63,7 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
     currentQuickviewPosition: -1,
+    activeProductChild: {parentPermanentId: '', childPermanentId: ''},
   });
 
   return {
@@ -82,7 +85,16 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
     },
 
     getUniqueIDFromEngine(engine: CommerceEngine): string {
-      return responseIdSelectorFromEngine(engine);
+      switch (type) {
+        case 'search':
+          return Selectors.Search.responseIdSelector(engine);
+        case 'product-listing':
+          return Selectors.ProductListing.responseIdSelector(engine);
+        default:
+          throw new Error(
+            `getUniqueIDFromEngine not implemented for this interface type, ${type}`
+          );
+      }
     },
   };
 }

@@ -39,6 +39,18 @@ export class AtomicProductImage implements InitializableComponent {
   @Prop({reflect: true}) field: string = 'ec_thumbnails';
 
   /**
+   * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object.
+   * The field can be a string or an array of strings.
+   *
+   * If the value of the field is a string, it will be used as the alt text for all the images.
+   *
+   * If the value of the field is an array of strings, the alt text will be used in the order of the images.
+   *
+   * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+   */
+  @Prop({reflect: true}) imagesAltField?: string;
+
+  /**
    * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
    */
   @Prop({reflect: true}) fallback: string =
@@ -99,12 +111,12 @@ export class AtomicProductImage implements InitializableComponent {
 
   private validateUrl(url: string | undefined) {
     if (!url) {
-      const message = `Image for ${this.product.ec_name} is missing. Please review your indexation. You might want to add a "fallback" property.`;
+      const message = `Image for ${this.product.ec_name} is missing. Please review your indexing. You might want to add a "fallback" property.`;
       return this.handleMissingFallback(message);
     }
 
     if (typeof url !== 'string') {
-      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
+      const message = `Expected "${this.field}" to be a text field. Please review your indexing. You might want to add a "fallback" property.`;
       return this.handleMissingFallback(message);
     }
 
@@ -116,14 +128,29 @@ export class AtomicProductImage implements InitializableComponent {
       (image) => typeof image === 'string'
     );
 
+    const validImagesAlt = this.imagesAlt;
+
     this.images = validImages.map((url, index) => {
       const finalUrl = this.useFallback ? this.fallback : url;
 
       this.validateUrl(finalUrl);
+      let altText;
+
+      if (Array.isArray(validImagesAlt) && validImagesAlt[index]) {
+        altText = validImagesAlt[index];
+      } else if (typeof validImagesAlt === 'string') {
+        altText = validImagesAlt;
+      } else {
+        altText = this.bindings.i18n.t('image-alt-fallback', {
+          count: index + 1,
+          max: validImages?.length,
+          productName: this.product.ec_name,
+        });
+      }
 
       return {
         src: filterProtocol(finalUrl),
-        alt: `Image ${index + 1} out of ${validImages?.length} for ${this.product.ec_name}`,
+        alt: altText,
       };
     }) as Image[];
   }
@@ -135,6 +162,21 @@ export class AtomicProductImage implements InitializableComponent {
     );
 
     return Array.isArray(value) ? value : [value];
+  }
+
+  private get imagesAlt() {
+    if (this.imagesAltField) {
+      const value = ProductTemplatesHelpers.getProductProperty(
+        this.product,
+        this.imagesAltField
+      );
+
+      if (Array.isArray(value)) {
+        return value.map((v) => `${v}`.trim());
+      }
+      return (value as string).trim();
+    }
+    return null;
   }
 
   private get numberOfImages() {
@@ -158,16 +200,21 @@ export class AtomicProductImage implements InitializableComponent {
   }
 
   public render() {
-    const imagesToRender = this.images.map((image: Image, index: number) => {
+    const imagesToRender = this.images.map((image: Image) => {
       return {
         src: image.src,
-        alt: `Image ${index} out of ${this.images?.length} for ${this.product.ec_name}`,
+        alt: image.alt,
       };
     });
     if (this.images.length === 0) {
       this.validateUrl(this.fallback);
+
       return (
-        <img alt={'No image available'} src={this.fallback} loading="eager" />
+        <img
+          alt={this.bindings.i18n.t('image-not-found-alt')}
+          src={this.fallback}
+          loading="eager"
+        />
       );
     }
     if (this.images.length === 1) {
