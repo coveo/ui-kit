@@ -269,11 +269,11 @@ export namespace Components {
      */
     interface AtomicCommerceCategoryFacet {
         /**
-          * The numeric facet controller instance.
+          * The category facet controller instance.
          */
         "facet": CategoryFacet;
         /**
-          * The Summary controller instance.
+          * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
     }
@@ -5559,11 +5559,11 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceCategoryFacet {
         /**
-          * The numeric facet controller instance.
+          * The category facet controller instance.
          */
         "facet": CategoryFacet;
         /**
-          * The Summary controller instance.
+          * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
     }

@@ -86,9 +86,9 @@ export function createAtomicCommerceStore(
     getUniqueIDFromEngine(engine: CommerceEngine): string {
       switch (type) {
         case 'search':
-          return Selectors.Search.responseIdSelector(engine);
+          return Selectors.Search.responseIdSelectorFromEngine(engine);
         case 'product-listing':
-          return Selectors.ProductListing.responseIdSelector(engine);
+          return Selectors.ProductListing.responseIdSelectorFromEngine(engine);
         default:
           throw new Error(
             `getUniqueIDFromEngine not implemented for this interface type, ${type}`
