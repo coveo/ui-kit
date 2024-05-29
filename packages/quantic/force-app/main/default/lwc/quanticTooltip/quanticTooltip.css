@@ -15,7 +15,7 @@
 }
 
 .tooltip__content--positioned-below {
-  transform: translate(calc(-50% + var(--x-translation)), 0.1rem);
+  transform: translate(calc(-50% + var(--x-translation)), 0.2rem);
 }
 
 .tooltip__content--visible {
