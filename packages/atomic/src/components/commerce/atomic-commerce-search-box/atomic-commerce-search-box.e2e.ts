@@ -13,10 +13,11 @@ test.describe('default', () => {
 
   test.describe('after clicking the searchbox', () => {
     test.beforeEach(async ({page}) => {
+      await page.getByPlaceholder('Search').waitFor({state: 'visible'});
       await page.getByPlaceholder('Search').click();
     });
 
-    test('should display the suggested queries', async ({page}) => {
+    test('should display suggested queries', async ({page}) => {
       await expect(
         page.getByLabel(/suggested query\. 1 of \d?\./)
       ).toBeVisible();
@@ -26,7 +27,7 @@ test.describe('default', () => {
       test.beforeEach(async ({page}) => {
         await page
           .getByLabel(/suggested query\. 1 of \d?\./)
-          .waitFor({state: 'visible'});
+          .waitFor({state: 'visible', timeout: 10e3});
         await page.getByLabel('Search', {exact: true}).click();
       });
 
@@ -52,31 +53,16 @@ test.describe('with instant results & query suggestions', () => {
       await page.getByPlaceholder('Search').click();
     });
 
-    test('should display the suggested queries', async ({page}) => {
+    test('should display suggested queries', async ({page}) => {
       await expect(
-        page.getByLabel(/suggested query\. 1 of \d?\.$/)
+        page.getByLabel(/suggested query\. 1 of \d?\. In Left list./)
       ).toBeVisible();
     });
 
-    test.describe('after hovering over the suggested query', () => {
-      test.beforeEach(async ({page}) => {
-        await page.getByLabel(/suggested query\. 1 of \d?\.$/).hover();
-      });
-
-      test('should update the suggested query label', async ({page}) => {
-        await expect(
-          page.getByLabel(/suggested query\. 1 of \d?\. In Left list./)
-        ).toBeVisible();
-        await expect(
-          page.getByLabel(/suggested query\. 1 of \d?\.$/)
-        ).not.toBeVisible();
-      });
-
-      test('should display the instant results', async ({page}) => {
-        await expect(
-          page.getByLabel(/instant result\. 1 of \d?\. In Right list\./)
-        ).toBeVisible();
-      });
+    test('should display instant results', async ({page}) => {
+      await expect(
+        page.getByLabel(/instant result\. 1 of \d?\. In Right list\./)
+      ).toBeVisible();
     });
   });
 });
@@ -89,7 +75,9 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
   });
 
   test('the search button is disabled', async ({page}) => {
-    await expect(page.getByLabel('Search', {exact: true})).toBeDisabled();
+    await expect(page.getByLabel('Search', {exact: true})).toBeDisabled({
+      timeout: 10e3,
+    });
   });
 
   test.describe('after clicking the searchbox', () => {

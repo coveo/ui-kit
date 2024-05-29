@@ -328,34 +328,33 @@ export class AtomicInsightSearchBox {
 
   public render() {
     return (
-      <SearchBoxWrapper disabled={this.disableSearch} textArea>
-        <atomic-focus-detector
-          style={{display: 'contents'}}
-          onFocusExit={() => this.suggestionManager.clearSuggestions()}
-        >
-          <atomic-icon
-            part="submit-icon"
-            icon={SearchSlimIcon}
-            class="w-4 h-4 my-auto mr-0 ml-4"
-          />
-          <SearchTextArea
-            textAreaRef={this.textAreaRef}
-            loading={this.searchBoxState.isLoading}
-            ref={(el) => el && (this.textAreaRef = el)}
-            bindings={this.bindings}
-            value={this.searchBoxState.value}
-            ariaLabel={this.getSearchInputLabel()}
-            placeholder={this.bindings.i18n.t('search-ellipsis')}
-            onFocus={() => this.onFocus()}
-            onKeyDown={(e) => this.onKeyDown(e)}
-            onClear={() => {
-              this.searchBox.clear();
-              this.triggerTextAreaChange('');
-            }}
-            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-          />
-          {this.renderSuggestions()}
-        </atomic-focus-detector>
+      <SearchBoxWrapper
+        disabled={this.disableSearch}
+        textArea
+        onFocusOut={() => this.suggestionManager.clearSuggestions()}
+      >
+        <atomic-icon
+          part="submit-icon"
+          icon={SearchSlimIcon}
+          class="w-4 h-4 my-auto mr-0 ml-4"
+        />
+        <SearchTextArea
+          textAreaRef={this.textAreaRef}
+          loading={this.searchBoxState.isLoading}
+          ref={(el) => el && (this.textAreaRef = el)}
+          bindings={this.bindings}
+          value={this.searchBoxState.value}
+          ariaLabel={this.getSearchInputLabel()}
+          placeholder={this.bindings.i18n.t('search-ellipsis')}
+          onFocus={() => this.onFocus()}
+          onKeyDown={(e) => this.onKeyDown(e)}
+          onClear={() => {
+            this.searchBox.clear();
+            this.triggerTextAreaChange('');
+          }}
+          onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+        />
+        {this.renderSuggestions()}
       </SearchBoxWrapper>
     );
   }

@@ -57,9 +57,13 @@ const getSampleCommerceEngineConfiguration =
     },
   });
 
-export const wrapInCommerceInterface = (
-  config?: Partial<CommerceEngineConfiguration>
-): {
+export const wrapInCommerceInterface = ({
+  engineConfig,
+  skipFirstSearch,
+}: {
+  engineConfig?: Partial<CommerceEngineConfiguration>;
+  skipFirstSearch?: boolean;
+}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
@@ -78,11 +82,28 @@ export const wrapInCommerceInterface = (
     await step('Render the Search Interface', async () => {
       await searchInterface!.initialize({
         ...getSampleCommerceEngineConfiguration(),
-        ...config,
+        ...engineConfig,
       });
     });
+    if (skipFirstSearch) {
+      return;
+    }
     await step('Execute the first search', async () => {
       await searchInterface!.executeFirstSearch();
     });
   },
 });
+
+export const playExecuteFirstSearch: (
+  context: StoryContext
+) => Promise<void> = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement);
+
+  const searchInterface =
+    await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
+      'root-interface'
+    );
+  await step('Execute the first search', async () => {
+    await searchInterface!.executeFirstSearch();
+  });
+};
