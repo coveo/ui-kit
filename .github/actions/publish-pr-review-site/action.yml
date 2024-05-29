@@ -1,0 +1,53 @@
+name: 'Publish PR review site'
+description: Publish PR review stuff
+
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: coveo/ui-kit-prs
+        path: prs
+        sparse-checkout: '${{ github.event.pull_request.number }}'
+        token: ${{inputs.token}}
+    - name: 'Setup branch'
+      run: |
+        hasBranch="$(git ls-remote --heads origin refs/heads/${{github.event.pull_request.number}})"
+        if [[hasBranch == "true"]]; then
+          git fetch origin "refs/heads/${{github.event.pull_request.number}}"
+          git checkout "${{github.event.pull_request.number}}"
+        else
+          git checkout -b "${{github.event.pull_request.number}}"
+        fi
+      working-directory: prs
+      shell: bash
+    - name: 'Ensure clean directory exists'
+      run: |
+        rm -rf "${{github.event.pull_request.number}}"
+        mkdir -p "${{github.event.pull_request.number}}"
+      working-directory: prs
+      shell: bash
+    - name: 'Copy files'
+      run: |
+        cp -R packages/ui-kit/dist-storybook prs/"${{github.event.pull_request.number}}"
+      shell: bash
+    - name: 'Commit/Push'
+      run: |
+        git add "${{github.event.pull_request.number}}"
+        git commit -m "Add ${{github.sha}}"
+        git push
+      working-directory: prs
+      shell: bash
+    - name: 'Open & put PR in merge queue'
+      run: |
+        gh pr new -f
+        gh pr merge
+      env:
+        GH_TOKEN: ${{inputs.token}}
+      working-directory: prs
+      shell: bash
