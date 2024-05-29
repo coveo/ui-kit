@@ -9,3 +9,10 @@
     padding-top: 6px;
     white-space: nowrap;
 }
+
+/* Overrides the slds-dropdown_fluid class set by default on the combobox */
+.sort__combobox {
+    min-width: none;
+    max-width: none;
+    width: auto;
+}
