@@ -6,6 +6,11 @@ import {defineConfig, devices} from '@playwright/test';
  */
 // require('dotenv').config();
 
+const DEFAULT_DESKTOP_VIEWPORT = {
+  width: 1920,
+  height: 1080,
+};
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -35,17 +40,20 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: {...devices['Desktop Chrome']},
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: DEFAULT_DESKTOP_VIEWPORT,
+      },
     },
 
     {
       name: 'firefox',
-      use: {...devices['Desktop Firefox']},
+      use: {...devices['Desktop Firefox'], viewport: DEFAULT_DESKTOP_VIEWPORT},
     },
 
     {
       name: 'webkit',
-      use: {...devices['Desktop Safari']},
+      use: {...devices['Desktop Safari'], viewport: DEFAULT_DESKTOP_VIEWPORT},
     },
 
     /* Test against mobile viewports. */
