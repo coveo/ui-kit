@@ -27,7 +27,7 @@ runs:
       with:
         path: |
           **/node_modules/
-          !node_modules/.cache/nx/
+          !.nx/cache/
         key: npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
@@ -41,7 +41,7 @@ runs:
       uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: nx-cache
       with:
-        path: node_modules/.cache/nx
+        path: .nx/cache
         key: nx-${{ github.sha }}
         fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'

@@ -1,12 +1,18 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
+import {
+  activeParametersSelector,
+  enrichedParametersSelector,
+} from '../../../features/commerce/parameters/parameters-selectors';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions';
 import {
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
 import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
-import {productListingSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -18,7 +24,6 @@ import {
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
 import {buildProductListing, ProductListing} from './headless-product-listing';
-import {buildProductListingParameterManager} from './parameter-manager/headless-product-listing-parameter-manager';
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;
@@ -48,8 +53,11 @@ describe('headless product-listing', () => {
       facetResponseSelector,
       isFacetLoadingResponseSelector,
       requestIdSelector,
-      parameterManagerBuilder: buildProductListingParameterManager,
       serializer: productListingSerializer,
+      parametersDefinition,
+      activeParametersSelector,
+      restoreActionCreator: restoreProductListingParameters,
+      enrichParameters: enrichedParametersSelector,
     });
   });
 
@@ -58,6 +66,22 @@ describe('headless product-listing', () => {
       productListing: productListingV2Reducer,
       commerceContext: contextReducer,
       configuration,
+    });
+  });
+
+  it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
+    const promoteChildToParent = jest.spyOn(
+      ProductListingActions,
+      'promoteChildToParent'
+    );
+    const childPermanentId = 'childPermanentId';
+    const parentPermanentId = 'parentPermanentId';
+
+    productListing.promoteChildToParent(childPermanentId, parentPermanentId);
+
+    expect(promoteChildToParent).toHaveBeenCalledWith({
+      childPermanentId,
+      parentPermanentId,
     });
   });
 

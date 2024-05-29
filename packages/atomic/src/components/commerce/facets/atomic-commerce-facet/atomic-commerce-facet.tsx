@@ -178,7 +178,9 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
         label={this.displayName}
         query={query}
       >
-        <ul part="values">{children}</ul>
+        <ul part="values" class="mt-3">
+          {children}
+        </ul>
       </FacetValuesGroup>
     );
   }

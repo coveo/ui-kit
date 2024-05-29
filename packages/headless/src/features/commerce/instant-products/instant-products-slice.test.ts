@@ -5,11 +5,15 @@ import {
   QuerySearchCommerceAPIThunkReturn,
 } from '../search/search-actions';
 import {
+  promoteChildToParent,
   registerInstantProducts,
   updateInstantProductsQuery,
 } from './instant-products-actions';
 import {instantProductsReducer} from './instant-products-slice';
-import {InstantProductsCache} from './instant-products-state';
+import {
+  InstantProductsCache,
+  InstantProductsState,
+} from './instant-products-state';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
@@ -274,6 +278,101 @@ describe('instant products slice', () => {
           expectedState
         );
       });
+    });
+  });
+
+  describe('on #promoteChildToParent', () => {
+    const childPermanentId = 'child-id';
+    const parentPermanentId = 'parent-id';
+    const id: string = id1;
+    const query = 'some_query';
+    let action: ReturnType<typeof promoteChildToParent>;
+    let state: InstantProductsState;
+
+    beforeEach(() => {
+      action = promoteChildToParent({
+        childPermanentId,
+        parentPermanentId,
+        id,
+        query,
+      });
+
+      state = getSearchBoxInstantProductsState(id, query, {
+        [query]: {
+          duration: 0,
+          error: {},
+          expiresAt: 0,
+          isActive: true,
+          isLoading: false,
+          products: [],
+          searchUid: '',
+          totalCountFiltered: 0,
+        },
+      });
+    });
+
+    it('when cache does not exist for query, it does not change the state', () => {
+      state[id]!.cache = {};
+
+      const finalState = instantProductsReducer(state, action);
+
+      expect(finalState).toEqual(state);
+    });
+
+    it('when parent does not exist in cache for query, it does not change the state', () => {
+      const finalState = instantProductsReducer(state, action);
+
+      expect(finalState).toEqual(state);
+    });
+
+    it('when child does not exist in cache for query, it does not change the state', () => {
+      state[id]!.cache[query].products = [
+        buildMockProduct({permanentid: parentPermanentId, children: []}),
+      ];
+
+      const finalState = instantProductsReducer(state, action);
+
+      expect(finalState).toEqual(state);
+    });
+
+    it('when both parent and child exist in cache for query, promotes the child to parent', () => {
+      const childProduct = buildMockProduct({
+        permanentid: childPermanentId,
+        additionalFields: {test: 'test'},
+        clickUri: 'child-uri',
+        ec_brand: 'child brand',
+        ec_category: 'child category',
+        ec_description: 'child description',
+        ec_gender: 'child gender',
+        ec_images: ['child image'],
+        ec_in_stock: false,
+        ec_item_group_id: 'child item group id',
+        ec_name: 'child name',
+        ec_product_id: 'child product id',
+        ec_promo_price: 1,
+        ec_rating: 1,
+        ec_shortdesc: 'child short description',
+        ec_thumbnails: ['child thumbnail'],
+        ec_price: 2,
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: 'parent-id',
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+      });
+
+      state[id]!.cache[query].products = [parentProduct];
+
+      const finalState = instantProductsReducer(state, action);
+
+      expect(finalState[id].cache[query].products).toEqual([
+        buildMockProduct({
+          ...childProduct,
+          children: parentProduct.children,
+          totalNumberOfChildren: parentProduct.totalNumberOfChildren,
+        }),
+      ]);
     });
   });
 });

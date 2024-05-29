@@ -9,6 +9,9 @@ import {
   buildSearchSummary,
   ListingSummary,
   SearchSummary,
+  CategoryFacet,
+  NumericFacet,
+  RegularFacet,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, Host, State, Prop} from '@stencil/core';
 import {
@@ -27,7 +30,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 @Component({
   tag: 'atomic-commerce-facets',
   styleUrl: 'atomic-commerce-facets.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
@@ -101,30 +104,30 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
           });
 
           switch (facet.state.type) {
-            // case 'regular':
-            //   return (
-            //     <atomic-commerce-facet
-            //       {...props<RegularFacet>()}
-            //     ></atomic-commerce-facet>
-            //   );
-            // case 'numericalRange':
-            //   return (
-            //     <atomic-commerce-numeric-facet
-            //       {...props<NumericFacet>()}
-            //     ></atomic-commerce-numeric-facet>
-            //   );
+            case 'regular':
+              return (
+                <atomic-commerce-facet
+                  {...props<RegularFacet>()}
+                ></atomic-commerce-facet>
+              );
+            case 'numericalRange':
+              return (
+                <atomic-commerce-numeric-facet
+                  {...props<NumericFacet>()}
+                ></atomic-commerce-numeric-facet>
+              );
             case 'dateRange':
               return (
                 <atomic-commerce-timeframe-facet
                   {...props<DateFacet>()}
                 ></atomic-commerce-timeframe-facet>
               );
-            // case 'hierarchical':
-            //   return (
-            //     <atomic-commerce-category-facet
-            //       {...props<CategoryFacet>()}
-            //     ></atomic-commerce-category-facet>
-            //   );
+            case 'hierarchical':
+              return (
+                <atomic-commerce-category-facet
+                  {...props<CategoryFacet>()}
+                ></atomic-commerce-category-facet>
+              );
             default: {
               this.bindings.engine.logger.warn(
                 `Unexpected facet type ${facet.state.type}.`

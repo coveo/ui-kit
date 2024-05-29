@@ -58,11 +58,11 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   @Element() private host!: HTMLElement;
 
   /**
-   * The Summary controller instance.
+   * The summary controller instance.
    */
   @Prop() summary!: SearchSummary | ListingSummary;
   /**
-   * The numeric facet controller instance.
+   * The category facet controller instance.
    */
   @Prop() public facet!: CategoryFacet;
 
