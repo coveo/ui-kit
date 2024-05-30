@@ -39,7 +39,19 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @type {String[]}
    */
   @api recentQueries;
+  /**
+   * The maximum number of suggestions to display.
+   * @api
+   * @type {string}
+   */
   @api query;
+  /**
+   * The maximum number of suggestions to display.
+   * @api
+   * @type {number}
+   * @defaultValue 7
+   */
+  @api maxNumberOfSuggestions;
 
   /**
    * Move highlighted selection up.
@@ -123,15 +135,17 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
           isClearRecentQueryButton: true,
         },
         ...options,
-      ];
+      ].slice(0, this.maxNumberOfSuggestions + 1);
     }
-    return this.filteredSuggestions.map((option, index) => ({
-      ...option,
-      key: index,
-      isSelected: this.selectionIndex === index,
-      containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index ? 'slds-has-focus' : ''}`,
-      icon: 'utility:search',
-    }));
+    return this.filteredSuggestions
+      .map((option, index) => ({
+        ...option,
+        key: index,
+        isSelected: this.selectionIndex === index,
+        containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index ? 'slds-has-focus' : ''}`,
+        icon: 'utility:search',
+      }))
+      .slice(0, this.maxNumberOfSuggestions);
   }
 
   get filteredSuggestions() {
@@ -221,7 +235,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
 
   get listboxCssClass() {
-    return `slds-dropdown slds-dropdown_length-7 slds-dropdown_fluid quantic-suggestions-list ${
+    return `slds-dropdown slds-dropdown_length-10 slds-dropdown_fluid quantic-suggestions-list ${
       this.suggestions?.length ? '' : 'slds-hidden'
     }`;
   }

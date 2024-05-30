@@ -98,6 +98,13 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {String[]}
    */
   @api recentQueries;
+  /**
+   * The maximum number of suggestions to display.
+   * @api
+   * @type {number}
+   * @defaultValue 7
+   */
+  @api maxNumberOfSuggestions;
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;

@@ -1,5 +1,6 @@
 <template>
     <div id="listbox-id" class={listboxCssClass} role="listbox">
+        {maxNumberOfSuggestions}
         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
             <template for:each={allOptions} for:item="option">
                 <template lwc:if={option.isClearRecentQueryButton}>

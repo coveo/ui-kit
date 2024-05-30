@@ -48,9 +48,9 @@ export default class QuanticSearchBox extends LightningElement {
    * The maximum number of suggestions to display.
    * @api
    * @type {number}
-   * @defaultValue 5
+   * @defaultValue 7
    */
-  @api numberOfSuggestions = 5;
+  @api numberOfSuggestions = 7;
   /**
    * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
    * The resulting component will expand to support multi-line queries.
@@ -59,6 +59,13 @@ export default class QuanticSearchBox extends LightningElement {
    * @defaultValue false
    */
   @api textarea = false;
+  /**
+   * Whether to disable rendering the recent queries as suggestions.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api disableRecentQuerySuggestions = false;
 
   /** @type {SearchBoxState} */
   @track state;
@@ -95,33 +102,21 @@ export default class QuanticSearchBox extends LightningElement {
       },
     });
 
-    this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
-      initialState: {
-        queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
-      },
-      options: {
-        maxLength: 10,
-      },
-    });
-    this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
-      this.updateRecentQueriesListState()
-    );
-    this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
-  };
-
-  get localStorageKey() {
-    return `${this.engineId}_quantic-recent-queries`;
-  }
-
-  updateRecentQueriesListState() {
-    if (this.recentQueriesList.state?.queries) {
-      this.recentQueries = this.recentQueriesList?.state?.queries || [];
-      setItemInLocalStorage(
-        this.localStorageKey,
-        this.recentQueriesList.state.queries
+    if (!this.disableRecentQuerySuggestions) {
+      this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
+        initialState: {
+          queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
+        },
+        options: {
+          maxLength: 100,
+        },
+      });
+      this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
+        this.updateRecentQueriesListState()
       );
     }
-  }
+    this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -132,12 +127,10 @@ export default class QuanticSearchBox extends LightningElement {
     this.addEventListener('quantic__submitsearch', this.handleSubmit);
     this.addEventListener('quantic__showsuggestions', this.showSuggestion);
     this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
-    this.addEventListener('quantic__clearqueries', this.clearRecentQueries);
+    if (!this.disableRecentQuerySuggestions) {
+      this.addEventListener('quantic__clearqueries', this.clearRecentQueries);
+    }
   }
-
-  clearRecentQueries = () => {
-    this.recentQueriesList.clear();
-  };
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
@@ -155,6 +148,7 @@ export default class QuanticSearchBox extends LightningElement {
       'quantic__selectsuggestion',
       this.selectSuggestion
     );
+    this.removeEventListener('quantic__clearqueries', this.clearRecentQueries);
   }
 
   updateState() {
@@ -163,11 +157,30 @@ export default class QuanticSearchBox extends LightningElement {
     }
     this.state = this.searchBox?.state;
     this.suggestions =
-      this.state?.suggestions?.map((s, index) => ({
+      this.state?.suggestions?.map((suggestion, index) => ({
         key: index,
-        rawValue: s.rawValue,
-        value: s.highlightedValue,
+        rawValue: suggestion.rawValue,
+        value: suggestion.highlightedValue,
       })) ?? [];
+  }
+
+  updateRecentQueriesListState() {
+    if (this.recentQueriesList.state?.queries) {
+      this.recentQueries = this.recentQueriesList.state.queries;
+      setItemInLocalStorage(
+        this.localStorageKey,
+        this.recentQueriesList.state.queries
+      );
+    }
+  }
+
+  clearRecentQueries = (event) => {
+    event.stopPropagation();
+    this.recentQueriesList.clear();
+  };
+
+  get localStorageKey() {
+    return `${this.engineId}_quantic-recent-queries`;
   }
 
   /**
