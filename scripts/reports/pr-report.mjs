@@ -8,6 +8,8 @@ import {buildLiveExampleReport} from './live-examples/live-examples.mjs';
 import {buildSSRProgressReport} from './ssr-progress/ssr-progress.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';
 
+const reportCommentIdentifier = '<!-- pr-report -->';
+
 const reportTitle = '# Pull Request Report';
 
 async function main() {
@@ -27,6 +29,7 @@ async function buildReport() {
     liveExamplesReport,
     bundleSizeReport,
     ssrProgress,
+    reportCommentIdentifier,
   ].join('\n\n');
 }
 
@@ -39,9 +42,11 @@ async function sendReport(report) {
     ? updatePullRequestComment(comment.id, report)
     : createPullRequestComment(report);
 }
-
+''.en;
 function findBundleSizeComment(comments) {
-  return comments.find((comment) => comment.body.indexOf(reportTitle) !== -1);
+  return comments.find((comment) =>
+    comment.body.endsWith(reportCommentIdentifier)
+  );
 }
 
 main();
