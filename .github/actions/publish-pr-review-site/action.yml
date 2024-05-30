@@ -5,6 +5,8 @@ inputs:
   token:
     description: 'GitHub token'
     required: true
+  copy:
+    description: 'Files to copy'
 
 runs:
   using: composite
@@ -33,6 +35,7 @@ runs:
       working-directory: prs
       shell: bash
     - name: 'Copy files'
+      if: ${{inputs.copy}}
       run: |
         cp -R packages/atomic/dist-storybook prs/${{github.event.pull_request.number}}
       shell: bash

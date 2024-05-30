@@ -32,6 +32,7 @@ jobs:
       - uses: ./.github/actions/publish-pr-review-site
         with:
           token: ${{ secrets.GH_PUBLISH_TOKEN }}
+          copy: true
   lint-check:
     name: 'Check with linter'
     needs: build
