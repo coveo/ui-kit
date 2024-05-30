@@ -53,7 +53,7 @@ export class AtomicCommerceNumericFacet
 
   @State() public error!: Error;
 
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 

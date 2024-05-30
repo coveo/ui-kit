@@ -489,29 +489,6 @@ export declare interface AtomicIcon extends Components.AtomicIcon {}
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
-  methods: ['setRenderFunction', 'previousPage', 'nextPage']
-})
-@Component({
-  selector: 'atomic-ipx-recs-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
-})
-export class AtomicIpxRecsList {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicIpxRecsList extends Components.AtomicIpxRecsList {}
-
-
-@ProxyCmp({
   inputs: ['maxWidth', 'minWidth', 'section']
 })
 @Component({
