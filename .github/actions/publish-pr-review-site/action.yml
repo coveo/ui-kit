@@ -20,11 +20,11 @@ runs:
     - name: 'Setup branch'
       run: |
         if [[ -z $(git ls-remote --heads origin refs/heads/${{github.event.pull_request.number}} | tr -s '[:blank:]') ]]; then
+          git checkout -b "${{github.event.pull_request.number}}"
+        else
           git fetch origin "refs/heads/${{github.event.pull_request.number}}"
           git checkout "${{github.event.pull_request.number}}"
           git pull
-        else
-          git checkout -b "${{github.event.pull_request.number}}"
         fi
       working-directory: prs
       shell: bash
