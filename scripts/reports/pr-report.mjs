@@ -16,11 +16,14 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
+  const liveExample = await buildLiveExampleReport();
   const ssrProgress = await buildSSRProgressReport();
   const bundleSizeReport = await buildBundleSizeReport();
 
   return `
   **${reportTitle}**
+
+  ${liveExample}
 
   ${titleFormatReport}
 
