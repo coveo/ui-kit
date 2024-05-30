@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -27,6 +27,7 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -35,7 +36,7 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -56,6 +57,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
