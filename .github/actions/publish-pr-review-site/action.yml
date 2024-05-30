@@ -53,3 +53,8 @@ runs:
         GH_TOKEN: ${{inputs.token}}
       working-directory: prs
       shell: bash
+    - name: Comment on PR
+      run: gh pr comment -b "See [Storybook](https://coveo.github.io/ui-kit-prs/${{github.event.pull_request.number}}/dist-storybook/) example for this PR"
+      env:
+        GH_TOKEN: ${{inputs.token}}
+      shell: bash
