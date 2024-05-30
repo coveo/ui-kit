@@ -8,6 +8,12 @@ import {LightningElement, api, track} from 'lwc';
  */
 
 /**
+ * @typedef RecentQuery
+ * @property {number} key
+ * @property {string} value
+ */
+
+/**
  * The `QuanticSearchBoxSuggestionsList` is used internally by search box components to display the query suggestions in an omnibox.
  * @fires CustomEvent#highlightchange
  * @fires CustomEvent#suggestionselected
@@ -23,6 +29,13 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @type {Suggestion[]}
    */
   @api suggestions = [];
+  /**
+   * The query suggestions to display.
+   * @api
+   * @type {String[]}
+   */
+  @api recentQueries;
+  @api query;
 
   /**
    * Move highlighted selection up.
@@ -31,7 +44,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   selectionUp() {
     this.selectionIndex--;
     if (this.selectionIndex < 0) {
-      this.selectionIndex = this.suggestions.length - 1;
+      this.selectionIndex = this.suggestionsToRender.length - 1;
     }
   }
 
@@ -41,7 +54,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   @api
   selectionDown() {
     this.selectionIndex++;
-    if (this.selectionIndex >= this.suggestions.length) {
+    if (this.selectionIndex >= this.suggestionsToRender.length) {
       this.selectionIndex = 0;
     }
   }
@@ -87,18 +100,95 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     }
   }
 
+  formatValue(value) {
+    const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
+      content: value,
+      openingDelimiter: '<b class="font-bold">',
+      closingDelimiter: '</b>',
+      highlights: [
+        {
+          offset: this.query.length,
+          length: value.length - this.query.length,
+        },
+      ],
+    });
+    return highlightedValue;
+  }
+
   get suggestionsToRender() {
-    return this.suggestions?.map((s, i) => ({
-      ...s,
-      isSelected: this.selectionIndex === i,
+    if (this.shouldDisplayRecentQueries) {
+      const options = [
+        ...this.filteredRecentQueries,
+        ...this.filteredSuggestions,
+      ]?.map((option, index) => ({
+        ...option,
+        key: index + 1,
+        isSelected: this.selectionIndex === index + 1,
+        containerCSSClass: `slds-media slds-listbox__option slds-listbox__option_plain slds-media_small ${this.selectionIndex === index + 1 ? 'slds-has-focus' : ''} slds-grid suggestion-option`,
+      }));
+      return [
+        {
+          key: 0,
+          isSelected: this.selectionIndex === 0,
+          isClearRecentQueryButton: true,
+        },
+        ...options,
+      ];
+    }
+    return this.filteredSuggestions.map((option, index) => ({
+      ...option,
+      key: index,
+      isSelected: this.selectionIndex === index,
+      containerCSSClass: `slds-media slds-listbox__option slds-listbox__option_plain slds-media_small ${this.selectionIndex === index ? 'slds-has-focus' : ''} slds-grid suggestion-option`,
     }));
   }
 
+  get filteredSuggestions() {
+    return (
+      this.suggestions?.filter((suggestion) =>
+        this.filteredRecentQueries.some(
+          (recentQuery) => recentQuery.rawValue !== suggestion.rawValue
+        )
+      ) || []
+    );
+  }
+
+  get filteredRecentQueries() {
+    return (
+      this.recentQueries
+        ?.filter(
+          (recentQuery) =>
+            recentQuery !== this.query &&
+            recentQuery.toLowerCase().startsWith(this.query.toLowerCase())
+        )
+        .map((recentQuery) => ({
+          value: this.formatValue(recentQuery),
+          rawValue: recentQuery,
+          isRecentQuery: true,
+        })) || []
+    );
+  }
+
   emitSuggestionHighlighted() {
-    const highlightChangeEvent = new CustomEvent('highlightchange', {
-      detail: this.suggestions[this.selectionIndex],
-    });
-    this.dispatchEvent(highlightChangeEvent);
+    if (!(this.shouldDisplayRecentQueries && this.selectionIndex === 0)) {
+      const highlightChangeEvent = new CustomEvent('highlightchange', {
+        detail: this.suggestionsToRender[this.selectionIndex],
+      });
+      this.dispatchEvent(highlightChangeEvent);
+    }
+  }
+
+  get shouldDisplayRecentQueries() {
+    return !!this.filteredRecentQueries?.length;
+  }
+
+  clearRecentQueries() {
+    this.dispatchEvent(
+      new CustomEvent('quantic__clearqueries', {
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   handleSuggestionSelection(event) {
@@ -119,8 +209,12 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     event.preventDefault();
   }
 
+  get clearCSS() {
+    return `slds-media slds-listbox__option slds-listbox__option_plain slds-media_small ${this.selectionIndex === 0 ? 'slds-has-focus' : ''} slds-grid recent-searches__label`;
+  }
+
   get listboxCssClass() {
-    return `slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid quantic-suggestions-list ${
+    return `slds-dropdown slds-dropdown_length-7 slds-dropdown_fluid quantic-suggestions-list ${
       this.suggestions?.length ? '' : 'slds-hidden'
     }`;
   }

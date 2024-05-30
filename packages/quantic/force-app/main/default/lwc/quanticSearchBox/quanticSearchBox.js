@@ -3,6 +3,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {getItemFromLocalStorage, setItemInLocalStorage} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
@@ -12,6 +13,7 @@ import searchBox from './templates/searchBox.html';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
 /** @typedef {import("coveo").SearchBox} SearchBox */
+/** @typedef {import("coveo").RecentQueriesList} RecentQueriesList */
 /** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
 /** @typedef {import("c/quanticSearchBoxInput").default} quanticSearchBoxInput */
 
@@ -71,6 +73,10 @@ export default class QuanticSearchBox extends LightningElement {
   suggestions = [];
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {RecentQueriesList} */
+  recentQueriesList;
+  /** @type {Array} */
+  recentQueries;
 
   /**
    * @param {SearchEngine} engine
@@ -88,8 +94,34 @@ export default class QuanticSearchBox extends LightningElement {
         },
       },
     });
+
+    this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
+      initialState: {
+        queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
+      },
+      options: {
+        maxLength: 10,
+      },
+    });
+    this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
+      this.updateRecentQueriesListState()
+    );
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   };
+
+  get localStorageKey() {
+    return `${this.engineId}_quantic-recent-queries`;
+  }
+
+  updateRecentQueriesListState() {
+    if (this.recentQueriesList.state?.queries) {
+      this.recentQueries = this.recentQueriesList?.state?.queries || [];
+      setItemInLocalStorage(
+        this.localStorageKey,
+        this.recentQueriesList.state.queries
+      );
+    }
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -100,7 +132,12 @@ export default class QuanticSearchBox extends LightningElement {
     this.addEventListener('quantic__submitsearch', this.handleSubmit);
     this.addEventListener('quantic__showsuggestions', this.showSuggestion);
     this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
+    this.addEventListener('quantic__clearqueries', this.clearRecentQueries);
   }
+
+  clearRecentQueries = () => {
+    this.recentQueriesList.clear();
+  };
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);

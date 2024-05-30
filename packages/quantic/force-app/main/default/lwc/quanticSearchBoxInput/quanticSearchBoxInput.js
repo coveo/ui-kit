@@ -71,7 +71,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api
   get inputValue() {
-    return this.input.value;
+    return this.input?.value;
   }
   set inputValue(newValue) {
     this.input.value = newValue;
@@ -92,6 +92,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
   @api resetSelection() {
     this.suggestionListElement?.resetSelection();
   }
+  /**
+   * The query suggestions to display.
+   * @api
+   * @type {String[]}
+   */
+  @api recentQueries;
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
@@ -228,6 +234,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {KeyboardEvent} event
    */
   onKeyup(event) {
+    console.log('onKey up');
     switch (event.key) {
       case keys.ENTER:
         this.handleEnter(event);
