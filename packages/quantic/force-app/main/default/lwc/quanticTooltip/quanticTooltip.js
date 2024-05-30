@@ -71,8 +71,10 @@ export default class QuanticTooltip extends LightningElement {
   updateTooltipVerticalPosition = () => {
     const tooltipHeight = getAbsoluteHeight(this.tooltip);
     const targetHeight = getAbsoluteHeight(this.target);
+    const tooltipArrowHeight = 20;
 
-    const minimumYPositionToDisplayTooltipAbove = tooltipHeight + targetHeight;
+    const minimumYPositionToDisplayTooltipAbove =
+      tooltipHeight + targetHeight + tooltipArrowHeight;
 
     if (this.tooltipYPosition < 0) {
       this.displayTooltipAboveTarget = false;
@@ -132,5 +134,15 @@ export default class QuanticTooltip extends LightningElement {
     /** @type {HTMLSlotElement} */
     const slot = this.template.querySelector('slot[name="content"]');
     return !!slot?.assignedNodes()?.length;
+  }
+
+  get tooltipArrowCSSClass() {
+    return `tooltip__arrow slds-fall-into-ground slds-is-absolute ${
+      this.displayTooltipAboveTarget
+        ? 'tooltip__arrow--positioned-above slds-nubbin_bottom'
+        : 'tooltip__arrow--positioned-below slds-nubbin_top'
+    } ${this.lightTheme ? 'tooltip__arrow--light' : 'tooltip__arrow--dark'} ${
+      this.isVisible ? 'tooltip__content--visible' : ''
+    }`;
   }
 }
