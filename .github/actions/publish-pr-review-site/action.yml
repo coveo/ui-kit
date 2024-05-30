@@ -20,10 +20,10 @@ runs:
     - name: 'Setup branch'
       run: |
         if [[ -z $(git ls-remote --heads origin refs/heads/${{github.event.pull_request.number}} | tr -s '[:blank:]') ]]; then
-          git checkout -b "${{github.event.pull_request.number}}"
+          git switch -c "${{github.event.pull_request.number}}"
         else
           git fetch origin "refs/heads/${{github.event.pull_request.number}}"
-          git checkout "${{github.event.pull_request.number}}"
+          git switch "${{github.event.pull_request.number}}"
           git pull
         fi
       working-directory: prs
