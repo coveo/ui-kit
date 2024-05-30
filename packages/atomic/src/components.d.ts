@@ -763,7 +763,7 @@ export namespace Components {
         "min"?: string;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -2563,7 +2563,6 @@ export namespace Components {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -3675,7 +3674,7 @@ declare global {
         new (): HTMLAtomicFacetDateInputElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -4714,7 +4713,6 @@ declare global {
     };
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
@@ -6054,7 +6052,7 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -7753,7 +7751,6 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -8737,7 +8734,7 @@ declare module "@stencil/core" {
              */
             "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
@@ -9075,7 +9072,6 @@ declare module "@stencil/core" {
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             /**
              * The `atomic-result-number` component renders the value of a number result field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
              */
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             /**
