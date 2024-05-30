@@ -29,11 +29,6 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
-      - uses: ./.github/actions/publish-pr-review-site
-        if: github.event_name == 'pull_request'
-        with:
-          token: ${{ secrets.GH_PUBLISH_TOKEN }}
-          copy: true
   lint-check:
     name: 'Check with linter'
     needs: build
@@ -58,6 +53,19 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
+  playwright-atomic:
+    name: 'Run Playwright tests for Atomic'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/playwright-atomic
+      - uses: ./.github/actions/publish-pr-review-site
+        if: ${{ always() && github.event_name == 'pull_request'}}
+        with:
+          token: ${{ secrets.GH_PUBLISH_TOKEN }}
+          copy: true
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
     needs: build
@@ -268,6 +276,7 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
       - 'e2e-quantic'
@@ -302,6 +311,7 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'
       - 'e2e-atomic-react-test'
