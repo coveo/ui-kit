@@ -21,6 +21,11 @@ import {
   Controller,
   buildController,
 } from '../../controller/headless-controller';
+import {
+  InteractiveProduct,
+  InteractiveProductProps,
+  buildCoreInteractiveProduct,
+} from '../core/product-list/headless-core-interactive-product';
 
 export interface InstantProductsOptions {
   /**
@@ -80,6 +85,14 @@ export interface InstantProducts extends Controller {
     childPermanentId: string,
     parentPermanentId: string
   ): void;
+
+  /**
+   * Creates an `InteractiveProduct` sub-controller.
+   * @param props - The properties for the `InteractiveProduct` sub-controller.
+   * @returns An `InteractiveProduct` sub-controller.
+   */
+  interactiveProduct(props: InteractiveProductProps): InteractiveProduct;
+
   /**
    * The state of the `InstantProducts` controller.
    */
@@ -194,6 +207,14 @@ export function buildInstantProducts(
           query: getQuery(),
         })
       );
+    },
+
+    interactiveProduct(props: InteractiveProductProps) {
+      return buildCoreInteractiveProduct(engine, {
+        ...props,
+        responseIdSelector: () =>
+          getStateForSearchBox().cache[getQuery()].searchUid,
+      });
     },
 
     get state() {
