@@ -57,6 +57,7 @@ import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomi
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
+ * @internal
  */
 @Component({
   tag: 'atomic-ipx-recs-list',

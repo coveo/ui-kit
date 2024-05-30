@@ -25,7 +25,6 @@ export const AtomicCommerceSearchBoxRecentQueries = /*@__PURE__*/createReactComp
 export const AtomicCommerceSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSortDropdown, HTMLAtomicCommerceSortDropdownElement>('atomic-commerce-sort-dropdown');
 export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceText, HTMLAtomicCommerceTextElement>('atomic-commerce-text');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
-export const AtomicIpxRecsList = /*@__PURE__*/createReactComponent<JSX.AtomicIpxRecsList, HTMLAtomicIpxRecsListElement>('atomic-ipx-recs-list');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
 export const AtomicProduct = /*@__PURE__*/createReactComponent<JSX.AtomicProduct, HTMLAtomicProductElement>('atomic-product');
