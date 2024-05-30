@@ -34,7 +34,7 @@ runs:
       shell: bash
     - name: 'Copy files'
       run: |
-        cp -R packages/ui-kit/atomic/dist-storybook prs/"${{github.event.pull_request.number}}"
+        cp -R packages/atomic/dist-storybook prs/"${{github.event.pull_request.number}}"
       shell: bash
     - name: 'Commit/Push'
       run: |
