@@ -1,4 +1,3 @@
-import {buildLiveExampleReport} from './build-live-sample/generate-live-sample-links.mjs';
 import {buildBundleSizeReport} from './bundle-size/bundle-size.mjs';
 import {
   getPullRequestComments,
@@ -8,7 +7,7 @@ import {
 import {buildSSRProgressReport} from './ssr-progress/ssr-progress.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';
 
-const reportTitle = 'Pull Request Report';
+const reportTitle = '# Pull Request Report';
 
 async function main() {
   const report = await buildReport();
@@ -17,21 +16,12 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
-  const liveExample = await buildLiveExampleReport();
-  const ssrProgress = await buildSSRProgressReport();
   const bundleSizeReport = await buildBundleSizeReport();
+  const ssrProgress = await buildSSRProgressReport();
 
-  return `
-  **${reportTitle}**
-
-  ${liveExample}
-
-  ${titleFormatReport}
-
-  ${bundleSizeReport}
-
-  ${ssrProgress}
-  `;
+  return [reportTitle, titleFormatReport, bundleSizeReport, ssrProgress].join(
+    '\n\n'
+  );
 }
 
 async function sendReport(report) {
