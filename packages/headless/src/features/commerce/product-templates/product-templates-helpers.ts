@@ -41,9 +41,24 @@ export const getProductProperty = (
  * @returns (Record<string, unknown>) An object containing the required properties for logging analytics events, as well as a warning message if any of the required properties are missing.
  */
 export const getRequiredProductPropertiesForAnalytics = (product: Product) => {
-  const productId = getProductIdFromStandardLookupFields(product);
-  const productName = getProductNameFromStandardLookupFields(product);
-  const productPrice = getProductPriceFromStandardLookupFields(product);
+  const productId = getProductPropertyFromLookupFields(
+    product,
+    ['ec_product_id', 'permanentid'],
+    'productId',
+    'string'
+  );
+  const productName = getProductPropertyFromLookupFields(
+    product,
+    ['ec_name', 'ec_product_id', 'permanentid'],
+    'name',
+    'string'
+  );
+  const productPrice = getProductPropertyFromLookupFields(
+    product,
+    ['ec_promo_price', 'ec_price'],
+    'price',
+    'number'
+  );
   const warnings: string[] = [];
   if (productId.warning) {
     warnings.push(productId.warning);
@@ -150,22 +165,35 @@ const getFieldValuesFromProduct = (
   return isArray(rawValue) ? rawValue : [rawValue];
 };
 
-const getFirstValidStringFieldValueFromProduct = (
-  fieldNames: string[],
+type AllowedExpectedType = 'string' | 'number';
+
+type MappedExpectedType = {
+  [T in AllowedExpectedType]: T extends 'string'
+    ? string
+    : T extends 'number'
+      ? number
+      : never;
+};
+
+function getFirstValidFieldValueFromProduct<
+  ExpectedType extends MappedExpectedType,
+>(
+  expectedType: AllowedExpectedType,
+  lookupFields: string[],
   product: Product
-) => {
-  const rawValues = fieldNames.map((fieldName) =>
+): ExpectedType | undefined {
+  const rawValues = lookupFields.map((fieldName) =>
     getProductProperty(product, fieldName)
   );
 
-  const value = rawValues.find((value) => typeof value === 'string');
+  const value = rawValues.find((value) => typeof value === expectedType);
 
   if (value === undefined) {
     return value;
   }
 
-  return value as string;
-};
+  return value as ExpectedType;
+}
 
 const getCouldNotRetrievePropertyWarning = (
   property: string,
@@ -173,55 +201,20 @@ const getCouldNotRetrievePropertyWarning = (
 ) =>
   `'${property}' could not be retrieved from field${lookupFields.length > 1 ? 's' : ''} '${lookupFields.join("', '")}'.`;
 
-const getFirstValidNumberFieldValueFromProduct = (
-  fieldNames: string[],
-  product: Product
+const getProductPropertyFromLookupFields = (
+  product: Product,
+  lookupFields: string[],
+  propertyName: string,
+  expectedType: AllowedExpectedType
 ) => {
-  const rawValues = fieldNames.map((fieldName) =>
-    getProductProperty(product, fieldName)
+  const value = getFirstValidFieldValueFromProduct(
+    expectedType,
+    lookupFields,
+    product
   );
-
-  const value = rawValues.find((value) => typeof value === 'number');
-
-  if (value === undefined) {
-    return value;
-  }
-
-  return value as number;
-};
-
-export const getProductNameFromStandardLookupFields = (product: Product) => {
-  const lookupFields = ['ec_name', 'ec_product_id', 'permanentid'];
-  const value = getFirstValidStringFieldValueFromProduct(lookupFields, product);
   let warning;
   if (!value) {
-    warning = getCouldNotRetrievePropertyWarning('name', lookupFields);
-  }
-  return {
-    warning,
-    value,
-  };
-};
-
-export const getProductPriceFromStandardLookupFields = (product: Product) => {
-  const lookupFields = ['ec_promo_price', 'ec_price'];
-  const value = getFirstValidNumberFieldValueFromProduct(lookupFields, product);
-  let warning;
-  if (!value) {
-    warning = getCouldNotRetrievePropertyWarning('price', lookupFields);
-  }
-  return {
-    warning,
-    value,
-  };
-};
-
-export const getProductIdFromStandardLookupFields = (product: Product) => {
-  const lookupFields = ['ec_product_id', 'permanentid'];
-  const value = getFirstValidStringFieldValueFromProduct(lookupFields, product);
-  let warning;
-  if (!value) {
-    warning = getCouldNotRetrievePropertyWarning('productId', lookupFields);
+    warning = getCouldNotRetrievePropertyWarning(propertyName, lookupFields);
   }
   return {
     warning,
