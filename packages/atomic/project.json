@@ -127,10 +127,10 @@
     "build-storybook": {
       "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
       "executor": "nx:run-commands",
-      "outputs": ["{options.outputDir}"],
+      "outputs": ["{projectRoot}/dist-storybook"],
       "options": {
         "cwd": "{projectRoot}",
-        "command": "npx storybook build -o storybook-static"
+        "command": "npx storybook build -o dist-storybook"
       }
     },
     "test-storybook": {
