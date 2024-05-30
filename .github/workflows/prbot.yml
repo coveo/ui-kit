@@ -30,6 +30,8 @@ jobs:
       - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
       - uses: ./.github/actions/publish-pr-review-site
+        with:
+          token: ${{ secrets.GH_PUBLISH_TOKEN }}
   lint-check:
     name: 'Check with linter'
     needs: build
