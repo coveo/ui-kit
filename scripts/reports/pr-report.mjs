@@ -4,6 +4,7 @@ import {
   updatePullRequestComment,
   createPullRequestComment,
 } from './github-client.mjs';
+import {buildLiveExampleReport} from './live-examples/live-examples.mjs';
 import {buildSSRProgressReport} from './ssr-progress/ssr-progress.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';
 
@@ -16,12 +17,17 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
+  const liveExamplesReport = await buildLiveExampleReport();
   const bundleSizeReport = await buildBundleSizeReport();
   const ssrProgress = await buildSSRProgressReport();
 
-  return [reportTitle, titleFormatReport, bundleSizeReport, ssrProgress].join(
-    '\n\n'
-  );
+  return [
+    reportTitle,
+    titleFormatReport,
+    liveExamplesReport,
+    bundleSizeReport,
+    ssrProgress,
+  ].join('\n\n');
 }
 
 async function sendReport(report) {
