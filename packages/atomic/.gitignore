@@ -42,4 +42,4 @@ headless/
 /blob-report/
 /playwright/.cache/
 
-storybook-static/
+dist-storybook/
