@@ -30,6 +30,7 @@ jobs:
       - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
       - uses: ./.github/actions/publish-pr-review-site
+        if: github.event_name == 'pull_request'
         with:
           token: ${{ secrets.GH_PUBLISH_TOKEN }}
           copy: true
