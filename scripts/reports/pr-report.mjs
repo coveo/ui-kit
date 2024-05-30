@@ -1,3 +1,4 @@
+import {buildLiveExampleReport} from './build-live-sample/generate-live-sample-links.mjs';
 import {buildBundleSizeReport} from './bundle-size/bundle-size.mjs';
 import {
   getPullRequestComments,
