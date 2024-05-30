@@ -158,7 +158,7 @@
     <name>quantic_DisconnectedTitle</name>
   </customLabels>
   <customLabels>
-    <label>Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion
+    <label>Votre requête n'a pas pu être envoyée. Peut-être que vous avez perdu votre connexion
   internet.</label>
     <name>quantic_DisconnectedDesc</name>
   </customLabels>
@@ -287,7 +287,7 @@
   <customLabels>
     <label>Aperçu non disponible</label>
     <name>quantic_NoPreviewAvailable</name>
-  </customLabels>quantic_Colon <customLabels>
+  </customLabels>quantic_Colon<customLabels>
     <label> :</label>
     <name>quantic_Colon</name>
   </customLabels>
