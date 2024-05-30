@@ -388,6 +388,8 @@ export namespace Components {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    interface AtomicCommerceNoProducts {
+    }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      */
@@ -761,7 +763,7 @@ export namespace Components {
         "min"?: string;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -2561,7 +2563,6 @@ export namespace Components {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -3477,6 +3478,12 @@ declare global {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
+    interface HTMLAtomicCommerceNoProductsElement extends Components.AtomicCommerceNoProducts, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceNoProductsElement: {
+        prototype: HTMLAtomicCommerceNoProductsElement;
+        new (): HTMLAtomicCommerceNoProductsElement;
+    };
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      */
@@ -3667,7 +3674,7 @@ declare global {
         new (): HTMLAtomicFacetDateInputElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -4706,7 +4713,6 @@ declare global {
     };
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
@@ -5224,6 +5230,7 @@ declare global {
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
+        "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
@@ -5697,6 +5704,8 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    interface AtomicCommerceNoProducts {
+    }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      */
@@ -6043,7 +6052,7 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -7742,7 +7751,6 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -8422,6 +8430,7 @@ declare namespace LocalJSX {
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
+        "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
@@ -8657,6 +8666,7 @@ declare module "@stencil/core" {
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;
             /**
              * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
              */
@@ -8724,7 +8734,7 @@ declare module "@stencil/core" {
              */
             "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
@@ -9062,7 +9072,6 @@ declare module "@stencil/core" {
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             /**
              * The `atomic-result-number` component renders the value of a number result field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
              */
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             /**
