@@ -130,7 +130,7 @@
       "outputs": ["{options.outputDir}"],
       "options": {
         "cwd": "{projectRoot}",
-        "command": "npx storybook build"
+        "command": "npx storybook build -o storybook-static"
       }
     },
     "test-storybook": {
