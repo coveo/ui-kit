@@ -62,7 +62,7 @@ export const getRequiredProductPropertiesForAnalytics = (product: Product) => {
     warning:
       warnings.length === 0
         ? undefined
-        : `Some of the properties required for logging analytics events are missing for product '${product.permanentid}':
+        : `Some of the properties required for logging analytics events are missing for product with permanentid '${product.permanentid}':
     \n- ${warnings.join('\n- ')}
     \nReview the configuration of the above 'ec_'-prefixed fields in your index, and make sure they contain the correct metadata.`,
   };
