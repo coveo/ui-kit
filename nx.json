@@ -52,7 +52,10 @@
       "buildInputs",
       "negativeNonBuildOutputs",
       "negativeBuildOutputs",
-      "negativeCommonNonProduction"
+      "negativeCommonNonProduction",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
     ]
   },
   "targetDefaults": {
@@ -108,6 +111,15 @@
     },
     "cached:build:stencil": {
       "cache": true
+    },
+    "build-storybook": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ]
     }
   },
   "defaultBase": "master",
