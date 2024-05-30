@@ -40,7 +40,7 @@ runs:
       run: |
         git add "${{github.event.pull_request.number}}"
         git commit -m "Add ${{github.sha}}"
-        git push
+        git push --set-upstream origin ${{github.event.pull_request.number}}
       working-directory: prs
       shell: bash
     - name: 'Open & put PR in merge queue'
