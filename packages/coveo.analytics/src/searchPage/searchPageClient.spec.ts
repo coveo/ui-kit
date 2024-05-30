@@ -1602,7 +1602,7 @@ describe('SearchPageClient', () => {
         expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCollapse, meta);
     });
 
-    it('should send proper payload for #logGeneratedAnswerFeedbackSubmit', async () => {
+    it('should send proper payload for #logGeneratedAnswerFeedbackSubmiV2', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
             helpful: true,
@@ -1619,7 +1619,7 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmitV2, meta);
     });
 
-    it('should send proper payload for #logGeneratedAnswerFeedbackSubmitV2', async () => {
+    it('should send proper payload for #logGeneratedAnswerFeedbackSubmit', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
             reason: <GeneratedAnswerFeedbackReason>'other',
