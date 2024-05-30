@@ -33,4 +33,13 @@ src/generated
 cypress/screenshots/*
 
 headless/
-dist-storybook/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+storybook-static/
