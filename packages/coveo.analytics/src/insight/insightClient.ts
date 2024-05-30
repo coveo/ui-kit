@@ -9,6 +9,7 @@ import {
     GeneratedAnswerBaseMeta,
     GeneratedAnswerCitationMeta,
     GeneratedAnswerFeedbackMeta,
+    GeneratedAnswerFeedbackMetaV2,
     GeneratedAnswerRephraseMeta,
     GeneratedAnswerSourceHoverMeta,
     GeneratedAnswerStreamEndMeta,
@@ -584,6 +585,18 @@ export class CoveoInsightClient {
     ) {
         return this.logCustomEvent(
             SearchPageEvents.generatedAnswerFeedbackSubmit,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerFeedbackMetadata}
+                : generatedAnswerFeedbackMetadata
+        );
+    }
+
+    public logGeneratedAnswerFeedbackSubmitV2(
+        generatedAnswerFeedbackMetadata: GeneratedAnswerFeedbackMetaV2,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerFeedbackSubmitV2,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerFeedbackMetadata}
                 : generatedAnswerFeedbackMetadata
