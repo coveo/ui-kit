@@ -1,27 +1,11 @@
 <template>
     <div id="listbox-id" class={listboxCssClass} role="listbox">
         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-            <!-- <template lwc:if={shouldDisplayRecentQueries}> -->
-                <!-- <template for:each={recentQueriesToRender} for:item="recentQuery">
-                    <li key={recentQuery.key} role="presentation" class="slds-listbox__item"
-                        data-rawvalue={recentQuery.value} onclick={a} onmouseover={a} onmousedown={preventDefault}>
-                        <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-grid suggestion-option" role="option">
-                            <span class="slds-media__figure slds-listbox__option-icon suggestion-option__icon">
-                                <lightning-icon icon-name="utility:clock" size="xx-small" alternative-text="Connected"
-                                    title="Connected"></lightning-icon>
-                            </span>
-                            <span class="slds-media__body slds-grid">
-                                <c-quantic-recent-query query={query} value={recentQuery.value}></c-quantic-recent-query>
-                            </span>
-                        </div>
-                    </li>
-                </template> -->
-            <!-- </template> -->
-            <template for:each={suggestionsToRender} for:item="suggestion">
-                <template lwc:if={suggestion.isClearRecentQueryButton}>
-                    <li key={suggestion.key} role="presentation" class="slds-listbox__item" onclick={clearRecentQueries} onmouseover={a}
+            <template for:each={allOptions} for:item="option">
+                <template lwc:if={option.isClearRecentQueryButton}>
+                    <li key={option.key} role="presentation" class="slds-listbox__item" onclick={clearRecentQueries} onmouseover={preventDefault}
                         onmousedown={preventDefault}>
-                        <div class={clearCSS} role="option">
+                        <div class={clearRecentQueriesOptionCSSClass} role="option">
                             <span class="slds-media__body slds-text-title_bold">
                                 Recent Searches
                             </span>
@@ -30,17 +14,17 @@
                     </li>
                 </template>
                 <template lwc:else>
-                    <li key={suggestion.rawValue} role="presentation" class="slds-listbox__item"
-                    data-rawvalue={suggestion.rawValue} onclick={handleSuggestionSelection}
+                    <li key={option.rawValue} role="presentation" class="slds-listbox__item"
+                    data-rawvalue={option.rawValue} onclick={handleSuggestionSelection}
                     onmouseover={handleSuggestionHover} onmousedown={preventDefault}>
-                    <div class={suggestion.containerCSSClass} role="option" aria-selected={suggestion.isSelected}>
+                    <div class={option.containerCSSClass} role="option" aria-selected={option.isSelected}>
                         <span class="slds-media__figure slds-listbox__option-icon suggestion-option__icon">
-                            <lightning-icon icon-name="utility:search" size="xx-small" alternative-text="Connected"
+                            <lightning-icon icon-name={option.icon} size="xx-small" alternative-text="Connected"
                                 title="Connected"></lightning-icon>
                         </span>
                         <span class="slds-media__body slds-grid">
                             <lightning-formatted-rich-text class="slds-truncate"
-                                value={suggestion.value}></lightning-formatted-rich-text>
+                                value={option.value}></lightning-formatted-rich-text>
                         </span>
                     </div>
                 </li>

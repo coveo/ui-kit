@@ -1,10 +1,14 @@
 import {LightningElement, api, track} from 'lwc';
 
+const optionCSSClass =
+  'slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-grid option';
+
 /**
  * @typedef Suggestion
  * @property {number} key
  * @property {string} value
  * @property {string} rawValue
+ * @property {false} isRecentQuery
  */
 
 /**
@@ -44,7 +48,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   selectionUp() {
     this.selectionIndex--;
     if (this.selectionIndex < 0) {
-      this.selectionIndex = this.suggestionsToRender.length - 1;
+      this.selectionIndex = this.allOptions.length - 1;
     }
   }
 
@@ -54,7 +58,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   @api
   selectionDown() {
     this.selectionIndex++;
-    if (this.selectionIndex >= this.suggestionsToRender.length) {
+    if (this.selectionIndex >= this.allOptions.length) {
       this.selectionIndex = 0;
     }
   }
@@ -100,22 +104,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     }
   }
 
-  formatValue(value) {
-    const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
-      content: value,
-      openingDelimiter: '<b class="font-bold">',
-      closingDelimiter: '</b>',
-      highlights: [
-        {
-          offset: this.query.length,
-          length: value.length - this.query.length,
-        },
-      ],
-    });
-    return highlightedValue;
-  }
-
-  get suggestionsToRender() {
+  get allOptions() {
     if (this.shouldDisplayRecentQueries) {
       const options = [
         ...this.filteredRecentQueries,
@@ -124,7 +113,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         ...option,
         key: index + 1,
         isSelected: this.selectionIndex === index + 1,
-        containerCSSClass: `slds-media slds-listbox__option slds-listbox__option_plain slds-media_small ${this.selectionIndex === index + 1 ? 'slds-has-focus' : ''} slds-grid suggestion-option`,
+        containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index + 1 ? 'slds-has-focus' : ''}`,
+        icon: option.isRecentQuery ? 'utility:clock' : 'utility:search',
       }));
       return [
         {
@@ -139,16 +129,18 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       ...option,
       key: index,
       isSelected: this.selectionIndex === index,
-      containerCSSClass: `slds-media slds-listbox__option slds-listbox__option_plain slds-media_small ${this.selectionIndex === index ? 'slds-has-focus' : ''} slds-grid suggestion-option`,
+      containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index ? 'slds-has-focus' : ''}`,
+      icon: 'utility:search',
     }));
   }
 
   get filteredSuggestions() {
     return (
-      this.suggestions?.filter((suggestion) =>
-        this.filteredRecentQueries.some(
-          (recentQuery) => recentQuery.rawValue !== suggestion.rawValue
-        )
+      this.suggestions?.filter(
+        (suggestion) =>
+          !this.filteredRecentQueries.some(
+            (recentQuery) => recentQuery.rawValue === suggestion.rawValue
+          )
       ) || []
     );
   }
@@ -162,17 +154,32 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
             recentQuery.toLowerCase().startsWith(this.query.toLowerCase())
         )
         .map((recentQuery) => ({
-          value: this.formatValue(recentQuery),
+          value: this.formatRecentQuery(recentQuery),
           rawValue: recentQuery,
           isRecentQuery: true,
         })) || []
     );
   }
 
+  formatRecentQuery(value) {
+    const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
+      content: value,
+      openingDelimiter: '<b>',
+      closingDelimiter: '</b>',
+      highlights: [
+        {
+          offset: this.query.length,
+          length: value.length - this.query.length,
+        },
+      ],
+    });
+    return highlightedValue;
+  }
+
   emitSuggestionHighlighted() {
     if (!(this.shouldDisplayRecentQueries && this.selectionIndex === 0)) {
       const highlightChangeEvent = new CustomEvent('highlightchange', {
-        detail: this.suggestionsToRender[this.selectionIndex],
+        detail: this.allOptions[this.selectionIndex],
       });
       this.dispatchEvent(highlightChangeEvent);
     }
@@ -209,8 +216,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     event.preventDefault();
   }
 
-  get clearCSS() {
-    return `slds-media slds-listbox__option slds-listbox__option_plain slds-media_small ${this.selectionIndex === 0 ? 'slds-has-focus' : ''} slds-grid recent-searches__label`;
+  get clearRecentQueriesOptionCSSClass() {
+    return `${optionCSSClass} ${this.selectionIndex === 0 ? 'slds-has-focus' : ''} recent-searches__label`;
   }
 
   get listboxCssClass() {

@@ -234,7 +234,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {KeyboardEvent} event
    */
   onKeyup(event) {
-    console.log('onKey up');
     switch (event.key) {
       case keys.ENTER:
         this.handleEnter(event);
