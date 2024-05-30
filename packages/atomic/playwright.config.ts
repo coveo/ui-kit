@@ -38,4 +38,12 @@ export default defineConfig({
   expect: {
     timeout: 20 * 1000,
   },
+  webServer: process.env.CI
+    ? {
+        command: 'npx http-server ./dist-storybook -p 4400',
+        port: 4400,
+        timeout: 120 * 1000,
+        reuseExistingServer: !process.env.CI,
+      }
+    : undefined,
 });
