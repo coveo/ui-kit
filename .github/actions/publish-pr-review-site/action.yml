@@ -38,6 +38,8 @@ runs:
       shell: bash
     - name: 'Commit/Push'
       run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
         git add "${{github.event.pull_request.number}}"
         git commit -m "Add ${{github.sha}}"
         git push --set-upstream origin ${{github.event.pull_request.number}}
