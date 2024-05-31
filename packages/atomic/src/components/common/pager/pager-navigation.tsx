@@ -1,7 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {i18n} from 'i18next';
 
 export interface PagerNavigationProps {
-  label: string;
+  i18n: i18n;
 }
 
 export const PagerNavigation: FunctionalComponent<PagerNavigationProps> = (
@@ -9,8 +10,8 @@ export const PagerNavigation: FunctionalComponent<PagerNavigationProps> = (
   children
 ) => {
   return (
-    <nav aria-label={props.label}>
-      <div part="buttons" class="flex gap-2 flex-wrap">
+    <nav aria-label={props.i18n.t('pagination')}>
+      <div part="buttons" class="flex flex-wrap gap-2">
         {...children}
       </div>
     </nav>

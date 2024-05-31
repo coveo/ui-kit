@@ -4,8 +4,6 @@ import {
   NumericRangeRequest,
   ListingSummary,
   SearchSummary,
-  buildListingSummary,
-  buildSearchSummary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -55,13 +53,16 @@ export class AtomicCommerceNumericFacet
 
   @State() public error!: Error;
 
-  private summary!: ListingSummary | SearchSummary;
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
   /**
-   * The field whose values you want to display in the facet.
+   * The Summary controller instance.
+   */
+  @Prop() summary!: SearchSummary | ListingSummary;
+  /**
+   * The numeric facet controller instance.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
 
@@ -75,16 +76,7 @@ export class AtomicCommerceNumericFacet
   }
 
   public initialize() {
-    this.initializeSummary();
     this.registerFacetToStore();
-  }
-
-  private initializeSummary() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.summary = buildListingSummary(this.bindings.engine);
-    } else {
-      this.summary = buildSearchSummary(this.bindings.engine);
-    }
   }
 
   private registerFacetToStore() {

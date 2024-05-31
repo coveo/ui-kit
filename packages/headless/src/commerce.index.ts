@@ -33,6 +33,8 @@ export * from './features/commerce/product-listing/product-listing-actions-loade
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
+export * from './features/commerce/search-parameters/search-parameters-actions-loader';
+export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
 
 // Selectors
 export {Selectors};
@@ -133,6 +135,7 @@ export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   DateFacet,
   DateFacetState,

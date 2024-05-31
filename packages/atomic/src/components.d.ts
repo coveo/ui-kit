@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -36,7 +36,7 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CommerceEngine, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -266,10 +266,31 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCommerceCategoryFacet {
+        /**
+          * The category facet controller instance.
+         */
+        "facet": CategoryFacet;
+        /**
+          * The summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -367,14 +388,20 @@ export namespace Components {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    interface AtomicCommerceNoProducts {
+    }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -736,7 +763,7 @@ export namespace Components {
         "min"?: string;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -2536,7 +2563,6 @@ export namespace Components {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -3383,6 +3409,16 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface HTMLAtomicCommerceCategoryFacetElement extends Components.AtomicCommerceCategoryFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceCategoryFacetElement: {
+        prototype: HTMLAtomicCommerceCategoryFacetElement;
+        new (): HTMLAtomicCommerceCategoryFacetElement;
+    };
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
@@ -3441,6 +3477,12 @@ declare global {
     var HTMLAtomicCommerceLoadMoreProductsElement: {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
+    };
+    interface HTMLAtomicCommerceNoProductsElement extends Components.AtomicCommerceNoProducts, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceNoProductsElement: {
+        prototype: HTMLAtomicCommerceNoProductsElement;
+        new (): HTMLAtomicCommerceNoProductsElement;
     };
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -3632,7 +3674,7 @@ declare global {
         new (): HTMLAtomicFacetDateInputElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -4671,7 +4713,6 @@ declare global {
     };
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
@@ -5182,12 +5223,14 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
+        "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
@@ -5556,10 +5599,31 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCommerceCategoryFacet {
+        /**
+          * The category facet controller instance.
+         */
+        "facet": CategoryFacet;
+        /**
+          * The summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
     interface AtomicCommerceFacet {
+        /**
+          * The facet controller instance.
+         */
         "facet": RegularFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5640,14 +5704,20 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    interface AtomicCommerceNoProducts {
+    }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      */
     interface AtomicCommerceNumericFacet {
         /**
-          * The field whose values you want to display in the facet.
+          * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The Summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -5982,7 +6052,7 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
      */
     interface AtomicFacetManager {
         /**
@@ -7681,7 +7751,6 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-result-number` component renders the value of a number result field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
     interface AtomicResultNumber {
         /**
@@ -8354,12 +8423,14 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
+        "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
@@ -8572,6 +8643,11 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+             */
+            "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
+            /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
@@ -8590,6 +8666,7 @@ declare module "@stencil/core" {
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;
             /**
              * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
              */
@@ -8657,7 +8734,7 @@ declare module "@stencil/core" {
              */
             "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
@@ -8995,7 +9072,6 @@ declare module "@stencil/core" {
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             /**
              * The `atomic-result-number` component renders the value of a number result field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
              */
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             /**
