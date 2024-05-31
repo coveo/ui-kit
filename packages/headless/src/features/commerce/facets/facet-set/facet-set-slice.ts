@@ -348,7 +348,6 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
@@ -370,7 +369,6 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
         request.values = convertToDateRangeRequests(values);
         request.numberOfValues = values.length;
       })

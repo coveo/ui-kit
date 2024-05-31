@@ -32,7 +32,7 @@ export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
    *
    * @param ranges - The new ranges to set.
    */
-  setRanges: (ranges: DateFacetValue[]) => void;
+  setRanges: (ranges: DateRangeRequest[]) => void;
   /**
    * The state of the `DateFacet` controller.
    */
@@ -75,12 +75,11 @@ export function buildCommerceDateFacet(
   return {
     ...coreController,
 
-    // TODO: KIT-3226 do not accept DateFacetValue as the argument as it expose unnecessary properties
-    setRanges(ranges: DateFacetValue[]) {
+    setRanges(ranges: DateRangeRequest[]) {
       dispatch(
         updateDateFacetValues({
           facetId,
-          values: ranges,
+          values: ranges.map((range) => ({...range, numberOfResults: 0})),
         })
       );
       dispatch(fetchProductsActionCreator());
