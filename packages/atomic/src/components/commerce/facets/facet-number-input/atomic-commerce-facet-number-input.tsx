@@ -50,11 +50,7 @@ export class FacetNumberInput {
         start: this.start!,
         end: this.end!,
         endInclusive: true,
-        isAutoSelected: false,
         state: 'selected',
-        numberOfResults: 0,
-        isSuggested: false,
-        moreValuesAvailable: false,
       },
     ]);
   }

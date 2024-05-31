@@ -278,10 +278,6 @@ export class AtomicCommerceTimeframeFacet
               start,
               end,
               endInclusive,
-              isAutoSelected: false,
-              isSuggested: false,
-              numberOfResults: 0,
-              moreValuesAvailable: false,
               state: 'selected',
             },
           ]);
