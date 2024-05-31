@@ -77,12 +77,12 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   /**
    * Return the currently selected suggestion.
-   * @returns {Suggestion}
+   * @returns {Object}
    */
   @api
   getCurrentSelectedValue() {
     if (this.selectionIndex > -1) {
-      return this.suggestions[this.selectionIndex];
+      return this.allOptions[this.selectionIndex];
     }
     return undefined;
   }
@@ -236,7 +236,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   get listboxCssClass() {
     return `slds-dropdown slds-dropdown_length-10 slds-dropdown_fluid quantic-suggestions-list ${
-      this.suggestions?.length ? '' : 'slds-hidden'
+      this.allOptions?.length ? '' : 'slds-hidden'
     }`;
   }
 }

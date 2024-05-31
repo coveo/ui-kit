@@ -18,6 +18,12 @@ const standaloneSearchBoxActions = (selector: SearchBoxSelector) => {
         })
         .logAction(`when typing "${query}" in search box`);
     },
+    pressDownArrowOnSearchBox: (textarea = false) => {
+      selector.input(textarea).type('{downarrow}');
+    },
+    pressEnterOnSearchBox: (textarea = false) => {
+      selector.input(textarea).type('{enter}');
+    },
     clickQuerySuggestion: (index: number) => {
       selector.querySuggestion(index).click();
     },

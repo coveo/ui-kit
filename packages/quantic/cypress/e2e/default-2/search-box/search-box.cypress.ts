@@ -293,6 +293,106 @@ describe('quantic-search-box', () => {
             });
           });
         });
+
+        describe('when using the keyboard to select a recent query', () => {
+          const exampleRecentQueries = ['foo', 'bar'];
+
+          beforeEach(() => {
+            setRecentQueriesInLocalStorage(exampleRecentQueries);
+            visitSearchBox({...defaultOptions, textarea});
+            mockQuerySuggestions(exampleQuerySuggestions);
+          });
+
+          it('should properly navigate and select the right suggestion', () => {
+            const expectedQuerySuggestions = [
+              ...exampleRecentQueries,
+              ...exampleQuerySuggestions,
+            ];
+            scope('when loading standalone search box', () => {
+              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchButton(true);
+            });
+
+            scope('when focusing on the search box input', () => {
+              Actions.focusSearchBox(textarea);
+              cy.wait(InterceptAliases.QuerySuggestions);
+
+              Expect.displaySuggestionList(true);
+              Expect.displayClearRecentQueriesButton(true);
+              Expect.numberOfQuerySuggestions(expectedQuerySuggestions.length);
+              Expect.querySuggestionsEquals(expectedQuerySuggestions);
+            });
+
+            scope('when selecting a recent query with the keyboard', () => {
+              // First arrow down press to go to the clear recent queries option.
+              Actions.pressDownArrowOnSearchBox(textarea);
+              // Second arrow down press to go to the first recent queries option.
+              Actions.pressDownArrowOnSearchBox(textarea);
+              Actions.pressEnterOnSearchBox(textarea);
+              const clickedSuggestionIndex = 0;
+              Expect.searchWithQuery(
+                exampleRecentQueries[clickedSuggestionIndex],
+                {
+                  LSkey: recentQueriesLSKey,
+                  queries: exampleRecentQueries,
+                }
+              );
+            });
+          });
+        });
+
+        describe('when using the keyboard to select a query suggestion', () => {
+          const exampleRecentQueries = ['foo', 'bar'];
+
+          beforeEach(() => {
+            setRecentQueriesInLocalStorage(exampleRecentQueries);
+            visitSearchBox({...defaultOptions, textarea});
+            mockQuerySuggestions(exampleQuerySuggestions);
+          });
+
+          it('should properly navigate and select the right suggestion', () => {
+            const expectedQuerySuggestions = [
+              ...exampleRecentQueries,
+              ...exampleQuerySuggestions,
+            ];
+            scope('when loading standalone search box', () => {
+              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchButton(true);
+            });
+
+            scope('when focusing on the search box input', () => {
+              Actions.focusSearchBox(textarea);
+              cy.wait(InterceptAliases.QuerySuggestions);
+
+              Expect.displaySuggestionList(true);
+              Expect.displayClearRecentQueriesButton(true);
+              Expect.numberOfQuerySuggestions(expectedQuerySuggestions.length);
+              Expect.querySuggestionsEquals(expectedQuerySuggestions);
+            });
+
+            scope('when selecting a recent query with the keyboard', () => {
+              // First arrow down press to go to the clear recent queries option.
+              Actions.pressDownArrowOnSearchBox(textarea);
+              // pressing the arrow down button to surpass every recent query option.
+              for (let i = 0; i < exampleRecentQueries.length + 1; i++) {
+                Actions.pressDownArrowOnSearchBox(textarea);
+              }
+
+              Actions.pressEnterOnSearchBox(textarea);
+              const clickedSuggestionIndex = 0;
+              Expect.searchWithQuery(
+                exampleQuerySuggestions[clickedSuggestionIndex],
+                {
+                  LSkey: recentQueriesLSKey,
+                  queries: [
+                    exampleQuerySuggestions[clickedSuggestionIndex],
+                    ...exampleRecentQueries,
+                  ],
+                }
+              );
+            });
+          });
+        });
       });
     });
   });
