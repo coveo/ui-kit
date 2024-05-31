@@ -198,7 +198,7 @@ function getUpdateAnalyticsConfigurationPayload(
     apiBaseUrl,
   };
 
-  if (doNotTrack()) {
+  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,
