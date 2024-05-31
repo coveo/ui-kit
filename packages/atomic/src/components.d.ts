@@ -5442,6 +5442,78 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
     }
+    /**
+     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     */
+    interface AtomicBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit"?: number;
+    }
+    /**
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+     */
+    interface AtomicCategoryFacet {
+        /**
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
+         */
+        "basePath"?: string[] | string;
+        /**
+          * The character that separates values of a multi-value field.  *Note:* If you use the [example formatting](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet/#usage-notes) for the associated multi-value field, you must set this value to `|` or the facet won't display properly.
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath"?: boolean;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
+         */
+        "sortCriteria"?: CategoryFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box.
+         */
+        "withSearch"?: boolean;
+    }
     interface AtomicCitation {
         /**
           * The citation item information.
