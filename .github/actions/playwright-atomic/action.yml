@@ -15,4 +15,4 @@ runs:
       with:
         name: atomic-playwright-report
         path: packages/atomic/playwright-report/
-        retention-days: 30
+        retention-days: 5
