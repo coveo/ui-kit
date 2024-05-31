@@ -36,15 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/build
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: ./.github/actions/commit-generated-files
-        env:
-          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   lint-check:
     name: 'Check with linter'
     needs: build

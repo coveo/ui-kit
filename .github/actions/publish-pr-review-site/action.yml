@@ -24,7 +24,7 @@ runs:
         else
           git fetch origin "refs/heads/${{github.event.pull_request.number}}"
           git switch "${{github.event.pull_request.number}}"
-          git pull
+          git reset --hard main
         fi
       working-directory: prs
       shell: bash
@@ -46,11 +46,19 @@ runs:
         git config user.email "<>"
         git add "${{github.event.pull_request.number}}"
         git commit -m "Add ${{github.sha}}"
-        git push --set-upstream origin ${{github.event.pull_request.number}}
+        git push --set-upstream origin ${{github.event.pull_request.number}} -f
       working-directory: prs
       shell: bash
-    - name: 'Open & put PR in merge queue'
-      run: gh pr new -f && gh pr merge
+    - name: 'Ensure PR exists'
+      run: gh pr new -f
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{inputs.token}}
+      working-directory: prs
+      shell: bash
+    - name: 'Merge PR'
+      run: gh pr merge
+      continue-on-error: true
       env:
         GH_TOKEN: ${{inputs.token}}
       working-directory: prs
