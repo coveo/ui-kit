@@ -5,25 +5,12 @@ on:
 env:
   CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:
-  github_auth:
-    environment: PR Artifacts
-    runs-on: ubuntu-latest
-    outputs:
-      token: ${{ steps.generate-token.outputs.token }}
-    steps:
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
   report-size:
     if: github.event_name == 'pull_request'
-    needs: github_auth
     name: 'Report bundle size'
+    environment: PR Artifacts
     runs-on: ubuntu-latest
     env:
-      GITHUB_CREDENTIALS: ${{ needs.github_auth.outputs.token }}
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -33,18 +20,31 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - run: npm ci
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - run: npm run pr:report
+        env:
+          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build:
     name: 'Build'
-    needs: github_auth
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/build
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: ./.github/actions/commit-generated-files
         env:
-          GITHUB_CREDENTIALS: ${{ needs.github_auth.outputs.token }}
+          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   lint-check:
     name: 'Check with linter'
     needs: build
@@ -72,7 +72,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     environment: PR Artifacts
-    needs: [build, github_auth]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -80,10 +80,18 @@ jobs:
       - run: npm run build
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: coveo
+          repo: ui-kit-prs
       - uses: ./.github/actions/publish-pr-review-site
         if: ${{ always() && github.event_name == 'pull_request'}}
         with:
-          token: ${{ needs.github_auth.outputs.token }}
+          token: ${{ steps.generate-token.outputs.token }}
           copy: true
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
