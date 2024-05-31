@@ -50,9 +50,7 @@ runs:
       working-directory: prs
       shell: bash
     - name: 'Open & put PR in merge queue'
-      run: |
-        gh pr new -f
-        gh pr merge
+      run: gh pr new -f && gh pr merge
       env:
         GH_TOKEN: ${{inputs.token}}
       working-directory: prs
