@@ -96,6 +96,7 @@ export const InterceptAliases = {
     },
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
+    ClearRecentQueries: uaAlias('clearRecentQueries'),
   },
   NextAnalytics: {
     Qna: {
@@ -637,4 +638,18 @@ export function mockSearchWithNotifyTrigger(
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockQuerySuggestions(suggestions: string[]) {
+  cy.intercept(routeMatchers.querySuggest, (req) => {
+    req.continue((res) => {
+      res.body.completions = suggestions.map((suggestion) => ({
+        expression: suggestion,
+        highlighted: suggestion,
+      }));
+
+      res.body.responseId = crypto.randomUUID();
+      res.send();
+    });
+  }).as(InterceptAliases.QuerySuggestions.substring(1));
 }

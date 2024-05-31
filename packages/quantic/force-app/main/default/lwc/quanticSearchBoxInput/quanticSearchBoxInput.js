@@ -361,7 +361,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get hasSuggestions() {
-    return this.suggestions?.length;
+    return this.suggestions?.length || this.recentQueries?.length;
   }
 
   render() {
