@@ -59,8 +59,20 @@ export class FacetNumberInput {
     ]);
   }
 
+  private get minimumInputValue() {
+    const {domain} = this.facet.state;
+    const min = Number.MIN_SAFE_INTEGER;
+    return Math.max(this.start || min, domain?.min || min);
+  }
+
+  private get maximumInputValue() {
+    const {domain} = this.facet.state;
+    const min = Number.MAX_SAFE_INTEGER;
+    return Math.min(this.end || min, domain?.max || min);
+  }
+
   render() {
-    const {facetId, domain} = this.facet.state;
+    const {facetId} = this.facet.state;
     const label = this.bindings.i18n.t(this.label);
     const minText = this.bindings.i18n.t('min');
     const maxText = this.bindings.i18n.t('max');
@@ -101,7 +113,7 @@ export class FacetNumberInput {
           aria-label={minAria}
           required
           min={Number.MIN_SAFE_INTEGER}
-          max={domain!.max}
+          max={this.maximumInputValue}
           value={this.range?.start}
           onInput={(e) =>
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
@@ -119,7 +131,7 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={maxAria}
           required
-          min={domain!.min}
+          min={this.minimumInputValue}
           max={Number.MAX_SAFE_INTEGER}
           value={this.range?.end}
           onInput={(e) =>
