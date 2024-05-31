@@ -41,19 +41,19 @@ export const getProductProperty = (
  * @returns (Record<string, unknown>) An object containing the required properties for logging analytics events, as well as a warning message if any of the required properties are missing.
  */
 export const getRequiredProductPropertiesForAnalytics = (product: Product) => {
-  const productId = getProductPropertyFromLookupFields(
+  const productId = getProductPropertyFromLookupFields<string>(
     product,
     ['ec_product_id', 'permanentid'],
     'productId',
     'string'
   );
-  const productName = getProductPropertyFromLookupFields(
+  const productName = getProductPropertyFromLookupFields<string>(
     product,
     ['ec_name', 'ec_product_id', 'permanentid'],
     'name',
     'string'
   );
-  const productPrice = getProductPropertyFromLookupFields(
+  const productPrice = getProductPropertyFromLookupFields<number>(
     product,
     ['ec_promo_price', 'ec_price'],
     'price',
@@ -165,34 +165,24 @@ const getFieldValuesFromProduct = (
   return isArray(rawValue) ? rawValue : [rawValue];
 };
 
-type AllowedExpectedType = 'string' | 'number';
+type AllowedExpectedTypeof = 'string' | 'number';
 
-type MappedExpectedType = {
-  [T in AllowedExpectedType]: T extends 'string'
-    ? string
-    : T extends 'number'
-      ? number
-      : never;
-};
-
-function getFirstValidFieldValueFromProduct<
-  ExpectedType extends MappedExpectedType,
->(
-  expectedType: AllowedExpectedType,
+function getFirstValidFieldValueFromProduct<T extends string | number>(
+  expectedTypeof: AllowedExpectedTypeof,
   lookupFields: string[],
   product: Product
-): ExpectedType | undefined {
+): T | undefined {
   const rawValues = lookupFields.map((fieldName) =>
     getProductProperty(product, fieldName)
   );
 
-  const value = rawValues.find((value) => typeof value === expectedType);
+  const value = rawValues.find((value) => typeof value === expectedTypeof);
 
   if (value === undefined) {
     return value;
   }
 
-  return value as ExpectedType;
+  return value as T;
 }
 
 const getCouldNotRetrievePropertyWarning = (
@@ -201,14 +191,14 @@ const getCouldNotRetrievePropertyWarning = (
 ) =>
   `'${property}' could not be retrieved from field${lookupFields.length > 1 ? 's' : ''} '${lookupFields.join("', '")}'.`;
 
-const getProductPropertyFromLookupFields = (
+function getProductPropertyFromLookupFields<T extends string | number>(
   product: Product,
   lookupFields: string[],
   propertyName: string,
-  expectedType: AllowedExpectedType
-) => {
-  const value = getFirstValidFieldValueFromProduct(
-    expectedType,
+  type: AllowedExpectedTypeof
+) {
+  const value = getFirstValidFieldValueFromProduct<T>(
+    type,
     lookupFields,
     product
   );
@@ -220,7 +210,7 @@ const getProductPropertyFromLookupFields = (
     warning,
     value,
   };
-};
+}
 
 export const ProductTemplatesHelpers = {
   getProductProperty,
