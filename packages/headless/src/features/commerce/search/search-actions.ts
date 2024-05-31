@@ -1,5 +1,5 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
@@ -178,7 +178,7 @@ export const fetchInstantProducts = createAsyncThunk<
     const state = getState();
     const {q} = payload;
     const {apiClient} = extra;
-    const fetched = await apiClient.search({
+    const fetched = await apiClient.productSuggestions({
       ...(await buildCommerceAPIRequest(state)),
       query: q,
     });
@@ -197,4 +197,20 @@ export const fetchInstantProducts = createAsyncThunk<
       response: {...fetched.success, products},
     };
   }
+);
+
+export interface PromoteChildToParentActionCreatorPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
+};
+
+export const promoteChildToParent = createAction(
+  'commerce/search/promoteChildToParent',
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

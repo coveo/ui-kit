@@ -66,7 +66,6 @@ describe('category field suggestions', () => {
           action: () => categoryFieldSuggestions.select(firstToggledValue),
           expectedSubscriberCalls: 2,
         });
-        console.log(categoryFacet.state.values);
         expect(getSelectedValue().value).toEqual(firstToggledValue.rawValue);
         await waitForNextStateChange(categoryFacet, {
           action: () => categoryFieldSuggestions.select(secondToggledValue),

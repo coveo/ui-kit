@@ -23,7 +23,7 @@ import {fetchProductListing} from './product-listing-actions';
 /**
  * The product listing action creators.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ProductListingActionCreators {
   /**
@@ -41,9 +41,10 @@ export interface ProductListingActionCreators {
 /**
  * Loads the product listing reducer and returns the possible action creators.
  *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function loadProductListingActions(
   engine: CommerceEngine
@@ -58,7 +59,7 @@ export function loadProductListingActions(
 /**
  * The product listing analytics action creators.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ProductListingAnalyticsActionCreators {
   /**
@@ -121,7 +122,7 @@ export interface ProductListingAnalyticsActionCreators {
  *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export function loadProductListingAnalyticsActions(
   engine: CommerceEngine

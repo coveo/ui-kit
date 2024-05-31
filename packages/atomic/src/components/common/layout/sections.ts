@@ -1,6 +1,6 @@
 import {isElementNode} from '../../../utils/utils';
 
-export const resultSectionTags = new Set([
+const resultSectionTags = new Set([
   'atomic-result-section-visual',
   'atomic-result-section-badges',
   'atomic-result-section-actions',
@@ -12,17 +12,29 @@ export const resultSectionTags = new Set([
   'atomic-result-section-children',
 ] as const);
 
+const productSectionTags = new Set([
+  'atomic-product-section-visual',
+  'atomic-product-section-badges',
+  'atomic-product-section-actions',
+  'atomic-product-section-name',
+  'atomic-product-section-metadata',
+  'atomic-product-section-emphasized',
+  'atomic-product-section-description',
+  'atomic-product-section-bottom-metadata',
+  'atomic-product-section-children',
+] as const);
+
+const allTags = new Set([...resultSectionTags, ...productSectionTags]);
+
 type SetValueType<T> = T extends Set<infer U> ? U : never;
 
-export type ResultSectionTagName = SetValueType<typeof resultSectionTags>;
+export type ItemSectionTagName = SetValueType<typeof allTags>;
 
 export function isResultSectionNode(element: Node) {
   if (!isElementNode(element)) {
     return false;
   }
-  return resultSectionTags.has(
-    element.tagName.toLowerCase() as ResultSectionTagName
-  );
+  return allTags.has(element.tagName.toLowerCase() as ItemSectionTagName);
 }
 
 export function containsSections(content: string | NodeList | HTMLCollection) {

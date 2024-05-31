@@ -11,8 +11,10 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
 import {
   nextPage,
@@ -48,7 +50,7 @@ describe('pagination slice', () => {
       recommendations: {},
       principal: {
         page: 0,
-        perPage: undefined,
+        perPage: 0,
         totalEntries: 0,
         totalPages: 0,
       },
@@ -208,6 +210,40 @@ describe('pagination slice', () => {
 
   describe.each([
     {
+      action: restoreSearchParameters,
+      actionName: 'restoreSearchParameters',
+    },
+    {
+      action: restoreProductListingParameters,
+      actionName: 'restoreProductListingParameters',
+    },
+  ])('$actionName', ({action}) => {
+    it('restores principal pagination', () => {
+      const parameters = {
+        page: 2,
+        perPage: 11,
+      };
+
+      const finalState = paginationReducer(state, action(parameters));
+
+      expect(finalState.principal.page).toBe(parameters.page);
+      expect(finalState.principal.perPage).toBe(parameters.perPage);
+    });
+
+    it('does not restore principal pagination when parameters are not defined', () => {
+      const parameters = {
+        page: undefined,
+        perPage: undefined,
+      };
+
+      const finalState = paginationReducer(state, action(parameters));
+
+      expect(finalState.principal).toBe(state.principal);
+    });
+  });
+
+  describe.each([
+    {
       actionName: '#deselectAllFacetValues',
       action: deselectAllFacetValues,
     },
@@ -242,13 +278,11 @@ describe('pagination slice', () => {
   ])('$actionName', ({action}) => {
     it('resets principal pagination', () => {
       state.principal.page = 5;
-      state.principal.perPage = 17;
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const finalState = paginationReducer(state, action({} as any));
 
       expect(finalState.principal.page).toBe(0);
-      expect(finalState.principal.perPage).toBe(undefined);
     });
   });
 });
