@@ -21,6 +21,17 @@ import {
   ProductContextEvent,
 } from '../product-template-components/product-template-decorators';
 
+export interface CommerceInteractiveProduct {
+  /**
+   * The interactive product controller.
+   */
+  controller?: InteractiveProduct;
+  /**
+   * The warning message to log if the controller is not available because some required properties are missing.
+   */
+  warning?: string;
+}
+
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
  * @internal
@@ -49,7 +60,7 @@ export class AtomicProduct {
    * The InteractiveProduct item.
    * @internal
    */
-  @Prop() interactiveProduct?: InteractiveProduct;
+  @Prop() interactiveProduct!: CommerceInteractiveProduct;
 
   /**
    * Global Atomic state.
@@ -112,7 +123,10 @@ export class AtomicProduct {
     event.preventDefault();
     event.stopPropagation();
     if (this.interactiveProduct) {
-      event.detail(this.interactiveProduct);
+      event.detail({
+        interactiveProduct: this.interactiveProduct.controller,
+        warning: this.interactiveProduct.warning,
+      });
     }
   }
 

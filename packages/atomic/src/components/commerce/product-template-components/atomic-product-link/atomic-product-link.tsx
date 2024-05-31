@@ -36,7 +36,10 @@ export class AtomicProductLink
   public static isCompatibleWithProductList = true;
 
   @ProductContext() private product!: Product;
-  @InteractiveProductContext() private interactiveProduct!: InteractiveProduct;
+  @InteractiveProductContext() private interactiveProduct!: {
+    interactiveProduct?: InteractiveProduct;
+    warning?: string;
+  };
 
   @Element() private host!: HTMLElement;
 
@@ -55,6 +58,10 @@ export class AtomicProductLink
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
+
+  private logWarning(warning: string) {
+    this.bindings.engine.logger.warn(warning);
+  }
 
   public initialize() {
     this.host.dispatchEvent(
@@ -78,15 +85,27 @@ export class AtomicProductLink
       ? this.product.clickUri
       : 'test';
 
+    if (!this.interactiveProduct) {
+      return;
+    }
+
+    const {interactiveProduct, warning} = this.interactiveProduct;
+
     return (
       <LinkWithItemAnalytics
         href={href}
-        onSelect={() => this.interactiveProduct.select()}
+        onSelect={() =>
+          warning ? this.logWarning(warning) : interactiveProduct!.select()
+        }
         onBeginDelayedSelect={() =>
-          this.interactiveProduct.beginDelayedSelect()
+          warning
+            ? this.logWarning(warning)
+            : interactiveProduct!.beginDelayedSelect()
         }
         onCancelPendingSelect={() =>
-          this.interactiveProduct.cancelPendingSelect()
+          warning
+            ? this.logWarning(warning)
+            : interactiveProduct!.cancelPendingSelect()
         }
         attributes={this.linkAttributes}
         stopPropagation={this.stopPropagation}

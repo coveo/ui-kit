@@ -367,9 +367,10 @@ export class AtomicCommerceRecommendationList
   }
 
   private renderAsGrid(product: Product, i: number) {
-    const {interactiveProduct, ...restOfPropsForAtomicProduct} =
-      this.getAtomicProductProps(product, i);
-    const analyticsWarning = interactiveProduct.warning;
+    const propsForAtomicProduct = this.getAtomicProductProps(product, i);
+    const analyticsWarning = propsForAtomicProduct.interactiveProduct.warning;
+    const interactiveProductController =
+      propsForAtomicProduct.interactiveProduct.controller;
     return (
       <DisplayGrid
         item={{
@@ -380,26 +381,23 @@ export class AtomicCommerceRecommendationList
         select={() =>
           analyticsWarning
             ? this.logWarning(analyticsWarning)
-            : interactiveProduct.controller?.select()
+            : interactiveProductController?.select()
         }
         beginDelayedSelect={() =>
           analyticsWarning
             ? this.logWarning(analyticsWarning)
-            : interactiveProduct.controller?.beginDelayedSelect()
+            : interactiveProductController?.beginDelayedSelect()
         }
         cancelPendingSelect={() =>
           analyticsWarning
             ? this.logWarning(analyticsWarning)
-            : interactiveProduct.controller?.cancelPendingSelect()
+            : interactiveProductController?.cancelPendingSelect()
         }
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)
         }
       >
-        <atomic-product
-          interactiveProduct={interactiveProduct.controller}
-          {...restOfPropsForAtomicProduct}
-        ></atomic-product>
+        <atomic-product {...propsForAtomicProduct}></atomic-product>
       </DisplayGrid>
     );
   }

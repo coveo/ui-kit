@@ -279,9 +279,10 @@ export class AtomicCommerceProductList
 
   private renderAsGrid() {
     return this.productState.products.map((product, i) => {
-      const {interactiveProduct, ...restOfPropsForAtomicProduct} =
-        this.getPropsForAtomicProduct(product, i);
-      const analyticsWarning = interactiveProduct.warning;
+      const propsForAtomicProduct = this.getPropsForAtomicProduct(product, i);
+      const analyticsWarning = propsForAtomicProduct.interactiveProduct.warning;
+      const interactiveProductController =
+        propsForAtomicProduct.interactiveProduct.controller;
       return (
         <DisplayGrid
           item={{
@@ -289,30 +290,27 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          {...interactiveProduct.controller}
+          {...propsForAtomicProduct.interactiveProduct.controller}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
           select={() => {
             analyticsWarning
               ? this.logWarning(analyticsWarning)
-              : interactiveProduct.controller?.select();
+              : interactiveProductController?.select();
           }}
           beginDelayedSelect={() => {
             analyticsWarning
               ? this.logWarning(analyticsWarning)
-              : interactiveProduct.controller?.beginDelayedSelect();
+              : interactiveProductController?.beginDelayedSelect();
           }}
           cancelPendingSelect={() => {
             analyticsWarning
               ? this.logWarning(analyticsWarning)
-              : interactiveProduct.controller?.cancelPendingSelect();
+              : interactiveProductController?.cancelPendingSelect();
           }}
         >
-          <atomic-product
-            interactiveProduct={interactiveProduct.controller}
-            {...restOfPropsForAtomicProduct}
-          ></atomic-product>
+          <atomic-product {...propsForAtomicProduct}></atomic-product>
         </DisplayGrid>
       );
     });
@@ -377,7 +375,6 @@ export class AtomicCommerceProductList
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product, i);
       return (
         <atomic-product
-          {...this}
           {...propsForAtomicProduct}
           ref={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
