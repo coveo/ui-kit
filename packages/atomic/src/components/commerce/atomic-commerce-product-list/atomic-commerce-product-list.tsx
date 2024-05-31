@@ -225,9 +225,9 @@ export class AtomicCommerceProductList
   private getInteractiveProduct(product: Product, index: number) {
     let parentController: ProductListing | Search;
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      parentController = buildProductListing(this.bindings.engine);
+      parentController = this.productListing;
     } else {
-      parentController = buildSearch(this.bindings.engine);
+      parentController = this.search;
     }
 
     const {name, price, productId, warning} =
