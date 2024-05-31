@@ -44,7 +44,7 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: ./.github/actions/commit-generated-files
         with:
-          github-token: ${{ steps.generate-token.outputs.token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
   lint-check:
     name: 'Check with linter'
     needs: build
