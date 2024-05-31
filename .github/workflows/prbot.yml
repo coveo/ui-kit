@@ -5,12 +5,25 @@ on:
 env:
   CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:
+  github_auth:
+    environment: PR Artifacts
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.generate-token.outputs.token }}
+    steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
   report-size:
     if: github.event_name == 'pull_request'
+    needs: github_auth
     name: 'Report bundle size'
     runs-on: ubuntu-latest
     env:
-      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_CREDENTIALS: ${{ needs.github_auth.outputs.token }}
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -23,12 +36,15 @@ jobs:
       - run: npm run pr:report
   build:
     name: 'Build'
+    needs: github_auth
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
+        env:
+          GITHUB_CREDENTIALS: ${{ needs.github_auth.outputs.token }}
   lint-check:
     name: 'Check with linter'
     needs: build
@@ -56,7 +72,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     environment: PR Artifacts
-    needs: build
+    needs: [build, github_auth]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -67,7 +83,7 @@ jobs:
       - uses: ./.github/actions/publish-pr-review-site
         if: ${{ always() && github.event_name == 'pull_request'}}
         with:
-          token: ${{ secrets.GH_PUBLISH_TOKEN }}
+          token: ${{ needs.github_auth.outputs.token }}
           copy: true
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
