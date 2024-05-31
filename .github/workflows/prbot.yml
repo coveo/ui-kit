@@ -43,8 +43,8 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: ./.github/actions/commit-generated-files
-        env:
-          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
   lint-check:
     name: 'Check with linter'
     needs: build
