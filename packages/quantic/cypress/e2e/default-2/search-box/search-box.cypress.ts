@@ -135,6 +135,33 @@ describe('quantic-search-box', () => {
           });
         });
 
+        describe('when no query suggestions are returned and only recent queries are present', () => {
+          const exampleRecentQueries = ['foo', 'bar'];
+
+          beforeEach(() => {
+            setRecentQueriesInLocalStorage(exampleRecentQueries);
+            visitSearchBox({...defaultOptions, textarea});
+            mockQuerySuggestions([]);
+          });
+
+          it('should display the recent query suggestions', () => {
+            scope('when loading standalone search box', () => {
+              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchButton(true);
+            });
+
+            scope('when focusing on the search box input', () => {
+              Actions.focusSearchBox(textarea);
+              cy.wait(InterceptAliases.QuerySuggestions);
+
+              Expect.displaySuggestionList(true);
+              Expect.displayClearRecentQueriesButton(true);
+              Expect.numberOfQuerySuggestions(exampleRecentQueries.length);
+              Expect.querySuggestionsEquals(exampleRecentQueries);
+            });
+          });
+        });
+
         describe('when the same suggestion is returned as a query suggestion and as a recent query suggestion', () => {
           const exampleRecentQueries = ['ABC'];
           const exampleQuerySuggestions = ['ABC'];
