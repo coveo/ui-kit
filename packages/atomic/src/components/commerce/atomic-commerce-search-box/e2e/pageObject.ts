@@ -1,4 +1,4 @@
-import {Page} from '@playwright/test';
+import type {Page} from '@playwright/test';
 
 export class AtomicCommerceSearchBoxLocators {
   private page: Page;
@@ -36,6 +36,10 @@ export class AtomicCommerceSearchBoxLocators {
         `instant result\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
+  }
+
+  get hydrated() {
+    return this.page.locator('atomic-commerce-search-box[class*="hydrated"]');
   }
 
   private listSideAffix(listSide?: 'Left' | 'Right') {

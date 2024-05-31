@@ -65,6 +65,7 @@
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.9.1",
     "@babel/core": "7.24.5",
     "@coveo/atomic": "2.65.5",
     "@coveo/headless": "2.63.5",

@@ -1,3 +1,7 @@
+import {
+  AxeFixture,
+  makeAxeBuilder,
+} from '@coveo/atomic/playwrightUtils/base-fixture';
 import {test as base} from '@playwright/test';
 import {AtomicCommerceLoadMoreProductsLocators as LoadMore} from '../../atomic-commerce-load-more-products/e2e/pageObject';
 import {AtomicCommerceFacetsLocators as Facets} from '../../facets/atomic-commerce-facets/e2e/pageObject';
@@ -9,7 +13,8 @@ type MyFixtures = {
   loadMore: LoadMore;
 };
 
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<MyFixtures & AxeFixture>({
+  makeAxeBuilder,
   searchBox: async ({page}, use) => {
     await use(new SearchBox(page));
   },
