@@ -773,11 +773,11 @@
     <name>quantic_GeneratingAnswer</name>
   </customLabels>
   <customLabels>
-    <label>ON</label>
+    <label>Réponse générée ON</label>
     <name>quantic_GeneratedAnswerOn</name>
   </customLabels>
   <customLabels>
-    <label>OFF</label>
+    <label>Réponse générée OFF</label>
     <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
   <customLabels>

@@ -1413,14 +1413,14 @@
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerOn</fullName>
-    <value>ON</value>
+    <value>Generated answer ON</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer ON</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerOff</fullName>
-    <value>OFF</value>
+    <value>Generated answer OFF</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer OFF</shortDescription>
