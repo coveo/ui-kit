@@ -14,7 +14,7 @@ import {
   serializeSpecialCharacters,
   splitOnFirstEqual,
 } from '../../search-parameters/search-parameter-serializer';
-import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameter-actions';
+import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
 import {
   buildFieldsSortCriterion,

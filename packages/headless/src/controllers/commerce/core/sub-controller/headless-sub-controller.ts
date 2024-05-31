@@ -8,7 +8,7 @@ import {stateKey} from '../../../../app/state-key';
 import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
 import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer';
-import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
+import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
 import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions';
 import {
   buildDidYouMean,
