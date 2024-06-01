@@ -30,6 +30,7 @@ export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNu
 export const AtomicProduct = /*@__PURE__*/createReactComponent<JSX.AtomicProduct, HTMLAtomicProductElement>('atomic-product');
 export const AtomicProductChildren = /*@__PURE__*/createReactComponent<JSX.AtomicProductChildren, HTMLAtomicProductChildrenElement>('atomic-product-children');
 export const AtomicProductDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductDescription, HTMLAtomicProductDescriptionElement>('atomic-product-description');
+export const AtomicProductFieldCondition = /*@__PURE__*/createReactComponent<JSX.AtomicProductFieldCondition, HTMLAtomicProductFieldConditionElement>('atomic-product-field-condition');
 export const AtomicProductImage = /*@__PURE__*/createReactComponent<JSX.AtomicProductImage, HTMLAtomicProductImageElement>('atomic-product-image');
 export const AtomicProductLink = /*@__PURE__*/createReactComponent<JSX.AtomicProductLink, HTMLAtomicProductLinkElement>('atomic-product-link');
 export const AtomicProductNumericFieldValue = /*@__PURE__*/createReactComponent<JSX.AtomicProductNumericFieldValue, HTMLAtomicProductNumericFieldValueElement>('atomic-product-numeric-field-value');
