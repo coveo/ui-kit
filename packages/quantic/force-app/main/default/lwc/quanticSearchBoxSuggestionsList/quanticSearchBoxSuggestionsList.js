@@ -1,3 +1,5 @@
+import clear from '@salesforce/label/c.quantic_Clear';
+import recentQueries from '@salesforce/label/c.quantic_RecentQueries';
 import {LightningElement, api, track} from 'lwc';
 
 const optionCSSClass =
@@ -52,6 +54,11 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @defaultValue 7
    */
   @api maxNumberOfSuggestions;
+
+  labels = {
+    clear,
+    recentQueries,
+  };
 
   /**
    * Move highlighted selection up.
