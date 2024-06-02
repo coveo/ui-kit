@@ -420,6 +420,125 @@ describe('quantic-search-box', () => {
             });
           });
         });
+
+        describe('when a custom value is set for the property numberOfSuggestions', () => {
+          const exampleRecentQueries = ['foo', 'bar'];
+          const customNumberOfSuggestions = 3;
+
+          beforeEach(() => {
+            setRecentQueriesInLocalStorage(exampleRecentQueries);
+            visitSearchBox({
+              ...defaultOptions,
+              textarea,
+              numberOfSuggestions: customNumberOfSuggestions,
+            });
+            mockQuerySuggestions(exampleQuerySuggestions);
+          });
+
+          it('should limit the number of suggestions to display to respect the number of suggestions property', () => {
+            const expectedQuerySuggestions = [
+              ...exampleRecentQueries,
+              ...exampleQuerySuggestions,
+            ].slice(0, customNumberOfSuggestions);
+            scope('when loading standalone search box', () => {
+              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchButton(true);
+            });
+
+            scope('when focusing on the search box input', () => {
+              Actions.focusSearchBox(textarea);
+              cy.wait(InterceptAliases.QuerySuggestions);
+
+              Expect.displaySuggestionList(true);
+              Expect.displayClearRecentQueriesButton(true);
+              Expect.numberOfQuerySuggestions(customNumberOfSuggestions);
+              Expect.querySuggestionsEquals(expectedQuerySuggestions);
+            });
+          });
+        });
+
+        describe('when a the property disableRecentQuerySuggestions is set to true', () => {
+          const exampleRecentQueries = ['foo', 'bar'];
+
+          describe('when the local storage contains recent query suggestions', () => {
+            beforeEach(() => {
+              setRecentQueriesInLocalStorage(exampleRecentQueries);
+              visitSearchBox({
+                ...defaultOptions,
+                textarea,
+                disableRecentQuerySuggestions: true,
+              });
+              mockQuerySuggestions(exampleQuerySuggestions);
+            });
+
+            it('should not display the recent query suggestions', () => {
+              const expectedQuerySuggestions = exampleQuerySuggestions;
+
+              scope('when loading standalone search box', () => {
+                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchButton(true);
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+                Expect.displayClearRecentQueriesButton(false);
+                Expect.numberOfQuerySuggestions(
+                  expectedQuerySuggestions.length
+                );
+                Expect.querySuggestionsEquals(expectedQuerySuggestions);
+              });
+            });
+          });
+
+          describe('when the local storage does not contain recent query suggestions', () => {
+            beforeEach(() => {
+              setRecentQueriesInLocalStorage([]);
+              visitSearchBox({
+                ...defaultOptions,
+                textarea,
+                disableRecentQuerySuggestions: true,
+              });
+              mockQuerySuggestions(exampleQuerySuggestions);
+            });
+
+            it('should not add the query to the local storage after executing a new search', () => {
+              const expectedQuerySuggestions = exampleQuerySuggestions;
+
+              scope('when loading standalone search box', () => {
+                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchButton(true);
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+                Expect.displayClearRecentQueriesButton(false);
+                Expect.numberOfQuerySuggestions(
+                  expectedQuerySuggestions.length
+                );
+                Expect.querySuggestionsEquals(expectedQuerySuggestions);
+              });
+
+              scope('when selecting a suggestions', () => {
+                const clickedSuggestionIndex = 0;
+                Actions.clickQuerySuggestion(clickedSuggestionIndex);
+
+                Expect.searchWithQuery(
+                  exampleQuerySuggestions[clickedSuggestionIndex],
+                  {
+                    LSkey: recentQueriesLSKey,
+                    queries: [],
+                  }
+                );
+              });
+            });
+          });
+        });
       });
     });
   });
