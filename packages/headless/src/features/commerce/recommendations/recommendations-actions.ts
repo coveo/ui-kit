@@ -78,9 +78,12 @@ export const fetchRecommendations = createAsyncThunk<
   }
 );
 
+export type FetchMoreRecommendationsActionCreatorPayload =
+  FetchRecommendationsActionCreatorPayload;
+
 export const fetchMoreRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn | null,
-  FetchRecommendationsActionCreatorPayload,
+  FetchMoreRecommendationsActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
@@ -119,9 +122,11 @@ export interface SlotIdPayload {
   slotId: string;
 }
 
+export type RegisterRecommendationsSlotActionCreatorPayload = SlotIdPayload;
+
 export const registerRecommendationsSlot = createAction(
   'commerce/recommendations/registerSlot',
-  (payload: SlotIdPayload) =>
+  (payload: RegisterRecommendationsSlotActionCreatorPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)
 );
 
