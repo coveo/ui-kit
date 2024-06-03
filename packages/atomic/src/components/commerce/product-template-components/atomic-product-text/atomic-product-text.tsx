@@ -1,5 +1,9 @@
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {Component, h, Prop, Element} from '@stencil/core';
+import {
+  Product,
+  ProductTemplatesHelpers,
+  HighlightUtils,
+} from '@coveo/headless/commerce';
+import {Component, h, Prop, Element, Host} from '@stencil/core';
 import {isArray} from 'lodash';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
@@ -34,9 +38,36 @@ export class AtomicProductText
    */
   @Prop({reflect: true}) public field!: string;
   /**
+   * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
+   */
+  @Prop({reflect: true}) public shouldHighlight = true;
+  /**
    * The locale key for the text to display when the configured field has no value.
    */
   @Prop({reflect: true}) public default?: string;
+
+  private renderWithHighlights(
+    value: string,
+    highlights: HighlightUtils.HighlightKeyword[]
+  ) {
+    try {
+      const openingDelimiter = '_openingDelimiter_';
+      const closingDelimiter = '_closingDelimiter_';
+      const highlightedValue = HighlightUtils.highlightString({
+        content: value,
+        openingDelimiter,
+        closingDelimiter,
+        highlights,
+      });
+      const innerHTML = highlightedValue
+        .replace(new RegExp(openingDelimiter, 'g'), '<b>')
+        .replace(new RegExp(closingDelimiter, 'g'), '</b>');
+      // deepcode ignore ReactSetInnerHtml: This is not React code
+      return <Host innerHTML={innerHTML}></Host>;
+    } catch (error) {
+      this.error = error as Error;
+    }
+  }
 
   private possiblyWarnOnBadFieldType() {
     const productValueRaw = ProductTemplatesHelpers.getProductProperty(
@@ -49,6 +80,11 @@ export class AtomicProductText
         this
       );
     }
+  }
+
+  private get fieldForHighlights() {
+    const cleanedField = this.field.replace(/^ec_/, '');
+    return `${cleanedField}Highlights`;
   }
 
   public render() {
@@ -76,17 +112,29 @@ export class AtomicProductText
       );
     }
 
-    if (productValueAsString !== null) {
-      this.possiblyWarnOnBadFieldType();
-      return (
-        <atomic-commerce-text
-          value={getFieldValueCaption(
-            this.field,
-            productValueAsString,
-            this.bindings.i18n
-          )}
-        ></atomic-commerce-text>
-      );
+    if (productValueAsString === null) {
+      return;
     }
+
+    this.possiblyWarnOnBadFieldType();
+
+    const highlightsValue = ProductTemplatesHelpers.getProductProperty(
+      this.product,
+      this.fieldForHighlights
+    ) as HighlightUtils.HighlightKeyword[];
+
+    if (this.shouldHighlight && highlightsValue) {
+      return this.renderWithHighlights(productValueAsString, highlightsValue);
+    }
+
+    return (
+      <atomic-commerce-text
+        value={getFieldValueCaption(
+          this.field,
+          productValueAsString,
+          this.bindings.i18n
+        )}
+      ></atomic-commerce-text>
+    );
   }
 }
