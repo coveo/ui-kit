@@ -6,11 +6,7 @@ import {
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {
-  defaultNumberOfValuesIncrement,
-  toggleSelectCategoryFacetValue,
-  updateCategoryFacetNumberOfValues,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
+import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
   excludeFacetSearchResult,
@@ -45,6 +41,11 @@ import {restoreProductListingParameters} from '../../product-listing-parameters/
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
+import '../category-facet/category-facet-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../category-facet/category-facet-actions';
 import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
 import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
 import {

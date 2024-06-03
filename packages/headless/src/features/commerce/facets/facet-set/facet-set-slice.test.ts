@@ -24,11 +24,7 @@ import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {
-  defaultNumberOfValuesIncrement,
-  toggleSelectCategoryFacetValue,
-  updateCategoryFacetNumberOfValues,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
+import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {
   FacetValueState,
   facetValueStates,
@@ -67,6 +63,10 @@ import {restoreProductListingParameters} from '../../product-listing-parameters/
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../category-facet/category-facet-actions';
 import * as CommerceFacetReducers from './facet-set-reducer-helpers';
 import {
   commerceFacetSetReducer,
