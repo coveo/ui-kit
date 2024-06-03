@@ -143,9 +143,12 @@ export const fetchMoreProducts = createAsyncThunk<
   }
 );
 
+export type PrepareForSearchWithQueryActionCreatorPayload =
+  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions;
+
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
-  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
+  PrepareForSearchWithQueryActionCreatorPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;

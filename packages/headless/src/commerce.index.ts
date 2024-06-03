@@ -29,6 +29,7 @@ export type {Product, ChildProduct} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
+export * from './features/commerce/search/search-actions-loader';
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
