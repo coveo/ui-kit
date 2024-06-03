@@ -2,9 +2,11 @@ import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/
 import {AnyFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
 import {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
-  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
+import {
+  deselectAllFacetValues,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
@@ -25,6 +27,9 @@ import {
 } from './headless-core-commerce-facet';
 
 jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock(
+  '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
+);
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';

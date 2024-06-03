@@ -10,12 +10,14 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
   deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
@@ -55,6 +57,10 @@ jest.mock(
   '../../../../features/facets/category-facet-set/category-facet-set-actions'
 );
 jest.mock('../../../../features/breadcrumb/breadcrumb-actions');
+
+jest.mock(
+  '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
+);
 
 describe('core breadcrumb manager', () => {
   let engine: MockedCommerceEngine;

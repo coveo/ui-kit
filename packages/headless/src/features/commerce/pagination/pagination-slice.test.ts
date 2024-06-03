@@ -1,16 +1,16 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from '../../facets/facet-set/facet-set-actions';
+import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../facets/regular-facet/regular-facet-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';

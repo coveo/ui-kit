@@ -13,7 +13,7 @@ import {
 import {validateCategoryFacetValue} from '../../../facets/category-facet-set/category-facet-validate-payload';
 
 export const updateCategoryFacetNumberOfValues = createAction(
-  'commerce/facets/category/updateNumberOfValues',
+  'commerce/facets/categoryFacet/updateNumberOfValues',
   (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
@@ -22,7 +22,7 @@ export const updateCategoryFacetNumberOfValues = createAction(
 );
 
 export const toggleSelectCategoryFacetValue = createAction(
-  'commerce/facets/category/toggleSelectValue',
+  'commerce/facets/categoryFacet/toggleSelectValue',
   (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
     try {
       validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);

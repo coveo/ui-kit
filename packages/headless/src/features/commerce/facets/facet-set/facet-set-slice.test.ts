@@ -36,8 +36,6 @@ import {
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
 import {
   deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
   updateFreezeCurrentValues,
@@ -67,6 +65,10 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../category-facet/category-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../regular-facet/regular-facet-actions';
 import * as CommerceFacetReducers from './facet-set-reducer-helpers';
 import {
   commerceFacetSetReducer,

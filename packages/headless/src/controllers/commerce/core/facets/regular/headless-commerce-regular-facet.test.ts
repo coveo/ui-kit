@@ -2,7 +2,7 @@ import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-commerce-facet-response';
@@ -20,7 +20,9 @@ import {
   buildCommerceRegularFacet,
 } from './headless-commerce-regular-facet';
 
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+jest.mock(
+  '../../../../../features/commerce/facets/regular-facet/regular-facet-actions'
+);
 
 describe('RegularFacet', () => {
   const facetId: string = 'regular_facet_id';

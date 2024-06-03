@@ -1,14 +1,14 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from '../../facets/facet-set/facet-set-actions';
+import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../facets/regular-facet/regular-facet-actions';
 import {Parameters} from '../parameters/parameters-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';

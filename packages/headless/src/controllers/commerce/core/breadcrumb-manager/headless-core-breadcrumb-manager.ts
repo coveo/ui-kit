@@ -16,12 +16,14 @@ import {
   NumericFacetResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
   deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
