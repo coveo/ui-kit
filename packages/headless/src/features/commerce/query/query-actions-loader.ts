@@ -7,6 +7,8 @@ export type {UpdateQueryActionCreatorPayload};
 
 /**
  * The query action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface QueryActionCreators {
   /**
@@ -21,6 +23,8 @@ export interface QueryActionCreators {
 
 /**
  * Loads the `query` reducer and returns possible action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the action creators.
