@@ -1,4 +1,5 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+import * as Selectors from './selectors/commerce-selectors.index';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -24,7 +25,7 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
-export type {Product} from './api/commerce/common/product';
+export type {Product, ChildProduct} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
@@ -32,6 +33,11 @@ export * from './features/commerce/product-listing/product-listing-actions-loade
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
+export * from './features/commerce/search-parameters/search-parameters-actions-loader';
+export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
+
+// Selectors
+export {Selectors};
 
 // Controllers
 export type {
@@ -129,6 +135,7 @@ export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   DateFacet,
   DateFacetState,
@@ -241,6 +248,13 @@ export type {
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
 
 export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+} from './controllers/core/triggers/headless-core-redirection-trigger';
+
+export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
+
+export type {
   FieldSuggestions,
   FieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-field-suggestions';
@@ -252,3 +266,12 @@ export type {FieldSuggestionsGenerator} from './controllers/commerce/field-sugge
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 
 export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';
+
+export type {
+  ParameterManager,
+  ParameterManagerState,
+  ParameterManagerProps,
+  ParameterManagerInitialState,
+} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
+export type {Parameters} from './features/commerce/parameters/parameters-actions';
+export type {SearchParameters} from './features/search-parameters/search-parameter-actions';

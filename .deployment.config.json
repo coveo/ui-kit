@@ -119,7 +119,7 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
-        "source": "utils/atomic-storybook/storybook-static",
+        "source": "packages/atomic/dist-storybook",
         "parameters": {
           "acl": "public-read"
         }

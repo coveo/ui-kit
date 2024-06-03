@@ -1,4 +1,4 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {updateQuery} from './query-actions';
 import {queryReducer} from './query-slice';
 import {CommerceQueryState, getCommerceQueryInitialState} from './query-state';
