@@ -6,7 +6,7 @@ import {
   enrichedParametersSelector,
 } from '../../../features/commerce/parameters/parameters-selectors';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
-import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameter-actions';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions';
 import {
   requestIdSelector,

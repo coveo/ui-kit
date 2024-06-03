@@ -73,7 +73,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   @State() public error!: Error;
 
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;

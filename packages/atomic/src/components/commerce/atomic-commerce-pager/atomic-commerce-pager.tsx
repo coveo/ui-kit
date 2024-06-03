@@ -112,17 +112,17 @@ export class AtomicCommercePager
         hasResults={this.pagerState.totalPages > 1}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
-        <PagerNavigation label={this.bindings.i18n.t('pagination')}>
+        <PagerNavigation i18n={this.bindings.i18n}>
           <PagerPreviousButton
             icon={this.previousButtonIcon}
             disabled={this.pagerState.page === 0}
-            ariaLabel={this.bindings.i18n.t('previous')}
+            i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.previousPage();
               this.focusOnFirstResultAndScrollToTop();
             }}
           />
-          <PagerPageButtons>
+          <PagerPageButtons i18n={this.bindings.i18n}>
             {pagesRange.map((pageNumber) => {
               return (
                 <PagerPageButton
@@ -152,7 +152,7 @@ export class AtomicCommercePager
           <PagerNextButton
             icon={this.nextButtonIcon}
             disabled={this.pagerState.page >= this.pagerState.totalPages}
-            ariaLabel={this.bindings.i18n.t('next')}
+            i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.nextPage();
               this.focusOnFirstResultAndScrollToTop();

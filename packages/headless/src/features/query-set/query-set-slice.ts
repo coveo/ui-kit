@@ -4,6 +4,7 @@ import {
   CommerceSearchParameters,
   restoreSearchParameters as commerceRestoreSearchParameters,
 } from '../commerce/search-parameters/search-parameters-actions';
+import {executeSearch as commerceExecuteSearch} from '../commerce/search/search-actions';
 import {change} from '../history/history-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {
@@ -34,6 +35,10 @@ export const querySetReducer = createReducer(
       .addCase(selectQuerySuggestion, (state, action) => {
         const {id, expression} = action.payload;
         updateQuery(state, id, expression);
+      })
+      .addCase(commerceExecuteSearch.fulfilled, (state, action) => {
+        const {queryExecuted} = action.payload;
+        updateAllQuerySetQuery(state, queryExecuted);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {queryExecuted} = action.payload;

@@ -83,17 +83,17 @@ export class AtomicInsightPager
 
   public render() {
     return (
-      <PagerNavigation label={this.bindings.i18n.t('pagination')}>
+      <PagerNavigation i18n={this.bindings.i18n}>
         <PagerPreviousButton
           icon={ArrowLeftIcon}
           disabled={!this.pagerState.hasPreviousPage}
-          ariaLabel={this.bindings.i18n.t('previous')}
+          i18n={this.bindings.i18n}
           onClick={() => {
             this.pager.previousPage();
             this.focusOnFirstResultAndScrollToTop();
           }}
         />
-        <PagerPageButtons>
+        <PagerPageButtons i18n={this.bindings.i18n}>
           {this.pagerState.currentPages.map((pageNumber) => {
             return (
               <PagerPageButton
@@ -119,7 +119,7 @@ export class AtomicInsightPager
         <PagerNextButton
           icon={ArrowRightIcon}
           disabled={!this.pagerState.hasNextPage}
-          ariaLabel={this.bindings.i18n.t('next')}
+          i18n={this.bindings.i18n}
           onClick={() => {
             this.pager.nextPage();
             this.focusOnFirstResultAndScrollToTop();

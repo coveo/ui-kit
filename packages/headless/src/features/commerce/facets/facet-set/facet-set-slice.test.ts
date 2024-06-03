@@ -63,7 +63,7 @@ import {
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameter-actions';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
