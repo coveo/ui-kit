@@ -19,6 +19,7 @@ import {executeSearch} from '../search/search-actions';
 import {
   nextPage,
   previousPage,
+  registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
 } from './pagination-actions';
@@ -283,6 +284,36 @@ describe('pagination slice', () => {
       const finalState = paginationReducer(state, action({} as any));
 
       expect(finalState.principal.page).toBe(0);
+    });
+  });
+
+  describe('#registerRecommendationsSlotPagination', () => {
+    it('when slot id is not already registered, registers the slot', () => {
+      const finalState = paginationReducer(
+        state,
+        registerRecommendationsSlotPagination({slotId})
+      );
+
+      expect(finalState.recommendations[slotId]).toEqual(
+        getCommercePaginationInitialSlice()
+      );
+    });
+
+    it('when slot id is already registered, does not register the slot', () => {
+      const recommendation = {
+        page: 5,
+        perPage: 3,
+        totalEntries: 35,
+        totalPages: 12,
+      };
+      state.recommendations[slotId] = recommendation;
+
+      const finalState = paginationReducer(
+        state,
+        registerRecommendationsSlotPagination({slotId})
+      );
+
+      expect(finalState.recommendations[slotId]).toEqual(recommendation);
     });
   });
 });

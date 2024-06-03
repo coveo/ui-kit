@@ -90,7 +90,7 @@ export const paginationReducer = createReducer(
       .addCase(registerRecommendationsSlotPagination, (state, action) => {
         const slotId = action.payload.slotId;
 
-        if (slotId in state) {
+        if (slotId in state.recommendations) {
           return;
         }
 
