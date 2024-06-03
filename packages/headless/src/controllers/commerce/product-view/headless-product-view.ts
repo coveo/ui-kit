@@ -1,6 +1,6 @@
 import {Product} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {productView} from '../../../features/commerce/context/product/product-actions';
+import {productView} from '../../../features/commerce/product/product-actions';
 
 /**
  * The `ProductView` controller provides an interface for triggering an analytics event for a product view.

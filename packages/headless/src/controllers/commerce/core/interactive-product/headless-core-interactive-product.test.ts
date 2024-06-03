@@ -1,5 +1,5 @@
 import {configuration} from '../../../../app/common-reducers';
-import {productClick} from '../../../../features/commerce/context/product/product-actions';
+import {productClick} from '../../../../features/commerce/product/product-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,

@@ -1,5 +1,5 @@
 import {Product} from '@coveo/relay-event-types';
-import {productView} from '../../../features/commerce/context/product/product-actions';
+import {productView} from '../../../features/commerce/product/product-actions';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
