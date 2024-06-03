@@ -45,7 +45,7 @@ export interface ProductListingActionCreators {
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless commerce engine.
  * @returns An object holding the action creators.
  */
 export function loadProductListingActions(
