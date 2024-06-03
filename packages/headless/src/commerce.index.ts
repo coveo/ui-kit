@@ -172,9 +172,6 @@ export type {
 } from './controllers/commerce/search/headless-search';
 export {buildSearch} from './controllers/commerce/search/headless-search';
 
-export {updateQuery} from './features/commerce/query/query-actions';
-export type {UpdateQueryActionCreatorPayload} from './features/commerce/query/query-actions';
-
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {
   SearchBox,
