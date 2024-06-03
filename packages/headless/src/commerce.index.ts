@@ -269,4 +269,3 @@ export type {
   ParameterManagerInitialState,
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
 export type {Parameters} from './features/commerce/parameters/parameters-actions';
-export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
