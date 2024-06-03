@@ -34,6 +34,7 @@ export * from './features/commerce/search/search-actions-loader';
 export * from './features/commerce/product-listing/product-listing-actions-loader';
 export * from './features/commerce/recommendations/recommendations-actions-loader';
 export * from './features/commerce/pagination/pagination-actions-loader';
+export * from './features/commerce/product/product-actions-loaders';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
