@@ -57,6 +57,12 @@ export type {
 export {buildContext} from './controllers/commerce/context/headless-context';
 
 export type {
+  Search,
+  SearchState,
+} from './controllers/commerce/search/headless-search';
+export {buildSearch} from './controllers/commerce/search/headless-search';
+
+export type {
   ProductListing,
   ProductListingState,
 } from './controllers/commerce/product-listing/headless-product-listing';
@@ -165,12 +171,6 @@ export type {
   CategoryFacetSearchState,
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
-
-export type {
-  Search,
-  SearchState,
-} from './controllers/commerce/search/headless-search';
-export {buildSearch} from './controllers/commerce/search/headless-search';
 
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {
