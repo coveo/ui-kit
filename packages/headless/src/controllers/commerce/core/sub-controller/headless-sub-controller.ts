@@ -28,6 +28,11 @@ import {
 import {buildCommerceNumericFacet} from '../facets/numeric/headless-commerce-numeric-facet';
 import {buildCommerceRegularFacet} from '../facets/regular/headless-commerce-regular-facet';
 import {
+  buildCoreInteractiveProduct,
+  InteractiveProduct,
+  InteractiveProductProps,
+} from '../interactive-product/headless-core-interactive-product';
+import {
   buildCorePagination,
   Pagination,
   PaginationProps,
@@ -37,11 +42,6 @@ import {
   ParameterManager,
   ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager';
-import {
-  buildCoreInteractiveProduct,
-  InteractiveProduct,
-  InteractiveProductProps,
-} from '../product-list/headless-core-interactive-product';
 import {
   buildCoreSort,
   Sort,

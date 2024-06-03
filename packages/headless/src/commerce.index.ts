@@ -91,7 +91,7 @@ export type {
   InteractiveProduct,
   InteractiveProductOptions,
   InteractiveProductProps,
-} from './controllers/commerce/core/product-list/headless-core-interactive-product';
+} from './controllers/commerce/core/interactive-product/headless-core-interactive-product';
 
 export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result';
 
