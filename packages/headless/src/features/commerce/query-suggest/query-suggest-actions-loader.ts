@@ -7,6 +7,9 @@ import {
 } from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {querySetReducer as querySet} from '../../query-set/query-set-slice';
 import {
+  ClearQuerySuggestActionCreatorPayload,
+  RegisterQuerySuggestActionCreatorPayload,
+  SelectQuerySuggestionActionCreatorPayload,
   clearQuerySuggest,
   registerQuerySuggest,
   selectQuerySuggestion,
@@ -17,6 +20,13 @@ import {
 } from '../../query-suggest/query-suggest-actions-loader';
 import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice';
 import {fetchQuerySuggestions} from './query-suggest-actions';
+
+export type {
+  FetchQuerySuggestionsActionCreatorPayload,
+  ClearQuerySuggestActionCreatorPayload,
+  RegisterQuerySuggestActionCreatorPayload,
+  SelectQuerySuggestionActionCreatorPayload,
+};
 
 export type BaseQuerySuggestActionCreators = Omit<
   QuerySuggestActionCreators,
