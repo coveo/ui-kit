@@ -1,9 +1,9 @@
-import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
+import {itemsSelector} from '../../../../features/commerce/cart/cart-selector';
 import {
   CartState,
   getCartInitialState,
-} from '../../../../features/commerce/context/cart/cart-state';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
+} from '../../../../features/commerce/cart/cart-state';
+import {CartItemWithMetadata} from '../../../../features/commerce/cart/cart-state';
 import {createCartKey} from './headless-cart';
 import {
   itemSelector,

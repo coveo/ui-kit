@@ -35,7 +35,7 @@ export * from './features/commerce/product-listing/product-listing-actions-loade
 export * from './features/commerce/recommendations/recommendations-actions-loader';
 export * from './features/commerce/pagination/pagination-actions-loader';
 export * from './features/commerce/product/product-actions-loaders';
-export * from './features/commerce/context/cart/cart-actions-loader';
+export * from './features/commerce/cart/cart-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
@@ -107,8 +107,8 @@ export type {
   Cart,
   CartState,
 } from './controllers/commerce/context/cart/headless-cart';
-export type {Transaction} from './features/commerce/context/cart/cart-selector';
-export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-state';
+export type {Transaction} from './features/commerce/cart/cart-selector';
+export type {CartItemWithMetadata} from './features/commerce/cart/cart-state';
 export type {CartItemParam} from './api/commerce/commerce-api-params';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
 

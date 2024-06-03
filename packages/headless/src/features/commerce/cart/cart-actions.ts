@@ -1,7 +1,7 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client';
-import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine';
-import {validatePayload} from '../../../../utils/validate-payload';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
+import {validatePayload} from '../../../utils/validate-payload';
 import {Transaction, getECPurchasePayload} from './cart-selector';
 import {CartItemWithMetadata} from './cart-state';
 import {

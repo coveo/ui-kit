@@ -2,7 +2,7 @@ import {RecordValue, Schema} from '@coveo/bueno';
 import {getOrganizationEndpoints} from '../../api/platform-client';
 import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart';
 import {ContextOptions} from '../../controllers/commerce/context/headless-context';
-import {cartDefinition} from '../../features/commerce/context/cart/cart-validation';
+import {cartDefinition} from '../../features/commerce/cart/cart-validation';
 import {contextDefinition} from '../../features/commerce/context/context-validation';
 import {
   EngineConfiguration,

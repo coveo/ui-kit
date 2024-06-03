@@ -1,4 +1,4 @@
-import {getCartInitialState} from '../features/commerce/context/cart/cart-state';
+import {getCartInitialState} from '../features/commerce/cart/cart-state';
 import {getContextInitialState} from '../features/commerce/context/context-state';
 import {getCommerceFacetSetInitialState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {getFieldSuggestionsOrderInitialState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';

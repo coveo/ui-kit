@@ -1,4 +1,4 @@
-import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
+import {CartItemParam} from '../../../api/commerce/commerce-api-params';
 
 export interface CartItemWithMetadata extends CartItemParam {
   /**
