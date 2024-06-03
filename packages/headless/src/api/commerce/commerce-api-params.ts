@@ -42,23 +42,7 @@ export interface ViewParams {
   referrer?: string;
 }
 
-interface UserIdRequired {
-  userId: string;
-  email?: string;
-}
-
-interface EmailRequired {
-  userId?: string;
-  email: string;
-}
-
-interface UserIdAndEmail {
-  userId: string;
-  email: string;
-}
-
-export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
-  userIp?: string;
+export type UserParams = {
   userAgent?: string;
 };
 
