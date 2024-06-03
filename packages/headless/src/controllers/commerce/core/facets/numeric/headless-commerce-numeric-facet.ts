@@ -97,6 +97,8 @@ export function buildCommerceNumericFacet(
     ...coreController,
 
     setRanges(ranges: NumericFacetValue[]) {
+      // TODO: KIT-3226 do not accept NumericFacetValue as the argument as it exposes unnecessary properties
+      // The properties isAutoSelected, isSuggested, numberOfResults, and moreValuesAvailable should not be relevant to the user when setting a range
       dispatch(
         updateNumericFacetValues({
           facetId,
