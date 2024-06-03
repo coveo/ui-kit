@@ -13,8 +13,11 @@ export interface CommerceSearchParameters extends Parameters {
   q?: string;
 }
 
+export type RestoreSearchParametersActionCreatorPayload =
+  CommerceSearchParameters;
+
 export const restoreSearchParameters = createAction(
   'commerce/searchParameters/restore',
-  (payload: CommerceSearchParameters) =>
+  (payload: RestoreSearchParametersActionCreatorPayload) =>
     validatePayload(payload, searchParametersDefinition)
 );

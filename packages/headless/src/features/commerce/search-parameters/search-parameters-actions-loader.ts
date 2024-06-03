@@ -6,9 +6,11 @@ import {paginationReducer as commercePagination} from '../pagination/pagination-
 import {queryReducer as query} from '../query/query-slice';
 import {sortReducer as commerceSort} from '../sort/sort-slice';
 import {
-  CommerceSearchParameters,
+  RestoreSearchParametersActionCreatorPayload,
   restoreSearchParameters,
 } from './search-parameters-actions';
+
+export type {RestoreSearchParametersActionCreatorPayload};
 
 /**
  * The search parameters action creators.
@@ -20,8 +22,8 @@ export interface SearchParametersActionCreators {
    * @returns A dispatchable action.
    */
   restoreSearchParameters(
-    parameters: CommerceSearchParameters
-  ): PayloadAction<CommerceSearchParameters>;
+    payload: RestoreSearchParametersActionCreatorPayload
+  ): PayloadAction<RestoreSearchParametersActionCreatorPayload>;
 }
 
 /**
