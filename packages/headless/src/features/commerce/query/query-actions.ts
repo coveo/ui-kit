@@ -10,7 +10,7 @@ export interface UpdateQueryActionCreatorPayload {
 }
 
 export const updateQuery = createAction(
-  'query/updateQuery',
+  'commerce/query/updateQuery',
   (payload: UpdateQueryActionCreatorPayload) =>
     validatePayload(payload, {
       query: new StringValue(),
