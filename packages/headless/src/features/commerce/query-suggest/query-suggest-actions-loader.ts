@@ -35,6 +35,8 @@ export type BaseQuerySuggestActionCreators = Omit<
 
 /**
  * The query suggest action creators for commerce.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceQuerySuggestActionCreators
   extends BaseQuerySuggestActionCreators {
@@ -55,6 +57,8 @@ export interface CommerceQuerySuggestActionCreators
 
 /**
  * Loads the `querySuggest` reducer and returns possible action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
