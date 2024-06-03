@@ -36,6 +36,7 @@ export * from './features/commerce/recommendations/recommendations-actions-loade
 export * from './features/commerce/pagination/pagination-actions-loader';
 export * from './features/commerce/product/product-actions-loaders';
 export * from './features/commerce/context/cart/cart-actions-loader';
+export * from './features/commerce/sort/sort-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
