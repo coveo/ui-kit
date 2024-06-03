@@ -1,3 +1,4 @@
+import {isUndefined} from '@coveo/bueno';
 import {NumericFacet} from '@coveo/headless/commerce';
 import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
 import {Button} from '../../../common/button';
@@ -61,14 +62,17 @@ export class FacetNumberInput {
 
   private get minimumInputValue() {
     const {domain} = this.facet.state;
-    const min = Number.MIN_SAFE_INTEGER;
-    return Math.max(this.start || min, domain?.min || min);
+    const ensureValue = (num?: number) =>
+      isUndefined(num) ? Number.MIN_SAFE_INTEGER : num;
+    return Math.max(ensureValue(this.start), ensureValue(domain?.min));
   }
 
   private get maximumInputValue() {
     const {domain} = this.facet.state;
-    const min = Number.MAX_SAFE_INTEGER;
-    return Math.min(this.end || min, domain?.max || min);
+    const ensureValue = (num?: number) =>
+      isUndefined(num) ? Number.MAX_SAFE_INTEGER : num;
+
+    return Math.min(ensureValue(this.end), ensureValue(domain?.max));
   }
 
   render() {
