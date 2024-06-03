@@ -2,10 +2,10 @@ import {
   purchase,
   setItems,
   updateItemQuantity,
-} from '../../../../features/commerce/cart/cart-actions';
-import {itemsSelector} from '../../../../features/commerce/cart/cart-selector';
-import {cartReducer} from '../../../../features/commerce/cart/cart-slice';
-import {CartItemWithMetadata} from '../../../../features/commerce/cart/cart-state';
+} from '../../../../features/commerce/context/cart/cart-actions';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
+import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
 import {getContextInitialState} from '../../../../features/commerce/context/context-state';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {

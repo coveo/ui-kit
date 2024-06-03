@@ -15,7 +15,7 @@ import {
   FacetOrderSection,
   VersionSection,
 } from '../../../state/state-sections';
-import {getProductsFromCartState} from '../cart/cart-state';
+import {getProductsFromCartState} from '../context/cart/cart-state';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &

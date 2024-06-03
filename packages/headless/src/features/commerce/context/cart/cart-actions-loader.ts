@@ -1,9 +1,9 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
+} from '../../../../app/commerce-engine/commerce-engine';
 import {
   PurchaseActionCreatorPayload,
   SetItemsActionCreatorPayload,

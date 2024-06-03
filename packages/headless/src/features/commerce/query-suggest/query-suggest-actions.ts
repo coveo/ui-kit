@@ -18,7 +18,7 @@ import {
   FetchQuerySuggestionsActionCreatorPayload,
   idDefinition,
 } from '../../query-suggest/query-suggest-actions';
-import {getProductsFromCartState} from '../cart/cart-state';
+import {getProductsFromCartState} from '../context/cart/cart-state';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   CommerceContextSection &

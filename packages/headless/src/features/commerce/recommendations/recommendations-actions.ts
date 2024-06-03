@@ -8,11 +8,11 @@ import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendati
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {RecommendationsSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
-import {getProductsFromCartPurchasedState} from '../cart/cart-state';
 import {
   StateNeededByQueryCommerceAPI,
   buildBaseCommerceAPIRequest,
 } from '../common/actions';
+import {getProductsFromCartPurchasedState} from '../context/cart/cart-state';
 import {perPageRecommendationSelector} from '../pagination/pagination-selectors';
 import {recommendationsSlotDefinition} from './recommendations';
 import {

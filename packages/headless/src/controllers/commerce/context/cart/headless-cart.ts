@@ -5,14 +5,14 @@ import {
   purchase,
   setItems,
   updateItemQuantity,
-} from '../../../../features/commerce/cart/cart-actions';
+} from '../../../../features/commerce/context/cart/cart-actions';
 import {
   Transaction,
   itemsSelector,
-} from '../../../../features/commerce/cart/cart-selector';
-import {cartReducer as cart} from '../../../../features/commerce/cart/cart-slice';
-import {CartItemWithMetadata} from '../../../../features/commerce/cart/cart-state';
-import {cartSchema} from '../../../../features/commerce/cart/cart-validation';
+} from '../../../../features/commerce/context/cart/cart-selector';
+import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
+import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 import {CartSection} from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
