@@ -34,6 +34,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * A facet is a list of values for a certain field occurring in the results.
  * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
  *
+ * @slot default - The `atomic-timeframe` components defining the timeframes to display.
+ *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  *

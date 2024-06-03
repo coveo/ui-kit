@@ -43,9 +43,6 @@ export class AtomicCommerceTimeframeFacet
   implements InitializableComponent<Bindings>
 {
   @InitializeBindings() public bindings!: Bindings;
-  public facetForDateRange?: DateFacet;
-  public facetForDatePicker?: DateFacet;
-
   @Element() private host!: HTMLElement;
 
   /**
@@ -93,7 +90,7 @@ export class AtomicCommerceTimeframeFacet
 
   private get valuesToRender() {
     return (
-      this.facet?.state.values.filter(
+      this.facetState?.values.filter(
         (value) => value.numberOfResults || value.state !== 'idle'
       ) || []
     );
@@ -141,7 +138,7 @@ export class AtomicCommerceTimeframeFacet
     }
 
     return (
-      this.facet?.state.values.filter(({state}) => state === 'selected')
+      this.facetState?.values?.filter(({state}) => state === 'selected')
         .length || 0
     );
   }

@@ -7,7 +7,7 @@ import {buildFetchProductListingV2Response} from '../../../test/mock-product-lis
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {Parameters} from '../../commerce/parameters/parameters-actions';
-import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameter-actions';
+import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../commerce/search-parameters/search-parameters-actions';
 import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
