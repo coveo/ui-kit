@@ -23,6 +23,7 @@ const optionCSSClass =
  * The `QuanticSearchBoxSuggestionsList` is used internally by search box components to display the query suggestions in an omnibox.
  * @fires CustomEvent#highlightchange
  * @fires CustomEvent#suggestionselected
+ * @fires CustomEvent#quantic__clearrecentqueries
  * @category Search
  * @category Insight Panel
  * @example
@@ -36,13 +37,13 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    */
   @api suggestions = [];
   /**
-   * The query suggestions to display.
+   * The list containing the recent query suggestions.
    * @api
    * @type {String[]}
    */
   @api recentQueries;
   /**
-   * The maximum number of suggestions to display.
+   * The current search query value.
    * @api
    * @type {string}
    */
@@ -212,7 +213,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   clearRecentQueries() {
     this.dispatchEvent(
-      new CustomEvent('quantic__clearqueries', {
+      new CustomEvent('quantic__clearrecentqueries', {
         bubbles: true,
         composed: true,
       })

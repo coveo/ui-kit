@@ -71,7 +71,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api
   get inputValue() {
-    return this.input?.value;
+    return this.input.value;
   }
   set inputValue(newValue) {
     this.input.value = newValue;
@@ -93,7 +93,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.suggestionListElement?.resetSelection();
   }
   /**
-   * The query suggestions to display.
+   * The list containing the recent query suggestions.
    * @api
    * @type {String[]}
    */

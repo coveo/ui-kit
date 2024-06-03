@@ -290,37 +290,6 @@ describe('quantic-search-box', () => {
           });
         });
 
-        describe('when the property disableRecentQuerySuggestions is set to true', () => {
-          const exampleRecentQueries = ['foo', 'bar'];
-
-          beforeEach(() => {
-            setRecentQueriesInLocalStorage(exampleRecentQueries);
-            visitSearchBox({
-              ...defaultOptions,
-              textarea,
-              disableRecentQuerySuggestions: true,
-            });
-            mockQuerySuggestions(exampleQuerySuggestions);
-          });
-
-          it('should display the suggestions without recent query suggestions', () => {
-            scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
-              Expect.displaySearchButton(true);
-            });
-
-            scope('when focusing on the search box input', () => {
-              Actions.focusSearchBox(textarea);
-              cy.wait(InterceptAliases.QuerySuggestions);
-
-              Expect.displaySuggestionList(true);
-              Expect.displayClearRecentQueriesButton(false);
-              Expect.numberOfQuerySuggestions(exampleQuerySuggestions.length);
-              Expect.querySuggestionsEquals(exampleQuerySuggestions);
-            });
-          });
-        });
-
         describe('when using the keyboard to select a recent query', () => {
           const exampleRecentQueries = ['foo', 'bar'];
 

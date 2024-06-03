@@ -131,7 +131,10 @@ export default class QuanticSearchBox extends LightningElement {
     this.addEventListener('quantic__showsuggestions', this.showSuggestion);
     this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
     if (!this.disableRecentQuerySuggestions) {
-      this.addEventListener('quantic__clearqueries', this.clearRecentQueries);
+      this.addEventListener(
+        'quantic__clearrecentqueries',
+        this.clearRecentQueries
+      );
     }
   }
 
@@ -151,7 +154,10 @@ export default class QuanticSearchBox extends LightningElement {
       'quantic__selectsuggestion',
       this.selectSuggestion
     );
-    this.removeEventListener('quantic__clearqueries', this.clearRecentQueries);
+    this.removeEventListener(
+      'quantic__clearrecentqueries',
+      this.clearRecentQueries
+    );
   }
 
   updateState() {
@@ -177,6 +183,9 @@ export default class QuanticSearchBox extends LightningElement {
     }
   }
 
+  /**
+   * Clears the recent queries.
+   */
   clearRecentQueries = (event) => {
     event.stopPropagation();
     this.recentQueriesList.clear();

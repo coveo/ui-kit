@@ -41,6 +41,30 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
           `should make a search request with the query ${expectedQuery}`
         );
     },
+    displayInputSearchBox: (display: boolean, textarea = false) => {
+      selector
+        .input(textarea)
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the input search box`);
+    },
+    displaySearchButton: (display: boolean) => {
+      selector
+        .searchButton()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the search button`);
+    },
+    displaySuggestionList: (display: boolean) => {
+      selector
+        .suggestionList()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the query suggestions list`);
+    },
+    numberOfQuerySuggestions: (value: number) => {
+      selector
+        .querySuggestions()
+        .should('have.length', value)
+        .logDetail(`should display ${value} query suggestions`);
+    },
     logClearRecentQueries: () => {
       cy.wait(InterceptAliases.UA.ClearRecentQueries)
         .then((interception) => {
@@ -48,32 +72,6 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
           expect(analyticsBody).to.have.property('eventType', 'recentQueries');
         })
         .logDetail("should log the 'clearRecentQueries' UA event");
-    },
-    displayInputSearchBox: (display: boolean, textarea = false) => {
-      selector
-        .input(textarea)
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the input search box`);
-    },
-
-    displaySearchButton: (display: boolean) => {
-      selector
-        .searchButton()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the search button`);
-    },
-
-    displaySuggestionList: (display: boolean) => {
-      selector
-        .suggestionList()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the suggestion list`);
-    },
-    numberOfQuerySuggestions: (value: number) => {
-      selector
-        .querySuggestions()
-        .should('have.length', value)
-        .logDetail(`should display ${value} query suggestions`);
     },
   };
 }
