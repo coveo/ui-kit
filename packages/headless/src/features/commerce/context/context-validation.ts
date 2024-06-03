@@ -20,9 +20,6 @@ export const viewDefinition = {
 };
 
 export const userDefinition = {
-  userId: nonEmptyString,
-  email: nonEmptyString,
-  userIp: nonEmptyString,
   userAgent: nonEmptyString,
 };
 
