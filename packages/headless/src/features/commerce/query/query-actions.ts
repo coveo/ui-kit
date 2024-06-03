@@ -4,7 +4,7 @@ import {validatePayload} from '../../../utils/validate-payload';
 
 export interface UpdateQueryActionCreatorPayload {
   /**
-   * The basic query expression (e.g., `acme tornado seeds`).
+   * The new basic query expression (e.g., `acme tornado seeds`).
    */
   query?: string;
 }
