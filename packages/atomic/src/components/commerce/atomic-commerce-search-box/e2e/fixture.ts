@@ -3,9 +3,9 @@ import {
   makeAxeBuilder,
 } from '@coveo/atomic/playwrightUtils/base-fixture';
 import {test as base} from '@playwright/test';
-import {AtomicCommerceLoadMoreProductsLocators as LoadMore} from '../../atomic-commerce-load-more-products/e2e/pageObject';
-import {AtomicCommerceFacetsLocators as Facets} from '../../facets/atomic-commerce-facets/e2e/pageObject';
-import {AtomicCommerceSearchBoxLocators as SearchBox} from './pageObject';
+import {AtomicCommerceLoadMoreProductsLocators as LoadMore} from '../../atomic-commerce-load-more-products/e2e/page-object';
+import {AtomicCommerceFacetsLocators as Facets} from '../../facets/atomic-commerce-facets/e2e/page-object';
+import {AtomicCommerceSearchBoxLocators as SearchBox} from './page-object';
 
 type MyFixtures = {
   searchBox: SearchBox;
