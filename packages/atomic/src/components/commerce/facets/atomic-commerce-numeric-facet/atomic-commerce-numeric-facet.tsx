@@ -45,7 +45,7 @@ export class AtomicCommerceNumericFacet
   @InitializeBindings() public bindings!: Bindings;
   @Element() private host!: HTMLElement;
 
-  @State() private range?: Range;
+  @State() private inputRange?: Range;
 
   @BindStateToController('facet')
   @State()
@@ -117,7 +117,11 @@ export class AtomicCommerceNumericFacet
 
   @Listen('atomic/numberInputApply')
   public applyNumberInput({detail}: CustomEvent<Range>) {
-    this.range = {start: detail.start, end: detail.end};
+    this.inputRange = {start: detail.start, end: detail.end};
+  }
+
+  private resetInputRange() {
+    this.inputRange = undefined;
   }
 
   public render() {
@@ -139,8 +143,8 @@ export class AtomicCommerceNumericFacet
               label={this.displayName}
               onClearFilters={() => {
                 this.focusTarget.focusAfterSearch();
-                this.facet.deselectAll();
                 this.facet.setRanges([]);
+                this.resetInputRange();
               }}
               numberOfActiveValues={this.numberOfSelectedValues}
               isCollapsed={this.isCollapsed}
@@ -155,7 +159,7 @@ export class AtomicCommerceNumericFacet
                   bindings={this.bindings}
                   label={this.displayName}
                   facet={this.facet}
-                  range={this.range}
+                  range={this.inputRange}
                 ></atomic-commerce-facet-number-input>
               ),
             ]}
@@ -205,7 +209,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get numberOfSelectedValues() {
-    if (this.range) {
+    if (this.inputRange) {
       return 1;
     }
 
@@ -216,7 +220,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasInputRange() {
-    return !!this.range;
+    return !!this.inputRange;
   }
 
   private get shouldRenderValues() {
