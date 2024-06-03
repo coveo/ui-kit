@@ -666,7 +666,7 @@ export class AtomicCommerceSearchBox
           <SearchBoxWrapper
             disabled={isDisabled}
             textArea={true}
-            onFocusOut={(event) =>
+            onFocusout={(event) =>
               isFocusingOut(event) && this.suggestionManager.clearSuggestions()
             }
           >

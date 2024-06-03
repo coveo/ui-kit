@@ -709,7 +709,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           <SearchBoxWrapper
             disabled={isDisabled}
             textArea={this.textarea}
-            onFocusOut={(event) =>
+            onFocusout={(event) =>
               isFocusingOut(event) && this.suggestionManager.clearSuggestions()
             }
           >

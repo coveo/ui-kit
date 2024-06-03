@@ -3,7 +3,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 interface Props {
   disabled: boolean;
   textArea?: boolean;
-  onFocusOut?: (event: FocusEvent) => void;
+  onFocusout?: (event: FocusEvent) => void;
 }
 
 export const SearchBoxWrapper: FunctionalComponent<Props> = (
@@ -24,7 +24,7 @@ export const SearchBoxWrapper: FunctionalComponent<Props> = (
   };
 
   return (
-    <div part="wrapper" class={getClasses()} onFocusout={props.onFocusOut}>
+    <div part="wrapper" class={getClasses()} onFocusout={props.onFocusout}>
       {children}
     </div>
   );

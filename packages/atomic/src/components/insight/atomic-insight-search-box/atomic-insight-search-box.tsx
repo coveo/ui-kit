@@ -331,7 +331,7 @@ export class AtomicInsightSearchBox {
       <SearchBoxWrapper
         disabled={this.disableSearch}
         textArea
-        onFocusOut={(event) =>
+        onFocusout={(event) =>
           isFocusingOut(event) && this.suggestionManager.clearSuggestions()
         }
       >
