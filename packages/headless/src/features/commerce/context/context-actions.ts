@@ -11,7 +11,7 @@ import {
   viewDefinition,
 } from './context-validation';
 
-export interface SetContextPayload {
+export interface SetContextActionCreatorPayload {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
@@ -21,19 +21,22 @@ export interface SetContextPayload {
 
 export const setContext = createAction(
   'commerce/setContext',
-  (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
+  (payload: SetContextActionCreatorPayload) =>
+    validatePayload(payload, contextDefinition)
 );
 
-export type SetUserPayload = UserParams;
+export type SetUserActionCreatorPayload = UserParams;
 
 export const setUser = createAction(
   'commerce/setUser',
-  (payload: SetUserPayload) => validatePayload(payload, userDefinition)
+  (payload: SetUserActionCreatorPayload) =>
+    validatePayload(payload, userDefinition)
 );
 
-export type SetViewPayload = ViewParams;
+export type SetViewActionCreatorPayload = ViewParams;
 
 export const setView = createAction(
   'commerce/setView',
-  (payload: SetViewPayload) => validatePayload(payload, viewDefinition)
+  (payload: SetViewActionCreatorPayload) =>
+    validatePayload(payload, viewDefinition)
 );
