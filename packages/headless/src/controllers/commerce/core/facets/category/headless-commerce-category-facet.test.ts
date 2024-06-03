@@ -21,7 +21,7 @@ import {
 } from './headless-commerce-category-facet';
 
 jest.mock(
-  '../../../../../features/facets/category-facet-set/category-facet-set-actions'
+  '../../../../../features/commerce/facets/category-facet/category-facet-actions'
 );
 
 describe('CategoryFacet', () => {

@@ -7,7 +7,7 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {buildCoreInteractiveProduct} from './headless-core-interactive-product';
 
-jest.mock('../../../../features/commerce/context/product/product-actions');
+jest.mock('../../../../features/commerce/product/product-actions');
 
 describe('core interactive result', () => {
   let engine: MockedCommerceEngine;

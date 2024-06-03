@@ -7,7 +7,7 @@ import {
 } from '../../../test/mock-engine-v2';
 import {buildProductView, ProductView} from './headless-product-view';
 
-jest.mock('../../../features/commerce/context/product/product-actions');
+jest.mock('../../../features/commerce/product/product-actions');
 
 describe('ProductView', () => {
   let engine: MockedCommerceEngine;
