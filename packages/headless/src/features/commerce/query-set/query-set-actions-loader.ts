@@ -1,22 +1,54 @@
+import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
+  RegisterQuerySetQueryActionCreatorPayload,
+  UpdateQuerySetQueryActionCreatorPayload,
 } from '../../query-set/query-set-actions';
-import {QuerySetActionCreators} from '../../query-set/query-set-actions-loader';
-import {querySetReducer as querySet} from '../../query-set/query-set-slice';
+import {querySetReducer} from '../../query-set/query-set-slice';
+import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
+
+export type {
+  RegisterQuerySetQueryActionCreatorPayload,
+  UpdateQuerySetQueryActionCreatorPayload,
+};
 
 /**
- * Loads the `querySet` reducer and returns possible action creators.
+ * The query set action creators.
  *
- * @param engine - The headless engine.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ */
+export interface QuerySetActionCreators {
+  /**
+   * Registers a query set query.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  registerQuerySetQuery(
+    payload: RegisterQuerySetQueryActionCreatorPayload
+  ): PayloadAction<RegisterQuerySetQueryActionCreatorPayload>;
+
+  /**
+   * Updates a query set query.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateQuerySetQuery(
+    payload: UpdateQuerySetQueryActionCreatorPayload
+  ): PayloadAction<UpdateQuerySetQueryActionCreatorPayload>;
+}
+
+/**
+ * Loads the query set reducer and returns the possible commerce query set action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The commerce engine.
  * @returns An object holding the action creators.
  */
-export function loadQuerySetActions(
-  engine: CommerceEngine
-): QuerySetActionCreators {
-  engine.addReducers({querySet});
-
+export function loadQuerySetActions(engine: CommerceEngine) {
+  engine.addReducers({querySetReducer});
   return {
     registerQuerySetQuery,
     updateQuerySetQuery,
