@@ -45,6 +45,7 @@ export function getObjectHash<T>(obj: T) {
 }
 
 const doNotTrackValues = new Set(['1', 1, 'yes', true]);
+// TODO KIT-2844
 
 /**
  * Logic copied from coveo.analytics.
