@@ -24,6 +24,6 @@ export const commerceTriggersReducer = createReducer(
         handleApplyQueryTriggerModification(state, action.payload)
       )
       .addCase(updateIgnoreQueryTrigger, (state, action) =>
-        handleUpdateIgnoreQueryTrigger(state, action.payload)
+        handleUpdateIgnoreQueryTrigger(state, action.payload.q)
       )
 );
