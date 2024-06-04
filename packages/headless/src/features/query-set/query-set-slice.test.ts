@@ -1,4 +1,10 @@
+import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response';
 import {buildMockSearch} from '../../test/mock-search';
+import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions';
+import {
+  QuerySearchCommerceAPIThunkReturn,
+  executeSearch as commerceExecuteSearch,
+} from '../commerce/search/search-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
@@ -102,19 +108,57 @@ describe('querySet slice', () => {
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it('sets all queries to q on #restoreSearchParameters, when "q" defined', () => {
+  it('sets all queries to queryExecuted on commerce executeSearch.fulfilled', () => {
     registerQueryWithId('foo');
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
     const nextState = querySetReducer(
       state,
-      restoreSearchParameters({q: 'world'})
+      commerceExecuteSearch.fulfilled(
+        {
+          queryExecuted: 'world',
+          response: {
+            responseId: 'someid',
+          } as unknown as SearchCommerceSuccessResponse,
+        } as QuerySearchCommerceAPIThunkReturn,
+        ''
+      )
     );
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it('does not modify query on #restoreSearchParameters, when "q" not defined', () => {
+  it.each([
+    {action: restoreSearchParameters},
+    {action: commerceRestoreSearchParameters},
+  ])('sets all queries to q on #$action, when "q" defined', ({action}) => {
+    registerQueryWithId('foo');
+    registerQueryWithId('bar');
+
+    const expectedQuerySet = {foo: 'world', bar: 'world'};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const nextState = querySetReducer(state, (action as any)({q: 'world'}));
+    expect(nextState).toEqual(expectedQuerySet);
+  });
+
+  it.each([
+    {
+      action: restoreSearchParameters,
+    },
+    {
+      action: commerceRestoreSearchParameters,
+    },
+  ])('does not modify query on #$action, when "q" not defined', ({action}) => {
+    registerQueryWithId('foo', 'foo');
+    registerQueryWithId('bar', 'bar');
+
+    const expectedQuerySet = {foo: 'foo', bar: 'bar'};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const nextState = querySetReducer(state, (action as any)({}));
+    expect(nextState).toEqual(expectedQuerySet);
+  });
+
+  it('does not modify query on #$action, when "q" not defined', () => {
     registerQueryWithId('foo', 'foo');
     registerQueryWithId('bar', 'bar');
 

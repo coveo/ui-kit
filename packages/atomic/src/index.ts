@@ -1,5 +1,4 @@
-import {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
-import {initializeBindings as genericInitializeBindings} from './utils/initialization-utils';
+export {initializeBindings} from './utils/initialization-utils';
 
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 
@@ -12,10 +11,8 @@ export {MissingInterfaceParentError} from './utils/initialization-utils';
 
 export {PopoverChildFacet} from './components/search/facets/atomic-popover/popover-type';
 
-export function initializeBindings(element: Element) {
-  return genericInitializeBindings<Bindings>(element);
-}
 export {resultContext} from './components/search/result-template-components/result-template-decorators';
+export {productContext} from './components/commerce/product-template-components/product-template-decorators';
 export {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -26,3 +23,4 @@ export {
 export {RedirectionPayload} from './components/search/atomic-search-box/redirection-payload';
 
 export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';
+export {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';

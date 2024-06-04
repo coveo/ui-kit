@@ -3,6 +3,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   defaultNumberOfValuesIncrement,
@@ -88,7 +89,7 @@ export function buildCategoryFacet(
     return buildCategoryFacetSearch(engine, {
       options: {facetId: getFacetId(), ...options.facetSearch},
       select: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       isForFieldSuggestions: false,
     });
@@ -120,7 +121,7 @@ export function buildCategoryFacet(
         defaultNumberOfValuesIncrement;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     showLessValues() {
@@ -132,7 +133,7 @@ export function buildCategoryFacet(
           numberOfValues: defaultNumberOfValuesIncrement,
         })
       );
-      dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     facetSearch: restOfFacetSearch,
@@ -160,7 +161,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         hasActiveValues,
         selectedValueAncestry,
-        facetSearch: facetSearchStateSelector(engine.state),
+        facetSearch: facetSearchStateSelector(engine[stateKey]),
       };
     },
 

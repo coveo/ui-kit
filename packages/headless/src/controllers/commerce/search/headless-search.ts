@@ -2,11 +2,23 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
-import {LegacySearchAction} from '../../../features/analytics/analytics-utils';
+import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
-import {responseIdSelector} from '../../../features/commerce/search/search-selectors';
+import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
+import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema';
+import {
+  executeSearch,
+  fetchMoreProducts,
+  promoteChildToParent,
+} from '../../../features/commerce/search/search-actions';
+import {
+  activeParametersSelector,
+  enrichedParametersSelector,
+  requestIdSelector,
+  responseIdSelector,
+} from '../../../features/commerce/search/search-selectors';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -14,19 +26,40 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 import {
-  buildSolutionTypeSubControllers,
-  SearchAndListingSubControllers,
+  buildSearchSubControllers,
+  SearchSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
 
-export interface Search extends Controller, SearchAndListingSubControllers {
+export interface Search extends Controller, SearchSubControllers {
   /**
    * Executes the first search.
    */
-  executeFirstSearch(analyticsEvent?: LegacySearchAction): void;
+  executeFirstSearch(): void;
+
+  /**
+   * Finds the specified parent product and the specified child product of that parent, and makes that child the new
+   * parent. The `children` and `totalNumberOfChildren` properties of the original parent are preserved in the new
+   * parent.
+   *
+   * This method is useful when leveraging the product grouping feature to allow users to select nested products.
+   *
+   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * to make that child the new parent product, and re-render the product as such in the storefront.
+   *
+   * **Note:** In the controller state, a product that has children will always include itself as its own child so that
+   * it can be rendered as a nested product, and restored as the parent product through this method as needed.
+   *
+   * @param childPermanentId The permanentid of the child product that will become the new parent.
+   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   */
+  promoteChildToParent(
+    childPermanentId: string,
+    parentPermanentId: string
+  ): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Search` controller.
@@ -41,6 +74,11 @@ export interface SearchState {
   responseId: string;
 }
 
+/**
+ * Builds a `Search` controller for the given commerce engine.
+ * @param engine - The commerce engine.
+ * @returns A `Search` controller.
+ */
 export function buildSearch(engine: CommerceEngine): Search {
   if (!loadBaseSearchReducers(engine)) {
     throw loadReducerError;
@@ -48,12 +86,19 @@ export function buildSearch(engine: CommerceEngine): Search {
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
-  const subControllers = buildSolutionTypeSubControllers(engine, {
+  const getState = () => engine[stateKey];
+  const subControllers = buildSearchSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: executeSearch,
+    fetchProductsActionCreator: executeSearch,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    requestIdSelector,
+    serializer: searchSerializer,
+    parametersDefinition: searchParametersDefinition,
+    restoreActionCreator: restoreSearchParameters,
+    activeParametersSelector,
+    enrichParameters: enrichedParametersSelector,
   });
 
   return {
@@ -64,10 +109,12 @@ export function buildSearch(engine: CommerceEngine): Search {
       return getState().commerceSearch;
     },
 
-    // eslint-disable-next-line @cspell/spellchecker
-    // TODO CAPI-244: Handle analytics
+    promoteChildToParent(childPermanentId: string, parentPermanentId: string) {
+      dispatch(promoteChildToParent({childPermanentId, parentPermanentId}));
+    },
+
     executeFirstSearch() {
-      const firstSearchExecuted = responseIdSelector(engine.state) !== '';
+      const firstSearchExecuted = responseIdSelector(getState()) !== '';
 
       if (firstSearchExecuted) {
         return;

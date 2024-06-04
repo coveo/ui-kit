@@ -326,12 +326,13 @@ export const buildInstantResultSearchRequest = async (
   numberOfResults: number,
   eventDescription: EventDescription
 ) => {
-  const sharedWithFoldingRequest = buildSearchAndFoldingLoadCollectionRequest(
-    state,
-    navigatorContext,
-    relay,
-    eventDescription
-  );
+  const sharedWithFoldingRequest =
+    await buildSearchAndFoldingLoadCollectionRequest(
+      state,
+      navigatorContext,
+      relay,
+      eventDescription
+    );
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,

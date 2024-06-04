@@ -12,7 +12,6 @@ export const fromAnalyticsStateToAnalyticsParams = (
   relay: Relay,
   eventDescription?: EventDescription
 ): AnalyticsParam => {
-  const isNextAnalytics = s.analyticsMode === 'next';
   return {
     analytics: {
       clientId: relay.getMeta('').clientId,
@@ -23,16 +22,15 @@ export const fromAnalyticsStateToAnalyticsParams = (
       ...(eventDescription && {
         actionCause: eventDescription.actionCause,
       }),
-      ...(eventDescription &&
-        !isNextAnalytics && {
-          customData: eventDescription.customData,
-        }),
+      ...(eventDescription && {
+        customData: eventDescription.customData,
+      }),
       ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
       ...(s.deviceId && {deviceId: s.deviceId}),
       ...(getPageID() && {pageId: getPageID()}),
-      ...(isNextAnalytics && s.trackingId && {trackingId: s.trackingId}),
-      ...{capture: isNextAnalytics},
-      ...(isNextAnalytics && {source: getAnalyticsSource(s)}),
+      ...(s.trackingId && {trackingId: s.trackingId}),
+      ...{capture: true},
+      ...{source: getAnalyticsSource(s)},
     },
   };
 };

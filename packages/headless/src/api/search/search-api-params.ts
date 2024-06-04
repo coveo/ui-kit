@@ -79,7 +79,7 @@ export interface TabParam {
 }
 
 export interface ReferrerParam {
-  referrer: string;
+  referrer: string | null;
 }
 
 export interface RecommendationParam {
@@ -119,7 +119,7 @@ export interface AnalyticsParam {
     deviceId?: string;
     pageId?: string;
     clientTimestamp: string;
-    documentReferrer: string;
+    documentReferrer: string | null;
     originContext: string;
     userDisplayName?: string;
     documentLocation?: string;

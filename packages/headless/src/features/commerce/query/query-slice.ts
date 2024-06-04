@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {updateQuery} from './query-actions';
 import {getCommerceQueryInitialState} from './query-state';
 
@@ -13,7 +13,7 @@ export const queryReducer = createReducer(
         ...action.payload,
       }))
       .addCase(restoreSearchParameters, (state, action) => {
-        state.query = action.payload.q;
+        state.query = action.payload.q ?? '';
       });
   }
 );

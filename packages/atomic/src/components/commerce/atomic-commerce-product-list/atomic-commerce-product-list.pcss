@@ -1,0 +1,47 @@
+@import '../../../global/global.pcss';
+@import '../../../global/mixins.pcss';
+@import '../../common/item-list/styles/placeholders.pcss';
+@import '../../common/item-list/styles/table-display.pcss';
+@import '../../common/item-list/styles/list-display.pcss';
+@import '../../common/item-list/styles/grid-display.pcss';
+
+:host {
+  .result-link {
+    @mixin link-style;
+  }
+  .result-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    justify-items: center;
+    & a {
+      justify-content: center;
+    }
+  }
+
+  .result-list {
+    display: flex;
+    flex-direction: column;
+
+    & .result-item {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-wrap: wrap;
+      & .result-details  {
+        align-content: center;
+      }
+    }
+  }
+
+  @screen desktop-only {
+    .result-grid {
+      display: grid;
+    }
+  }
+
+  @screen mobile-only {
+    .result-grid {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

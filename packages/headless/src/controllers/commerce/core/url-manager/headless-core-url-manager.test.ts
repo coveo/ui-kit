@@ -1,29 +1,20 @@
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters,
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {searchSerializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
-import {executeSearch} from '../../../../features/commerce/search/search-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2';
-import {buildSearchParameterManager} from '../../search/parameter-manager/headless-search-parameter-manager';
 import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager';
-
-jest.mock(
-  '../../../../features/commerce/search-parameters/search-parameter-actions'
-);
-jest.mock('../../../../features/commerce/search/search-actions');
 
 describe('core url manager', () => {
   let engine: MockedCommerceEngine;
   let manager: UrlManager;
-  let mockedExecuteSearchAction: jest.MockedFunctionDeep<typeof executeSearch>;
-  let mockedRestoreSearchParametersAction: jest.MockedFunctionDeep<
-    typeof restoreSearchParameters
-  >;
+  const mockRequestIdSelector = jest.fn();
+  const mockExecuteSearchAction = jest.fn();
+  const mockParameterManagerBuilder = jest.fn();
+  const mockSerializer = {
+    serialize: jest.fn(),
+    deserialize: jest.fn(),
+  };
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -34,95 +25,71 @@ describe('core url manager', () => {
       initialState: {
         fragment,
       },
-      requestIdSelector: (state) => state.commerceSearch.requestId,
-      parameterManagerBuilder: buildSearchParameterManager,
-      serializer: searchSerializer,
+      requestIdSelector: mockRequestIdSelector,
+      parameterManagerBuilder: mockParameterManagerBuilder,
+      serializer: mockSerializer,
     });
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockedExecuteSearchAction = jest.mocked(executeSearch);
-    mockedRestoreSearchParametersAction = jest.mocked(restoreSearchParameters);
+    jest.resetAllMocks();
     initEngine();
     initUrlManager();
   });
-
-  function testLatestRestoreSearchParameters(params: CommerceSearchParameters) {
-    expect(mockedRestoreSearchParametersAction).toHaveBeenLastCalledWith(
-      params
-    );
-  }
-
-  function testExecuteSearch() {
-    expect(mockedExecuteSearchAction).toHaveBeenCalled();
-  }
 
   describe('initialization', () => {
     it('initializes', () => {
       expect(manager).toBeTruthy();
     });
 
-    it('dispatches #restoreSearchParameters', () => {
-      expect(mockedRestoreSearchParametersAction).toHaveBeenCalled();
+    it('builds #parameterManagerBuilder', () => {
+      const parameters = {
+        page: 1,
+        perPage: 2,
+      };
+      mockSerializer.deserialize.mockReturnValue(parameters);
+
+      initUrlManager('page=1&perPage=2');
+
+      expect(mockParameterManagerBuilder).toHaveBeenCalledWith(
+        engine,
+        expect.objectContaining({
+          initialState: {
+            parameters,
+          },
+        })
+      );
     });
 
     it('does not execute a search', () => {
-      expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
-    });
-
-    it('initial #restoreActionCreator should parse the "active" fragment', () => {
-      initUrlManager('q=windmill');
-      testLatestRestoreSearchParameters({
-        q: 'windmill',
-      });
+      expect(mockExecuteSearchAction).not.toHaveBeenCalled();
     });
   });
 
   describe('#state', () => {
-    it('contains the serialized fragment of the search parameters state', () => {
-      engine.state.commerceQuery.query = 'books';
-      expect(manager.state.fragment).toBe('q=books');
+    it('contains the serialized fragment of the parameters state', () => {
+      mockParameterManagerBuilder.mockReturnValue({
+        state: {},
+      });
+
+      initUrlManager();
+
+      mockSerializer.serialize.mockReturnValue('page=2');
+      expect(manager.state.fragment).toBe('page=2');
     });
   });
 
-  describe('#synchronize', () => {
-    it(`when adding a parameter
-    should restore the right parameters and execute a search`, () => {
-      manager.synchronize('q=test');
-      testLatestRestoreSearchParameters({
-        q: 'test',
-      });
-      testExecuteSearch();
+  it('#synchronize calls #synchronize on parameter manager', () => {
+    mockSerializer.deserialize.mockReturnValue({page: 0});
+    const mockSynchronize = jest.fn();
+    mockParameterManagerBuilder.mockReturnValue({
+      synchronize: mockSynchronize,
     });
 
-    it(`when removing a parameter
-    should restore the right parameters and execute a search`, () => {
-      engine.state.commerceQuery.query = 'test';
-      manager.synchronize('');
+    initUrlManager();
+    manager.synchronize('page=0');
 
-      testLatestRestoreSearchParameters({});
-      testExecuteSearch();
-    });
-
-    it(`when the fragment is unchanged
-    should not execute a search`, () => {
-      engine.state.commerceQuery.query = 'test';
-      manager.synchronize('q=test');
-
-      expect(mockedExecuteSearchAction).not.toHaveBeenCalled();
-    });
-
-    it(`when a parameter's value changes
-    should restore the right parameters and execute a search`, () => {
-      engine.state.commerceQuery.query = 'books';
-      manager.synchronize('q=movies');
-
-      testLatestRestoreSearchParameters({
-        q: 'movies',
-      });
-      testExecuteSearch();
-    });
+    expect(mockSynchronize).toHaveBeenCalledWith({page: 0});
   });
 
   describe('#subscribe', () => {
@@ -131,6 +98,13 @@ describe('core url manager', () => {
         (args) => args[0]
       )[0]();
     }
+
+    beforeEach(() => {
+      mockParameterManagerBuilder.mockReturnValue({
+        state: {},
+      });
+      initUrlManager();
+    });
 
     describe('should not call listener', () => {
       it('when initially subscribing', () => {
@@ -144,7 +118,7 @@ describe('core url manager', () => {
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceSearch.requestId = 'abcde';
+        mockRequestIdSelector.mockReturnValue('abcde');
         callListener();
 
         expect(listener).not.toHaveBeenCalled();
@@ -154,7 +128,7 @@ describe('core url manager', () => {
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceQuery.query = 'albums';
+        mockSerializer.serialize.mockReturnValue('q=albums');
         callListener();
 
         expect(listener).not.toHaveBeenCalled();
@@ -163,24 +137,29 @@ describe('core url manager', () => {
 
     describe('should call listener', () => {
       it('when a fragment value is added and the requestId has changed', () => {
+        mockRequestIdSelector.mockReturnValueOnce('new-request-id');
+        mockSerializer.serialize.mockReturnValueOnce('q=new-fragment');
+        mockSerializer.deserialize.mockImplementation((fragment) => fragment);
+
         const listener = jest.fn();
+        initUrlManager('q=old-fragment');
         manager.subscribe(listener);
 
-        engine.state.commerceSearch.requestId = 'abcde';
-        engine.state.commerceQuery.query = 'books';
         callListener();
 
         expect(listener).toHaveBeenCalledTimes(1);
       });
 
       it('when a fragment value is removed and the requestId has changed', () => {
-        initUrlManager('q=movies');
+        mockRequestIdSelector.mockReturnValueOnce('new-request-id');
+        mockSerializer.serialize.mockReturnValue('');
+        mockSerializer.deserialize.mockImplementation((fragment) => fragment);
+
+        initUrlManager('q=fragment-to-remove');
 
         const listener = jest.fn();
         manager.subscribe(listener);
 
-        engine.state.commerceSearch.requestId = 'abcde';
-        engine.state.commerceQuery.query = '';
         callListener();
 
         expect(listener).toHaveBeenCalledTimes(1);

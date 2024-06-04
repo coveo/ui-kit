@@ -15,13 +15,19 @@ import {
   QuerySetSection,
   FacetSearchSection,
   CategoryFacetSearchSection,
+  CommerceDidYouMeanSection,
+  InstantProductsSection,
   CommerceStandaloneSearchBoxSection,
+  RecentQueriesSection,
+  FieldSuggestionsOrderSection,
+  TriggerSection,
 } from './state-sections';
 
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-546: Handle only the query param for now. Add facets, sort, pagination later.
-export type CommerceSearchParametersState = CommerceQuerySection;
-export type CommerceProductListingParametersState = {};
+export type CommerceProductListingParametersState = CommerceFacetSetSection &
+  CommerceSortSection &
+  CommercePaginationSection;
+export type CommerceSearchParametersState =
+  CommerceProductListingParametersState & CommerceQuerySection;
 
 export type CommerceAppState = ConfigurationSection &
   CommerceStandaloneSearchBoxSection &
@@ -37,6 +43,11 @@ export type CommerceAppState = ConfigurationSection &
   CommerceSortSection &
   CommerceContextSection &
   CartSection &
+  RecentQueriesSection &
   QuerySuggestionSection &
   QuerySetSection &
+  CommerceDidYouMeanSection &
+  InstantProductsSection &
+  FieldSuggestionsOrderSection &
+  TriggerSection &
   VersionSection;

@@ -1,43 +1,30 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {StringValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
-import {
-  CartSection,
-  CommerceContextSection,
-  CommerceFacetSetSection,
-  CommercePaginationSection,
-  CommerceSortSection,
-  ConfigurationSection,
-  FacetOrderSection,
-  ProductListingV2Section,
-  VersionSection,
-} from '../../../state/state-sections';
+import {ProductListingV2Section} from '../../../state/state-sections';
+import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
-  StateNeededByQueryCommerceAPI,
+  ListingAndSearchStateNeededByQueryCommerceAPI,
 } from '../common/actions';
-import {logProductListingV2Load} from './product-listing-analytics';
+import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
+import {
+  moreProductsAvailableSelector,
+  numberOfProductsSelector,
+} from './product-listing-selectors';
 
-export type StateNeededByFetchProductListingV2 = ConfigurationSection &
-  ProductListingV2Section &
-  CommerceContextSection &
-  CartSection &
-  Partial<
-    CommercePaginationSection &
-      CommerceFacetSetSection &
-      CommerceSortSection &
-      FacetOrderSection &
-      VersionSection
-  >;
+export type StateNeededByFetchProductListing =
+  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingV2Section;
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
   void,
-  AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
@@ -54,7 +41,55 @@ export const fetchProductListing = createAsyncThunk<
 
     return {
       response: fetched.success,
-      analyticsAction: logProductListingV2Load(),
     };
   }
+);
+
+export const fetchMoreProducts = createAsyncThunk<
+  QueryCommerceAPIThunkReturn | null,
+  void,
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+>(
+  'commerce/productListing/fetchMoreProducts',
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+    const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
+    }
+    const {apiClient} = extra;
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
+
+    const fetched = await apiClient.getProductListing({
+      ...(await buildCommerceAPIRequest(state)),
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      dispatch(logQueryError(fetched.error));
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+    };
+  }
+);
+
+export interface PromoteChildToParentActionCreatorPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
+};
+
+export const promoteChildToParent = createAction(
+  'commerce/productListing/promoteChildToParent',
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

@@ -13,10 +13,11 @@ export const buildCategoryFacetSearchRequest = async (
 ): Promise<CategoryFacetSearchRequest> => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const categoryFacet = state.commerceFacetSet[facetId]!.request;
-  const path = isCategoryFacetRequest(categoryFacet)
-    ? getPathToSelectedCategoryFacetItem(categoryFacet)
-    : [];
+  const categoryFacet = state.commerceFacetSet[facetId]?.request;
+  const path =
+    categoryFacet && isCategoryFacetRequest(categoryFacet)
+      ? categoryFacet && getPathToSelectedCategoryFacetItem(categoryFacet)
+      : [];
   const ignorePaths = path.length ? [path] : [];
   const query = state.commerceQuery?.query;
 

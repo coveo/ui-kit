@@ -17,29 +17,18 @@ async function getLinterConfiguration() {
 function buildReport(isTitleValid) {
   const message = isTitleValid ? buildSuccessMessage() : buildErrorMessage();
 
-  return `
-  **PR Title**
-
-  ${message}
-  `;
+  return ['## PR Title', message].join('\n\n');
 }
 
 function buildSuccessMessage() {
-  return `
-  :white_check_mark: Title follows the [conventional commit](${specUrl}) spec.
-  `;
+  return `:white_check_mark: Title follows the [conventional commit](${specUrl}) spec.`;
 }
 
 function buildErrorMessage() {
-  return `
-  :x: Title should follow the [conventional commit](${specUrl}) spec:
-  
-  <type>(optional scope): <description>
+  return `:x: Title should follow the [conventional commit](${specUrl}) spec:  
+\`<type>(optional scope): <description>\`
 
-  Example:
-  
-  feat(headless): add result-list controller
-  `;
+Example: \`feat(headless): add result-list controller\``;
 }
 
 export async function buildTitleReport() {

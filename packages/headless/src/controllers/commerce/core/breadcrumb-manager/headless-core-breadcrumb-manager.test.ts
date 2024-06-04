@@ -1,4 +1,5 @@
 import {Action} from '@reduxjs/toolkit';
+import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
@@ -9,12 +10,13 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
+  updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -61,7 +63,7 @@ describe('core breadcrumb manager', () => {
 
   const facetId = 'some_facet_id';
   const facetResponseSelector = jest.fn();
-  const fetchResultsActionCreator = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -72,8 +74,8 @@ describe('core breadcrumb manager', () => {
   }
 
   function setFacetsState({facetId, ...restOfResponse}: AnyFacetResponse) {
-    engine.state.facetOrder.push(facetId);
-    engine.state.commerceFacetSet[facetId] = {
+    engine[stateKey].facetOrder.push(facetId);
+    engine[stateKey].commerceFacetSet[facetId] = {
       request: buildMockCommerceFacetRequest(),
     };
     facetResponseSelector.mockReturnValue({facetId, ...restOfResponse});
@@ -84,7 +86,7 @@ describe('core breadcrumb manager', () => {
 
     options = {
       facetResponseSelector,
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
     };
 
     initEngine();
@@ -198,12 +200,17 @@ describe('core breadcrumb manager', () => {
   });
 
   describe('category facet breadcrumbs', () => {
-    const breadcrumb = {
+    const breadcrumb: CategoryFacetValue = {
       value: 'Shoes',
       path: ['Shoes'],
       children: [],
       state: 'selected',
-    } as unknown as CategoryFacetValue;
+      moreValuesAvailable: false,
+      isAutoSelected: false,
+      isLeafValue: true,
+      isSuggested: false,
+      numberOfResults: 10,
+    };
 
     beforeEach(() => {
       setFacetsState(
@@ -216,7 +223,6 @@ describe('core breadcrumb manager', () => {
               children: [],
               state: 'idle',
               moreValuesAvailable: false,
-              numberOfResults: 10,
               isLeafValue: true,
             },
             breadcrumb,
@@ -229,17 +235,10 @@ describe('core breadcrumb manager', () => {
       expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    describe('#deselect when facet is selected', () =>
-      generateDeselectionTestCases(breadcrumb)(
-        'selected',
-        toggleSelectCategoryFacetValue
-      ));
-
-    it('#deselect does not exclude when facet is excluded', () => {
-      breadcrumb.state = 'excluded';
+    it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-
-      expect(fetchResultsActionCreator).not.toHaveBeenCalled();
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -270,8 +269,15 @@ describe('core breadcrumb manager', () => {
         });
       });
 
-      it('dispatches #fetchResultsActionCreator', () => {
-        expect(fetchResultsActionCreator).toHaveBeenCalled();
+      it('dispatches #fetchProductsActionCreator', () => {
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
+      });
+
+      it('dispatches #updateFreezeCurrentValues', () => {
+        expect(updateFreezeCurrentValues).toHaveBeenCalledWith({
+          facetId,
+          freezeCurrentValues: false,
+        });
       });
     };
   }

@@ -2,6 +2,7 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
@@ -13,6 +14,7 @@ import {recommendationsReducer} from '../../features/commerce/recommendations/re
 import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
+import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -20,11 +22,12 @@ import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
-  CoreEngine,
+  CoreEngineNext,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
+import {redactEngine, stateKey} from '../state-key';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -46,6 +49,7 @@ const commerceEngineReducers = {
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+  triggers: commerceTriggersReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
@@ -56,21 +60,20 @@ export type CommerceEngineState =
 /**
  * The engine for powering commerce experiences.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngine<State extends object = {}>
-  extends CoreEngine<State & CommerceEngineState, CommerceThunkExtraArguments> {
+  extends CoreEngineNext<
+    State & CommerceEngineState,
+    CommerceThunkExtraArguments
+  > {
   /**
    * Executes the first search.
-   *
-   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
   executeFirstSearch(): void;
 
   /**
-   * Executes the first search, and logs the analytics event that triggered a redirection from a standalone search box.
-   *
-   * @param analytics - The standalone search box analytics data.
+   * Executes the first search after a redirection from a standalone search box.
    */
   executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
 }
@@ -78,7 +81,7 @@ export interface CommerceEngine<State extends object = {}>
 /**
  * The commerce engine options.
  *
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -91,9 +94,10 @@ export interface CommerceEngineOptions
 /**
  * Creates a commerce engine instance.
  *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
- * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function buildCommerceEngine(
   options: CommerceEngineOptions
@@ -113,26 +117,38 @@ export function buildCommerceEngine(
     reducers: commerceEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+  const {state: _, ...engine} = internalEngine;
 
   engine.dispatch(setContext(options.configuration.context));
+  if (
+    options.configuration.cart !== undefined &&
+    options.configuration.cart.items !== undefined
+  ) {
+    engine.dispatch(setItems(options.configuration.cart.items));
+  }
 
-  return {
+  return redactEngine({
     ...engine,
 
-    get state() {
-      return engine.state;
+    get [stateKey]() {
+      return internalEngine.state;
     },
+
+    get configuration() {
+      return internalEngine.state.configuration;
+    },
+
     executeFirstSearch() {
       const action = executeSearch();
-      engine.dispatch(action);
+      internalEngine.dispatch(action);
     },
 
     executeFirstSearchAfterStandaloneSearchBoxRedirect() {
       const action = executeSearch();
-      engine.dispatch(action);
+      internalEngine.dispatch(action);
     },
-  };
+  });
 }
 
 function validateConfiguration(

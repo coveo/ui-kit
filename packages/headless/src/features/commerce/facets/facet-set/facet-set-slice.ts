@@ -22,6 +22,7 @@ import {
   toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
   updateFacetNumberOfValues,
+  updateFreezeCurrentValues,
 } from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
@@ -29,6 +30,7 @@ import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-red
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
+  updateDateFacetValues,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
@@ -39,9 +41,18 @@ import {
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
+import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
 import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
+import {
+  buildCategoryFacetValueRequest,
+  buildSelectedFacetValueRequest,
+  restoreFromParameters,
+  selectPath,
+} from './facet-set-reducers';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
@@ -64,6 +75,10 @@ export const commerceFacetSetReducer = createReducer(
     builder
       .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
       .addCase(executeSearch.fulfilled, handleQueryFulfilled)
+      .addCase(
+        executeCommerceFieldSuggest.fulfilled,
+        handleFieldSuggestionsFulfilled
+      )
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -83,6 +98,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'select');
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -105,7 +121,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'select');
 
         if (
-          isContinuousRangeRequest(facetRequest) &&
+          facetRequest.interval === 'continuous' &&
           existingValue.state === 'idle'
         ) {
           facetRequest.values = [];
@@ -183,6 +199,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleExcludeNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -206,7 +223,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'exclude');
 
         if (
-          isContinuousRangeRequest(facetRequest) &&
+          facetRequest.interval === 'continuous' &&
           existingValue.state === 'idle'
         ) {
           facetRequest.values = [];
@@ -258,6 +275,7 @@ export const commerceFacetSetReducer = createReducer(
 
         const {rawValue} = value;
 
+        facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
@@ -265,7 +283,10 @@ export const commerceFacetSetReducer = createReducer(
         );
 
         if (!existingValue) {
-          insertNewValue(facetRequest, {state: 'selected', value: rawValue});
+          insertNewValue(
+            facetRequest,
+            buildSelectedFacetValueRequest(rawValue) as AnyFacetValueRequest
+          );
           return;
         }
 
@@ -285,6 +306,7 @@ export const commerceFacetSetReducer = createReducer(
 
         const {rawValue} = value;
 
+        facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
@@ -326,6 +348,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
@@ -338,6 +361,17 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.numberOfValues = numberOfValues;
+      })
+      .addCase(updateDateFacetValues, (state, action) => {
+        const {facetId, values} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request || !ensureDateFacetRequest(request)) {
+          return;
+        }
+
+        request.values = convertToDateRangeRequests(values);
+        request.numberOfValues = values.length;
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
@@ -354,6 +388,16 @@ export const commerceFacetSetReducer = createReducer(
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
+      .addCase(updateFreezeCurrentValues, (state, action) => {
+        const {facetId, freezeCurrentValues} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.freezeCurrentValues = freezeCurrentValues;
+      })
       .addCase(deselectAllFacetValues, (state, action) => {
         const facetId = action.payload;
         const request = state[facetId]?.request;
@@ -367,7 +411,9 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
       .addCase(setContext, clearAllFacetValues)
       .addCase(setView, clearAllFacetValues)
-      .addCase(setUser, clearAllFacetValues);
+      .addCase(setUser, clearAllFacetValues)
+      .addCase(restoreSearchParameters, restoreFromParameters)
+      .addCase(restoreProductListingParameters, restoreFromParameters);
   }
 );
 
@@ -412,6 +458,20 @@ function handleQueryFulfilled(
   }
 }
 
+function handleFieldSuggestionsFulfilled(
+  state: WritableDraft<CommerceFacetSetState>,
+  action: ReturnType<typeof executeCommerceFieldSuggest.fulfilled>
+) {
+  const facetId = action.payload.facetId;
+
+  let facetRequest = state[facetId]?.request;
+  if (!facetRequest) {
+    state[facetId] = {request: {} as AnyFacetRequest};
+    facetRequest = state[facetId].request;
+    facetRequest.initialNumberOfValues = 10;
+  }
+}
+
 function handleDeselectAllFacetValues(request: AnyFacetRequest) {
   if (request.type === 'hierarchical') {
     request.numberOfValues = request.initialNumberOfValues;
@@ -445,19 +505,6 @@ function ensurePathAndReturnChildren(
 
   return children;
 }
-
-function buildCategoryFacetValueRequest(
-  value: string,
-  retrieveCount: number
-): CategoryFacetValueRequest {
-  return {
-    children: [],
-    state: 'idle',
-    value,
-    retrieveCount,
-  };
-}
-
 function updateExistingFacetValueState(
   existingFacetValue: WritableDraft<
     FacetValueRequest | NumericRangeRequest | DateRangeRequest
@@ -505,18 +552,22 @@ function updateStateFromFacetResponse(
   facetRequest.type = facetResponse.type;
   facetRequest.values =
     getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
+  facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
   if (
     facetResponse.type === 'hierarchical' &&
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
-  } else if (facetResponse.type === 'numericalRange' && facetResponse.domain) {
-    facetRequest.domain = {
-      min: facetResponse.domain.min,
-      max: facetResponse.domain.max,
-      increment: facetResponse.domain.increment,
-    };
+  } else if (facetResponse.type === 'numericalRange') {
+    facetRequest.interval = facetResponse.interval;
+    if (facetResponse.domain) {
+      facetRequest.domain = {
+        min: facetResponse.domain.min,
+        max: facetResponse.domain.max,
+        increment: facetResponse.domain.increment,
+      };
+    }
   }
 }
 
@@ -585,39 +636,4 @@ function clearAllFacetValues(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values = [];
   });
-}
-
-export function selectPath(
-  request: CategoryFacetRequest,
-  path: string[],
-  initialNumberOfValues: number
-) {
-  request.values = buildCurrentValuesFromPath(path, initialNumberOfValues);
-  request.numberOfValues = path.length ? 1 : initialNumberOfValues;
-  request.preventAutoSelect = true;
-}
-
-function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
-  if (!path.length) {
-    return [];
-  }
-
-  const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
-  let curr = root;
-
-  for (const segment of path.splice(1)) {
-    const next = buildCategoryFacetValueRequest(segment, retrieveCount);
-    curr.children.push(next);
-    curr = next;
-  }
-
-  curr.state = 'selected';
-
-  return [root];
-}
-
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-850: Tthis is the best we can do for now to identify a continuous range. When the `interval` property gets added to the facet response, we'll use that instead.
-function isContinuousRangeRequest(request: NumericFacetRequest): boolean {
-  return request.values.length === 1 && request.domain?.increment === 0;
 }

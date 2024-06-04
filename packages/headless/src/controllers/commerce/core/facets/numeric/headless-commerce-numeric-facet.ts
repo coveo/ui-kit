@@ -1,4 +1,5 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -54,7 +55,7 @@ export type NumericFacet = CoreCommerceFacet<
    *
    * @param ranges - The new ranges to set.
    */
-  setRanges: (ranges: NumericFacetValue[]) => void;
+  setRanges: (ranges: NumericRangeRequest[]) => void;
   /**
    * The state of the `NumericFacet` controller.
    */
@@ -89,23 +90,24 @@ export function buildCommerceNumericFacet(
   });
 
   const {dispatch} = engine;
-  const {facetId, fetchResultsActionCreator} = options;
+  const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
+    options;
 
   return {
     ...coreController,
 
-    setRanges(ranges: NumericFacetValue[]) {
+    setRanges(ranges: NumericRangeRequest[]) {
       dispatch(
         updateNumericFacetValues({
           facetId,
-          values: ranges,
+          values: ranges.map((range) => ({...range, numberOfResults: 0})),
         })
       );
-      dispatch(fetchResultsActionCreator());
+      dispatch(fetchProductsActionCreator());
     },
 
     get state() {
-      const response = options.facetResponseSelector(engine.state, facetId);
+      const response = options.facetResponseSelector(engine[stateKey], facetId);
       if (response?.type === 'numericalRange' && response.domain) {
         const {min, max} = response.domain;
         return {

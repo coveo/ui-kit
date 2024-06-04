@@ -13,35 +13,27 @@ import {
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
-  ProductListingV2Section,
-  RecommendationsSection,
   VersionSection,
 } from '../../../state/state-sections';
-import {PreparableAnalyticsAction} from '../../analytics/analytics-utils';
-import {StateNeededByFetchProductListingV2} from '../product-listing/product-listing-actions';
+import {getProductsFromCartState} from '../context/cart/cart-state';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
-  ProductListingV2Section &
-  RecommendationsSection &
   CommerceContextSection &
   CartSection &
-  Partial<
-    CommercePaginationSection &
-      CommerceSortSection &
-      CommerceFacetSetSection &
-      FacetOrderSection &
-      VersionSection
-  >;
+  Partial<CommercePaginationSection & VersionSection>;
+
+export type ListingAndSearchStateNeededByQueryCommerceAPI =
+  StateNeededByQueryCommerceAPI &
+    Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection>;
 
 export interface QueryCommerceAPIThunkReturn {
-  /** The successful search response. */
+  /** The successful response. */
   response: CommerceSuccessResponse;
-  analyticsAction?: PreparableAnalyticsAction<StateNeededByQueryCommerceAPI>;
 }
 
 export const buildCommerceAPIRequest = async (
-  state: StateNeededByQueryCommerceAPI
+  state: ListingAndSearchStateNeededByQueryCommerceAPI
 ): Promise<CommerceAPIRequest> => {
   return {
     ...(await buildBaseCommerceAPIRequest(state)),
@@ -67,13 +59,7 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => {
-        const {sku, quantity} = state.cart.cart[id];
-        return {
-          sku,
-          quantity,
-        };
-      }),
+      cart: getProductsFromCartState(state.cart),
     },
     ...effectivePagination(state, slotId),
   };
@@ -96,7 +82,7 @@ const effectivePagination = (
   );
 };
 
-function getFacets(state: StateNeededByFetchProductListingV2) {
+function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
   if (!state.facetOrder || !state.commerceFacetSet) {
     return [];
   }

@@ -5,9 +5,12 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
+  fetchMoreRecommendations,
   fetchRecommendations,
+  promoteChildToParent,
   registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
@@ -19,7 +22,7 @@ import {
 } from '../../controller/headless-controller';
 import {
   BaseSolutionTypeSubControllers,
-  buildBaseSolutionTypeControllers,
+  buildBaseSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 
 /**
@@ -32,6 +35,27 @@ export interface Recommendations
    * Fetches the recommendations.
    */
   refresh(): void;
+
+  /**
+   * Finds the specified parent product and the specified child product of that parent, and makes that child the new
+   * parent. The `children` and `totalNumberOfChildren` properties of the original parent are preserved in the new
+   * parent.
+   *
+   * This method is useful when leveraging the product grouping feature to allow users to select nested products.
+   *
+   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * to make that child the new parent product, and re-render the product as such in the storefront.
+   *
+   * **Note:** In the controller state, a product that has children will always include itself as its own child so that
+   * it can be rendered as a nested product, and restored as the parent product through this method as needed.
+   *
+   * @param childPermanentId The permanentid of the child product that will become the new parent.
+   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   */
+  promoteChildToParent(
+    childPermanentId: string,
+    parentPermanentId: string
+  ): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Recommendations` controller.
@@ -52,9 +76,16 @@ export interface RecommendationsOptions {
    * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
   slotId: string;
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  productId?: string;
 }
 
-interface RecommendationsProps {
+export interface RecommendationsProps {
+  /**
+   * The options for the `Recommendations` controller.
+   */
   options: RecommendationsOptions;
 }
 
@@ -83,28 +114,35 @@ export function buildRecommendations(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const {slotId} = props.options;
+  const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId}));
 
   const recommendationStateSelector = createSelector(
     (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
-  const subControllers = buildBaseSolutionTypeControllers(engine, {
+  const subControllers = buildBaseSubControllers(engine, {
     slotId,
     responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
-    fetchResultsActionCreator: () => fetchRecommendations({slotId}),
+    fetchProductsActionCreator: () => fetchRecommendations({slotId}),
+    fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
   });
 
   return {
     ...controller,
     ...subControllers,
 
-    get state() {
-      return recommendationStateSelector(engine.state);
+    promoteChildToParent(childPermanentId, parentPermanentId) {
+      dispatch(
+        promoteChildToParent({childPermanentId, parentPermanentId, slotId})
+      );
     },
 
-    refresh: () => dispatch(fetchRecommendations({slotId})),
+    get state() {
+      return recommendationStateSelector(engine[stateKey]);
+    },
+
+    refresh: () => dispatch(fetchRecommendations({slotId, productId})),
   };
 }
 

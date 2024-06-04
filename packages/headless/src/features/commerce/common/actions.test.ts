@@ -40,9 +40,6 @@ describe('commerce common actions', () => {
         clientId: expect.any(String),
         context: {
           user: {
-            userId: 'user_id',
-            email: 'email',
-            userIp: 'user_ip',
             userAgent: 'user_agent',
           },
           view: {
@@ -51,7 +48,7 @@ describe('commerce common actions', () => {
           },
           cart: [
             {
-              sku: product.sku,
+              productId: product.productId,
               quantity: product.quantity,
             },
           ],
@@ -86,8 +83,6 @@ describe('commerce common actions', () => {
     });
 
     it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', async () => {
-      delete state.commerceSort;
-
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
         principal: {
@@ -109,8 +104,6 @@ describe('commerce common actions', () => {
     });
 
     it('given a slotId, returns expected base request with the effective pagination for that slot', async () => {
-      delete state.commerceSort;
-
       const slotId = 'slot_id';
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
@@ -136,7 +129,7 @@ describe('commerce common actions', () => {
   });
 
   describe('#buildCommerceAPIRequest', () => {
-    let state: Actions.StateNeededByQueryCommerceAPI;
+    let state: Actions.ListingAndSearchStateNeededByQueryCommerceAPI;
     let mockedBuildBaseCommerceAPIRequest: jest.SpyInstance;
     beforeEach(() => {
       jest.clearAllMocks();

@@ -1,10 +1,8 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
   SearchBoxOptions,
-  StandaloneSearchBox,
   StandaloneSearchBoxState,
-} from '@coveo/headless';
-import {
+  StandaloneSearchBox,
   SearchBox,
   SearchBoxState,
   buildSearchBox,
@@ -52,6 +50,7 @@ import {
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -89,9 +88,9 @@ import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/at
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  *
- * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-results` component.
- * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-results` component.
- * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-results` component.
+ * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
  * @internal
  */
@@ -177,16 +176,6 @@ export class AtomicCommerceSearchBox
   @Prop({reflect: true}) public clearFilters = true;
 
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
-   * You should only enable query syntax in the search box if you have good reasons to do so, as it
-   * requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised
-   * by the search box behaviour.
-   *
-   * When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
-   */
-  @Prop({reflect: true}) public enableQuerySyntax = false;
-
-  /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
    * Example:
@@ -215,10 +204,6 @@ export class AtomicCommerceSearchBox
   public initialize() {
     this.id = randomID('atomic-commerce-search-box-');
 
-    this.searchBox = buildSearchBox(this.bindings.engine, {
-      options: this.searchBoxOptions,
-    });
-
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
@@ -241,15 +226,14 @@ export class AtomicCommerceSearchBox
       return;
     }
 
-    const {redirectTo, value, analytics} = this.searchBoxState;
+    const {redirectTo, value} = this.searchBoxState;
 
     if (redirectTo === '') {
       return;
     }
-    const data: StandaloneSearchBoxData = {
+    const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
       value,
-      enableQuerySyntax: this.enableQuerySyntax,
-      analytics,
+      enableQuerySyntax: false,
     };
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
@@ -275,6 +259,17 @@ export class AtomicCommerceSearchBox
         this.suggestionBindings
       );
     }
+  }
+
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+    this.bindings.store.state.activeProductChild = {
+      parentPermanentId,
+      childPermanentId,
+    };
+    this.suggestionManager.forceUpdate();
   }
 
   public componentWillRender() {
@@ -340,7 +335,6 @@ export class AtomicCommerceSearchBox
   private get searchBoxOptions(): SearchBoxOptions {
     return {
       id: this.id,
-      numberOfSuggestions: 0,
       highlightOptions: {
         notMatchDelimiters: {
           open: '<span class="font-bold">',
@@ -352,7 +346,6 @@ export class AtomicCommerceSearchBox
         },
       },
       clearFilters: this.clearFilters,
-      enableQuerySyntax: this.enableQuerySyntax,
     };
   }
 
@@ -688,10 +681,8 @@ export class AtomicCommerceSearchBox
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>
-              {/* TODO: KIT-3130 Add recent queries */}
-              {/* <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries> */}
-              {/* TODO: KIT-3128 Add query suggestions */}
-              {/* <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions> */}
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
             </slot>
           ),
         ]}

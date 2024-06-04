@@ -1,5 +1,6 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
@@ -7,7 +8,7 @@ import {
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
-import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
+import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
 import {selectQuerySuggestion} from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {
@@ -48,7 +49,7 @@ export interface StandaloneSearchBox extends SearchBox {
 
 export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
-   * The Url to redirect to.
+   * The URL to redirect to.
    */
   redirectTo: string;
 }
@@ -56,9 +57,9 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
 /**
  * Creates a `StandaloneSearchBox` controller instance.
  *
- * @param engine - The commerce headless engine.
- * @param props - The configurable `SearchBox` properties.
- * @returns A `StandaloneSearchBoxProps` controller instance.
+ * @param engine - The headless commerce engine.
+ * @param props - The configurable `StandaloneSearchBox` properties.
+ * @returns A `StandaloneSearchBox` controller instance.
  *
  * @internal
  */
@@ -71,7 +72,7 @@ export function buildStandaloneSearchBox(
   }
 
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const id = props.options.id || randomID('standalone_search_box');
   const options: Required<StandaloneSearchBoxOptions> = {
@@ -116,14 +117,7 @@ export function buildStandaloneSearchBox(
           query: this.state.value,
         })
       );
-      dispatch(
-        fetchRedirectUrl({
-          id,
-          // TODO: KIT-3134: remove once the `search/redirect` endpoint is implemented.
-          // In the meantime, we simply use the redirection URL provided in the props
-          redirectionUrl: props.options.redirectionUrl,
-        })
-      );
+      dispatch(fetchRedirectUrl({id}));
     },
 
     get state() {
@@ -148,7 +142,7 @@ function loadStandaloneSearchBoxReducers(
 > {
   engine.addReducers({
     commerceQuery,
-    commerceStandaloneSearchBoxSet: standaloneSearchBoxSet,
+    commerceStandaloneSearchBoxSet,
     configuration,
     querySuggest,
   });

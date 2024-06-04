@@ -1,4 +1,4 @@
-import {TriggerQuery} from '../../src/api/search/trigger';
+import {TriggerQuery} from '../api/common/trigger';
 
 export function buildMockQueryTrigger(
   config: Partial<TriggerQuery> = {}

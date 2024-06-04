@@ -5,12 +5,15 @@ import {
   Unsubscribe,
   UrlManager,
   buildSearch,
-  buildSearchUrlManager,
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   updateQuery,
   CommerceEngine,
   CommerceEngineConfiguration,
   buildCommerceEngine,
+  buildProductListing,
+  ProductListing,
+  Context,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -50,7 +53,10 @@ export type CommerceBindings = CommonBindings<
 
 /**
  * @internal
- * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page. It handles the headless search engine and localization configurations.
+ * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
+ * (with the exception of `atomic-commerce-recommendation-list`, which must be have
+ * `atomic-commerce-recommendation-interface` as a parent). It handles the headless search engine and localization
+ * configurations.
  */
 @Component({
   tag: 'atomic-commerce-interface',
@@ -62,11 +68,12 @@ export class AtomicCommerceInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
   private urlManager!: UrlManager;
-  private searchStatus!: Search;
+  private searchStatus!: Search | ProductListing;
+  private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
-  private store = createAtomicCommerceStore();
+  private store: AtomicCommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   @Element() public host!: HTMLAtomicCommerceInterfaceElement;
@@ -161,10 +168,10 @@ export class AtomicCommerceInterface
       this,
       'CoveoAtomic'
     );
+    this.store = createAtomicCommerceStore(this.type);
   }
 
   public connectedCallback() {
-    this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -184,10 +191,6 @@ export class AtomicCommerceInterface
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
@@ -196,6 +199,8 @@ export class AtomicCommerceInterface
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
+
+    this.context.setLanguage(this.language);
     this.commonInterfaceHelper.onLanguageChange();
   }
 
@@ -269,7 +274,6 @@ export class AtomicCommerceInterface
       );
 
     if (!standaloneSearchBoxData) {
-      this.engine.dispatch(updateQuery({query: ''}));
       this.engine.executeFirstSearch();
       return;
     }
@@ -349,11 +353,7 @@ export class AtomicCommerceInterface
   }
 
   private initUrlManager() {
-    if (!this.reflectStateInUrl) {
-      return;
-    }
-
-    this.urlManager = buildSearchUrlManager(this.engine!, {
+    this.urlManager = this.searchStatus.urlManager({
       initialState: {fragment: this.fragment},
     });
 
@@ -365,7 +365,11 @@ export class AtomicCommerceInterface
   }
 
   private initSearchStatus() {
-    this.searchStatus = buildSearch(this.engine!);
+    if (this.type === 'product-listing') {
+      this.searchStatus = buildProductListing(this.engine!);
+    } else {
+      this.searchStatus = buildSearch(this.engine!);
+    }
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
       if (
         !this.searchStatus.state.isLoading &&
@@ -374,6 +378,10 @@ export class AtomicCommerceInterface
         this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
       }
     });
+  }
+
+  private initContext() {
+    this.context = buildContext(this.engine!);
   }
 
   private updateHash() {
@@ -399,6 +407,7 @@ export class AtomicCommerceInterface
 
     this.initSearchStatus();
     this.initUrlManager();
+    this.initContext();
     this.initialized = true;
   }
 

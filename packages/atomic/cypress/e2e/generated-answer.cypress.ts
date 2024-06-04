@@ -1,6 +1,6 @@
 import {GeneratedAnswerStyle} from '@coveo/headless';
 import {RouteAlias, TagProps} from '../fixtures/fixture-common';
-import {TestFixture} from '../fixtures/test-fixture';
+import {TestFixture, generateLongTextAnswer} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
   addGeneratedAnswer,
@@ -191,8 +191,82 @@ describe('Generated Answer Test Suites', () => {
       });
     });
 
+    describe('when withToggle prop is NOT provided', () => {
+      beforeEach(() => {
+        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id');
+      });
+
+      it('should hide the toggle button', () => {
+        GeneratedAnswerAssertions.assertToggleVisibility(false);
+      });
+    });
+
+    describe('when collapsible prop is provided', () => {
+      describe('answer height is more than 250px', () => {
+        const streamId = crypto.randomUUID();
+
+        const testTextDelta = generateLongTextAnswer();
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            collapsible: true,
+          });
+        });
+
+        GeneratedAnswerAssertions.assertShowButton(true);
+        GeneratedAnswerAssertions.assertAnswerCollapsed(true);
+        GeneratedAnswerAssertions.assertShowMoreLabel(true);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
+
+        describe('when we click on show more button', () => {
+          beforeEach(() => {
+            GeneratedAnswerSelectors.showButton().click();
+          });
+
+          GeneratedAnswerAssertions.assertAnswerCollapsed(false);
+          GeneratedAnswerAssertions.assertShowMoreLabel(false);
+          GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
+        });
+      });
+
+      describe('answer height is less than 250px', () => {
+        const streamId = crypto.randomUUID();
+
+        const testTextDelta = 'Some text';
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            collapsible: true,
+          });
+        });
+
+        GeneratedAnswerAssertions.assertShowButton(false);
+        GeneratedAnswerAssertions.assertAnswerCollapsed(false);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
+      });
+    });
+
     describe('when a stream ID is returned', () => {
-      describe('when component is deactivated', () => {
+      describe('when withToggle prop is provided and component is deactivated', () => {
         const streamId = crypto.randomUUID();
         const testTextDelta = 'Some text';
         const testMessagePayload = {
@@ -205,7 +279,9 @@ describe('Generated Answer Test Suites', () => {
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
-          setupGeneratedAnswer(streamId);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            'with-toggle': true,
+          });
           cy.wait(getStreamInterceptAlias(streamId));
 
           GeneratedAnswerSelectors.toggle().click();
@@ -213,13 +289,14 @@ describe('Generated Answer Test Suites', () => {
 
         GeneratedAnswerAssertions.assertAnswerVisibility(false);
         GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertToggleVisibility(true);
         GeneratedAnswerAssertions.assertToggleValue(false);
         GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
         GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
         GeneratedAnswerAssertions.assertDisclaimer(false);
 
-        describe('when component is re-activated', () => {
+        describe('when withToggle prop is provided and component is re-activated', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
             GeneratedAnswerSelectors.toggle().click();
@@ -227,6 +304,7 @@ describe('Generated Answer Test Suites', () => {
 
           GeneratedAnswerAssertions.assertAnswerVisibility(true);
           GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertToggleVisibility(true);
           GeneratedAnswerAssertions.assertToggleValue(true);
           GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
@@ -345,6 +423,7 @@ describe('Generated Answer Test Suites', () => {
           mockStreamResponse(streamId, testCitationsPayload);
           setupGeneratedAnswer(streamId);
           cy.wait(getStreamInterceptAlias(streamId));
+          cy.wait(1000);
         });
 
         it('should display the citation link', () => {
@@ -398,9 +477,7 @@ describe('Generated Answer Test Suites', () => {
         describe('when a citation is clicked', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
-            GeneratedAnswerSelectors.citation()
-              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
-              .click();
+            GeneratedAnswerSelectors.citation().click();
           });
 
           it('should log an openGeneratedAnswerSource click event', () => {
