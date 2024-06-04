@@ -5,10 +5,6 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {
-  CommerceQuerySection,
-  CommerceSearchSection,
-} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
   deselectAllBreadcrumbs,
@@ -17,15 +13,16 @@ import {
 import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
 import {updatePage} from '../../pagination/pagination-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
-import {
-  buildCommerceAPIRequest,
-  ListingAndSearchStateNeededByQueryCommerceAPI,
-} from '../common/actions';
+import {buildCommerceAPIRequest} from '../common/actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
   UpdateQueryActionCreatorPayload,
   updateQuery,
 } from '../query/query-actions';
+import {
+  AsyncSearchThunkProcessor,
+  StateNeededByExecuteSearch,
+} from './search-actions-thunk-processor';
 import {
   querySelector,
   moreProductsAvailableSelector,
@@ -41,11 +38,6 @@ export interface QuerySearchCommerceAPIThunkReturn {
   /** The original query expression that was received and automatically corrected. */
   originalQuery: string;
 }
-
-export type StateNeededByExecuteSearch =
-  ListingAndSearchStateNeededByQueryCommerceAPI &
-    CommerceSearchSection &
-    CommerceQuerySection;
 
 export interface PrepareForSearchWithQueryOptions {
   /**
@@ -79,30 +71,19 @@ export const executeSearch = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->(
-  'commerce/search/executeSearch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const {apiClient} = extra;
+>('commerce/search/executeSearch', async (_action, config) => {
+  const {getState} = config;
+  const state = getState();
 
-    const query = querySelector(state);
-    const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
-      query,
-    });
+  const request = await buildCommerceAPIRequest(state);
 
-    if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
-      return rejectWithValue(fetched.error);
-    }
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >(config);
+  const fetchedResponse = await processor.fetchFromAPI(request);
 
-    return {
-      response: fetched.success,
-      originalQuery: query,
-      queryExecuted: queryExecutedFromResponseSelector(state, fetched.success),
-    };
-  }
-);
+  return processor.process(fetchedResponse);
+});
 
 export const fetchMoreProducts = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn | null,

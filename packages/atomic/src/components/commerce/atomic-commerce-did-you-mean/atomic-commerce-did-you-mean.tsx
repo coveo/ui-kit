@@ -1,12 +1,12 @@
 import {
-  DidYouMean,
   DidYouMeanState,
-  buildDidYouMean,
+  DidYouMean,
+  buildSearch,
   QueryTrigger,
   buildQueryTrigger,
   QueryTriggerState,
-} from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+} from '@coveo/headless/commerce';
+import {Component, State, h} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -16,10 +16,12 @@ import {AutoCorrection} from '../../common/query-correction/auto-correction';
 import {Correction} from '../../common/query-correction/correction';
 import {QueryCorrectionGuard} from '../../common/query-correction/guard';
 import {TriggerCorrection} from '../../common/query-correction/trigger-correction';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+ * @internal
+ *
+ * The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
  * @part no-results - The text displayed when there are no results.
  * @part auto-corrected - The text displayed for the automatically corrected query.
@@ -31,14 +33,16 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part highlight - The query highlights.
  */
 @Component({
-  tag: 'atomic-did-you-mean',
-  styleUrl: 'atomic-did-you-mean.pcss',
+  tag: 'atomic-commerce-did-you-mean',
+  styleUrl: 'atomic-commerce-did-you-mean.pcss',
   shadow: true,
 })
-export class AtomicDidYouMean implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
-  private didYouMean!: DidYouMean;
-  protected queryTrigger!: QueryTrigger;
+export class AtomicCommerceQueryCorrection
+  implements InitializableComponent<CommerceBindings>
+{
+  @InitializeBindings() public bindings!: CommerceBindings;
+  didYouMean!: DidYouMean;
+  queryTrigger!: QueryTrigger;
 
   @BindStateToController('didYouMean')
   @State()
@@ -46,41 +50,22 @@ export class AtomicDidYouMean implements InitializableComponent {
   @BindStateToController('queryTrigger')
   @State()
   private queryTriggerState?: QueryTriggerState;
-  @State() public error!: Error;
-
-  /**
-   * Whether to automatically apply corrections for queries that would otherwise return no results.
-   * When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term.
-   * When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.
-   *
-   * The default value is `true`.
-   */
-  @Prop({reflect: true}) public automaticallyCorrectQuery = true;
-
-  // TODO: V3: Default to `next`
-  /**
-   * Define which query correction system to use
-   *
-   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
-   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
-   *
-   * Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
-   */
-  @Prop({reflect: true})
-  public queryCorrectionMode: 'legacy' | 'next' = 'legacy';
+  @State()
+  public error!: Error;
 
   public initialize() {
-    this.didYouMean = buildDidYouMean(this.bindings.engine, {
-      options: {
-        automaticallyCorrectQuery: this.automaticallyCorrectQuery,
-        queryCorrectionMode: this.queryCorrectionMode,
-      },
-    });
+    if (this.bindings.interfaceElement.type !== 'search') {
+      this.error = new Error(
+        'atomic-commerce-did-you-mean is only usable with an atomic-commerce-interface of type "search"'
+      );
+    }
+
+    this.didYouMean = buildSearch(this.bindings.engine).didYouMean();
     this.queryTrigger = buildQueryTrigger(this.bindings.engine);
   }
 
   private get content() {
-    if (!this.queryTriggerState || !this.didYouMeanState) {
+    if (!this.didYouMeanState || !this.queryTriggerState) {
       return;
     }
 
@@ -102,7 +87,7 @@ export class AtomicDidYouMean implements InitializableComponent {
         <Correction
           correctedQuery={this.didYouMeanState.queryCorrection.correctedQuery}
           i18n={this.bindings.i18n}
-          onClick={() => this.didYouMean.applyCorrection()}
+          onClick={() => {}}
         />
       );
     }
