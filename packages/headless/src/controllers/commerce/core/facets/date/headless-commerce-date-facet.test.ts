@@ -15,7 +15,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {DateFacetValue} from '../headless-core-commerce-facet';
+import {DateRangeRequest} from '../headless-core-commerce-facet';
 import {
   DateFacet,
   DateFacetOptions,
@@ -98,15 +98,22 @@ describe('DateFacet', () => {
   });
 
   describe('#setRanges', () => {
-    let values: DateFacetValue[];
+    let values: DateRangeRequest[];
     beforeEach(() => {
-      values = [buildMockCommerceDateFacetValue()];
+      values = [buildMockCommerceDateFacetValue()].map(
+        ({start, end, endInclusive, state}) => ({
+          start,
+          end,
+          endInclusive,
+          state,
+        })
+      );
       facet.setRanges(values);
     });
     it('dispatches #updateDateFacetValues with the correct payload', () => {
       expect(updateDateFacetValues).toHaveBeenCalledWith({
         facetId,
-        values,
+        values: values.map((value) => ({...value, numberOfResults: 0})),
       });
     });
 

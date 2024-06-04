@@ -157,6 +157,7 @@ export type {
   DateFacet,
   DateFacetState,
 } from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter';
 export type {
   FacetType,
   FacetValueRequest,
@@ -263,6 +264,12 @@ export type {
 export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
 
 export type {
+  QueryTrigger,
+  QueryTriggerState,
+} from './controllers/core/triggers/headless-core-query-trigger';
+export {buildQueryTrigger} from './controllers/commerce/triggers/headless-commerce-query-trigger';
+
+export type {
   FieldSuggestions,
   FieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-field-suggestions';
@@ -280,3 +287,10 @@ export type {
   ParameterManagerInitialState,
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
 export type {Parameters} from './features/commerce/parameters/parameters-actions';
+export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
+
+// Types & Helpers
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date';

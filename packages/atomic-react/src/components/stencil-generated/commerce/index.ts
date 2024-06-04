@@ -8,6 +8,7 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
+export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');
 export const AtomicCommerceFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacet, HTMLAtomicCommerceFacetElement>('atomic-commerce-facet');
 export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceInterface, HTMLAtomicCommerceInterfaceElement>('atomic-commerce-interface');
@@ -24,6 +25,7 @@ export const AtomicCommerceSearchBoxQuerySuggestions = /*@__PURE__*/createReactC
 export const AtomicCommerceSearchBoxRecentQueries = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBoxRecentQueries, HTMLAtomicCommerceSearchBoxRecentQueriesElement>('atomic-commerce-search-box-recent-queries');
 export const AtomicCommerceSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSortDropdown, HTMLAtomicCommerceSortDropdownElement>('atomic-commerce-sort-dropdown');
 export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceText, HTMLAtomicCommerceTextElement>('atomic-commerce-text');
+export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
