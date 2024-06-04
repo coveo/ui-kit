@@ -548,6 +548,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -3586,6 +3587,7 @@ declare global {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxElement extends Components.AtomicCommerceSearchBox, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5888,6 +5890,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -8773,6 +8776,7 @@ declare module "@stencil/core" {
             "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+             * @alpha 
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**
