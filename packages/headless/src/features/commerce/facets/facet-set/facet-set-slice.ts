@@ -21,11 +21,6 @@ import {
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-  updateDateFacetValues,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
 import {
@@ -44,6 +39,11 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../category-facet/category-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+  updateDateFacetValues,
+} from '../date-facet/date-facet-actions';
 import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
 import {
   toggleExcludeFacetValue,

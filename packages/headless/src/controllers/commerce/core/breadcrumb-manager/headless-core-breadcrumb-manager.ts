@@ -5,6 +5,10 @@ import {
 } from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../../features/commerce/facets/date-facet/date-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
@@ -26,10 +30,6 @@ import {
   deselectAllFacetValues,
   updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,

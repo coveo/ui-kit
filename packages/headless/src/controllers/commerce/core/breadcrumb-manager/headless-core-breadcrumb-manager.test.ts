@@ -1,6 +1,10 @@
 import {Action} from '@reduxjs/toolkit';
 import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../../features/commerce/facets/date-facet/date-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   AnyFacetResponse,
@@ -20,10 +24,6 @@ import {
   deselectAllFacetValues,
   updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -50,12 +50,7 @@ jest.mock('../../../../features/facets/facet-set/facet-set-actions');
 jest.mock(
   '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
-jest.mock(
-  '../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
-jest.mock(
-  '../../../../features/facets/category-facet-set/category-facet-set-actions'
-);
+jest.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
 jest.mock('../../../../features/breadcrumb/breadcrumb-actions');
 
 jest.mock(

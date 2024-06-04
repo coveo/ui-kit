@@ -1,10 +1,10 @@
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
-import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+} from '../../../../../features/commerce/facets/date-facet/date-facet-actions';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
+import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-commerce-facet-response';
@@ -23,7 +23,7 @@ import {
 } from './headless-commerce-date-facet';
 
 jest.mock(
-  '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
+  '../../../../../features/commerce/facets/date-facet/date-facet-actions'
 );
 
 describe('DateFacet', () => {
