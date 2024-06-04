@@ -76,13 +76,15 @@ export const executeSearch = createAsyncThunk<
   const state = getState();
 
   const request = await buildCommerceAPIRequest(state);
+  const query = querySelector(state);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >(config);
-  const fetchedResponse = await processor.fetchFromAPI(request);
+  const fetchedResponse = await processor.fetchFromAPI({...request, query});
 
-  return processor.process(fetchedResponse);
+  const processed = await processor.process(fetchedResponse);
+  return processed;
 });
 
 export const fetchMoreProducts = createAsyncThunk<

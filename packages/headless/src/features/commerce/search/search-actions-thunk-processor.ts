@@ -8,6 +8,7 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {CommerceAPIRequest} from '../../../api/commerce/common/request';
+import {CommerceSearchRequest} from '../../../api/commerce/search/request';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
@@ -75,7 +76,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
   }
 
-  public async fetchFromAPI(request: CommerceAPIRequest) {
+  public async fetchFromAPI(
+    request: CommerceAPIRequest | CommerceSearchRequest
+  ) {
     const startedAt = new Date().getTime();
     const response = await this.extra.apiClient.search(request);
     const duration = new Date().getTime() - startedAt;
@@ -85,7 +88,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private processSuccessResponse(
     fetched: FetchedResponse
-  ): ValidReturnTypeFromProcessingStep<RejectionType> {
+  ): QuerySearchCommerceAPIThunkReturn {
     return {
       ...fetched,
       response: this.getSuccessResponse(fetched)!,
@@ -187,9 +190,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       })
     );
     this.onUpdateQueryForCorrection(modified);
-    const fetched = await this.fetchFromAPI(
-      await buildCommerceAPIRequest(this.getState())
-    );
+    const fetched = await this.fetchFromAPI({
+      ...(await buildCommerceAPIRequest(this.getState())),
+      query: modified,
+    });
 
     return fetched;
   }
