@@ -1,20 +1,21 @@
-import {updateQuery} from '../../features/query/query-actions';
-import {queryReducer as query} from '../../features/query/query-slice';
-import {executeSearch} from '../../features/search/search-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {stateKey} from '../../../app/state-key';
+import {updateQuery} from '../../../features/commerce/query/query-actions';
+import {queryReducer as query} from '../../../features/commerce/query/query-slice';
+import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
-  buildMockSearchEngine,
-  MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {QueryTrigger} from '../core/triggers/headless-core-query-trigger';
-import {buildQueryTrigger} from './headless-query-trigger';
+  MockedCommerceEngine,
+  buildMockCommerceEngine,
+} from '../../../test/mock-engine-v2';
+import {QueryTrigger} from '../../core/triggers/headless-core-query-trigger';
+import {buildQueryTrigger} from './headless-commerce-query-trigger';
 
-jest.mock('../../features/query/query-actions');
-jest.mock('../../features/search/search-actions');
+jest.mock('../../../features/commerce/query/query-actions');
+jest.mock('../../../features/commerce/search/search-actions');
 
-describe('QueryTrigger', () => {
-  let engine: MockedSearchEngine;
+describe('commerce query trigger', () => {
+  let engine: MockedCommerceEngine;
   let queryTrigger: QueryTrigger;
 
   function initQueryTrigger() {
@@ -26,7 +27,7 @@ describe('QueryTrigger', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchEngine(createMockState());
+    engine = buildMockCommerceEngine(buildMockCommerceState());
     initQueryTrigger();
   });
 
@@ -48,11 +49,12 @@ describe('QueryTrigger', () => {
   describe('when a search without a trigger is performed', () => {
     const listener = jest.fn();
     beforeEach(() => {
-      engine = buildMockSearchEngine(createMockState());
+      engine = buildMockCommerceEngine(buildMockCommerceState());
       initQueryTrigger();
       queryTrigger.subscribe(listener);
-      engine.state.query!.q = 'Oranges';
-      engine.state.triggers!.query = '';
+      console.log(engine[stateKey]);
+      engine[stateKey].commerceQuery.query = 'Oranges';
+      engine[stateKey].triggers!.query = '';
 
       const [firstListener] = registeredListeners();
       firstListener();
