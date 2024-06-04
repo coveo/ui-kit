@@ -40,9 +40,6 @@ describe('commerce common actions', () => {
         clientId: expect.any(String),
         context: {
           user: {
-            userId: 'user_id',
-            email: 'email',
-            userIp: 'user_ip',
             userAgent: 'user_agent',
           },
           view: {

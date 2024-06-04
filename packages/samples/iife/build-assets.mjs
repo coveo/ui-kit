@@ -71,7 +71,7 @@ function getDeploymentPipelineAssets() {
    */
   const assets = [];
   for (const [source, phasesWithSameSource] of Object.entries(phasesBySource)) {
-    if (source === 'packages/atomic/storybook-static') {
+    if (source === 'packages/atomic/dist-storybook') {
       continue;
     }
     const relativeDestinations = new Set(

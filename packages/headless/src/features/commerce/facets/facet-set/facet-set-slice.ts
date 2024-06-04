@@ -30,6 +30,7 @@ import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-red
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
+  updateDateFacetValues,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
@@ -347,6 +348,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
@@ -359,6 +361,17 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         facetRequest.numberOfValues = numberOfValues;
+      })
+      .addCase(updateDateFacetValues, (state, action) => {
+        const {facetId, values} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request || !ensureDateFacetRequest(request)) {
+          return;
+        }
+
+        request.values = convertToDateRangeRequests(values);
+        request.numberOfValues = values.length;
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
