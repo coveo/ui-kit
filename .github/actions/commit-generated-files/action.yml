@@ -6,7 +6,7 @@ runs:
     - run: |
         if [ ! -z "$(git status --porcelain)" ]; then
           git fetch --depth=1
-          git checkout ${{ github.head_ref }}
+          git switch ${{ github.head_ref }}
           git add 'packages/atomic/**/*.d.ts' 'packages/atomic-hosted-page/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*' 'packages/atomic-angular/projects/atomic-angular/src/lib/stencil-generated/*'
 
           git config --global user.name "GitHub Actions Bot"

@@ -1,5 +1,10 @@
+import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response';
 import {buildMockSearch} from '../../test/mock-search';
 import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions';
+import {
+  QuerySearchCommerceAPIThunkReturn,
+  executeSearch as commerceExecuteSearch,
+} from '../commerce/search/search-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
@@ -99,6 +104,26 @@ describe('querySet slice', () => {
     const nextState = querySetReducer(
       state,
       executeSearch.fulfilled(searchState, '', {legacy: logSearchboxSubmit()})
+    );
+    expect(nextState).toEqual(expectedQuerySet);
+  });
+
+  it('sets all queries to queryExecuted on commerce executeSearch.fulfilled', () => {
+    registerQueryWithId('foo');
+    registerQueryWithId('bar');
+
+    const expectedQuerySet = {foo: 'world', bar: 'world'};
+    const nextState = querySetReducer(
+      state,
+      commerceExecuteSearch.fulfilled(
+        {
+          queryExecuted: 'world',
+          response: {
+            responseId: 'someid',
+          } as unknown as SearchCommerceSuccessResponse,
+        } as QuerySearchCommerceAPIThunkReturn,
+        ''
+      )
     );
     expect(nextState).toEqual(expectedQuerySet);
   });

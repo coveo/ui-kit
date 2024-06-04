@@ -45,9 +45,15 @@ export function getObjectHash<T>(obj: T) {
 }
 
 const doNotTrackValues = new Set(['1', 1, 'yes', true]);
+// TODO KIT-2844
 
 /**
  * Logic copied from coveo.analytics.
+ *
+ * @deprecated Starting with Event Protocol, Coveo will no longer respect the DNT standard.
+ * Instead, we will provide implementers with documentation on privacy best-practices, letting
+ * them decide which standards to respect.
+ * For more context behind the decision, see: https://coveord.atlassian.net/browse/LENS-1502
  */
 export function doNotTrack() {
   if (typeof navigator === 'undefined' || typeof window === 'undefined') {
