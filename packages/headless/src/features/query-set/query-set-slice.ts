@@ -1,6 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
+  registerQuerySetQuery as registerCommerceQuerySetQuery,
+  updateQuerySetQuery as updateCommerceQuerySetQuery,
+} from '../commerce/query-set/query-set-actions';
+import {
   CommerceSearchParameters,
   restoreSearchParameters as commerceRestoreSearchParameters,
 } from '../commerce/search-parameters/search-parameters-actions';
@@ -12,23 +16,28 @@ import {
   restoreSearchParameters,
 } from '../search-parameters/search-parameter-actions';
 import {executeSearch} from '../search/search-actions';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
+import {
+  RegisterQuerySetQueryActionCreatorPayload,
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from './query-set-actions';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),
   (builder) => {
     builder
-      .addCase(registerQuerySetQuery, (state, action) => {
-        const {id, query} = action.payload;
-
-        if (id in state) {
-          return;
-        }
-
-        state[id] = query;
-      })
+      .addCase(registerQuerySetQuery, (state, action) =>
+        registerQuery(state, action.payload)
+      )
+      .addCase(registerCommerceQuerySetQuery, (state, action) =>
+        registerQuery(state, action.payload)
+      )
       .addCase(updateQuerySetQuery, (state, action) => {
+        const {id, query} = action.payload;
+        updateQuery(state, id, query);
+      })
+      .addCase(updateCommerceQuerySetQuery, (state, action) => {
         const {id, query} = action.payload;
         updateQuery(state, id, query);
       })
@@ -77,4 +86,16 @@ const updateQuery = (state: QuerySetState, id: string, query: string) => {
   if (id in state) {
     state[id] = query;
   }
+};
+
+const registerQuery = (
+  state: QuerySetState,
+  actionPayload: RegisterQuerySetQueryActionCreatorPayload
+) => {
+  const {id, query} = actionPayload;
+  if (id in state) {
+    return;
+  }
+
+  state[id] = query;
 };

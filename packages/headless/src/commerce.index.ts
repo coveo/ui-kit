@@ -41,6 +41,7 @@ export * from './features/commerce/facets/category-facet/category-facet-actions-
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader';
+export * from './features/commerce/query-set/query-set-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
