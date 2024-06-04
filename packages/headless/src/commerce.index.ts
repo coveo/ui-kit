@@ -135,10 +135,12 @@ export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   DateFacet,
   DateFacetState,
 } from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter';
 export type {
   FacetType,
   FacetValueRequest,
@@ -280,3 +282,9 @@ export type {
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
 export type {Parameters} from './features/commerce/parameters/parameters-actions';
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
+
+// Types & Helpers
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date';

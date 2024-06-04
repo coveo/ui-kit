@@ -1,7 +1,7 @@
 import {Controller} from '../../controller/headless-controller';
 
 /**
- * The `QueryTrigger` controller handles query triggers. A [Query trigger](https://docs.coveo.com/en/3413#query) query pipeline rule lets you define a query to be automatically executed against the index when a certain condition is met.
+ * The `QueryTrigger` controller handles [query trigger](https://docs.coveo.com/en/3413#query) query pipeline rules, which let you define a search query to execute when a certain condition is met.
  */
 export interface QueryTrigger extends Controller {
   /**
@@ -19,17 +19,17 @@ export interface QueryTrigger extends Controller {
  */
 export interface QueryTriggerState {
   /**
-   * The new query to perform a search with after receiving a query trigger.
+   * The new query returned by a query trigger rule in the query pipeline.
    */
   newQuery: string;
 
   /**
-   * The query used to perform the search that received a query trigger in its response.
+   * The original query that was submitted by the user.
    */
   originalQuery: string;
 
   /**
-   * A boolean to specify if the controller was triggered resulting in a modification to the query.
+   * Whether the original query was modified by a trigger rule in the query pipeline.
    */
   wasQueryModified: boolean;
 }

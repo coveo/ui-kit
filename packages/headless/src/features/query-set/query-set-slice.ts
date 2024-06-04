@@ -36,6 +36,10 @@ export const querySetReducer = createReducer(
         const {id, expression} = action.payload;
         updateQuery(state, id, expression);
       })
+      .addCase(commerceExecuteSearch.fulfilled, (state, action) => {
+        const {queryExecuted} = action.payload;
+        updateAllQuerySetQuery(state, queryExecuted);
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {queryExecuted} = action.payload;
         updateAllQuerySetQuery(state, queryExecuted);

@@ -26,7 +26,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {FacetSearchInputGuard} from '../../../common/facets/facet-search/facet-search-input-guard';
@@ -74,7 +73,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   @State() public error!: Error;
 
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
@@ -114,7 +113,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
         firstSearchExecuted={firstSearchExecuted}
         hasResults={this.facetState.values.length > 0}
       >
-        {firstSearchExecuted ? (
+        {
           <FacetContainer>
             <FacetHeader
               i18n={this.bindings.i18n}
@@ -131,9 +130,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
             ></FacetHeader>
             {this.renderBody()}
           </FacetContainer>
-        ) : (
-          <FacetPlaceholder numberOfValues={8} isCollapsed={this.isCollapsed} />
-        )}
+        }
       </FacetGuard>
     );
   }

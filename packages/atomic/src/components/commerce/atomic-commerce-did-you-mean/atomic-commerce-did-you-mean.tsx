@@ -37,7 +37,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
   styleUrl: 'atomic-commerce-did-you-mean.pcss',
   shadow: true,
 })
-export class AtomicCommerceQueryCorrection
+export class AtomicCommerceDidYouMean
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
