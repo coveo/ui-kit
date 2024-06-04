@@ -256,6 +256,12 @@ export type {
 export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
 
 export type {
+  QueryTrigger,
+  QueryTriggerState,
+} from './controllers/core/triggers/headless-core-query-trigger';
+export {buildQueryTrigger} from './controllers/commerce/triggers/headless-commerce-query-trigger';
+
+export type {
   FieldSuggestions,
   FieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-field-suggestions';
