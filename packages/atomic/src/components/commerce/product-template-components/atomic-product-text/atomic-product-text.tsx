@@ -39,6 +39,7 @@ export class AtomicProductText
   @Prop({reflect: true}) public field!: string;
   /**
    * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
+   * This property only works for the document excerpt and the ec_name field.
    */
   @Prop({reflect: true}) public shouldHighlight = true;
   /**
@@ -82,9 +83,8 @@ export class AtomicProductText
     }
   }
 
-  private get fieldForHighlights() {
-    const cleanedField = this.field.replace(/^ec_/, '');
-    return `${cleanedField}Highlights`;
+  public isFieldSupportedForHighlighting() {
+    return ['ec_name', 'excerpt'].includes(this.field);
   }
 
   public render() {
@@ -118,13 +118,15 @@ export class AtomicProductText
 
     this.possiblyWarnOnBadFieldType();
 
-    const highlightsValue = ProductTemplatesHelpers.getProductProperty(
-      this.product,
-      this.fieldForHighlights
-    ) as HighlightUtils.HighlightKeyword[];
+    if (this.isFieldSupportedForHighlighting()) {
+      const highlightsValue = ProductTemplatesHelpers.getProductProperty(
+        this.product,
+        this.field === 'ec_name' ? 'nameHighlights' : 'excerptHighlights'
+      ) as HighlightUtils.HighlightKeyword[];
 
-    if (this.shouldHighlight && highlightsValue) {
-      return this.renderWithHighlights(productValueAsString, highlightsValue);
+      if (this.shouldHighlight && highlightsValue) {
+        return this.renderWithHighlights(productValueAsString, highlightsValue);
+      }
     }
 
     return (
