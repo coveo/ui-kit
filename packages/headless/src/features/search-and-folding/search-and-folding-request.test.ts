@@ -1,5 +1,6 @@
 import {SearchAppState} from '../../state/search-app-state';
 import {mockRelay} from '../../test/mock-engine-v2';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
 import {createMockState} from '../../test/mock-state';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request';
@@ -13,7 +14,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.aq).toBe('a');
@@ -26,7 +27,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.aq).toBe(undefined);
@@ -41,7 +42,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.cq).toBe('a');
@@ -54,7 +55,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.cq).toBe(undefined);
@@ -69,7 +70,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.lq).toBe('a');
@@ -82,7 +83,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.lq).toBe(undefined);
@@ -97,7 +98,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.dq).toBe('a');
@@ -110,7 +111,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.dq).toBe(undefined);
@@ -125,7 +126,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.excerptLength).toBe(1234);
@@ -136,7 +137,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       state.excerptLength.length = undefined;
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.excerptLength).toBe(undefined);
@@ -153,7 +154,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     it('#visitorId is included in the request', async () => {
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.visitorId).toBeDefined();
@@ -170,7 +171,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     it('#visitorId is not included in the request', async () => {
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.visitorId).toBeUndefined();
@@ -179,7 +180,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     it('#actionsHistory is not included in the request', async () => {
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       expect(request.actionsHistory).toBeUndefined();

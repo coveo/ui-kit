@@ -122,7 +122,7 @@ export interface AnalyticsParam {
     documentReferrer: string | null;
     originContext: string;
     userDisplayName?: string;
-    documentLocation?: string;
+    documentLocation?: string | null;
     trackingId?: string;
     capture?: boolean;
     source?: string[];

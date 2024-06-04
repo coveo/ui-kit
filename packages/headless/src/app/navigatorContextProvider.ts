@@ -1,7 +1,7 @@
 export interface NavigatorContext {
   referrer: string | null;
-  userAgent: string;
-  location: string;
+  userAgent: string | null;
+  location: string | null;
 }
 
 export type NavigatorContextProvider = () => NavigatorContext;
@@ -16,6 +16,6 @@ export const defaultBrowserNavigatorContextProvider: NavigatorContextProvider =
 export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
   () => ({
     referrer: null,
-    userAgent: 'Node.js',
-    location: 'default',
+    userAgent: null,
+    location: null,
   });

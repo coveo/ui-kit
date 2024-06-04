@@ -17,6 +17,7 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice'
 import {mockRelay} from '../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
@@ -109,7 +110,7 @@ describe('search api client', () => {
       const req = (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request;
@@ -143,7 +144,7 @@ describe('search api client', () => {
       const req = await buildQuerySuggestRequest(
         'test',
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       const res = await searchAPIClient.querySuggest(req);
@@ -176,7 +177,7 @@ describe('search api client', () => {
       const req = await buildSpecificFacetSearchRequest(
         'test',
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay(),
         false
       );
@@ -196,7 +197,7 @@ describe('search api client', () => {
       const req = (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request;
@@ -250,7 +251,7 @@ describe('search api client', () => {
       const req = (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request;
@@ -270,7 +271,7 @@ describe('search api client', () => {
       const req = (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request;
@@ -288,7 +289,7 @@ describe('search api client', () => {
       const req = (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request;
@@ -308,7 +309,7 @@ describe('search api client', () => {
     should call PlatformClient.call with the right options`, async () => {
       const req = await buildPlanRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       searchAPIClient.plan(req);
@@ -346,7 +347,7 @@ describe('search api client', () => {
       state.configuration.search.authenticationProviders = ['myProvider'];
       const req = await buildPlanRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       searchAPIClient.plan(req);
@@ -369,7 +370,7 @@ describe('search api client', () => {
       const req = await buildQuerySuggestRequest(
         id,
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       searchAPIClient.querySuggest(req);
@@ -416,7 +417,7 @@ describe('search api client', () => {
       const req = await buildQuerySuggestRequest(
         id,
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       );
       searchAPIClient.querySuggest(req);
@@ -442,7 +443,7 @@ describe('search api client', () => {
         const req = await buildSpecificFacetSearchRequest(
           id,
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay(),
           false
         );
@@ -489,7 +490,7 @@ describe('search api client', () => {
         const req = await buildSpecificFacetSearchRequest(
           id,
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay(),
           false
         );
@@ -516,7 +517,7 @@ describe('search api client', () => {
         const req = await buildSpecificFacetSearchRequest(
           id,
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay(),
           false
         );
@@ -531,7 +532,7 @@ describe('search api client', () => {
         const searchRequest = (
           await buildSearchRequest(
             state,
-            {location: '', referrer: '', userAgent: ''},
+            buildMockNavigatorContextProvider()(),
             mockRelay()
           )
         ).request;
@@ -571,7 +572,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
         const req = await buildCategoryFacetSearchRequest(
           id,
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay(),
           false
         );
@@ -586,7 +587,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
         const searchRequest = (
           await buildSearchRequest(
             state,
-            {location: '', referrer: '', userAgent: ''},
+            buildMockNavigatorContextProvider()(),
             mockRelay()
           )
         ).request;
@@ -766,7 +767,7 @@ should call PlatformClient.call with the right options`, async () => {
       const req = (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request;
@@ -856,7 +857,7 @@ should call PlatformClient.call with the right options`, async () => {
         (
           await buildSearchRequest(
             state,
-            {location: '', referrer: '', userAgent: ''},
+            buildMockNavigatorContextProvider()(),
             mockRelay()
           )
         ).request

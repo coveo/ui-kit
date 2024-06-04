@@ -13,6 +13,7 @@ import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {createMockState} from '../../test/mock-state';
@@ -34,7 +35,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -47,7 +48,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -60,7 +61,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -73,7 +74,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -88,7 +89,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -101,7 +102,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -115,7 +116,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -129,7 +130,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -146,7 +147,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -167,7 +168,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -185,7 +186,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -212,7 +213,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -229,7 +230,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -247,7 +248,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -274,7 +275,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -286,7 +287,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -301,7 +302,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -329,7 +330,7 @@ describe('search request', () => {
     const {generateAutomaticFacets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -352,7 +353,7 @@ describe('search request', () => {
     const {generateAutomaticFacets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -364,7 +365,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -380,7 +381,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -398,7 +399,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -472,7 +473,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -490,7 +491,7 @@ describe('search request', () => {
     const request = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -514,7 +515,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -541,7 +542,7 @@ describe('search request', () => {
     const {facets} = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -557,7 +558,7 @@ describe('search request', () => {
     const params = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
@@ -572,7 +573,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.visitorId
@@ -585,7 +586,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.visitorId
@@ -599,7 +600,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.tab
@@ -613,7 +614,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.referrer
@@ -626,7 +627,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.fieldsToInclude
@@ -640,7 +641,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.fieldsToInclude
@@ -652,7 +653,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -665,7 +666,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -678,7 +679,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -694,7 +695,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -710,7 +711,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -727,7 +728,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -752,7 +753,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -777,7 +778,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.cq
@@ -791,7 +792,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.queryCorrection?.enabled
@@ -806,7 +807,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.queryCorrection?.options?.automaticallyCorrect
@@ -821,7 +822,7 @@ describe('search request', () => {
       (
         await buildSearchRequest(
           state,
-          {location: '', referrer: '', userAgent: ''},
+          buildMockNavigatorContextProvider()(),
           mockRelay()
         )
       ).request.queryCorrection?.options?.automaticallyCorrect

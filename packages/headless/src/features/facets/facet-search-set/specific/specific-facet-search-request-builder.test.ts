@@ -3,6 +3,7 @@ import {mockRelay} from '../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
+import {buildMockNavigatorContextProvider} from '../../../../test/mock-navigator-context-provider';
 import {createMockState} from '../../../../test/mock-state';
 import {buildSearchRequest} from '../../../search/search-request';
 import {buildSpecificFacetSearchRequest} from './specific-facet-search-request-builder';
@@ -21,7 +22,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
     return buildSpecificFacetSearchRequest(
       id,
       state,
-      {location: '', referrer: '', userAgent: ''},
+      buildMockNavigatorContextProvider()(),
       mockRelay(),
       false
     );
@@ -78,7 +79,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
     const request = (
       await buildSearchRequest(
         state,
-        {location: '', referrer: '', userAgent: ''},
+        buildMockNavigatorContextProvider()(),
         mockRelay()
       )
     ).request;
