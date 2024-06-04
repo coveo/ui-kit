@@ -1,4 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   SetContextActionCreatorPayload,
   SetUserActionCreatorPayload,
@@ -7,6 +8,7 @@ import {
   setUser,
   setView,
 } from './context-actions';
+import {contextReducer as commerceContext} from './context-slice';
 
 export type {
   SetContextActionCreatorPayload,
@@ -52,13 +54,16 @@ export interface ContextActionCreators {
 }
 
 /**
- * Loads the context reducer and returns the possible action creators.
+ * Loads the context reducer and returns the possible commerce context action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
- * @returns An object holding the action creators.
+ * @returns An object holding the commerce context action creators.
  */
-export function loadContextActions(): ContextActionCreators {
+export function loadContextActions(
+  engine: CommerceEngine
+): ContextActionCreators {
+  engine.addReducers({commerceContext});
   return {
     setContext,
     setUser,

@@ -20,7 +20,7 @@ export interface SetContextActionCreatorPayload {
 }
 
 export const setContext = createAction(
-  'commerce/setContext',
+  'commerce/context/set',
   (payload: SetContextActionCreatorPayload) =>
     validatePayload(payload, contextDefinition)
 );
@@ -28,7 +28,7 @@ export const setContext = createAction(
 export type SetUserActionCreatorPayload = UserParams;
 
 export const setUser = createAction(
-  'commerce/setUser',
+  'commerce/context/setUser',
   (payload: SetUserActionCreatorPayload) =>
     validatePayload(payload, userDefinition)
 );
@@ -36,7 +36,7 @@ export const setUser = createAction(
 export type SetViewActionCreatorPayload = ViewParams;
 
 export const setView = createAction(
-  'commerce/setView',
+  'commerce/context/setView',
   (payload: SetViewActionCreatorPayload) =>
     validatePayload(payload, viewDefinition)
 );
