@@ -45,11 +45,6 @@ import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
-import {
-  toggleExcludeNumericFacetValue,
-  toggleSelectNumericFacetValue,
-  updateNumericFacetValues,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setUser, setView} from '../../context/context-actions';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
@@ -65,6 +60,11 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
+} from '../numeric-facet/numeric-facet-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,

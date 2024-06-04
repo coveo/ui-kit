@@ -1,10 +1,15 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
+import {setContext, setUser, setView} from '../context/context-actions';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../facets/date-facet/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {setContext, setUser, setView} from '../context/context-actions';
+} from '../facets/numeric-facet/numeric-facet-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -103,6 +108,9 @@ export const paginationReducer = createReducer(
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
       .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
+      .addCase(toggleSelectDateFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeDateFacetValue, handlePaginationReset)
+      .addCase(toggleSelectCategoryFacetValue, handlePaginationReset)
       .addCase(setContext, handlePaginationReset)
       .addCase(setView, handlePaginationReset)
       .addCase(setUser, handlePaginationReset);

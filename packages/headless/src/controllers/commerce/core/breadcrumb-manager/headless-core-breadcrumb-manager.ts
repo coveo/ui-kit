@@ -21,6 +21,10 @@ import {
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
+import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
@@ -30,10 +34,6 @@ import {
   deselectAllFacetValues,
   updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {
-  toggleExcludeNumericFacetValue,
-  toggleSelectNumericFacetValue,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
   CommerceFacetSetSection,
   FacetOrderSection,

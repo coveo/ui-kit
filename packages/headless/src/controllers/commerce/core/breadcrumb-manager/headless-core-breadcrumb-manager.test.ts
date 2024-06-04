@@ -15,6 +15,10 @@ import {
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
+import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
@@ -24,10 +28,6 @@ import {
   deselectAllFacetValues,
   updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {
-  toggleExcludeNumericFacetValue,
-  toggleSelectNumericFacetValue,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCategoryFacetResponse,
@@ -48,7 +48,7 @@ import {
 
 jest.mock('../../../../features/facets/facet-set/facet-set-actions');
 jest.mock(
-  '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+  '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
 jest.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
 jest.mock('../../../../features/breadcrumb/breadcrumb-actions');

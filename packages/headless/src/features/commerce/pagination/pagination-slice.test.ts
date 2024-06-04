@@ -2,11 +2,16 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
 import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
+import {setContext, setUser, setView} from '../context/context-actions';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../facets/date-facet/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {setContext, setUser, setView} from '../context/context-actions';
+} from '../facets/numeric-facet/numeric-facet-actions';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
@@ -263,6 +268,18 @@ describe('pagination slice', () => {
     {
       actionName: '#toggleExcludeNumericFacetValue',
       action: toggleExcludeNumericFacetValue,
+    },
+    {
+      actionName: '#toggleSelectDateFacetValue',
+      action: toggleSelectDateFacetValue,
+    },
+    {
+      actionName: '#toggleExcludeDateFacetValue',
+      action: toggleExcludeDateFacetValue,
+    },
+    {
+      actionName: '#toggleSelectCategoryFacetValue',
+      action: toggleSelectCategoryFacetValue,
     },
     {
       actionName: '#setContext',
