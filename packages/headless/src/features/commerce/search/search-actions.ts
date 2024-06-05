@@ -27,7 +27,6 @@ import {
   querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
-  queryExecutedFromResponseSelector,
 } from './search-selectors';
 
 export interface QuerySearchCommerceAPIThunkReturn {
@@ -83,48 +82,40 @@ export const executeSearch = createAsyncThunk<
   >(config);
   const fetchedResponse = await processor.fetchFromAPI({...request, query});
 
-  const processed = await processor.process(fetchedResponse);
-  return processed;
+  return processor.process(fetchedResponse);
 });
 
 export const fetchMoreProducts = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn | null,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->(
-  'commerce/search/fetchMoreProducts',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const moreProductsAvailable = moreProductsAvailableSelector(state);
-    if (!moreProductsAvailable) {
-      return null;
-    }
+>('commerce/search/fetchMoreProducts', async (_action, config) => {
+  const {getState} = config;
+  const state = getState();
 
-    const {apiClient} = extra;
-
-    const perPage = perPagePrincipalSelector(state);
-    const numberOfProducts = numberOfProductsSelector(state);
-    const nextPageToRequest = numberOfProducts / perPage;
-    const query = querySelector(state);
-
-    const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
-      query,
-      page: nextPageToRequest,
-    });
-
-    if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: fetched.success,
-      originalQuery: query,
-      queryExecuted: queryExecutedFromResponseSelector(state, fetched.success),
-    };
+  const moreProductsAvailable = moreProductsAvailableSelector(state);
+  if (!moreProductsAvailable) {
+    return null;
   }
-);
+
+  const perPage = perPagePrincipalSelector(state);
+  const numberOfProducts = numberOfProductsSelector(state);
+  const nextPageToRequest = numberOfProducts / perPage;
+  const query = querySelector(state);
+
+  const request = await buildCommerceAPIRequest(state);
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >(config);
+  const fetchedResponse = await processor.fetchFromAPI({
+    ...request,
+    query,
+    page: nextPageToRequest,
+  });
+
+  return processor.process(fetchedResponse);
+});
 
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
