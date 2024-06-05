@@ -2,6 +2,9 @@
   "name": "atomic-react",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
+    "release:build": {},
+    "release:phase1": {},
+    "release:phase2": {},
     "cached:build": {
       "dependsOn": ["^build", "clean"],
       "executor": "nx:run-commands",

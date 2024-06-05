@@ -2,6 +2,9 @@
   "name": "headless-react",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
+    "release:build": {},
+    "release:phase1": {},
+    "release:phase2": {},
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {

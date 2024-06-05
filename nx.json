@@ -98,16 +98,24 @@
       "dependsOn": ["build"]
     },
     "release:phase1": {
-      "dependsOn": ["^release:phase1", "^release:phase2"]
+      "dependsOn": ["^release:phase1", "^release:phase2"],
+      "executor": "nx:run-script",
+      "options": {"script": "publish:bump"}
     },
     "release:build": {
-      "dependsOn": ["^release:build", "release:phase1"]
+      "dependsOn": ["^release:build", "release:phase1"],
+      "executor": "nx:run-script",
+      "options": {"script": "build"}
     },
     "release:phase2": {
-      "dependsOn": ["release:build", "release:phase1"]
+      "dependsOn": ["release:build", "release:phase1"],
+      "executor": "nx:run-script",
+      "options": {"script": "publish:npm"}
     },
     "release:phase5": {
-      "dependsOn": ["^release:phase5"]
+      "dependsOn": ["^release:phase5"],
+      "executor": "nx:run-script",
+      "options": {"script": "publish:bump"}
     },
     "cached:build:stencil": {
       "cache": true
