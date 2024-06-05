@@ -8,11 +8,11 @@ runs:
       shell: bash
     - name: Run Playwright tests
       run: npx playwright test
-      working-directory: packages/atomic-hosted-pages
+      working-directory: packages/atomic-hosted-page
       shell: bash
     - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: atomic-playwright-report
-        path: packages/atomic-hosted-pages/playwright-report/
+        path: packages/atomic-hosted-page/playwright-report/
         retention-days: 5
