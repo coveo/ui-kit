@@ -2547,6 +2547,10 @@ export namespace Components {
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
+        /**
+          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
+         */
+        "imageAltField"?: string;
     }
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -7842,6 +7846,10 @@ declare namespace LocalJSX {
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
+        /**
+          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
+         */
+        "imageAltField"?: string;
     }
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
