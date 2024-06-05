@@ -627,9 +627,9 @@ function insertNewValue(
 }
 
 function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
-  Object.values(state).forEach((facet) => {
-    facet.request.values.forEach((value) => (value.state = 'idle'));
-  });
+  Object.values(state).forEach((facet) =>
+    handleDeselectAllFacetValues(facet.request)
+  );
 }
 
 function clearAllFacetValues(state: CommerceFacetSetState) {
