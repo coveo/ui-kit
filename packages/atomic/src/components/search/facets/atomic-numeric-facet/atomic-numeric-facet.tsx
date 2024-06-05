@@ -208,6 +208,9 @@ export class AtomicNumericFacet implements InitializableComponent {
   }
 
   public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
     this.dependenciesManager?.stopWatching();
   }
 
