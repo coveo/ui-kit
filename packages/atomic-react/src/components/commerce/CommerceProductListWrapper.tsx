@@ -3,7 +3,7 @@ import type {Product} from '@coveo/headless/commerce';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicCommerceProductList} from '../stencil-generated/index';
+import {AtomicCommerceProductList} from '../stencil-generated/commerce';
 
 /**
  * The properties of the AtomicCommerceProductList component

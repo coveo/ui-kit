@@ -1,15 +1,15 @@
 import {Fragment, FunctionalComponent, h, VNode} from '@stencil/core';
-import {AnyBindings} from '../components/common/interface/bindings';
+import {i18n} from 'i18next';
 
 export interface LocalizedStringProps {
-  bindings: AnyBindings;
+  i18n: i18n;
   key: string;
   params: Record<string, VNode | string>;
   count?: number;
 }
 
 export const LocalizedString: FunctionalComponent<LocalizedStringProps> = ({
-  bindings,
+  i18n,
   key,
   params,
   count,
@@ -27,7 +27,7 @@ export const LocalizedString: FunctionalComponent<LocalizedStringProps> = ({
       getPlaceholderForParamKey(paramKey),
     ])
   );
-  const localizedStringWithPlaceholders = bindings.i18n.t(key, {
+  const localizedStringWithPlaceholders = i18n.t(key, {
     interpolation: {escapeValue: false},
     count,
     ...placeholdersMap,

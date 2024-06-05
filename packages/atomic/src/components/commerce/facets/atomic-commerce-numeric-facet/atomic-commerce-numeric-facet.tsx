@@ -4,8 +4,6 @@ import {
   NumericRangeRequest,
   ListingSummary,
   SearchSummary,
-  buildListingSummary,
-  buildSearchSummary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -19,7 +17,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
@@ -55,13 +52,16 @@ export class AtomicCommerceNumericFacet
 
   @State() public error!: Error;
 
-  private summary!: ListingSummary | SearchSummary;
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
   /**
-   * The field whose values you want to display in the facet.
+   * The Summary controller instance.
+   */
+  @Prop() summary!: SearchSummary | ListingSummary;
+  /**
+   * The numeric facet controller instance.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
 
@@ -75,16 +75,7 @@ export class AtomicCommerceNumericFacet
   }
 
   public initialize() {
-    this.initializeSummary();
     this.registerFacetToStore();
-  }
-
-  private initializeSummary() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.summary = buildListingSummary(this.bindings.engine);
-    } else {
-      this.summary = buildSearchSummary(this.bindings.engine);
-    }
   }
 
   private registerFacetToStore() {
@@ -140,7 +131,7 @@ export class AtomicCommerceNumericFacet
         hasError={hasError}
         hasResults={this.shouldRenderFacet}
       >
-        {firstSearchExecuted ? (
+        {
           <FacetContainer>
             <FacetHeader
               i18n={i18n}
@@ -168,9 +159,7 @@ export class AtomicCommerceNumericFacet
               ),
             ]}
           </FacetContainer>
-        ) : (
-          <FacetPlaceholder isCollapsed={this.isCollapsed} numberOfValues={8} />
-        )}
+        }
       </FacetGuard>
     );
   }

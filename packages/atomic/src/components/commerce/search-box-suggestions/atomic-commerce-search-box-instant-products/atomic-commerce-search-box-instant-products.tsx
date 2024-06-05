@@ -202,6 +202,13 @@ export class AtomicCommerceSearchBoxInstantProducts
       options: {},
     });
 
+    this.bindings.store.onChange('activeProductChild', () => {
+      this.instantProducts.promoteChildToParent(
+        this.bindings.store.state.activeProductChild.childPermanentId,
+        this.bindings.store.state.activeProductChild.parentPermanentId
+      );
+    });
+
     this.itemTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(

@@ -31,14 +31,12 @@ function buildVisualReport(rows) {
 
   const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
+  const tableHead = `
+| File | Old (kb) | New (kb) | Change (%)
+| ---- |:--------:|:--------:|:------:`;
 
-  return `
-  **Bundle Size**
-  
-  | File | Old (kb) | New (kb) | Change (%)
-  | ---- |:--------:|:--------:|:------:
-  ${presentableRows}
-  `;
+  const table = [tableHead, presentableRows].join('\n');
+  return ['## Bundle Size', table].join('\n\n');
 }
 
 export function buildReport(oldSizes, newSizes) {

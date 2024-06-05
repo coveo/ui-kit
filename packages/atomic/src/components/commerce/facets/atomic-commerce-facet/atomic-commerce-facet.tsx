@@ -1,8 +1,6 @@
 import {
   RegularFacet,
   RegularFacetState,
-  buildListingSummary,
-  buildSearchSummary,
   SearchSummary,
   ListingSummary,
 } from '@coveo/headless/commerce';
@@ -28,7 +26,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {FacetSearchInputGuard} from '../../../common/facets/facet-search/facet-search-input-guard';
@@ -59,9 +56,15 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 })
 export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
-  public summary!: SearchSummary | ListingSummary;
   @Element() private host!: HTMLElement;
 
+  /**
+   * The Summary controller instance.
+   */
+  @Prop() summary!: SearchSummary | ListingSummary;
+  /**
+   * The facet controller instance.
+   */
   @Prop() public facet!: RegularFacet;
 
   @BindStateToController('facet')
@@ -70,7 +73,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   @State() public error!: Error;
 
-  private isCollapsed = false;
+  @State() private isCollapsed = false;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
@@ -79,7 +82,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    this.initSummary();
     this.initAriaLive();
     this.initPopover();
     this.registerFacet();
@@ -111,7 +113,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
         firstSearchExecuted={firstSearchExecuted}
         hasResults={this.facetState.values.length > 0}
       >
-        {firstSearchExecuted ? (
+        {
           <FacetContainer>
             <FacetHeader
               i18n={this.bindings.i18n}
@@ -128,9 +130,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
             ></FacetHeader>
             {this.renderBody()}
           </FacetContainer>
-        ) : (
-          <FacetPlaceholder numberOfValues={8} isCollapsed={this.isCollapsed} />
-        )}
+        }
       </FacetGuard>
     );
   }
@@ -175,7 +175,9 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
         label={this.displayName}
         query={query}
       >
-        <ul part="values">{children}</ul>
+        <ul part="values" class="mt-3">
+          {children}
+        </ul>
       </FacetValuesGroup>
     );
   }
@@ -291,14 +293,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
       hasValues: () => !!this.facet.state.values.length,
       numberOfActiveValues: () => this.activeValues.length,
     });
-  }
-
-  private initSummary() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.summary = buildListingSummary(this.bindings.engine);
-    } else {
-      this.summary = buildSearchSummary(this.bindings.engine);
-    }
   }
 
   private initAriaLive() {

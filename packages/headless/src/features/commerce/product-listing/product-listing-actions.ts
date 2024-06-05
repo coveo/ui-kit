@@ -1,9 +1,11 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {StringValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {ProductListingV2Section} from '../../../state/state-sections';
+import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
@@ -74,4 +76,20 @@ export const fetchMoreProducts = createAsyncThunk<
       response: fetched.success,
     };
   }
+);
+
+export interface PromoteChildToParentActionCreatorPayload {
+  childPermanentId: string;
+  parentPermanentId: string;
+}
+
+export const promoteChildToParentDefinition = {
+  childPermanentId: new StringValue({required: true}),
+  parentPermanentId: new StringValue({required: true}),
+};
+
+export const promoteChildToParent = createAction(
+  'commerce/productListing/promoteChildToParent',
+  (payload: PromoteChildToParentActionCreatorPayload) =>
+    validatePayload(payload, promoteChildToParentDefinition)
 );

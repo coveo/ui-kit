@@ -7,7 +7,15 @@ import {
   Search,
   Product,
 } from '@coveo/headless/commerce';
-import {Component, Element, Method, Prop, State, h} from '@stencil/core';
+import {
+  Component,
+  Element,
+  Listen,
+  Method,
+  Prop,
+  State,
+  h,
+} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -37,6 +45,7 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * @internal
@@ -118,7 +127,7 @@ export class AtomicCommerceProductList
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
       this.productListing.refresh();
-    } else if (this.bindings.interfaceElement.type === 'search') {
+    } else {
       this.search = buildSearch(this.bindings.engine);
     }
 
@@ -146,6 +155,21 @@ export class AtomicCommerceProductList
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+  }
+
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.productListing.promoteChildToParent(
+        childPermanentId,
+        parentPermanentId
+      );
+    } else if (this.bindings.interfaceElement.type === 'search') {
+      this.search.promoteChildToParent(childPermanentId, parentPermanentId);
+    }
   }
 
   get productState() {
