@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - fix-release
       - 'prerelease/**'
 jobs:
   build:
