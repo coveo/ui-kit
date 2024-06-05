@@ -48,7 +48,7 @@ export const buildBaseCommerceAPIRequest = async (
   state: StateNeededByQueryCommerceAPI,
   slotId?: string
 ): Promise<BaseCommerceAPIRequest> => {
-  const {view, user, ...restOfContext} = state.commerceContext;
+  const {view, user, capture, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
@@ -59,6 +59,7 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
+      capture,
       cart: getProductsFromCartState(state.cart),
     },
     ...effectivePagination(state, slotId),

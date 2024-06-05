@@ -6,6 +6,7 @@ import {
 } from '../../../api/commerce/commerce-api-params';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
+  captureDefinition,
   contextDefinition,
   userDefinition,
   viewDefinition,
@@ -17,6 +18,7 @@ export interface SetContextPayload {
   currency: CurrencyCodeISO4217;
   user?: UserParams;
   view: ViewParams;
+  capture?: boolean;
 }
 
 export const setContext = createAction(
@@ -36,4 +38,9 @@ export type SetViewPayload = ViewParams;
 export const setView = createAction(
   'commerce/setView',
   (payload: SetViewPayload) => validatePayload(payload, viewDefinition)
+);
+
+export const setCapture = createAction(
+  'commerce/setCapture',
+  (payload: boolean) => validatePayload(payload, captureDefinition)
 );

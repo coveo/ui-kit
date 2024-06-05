@@ -46,6 +46,7 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
       view: {
         url: 'https://www.example.com',
       },
+      capture: true,
     },
     cart: {
       items: [

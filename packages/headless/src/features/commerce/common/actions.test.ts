@@ -46,6 +46,7 @@ describe('commerce common actions', () => {
             url: 'https://example.com',
             referrer: 'https://referrer.com',
           },
+          capture: true,
           cart: [
             {
               productId: product.productId,
