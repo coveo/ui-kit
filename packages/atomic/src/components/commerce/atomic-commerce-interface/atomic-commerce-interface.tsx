@@ -14,6 +14,10 @@ import {
   ProductListing,
   Context,
   buildContext,
+  buildSearchSummary,
+  buildListingSummary,
+  SearchSummary,
+  ListingSummary,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -38,6 +42,11 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
+import {
+  errorSelector,
+  firstSearchExecutedSelector,
+  noProductsSelector,
+} from '../atomic-commerce-layout/commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicCommerceStore, createAtomicCommerceStore} from './store';
 
@@ -68,10 +77,12 @@ export class AtomicCommerceInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
   private urlManager!: UrlManager;
-  private searchStatus!: Search | ProductListing;
+  private searchOrListing!: Search | ProductListing;
+  private summary!: SearchSummary | ListingSummary;
   private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
+  private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: AtomicCommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
@@ -212,6 +223,7 @@ export class AtomicCommerceInterface
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
     this.unsubscribeSearchStatus();
+    this.unsubscribeSummary();
     window.removeEventListener('hashchange', this.onHashChange);
   }
 
@@ -353,7 +365,7 @@ export class AtomicCommerceInterface
   }
 
   private initUrlManager() {
-    this.urlManager = this.searchStatus.urlManager({
+    this.urlManager = this.searchOrListing.urlManager({
       initialState: {fragment: this.fragment},
     });
 
@@ -365,18 +377,43 @@ export class AtomicCommerceInterface
   }
 
   private initSearchStatus() {
-    if (this.type === 'product-listing') {
-      this.searchStatus = buildProductListing(this.engine!);
-    } else {
-      this.searchStatus = buildSearch(this.engine!);
-    }
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
+    this.searchOrListing =
+      this.type === 'product-listing'
+        ? buildProductListing(this.engine!)
+        : buildSearch(this.engine!);
+
+    this.unsubscribeSearchStatus = this.searchOrListing.subscribe(() => {
       if (
-        !this.searchStatus.state.isLoading &&
+        !this.searchOrListing.state.isLoading &&
         this.store.hasLoadingFlag(FirstSearchExecutedFlag)
       ) {
         this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
       }
+    });
+  }
+
+  private initSummary() {
+    this.summary =
+      this.type === 'product-listing'
+        ? buildListingSummary(this.engine!)
+        : buildSearchSummary(this.engine!);
+
+    this.unsubscribeSummary = this.summary.subscribe(() => {
+      const {firstSearchExecuted, hasProducts, hasError} = this.summary.state;
+      const hasNoProductsAfterInitialSearch =
+        firstSearchExecuted && !hasError && !hasProducts;
+
+      this.host.classList.toggle(
+        noProductsSelector,
+        hasNoProductsAfterInitialSearch
+      );
+
+      this.host.classList.toggle(errorSelector, hasError);
+
+      this.host.classList.toggle(
+        firstSearchExecutedSelector,
+        firstSearchExecuted
+      );
     });
   }
 
@@ -387,7 +424,7 @@ export class AtomicCommerceInterface
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
 
-    if (!this.searchStatus.state.isLoading) {
+    if (!this.searchOrListing.state.isLoading) {
       history.replaceState(null, document.title, `#${newFragment}`);
       this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
 
@@ -406,6 +443,7 @@ export class AtomicCommerceInterface
     await this.commonInterfaceHelper.onInitialization(initEngine);
 
     this.initSearchStatus();
+    this.initSummary();
     this.initUrlManager();
     this.initContext();
     this.initialized = true;
