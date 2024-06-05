@@ -181,6 +181,9 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   updateHash() {
+    if (this.urlManager.state.fragment === '') {
+      return;
+    }
     window.history.pushState(
       null,
       document.title,
