@@ -17,4 +17,12 @@ export class AtomicCommerceLoadMoreProductsLocators {
   get loadMoreButton() {
     return this.page.getByText('Load more results');
   }
+
+  get progressBar() {
+    return this.page.locator('[part="progress-bar"]');
+  }
+
+  get progressValue() {
+    return this.progressBar.locator('[part="progress-bar"] > div');
+  }
 }
