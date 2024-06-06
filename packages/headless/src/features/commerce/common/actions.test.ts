@@ -190,15 +190,18 @@ describe('commerce common actions', () => {
       });
     });
 
-    it('sets the capture property from the analytics configuration', async () => {
-      const request = await Actions.buildCommerceAPIRequest(state);
+    it.each([true, false])(
+      'sets the capture property from the analytics configuration',
+      async (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
 
-      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+        const request = await Actions.buildCommerceAPIRequest(state);
 
-      expect(request.context.capture).toEqual(
-        state.configuration.analytics.enabled
-      );
-    });
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+
+        expect(request.context.capture).toEqual(analyticsEnabled);
+      }
+    );
 
     describe('given a state that has the commerceFacetSet and facetOrder sections', () => {
       let facet1: CommerceFacetSlice;
