@@ -153,7 +153,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   documentLocation?: string;
   /**
-   * TBD
+   * Specifies the unique identifier of the tracking target.
    */
   trackingId?: string;
   /**

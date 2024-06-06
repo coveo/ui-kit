@@ -156,7 +156,7 @@ export interface AnalyticsConfiguration {
    */
   documentLocation?: string;
   /**
-   * TBD
+   * Specifies the unique identifier of the tracking target.
    * @internal
    */
   trackingId?: string;
