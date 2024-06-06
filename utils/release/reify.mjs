@@ -3,10 +3,10 @@ import Arborist from '@npmcli/arborist';
 import {DepGraph} from 'dependency-graph';
 import {REPO_FS_ROOT} from './common/constants.mjs';
 
-if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
-}
-process.chdir(process.env.INIT_CWD);
+// if (!process.env.INIT_CWD) {
+//   throw new Error('Should be called using npm run-script');
+// }
+// process.chdir(process.env.INIT_CWD);
 
 /**
  * Current strategy: reify each package (along with their dependants transitively) in topological (parents->dependants) order.
@@ -50,6 +50,9 @@ function buildDependencyGraph(rootNode) {
     for (const dependency of dependencies) {
       if (!node.package.name || !dependency.package.name) {
         throw 'Workspaces must all have a name.';
+      }
+      if (node.package.name === dependency.package.name) {
+        continue;
       }
       graph.addDependency(node.package.name, dependency.package.name);
       addWorkspaceDependencies(dependency);
