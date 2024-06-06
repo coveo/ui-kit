@@ -128,7 +128,7 @@ export interface AnalyticsState {
    */
   documentLocation: string;
   /**
-   * Specifies the unique identifier of the tracking target.
+   * The unique identifier of the tracking target.
    * @internal
    */
   trackingId: string;
