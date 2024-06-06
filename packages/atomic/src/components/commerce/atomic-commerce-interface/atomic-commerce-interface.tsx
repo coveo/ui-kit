@@ -1,11 +1,9 @@
 import {
-  PlatformEnvironment,
   LogLevel,
   Search,
   Unsubscribe,
   UrlManager,
   buildSearch,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   updateQuery,
   CommerceEngine,
   CommerceEngineConfiguration,
@@ -282,18 +280,6 @@ export class AtomicCommerceInterface
     const {value} = standaloneSearchBoxData;
     this.engine!.dispatch(updateQuery({query: value}));
     this.engine.executeFirstSearch();
-  }
-
-  /**
-   * Returns the unique, organization-specific endpoint(s).
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
   public get bindings(): CommerceBindings {

@@ -1,3 +1,4 @@
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart';
 import {stateKey} from '../state-key';
 import {
@@ -63,5 +64,38 @@ describe('buildCommerceEngine', () => {
       [createCartKey(items[0])]: items[0],
       [createCartKey(items[1])]: items[1],
     });
+  });
+
+  it('uses organization endpoints when manually configured', () => {
+    options.configuration.organizationEndpoints = getOrganizationEndpoints(
+      'my-org-id',
+      'hipaa'
+    );
+    initEngine();
+
+    expect(engine.configuration.platformUrl).toBe(
+      'https://my-org-id.orghipaa.coveo.com'
+    );
+  });
+
+  it('uses organization endpoints when not manually specified', () => {
+    options.configuration.organizationEndpoints = undefined;
+    options.configuration.environment = 'hipaa';
+    options.configuration.organizationId = 'my-org-id';
+    initEngine();
+
+    expect(engine.configuration.platformUrl).toBe(
+      'https://my-org-id.orghipaa.coveo.com'
+    );
+  });
+
+  it('uses organization endpoints defaulting to prod when not manually specified', () => {
+    options.configuration.organizationEndpoints = undefined;
+    options.configuration.organizationId = 'my-org-id';
+    initEngine();
+
+    expect(engine.configuration.platformUrl).toBe(
+      'https://my-org-id.org.coveo.com'
+    );
   });
 });

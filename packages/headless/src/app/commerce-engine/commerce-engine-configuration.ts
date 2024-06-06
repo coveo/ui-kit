@@ -1,9 +1,9 @@
-import {RecordValue, Schema} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '../../api/platform-client';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart';
 import {ContextOptions} from '../../controllers/commerce/context/headless-context';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation';
 import {contextDefinition} from '../../features/commerce/context/context-validation';
+import {PlatformEnvironment} from '../../utils/url-utils';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
@@ -17,6 +17,7 @@ import {
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;
   cart?: CartInitialState;
+  environment?: PlatformEnvironment;
 }
 
 export const commerceEngineConfigurationSchema =
@@ -29,6 +30,12 @@ export const commerceEngineConfigurationSchema =
     cart: new RecordValue({
       values: cartDefinition,
     }),
+    environment: new StringValue<PlatformEnvironment>({
+      required: false,
+      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+      emptyAllowed: false,
+      default: 'prod',
+    }),
   });
 
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
@@ -36,9 +43,6 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
     organizationId: 'fashioncoveodemocomgzh7iep8',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-    organizationEndpoints: getOrganizationEndpoints(
-      'fashioncoveodemocomgzh7iep8'
-    ),
     context: {
       language: 'en',
       country: 'CA',

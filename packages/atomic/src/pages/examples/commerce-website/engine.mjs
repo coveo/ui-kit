@@ -1,8 +1,5 @@
 import {navContent} from './commerce-nav.mjs';
-import {
-  getOrganizationEndpoints,
-  buildCommerceEngine,
-} from '/build/headless/commerce/headless.esm.js';
+import {buildCommerceEngine} from '/build/headless/commerce/headless.esm.js';
 
 export const commerceEngine = buildCommerceEngine({
   configuration: {
@@ -17,6 +14,7 @@ export const commerceEngine = buildCommerceEngine({
       },
     },
     organizationId: 'barcasportsmcy01fvu',
+    environment: 'dev',
     analytics: {
       trackingId: 'sports',
     },
@@ -52,9 +50,5 @@ export const commerceEngine = buildCommerceEngine({
         },
       ],
     },
-    organizationEndpoints: await getOrganizationEndpoints(
-      'barcasportsmcy01fvu',
-      'dev'
-    ),
   },
 });
