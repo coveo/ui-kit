@@ -21,15 +21,6 @@ const meta: Meta = {
 
 export default meta;
 
-// export const Default: Story = {
-//   name: 'atomic-commerce-load-more-products',
-//   decorators: [(story) => story()],
-//   play: async (context) => {
-//     await play(context);
-//     await playExecuteFirstSearch(context);
-//   },
-// };
-
 export const InPage: Story = {
   name: 'In a page',
   decorators: [

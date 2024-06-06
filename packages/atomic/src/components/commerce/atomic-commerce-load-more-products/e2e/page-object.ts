@@ -7,7 +7,6 @@ export class AtomicCommerceLoadMoreProductsLocators {
   }
 
   summary({index, total}: {index?: number; total?: number} = {}) {
-    console.log(index, total);
     return this.page.getByText(
       new RegExp(`Showing ${index ?? '\\d+'} of ${total ?? '\\d+'} result`)
     );
