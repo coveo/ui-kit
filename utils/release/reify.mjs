@@ -24,9 +24,7 @@ process.chdir(process.env.INIT_CWD);
  * @param {Arborist.Node} rootNode
  */
 function buildDependencyGraph(rootNode) {
-  const graph = /** @type {DepGraph<Arborist.Node>} */ (
-    new DepGraph({circular: true})
-  );
+  const graph = /** @type {DepGraph<Arborist.Node>} */ (new DepGraph());
   /**
    * @param {Arborist.Node} node
    */
@@ -54,9 +52,6 @@ function buildDependencyGraph(rootNode) {
         throw 'Workspaces must all have a name.';
       }
       graph.addDependency(node.package.name, dependency.package.name);
-      if (node.package.name === dependency.package.name) {
-        continue; // Avoid infinite recursion on self-references.
-      }
       addWorkspaceDependencies(dependency);
     }
   }
