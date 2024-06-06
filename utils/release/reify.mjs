@@ -48,13 +48,13 @@ function buildDependencyGraph(rootNode) {
   function addWorkspaceDependencies(node) {
     const dependencies = getWorkspaceDependencies(node);
     for (const dependency of dependencies) {
-      if (node.package.name === dependency.package.name) {
-        continue; // Skip self-references
-      }
       if (!node.package.name || !dependency.package.name) {
         throw 'Workspaces must all have a name.';
       }
       graph.addDependency(node.package.name, dependency.package.name);
+      if (node.package.name === dependency.package.name) {
+        continue; // Avoid infinite recursion on self-references.
+      }
       addWorkspaceDependencies(dependency);
     }
   }
