@@ -21,7 +21,7 @@
     "nx:graph": "nx graph --file=topology.json",
     "release:phase0": "npm run-script -w=@coveo/release git-lock",
     "release:phase1-3": "npm run release:phase2 && npm run-script -w=@coveo/release reify",
-    "release:phase2": "nx run-many --targets=release:phase2 --all --parallel=false --output-style=stream",
+    "release:phase2": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
     "release:phase4": "npm run-script -w=@coveo/release git-publish-all",
     "release:phase5": "nx run-many --targets=release:phase5 --all"
   },

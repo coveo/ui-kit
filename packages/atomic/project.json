@@ -46,9 +46,7 @@
         "script": "validate:definitions"
       }
     },
-    "release:build": {},
     "release:phase1": {},
-    "release:phase2": {},
     "build": {
       "dependsOn": [
         "cached:build:stencil",
