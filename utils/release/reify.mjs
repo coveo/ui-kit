@@ -24,7 +24,9 @@ process.chdir(process.env.INIT_CWD);
  * @param {Arborist.Node} rootNode
  */
 function buildDependencyGraph(rootNode) {
-  const graph = /** @type {DepGraph<Arborist.Node>} */ (new DepGraph());
+  const graph = /** @type {DepGraph<Arborist.Node>} */ (
+    new DepGraph({circular: true})
+  );
   /**
    * @param {Arborist.Node} node
    */
