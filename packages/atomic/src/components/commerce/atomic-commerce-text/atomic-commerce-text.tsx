@@ -6,7 +6,7 @@ import {
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
  */
 @Component({
