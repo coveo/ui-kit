@@ -5,7 +5,7 @@
   --quantic-neutral-dim: #bfc4c8;
   --quantic-border-color: #d6dcdd;
   --quantic-neutral: #757575;
-  --quantic-table-header-bg: #E5E8E8;
+  --quantic-table-header-bg: #e5e8e8;
   --quantic-border-radius: 0.25rem;
   --quantic-on-background: #000000;
 }
@@ -27,15 +27,23 @@
   }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+div[data-level='answer-heading-1'] {
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+div[data-level='answer-heading-2'] {
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+div[data-level='answer-heading-3'] {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+div[data-level] {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
-  font-weight: var(--atomic-font-bold);
+  font-weight: bold;
 }
 
 li,

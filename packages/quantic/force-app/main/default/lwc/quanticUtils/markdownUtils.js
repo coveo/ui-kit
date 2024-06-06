@@ -24,7 +24,20 @@ const completeUnclosedElement = (text) => {
   return text;
 };
 
+const escapeHtml = (text) => {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
 const customRenderer = {
+  code(code) {
+    return `<pre><code>${escapeHtml(code)}</code></pre>`;
+  },
+
   /**
    * @param {string} text
    * @param {string} level

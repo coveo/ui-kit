@@ -30,6 +30,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
       loadScript(this, MARKED_JS + '/marked.min.js')
         .then(() => {
           this._ready = true;
+          this.updateHtmlContent();
         })
         .catch((error) => {
           console.error('Error loading marked', error);
@@ -40,10 +41,15 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
   updateHtmlContent() {
     const newHTMLContent =
       // @ts-ignore
-      window.marked && transformMarkdownToHtml(this.answer, window.marked);
-    // eslint-disable-next-line @lwc/lwc/no-inner-html
-    this.template.querySelector('.generated-answer-content__answer').innerHTML =
-      newHTMLContent;
+      (window.marked && transformMarkdownToHtml(this.answer, window.marked)) ||
+      '';
+    const answerContainer = this.template.querySelector(
+      '.generated-answer-content__answer'
+    );
+    if (answerContainer) {
+      // eslint-disable-next-line @lwc/lwc/no-inner-html
+      answerContainer.innerHTML = newHTMLContent;
+    }
   }
 
   get generatedAnswerClass() {
