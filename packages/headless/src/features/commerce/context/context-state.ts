@@ -10,7 +10,6 @@ export interface CommerceContextState {
   currency: CurrencyCodeISO4217;
   user?: UserParams;
   view: ViewParams;
-  capture: boolean;
 }
 
 export const getContextInitialState = (): CommerceContextState => ({
@@ -20,5 +19,4 @@ export const getContextInitialState = (): CommerceContextState => ({
   view: {
     url: '',
   },
-  capture: true,
 });

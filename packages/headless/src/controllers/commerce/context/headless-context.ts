@@ -2,7 +2,6 @@ import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {
-  setCapture,
   setContext,
   setUser,
   setView,
@@ -22,7 +21,6 @@ export interface ContextOptions {
   currency: CurrencyCodeISO4217;
   user?: User;
   view: View;
-  capture?: boolean;
 }
 
 export type User = {
@@ -76,12 +74,6 @@ export interface Context extends Controller {
   setView(view: View): void;
 
   /**
-   * Sets the analytics capture mode.
-   * @param capture - Whether to capture analytics or not.
-   */
-  setCapture(capture: boolean): void;
-
-  /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
    */
   state: ContextState;
@@ -93,7 +85,6 @@ export interface ContextState {
   currency: CurrencyCodeISO4217;
   user?: User;
   view: View;
-  capture: boolean;
 }
 
 /**
@@ -154,8 +145,6 @@ export function buildContext(
     setUser: (user: User) => dispatch(setUser(user)),
 
     setView: (view: View) => dispatch(setView(view)),
-
-    setCapture: (capture: boolean) => dispatch(setCapture(capture)),
   };
 }
 

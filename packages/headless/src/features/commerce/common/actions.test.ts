@@ -190,6 +190,16 @@ describe('commerce common actions', () => {
       });
     });
 
+    it('sets the capture property from the analytics configuration', async () => {
+      const request = await Actions.buildCommerceAPIRequest(state);
+
+      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+
+      expect(request.context.capture).toEqual(
+        state.configuration.analytics.enabled
+      );
+    });
+
     describe('given a state that has the commerceFacetSet and facetOrder sections', () => {
       let facet1: CommerceFacetSlice;
       let facet2: CommerceFacetSlice;

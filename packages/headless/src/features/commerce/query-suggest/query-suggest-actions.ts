@@ -67,7 +67,7 @@ export const buildQuerySuggestRequest = async (
   id: string,
   state: StateNeededByQuerySuggest
 ): Promise<QuerySuggestRequest> => {
-  const {view, user, capture, ...restOfContext} = state.commerceContext;
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
@@ -79,7 +79,7 @@ export const buildQuerySuggestRequest = async (
     context: {
       user,
       view,
-      capture,
+      capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
     },
   };

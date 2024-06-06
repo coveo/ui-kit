@@ -1,4 +1,4 @@
-import {setCapture, setContext, setUser, setView} from './context-actions';
+import {setContext, setUser, setView} from './context-actions';
 import {contextReducer} from './context-slice';
 import {CommerceContextState, getContextInitialState} from './context-state';
 
@@ -34,7 +34,6 @@ describe('context-slice', () => {
       view: {
         url: 'https://example.org',
       },
-      capture: true,
     });
   });
 
@@ -52,10 +51,5 @@ describe('context-slice', () => {
       url: 'https://example.org',
     };
     expect(contextReducer(state, setView(view)).view).toEqual(view);
-  });
-
-  it('should allow to set capture', () => {
-    const capture = false;
-    expect(contextReducer(state, setCapture(capture)).capture).toEqual(capture);
   });
 });

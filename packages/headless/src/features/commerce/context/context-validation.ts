@@ -1,4 +1,4 @@
-import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {
   nonEmptyString,
@@ -23,8 +23,6 @@ export const userDefinition = {
   userAgent: nonEmptyString,
 };
 
-export const captureDefinition = new BooleanValue({required: false});
-
 export const contextDefinition = {
   language: requiredNonEmptyString,
   country: requiredNonEmptyString,
@@ -36,7 +34,6 @@ export const contextDefinition = {
     options: {required: true},
     values: viewDefinition,
   }),
-  capture: captureDefinition,
 };
 
 export const contextSchema = new Schema(contextDefinition);

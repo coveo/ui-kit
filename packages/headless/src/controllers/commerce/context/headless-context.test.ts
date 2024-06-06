@@ -22,7 +22,6 @@ describe('headless commerce context', () => {
     view: {
       url: 'https://example.org',
     },
-    capture: true,
   };
 
   let context: Context;
