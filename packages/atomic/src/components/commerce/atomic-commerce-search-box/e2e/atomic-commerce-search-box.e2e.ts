@@ -223,7 +223,7 @@ test.describe('with enable-query-syntax=true', () => {
   });
 
   test('should use query syntax', async ({loadMore, searchBox, page}) => {
-    await loadMore.loadMoreButton.waitFor({state: 'visible'});
+    await loadMore.button.waitFor({state: 'visible'});
     await searchBox.searchInput
       // eslint-disable-next-line @cspell/spellchecker
       .fill('@urihash=bzo5fpM1vf8Xñds1');
