@@ -70,16 +70,22 @@ export const getRequiredProductPropertiesForAnalytics = (product: Product) => {
     warnings.push(productPrice.warning);
   }
 
+  if (!productId.value || !productName.value || !productPrice.value) {
+    return {
+      productId: undefined,
+      name: undefined,
+      price: undefined,
+      warning: `Some of the properties required for logging analytics events are missing for product with permanentid '${product.permanentid}':
+    \n- ${warnings.join('\n- ')}
+    \nReview the configuration of the above 'ec_'-prefixed fields in your index, and make sure they contain the correct metadata.`,
+    };
+  }
+
   const properties = {
     productId: productId.value,
     name: productName.value,
     price: productPrice.value,
-    warning:
-      warnings.length === 0
-        ? undefined
-        : `Some of the properties required for logging analytics events are missing for product with permanentid '${product.permanentid}':
-    \n- ${warnings.join('\n- ')}
-    \nReview the configuration of the above 'ec_'-prefixed fields in your index, and make sure they contain the correct metadata.`,
+    warning: undefined,
   };
 
   return properties;
@@ -203,13 +209,14 @@ function getProductPropertyFromLookupFields<T extends string | number>(
     product
   );
   let warning;
-  if (!value) {
+  if (value === undefined) {
     warning = getCouldNotRetrievePropertyWarning(propertyName, lookupFields);
+    return {
+      value,
+      warning,
+    };
   }
-  return {
-    warning,
-    value,
-  };
+  return {value, warning: undefined};
 }
 
 export const ProductTemplatesHelpers = {

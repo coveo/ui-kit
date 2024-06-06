@@ -311,22 +311,26 @@ export class AtomicCommerceRecommendationList
     const {name, price, productId, warning} =
       ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
 
+    if (warning !== undefined) {
+      return {
+        controller: undefined,
+        warning,
+      };
+    }
+
     const position = this.productsPerPage
       ? this.currentPage * this.productsPerPage + index + 1
       : index + 1;
-    const controller =
-      name === undefined || price === undefined || productId === undefined
-        ? undefined
-        : this.recommendations.interactiveProduct({
-            options: {
-              position,
-              product: {
-                name,
-                price,
-                productId,
-              },
-            },
-          });
+    const controller = this.recommendations.interactiveProduct({
+      options: {
+        position,
+        product: {
+          name,
+          price,
+          productId,
+        },
+      },
+    });
 
     return {
       controller,

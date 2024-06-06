@@ -126,19 +126,23 @@ export class AtomicCommerceSearchBoxInstantProducts
     const {name, price, productId, warning} =
       ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
 
-    const controller =
-      name === undefined || price === undefined || productId === undefined
-        ? undefined
-        : this.instantProducts.interactiveProduct({
-            options: {
-              position: index + 1,
-              product: {
-                name,
-                price,
-                productId,
-              },
-            },
-          });
+    if (warning !== undefined) {
+      return {
+        controller: undefined,
+        warning,
+      };
+    }
+
+    const controller = this.instantProducts.interactiveProduct({
+      options: {
+        position: index + 1,
+        product: {
+          name,
+          price,
+          productId,
+        },
+      },
+    });
 
     return {controller, warning};
   }

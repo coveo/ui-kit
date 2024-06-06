@@ -233,26 +233,28 @@ export class AtomicCommerceProductList
     const {name, price, productId, warning} =
       ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
 
+    if (warning !== undefined) {
+      return {
+        controller: undefined,
+        warning,
+      };
+    }
+
     const pagination = parentController.pagination();
     const position =
       pagination.state.page * pagination.state.pageSize + index + 1;
 
-    const controller =
-      name === undefined || price === undefined || productId === undefined
-        ? undefined
-        : parentController.interactiveProduct({
-            options: {
-              position,
-              product: {
-                name,
-                price,
-                productId,
-              },
-            },
-          });
-
     return {
-      controller,
+      controller: parentController.interactiveProduct({
+        options: {
+          position,
+          product: {
+            name,
+            price,
+            productId,
+          },
+        },
+      }),
       warning,
     };
   }
