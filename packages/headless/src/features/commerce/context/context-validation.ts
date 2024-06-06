@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {
   nonEmptyString,
@@ -21,25 +21,6 @@ export const viewDefinition = {
 
 export const userDefinition = {
   userAgent: nonEmptyString,
-};
-
-const cartItemDefinition = new RecordValue({
-  options: {
-    required: true,
-  },
-  values: {
-    productId: nonEmptyString,
-    sku: nonEmptyString,
-    name: nonEmptyString,
-    price: nonEmptyString,
-    quantity: nonEmptyString,
-  },
-});
-
-export const cartDefinition = {
-  items: new ArrayValue({
-    each: cartItemDefinition,
-  }),
 };
 
 export const contextDefinition = {
