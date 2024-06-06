@@ -52,7 +52,6 @@ interface GeneratedAnswerStream {
   isStreaming: boolean;
   isLoading: boolean;
 }
-
 interface HeaderMessage {
   answerStyle: GeneratedAnswerStyle;
   contentFormat: GeneratedContentFormat;
