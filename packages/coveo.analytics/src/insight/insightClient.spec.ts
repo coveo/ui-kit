@@ -652,6 +652,27 @@ describe('InsightClient', () => {
             await client.logCreateArticle(exampleCreateArticleMetadata);
             expectMatchCustomEventPayload(InsightEvents.createArticle, exampleCreateArticleMetadata);
         });
+
+        it('should send proper payload for #generatedAnswerFeedbackSubmitV2', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+                helpful: true,
+                readable: <GeneratedAnswerFeedbackReasonOption>'yes',
+                correctness: {
+                    documented: <GeneratedAnswerFeedbackReasonOption>'no',
+                    correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+                    hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
+                },
+                details: 'foo',
+                documentUrl: 'https://document.com',
+            };
+
+            await client.logGeneratedAnswerFeedbackSubmitV2(exampleGeneratedAnswerMetadata);
+            expectMatchCustomEventPayload(
+                SearchPageEvents.generatedAnswerFeedbackSubmitV2,
+                exampleGeneratedAnswerMetadata
+            );
+        });
     });
 
     describe('when the case metadata is included', () => {
