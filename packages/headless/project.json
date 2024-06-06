@@ -9,6 +9,7 @@
     ]
   },
   "targets": {
+    "release:phase1": {},
     "cached:build": {
       "outputs": [
         "{projectRoot}/dist",

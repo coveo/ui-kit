@@ -29,7 +29,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
@@ -403,7 +402,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
         hasError={hasError}
         hasResults={values.length > 0}
       >
-        {firstSearchExecuted ? (
+        {
           <FacetContainer>
             {this.renderHeader()}
             {!this.isCollapsed && [
@@ -445,9 +444,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
               ),
             ]}
           </FacetContainer>
-        ) : (
-          <FacetPlaceholder isCollapsed={this.isCollapsed} numberOfValues={8} />
-        )}
+        }
       </FacetGuard>
     );
   }

@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -16,15 +16,15 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-import { AnyBindings } from "./components/common/interface/bindings";
-import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+import { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-import { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { CommerceInteractiveProduct } from "./components/commerce/atomic-product/atomic-product";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
@@ -36,8 +36,8 @@ import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interf
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -47,15 +47,15 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-export { AnyBindings } from "./components/common/interface/bindings";
-export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+export { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-export { i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { CommerceInteractiveProduct } from "./components/commerce/atomic-product/atomic-product";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
@@ -280,6 +280,8 @@ export namespace Components {
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
+    }
+    interface AtomicCommerceDidYouMean {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -550,6 +552,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -655,6 +658,20 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A facet is a list of values for a certain field occurring in the results.
+     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     */
+    interface AtomicCommerceTimeframeFacet {
+        /**
+          * The date facet controller instance.
+         */
+        "facet": DateFacet;
+        /**
+          * The summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
+    }
+    /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
      */
     interface AtomicComponentError {
@@ -758,11 +775,12 @@ export namespace Components {
      */
     interface AtomicFacetDateInput {
         "bindings": AnyBindings;
-        "filter": DateFilter;
-        "filterState": DateFilterState;
+        "facetId": string;
         "label": string;
         "max"?: string;
         "min"?: string;
+        "rangeGetter": () => DateFilterRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -777,7 +795,7 @@ export namespace Components {
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
+        "bindings": AnyBindings1;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -1812,6 +1830,20 @@ export namespace Components {
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
         "truncateAfter": 'none' | '1' | '2' | '3' | '4';
+    }
+    /**
+     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+     */
+    interface AtomicProductFieldCondition {
+        /**
+          * Verifies whether the specified fields are defined.
+         */
+        "ifDefined"?: string;
+        /**
+          * Verifies whether the specified fields are not defined.
+         */
+        "ifNotDefined"?: string;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -3420,6 +3452,12 @@ declare global {
         prototype: HTMLAtomicCommerceCategoryFacetElement;
         new (): HTMLAtomicCommerceCategoryFacetElement;
     };
+    interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceDidYouMeanElement: {
+        prototype: HTMLAtomicCommerceDidYouMeanElement;
+        new (): HTMLAtomicCommerceDidYouMeanElement;
+    };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
@@ -3559,6 +3597,7 @@ declare global {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxElement extends Components.AtomicCommerceSearchBox, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3617,6 +3656,16 @@ declare global {
     var HTMLAtomicCommerceTextElement: {
         prototype: HTMLAtomicCommerceTextElement;
         new (): HTMLAtomicCommerceTextElement;
+    };
+    /**
+     * A facet is a list of values for a certain field occurring in the results.
+     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     */
+    interface HTMLAtomicCommerceTimeframeFacetElement extends Components.AtomicCommerceTimeframeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceTimeframeFacetElement: {
+        prototype: HTMLAtomicCommerceTimeframeFacetElement;
+        new (): HTMLAtomicCommerceTimeframeFacetElement;
     };
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -4286,6 +4335,16 @@ declare global {
     var HTMLAtomicProductDescriptionElement: {
         prototype: HTMLAtomicProductDescriptionElement;
         new (): HTMLAtomicProductDescriptionElement;
+    };
+    /**
+     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+     */
+    interface HTMLAtomicProductFieldConditionElement extends Components.AtomicProductFieldCondition, HTMLStencilElement {
+    }
+    var HTMLAtomicProductFieldConditionElement: {
+        prototype: HTMLAtomicProductFieldConditionElement;
+        new (): HTMLAtomicProductFieldConditionElement;
     };
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -5226,6 +5285,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
+        "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5246,6 +5306,7 @@ declare global {
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
+        "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5317,6 +5378,7 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
+        "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
@@ -5614,6 +5676,8 @@ declare namespace LocalJSX {
          */
         "summary": SearchSummary | ListingSummary;
     }
+    interface AtomicCommerceDidYouMean {
+    }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
@@ -5839,6 +5903,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -5941,6 +6006,20 @@ declare namespace LocalJSX {
           * The string key value.
          */
         "value": string;
+    }
+    /**
+     * A facet is a list of values for a certain field occurring in the results.
+     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     */
+    interface AtomicCommerceTimeframeFacet {
+        /**
+          * The date facet controller instance.
+         */
+        "facet": DateFacet;
+        /**
+          * The summary controller instance.
+         */
+        "summary": SearchSummary | ListingSummary;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -6046,12 +6125,13 @@ declare namespace LocalJSX {
      */
     interface AtomicFacetDateInput {
         "bindings": AnyBindings;
-        "filter": DateFilter;
-        "filterState": DateFilterState;
+        "facetId": string;
         "label": string;
         "max"?: string;
         "min"?: string;
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
+        "rangeGetter": () => DateFilterRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -6066,7 +6146,7 @@ declare namespace LocalJSX {
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
+        "bindings": AnyBindings1;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -7054,6 +7134,20 @@ declare namespace LocalJSX {
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
         "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
+    }
+    /**
+     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+     */
+    interface AtomicProductFieldCondition {
+        /**
+          * Verifies whether the specified fields are defined.
+         */
+        "ifDefined"?: string;
+        /**
+          * Verifies whether the specified fields are not defined.
+         */
+        "ifNotDefined"?: string;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -8426,6 +8520,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
+        "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -8446,6 +8541,7 @@ declare namespace LocalJSX {
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
+        "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -8517,6 +8613,7 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
+        "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
@@ -8649,6 +8746,7 @@ declare module "@stencil/core" {
              * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
+            "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
@@ -8693,6 +8791,7 @@ declare module "@stencil/core" {
             "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+             * @alpha 
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**
@@ -8714,6 +8813,11 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
+            /**
+             * A facet is a list of values for a certain field occurring in the results.
+             * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+             */
+            "atomic-commerce-timeframe-facet": LocalJSX.AtomicCommerceTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceTimeframeFacetElement>;
             /**
              * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
              */
@@ -8884,6 +8988,11 @@ declare module "@stencil/core" {
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
             "atomic-product-children": LocalJSX.AtomicProductChildren & JSXBase.HTMLAttributes<HTMLAtomicProductChildrenElement>;
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
+            /**
+             * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+             * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+             */
+            "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.
              */

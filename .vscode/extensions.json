@@ -4,6 +4,6 @@
     "esbenp.prettier-vscode",
     "redhat.vscode-yaml",
     "streetsidesoftware.code-spell-checker",
-    "orta.vscode-jest"
+    "ms-playwright.playwright"
   ]
 }
