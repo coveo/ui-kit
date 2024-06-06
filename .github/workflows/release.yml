@@ -28,8 +28,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-        with:
-          fail-on-cache-miss: 'false'
       - name: Release
         run: npm run release
         env:

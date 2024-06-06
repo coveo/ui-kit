@@ -1,10 +1,6 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
-  fail-on-cache-miss:
-    description: 'Fail when cache miss occurs'
-    required: false
-    default: 'true'
   load-cache:
     description: 'Whether to restore the Nx cache.'
     required: false
@@ -43,7 +39,6 @@ runs:
       with:
         path: .nx/cache
         key: nx-${{ github.sha }}
-        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
