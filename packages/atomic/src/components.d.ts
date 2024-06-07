@@ -306,6 +306,7 @@ export namespace Components {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface AtomicCommerceFacets {
         /**
@@ -3488,6 +3489,7 @@ declare global {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
     }
@@ -5702,6 +5704,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface AtomicCommerceFacets {
         /**
@@ -8756,6 +8759,7 @@ declare module "@stencil/core" {
             /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+             * @alpha 
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;

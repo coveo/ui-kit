@@ -1,9 +1,9 @@
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../../playwrightUtils/base-page-object';
 
-export class AtomicCommerceFacetsLocators {
-  private page: Page;
+export class AtomicCommerceFacets extends BasePageObject {
   constructor(page: Page) {
-    this.page = page;
+    super(page, 'atomic-commerce-facets');
   }
 
   get inclusionFilters() {
@@ -14,5 +14,9 @@ export class AtomicCommerceFacetsLocators {
     return this.page.getByLabel(
       new RegExp(`Clear ${numberOfFilters ?? '\\d'} filter for`)
     );
+  }
+
+  get hydrated() {
+    return this.page.locator(`${this.tag}[class*="hydrated"]`);
   }
 }
