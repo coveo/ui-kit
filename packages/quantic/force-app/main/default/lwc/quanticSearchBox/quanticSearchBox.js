@@ -45,7 +45,7 @@ export default class QuanticSearchBox extends LightningElement {
    */
   @api withoutSubmitButton = false;
   /**
-   * The maximum number of suggestions to display.
+   * The maximum number of suggestions and recent search queries to display.
    * @api
    * @type {number}
    * @defaultValue 7
