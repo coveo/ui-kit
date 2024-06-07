@@ -1,7 +1,6 @@
 import {NumberValue} from '@coveo/bueno';
 import {
   Product,
-  ProductTemplatesHelpers,
   Recommendations,
   RecommendationsState,
   buildRecommendations,
@@ -303,54 +302,27 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private logWarning(message: string) {
-    this.bindings.engine.logger.warn(message);
-  }
-
-  private getInteractiveProduct(product: Product, index: number) {
-    const {name, price, productId, warning} =
-      ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
-
-    if (warning !== undefined) {
-      return {
-        controller: undefined,
-        warning,
-      };
+  private logWarningIfNeeded(message?: string) {
+    if (message) {
+      this.bindings.engine.logger.warn(message);
     }
-
-    const position = this.productsPerPage
-      ? this.currentPage * this.productsPerPage + index + 1
-      : index + 1;
-    const controller = this.recommendations.interactiveProduct({
-      options: {
-        position,
-        product: {
-          name,
-          price,
-          productId,
-        },
-      },
-    });
-
-    return {
-      controller,
-      warning,
-    };
   }
 
-  private getAtomicProductProps(recommendation: Product, position: number) {
+  private getAtomicProductProps(product: Product) {
     return {
-      interactiveProduct: this.getInteractiveProduct(recommendation, position),
-      product: recommendation,
+      interactiveProduct: this.recommendations.interactiveProduct({
+        options: {product},
+      }),
+      product: product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
       key: this.itemListCommon.getResultId(
-        recommendation.permanentid,
+        product.permanentid,
         this.recommendationsState.responseId,
         this.density,
         this.imageSize
       ),
-      content: this.productTemplateProvider.getTemplateContent(recommendation),
+      content: this.productTemplateProvider.getTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       display: this.display,
@@ -371,10 +343,8 @@ export class AtomicCommerceRecommendationList
   }
 
   private renderAsGrid(product: Product, i: number) {
-    const propsForAtomicProduct = this.getAtomicProductProps(product, i);
-    const analyticsWarning = propsForAtomicProduct.interactiveProduct.warning;
-    const interactiveProductController =
-      propsForAtomicProduct.interactiveProduct.controller;
+    const propsForAtomicProduct = this.getAtomicProductProps(product);
+    const {interactiveProduct} = propsForAtomicProduct;
     return (
       <DisplayGrid
         item={{
@@ -382,21 +352,18 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
-        select={() =>
-          analyticsWarning
-            ? this.logWarning(analyticsWarning)
-            : interactiveProductController?.select()
-        }
-        beginDelayedSelect={() =>
-          analyticsWarning
-            ? this.logWarning(analyticsWarning)
-            : interactiveProductController?.beginDelayedSelect()
-        }
-        cancelPendingSelect={() =>
-          analyticsWarning
-            ? this.logWarning(analyticsWarning)
-            : interactiveProductController?.cancelPendingSelect()
-        }
+        select={() => {
+          this.logWarningIfNeeded(interactiveProduct.warningMessage);
+          interactiveProduct.select();
+        }}
+        beginDelayedSelect={() => {
+          this.logWarningIfNeeded(interactiveProduct.warningMessage);
+          interactiveProduct.beginDelayedSelect();
+        }}
+        cancelPendingSelect={() => {
+          this.logWarningIfNeeded(interactiveProduct.warningMessage);
+          interactiveProduct.cancelPendingSelect();
+        }}
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)
         }

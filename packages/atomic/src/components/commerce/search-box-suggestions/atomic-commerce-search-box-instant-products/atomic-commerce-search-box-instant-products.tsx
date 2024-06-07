@@ -3,7 +3,6 @@ import {
   buildInstantProducts,
   Product,
   InstantProducts,
-  ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
@@ -122,31 +121,6 @@ export class AtomicCommerceSearchBoxInstantProducts
     return true;
   }
 
-  private getInteractiveProduct(product: Product, index: number) {
-    const {name, price, productId, warning} =
-      ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
-
-    if (warning !== undefined) {
-      return {
-        controller: undefined,
-        warning,
-      };
-    }
-
-    const controller = this.instantProducts.interactiveProduct({
-      options: {
-        position: index + 1,
-        product: {
-          name,
-          price,
-          productId,
-        },
-      },
-    });
-
-    return {controller, warning};
-  }
-
   private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
       return [];
@@ -156,8 +130,10 @@ export class AtomicCommerceSearchBoxInstantProducts
       : this.products;
 
     const elements: SearchBoxSuggestionElement[] = products.map(
-      (product: Product, i: number) => {
-        const interactiveProduct = this.getInteractiveProduct(product, i);
+      (product: Product) => {
+        const interactiveProduct = this.instantProducts.interactiveProduct({
+          options: {product},
+        });
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
           this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,

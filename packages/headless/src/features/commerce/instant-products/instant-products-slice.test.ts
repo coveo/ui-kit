@@ -1,5 +1,9 @@
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {buildMockProduct} from '../../../test/mock-product';
+import {
+  buildMockChildProduct,
+  buildMockProduct,
+  buildMockRawProduct,
+} from '../../../test/mock-product';
 import {
   fetchInstantProducts,
   QuerySearchCommerceAPIThunkReturn,
@@ -41,7 +45,7 @@ const initialEmptyCache: () => InstantProductsCache = () => ({
 });
 
 describe('instant products slice', () => {
-  describe('registerInstantProducts', () => {
+  describe('on #registerInstantProducts', () => {
     it('registers one search box instant products cache', () => {
       const expectedState = getSearchBoxInstantProductsState(id1);
       expect(
@@ -73,7 +77,7 @@ describe('instant products slice', () => {
     });
   });
 
-  describe('updateQuery', () => {
+  describe('on #updateQuery', () => {
     it('updates query when payload is not an empty string', () => {
       const query = 'some_query';
       const initialState = getSearchBoxInstantProductsState(id1);
@@ -100,7 +104,7 @@ describe('instant products slice', () => {
     });
   });
 
-  describe('fetchInstantProducts', () => {
+  describe('on #fetchInstantProducts', () => {
     describe('when pending', () => {
       it('creates new cache when one does not exist', () => {
         const query = 'some_query';
@@ -198,7 +202,7 @@ describe('instant products slice', () => {
         const action = fetchInstantProducts.fulfilled(
           {
             response: {
-              products: [buildMockProduct()],
+              products: [buildMockRawProduct()],
               pagination: {totalEntries: 123},
               responseId: 'someid',
             } as unknown as SearchCommerceSuccessResponse,
@@ -242,7 +246,7 @@ describe('instant products slice', () => {
         const action = fetchInstantProducts.fulfilled(
           {
             response: {
-              products: [buildMockProduct()],
+              products: [buildMockRawProduct()],
               pagination: {totalEntries: 123},
               responseId: 'someid',
             } as unknown as SearchCommerceSuccessResponse,
@@ -272,6 +276,60 @@ describe('instant products slice', () => {
           searchUid: 'someid',
           duration: 0,
           totalCountFiltered: 123,
+        });
+
+        expect(instantProductsReducer(initialState, action)).toEqual(
+          expectedState
+        );
+      });
+
+      it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
+        const query = 'some_query';
+        const action = fetchInstantProducts.fulfilled(
+          {
+            response: {
+              products: [
+                buildMockRawProduct({ec_name: 'product1'}),
+                buildMockRawProduct({ec_name: 'product2'}),
+              ],
+              pagination: {totalEntries: 22},
+              responseId: 'someid',
+            } as unknown as SearchCommerceSuccessResponse,
+          } as QuerySearchCommerceAPIThunkReturn,
+          'req_id',
+          {
+            id: id1,
+            q: query,
+            cacheTimeout: 10000,
+          }
+        );
+
+        const makeState = (some_query: InstantProductsCache) =>
+          getSearchBoxInstantProductsState(id1, query, {
+            some_query,
+            some_other_query: initialEmptyCache(),
+          });
+
+        const initialState = makeState(initialEmptyCache());
+
+        const expectedState = makeState({
+          isLoading: false,
+          error: null,
+          products: [
+            buildMockProduct({
+              ec_name: 'product1',
+              position: 1,
+            }),
+            buildMockProduct({
+              ec_name: 'product2',
+              position: 2,
+            }),
+          ],
+          expiresAt: Date.now() + 10000,
+          isActive: true,
+          searchUid: 'someid',
+          duration: 0,
+          totalCountFiltered: 22,
         });
 
         expect(instantProductsReducer(initialState, action)).toEqual(
@@ -336,7 +394,7 @@ describe('instant products slice', () => {
     });
 
     it('when both parent and child exist in cache for query, promotes the child to parent', () => {
-      const childProduct = buildMockProduct({
+      const childProduct = buildMockChildProduct({
         permanentid: childPermanentId,
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
@@ -360,6 +418,7 @@ describe('instant products slice', () => {
         permanentid: 'parent-id',
         children: [childProduct],
         totalNumberOfChildren: 1,
+        position: 5,
       });
 
       state[id]!.cache[query].products = [parentProduct];
@@ -371,6 +430,7 @@ describe('instant products slice', () => {
           ...childProduct,
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
+          position: parentProduct.position,
         }),
       ]);
     });

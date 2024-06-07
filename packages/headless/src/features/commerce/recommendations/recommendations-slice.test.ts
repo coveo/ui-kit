@@ -1,5 +1,9 @@
 import {Action} from '@reduxjs/toolkit';
-import {buildMockProduct} from '../../../test/mock-product';
+import {
+  buildMockChildProduct,
+  buildMockProduct,
+  buildMockRawProduct,
+} from '../../../test/mock-product';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
 import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice';
 import {
@@ -51,7 +55,7 @@ describe('recommendation-slice', () => {
   });
 
   describe('on #fetchRecommendations.fulfilled', () => {
-    const result = buildMockProduct();
+    const result = buildMockRawProduct();
     const responseId = 'some-response-id';
     const response = buildMockRecommendationsResponse({
       products: [result],
@@ -65,10 +69,10 @@ describe('recommendation-slice', () => {
     );
 
     it('when slot exists, sets the state to the received payload', () => {
-      const result = buildMockProduct();
+      const rawProduct = buildMockRawProduct({ec_name: 'product-1'});
       const responseId = 'some-response-id';
       const response = buildMockRecommendationsResponse({
-        products: [result],
+        products: [rawProduct],
         responseId,
       });
 
@@ -79,9 +83,37 @@ describe('recommendation-slice', () => {
 
       const slot = finalState[slotId]!;
 
-      expect(slot.products[0]).toEqual(result);
+      expect(slot.products).toEqual(
+        response.response.products.map((p) =>
+          buildMockProduct({ec_name: p.ec_name})
+        )
+      );
       expect(slot.responseId).toEqual(responseId);
       expect(slot.isLoading).toBe(false);
+    });
+
+    it('when slot exists, sets the #position of each product to its 1-based position in the unpaginated list', () => {
+      const response = buildMockRecommendationsResponse({
+        products: [
+          buildMockRawProduct({ec_name: 'product-1'}),
+          buildMockRawProduct({ec_name: 'product-2'}),
+        ],
+        pagination: {
+          page: 2,
+          perPage: 10,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      state[slotId] = buildMockRecommendationsSlice();
+
+      const action = fetchRecommendations.fulfilled(response, '', {slotId});
+      const finalState = recommendationsReducer(state, action);
+
+      const slot = finalState[slotId]!;
+      expect(slot.products[0].position).toBe(21);
+      expect(slot.products[1].position).toBe(22);
     });
   });
 
@@ -89,8 +121,8 @@ describe('recommendation-slice', () => {
     const responseId = 'some-response-id';
     const response = buildMockRecommendationsResponse({
       products: [
-        buildMockProduct({ec_name: 'product-3'}),
-        buildMockProduct({ec_name: 'product-4'}),
+        buildMockRawProduct({ec_name: 'product-3'}),
+        buildMockRawProduct({ec_name: 'product-4'}),
       ],
       responseId,
     });
@@ -120,6 +152,38 @@ describe('recommendation-slice', () => {
       ]);
       expect(slot.responseId).toEqual(responseId);
       expect(slot.isLoading).toBe(false);
+    });
+
+    it('when slot exists, sets the #position of each product to its 1-based position in the unpaginated list', () => {
+      const response = buildMockRecommendationsResponse({
+        products: [buildMockRawProduct({ec_name: 'product-3'})],
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      state[slotId] = buildMockRecommendationsSlice({
+        products: [
+          buildMockProduct({
+            ec_name: 'product-1',
+            position: 1,
+          }),
+          buildMockProduct({
+            ec_name: 'product-2',
+            position: 2,
+          }),
+        ],
+      });
+
+      const action = fetchMoreRecommendations.fulfilled(response, '', {slotId});
+      const finalState = recommendationsReducer(state, action);
+
+      expect(finalState[slotId]!.products[0].position).toBe(1);
+      expect(finalState[slotId]!.products[1].position).toBe(2);
+      expect(finalState[slotId]!.products[2].position).toBe(3);
     });
   });
 
@@ -273,7 +337,7 @@ describe('recommendation-slice', () => {
     });
 
     it('when both parent and child exist in slot, promotes the child to parent', () => {
-      const childProduct = buildMockProduct({
+      const childProduct = buildMockChildProduct({
         permanentid: childPermanentId,
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
@@ -297,6 +361,7 @@ describe('recommendation-slice', () => {
         permanentid: parentPermanentId,
         children: [childProduct],
         totalNumberOfChildren: 1,
+        position: 5,
       });
 
       state[slotId]!.products = [parentProduct];
@@ -308,6 +373,7 @@ describe('recommendation-slice', () => {
           ...childProduct,
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
+          position: parentProduct.position,
         }),
       ]);
     });

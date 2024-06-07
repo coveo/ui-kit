@@ -1,4 +1,4 @@
-import {Product} from '@coveo/relay-event-types';
+import {Product} from '../../../../api/commerce/common/product';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -18,13 +18,6 @@ export interface InteractiveProductOptions
    * The product to log analytics for.
    */
   product: Product;
-
-  /**
-   * The 1-based product's position across the non-paginated result set.
-   *
-   * E.g., if the product is the third one on the second page, and there are 10 products per page, its position is 13 (not 3).
-   */
-  position: number;
 }
 
 export interface InteractiveProductCoreProps
@@ -35,7 +28,7 @@ export interface InteractiveProductCoreProps
   options: InteractiveProductOptions;
 
   /**
-   * The selector to fetch the response id from the state.
+   * The selector to fetch the response ID from the state.
    */
   responseIdSelector: (state: CommerceEngineState) => string;
 }
@@ -46,9 +39,12 @@ export type InteractiveProductProps = Omit<
 >;
 
 /**
- * The `InteractiveProduct` controller provides an interface for handling long presses, multiple clicks, etc. to ensure analytics events are logged properly when a user selects a product.
+ * The `InteractiveProduct` controller provides an interface for handling long presses, multiple clicks, etc. to ensure
+ * analytics events are logged properly when a user selects a product.
  */
-export interface InteractiveProduct extends InteractiveResultCore {}
+export interface InteractiveProduct extends InteractiveResultCore {
+  warningMessage?: string;
+}
 
 /**
  * Creates an `InteractiveProduct` controller instance.
@@ -63,6 +59,42 @@ export function buildCoreInteractiveProduct(
 ): InteractiveProduct {
   let wasOpened = false;
 
+  const getWarningMessage = () => {
+    const messageSegment = (
+      property: string,
+      lookupFields: string[],
+      fallback: string
+    ) =>
+      `- Could not retrieve '${property}' analytics property from field${lookupFields.length > 1 ? 's' : ''} \
+'${lookupFields.join("', '")}'; fell back to ${fallback}.`;
+
+    const warnings = [];
+
+    const {ec_name, ec_promo_price, ec_price, ec_product_id} =
+      props.options.product;
+    if (!ec_name) {
+      warnings.push(messageSegment('name', ['ec_gender'], 'permanentid'));
+    }
+    if (!ec_promo_price && !ec_price) {
+      warnings.push(
+        messageSegment('price', ['ec_promo_price', 'ec_price'], 'NaN')
+      );
+    }
+    if (!ec_product_id) {
+      warnings.push(
+        messageSegment('productId', ['ec_product_id'], 'permanentid')
+      );
+    }
+
+    if (warnings.length === 0) {
+      return;
+    }
+
+    return `Some required analytics properties could not be retrieved from the expected fields for product with \
+permanentid '${props.options.product.permanentid}':\n\n${warnings.join('\n')}\n\nReview the configuration of the above \
+'ec_'-prefixed fields in your index, and make sure they contain the correct metadata.`;
+  };
+
   const logAnalyticsIfNeverOpened = () => {
     if (wasOpened) {
       return;
@@ -70,12 +102,25 @@ export function buildCoreInteractiveProduct(
     wasOpened = true;
     engine.dispatch(
       productClick({
-        product: props.options.product,
-        position: props.options.position,
+        product: {
+          name:
+            props.options.product.ec_name ?? props.options.product.permanentid,
+          price:
+            props.options.product.ec_promo_price ??
+            props.options.product.ec_price ??
+            NaN,
+          productId:
+            props.options.product.ec_product_id ??
+            props.options.product.permanentid,
+        },
+        position: props.options.product.position,
         responseId: props.responseIdSelector(engine[stateKey]),
       })
     );
   };
 
-  return buildInteractiveResultCore(engine, props, logAnalyticsIfNeverOpened);
+  return {
+    ...buildInteractiveResultCore(engine, props, logAnalyticsIfNeverOpened),
+    warningMessage: getWarningMessage(),
+  };
 }

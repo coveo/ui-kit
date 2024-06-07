@@ -26,72 +26,6 @@ export const getProductProperty = (
 };
 
 /**
- * Extracts the required properties from standard lookup fields for the purpose of recording analytics events on
- * end-user interactions with a product.
- *
- * The properties are:
- *
- * - name: The displayed name of the product. The function will attempt to extract the name from the ec_name field first, then from the ec_product_id field, and finally from the permanentid field.
- * - price: The displayed price of the product. This function will attempt to extract the price from the ec_promo_price field first, and then from the ec_price field.
- * - productId: The unique ID of the product. This function will attempt to extrat the ID from the ec_product_id field first, and then from the permanentid field.
- *
- * If any of the required properties can't be extracted from the standard lookup fields, a warning message will be generated.
- *
- * @param product (Product) - The target product.
- * @returns (Record<string, unknown>) An object containing the required properties for logging analytics events, as well as a warning message if any of the required properties are missing.
- */
-export const getRequiredProductPropertiesForAnalytics = (product: Product) => {
-  const productId = getProductPropertyFromLookupFields<string>(
-    product,
-    ['ec_product_id', 'permanentid'],
-    'productId',
-    'string'
-  );
-  const productName = getProductPropertyFromLookupFields<string>(
-    product,
-    ['ec_name', 'ec_product_id', 'permanentid'],
-    'name',
-    'string'
-  );
-  const productPrice = getProductPropertyFromLookupFields<number>(
-    product,
-    ['ec_promo_price', 'ec_price'],
-    'price',
-    'number'
-  );
-  const warnings: string[] = [];
-  if (productId.warning) {
-    warnings.push(productId.warning);
-  }
-  if (productName.warning) {
-    warnings.push(productName.warning);
-  }
-  if (productPrice.warning) {
-    warnings.push(productPrice.warning);
-  }
-
-  if (!productId.value || !productName.value || !productPrice.value) {
-    return {
-      productId: undefined,
-      name: undefined,
-      price: undefined,
-      warning: `Some of the properties required for logging analytics events are missing for product with permanentid '${product.permanentid}':
-    \n- ${warnings.join('\n- ')}
-    \nReview the configuration of the above 'ec_'-prefixed fields in your index, and make sure they contain the correct metadata.`,
-    };
-  }
-
-  const properties = {
-    productId: productId.value,
-    name: productName.value,
-    price: productPrice.value,
-    warning: undefined,
-  };
-
-  return properties;
-};
-
-/**
  * Creates a condition that verifies if the specified fields are defined.
  * @param fieldNames (string[]) - A list of fields that must be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is defined.
@@ -171,57 +105,8 @@ const getFieldValuesFromProduct = (
   return isArray(rawValue) ? rawValue : [rawValue];
 };
 
-type AllowedExpectedTypeof = 'string' | 'number';
-
-function getFirstValidFieldValueFromProduct<T extends string | number>(
-  expectedTypeof: AllowedExpectedTypeof,
-  lookupFields: string[],
-  product: Product
-): T | undefined {
-  const rawValues = lookupFields.map((fieldName) =>
-    getProductProperty(product, fieldName)
-  );
-
-  const value = rawValues.find((value) => typeof value === expectedTypeof);
-
-  if (value === undefined) {
-    return value;
-  }
-
-  return value as T;
-}
-
-const getCouldNotRetrievePropertyWarning = (
-  property: string,
-  lookupFields: string[]
-) =>
-  `'${property}' could not be retrieved from field${lookupFields.length > 1 ? 's' : ''} '${lookupFields.join("', '")}'.`;
-
-function getProductPropertyFromLookupFields<T extends string | number>(
-  product: Product,
-  lookupFields: string[],
-  propertyName: string,
-  type: AllowedExpectedTypeof
-) {
-  const value = getFirstValidFieldValueFromProduct<T>(
-    type,
-    lookupFields,
-    product
-  );
-  let warning;
-  if (value === undefined) {
-    warning = getCouldNotRetrievePropertyWarning(propertyName, lookupFields);
-    return {
-      value,
-      warning,
-    };
-  }
-  return {value, warning: undefined};
-}
-
 export const ProductTemplatesHelpers = {
   getProductProperty,
-  getRequiredProductPropertiesForAnalytics,
   fieldsMustBeDefined,
   fieldsMustNotBeDefined,
   fieldMustMatch,

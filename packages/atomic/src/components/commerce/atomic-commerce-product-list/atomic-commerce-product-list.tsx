@@ -6,7 +6,6 @@ import {
   SearchState,
   Search,
   Product,
-  ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -218,11 +217,13 @@ export class AtomicCommerceProductList
     );
   }
 
-  private logWarning(message: string) {
-    this.bindings.engine.logger.warn(message);
+  private logWarningIfNeeded(message?: string) {
+    if (message) {
+      this.bindings.engine.logger.warn(message);
+    }
   }
 
-  private getInteractiveProduct(product: Product, index: number) {
+  private getInteractiveProduct(product: Product) {
     let parentController: ProductListing | Search;
     if (this.bindings.interfaceElement.type === 'product-listing') {
       parentController = this.productListing;
@@ -230,38 +231,12 @@ export class AtomicCommerceProductList
       parentController = this.search;
     }
 
-    const {name, price, productId, warning} =
-      ProductTemplatesHelpers.getRequiredProductPropertiesForAnalytics(product);
-
-    if (warning !== undefined) {
-      return {
-        controller: undefined,
-        warning,
-      };
-    }
-
-    const pagination = parentController.pagination();
-    const position =
-      pagination.state.page * pagination.state.pageSize + index + 1;
-
-    return {
-      controller: parentController.interactiveProduct({
-        options: {
-          position,
-          product: {
-            name,
-            price,
-            productId,
-          },
-        },
-      }),
-      warning,
-    };
+    return parentController.interactiveProduct({options: {product}});
   }
 
-  private getPropsForAtomicProduct(product: Product, position: number) {
+  private getPropsForAtomicProduct(product: Product) {
     return {
-      interactiveProduct: this.getInteractiveProduct(product, position),
+      interactiveProduct: this.getInteractiveProduct(product),
       product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
@@ -281,10 +256,8 @@ export class AtomicCommerceProductList
 
   private renderAsGrid() {
     return this.productState.products.map((product, i) => {
-      const propsForAtomicProduct = this.getPropsForAtomicProduct(product, i);
-      const analyticsWarning = propsForAtomicProduct.interactiveProduct.warning;
-      const interactiveProductController =
-        propsForAtomicProduct.interactiveProduct.controller;
+      const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
+      const {interactiveProduct} = propsForAtomicProduct;
       return (
         <DisplayGrid
           item={{
@@ -292,24 +265,21 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          {...propsForAtomicProduct.interactiveProduct.controller}
+          {...propsForAtomicProduct.interactiveProduct}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
           select={() => {
-            analyticsWarning
-              ? this.logWarning(analyticsWarning)
-              : interactiveProductController?.select();
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.select();
           }}
           beginDelayedSelect={() => {
-            analyticsWarning
-              ? this.logWarning(analyticsWarning)
-              : interactiveProductController?.beginDelayedSelect();
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.beginDelayedSelect();
           }}
           cancelPendingSelect={() => {
-            analyticsWarning
-              ? this.logWarning(analyticsWarning)
-              : interactiveProductController?.cancelPendingSelect();
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.cancelPendingSelect();
           }}
         >
           <atomic-product {...propsForAtomicProduct}></atomic-product>
@@ -340,10 +310,7 @@ export class AtomicCommerceProductList
         host={this.host}
       >
         {this.productState.products.map((product, i) => {
-          const propsForAtomicProduct = this.getPropsForAtomicProduct(
-            product,
-            i
-          );
+          const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
           return (
             <DisplayTableRow
               {...propsForAtomicProduct}
@@ -374,7 +341,7 @@ export class AtomicCommerceProductList
 
   private renderAsList() {
     return this.productState.products.map((product, i) => {
-      const propsForAtomicProduct = this.getPropsForAtomicProduct(product, i);
+      const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
       return (
         <atomic-product
           {...propsForAtomicProduct}

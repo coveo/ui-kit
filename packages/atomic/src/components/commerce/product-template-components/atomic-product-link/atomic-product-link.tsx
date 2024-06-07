@@ -36,10 +36,7 @@ export class AtomicProductLink
   public static isCompatibleWithProductList = true;
 
   @ProductContext() private product!: Product;
-  @InteractiveProductContext() private interactiveProduct!: {
-    interactiveProduct?: InteractiveProduct;
-    warning?: string;
-  };
+  @InteractiveProductContext() private interactiveProduct!: InteractiveProduct;
 
   @Element() private host!: HTMLElement;
 
@@ -59,8 +56,10 @@ export class AtomicProductLink
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
 
-  private logWarning(warning: string) {
-    this.bindings.engine.logger.warn(warning);
+  private logWarningIfNeed(warning?: string) {
+    if (warning) {
+      this.bindings.engine.logger.warn(warning);
+    }
   }
 
   public initialize() {
@@ -89,24 +88,23 @@ export class AtomicProductLink
       return;
     }
 
-    const {interactiveProduct, warning} = this.interactiveProduct;
+    const {warningMessage} = this.interactiveProduct;
 
     return (
       <LinkWithItemAnalytics
         href={href}
-        onSelect={() =>
-          warning ? this.logWarning(warning) : interactiveProduct!.select()
-        }
-        onBeginDelayedSelect={() =>
-          warning
-            ? this.logWarning(warning)
-            : interactiveProduct!.beginDelayedSelect()
-        }
-        onCancelPendingSelect={() =>
-          warning
-            ? this.logWarning(warning)
-            : interactiveProduct!.cancelPendingSelect()
-        }
+        onSelect={() => {
+          this.logWarningIfNeed(warningMessage);
+          this.interactiveProduct.select();
+        }}
+        onBeginDelayedSelect={() => {
+          this.logWarningIfNeed(warningMessage);
+          this.interactiveProduct.beginDelayedSelect();
+        }}
+        onCancelPendingSelect={() => {
+          this.logWarningIfNeed(warningMessage);
+          this.interactiveProduct.cancelPendingSelect();
+        }}
         attributes={this.linkAttributes}
         stopPropagation={this.stopPropagation}
       >
