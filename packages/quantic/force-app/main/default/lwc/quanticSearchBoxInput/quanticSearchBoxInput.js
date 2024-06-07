@@ -182,12 +182,13 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   /**
    * Sends the "quantic__selectSuggestion" event.
-   * @param {string} selectedSuggestion
+   * @param {string} value
    */
-  sendSelectSuggestionEvent(selectedSuggestion) {
+  sendSelectSuggestionEvent(value, isRecentQuery = false) {
     const selectSuggestionEvent = new CustomEvent('quantic__selectsuggestion', {
       detail: {
-        selectedSuggestion,
+        value,
+        isRecentQuery,
       },
       bubbles: true,
       composed: true,
@@ -201,7 +202,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
       const selectedSuggestion =
         this.suggestionListElement?.getCurrentSelectedValue();
       if (this.areSuggestionsOpen && selectedSuggestion) {
-        this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
+        this.sendSelectSuggestionEvent(
+          selectedSuggestion.rawValue,
+          selectedSuggestion.isRecentQuery
+        );
       } else {
         this.sendSubmitSearchEvent();
       }
@@ -320,8 +324,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleSuggestionSelection(event) {
-    const textValue = event.detail;
-    this.sendSelectSuggestionEvent(textValue);
+    const {value, isRecentQuery} = event.detail;
+    this.sendSelectSuggestionEvent(value, isRecentQuery);
     this.blur();
   }
 

@@ -135,6 +135,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         isSelected: this.selectionIndex === index + 1,
         containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index + 1 ? 'slds-has-focus' : ''}`,
         icon: option.isRecentQuery ? 'utility:clock' : 'utility:search',
+        clickHandler: () => {
+          this.handleSuggestionSelection(option.rawValue, option.isRecentQuery);
+        },
       }));
       return [
         {
@@ -152,6 +155,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         isSelected: this.selectionIndex === index,
         containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index ? 'slds-has-focus' : ''}`,
         icon: 'utility:search',
+        clickHandler: () => {
+          this.handleSuggestionSelection(option.rawValue);
+        },
       }))
       .slice(0, this.maxNumberOfSuggestions);
   }
@@ -220,12 +226,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     );
   }
 
-  handleSuggestionSelection(event) {
-    const liElement = event.target.closest('li.slds-listbox__item');
-    const textValue = liElement.dataset.rawvalue;
-
+  handleSuggestionSelection(rawValue, isRecentQuery = false) {
     const suggestionSelectedEvent = new CustomEvent('suggestionselected', {
-      detail: textValue,
+      detail: {value: rawValue, isRecentQuery},
     });
     this.dispatchEvent(suggestionSelectedEvent);
   }
