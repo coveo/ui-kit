@@ -66,12 +66,28 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
         .logDetail(`should display ${value} query suggestions`);
     },
     logClearRecentQueries: () => {
-      cy.wait(InterceptAliases.UA.ClearRecentQueries)
+      cy.wait(InterceptAliases.UA.RecentQueries.ClearRecentQueries)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           expect(analyticsBody).to.have.property('eventType', 'recentQueries');
         })
         .logDetail("should log the 'clearRecentQueries' UA event");
+    },
+    logClickRecentQueries: (value: string) => {
+      cy.wait(InterceptAliases.UA.RecentQueries.ClickRecentQueries)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('queryText', value);
+        })
+        .logDetail("should log the 'recentQueriesClick' UA event");
+    },
+    logClickSuggestion: (value: string) => {
+      cy.wait(InterceptAliases.UA.OmniboxAnalytics)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('queryText', value);
+        })
+        .logDetail("should log the 'omniboxAnalytics' UA event");
     },
   };
 }

@@ -96,7 +96,11 @@ export const InterceptAliases = {
     },
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
-    ClearRecentQueries: uaAlias('clearRecentQueries'),
+    RecentQueries: {
+      ClearRecentQueries: uaAlias('clearRecentQueries'),
+      ClickRecentQueries: uaAlias('recentQueriesClick'),
+    },
+    OmniboxAnalytics: uaAlias('omniboxAnalytics'),
   },
   NextAnalytics: {
     Qna: {

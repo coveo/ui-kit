@@ -87,6 +87,9 @@ describe('quantic-search-box', () => {
                   queries: [exampleQuerySuggestions[clickedSuggestionIndex]],
                 }
               );
+              Expect.logClickSuggestion(
+                exampleQuerySuggestions[clickedSuggestionIndex]
+              );
             });
           });
         });
@@ -130,6 +133,9 @@ describe('quantic-search-box', () => {
                   LSkey: recentQueriesLSKey,
                   queries: exampleRecentQueries,
                 }
+              );
+              Expect.logClickRecentQueries(
+                exampleRecentQueries[clickedSuggestionIndex]
               );
             });
           });
@@ -333,6 +339,9 @@ describe('quantic-search-box', () => {
                   queries: exampleRecentQueries,
                 }
               );
+              Expect.logClickRecentQueries(
+                exampleRecentQueries[clickedSuggestionIndex]
+              );
             });
           });
         });
@@ -385,6 +394,9 @@ describe('quantic-search-box', () => {
                     ...exampleRecentQueries,
                   ],
                 }
+              );
+              Expect.logClickSuggestion(
+                exampleQuerySuggestions[clickedSuggestionIndex]
               );
             });
           });
