@@ -1,25 +1,10 @@
 const barcaRoot = 'https://sports-dev.barca.group';
 export const navContent = {
   Homepage: {href: 'homepage.html', label: 'Homepage', barcaUrl: barcaRoot},
-  Pants: {
-    href: 'listing-pants.html',
-    label: 'Pants',
-    barcaUrl: `${barcaRoot}/browse/promotions/clothing/pants`,
-  },
-  'Surf accessories': {
-    href: 'listing-surf-accessories.html',
-    label: 'Surf accessories',
-    barcaUrl: `${barcaRoot}/browse/promotions/surf-with-us-this-year`,
-  },
-  Sunglasses: {
-    href: 'listing-sunglasses.html',
-    label: 'Sunglasses',
-    barcaUrl: `${barcaRoot}/browse/promotions/accessories/sunglasses`,
-  },
-  Towels: {
-    href: 'listing-towels.html',
-    label: 'Towels',
-    barcaUrl: `${barcaRoot}/browse/promotions/accessories/towels`,
+  Sonars: {
+    href: 'listing-sonars.html',
+    label: 'Sonars',
+    barcaUrl: `https://engineering.barca.group/barca-spa/Sonars/c/19500`,
   },
   Cart: {href: 'cart.html', label: 'Cart', barcaUrl: `${barcaRoot}/cart`},
   Search: {
@@ -63,7 +48,10 @@ nav.innerHTML = `
 document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
 
 const isOnSearchPage = () => {
-  return window.location.pathname === '/examples/commerce-website/search.html';
+  return (
+    window.location.pathname ===
+    '/examples/commerce-website-engineering/search.html'
+  );
 };
 
 if (!isOnSearchPage()) {
@@ -79,7 +67,7 @@ if (!isOnSearchPage()) {
                 <atomic-product-link class="font-bold"></atomic-product-link>
               </atomic-product-section-name>
               <atomic-product-section-visual>
-                <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                <atomic-product-image field="ec_images"></atomic-product-image>
               </atomic-product-section-visual>
               <atomic-product-section-metadata>
                 <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
