@@ -65,7 +65,10 @@ const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
     readFileSync(packageJsonPath, {encoding: 'utf-8'})
   );
   const newPackageJson = modifyPackageJsonCallback(packageJson);
-  writeFileSync(packageJsonPath, JSON.stringify(newPackageJson || packageJson));
+  writeFileSync(
+    packageJsonPath,
+    JSON.stringify(newPackageJson || packageJson, null, 2)
+  );
 };
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
