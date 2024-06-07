@@ -3,13 +3,14 @@ import {
   ProductTemplatesHelpers,
   HighlightUtils,
 } from '@coveo/headless/commerce';
-import {Component, h, Prop, Element, Host} from '@stencil/core';
-import {isArray} from 'lodash';
+import {Component, h, Prop, Element, State} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {ItemTextFallback} from '../../../common/item-text/item-text-fallback';
+import {ItemTextHighlighted} from '../../../common/item-text/item-text-highlighted';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 import {getStringValueFromProductOrNull} from '../product-utils';
@@ -26,7 +27,7 @@ export class AtomicProductText
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
-  public error!: Error;
+  @State() public error!: Error;
 
   @ProductContext() private product!: Product;
 
@@ -47,40 +48,8 @@ export class AtomicProductText
    */
   @Prop({reflect: true}) public default?: string;
 
-  private renderWithHighlights(
-    value: string,
-    highlights: HighlightUtils.HighlightKeyword[]
-  ) {
-    try {
-      const openingDelimiter = '_openingDelimiter_';
-      const closingDelimiter = '_closingDelimiter_';
-      const highlightedValue = HighlightUtils.highlightString({
-        content: value,
-        openingDelimiter,
-        closingDelimiter,
-        highlights,
-      });
-      const innerHTML = highlightedValue
-        .replace(new RegExp(openingDelimiter, 'g'), '<b>')
-        .replace(new RegExp(closingDelimiter, 'g'), '</b>');
-      // deepcode ignore ReactSetInnerHtml: This is not React code
-      return <Host innerHTML={innerHTML}></Host>;
-    } catch (error) {
-      this.error = error as Error;
-    }
-  }
-
-  private possiblyWarnOnBadFieldType() {
-    const productValueRaw = ProductTemplatesHelpers.getProductProperty(
-      this.product,
-      this.field
-    );
-    if (isArray(productValueRaw)) {
-      this.bindings.engine.logger.error(
-        `atomic-product-text cannot be used with multi value field "${this.field}" with values "${productValueRaw}".`,
-        this
-      );
-    }
+  private get shouldRenderHighlights() {
+    return this.shouldHighlight && this.isFieldSupportedForHighlighting();
   }
 
   public isFieldSupportedForHighlighting() {
@@ -93,49 +62,34 @@ export class AtomicProductText
       this.field
     );
 
-    if (!productValueAsString && !this.default) {
-      this.possiblyWarnOnBadFieldType();
-      this.host.remove();
-      return;
-    }
-
-    if (!productValueAsString && this.default) {
-      this.possiblyWarnOnBadFieldType();
+    if (productValueAsString === null) {
       return (
-        <atomic-commerce-text
-          value={getFieldValueCaption(
-            this.field,
-            productValueAsString ?? this.default,
-            this.bindings.i18n
-          )}
-        ></atomic-commerce-text>
+        <ItemTextFallback
+          field={this.field}
+          host={this.host}
+          logger={this.bindings.engine.logger}
+          defaultValue={this.default}
+          itemValueRaw={productValueAsString}
+        ></ItemTextFallback>
       );
     }
 
-    if (productValueAsString === null) {
-      return;
-    }
+    const textValue = `${productValueAsString}`;
+    const highlightKeywords = ProductTemplatesHelpers.getProductProperty(
+      this.product,
+      this.field === 'ec_name' ? 'nameHighlights' : 'excerptHighlights'
+    ) as HighlightUtils.HighlightKeyword[];
 
-    this.possiblyWarnOnBadFieldType();
-
-    if (this.isFieldSupportedForHighlighting()) {
-      const highlightsValue = ProductTemplatesHelpers.getProductProperty(
-        this.product,
-        this.field === 'ec_name' ? 'nameHighlights' : 'excerptHighlights'
-      ) as HighlightUtils.HighlightKeyword[];
-
-      if (this.shouldHighlight && highlightsValue) {
-        return this.renderWithHighlights(productValueAsString, highlightsValue);
-      }
-    }
-
-    return (
+    return this.shouldRenderHighlights && highlightKeywords ? (
+      <ItemTextHighlighted
+        textValue={textValue}
+        highlightKeywords={highlightKeywords}
+        highlightString={HighlightUtils.highlightString}
+        onError={(error) => (this.error = error)}
+      ></ItemTextHighlighted>
+    ) : (
       <atomic-commerce-text
-        value={getFieldValueCaption(
-          this.field,
-          productValueAsString,
-          this.bindings.i18n
-        )}
+        value={getFieldValueCaption(this.field, textValue, this.bindings.i18n)}
       ></atomic-commerce-text>
     );
   }
