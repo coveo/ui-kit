@@ -8,7 +8,6 @@ import {
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
-import {doNotTrack} from '../../utils/utils';
 import {
   nonEmptyString,
   validatePayload,
@@ -154,7 +153,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   documentLocation?: string;
   /**
-   * TBD
+   * The unique identifier of the tracking target.
    */
   trackingId?: string;
   /**
@@ -207,9 +206,6 @@ const analyticsConfigurationSchema: SchemaDefinition<
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
   (payload: UpdateAnalyticsConfigurationActionCreatorPayload) => {
-    if (doNotTrack()) {
-      payload.enabled = false;
-    }
     return validatePayload(payload, analyticsConfigurationSchema);
   }
 );

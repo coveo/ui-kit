@@ -7,7 +7,8 @@ import {
   MockedSearchEngine,
 } from '../../test/mock-engine-v2';
 import {createMockState} from '../../test/mock-state';
-import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
+import {QueryTrigger} from '../core/triggers/headless-core-query-trigger';
+import {buildQueryTrigger} from './headless-query-trigger';
 
 jest.mock('../../features/query/query-actions');
 jest.mock('../../features/search/search-actions');

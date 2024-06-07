@@ -1,6 +1,12 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
+import {QueryTrigger} from '../core/triggers/headless-core-query-trigger';
+import {buildQueryTrigger} from './headless-query-trigger';
+
+export type {
+  QueryTrigger,
+  QueryTriggerState,
+} from '../core/triggers/headless-core-query-trigger';
 
 export * from './headless-query-trigger';
 

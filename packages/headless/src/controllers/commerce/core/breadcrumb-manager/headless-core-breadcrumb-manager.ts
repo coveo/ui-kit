@@ -250,6 +250,7 @@ export function buildCoreBreadcrumbManager(
 
     deselectAll: () => {
       dispatch(deselectAllBreadcrumbs());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     get state() {
