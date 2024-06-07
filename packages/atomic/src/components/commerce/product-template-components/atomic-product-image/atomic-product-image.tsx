@@ -48,7 +48,7 @@ export class AtomicProductImage implements InitializableComponent {
    *
    * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
    */
-  @Prop({reflect: true}) imagesAltField?: string;
+  @Prop({reflect: true}) imageAltField?: string;
 
   /**
    * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
@@ -128,7 +128,7 @@ export class AtomicProductImage implements InitializableComponent {
       (image) => typeof image === 'string'
     );
 
-    const validImagesAlt = this.imagesAlt;
+    const validImageAlt = this.imageAlt;
 
     this.images = validImages.map((url, index) => {
       const finalUrl = this.useFallback ? this.fallback : url;
@@ -136,10 +136,10 @@ export class AtomicProductImage implements InitializableComponent {
       this.validateUrl(finalUrl);
       let altText;
 
-      if (Array.isArray(validImagesAlt) && validImagesAlt[index]) {
-        altText = validImagesAlt[index];
-      } else if (typeof validImagesAlt === 'string') {
-        altText = validImagesAlt;
+      if (Array.isArray(validImageAlt) && validImageAlt[index]) {
+        altText = validImageAlt[index];
+      } else if (typeof validImageAlt === 'string') {
+        altText = validImageAlt;
       } else {
         altText = this.bindings.i18n.t('image-alt-fallback-multiple', {
           count: index + 1,
@@ -164,11 +164,11 @@ export class AtomicProductImage implements InitializableComponent {
     return Array.isArray(value) ? value : [value];
   }
 
-  private get imagesAlt() {
-    if (this.imagesAltField) {
+  private get imageAlt() {
+    if (this.imageAltField) {
       const value = ProductTemplatesHelpers.getProductProperty(
         this.product,
-        this.imagesAltField
+        this.imageAltField
       );
 
       if (Array.isArray(value)) {

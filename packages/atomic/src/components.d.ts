@@ -1890,7 +1890,7 @@ export namespace Components {
         /**
           * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
          */
-        "imagesAltField"?: string;
+        "imageAltField"?: string;
         /**
           * Navigates to the specified image index.
           * @param index - The index of the image to navigate to.
@@ -7238,7 +7238,7 @@ declare namespace LocalJSX {
         /**
           * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
          */
-        "imagesAltField"?: string;
+        "imageAltField"?: string;
     }
     interface AtomicProductLink {
         /**
