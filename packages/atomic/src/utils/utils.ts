@@ -172,9 +172,10 @@ export function getFocusedElement(
 
 export function isFocusingOut(event: FocusEvent) {
   return (
-    !(event.relatedTarget instanceof Node) ||
-    (event.currentTarget instanceof Node &&
-      !event.currentTarget.contains(event.relatedTarget))
+    document.hasFocus() &&
+    (!(event.relatedTarget instanceof Node) ||
+      (event.currentTarget instanceof Node &&
+        !event.currentTarget.contains(event.relatedTarget)))
   );
 }
 

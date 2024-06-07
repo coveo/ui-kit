@@ -366,6 +366,9 @@ export class AtomicCommerceSearchBox
   }
 
   private async onFocus() {
+    if (this.isExpanded) {
+      return;
+    }
     this.isExpanded = true;
     await this.suggestionManager.triggerSuggestions();
     this.announceNewSuggestionsToScreenReader();
@@ -666,9 +669,13 @@ export class AtomicCommerceSearchBox
           <SearchBoxWrapper
             disabled={isDisabled}
             textArea={true}
-            onFocusout={(event) =>
-              isFocusingOut(event) && this.suggestionManager.clearSuggestions()
-            }
+            onFocusout={(event) => {
+              if (!isFocusingOut(event)) {
+                return;
+              }
+              this.suggestionManager.clearSuggestions();
+              this.isExpanded = false;
+            }}
           >
             {this.renderTextBox(searchLabel)}
             <Submit

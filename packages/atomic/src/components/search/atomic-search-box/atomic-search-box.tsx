@@ -397,6 +397,9 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private async onFocus() {
+    if (this.isExpanded) {
+      return;
+    }
     this.isExpanded = true;
     await this.suggestionManager.triggerSuggestions();
     this.announceNewSuggestionsToScreenReader();
@@ -709,9 +712,13 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           <SearchBoxWrapper
             disabled={isDisabled}
             textArea={this.textarea}
-            onFocusout={(event) =>
-              isFocusingOut(event) && this.suggestionManager.clearSuggestions()
-            }
+            onFocusout={(event) => {
+              if (!isFocusingOut(event)) {
+                return;
+              }
+              this.suggestionManager.clearSuggestions();
+              this.isExpanded = false;
+            }}
           >
             {this.renderTextBox(searchLabel)}
             <Submit

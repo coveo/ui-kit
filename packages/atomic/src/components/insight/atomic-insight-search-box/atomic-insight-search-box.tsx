@@ -295,6 +295,9 @@ export class AtomicInsightSearchBox {
   }
 
   private async onFocus() {
+    if (this.isExpanded) {
+      return;
+    }
     this.isExpanded = true;
     await this.suggestionManager.triggerSuggestions();
     this.announceNewSuggestionsToScreenReader();
@@ -331,9 +334,13 @@ export class AtomicInsightSearchBox {
       <SearchBoxWrapper
         disabled={this.disableSearch}
         textArea
-        onFocusout={(event) =>
-          isFocusingOut(event) && this.suggestionManager.clearSuggestions()
-        }
+        onFocusout={(event) => {
+          if (!isFocusingOut(event)) {
+            return;
+          }
+          this.suggestionManager.clearSuggestions();
+          this.isExpanded = false;
+        }}
       >
         <atomic-icon
           part="submit-icon"
