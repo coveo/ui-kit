@@ -1,6 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameter-actions';
+import {
+  CommerceSearchParameters,
+  restoreSearchParameters as commerceRestoreSearchParameters,
+} from '../commerce/search-parameters/search-parameters-actions';
+import {executeSearch as commerceExecuteSearch} from '../commerce/search/search-actions';
 import {change} from '../history/history-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {
@@ -32,6 +36,10 @@ export const querySetReducer = createReducer(
         const {id, expression} = action.payload;
         updateQuery(state, id, expression);
       })
+      .addCase(commerceExecuteSearch.fulfilled, (state, action) => {
+        const {queryExecuted} = action.payload;
+        updateAllQuerySetQuery(state, queryExecuted);
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {queryExecuted} = action.payload;
         updateAllQuerySetQuery(state, queryExecuted);
@@ -53,7 +61,7 @@ export const querySetReducer = createReducer(
 function handleRestoreSearchParameters(
   state: QuerySetState,
   action: {
-    payload: SearchParameters;
+    payload: SearchParameters | CommerceSearchParameters;
   }
 ) {
   if (!isNullOrUndefined(action.payload.q)) {
