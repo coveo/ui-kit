@@ -141,10 +141,10 @@ export class AtomicProductImage implements InitializableComponent {
       } else if (typeof validImagesAlt === 'string') {
         altText = validImagesAlt;
       } else {
-        altText = this.bindings.i18n.t('image-alt-fallback', {
+        altText = this.bindings.i18n.t('image-alt-fallback-multiple', {
           count: index + 1,
           max: validImages?.length,
-          productName: this.product.ec_name,
+          itemName: this.product.ec_name,
         });
       }
 

@@ -49,23 +49,25 @@ export class AtomicResultImage implements InitializableComponent {
     return Array.isArray(value) ? value[0] : value;
   }
 
-  private get altText() {
+  private get altText(): string {
     if (this.imageAltField) {
       const value = ResultTemplatesHelpers.getResultProperty(
         this.result,
         this.field
       );
 
-      if (Array.isArray(value)) {
+      if (Array.isArray(value) && typeof value[0] === 'string') {
         return value[0];
       }
 
-      if (value !== null) {
+      if (typeof value === 'string') {
         return value;
       }
     }
 
-    return `Image for ${this.result.title}`;
+    return this.bindings.i18n.t('image-alt-fallback', {
+      itemName: this.result.title,
+    });
   }
 
   private logWarning(message: string) {
