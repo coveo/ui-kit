@@ -8,9 +8,6 @@ export const commerceEngine = buildCommerceEngine({
       country: 'US',
       currency: 'USD',
       language: 'en',
-      // country: 'FR',
-      // currency: 'EUR',
-      // language: 'fr',
       view: {
         url: navContent[document.title].barcaUrl,
         referrer: document.referrer,
@@ -24,32 +21,11 @@ export const commerceEngine = buildCommerceEngine({
     cart: {
       items: [
         {
-          productId: 'SP01057_00001',
-          sku: 'SP00071_00005_Small',
+          productId: 'BE03621',
+          sku: 'BE03621_03647',
           quantity: 1,
-          name: 'Kayaker Canoe',
-          price: 800,
-        },
-        {
-          productId: 'SP00081_00001',
-          sku: 'SP00081_00001',
-          quantity: 1,
-          name: 'Bamboo Canoe Paddle',
-          price: 120,
-        },
-        {
-          productId: 'SP04236_00005',
-          sku: 'SP04236_00005_XS',
-          quantity: 1,
-          name: 'Eco-Brave Rashguard',
-          price: 33,
-        },
-        {
-          productId: 'SP04236_00005',
-          sku: 'SP04236_00005_XS',
-          quantity: 1,
-          name: 'Eco-Brave Rashguard',
-          price: 33,
+          name: 'GarminMCB',
+          price: 600,
         },
       ],
     },

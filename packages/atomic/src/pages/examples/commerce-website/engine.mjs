@@ -5,9 +5,12 @@ export const commerceEngine = buildCommerceEngine({
   configuration: {
     accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
     context: {
-      country: 'US',
-      currency: 'USD',
-      language: 'en',
+      // country: 'US',
+      // currency: 'USD',
+      // language: 'en',
+      country: 'FR',
+      currency: 'EUR',
+      language: 'fr',
       view: {
         url: navContent[document.title].barcaUrl,
         referrer: document.referrer,
