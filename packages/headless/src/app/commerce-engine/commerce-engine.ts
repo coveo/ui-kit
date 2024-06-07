@@ -6,6 +6,7 @@ import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
+import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
@@ -49,6 +50,7 @@ const commerceEngineReducers = {
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+  didYouMean: didYouMeanReducer,
   triggers: commerceTriggersReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
