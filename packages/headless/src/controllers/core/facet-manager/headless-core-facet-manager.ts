@@ -1,4 +1,5 @@
 import {CoreEngine} from '../../../app/engine';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchSection} from '../../../state/state-sections';
@@ -37,6 +38,11 @@ export interface FacetManager extends Controller {
   sort<T>(facets: FacetManagerPayload<T>[]): FacetManagerPayload<T>[];
 
   /**
+   * Deselects all facet values.
+   */
+  deselectAll(): void;
+
+  /**
    * The state of the `CoreFacetManager` controller.
    */
   state: FacetManagerState;
@@ -61,6 +67,7 @@ export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
   }
 
   const controller = buildController(engine);
+  const {dispatch} = engine;
   const getState = () => engine.state;
 
   return {
@@ -75,6 +82,10 @@ export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
       const facetIds = facets.map((f) => f.facetId);
 
       return {facetIds};
+    },
+
+    deselectAll: () => {
+      dispatch(deselectAllBreadcrumbs());
     },
   };
 }

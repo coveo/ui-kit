@@ -1,4 +1,5 @@
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
 import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
 import {ProductListingSection} from '../../../state/state-sections';
@@ -26,6 +27,7 @@ export function buildFacetManager(
   }
 
   const controller = buildController(productListingEngine);
+  const {dispatch} = productListingEngine;
   const getState = () => productListingEngine.state;
 
   return {
@@ -33,6 +35,10 @@ export function buildFacetManager(
 
     sort<T>(facets: FacetManagerPayload<T>[]) {
       return sortFacets(facets, this.state.facetIds);
+    },
+
+    deselectAll: () => {
+      dispatch(deselectAllBreadcrumbs());
     },
 
     get state() {

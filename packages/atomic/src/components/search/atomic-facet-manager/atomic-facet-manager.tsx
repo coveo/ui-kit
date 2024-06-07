@@ -57,6 +57,10 @@ export class AtomicFacetManager implements InitializableComponent {
     this.bindings.i18n.on('languageChanged', this.sortFacets);
   }
 
+  public deselectAll() {
+    this.facetManager.deselectAll();
+  }
+
   private sortFacets = () => {
     const facets = getFacetsInChildren(this.host);
 
@@ -109,6 +113,11 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   public render() {
-    return <slot />;
+    return (
+      <div>
+        <button onClick={() => this.deselectAll()}>Deselect All</button>
+        <slot />
+      </div>
+    );
   }
 }
