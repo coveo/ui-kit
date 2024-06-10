@@ -26,8 +26,10 @@ test('should display a progress bar', async ({loadMore}) => {
   await expect(loadMore.progressBar).toBeVisible();
 });
 
-test('should a progress value between 1 and 100', async ({loadMore}) => {
-  await expect(loadMore.progressValue).toHaveCSS('width', /^.+$/);
+test('should display a progress value between 1 and 100', async ({
+  loadMore,
+}) => {
+  await expect(loadMore.progressValue).toHaveScreenshot();
 });
 
 test.describe('after clicking the load more button', () => {
