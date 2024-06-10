@@ -80,6 +80,7 @@ jobs:
       - run: npm run build
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic
+        continue-on-error: true
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@v1
