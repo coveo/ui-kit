@@ -15,9 +15,11 @@
         await customElements.whenDefined('atomic-commerce-recommendation-interface');
         const recommendationInterfaces = document.querySelectorAll('atomic-commerce-recommendation-interface');
 
-        for (const recommendationInterface of recommendationInterfaces) {
-          await recommendationInterface.initializeWithEngine(commerceEngine);
-        }
+        await Promise.all(
+          recommendationInterfaces.map((recommendationInterface) =>
+            recommendationInterface.initializeWithEngine(commerceEngine)
+          )
+        );
       })();
     </script>
     <style>

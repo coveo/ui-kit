@@ -224,12 +224,10 @@ export class AtomicCommerceProductList
   }
 
   private getInteractiveProduct(product: Product) {
-    let parentController: ProductListing | Search;
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      parentController = this.productListing;
-    } else {
-      parentController = this.search;
-    }
+    const parentController =
+      this.bindings.interfaceElement.type === 'product-listing'
+        ? this.productListing
+        : this.search;
 
     return parentController.interactiveProduct({options: {product}});
   }
