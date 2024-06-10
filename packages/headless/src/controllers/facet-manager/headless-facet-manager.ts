@@ -1,10 +1,5 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
-  breadcrumbResetAll,
-  logClearBreadcrumbs,
-} from '../../features/facets/generic/facet-generic-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {
   buildCoreFacetManager,
   FacetManager,
   FacetManagerState,
@@ -19,20 +14,5 @@ export type {FacetManagerState, FacetManagerPayload, FacetManager};
  * @param engine - The headless engine.
  */
 export function buildFacetManager(engine: SearchEngine): FacetManager {
-  const controller = buildCoreFacetManager(engine);
-  const {dispatch} = engine;
-
-  return {
-    ...controller,
-
-    deselectAll: () => {
-      controller.deselectAll();
-      dispatch(
-        executeSearch({
-          legacy: logClearBreadcrumbs(),
-          next: breadcrumbResetAll(),
-        })
-      );
-    },
-  };
+  return buildCoreFacetManager(engine);
 }

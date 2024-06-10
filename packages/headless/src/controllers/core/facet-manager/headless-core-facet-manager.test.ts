@@ -1,4 +1,3 @@
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
@@ -105,12 +104,6 @@ describe('facet manager', () => {
       ];
 
       expect(facetManager.sort(facets)).toEqual([facet2, facet1]);
-    });
-    describe('#deselectAll', () => {
-      it('dispatches #deselectAllBreadcrumbs', () => {
-        facetManager.deselectAll();
-        expect(deselectAllBreadcrumbs).toHaveBeenCalledTimes(1);
-      });
     });
   });
 });
