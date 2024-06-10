@@ -13,6 +13,8 @@ import {
   FacetManagerPayload,
 } from './headless-core-facet-manager';
 
+jest.mock('../../../features/breadcrumb/breadcrumb-actions');
+
 describe('facet manager', () => {
   let engine: MockedSearchEngine;
   let facetManager: FacetManager;

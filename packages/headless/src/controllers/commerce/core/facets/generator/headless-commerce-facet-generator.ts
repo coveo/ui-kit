@@ -4,6 +4,7 @@ import {
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
+import {deselectAllBreadcrumbs} from '../../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
@@ -47,6 +48,11 @@ export interface FacetGenerator extends Controller {
    * The facet sub-controllers created by the facet generator.
    */
   facets: GeneratedFacetControllers;
+
+  /**
+   * Deselects all facet values.
+   */
+  deselectAll(): void;
 }
 
 /**
@@ -120,6 +126,7 @@ export function buildFacetGenerator(
   }
 
   const controller = buildController(engine);
+  const {dispatch} = engine;
 
   const createFacetControllers = createSelector(
     [
@@ -162,6 +169,10 @@ export function buildFacetGenerator(
 
     get state() {
       return engine[stateKey].facetOrder;
+    },
+
+    deselectAll: () => {
+      dispatch(deselectAllBreadcrumbs());
     },
   };
 }

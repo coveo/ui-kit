@@ -1,3 +1,4 @@
+import {deselectAllBreadcrumbs} from '../../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
@@ -15,6 +16,8 @@ import {
   FacetGenerator,
   FacetGeneratorOptions,
 } from './headless-commerce-facet-generator';
+
+jest.mock('../../../../../features/breadcrumb/breadcrumb-actions');
 
 describe('FacetGenerator', () => {
   let engine: MockedCommerceEngine;
@@ -164,5 +167,12 @@ describe('FacetGenerator', () => {
     initCommerceFacetGenerator();
 
     expect(facetGenerator.state).toEqual(state.facetOrder);
+  });
+
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllBreadcrumbs', () => {
+      facetGenerator.deselectAll();
+      expect(deselectAllBreadcrumbs).toHaveBeenCalledTimes(1);
+    });
   });
 });
