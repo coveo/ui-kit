@@ -33,11 +33,11 @@ test('should display a progress value between 1 and 100', async ({
 });
 
 test.describe('after clicking the load more button', () => {
-  // TODO: Create a getApiResponseBody helper to avoid repeating the same code in multiple tests
+  // TODO: KIT-3306 - Create a getApiResponseBody helper to avoid repeating the same code in multiple tests
   const waitForSearchResponse = async (page: Page) => {
     return page.waitForResponse(
       (response) =>
-        // TODO: Create RouteAlias to avoid hard coding url directly in the test
+        // TODO: KIT-3306 - Create RouteAlias to avoid hard coding url directly in the test
         response.url().includes('barcasportsmcy01fvu/commerce/v2/search') &&
         response.status() === 200
     );
