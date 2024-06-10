@@ -372,14 +372,14 @@ export class AtomicCommerceSearchBox
   }
 
   private onSubmit() {
-    if (this.suggestionManager.isRightPanelInFocus()) {
-      this.suggestionManager.clickOnActiveElement();
+    this.isExpanded = false;
+
+    if (this.suggestionManager.hasActiveDescendant) {
+      this.suggestionManager.onSubmit();
       return;
     }
 
-    this.isExpanded = false;
     this.searchBox.submit();
-    this.suggestionManager.onSubmit();
   }
 
   private onKeyDown(e: KeyboardEvent) {
