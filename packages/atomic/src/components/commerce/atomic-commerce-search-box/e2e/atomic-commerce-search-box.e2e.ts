@@ -49,7 +49,7 @@ test.describe('default', () => {
 
 test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
-    searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
+    await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
   });
 
   test.describe('after clicking the searchbox input', () => {
