@@ -44,7 +44,8 @@ export class AtomicProductDescription
   /**
    * The name of the description field to use.
    */
-  @Prop() public field: 'ec_description' | 'ec_shortdesc' = 'ec_shortdesc';
+  @Prop() public field: 'ec_description' | 'ec_shortdesc' | 'excerpt' =
+    'ec_shortdesc';
 
   constructor() {
     this.resizeObserver = new ResizeObserver(() => {
@@ -65,7 +66,9 @@ export class AtomicProductDescription
       truncateAfter: new StringValue({
         constrainTo: ['none', '1', '2', '3', '4'],
       }),
-      field: new StringValue({constrainTo: ['ec_shortdesc', 'ec_description']}),
+      field: new StringValue({
+        constrainTo: ['ec_shortdesc', 'ec_description', 'excerpt'],
+      }),
     }).validate({
       truncateAfter: this.truncateAfter,
       field: this.field,
@@ -101,6 +104,10 @@ export class AtomicProductDescription
   }
 
   private renderProductDescription() {
+    if (this.field === 'excerpt') {
+      return <atomic-product-text field="excerpt"></atomic-product-text>;
+    }
+
     const productDescription = this.product[this.field] ?? '';
 
     if (productDescription !== null) {
