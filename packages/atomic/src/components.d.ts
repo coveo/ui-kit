@@ -1951,7 +1951,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the document excerpt and the ec_name field.
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
          */
         "shouldHighlight": boolean;
     }
@@ -7231,7 +7231,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the document excerpt and the ec_name field.
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
          */
         "shouldHighlight"?: boolean;
     }
