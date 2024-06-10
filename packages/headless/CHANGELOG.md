@@ -1,3 +1,9 @@
+# 2.65.0 (2024-06-06)
+
+### Features
+
+- **commerce:** toggle `capture` from analytics configuration ([#4057](https://github.com/coveo/ui-kit/issues/4057)) ([9e16744](https://github.com/coveo/ui-kit/commits/9e16744338e67dd293b064da8387a3bfd21e6c4e))
+
 # 2.64.0 (2024-06-06)
 
 ### Bug Fixes

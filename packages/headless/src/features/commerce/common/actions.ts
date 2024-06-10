@@ -59,6 +59,7 @@ export const buildBaseCommerceAPIRequest = async (
     context: {
       user,
       view,
+      capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
     },
     ...effectivePagination(state, slotId),
