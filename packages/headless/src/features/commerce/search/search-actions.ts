@@ -11,9 +11,9 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
-import {updatePage} from '../../pagination/pagination-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {buildCommerceAPIRequest} from '../common/actions';
+import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
   UpdateQueryActionCreatorPayload,
@@ -139,7 +139,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
       query: payload.query,
     })
   );
-  dispatch(updatePage(1));
+  dispatch(selectPage({page: 0}));
 });
 
 export const fetchInstantProducts = createAsyncThunk<
