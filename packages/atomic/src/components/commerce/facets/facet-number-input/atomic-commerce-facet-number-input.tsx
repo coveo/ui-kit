@@ -57,18 +57,11 @@ export class FacetNumberInput {
   }
 
   private get minimumInputValue() {
-    const {domain} = this.facet.state;
-    const ensureValue = (num?: number) =>
-      isUndefined(num) ? Number.MIN_SAFE_INTEGER : num;
-    return Math.max(ensureValue(this.start), ensureValue(domain?.min));
+    return isUndefined(this.start) ? Number.MIN_SAFE_INTEGER : this.start;
   }
 
   private get maximumInputValue() {
-    const {domain} = this.facet.state;
-    const ensureValue = (num?: number) =>
-      isUndefined(num) ? Number.MAX_SAFE_INTEGER : num;
-
-    return Math.min(ensureValue(this.end), ensureValue(domain?.max));
+    return isUndefined(this.end) ? Number.MAX_SAFE_INTEGER : this.end;
   }
 
   render() {
