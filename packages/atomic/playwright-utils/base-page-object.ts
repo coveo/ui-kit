@@ -19,15 +19,14 @@ export class BasePageObject<
     return 'http://localhost:4400/iframe.html';
   }
 
-  async gotoAndHydrate(story: string = 'default') {
-    await this.page.goto(`${this.urlRoot}?id=${this.tag}--${story}`);
-    await this.hydrated.waitFor();
-  }
-
-  async gotoParametrizedAndHydrate(args: Component, story = 'default') {
-    await this.page.goto(
-      `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`
-    );
+  async load(args?: Component, story: string = 'default') {
+    if (args) {
+      await this.page.goto(
+        `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`
+      );
+    } else {
+      await this.page.goto(`${this.urlRoot}?id=${this.tag}--${story}`);
+    }
     await this.hydrated.waitFor();
   }
 

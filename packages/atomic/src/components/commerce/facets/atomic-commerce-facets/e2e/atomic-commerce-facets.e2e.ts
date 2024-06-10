@@ -2,14 +2,14 @@ import {test, expect} from './fixture';
 
 test.describe('default', async () => {
   test('should be A11y compliant', async ({facets, makeAxeBuilder}) => {
-    await facets.gotoAndHydrate();
+    await facets.load();
     const accessibilityResults = await makeAxeBuilder().analyze();
 
     expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should display facets', async ({facets}) => {
-    await facets.gotoAndHydrate();
+    await facets.load();
     await expect(facets.standardFacets.first()).toBeVisible();
     await expect(facets.numericFacets.first()).toBeVisible();
     await expect(facets.categoryFacets.first()).toBeVisible();
@@ -17,7 +17,7 @@ test.describe('default', async () => {
 
   // KIT-3300
   test.skip('should collapse facets when set to 1', async ({facets}) => {
-    await facets.gotoParametrizedAndHydrate({
+    await facets.load({
       collapseFacetsAfter: 1,
     });
     await expect(facets.expandedFacets).toHaveCount(1);
@@ -28,7 +28,7 @@ test.describe('default', async () => {
   test.skip('should disable collapse facets when set to -1', async ({
     facets,
   }) => {
-    await facets.gotoParametrizedAndHydrate({
+    await facets.load({
       collapseFacetsAfter: -1,
     });
     await expect(facets.collapsedFacets).toHaveCount(0);

@@ -1,8 +1,8 @@
+import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
-} from '@coveo/atomic/playwrightUtils/base-fixture';
-import {test as base} from '@playwright/test';
+} from '../../../../../../playwright-utils/base-fixture';
 import {FacetsPageObject} from './page-object';
 
 interface TestFixture {

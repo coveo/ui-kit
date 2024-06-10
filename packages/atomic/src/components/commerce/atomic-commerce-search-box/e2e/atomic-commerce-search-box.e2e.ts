@@ -2,7 +2,7 @@ import {test, expect} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.gotoParametrizedAndHydrate({suggestionTimeout: 5000});
+    await searchBox.load({suggestionTimeout: 5000});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -49,10 +49,7 @@ test.describe('default', () => {
 
 test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
-    searchBox.gotoParametrizedAndHydrate(
-      {suggestionTimeout: 5000},
-      'rich-search-box'
-    );
+    searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
   });
 
   test.describe('after clicking the searchbox input', () => {
@@ -82,7 +79,7 @@ test.describe('with instant results & query suggestions', () => {
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.gotoParametrizedAndHydrate({
+    await searchBox.load({
       disableSearch: true,
       minimumQueryLength: 1,
       suggestionTimeout: 5000,
@@ -126,7 +123,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 
 test.describe('with minimum-query-length=3', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.gotoParametrizedAndHydrate({
+    await searchBox.load({
       minimumQueryLength: 4,
       suggestionTimeout: 5000,
     });
@@ -183,7 +180,7 @@ test.describe('with minimum-query-length=3', () => {
 
 test.describe('with a facet & clear-filters set to true', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.gotoParametrizedAndHydrate({
+    await searchBox.load({
       clearFilters: true,
       suggestionTimeout: 5000,
     });
@@ -202,7 +199,7 @@ test.describe('with a facet & clear-filters set to true', () => {
 
 test.describe('with a facet & clear-filters set to false', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.gotoParametrizedAndHydrate(
+    await searchBox.load(
       {
         clearFilters: false,
         suggestionTimeout: 5000,
