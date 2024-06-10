@@ -1,5 +1,5 @@
+import {Page, Response} from '@playwright/test';
 import {test, expect} from './fixture';
-import {AtomicCommerceLoadMoreProductsLocators} from './page-object';
 
 test.beforeEach(async ({page}) => {
   await page.goto(
@@ -31,23 +31,35 @@ test('should a progress value between 1 and 100', async ({loadMore}) => {
 });
 
 test.describe('after clicking the load more button', () => {
-  const getTotal = async (loadMore: AtomicCommerceLoadMoreProductsLocators) => {
-    const recap = await loadMore.summary().textContent();
-    const totalMatch = recap?.match(/\bshowing ([0-9]+) of/i);
-    return totalMatch ? parseInt(totalMatch[1]) : 0;
+  // TODO: Create a getApiResponseBody helper to avoid repeating the same code in multiple tests
+  const waitForSearchResponse = async (page: Page) => {
+    return page.waitForResponse(
+      (response) =>
+        // TODO: Create RouteAlias to avoid hard coding url directly in the test
+        response.url().includes('barcasportsmcy01fvu/commerce/v2/search') &&
+        response.status() === 200
+    );
+  };
+
+  const getPerPageFromResponse = async (response: Response) => {
+    const {
+      pagination: {perPage},
+    } = await response.json();
+    return perPage;
   };
 
   test('should load more products', async ({loadMore, products, page}) => {
+    const initialResponse = await waitForSearchResponse(page);
     await products.hydrated.waitFor();
-    const initialProductCount = await products.results.count();
     await loadMore.button.click();
-    await page.waitForTimeout(1000);
+    const finalResponse = await waitForSearchResponse(page);
 
-    const finalProductCount = await products.results.count();
-    const summaryTotal = await getTotal(loadMore);
+    const total =
+      (await getPerPageFromResponse(initialResponse)) +
+      (await getPerPageFromResponse(finalResponse));
 
-    expect(finalProductCount).toBeGreaterThan(initialProductCount);
-    expect(summaryTotal).toEqual(finalProductCount);
+    await expect(products.results).toHaveCount(total);
+    await expect(loadMore.summary({index: total})).toBeVisible();
   });
 });
 
