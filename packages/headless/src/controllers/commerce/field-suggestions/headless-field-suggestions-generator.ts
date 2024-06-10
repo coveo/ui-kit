@@ -35,6 +35,9 @@ export interface FieldSuggestionsGenerator extends Controller {
    */
   fieldSuggestions: GeneratedFieldSuggestionsControllers;
 
+  /**
+   * The state of the field suggestions generator.
+   */
   state: FieldSuggestionsFacet[];
 }
 
