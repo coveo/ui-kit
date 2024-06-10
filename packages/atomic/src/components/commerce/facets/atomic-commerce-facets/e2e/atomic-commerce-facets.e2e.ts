@@ -1,31 +1,37 @@
 import {test, expect} from './fixture';
 
 test.describe('default', async () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-facets--default'
-    );
-  });
-
   test('should be A11y compliant', async ({facets, makeAxeBuilder}) => {
-    await facets.hydrated.waitFor();
+    await facets.gotoAndHydrate();
     const accessibilityResults = await makeAxeBuilder().analyze();
+
     expect(accessibilityResults.violations).toEqual([]);
   });
 
-  /*await page.goto('http://localhost:4400/');
-  await page.goto(
-    'http://localhost:4400/?path=/story/atomic-automatic-facet-generator--default'
-  );
-  await page.getByRole('button', {name: 'Facets'}).click();
-  await page.getByRole('link', {name: 'atomic-commerce-facets'}).click();
-  await page
-    .frameLocator('iframe[title="storybook-preview-iframe"]')
-    .getByText('Barca Sports(40)')
-    .click();
-  await expect(
-    page
-      .frameLocator('iframe[title="storybook-preview-iframe"]')
-      .getByLabel('Inclusion filter on Barca')
-  ).toBeVisible();*/
+  test('should display facets', async ({facets}) => {
+    await facets.gotoAndHydrate();
+    await expect(facets.standardFacets.first()).toBeVisible();
+    await expect(facets.numericFacets.first()).toBeVisible();
+    await expect(facets.categoryFacets.first()).toBeVisible();
+  });
+
+  // KIT-3300
+  test.skip('should collapse facets when set to 1', async ({facets}) => {
+    await facets.gotoParametrizedAndHydrate({
+      collapseFacetsAfter: 1,
+    });
+    await expect(facets.expandedFacets).toHaveCount(1);
+    await expect(facets.collapsedFacets).toHaveCount(3);
+  });
+
+  // KIT-3300
+  test.skip('should disable collapse facets when set to -1', async ({
+    facets,
+  }) => {
+    await facets.gotoParametrizedAndHydrate({
+      collapseFacetsAfter: -1,
+    });
+    await expect(facets.collapsedFacets).toHaveCount(0);
+    await expect(facets.expandedFacets).toHaveCount(4);
+  });
 });

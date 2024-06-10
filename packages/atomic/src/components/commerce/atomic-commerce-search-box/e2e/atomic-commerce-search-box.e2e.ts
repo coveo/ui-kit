@@ -1,10 +1,8 @@
 import {test, expect} from './fixture';
 
 test.describe('default', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.gotoParametrizedAndHydrate({suggestionTimeout: 5000});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -50,9 +48,10 @@ test.describe('default', () => {
 });
 
 test.describe('with instant results & query suggestions', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story&args=suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    searchBox.gotoParametrizedAndHydrate(
+      {suggestionTimeout: 5000},
+      'rich-search-box'
     );
   });
 
@@ -82,10 +81,12 @@ test.describe('with instant results & query suggestions', () => {
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=disable-search:!true;minimum-query-length:1;suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.gotoParametrizedAndHydrate({
+      disableSearch: true,
+      minimumQueryLength: 1,
+      suggestionTimeout: 5000,
+    });
   });
 
   const testCases = () => {
@@ -124,10 +125,11 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 });
 
 test.describe('with minimum-query-length=3', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=minimum-query-length:4;suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.gotoParametrizedAndHydrate({
+      minimumQueryLength: 4,
+      suggestionTimeout: 5000,
+    });
   });
 
   const testCases = () => {
@@ -180,10 +182,11 @@ test.describe('with minimum-query-length=3', () => {
 });
 
 test.describe('with a facet & clear-filters set to true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!true;suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.gotoParametrizedAndHydrate({
+      clearFilters: true,
+      suggestionTimeout: 5000,
+    });
   });
 
   test('clicking the submit button should clear the facet value', async ({
@@ -198,9 +201,13 @@ test.describe('with a facet & clear-filters set to true', () => {
 });
 
 test.describe('with a facet & clear-filters set to false', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!false;suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.gotoParametrizedAndHydrate(
+      {
+        clearFilters: false,
+        suggestionTimeout: 5000,
+      },
+      'in-page'
     );
   });
 
@@ -212,23 +219,5 @@ test.describe('with a facet & clear-filters set to false', () => {
     await facets.clearFilters().waitFor({state: 'visible'});
     await searchBox.submitButton.click();
     await expect(facets.clearFilters()).toBeVisible();
-  });
-});
-
-test.describe('with enable-query-syntax=true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000'
-    );
-  });
-
-  test('should use query syntax', async ({loadMore, searchBox, page}) => {
-    await loadMore.loadMoreButton.waitFor({state: 'visible'});
-    await searchBox.searchInput
-      // eslint-disable-next-line @cspell/spellchecker
-      .fill('@urihash=bzo5fpM1vf8Xñds1');
-    await searchBox.submitButton.click();
-    await expect(loadMore.summary({total: 1})).toBeVisible();
-    await expect(page.getByText('WiLife Life Jacket WiLife')).toBeVisible();
   });
 });

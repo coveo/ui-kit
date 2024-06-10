@@ -1,25 +1,44 @@
 import type {Page} from '@playwright/test';
+import {buildArgsParam} from '@storybook/router';
+import {JSX} from '../dist/types/components';
 
-export class BasePageObject<Component extends HTMLElementTagNameMap> {
-  constructor(public page: Page) {
-    //const a = global['HTMLElementTagNameMap'];
-  }
+export class BasePageObject<
+  TagName extends keyof JSX.IntrinsicElements,
+  Component = JSX.IntrinsicElements[TagName],
+> {
+  constructor(
+    public page: Page,
+    public tag: TagName
+  ) {}
 
   get hydrated() {
-    return '';
-    // return this.page.locator(`${this.tag}[class*="hydrated"]`);
+    return this.page.locator(`${this.tag}[class*="hydrated"]`);
   }
 
-  goto(story: string = 'default') {
-    this.page.goto(
-      `http://localhost:4400/iframe.html?id=${this.tag}--${story}`
-    );
+  get urlRoot() {
+    return 'http://localhost:4400/iframe.html';
   }
 
-  gotoParametrized(story: string, args: keyof Component) {
-    console.log(args);
-    this.page.goto(
-      `http://localhost:4400/iframe.html?id=${this.tag}--${story}}`
+  async gotoAndHydrate(story: string = 'default') {
+    await this.page.goto(`${this.urlRoot}?id=${this.tag}--${story}`);
+    await this.hydrated.waitFor();
+  }
+
+  async gotoParametrizedAndHydrate(args: Component, story = 'default') {
+    await this.page.goto(
+      `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`
     );
+    await this.hydrated.waitFor();
+  }
+
+  private camelToKebab(args: Component) {
+    const toKebab: Record<string, unknown> = {};
+    Object.entries(args as Record<string, unknown>).forEach(([key, value]) => {
+      toKebab[
+        key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+      ] = value;
+    });
+
+    return toKebab;
   }
 }
