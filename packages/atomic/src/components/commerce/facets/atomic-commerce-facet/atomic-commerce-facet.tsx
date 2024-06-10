@@ -66,6 +66,10 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
    * The facet controller instance.
    */
   @Prop() public facet!: RegularFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   @BindStateToController('facet')
   @State()
@@ -73,7 +77,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   @State() public error!: Error;
 
-  @State() private isCollapsed = false;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
