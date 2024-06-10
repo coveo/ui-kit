@@ -8,7 +8,7 @@ import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-stat
 import {currentPageSelector} from './pagination-selectors';
 
 export const logPageNumber = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerNumber)(
+  makeInsightAnalyticsActionFactory(SearchPageEvents.browseResults)(
     'analytics/pager/number',
     (client, state) =>
       client.logPagerNumber({
@@ -18,7 +18,7 @@ export const logPageNumber = (): InsightAction =>
   );
 
 export const logPageNext = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerNext)(
+  makeInsightAnalyticsActionFactory(SearchPageEvents.browseResults)(
     'analytics/pager/next',
     (client, state) =>
       client.logPagerNext({
@@ -28,7 +28,7 @@ export const logPageNext = (): InsightAction =>
   );
 
 export const logPagePrevious = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerPrevious)(
+  makeInsightAnalyticsActionFactory(SearchPageEvents.browseResults)(
     'analytics/pager/previous',
     (client, state) =>
       client.logPagerPrevious({

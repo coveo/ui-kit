@@ -62,11 +62,7 @@ import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
 } from '../features/insight-search/insight-search-analytics-actions';
-import {
-  pagerNext,
-  pagerNumber,
-  pagerPrevious,
-} from '../features/pagination/pagination-analytics-actions';
+import {browseResults} from '../features/pagination/pagination-analytics-actions';
 import {
   logPageNext,
   logPagePrevious,
@@ -442,7 +438,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/pager/next', async () => {
     const action = fetchPage({
       legacy: logPageNext(),
-      next: pagerNext(),
+      next: browseResults(),
     });
 
     legacyInsightEngine.dispatch(action);
@@ -455,7 +451,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/pager/previous', async () => {
     const action = fetchPage({
       legacy: logPagePrevious(),
-      next: pagerPrevious(),
+      next: browseResults(),
     });
 
     legacyInsightEngine.dispatch(action);
@@ -468,7 +464,7 @@ describe('Analytics Search Migration', () => {
   it('analytics/pager/number', async () => {
     const action = fetchPage({
       legacy: logPageNumber(),
-      next: pagerNumber(),
+      next: browseResults(),
     });
 
     legacyInsightEngine.dispatch(action);
