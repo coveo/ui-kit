@@ -1,8 +1,7 @@
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
-import {executeSearch} from '../../features/commerce/search/search-actions';
 import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice';
+import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
-import {SearchAppState} from '../../state/search-app-state';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
@@ -12,20 +11,20 @@ import {FacetManager} from '../core/facet-manager/headless-core-facet-manager';
 import {buildFacetManager} from './headless-facet-manager';
 
 jest.mock('../../features/search/search-actions');
+jest.mock('../../features/breadcrumb/breadcrumb-actions');
 
 describe('Facet Manager', () => {
   let engine: MockedSearchEngine;
-  let state: SearchAppState;
   let facetManager: FacetManager;
 
   function initController() {
     engine = buildMockSearchEngine(createMockState());
-    engine.state = state;
+
     facetManager = buildFacetManager(engine);
   }
 
   beforeEach(() => {
-    state = createMockState();
+    jest.resetAllMocks();
     initController();
   });
 
