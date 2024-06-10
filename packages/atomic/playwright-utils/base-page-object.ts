@@ -27,7 +27,6 @@ export class BasePageObject<
     } else {
       await this.page.goto(`${this.urlRoot}?id=${this.tag}--${story}`);
     }
-    await this.hydrated.waitFor();
   }
 
   private camelToKebab(args: Component) {
