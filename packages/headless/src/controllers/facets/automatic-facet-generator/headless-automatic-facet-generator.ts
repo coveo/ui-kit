@@ -38,7 +38,7 @@ export interface AutomaticFacetGenerator extends Controller {
    */
   state: AutomaticFacetGeneratorState;
   /**
-   * Deselects all automatic facet values.
+   * Deselects all values in all facets.
    * */
   deselectAll(): void;
 }
