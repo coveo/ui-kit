@@ -11,6 +11,7 @@ export type {
   CommerceEngineOptions,
 } from './app/commerce-engine/commerce-engine';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine';
+export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration';
 
 export type {
   CoreEngine,

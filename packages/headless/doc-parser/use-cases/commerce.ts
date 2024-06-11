@@ -13,7 +13,11 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildProductListing',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildProductView',
@@ -21,11 +25,19 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildRecommendations',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/recommendations.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildSearch',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/search.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildSearchBox',
