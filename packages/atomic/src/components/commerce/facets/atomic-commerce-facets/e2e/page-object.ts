@@ -5,33 +5,27 @@ export class FacetsPageObject extends BasePageObject<'atomic-commerce-facets'> {
   constructor(page: Page) {
     super(page, 'atomic-commerce-facets');
   }
-
-  get container() {
-    return this.page.locator('atomic-commerce-facets');
-  }
-
   get standardFacets() {
-    return this.container.locator('atomic-commerce-facet');
+    return this.page
+      .getByText('Brand')
+      .or(this.page.getByText('Color'))
+      .or(this.page.getByText('Size'));
   }
 
   get numericFacets() {
-    return this.container.locator('atomic-commerce-numeric-facet');
-  }
-
-  get timeframeFacets() {
-    return this.container.locator('atomic-commerce-timeframe-facet');
+    return this.page.getByText('Price');
   }
 
   get categoryFacets() {
-    return this.container.locator('atomic-commerce-category-facet');
+    return this.page.getByText('Category');
   }
 
   get collapsedFacets() {
-    return this.container.locator('[aria-expanded="false"]');
+    return this.page.getByRole('button', {expanded: false});
   }
 
   get expandedFacets() {
-    return this.container.locator('[aria-expanded="true"]');
+    return this.page.getByRole('button', {expanded: true});
   }
 
   get inclusionFilters() {

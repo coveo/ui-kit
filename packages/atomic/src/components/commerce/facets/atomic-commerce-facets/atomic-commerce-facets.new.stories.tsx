@@ -63,3 +63,18 @@ export const InPage: Story = {
     await playExecuteFirstSearch(context);
   },
 };
+
+export const LoadingState: Story = {
+  name: 'Loading state',
+  decorators: [
+    (story) =>
+      html` <atomic-commerce-layout>
+        <atomic-layout-section section="facets">
+          ${story()}
+       
+      </atomic-commerce-layout>`,
+  ],
+  play: async (context) => {
+    await play(context);
+  },
+};

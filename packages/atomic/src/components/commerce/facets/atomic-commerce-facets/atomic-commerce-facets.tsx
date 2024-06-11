@@ -13,12 +13,13 @@ import {
   ListingSummary,
   SearchSummary,
 } from '@coveo/headless/commerce';
-import {Component, h, Element, Host, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -90,10 +91,16 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   }
 
   public render() {
+    if (!this.summary.state.firstSearchExecuted) {
+      return [...Array(this.collapseFacetsAfter)].map(() => (
+        <FacetPlaceholder numberOfValues={8} isCollapsed={false} />
+      ));
+    }
     return (
-      <Host>
+      <Fragment>
         {this.facetGenerator.facets.map((facet, index) => {
           if (facet.state.values.length === 0) {
+            console.log('yo');
             return;
           }
 
@@ -136,7 +143,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             }
           }
         })}
-      </Host>
+      </Fragment>
     );
   }
 }
