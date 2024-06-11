@@ -32,6 +32,10 @@ export class FacetsPageObject extends BasePageObject<'atomic-commerce-facets'> {
     return this.page.getByLabel(/Inclusion filter/);
   }
 
+  get placeholders() {
+    return this.page.locator('[part="placeholder"]');
+  }
+
   clearFilters(numberOfFilters?: number) {
     return this.page.getByLabel(
       new RegExp(`Clear ${numberOfFilters ?? '\\d'} filter for`)
