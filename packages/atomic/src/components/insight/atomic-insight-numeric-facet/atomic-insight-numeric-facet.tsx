@@ -183,6 +183,9 @@ export class AtomicInsightNumericFacet
   }
 
   public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
     this.dependenciesManager?.stopWatching();
   }
 

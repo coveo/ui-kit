@@ -275,9 +275,15 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
+    }
+    interface AtomicCommerceDidYouMean {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -287,6 +293,10 @@ export namespace Components {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
@@ -329,12 +339,6 @@ export namespace Components {
           * Executes the first search after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
-        /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * the commerce interface i18next instance.
          */
@@ -398,6 +402,10 @@ export namespace Components {
           * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
@@ -548,6 +556,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -661,6 +670,10 @@ export namespace Components {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The summary controller instance.
          */
@@ -3451,6 +3464,12 @@ declare global {
         prototype: HTMLAtomicCommerceCategoryFacetElement;
         new (): HTMLAtomicCommerceCategoryFacetElement;
     };
+    interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceDidYouMeanElement: {
+        prototype: HTMLAtomicCommerceDidYouMeanElement;
+        new (): HTMLAtomicCommerceDidYouMeanElement;
+    };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
@@ -3590,6 +3609,7 @@ declare global {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxElement extends Components.AtomicCommerceSearchBox, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5277,6 +5297,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
+        "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5663,9 +5684,15 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
+    }
+    interface AtomicCommerceDidYouMean {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -5675,6 +5702,10 @@ declare namespace LocalJSX {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
@@ -5769,6 +5800,10 @@ declare namespace LocalJSX {
           * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
@@ -5892,6 +5927,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -6004,6 +6040,10 @@ declare namespace LocalJSX {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The summary controller instance.
          */
@@ -8512,6 +8552,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
+        "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -8737,6 +8778,7 @@ declare module "@stencil/core" {
              * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
+            "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
@@ -8781,6 +8823,7 @@ declare module "@stencil/core" {
             "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+             * @alpha 
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**

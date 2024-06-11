@@ -1,4 +1,5 @@
 import {NumberValue} from '@coveo/bueno';
+import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   getVisitorID,
@@ -10,6 +11,7 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
+import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {
   ConfigurationSection,
   ContextSection,
@@ -24,6 +26,7 @@ import {
   requiredEmptyAllowedString,
 } from '../../utils/validate-payload';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
@@ -125,11 +128,20 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
   async (
     payload: {id: string},
-    {getState, rejectWithValue, extra: {apiClient, validatePayload}}
+    {
+      getState,
+      rejectWithValue,
+      extra: {apiClient, validatePayload, navigatorContext, relay},
+    }
   ) => {
     validatePayload(payload, idDefinition);
     const id = payload.id;
-    const request = await buildQuerySuggestRequest(id, getState());
+    const request = await buildQuerySuggestRequest(
+      id,
+      getState(),
+      navigatorContext,
+      relay
+    );
     const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
@@ -146,7 +158,9 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
 export const buildQuerySuggestRequest = async (
   id: string,
-  s: StateNeededByQuerySuggest
+  s: StateNeededByQuerySuggest,
+  navigatorContext: NavigatorContext,
+  relay: Relay
 ): Promise<QuerySuggestRequest> => {
   return {
     accessToken: s.configuration.accessToken,
@@ -166,7 +180,15 @@ export const buildQuerySuggestRequest = async (
     ...(s.configuration.analytics.enabled && {
       visitorId: await getVisitorID(s.configuration.analytics),
       ...(s.configuration.analytics.enabled &&
-        (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
+      s.configuration.analytics.analyticsMode === 'legacy'
+        ? await legacyFromAnalyticsStateToAnalyticsParams(
+            s.configuration.analytics
+          )
+        : fromAnalyticsStateToAnalyticsParams(
+            s.configuration.analytics,
+            navigatorContext,
+            relay
+          )),
     }),
     ...(s.configuration.search.authenticationProviders.length && {
       authentication: s.configuration.search.authenticationProviders.join(','),

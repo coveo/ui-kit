@@ -1,6 +1,5 @@
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {NumericFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -16,6 +15,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
+import {NumericRangeRequest} from '../headless-core-commerce-facet';
 import {
   NumericFacet,
   NumericFacetOptions,
@@ -103,15 +103,22 @@ describe('NumericFacet', () => {
   });
 
   describe('#setRanges', () => {
-    let values: NumericFacetValue[];
+    let values: NumericRangeRequest[];
     beforeEach(() => {
-      values = [buildMockCommerceNumericFacetValue()];
+      values = [buildMockCommerceNumericFacetValue()].map(
+        ({start, end, endInclusive, state}) => ({
+          start,
+          end,
+          endInclusive,
+          state,
+        })
+      );
       facet.setRanges(values);
     });
     it('dispatches #updateNumericFacetValues with the correct payload', () => {
       expect(updateNumericFacetValues).toHaveBeenCalledWith({
         facetId,
-        values,
+        values: values.map((value) => ({...value, numberOfResults: 0})),
       });
     });
 

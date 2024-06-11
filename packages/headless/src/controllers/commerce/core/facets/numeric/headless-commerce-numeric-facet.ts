@@ -55,7 +55,7 @@ export type NumericFacet = CoreCommerceFacet<
    *
    * @param ranges - The new ranges to set.
    */
-  setRanges: (ranges: NumericFacetValue[]) => void;
+  setRanges: (ranges: NumericRangeRequest[]) => void;
   /**
    * The state of the `NumericFacet` controller.
    */
@@ -96,13 +96,11 @@ export function buildCommerceNumericFacet(
   return {
     ...coreController,
 
-    setRanges(ranges: NumericFacetValue[]) {
-      // TODO: KIT-3226 do not accept NumericFacetValue as the argument as it exposes unnecessary properties
-      // The properties isAutoSelected, isSuggested, numberOfResults, and moreValuesAvailable should not be relevant to the user when setting a range
+    setRanges(ranges: NumericRangeRequest[]) {
       dispatch(
         updateNumericFacetValues({
           facetId,
-          values: ranges,
+          values: ranges.map((range) => ({...range, numberOfResults: 0})),
         })
       );
       dispatch(fetchProductsActionCreator());

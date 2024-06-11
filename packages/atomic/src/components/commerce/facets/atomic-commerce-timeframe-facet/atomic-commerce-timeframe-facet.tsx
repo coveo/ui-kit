@@ -21,7 +21,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -53,13 +52,16 @@ export class AtomicCommerceTimeframeFacet
    * The date facet controller instance.
    */
   @Prop() public facet!: DateFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   @BindStateToController('facet')
   @State()
   public facetState?: DateFacetState;
   @State() public error!: Error;
 
-  @State() private isCollapsed = false;
   @State() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
@@ -275,10 +277,6 @@ export class AtomicCommerceTimeframeFacet
               start,
               end,
               endInclusive,
-              isAutoSelected: false,
-              isSuggested: false,
-              numberOfResults: 0,
-              moreValuesAvailable: false,
               state: 'selected',
             },
           ]);
@@ -297,7 +295,7 @@ export class AtomicCommerceTimeframeFacet
         hasError={hasError}
         hasResults={this.shouldRenderFacet}
       >
-        {firstSearchExecuted ? (
+        {
           <FacetContainer>
             {this.renderHeader()}
             {!this.isCollapsed && [
@@ -305,9 +303,7 @@ export class AtomicCommerceTimeframeFacet
               this.shouldRenderInput && this.renderDateInput(),
             ]}
           </FacetContainer>
-        ) : (
-          <FacetPlaceholder isCollapsed={this.isCollapsed} numberOfValues={8} />
-        )}
+        }
       </FacetGuard>
     );
   }
