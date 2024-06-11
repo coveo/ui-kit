@@ -8,10 +8,10 @@
   "peerDependencies": {
     "@angular/common": "14 - 17",
     "@angular/core": "14 - 17",
-    "@coveo/headless": "2.64.0"
+    "@coveo/headless": "2.65.0"
   },
   "dependencies": {
-    "@coveo/atomic": "2.66.0",
+    "@coveo/atomic": "2.66.1",
     "tslib": "2.6.2"
   }
 }

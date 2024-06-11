@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -98,6 +99,7 @@ export const paginationReducer = createReducer(
       })
       .addCase(restoreSearchParameters, handleRestoreParameters)
       .addCase(restoreProductListingParameters, handleRestoreParameters)
+      .addCase(deselectAllBreadcrumbs, handlePaginationReset)
       .addCase(deselectAllFacetValues, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)

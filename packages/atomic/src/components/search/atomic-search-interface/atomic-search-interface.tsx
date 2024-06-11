@@ -41,6 +41,11 @@ import {
   CommonAtomicInterfaceHelper,
   mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
+import {
+  errorSelector,
+  firstSearchExecutedSelector,
+  noResultsSelector,
+} from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
 
@@ -538,17 +543,17 @@ export class AtomicSearchInterface
         !this.searchStatus.state.hasError;
 
       this.host.classList.toggle(
-        'atomic-search-interface-no-results',
+        noResultsSelector,
         hasNoResultsAfterInitialSearch
       );
 
       this.host.classList.toggle(
-        'atomic-search-interface-error',
+        errorSelector,
         this.searchStatus.state.hasError
       );
 
       this.host.classList.toggle(
-        'atomic-search-interface-search-executed',
+        firstSearchExecutedSelector,
         this.searchStatus.state.firstSearchExecuted
       );
 

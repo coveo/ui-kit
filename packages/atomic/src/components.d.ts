@@ -333,12 +333,6 @@ export namespace Components {
          */
         "executeFirstSearch": () => Promise<void>;
         /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
-        /**
           * the commerce interface i18next instance.
          */
         "i18n": i18n;
