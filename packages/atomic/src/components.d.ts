@@ -401,6 +401,7 @@ export namespace Components {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface AtomicCommercePager {
         /**
@@ -3530,6 +3531,7 @@ declare global {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface HTMLAtomicCommercePagerElement extends Components.AtomicCommercePager, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5779,6 +5781,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface AtomicCommercePager {
         /**
@@ -8765,6 +8768,7 @@ declare module "@stencil/core" {
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+             * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;

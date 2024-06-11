@@ -5,7 +5,6 @@ import {
 import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
 
 const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
 
@@ -13,6 +12,20 @@ const meta: Meta = {
   component: 'atomic-commerce-pager',
   title: 'Atomic-Commerce/Pager',
   id: 'atomic-commerce-pager',
+  argTypes: {
+    'previous-button-icon': {
+      control: 'text',
+      table: {
+        category: 'attributes',
+      },
+    },
+    'next-button-icon': {
+      control: 'text',
+      table: {
+        category: 'attributes',
+      },
+    },
+  },
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -22,13 +35,22 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Default',
-  decorators: [
-    (story) =>
-      html`<atomic-layout-section section="pagination">
-        ${story()}
-      </atomic-layout-section>`,
-  ],
+  name: 'atomic-commerce-pager',
+  play: async (context) => {
+    await play(context);
+    await playExecuteFirstSearch(context);
+  },
+};
+
+export const CustomIcon: Story = {
+  name: 'With custom icon',
+  tags: ['commerce'],
+  args: {
+    'previous-button-icon':
+      'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
+    'next-button-icon':
+      'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
+  },
   play: async (context) => {
     await play(context);
     await playExecuteFirstSearch(context);

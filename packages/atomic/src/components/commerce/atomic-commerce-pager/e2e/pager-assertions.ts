@@ -1,9 +1,25 @@
 import {test, expect} from './fixture';
 import {AtomicCommercePagerLocators} from './page-object';
 
+type NavigationButtons = keyof Pick<
+  AtomicCommercePagerLocators,
+  'nextButton' | 'previousButton'
+>;
+
 // TODO: Move in shared E2E folder
 export function should(should: boolean) {
   return should ? 'should' : 'should not';
+}
+
+// TODO: Move in shared E2E folder
+export function assertContainsComponentError(display: boolean) {
+  test(`${should(display)} display an error component`, async ({pager}) => {
+    const assertion = expect(pager.errorComponent);
+    const expectation = display
+      ? assertion.toBeVisible()
+      : assertion.not.toBeVisible();
+    await expectation;
+  });
 }
 
 export function assertAccessibility() {
@@ -14,13 +30,13 @@ export function assertAccessibility() {
   });
 }
 
-export function assertEnabled(locator: keyof AtomicCommercePagerLocators) {
+export function assertEnabled(locator: NavigationButtons) {
   test(`${locator} should be enabled`, async ({pager}) => {
     await expect(pager[locator]).toBeEnabled();
   });
 }
 
-export function assertDisabled(locator: keyof AtomicCommercePagerLocators) {
+export function assertDisabled(locator: NavigationButtons) {
   test(`${locator} should be disabled`, async ({pager}) => {
     await expect(pager[locator]).toBeDisabled();
   });
@@ -42,7 +58,7 @@ export function assertPagerSelected(pageNumber: number, selected: boolean) {
     pager,
   }) => {
     const part = 'active-page-button';
-    const assertion = expect(pager.numericButtons.nth(pageNumber - 1));
+    const assertion = expect(pager.numericButton(pageNumber));
     const expectation = selected
       ? assertion.toHaveAttribute('part', expect.stringContaining(part))
       : assertion.not.toHaveAttribute('part', part);

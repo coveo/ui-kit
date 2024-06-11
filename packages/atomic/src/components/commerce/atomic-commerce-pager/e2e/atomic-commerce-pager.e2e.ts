@@ -1,6 +1,7 @@
 import {test, expect} from './fixture';
 import {
   assertAccessibility,
+  assertContainsComponentError,
   assertDisabled,
   assertEnabled,
   assertPageInHash,
@@ -18,13 +19,13 @@ test.describe('Default', () => {
   assertDisabled('previousButton');
   assertAccessibility();
 
-  test('should display numeric Button', async ({pager}) => {
-    const buttons = await pager.numericButtons;
-    const count = await buttons.count();
+  test('should display 5 pages', async ({pager}) => {
+    await expect(pager.pages).toHaveCount(5);
+  });
 
-    for (let i = 0; i < count; i++) {
-      const element = buttons.nth(i);
-      await expect(element).toBeVisible();
+  test('should display numeric Button', async ({pager}) => {
+    for (let i = 1; i < 5; i++) {
+      await expect(pager.numericButton(i)).toBeVisible();
     }
   });
 
@@ -36,15 +37,12 @@ test.describe('Default', () => {
     await expect(pager.nextButton).toBeVisible();
   });
 
-  test('should display 5 page Buttons', async ({pager}) => {
-    await expect(pager.numericButtons).toHaveCount(5);
-  });
-
   test.describe('after clicking the button next', () => {
     test.beforeEach(async ({pager}) => {
       await pager.nextButton.click();
     });
 
+    // TODO: run this test in parallel
     assertPagerSelected(2, true);
     assertPagerSelected(1, false);
     assertPageInHash(2);
@@ -67,7 +65,7 @@ test.describe('Default', () => {
 
   test.describe('after clicking the pager button', () => {
     test.beforeEach(async ({pager}) => {
-      await pager.numericButtons.nth(2).click();
+      await pager.numericButton(3).click();
     });
 
     assertPagerSelected(3, true);
@@ -77,19 +75,19 @@ test.describe('Default', () => {
     assertEnabled('previousButton');
   });
 
-  describe('after clicking on page 5', () => {
+  test.describe('after clicking on page 5', () => {
     test.beforeEach(async ({pager}) => {
-      await pager.numericButtons.nth(5).click();
+      await pager.numericButton(5).click();
     });
 
-    assertPagerSelected(6, false);
+    assertPagerSelected(5, false);
   });
 });
 
-describe('with numberOfPages=2', () => {
+test.describe('with a valid page in the hash', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=2&perPage=48'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=2'
     );
   });
 
@@ -97,10 +95,10 @@ describe('with numberOfPages=2', () => {
   assertAccessibility();
 });
 
-describe('with numberOfPages=8k3', () => {
+test.describe('with an invalid page in the hash', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=8k3&perPage=48'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=8k3'
     );
   });
 
@@ -108,12 +106,40 @@ describe('with numberOfPages=8k3', () => {
   assertAccessibility();
 });
 
-// TODO: assert error
-// describe('with numberOfPages=-5', () => {
-//   test.beforeEach(async ({page}) => {
-//     await page.goto(
-//       'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=-5&perPage=48'
-//     );
-//   });
+test.describe('with number-of-pages=3', () => {
+  test.beforeEach(async ({page}) => {
+    await page.goto(
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=number-of-pages:3'
+    );
+  });
 
-// });
+  test('should display 3 pages', async ({pager}) => {
+    await expect(pager.pages).toHaveCount(3);
+  });
+});
+
+test.describe('with numberOfPages=-5', () => {
+  test.beforeEach(async ({page}) => {
+    await page.goto(
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=storyargs=number-of-pages=-5'
+    );
+  });
+  assertContainsComponentError(true);
+});
+
+test.describe('should allow custom icons', () => {
+  // TODO: pass the argument via the URL instead of creating a story
+  const customIcon =
+    'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+
+  test.beforeEach(async ({page}) => {
+    await page.goto(
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--custom-icon&viewMode=story'
+    );
+  });
+
+  test('previous button', async ({pager, page}) => {
+    await page.waitForRequest(/arrow-top-rounded/);
+    await expect(pager.previousButtonIcon).toHaveAttribute('icon', customIcon);
+  });
+});
