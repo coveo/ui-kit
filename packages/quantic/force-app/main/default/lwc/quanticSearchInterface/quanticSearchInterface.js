@@ -175,8 +175,11 @@ export default class QuanticSearchInterface extends LightningElement {
     this.urlManager = CoveoHeadless.buildUrlManager(engine, {
       initialState: {fragment: this.fragment},
     });
-    // Make sure sure to re-synchronize the search interface when the component gets discoconnected and reconnected again.
-    this.urlManager.synchronize(this.fragment);
+
+    const isFirstSearchExecuted = engine.state.search.response.searchUid !== '';
+    if (isFirstSearchExecuted) {
+      this.urlManager.synchronize(this.fragment);
+    }
 
     this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
       this.updateHash()
