@@ -36,6 +36,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   public facetGenerator!: FacetGenerator;
+  public summary!: ListingSummary | SearchSummary;
   @Element() host!: HTMLElement;
 
   /**
@@ -49,8 +50,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
 
   @BindStateToController('facetGenerator')
   @State()
-  public facetGeneratorState!: FacetGeneratorState[];
-  public summary!: ListingSummary | SearchSummary;
+  public facetGeneratorState!: FacetGeneratorState;
 
   @State() public error!: Error;
 
@@ -91,9 +91,9 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   }
 
   public render() {
-    if (!this.summary.state.firstSearchExecuted) {
-      return [...Array(this.collapseFacetsAfter)].map(() => (
-        <FacetPlaceholder numberOfValues={8} isCollapsed={false} />
+    if (!this.bindings.store.isAppLoaded()) {
+      return [...Array.from({length: this.collapseFacetsAfter})].map(() => (
+        <FacetPlaceholder isCollapsed={false} numberOfValues={8} />
       ));
     }
     return (

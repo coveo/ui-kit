@@ -448,6 +448,10 @@ export namespace Components {
          */
         "imageSize": ItemDisplayImageSize;
         /**
+          * The desired number of placeholders to display while the product list is loading.
+         */
+        "numberOfPlaceholders": number;
+        /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param productRenderingFunction
          */
@@ -5844,6 +5848,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed for products.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The desired number of placeholders to display while the product list is loading.
+         */
+        "numberOfPlaceholders"?: number;
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
