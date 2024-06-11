@@ -121,7 +121,7 @@ export default class QuanticResultLink extends NavigationMixin(
     this.engine = engine;
     ResultUtils.bindClickEventsOnResult(
       this.engine,
-      this.result,
+      {...this.result, raw: {...this.result.raw}},
       this.template,
       this.headless.buildInteractiveResult
     );
