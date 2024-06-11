@@ -178,6 +178,7 @@ export default class QuanticSearchInterface extends LightningElement {
 
     const isFirstSearchExecuted = engine.state.search.response.searchUid !== '';
     if (isFirstSearchExecuted) {
+      // Make sure to re-synchronize the search interface when the component gets disconnected and reconnected again.
       this.urlManager.synchronize(this.fragment);
     }
 
