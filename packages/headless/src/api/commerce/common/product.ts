@@ -1,7 +1,10 @@
-export type ChildProduct = Omit<Product, 'children' | 'totalNumberOfChildren'>;
+export type ChildProduct = Omit<
+  BaseProduct,
+  'children' | 'totalNumberOfChildren'
+>;
 
 // TODO: KIT-3164 update based on https://coveord.atlassian.net/browse/DOC-14667
-export interface Product {
+export interface BaseProduct {
   /**
    * The SKU of the product.
    */
@@ -104,4 +107,13 @@ export interface Product {
    * The total number of child products fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
   totalNumberOfChildren: number;
+}
+
+export interface Product extends BaseProduct {
+  /**
+   * The 1-based product's position across the non-paginated result set.
+   *
+   * E.g., if the product is the third one on the second page, and there are 10 products per page, its position is 13 (not 3).
+   */
+  position: number;
 }

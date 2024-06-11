@@ -64,13 +64,15 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
    * The category facet controller instance.
    */
   @Prop() public facet!: CategoryFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
   @State() public error!: Error;
-
-  @State() private isCollapsed = false;
 
   private resultIndexToFocusOnShowMore = 0;
   private showLessFocus?: FocusTargetController;
