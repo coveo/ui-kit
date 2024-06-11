@@ -52,9 +52,7 @@ const customRenderer = {
    * @returns {string} The list item element to render.
    */
   listitem(text) {
-    const unwrappedText = text
-      .replace(/^<p[^>]*>/, '')
-      .replace(/<\/p>\n?$/, '');
+    const unwrappedText = text.replace(/^<p[^>]*>/, '').replace(/<\/p>\n?/, '');
     const withClosedElement = completeUnclosedElement(unwrappedText);
     return `<li>${withClosedElement}</li>`;
   },
