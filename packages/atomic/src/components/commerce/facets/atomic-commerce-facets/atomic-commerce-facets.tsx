@@ -13,12 +13,13 @@ import {
   ListingSummary,
   SearchSummary,
 } from '@coveo/headless/commerce';
-import {Component, h, Element, Host, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -35,6 +36,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   public facetGenerator!: FacetGenerator;
+  public summary!: ListingSummary | SearchSummary;
   @Element() host!: HTMLElement;
 
   /**
@@ -48,8 +50,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
 
   @BindStateToController('facetGenerator')
   @State()
-  public facetGeneratorState!: FacetGeneratorState[];
-  public summary!: ListingSummary | SearchSummary;
+  public facetGeneratorState!: FacetGeneratorState;
 
   @State() public error!: Error;
 
@@ -90,8 +91,13 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   }
 
   public render() {
+    if (!this.bindings.store.isAppLoaded()) {
+      return [...Array.from({length: this.collapseFacetsAfter})].map(() => (
+        <FacetPlaceholder isCollapsed={false} numberOfValues={8} />
+      ));
+    }
     return (
-      <Host>
+      <Fragment>
         {this.facetGenerator.facets.map((facet, index) => {
           if (facet.state.values.length === 0) {
             return;
@@ -136,7 +142,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             }
           }
         })}
-      </Host>
+      </Fragment>
     );
   }
 }
