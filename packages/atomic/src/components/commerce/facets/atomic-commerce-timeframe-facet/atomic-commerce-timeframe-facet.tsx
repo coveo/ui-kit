@@ -2,11 +2,12 @@ import {
   DateFacet,
   DateFilterRange,
   deserializeRelativeDate,
-  ListingSummary,
-  SearchSummary,
   DateFacetValue,
   DateFacetState,
   DateRangeRequest,
+  SearchSummaryState,
+  ProductListingSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -47,7 +48,7 @@ export class AtomicCommerceTimeframeFacet
   /**
    * The summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The date facet controller instance.
    */
@@ -105,7 +106,7 @@ export class AtomicCommerceTimeframeFacet
 
   private get shouldRenderInput() {
     const {
-      firstSearchExecuted,
+      firstRequestExecuted: firstSearchExecuted,
       hasError,
       isLoading,
       hasProducts: hasResults,
@@ -283,12 +284,12 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public render() {
-    const {hasError, firstSearchExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summary.state;
 
     return (
       <FacetGuard
         enabled={true}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasError={hasError}
         hasResults={this.shouldRenderFacet}
       >

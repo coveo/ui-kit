@@ -8,10 +8,9 @@ import {
   buildProductListing,
   buildSearch,
   FacetGenerator,
-  buildListingSummary,
-  buildSearchSummary,
-  ListingSummary,
-  SearchSummary,
+  Summary,
+  SearchSummaryState,
+  ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, Host, State, Prop} from '@stencil/core';
 import {
@@ -49,27 +48,24 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @BindStateToController('facetGenerator')
   @State()
   public facetGeneratorState!: FacetGeneratorState[];
-  public summary!: ListingSummary | SearchSummary;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   @State() public error!: Error;
 
   public initialize() {
     this.validateProps();
     const {engine} = this.bindings;
-    this.facetGenerator = this.facetGeneratorBuilder(engine).facetGenerator();
-    this.summary = this.summaryBuilder(engine);
+    const controller = this.controllerBuilder(engine);
+    this.facetGenerator = controller.facetGenerator();
+    this.summary = controller.summary();
   }
 
   private isProductListing() {
     return this.bindings.interfaceElement.type === 'product-listing';
   }
 
-  private get facetGeneratorBuilder() {
+  private get controllerBuilder() {
     return this.isProductListing() ? buildProductListing : buildSearch;
-  }
-
-  private get summaryBuilder() {
-    return this.isProductListing() ? buildListingSummary : buildSearchSummary;
   }
 
   private validateProps() {

@@ -12,10 +12,9 @@ import {
   ProductListing,
   Context,
   buildContext,
-  buildSearchSummary,
-  buildListingSummary,
-  SearchSummary,
-  ListingSummary,
+  Summary,
+  SearchSummaryState,
+  ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -76,7 +75,7 @@ export class AtomicCommerceInterface
 {
   private urlManager!: UrlManager;
   private searchOrListing!: Search | ProductListing;
-  private summary!: SearchSummary | ListingSummary;
+  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
@@ -379,26 +378,23 @@ export class AtomicCommerceInterface
   }
 
   private initSummary() {
-    this.summary =
-      this.type === 'product-listing'
-        ? buildListingSummary(this.engine!)
-        : buildSearchSummary(this.engine!);
+    this.summary = this.searchOrListing.summary();
 
     this.unsubscribeSummary = this.summary.subscribe(() => {
-      const {firstSearchExecuted, hasProducts, hasError} = this.summary.state;
-      const hasNoProductsAfterInitialSearch =
-        firstSearchExecuted && !hasError && !hasProducts;
+      const {firstRequestExecuted, hasProducts, hasError} = this.summary.state;
+      const hasNoProductsAfterInitialQuery =
+        firstRequestExecuted && !hasError && !hasProducts;
 
       this.host.classList.toggle(
         noProductsSelector,
-        hasNoProductsAfterInitialSearch
+        hasNoProductsAfterInitialQuery
       );
 
       this.host.classList.toggle(errorSelector, hasError);
 
       this.host.classList.toggle(
         firstSearchExecutedSelector,
-        firstSearchExecuted
+        firstRequestExecuted
       );
     });
   }

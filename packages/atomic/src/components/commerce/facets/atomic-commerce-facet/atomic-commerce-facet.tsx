@@ -1,8 +1,9 @@
 import {
+  ProductListingSummaryState,
   RegularFacet,
   RegularFacetState,
-  SearchSummary,
-  ListingSummary,
+  SearchSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -61,7 +62,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   /**
    * The Summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
    */
@@ -105,12 +106,12 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   }
 
   public render() {
-    const {hasError, firstSearchExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summary.state;
     return (
       <FacetGuard
         enabled={true}
         hasError={hasError}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasResults={this.facetState.values.length > 0}
       >
         {
