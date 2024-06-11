@@ -3,87 +3,97 @@ import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engi
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {
-  pagePrincipalSelector,
-  perPagePrincipalSelector,
-  totalEntriesPrincipalSelector,
-} from '../../../../features/commerce/pagination/pagination-selectors';
-import {
   Controller,
   buildController,
 } from '../../../controller/headless-controller';
 
 export interface SummaryState {
   /**
-   * The number of the first product on the current page.
+   * The position of the first product on the current page.
    */
   firstProduct: number;
   /**
-   * The number of the last product on the current page.
+   * The position of the last product on the current page.
    */
   lastProduct: number;
   /**
-   * Whether the first search has been executed.
+   * Whether the first request has been executed.
    */
-  firstSearchExecuted: boolean;
-
+  firstRequestExecuted: boolean;
   /**
    * The total number of products available.
    */
   totalNumberOfProducts: number;
   /**
-   * Whether the search has returned any products.
+   * Whether the query has returned any products.
    */
   hasProducts: boolean;
   /**
-   * Whether the search is currently loading.
+   * Whether the query is currently loading.
    */
   isLoading: boolean;
   /**
-   * Whether the search has returned an error.
+   * Whether the query has returned an error.
    */
   hasError: boolean;
 }
-export interface Summary extends Controller {
+
+export interface Summary<State extends SummaryState = SummaryState>
+  extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `SearchSummary` controller.
    */
-  state: SummaryState;
+  state: State;
 }
 
-interface SummaryOptions {
-  selectNumProducts: (state: CommerceEngineState) => number;
-  selectResponseId: (state: CommerceEngineState) => string;
-  selectLoading: (state: CommerceEngineState) => boolean;
-  selectError: (
+export interface SummaryOptions<State extends SummaryState> {
+  numberOfProductsSelector: (state: CommerceEngineState) => number;
+  responseIdSelector: (state: CommerceEngineState) => string;
+  isLoadingSelector: (state: CommerceEngineState) => boolean;
+  errorSelector: (
     state: CommerceEngineState
   ) => CommerceAPIErrorStatusResponse | null | undefined;
+  pageSelector: (state: CommerceEngineState) => number;
+  perPageSelector: (state: CommerceEngineState) => number;
+  totalEntriesSelector: (state: CommerceEngineState) => number;
+  enrichSummary?: (state: CommerceEngineState) => Partial<State>;
 }
 
-interface SummaryProps {
-  options: SummaryOptions;
+interface SummaryProps<State extends SummaryState> {
+  options: SummaryOptions<State>;
 }
 
 /**
  * Builds a `Summary` controller.
  *
  * @param engine - The headless commerce engine.
+ * @param props - The configurable `Summary` properties.
  * @returns A `Summary` controller.
  */
-export const buildCoreSummary = (
+export const buildCoreSummary = <State extends SummaryState = SummaryState>(
   engine: CommerceEngine,
-  props: SummaryProps
-): Summary => {
+  props: SummaryProps<State>
+): Summary<State> => {
   const controller = buildController(engine);
   const {
-    options: {selectNumProducts, selectResponseId, selectLoading, selectError},
+    options: {
+      numberOfProductsSelector,
+      responseIdSelector,
+      isLoadingSelector,
+      errorSelector,
+      pageSelector,
+      perPageSelector,
+      totalEntriesSelector,
+      enrichSummary,
+    },
   } = props;
 
   const getState = () => engine[stateKey];
-  const page = () => pagePrincipalSelector(getState());
-  const perPage = () => perPagePrincipalSelector(getState());
-  const totalNumberOfProducts = () => totalEntriesPrincipalSelector(getState());
+  const page = () => pageSelector(getState());
+  const perPage = () => perPageSelector(getState());
+  const totalNumberOfProducts = () => totalEntriesSelector(getState());
 
-  const firstSearchExecuted = () => !!selectResponseId(getState());
+  const firstSearchExecuted = () => !!responseIdSelector(getState());
 
   const hasProducts = () =>
     firstSearchExecuted() && totalNumberOfProducts() > 0;
@@ -91,20 +101,23 @@ export const buildCoreSummary = (
   const firstProduct = () => (hasProducts() ? page() * perPage() + 1 : 0);
 
   const lastProduct = () =>
-    hasProducts() ? firstProduct() + (selectNumProducts(getState()) - 1) : 0;
+    hasProducts()
+      ? firstProduct() + (numberOfProductsSelector(getState()) - 1)
+      : 0;
 
   return {
     ...controller,
-    get state(): SummaryState {
+    get state(): State {
       return {
-        firstSearchExecuted: firstSearchExecuted(),
+        firstRequestExecuted: firstSearchExecuted(),
         firstProduct: firstProduct(),
         lastProduct: lastProduct(),
         totalNumberOfProducts: totalNumberOfProducts(),
         hasProducts: hasProducts(),
-        isLoading: selectLoading(getState()),
-        hasError: selectError(getState()) !== null,
-      };
+        isLoading: isLoadingSelector(getState()),
+        hasError: errorSelector(getState()) !== null,
+        ...(enrichSummary ? enrichSummary(getState()) : {}),
+      } as State;
     },
   };
 };

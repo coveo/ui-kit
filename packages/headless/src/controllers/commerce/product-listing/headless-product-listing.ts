@@ -4,6 +4,11 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
 import {
@@ -18,6 +23,9 @@ import {
   promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions';
 import {
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
@@ -35,13 +43,14 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
+import {ProductListingSummaryState} from './summary/headless-product-listing-summary';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
 export interface ProductListing
   extends Controller,
-    SearchAndListingSubControllers<Parameters> {
+    SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   /**
    * Fetches the product listing.
    */
@@ -107,6 +116,12 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
     enrichParameters: enrichedParametersSelector,
+    isLoadingSelector,
+    errorSelector,
+    pageSelector: pagePrincipalSelector,
+    perPageSelector: perPagePrincipalSelector,
+    totalEntriesSelector: totalEntriesPrincipalSelector,
+    numberOfProductsSelector,
   });
 
   return {
