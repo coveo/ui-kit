@@ -25,7 +25,11 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
-export type {Product, ChildProduct} from './api/commerce/common/product';
+export type {
+  BaseProduct,
+  Product,
+  ChildProduct,
+} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
