@@ -10,7 +10,6 @@ export class AtomicCommercePagerLocators {
     return this.page.locator('atomic-commerce-pager[class*="hydrated"]');
   }
 
-  // TODO: inherit from a base class to prevent having to redefine this in every page object
   get errorComponent() {
     return this.page.locator('atomic-component-error');
   }

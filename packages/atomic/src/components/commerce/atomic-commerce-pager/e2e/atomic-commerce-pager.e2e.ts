@@ -42,7 +42,6 @@ test.describe('Default', () => {
       await pager.nextButton.click();
     });
 
-    // TODO: run this test in parallel
     assertPagerSelected(2, true);
     assertPagerSelected(1, false);
     assertPageInHash(2);

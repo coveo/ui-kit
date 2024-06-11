@@ -22,6 +22,7 @@ export function assertContainsComponentError(display: boolean) {
   });
 }
 
+// TODO: Move in shared E2E folder
 export function assertAccessibility() {
   test('should be A11y compliant', async ({pager, makeAxeBuilder}) => {
     await pager.hydrated.waitFor();
