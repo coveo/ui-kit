@@ -217,12 +217,24 @@ export class AtomicCommerceProductList
     );
   }
 
+  private logWarningIfNeeded(message?: string) {
+    if (message) {
+      this.bindings.engine.logger.warn(message);
+    }
+  }
+
+  private getInteractiveProduct(product: Product) {
+    const parentController =
+      this.bindings.interfaceElement.type === 'product-listing'
+        ? this.productListing
+        : this.search;
+
+    return parentController.interactiveProduct({options: {product}});
+  }
+
   private getPropsForAtomicProduct(product: Product) {
     return {
-      // TODO: add back once interactive result is implemented for products in KIT-3149
-      /* interactiveResult: buildInteractiveResult(this.bindings.engine, {
-        options: {result},
-      }), */
+      interactiveProduct: this.getInteractiveProduct(product),
       product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
@@ -243,6 +255,7 @@ export class AtomicCommerceProductList
   private renderAsGrid() {
     return this.productState.products.map((product, i) => {
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
+      const {interactiveProduct} = propsForAtomicProduct;
       return (
         <DisplayGrid
           item={{
@@ -250,23 +263,24 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          // TODO KIT-3149: add back once the interactive result is implemented
-          //{...propsForAtomicProduct.interactiveResult}
-          // TODO KIT-3149: Remove these back once the interactive result is implemented
+          {...propsForAtomicProduct.interactiveProduct}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
-          select={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          select={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.select();
           }}
-          beginDelayedSelect={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          beginDelayedSelect={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.beginDelayedSelect();
           }}
-          cancelPendingSelect={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          cancelPendingSelect={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.cancelPendingSelect();
           }}
         >
-          <atomic-product {...this} {...propsForAtomicProduct}></atomic-product>
+          <atomic-product {...propsForAtomicProduct}></atomic-product>
         </DisplayGrid>
       );
     });
@@ -328,7 +342,6 @@ export class AtomicCommerceProductList
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
       return (
         <atomic-product
-          {...this}
           {...propsForAtomicProduct}
           ref={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
