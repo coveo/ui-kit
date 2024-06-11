@@ -12,10 +12,9 @@ sarifs
 **.cy.ts.mp4
 .cspellcache
 scripts/translation-gpt/temporary.json
-.nx/cache
 
 # CI Release
 topology.json
 .git-message
-.nx/cache
 packages/atomic/custom-elements.json
+.nx

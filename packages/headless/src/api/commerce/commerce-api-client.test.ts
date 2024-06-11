@@ -46,6 +46,7 @@ describe('commerce api client', () => {
         url: '',
         referrer: 'https://example.org/referrer',
       },
+      capture: true,
     },
   });
 
@@ -67,6 +68,7 @@ describe('commerce api client', () => {
           url: '',
           referrer: 'https://example.org/referrer',
         },
+        capture: true,
       },
     };
   };

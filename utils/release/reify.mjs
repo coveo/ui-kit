@@ -51,6 +51,9 @@ function buildDependencyGraph(rootNode) {
       if (!node.package.name || !dependency.package.name) {
         throw 'Workspaces must all have a name.';
       }
+      if (node.package.name === dependency.package.name) {
+        continue;
+      }
       graph.addDependency(node.package.name, dependency.package.name);
       addWorkspaceDependencies(dependency);
     }
