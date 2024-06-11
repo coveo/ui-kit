@@ -14,6 +14,24 @@ export class AtomicCommerceSearchBoxLocators {
     return this.page.getByRole('combobox', {name: 'Search'});
   }
 
+  get clearButton() {
+    return this.page.getByLabel('Clear', {exact: true});
+  }
+
+  get ariaLive() {
+    return this.page.locator('div[id*="aria-live-"][id$="-search-box"]');
+  }
+
+  get clearRecentQueriesButton() {
+    return this.page.getByLabel('Clear recent searches.');
+  }
+
+  get numberOfQueries() {
+    return this.page
+      .locator('atomic-commerce-search-box')
+      .getAttribute('number-of-queries');
+  }
+
   searchSuggestions({
     index,
     total,
@@ -21,7 +39,19 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `suggested query\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `.* suggested query\\. Button\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+      )
+    );
+  }
+
+  recentQueries({
+    index,
+    total,
+    listSide,
+  }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
+    return this.page.getByLabel(
+      new RegExp(
+        `.* recent query\\. Button\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }
@@ -33,7 +63,7 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `instant result\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `instant result\\. Button. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }

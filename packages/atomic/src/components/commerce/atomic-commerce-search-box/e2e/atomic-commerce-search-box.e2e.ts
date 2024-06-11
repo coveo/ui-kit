@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {test, expect, setSuggestions, setRecentQueries} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({page}) => {
@@ -17,14 +17,117 @@ test.describe('default', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test.describe('after clicking the searchbox input', () => {
-    test.beforeEach(async ({searchBox}) => {
+  test.describe('when suggestions are available', () => {
+    test.beforeEach(async ({searchBox, page}) => {
+      await setSuggestions(page, 4);
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
     });
 
     test('should display suggested queries', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
+    });
+
+    test('should update aria-live message', async ({searchBox}) => {
+      await searchBox.searchSuggestions().first().waitFor({state: 'visible'});
+      await expect(searchBox.ariaLive).toContainText(
+        (await searchBox.searchSuggestions().count()).toString()
+      );
+    });
+
+    test.describe('after focusing a suggestion', () => {
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.searchInput.press('ArrowDown');
+      });
+
+      test('should update the searchbox input', async ({searchBox}) => {
+        const expectedText = await searchBox
+          .searchSuggestions()
+          .first()
+          .textContent();
+        await expect(searchBox.searchInput).toHaveValue(expectedText ?? '');
+      });
+    });
+  });
+
+  test.describe('when no suggestions are available', () => {
+    test.beforeEach(async ({searchBox, page}) => {
+      await setSuggestions(page, 0);
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+    });
+
+    test('should display suggested queries', async ({searchBox}) => {
+      await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
+    });
+
+    test('should update aria-live message', async ({searchBox}) => {
+      await expect(searchBox.ariaLive).toContainText('no ');
+    });
+  });
+
+  test.describe('when recent queries are available', () => {
+    test.beforeEach(async ({searchBox, page}) => {
+      await setRecentQueries(page, 4);
+      await setSuggestions(page, 4);
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+    });
+
+    test('should display recent queries', async ({searchBox}) => {
+      await expect(searchBox.recentQueries().first()).toBeVisible();
+    });
+
+    test('should update aria-live message', async ({searchBox}) => {
+      await searchBox.recentQueries().first().waitFor({state: 'visible'});
+      await expect(searchBox.ariaLive).toContainText(
+        Math.min(
+          (await searchBox.recentQueries().count()) +
+            (await searchBox.searchSuggestions().count()),
+          parseInt((await searchBox.numberOfQueries) ?? '')
+        ).toString()
+      );
+    });
+
+    test('should clear recent queries when clicking the clear button', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.click();
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
+  });
+
+  test.describe('after clicking the searchbox input', () => {
+    test.beforeEach(async ({searchBox}) => {
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+    });
+
+    test.describe('after entering text', () => {
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.searchInput.fill('kayak');
+      });
+
+      test('should display clear button when searchbox has text', async ({
+        searchBox,
+      }) => {
+        await expect(searchBox.clearButton).toBeVisible();
+      });
+
+      test('should hide clear button when clearing input manually', async ({
+        searchBox,
+      }) => {
+        await searchBox.searchInput.fill('');
+        await expect(searchBox.clearButton).not.toBeVisible();
+      });
+
+      test('should clear searchbox when clicking the clear button', async ({
+        searchBox,
+      }) => {
+        await searchBox.clearButton.click();
+        await expect(searchBox.searchInput).toHaveText('');
+        await expect(searchBox.clearButton).not.toBeVisible();
+      });
     });
 
     test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
