@@ -126,12 +126,6 @@ export class AtomicCommerceRecommendationInterface
       this,
       'CoveoAtomic'
     );
-
-    if (!this.commonInterfaceHelper.engineIsCreated()) {
-      return;
-    }
-
-    this.contextController = buildContext(this.bindings.engine);
   }
 
   public connectedCallback() {
@@ -233,6 +227,10 @@ export class AtomicCommerceRecommendationInterface
     };
   }
 
+  private initContext() {
+    this.contextController = buildContext(this.bindings.engine);
+  }
+
   private initAriaLive() {
     if (
       Array.from(this.host.children).some(
@@ -246,6 +244,7 @@ export class AtomicCommerceRecommendationInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.initContext();
   }
 
   private addResourceBundle(
