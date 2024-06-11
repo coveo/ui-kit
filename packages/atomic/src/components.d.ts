@@ -275,6 +275,10 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -289,6 +293,10 @@ export namespace Components {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
@@ -394,6 +402,10 @@ export namespace Components {
           * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
@@ -659,6 +671,10 @@ export namespace Components {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The summary controller instance.
          */
@@ -5666,6 +5682,10 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -5680,6 +5700,10 @@ declare namespace LocalJSX {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
@@ -5774,6 +5798,10 @@ declare namespace LocalJSX {
           * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
@@ -6011,6 +6039,10 @@ declare namespace LocalJSX {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The summary controller instance.
          */

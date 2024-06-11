@@ -5,7 +5,7 @@ import {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {CollectionId} from '../folding/folding-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';

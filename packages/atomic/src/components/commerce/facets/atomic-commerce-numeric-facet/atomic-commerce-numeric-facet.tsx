@@ -52,7 +52,6 @@ export class AtomicCommerceNumericFacet
 
   @State() public error!: Error;
 
-  @State() private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
@@ -64,6 +63,10 @@ export class AtomicCommerceNumericFacet
    * The numeric facet controller instance.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private headerFocus?: FocusTargetController;
 
