@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Product, RawProduct} from '../../../api/commerce/common/product';
+import {Product, BaseProduct} from '../../../api/commerce/common/product';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -104,7 +104,7 @@ export const instantProductsReducer = createReducer(
   }
 );
 
-function preprocessProduct(product: RawProduct, position: number): Product {
+function preprocessProduct(product: BaseProduct, position: number): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );

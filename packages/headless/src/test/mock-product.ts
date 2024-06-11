@@ -1,7 +1,7 @@
 import {
   ChildProduct,
   Product,
-  RawProduct,
+  BaseProduct,
 } from '../api/commerce/common/product';
 
 export function buildMockChildProduct(
@@ -16,9 +16,9 @@ export function buildMockChildProduct(
   };
 }
 
-export function buildMockRawProduct(
-  config: Partial<RawProduct> = {}
-): RawProduct {
+export function buildMockBaseProduct(
+  config: Partial<BaseProduct> = {}
+): BaseProduct {
   const {children, totalNumberOfChildren, ...childProductConfig} = config;
   return {
     ...buildMockChildProduct(childProductConfig),
@@ -28,9 +28,9 @@ export function buildMockRawProduct(
 }
 
 export function buildMockProduct(config: Partial<Product> = {}): Product {
-  const {position, ...rawProductConfig} = config;
+  const {position, ...baseProductConfig} = config;
   return {
-    ...buildMockRawProduct(rawProductConfig),
+    ...buildMockBaseProduct(baseProductConfig),
     position: position ?? 1,
   };
 }

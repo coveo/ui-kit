@@ -3,7 +3,7 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {
   buildMockChildProduct,
   buildMockProduct,
-  buildMockRawProduct,
+  buildMockBaseProduct,
 } from '../../../test/mock-product';
 import {
   executeSearch,
@@ -31,7 +31,7 @@ describe('search-slice', () => {
 
   describe('on #executeSearch.fulfilled', () => {
     it('updates the state with the received payload', () => {
-      const products = [buildMockRawProduct({ec_name: 'product1'})];
+      const products = [buildMockBaseProduct({ec_name: 'product1'})];
       const facets = [buildMockCommerceRegularFacetResponse()];
       const responseId = 'some-response-id';
       const response = buildSearchResponse({
@@ -54,8 +54,8 @@ describe('search-slice', () => {
     it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
       const response = buildSearchResponse({
         products: [
-          buildMockRawProduct({ec_name: 'product1'}),
-          buildMockRawProduct({ec_name: 'product2'}),
+          buildMockBaseProduct({ec_name: 'product1'}),
+          buildMockBaseProduct({ec_name: 'product2'}),
         ],
         pagination: {
           page: 2,
@@ -90,8 +90,8 @@ describe('search-slice', () => {
         buildMockProduct({ec_name: 'product2'}),
       ];
       const newProducts = [
-        buildMockRawProduct({ec_name: 'product3'}),
-        buildMockRawProduct({ec_name: 'product4'}),
+        buildMockBaseProduct({ec_name: 'product3'}),
+        buildMockBaseProduct({ec_name: 'product4'}),
       ];
       const facets = [buildMockCommerceRegularFacetResponse()];
       const responseId = 'some-response-id';
@@ -128,7 +128,7 @@ describe('search-slice', () => {
         }),
       ];
       const response = buildSearchResponse({
-        products: [buildMockRawProduct({ec_name: 'product3'})],
+        products: [buildMockBaseProduct({ec_name: 'product3'})],
         pagination: {
           page: 1,
           perPage: 2,

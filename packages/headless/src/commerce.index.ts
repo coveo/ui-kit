@@ -26,7 +26,7 @@ export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {
-  RawProduct,
+  BaseProduct,
   Product,
   ChildProduct,
 } from './api/commerce/common/product';

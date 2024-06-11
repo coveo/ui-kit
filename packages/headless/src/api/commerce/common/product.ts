@@ -1,10 +1,10 @@
 export type ChildProduct = Omit<
-  RawProduct,
+  BaseProduct,
   'children' | 'totalNumberOfChildren'
 >;
 
 // TODO: KIT-3164 update based on https://coveord.atlassian.net/browse/DOC-14667
-export interface RawProduct {
+export interface BaseProduct {
   /**
    * The SKU of the product.
    */
@@ -109,7 +109,7 @@ export interface RawProduct {
   totalNumberOfChildren: number;
 }
 
-export interface Product extends RawProduct {
+export interface Product extends BaseProduct {
   /**
    * The 1-based product's position across the non-paginated result set.
    *

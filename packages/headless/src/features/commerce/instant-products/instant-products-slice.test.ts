@@ -2,7 +2,7 @@ import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/respon
 import {
   buildMockChildProduct,
   buildMockProduct,
-  buildMockRawProduct,
+  buildMockBaseProduct,
 } from '../../../test/mock-product';
 import {
   fetchInstantProducts,
@@ -202,7 +202,7 @@ describe('instant products slice', () => {
         const action = fetchInstantProducts.fulfilled(
           {
             response: {
-              products: [buildMockRawProduct()],
+              products: [buildMockBaseProduct()],
               pagination: {totalEntries: 123},
               responseId: 'someid',
             } as unknown as SearchCommerceSuccessResponse,
@@ -246,7 +246,7 @@ describe('instant products slice', () => {
         const action = fetchInstantProducts.fulfilled(
           {
             response: {
-              products: [buildMockRawProduct()],
+              products: [buildMockBaseProduct()],
               pagination: {totalEntries: 123},
               responseId: 'someid',
             } as unknown as SearchCommerceSuccessResponse,
@@ -289,8 +289,8 @@ describe('instant products slice', () => {
           {
             response: {
               products: [
-                buildMockRawProduct({ec_name: 'product1'}),
-                buildMockRawProduct({ec_name: 'product2'}),
+                buildMockBaseProduct({ec_name: 'product1'}),
+                buildMockBaseProduct({ec_name: 'product2'}),
               ],
               pagination: {totalEntries: 22},
               responseId: 'someid',

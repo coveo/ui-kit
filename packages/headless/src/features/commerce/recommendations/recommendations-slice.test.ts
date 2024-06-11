@@ -2,7 +2,7 @@ import {Action} from '@reduxjs/toolkit';
 import {
   buildMockChildProduct,
   buildMockProduct,
-  buildMockRawProduct,
+  buildMockBaseProduct,
 } from '../../../test/mock-product';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
 import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice';
@@ -55,7 +55,7 @@ describe('recommendation-slice', () => {
   });
 
   describe('on #fetchRecommendations.fulfilled', () => {
-    const result = buildMockRawProduct();
+    const result = buildMockBaseProduct();
     const responseId = 'some-response-id';
     const response = buildMockRecommendationsResponse({
       products: [result],
@@ -69,10 +69,10 @@ describe('recommendation-slice', () => {
     );
 
     it('when slot exists, sets the state to the received payload', () => {
-      const rawProduct = buildMockRawProduct({ec_name: 'product-1'});
+      const baseProduct = buildMockBaseProduct({ec_name: 'product-1'});
       const responseId = 'some-response-id';
       const response = buildMockRecommendationsResponse({
-        products: [rawProduct],
+        products: [baseProduct],
         responseId,
       });
 
@@ -95,8 +95,8 @@ describe('recommendation-slice', () => {
     it('when slot exists, sets the #position of each product to its 1-based position in the unpaginated list', () => {
       const response = buildMockRecommendationsResponse({
         products: [
-          buildMockRawProduct({ec_name: 'product-1'}),
-          buildMockRawProduct({ec_name: 'product-2'}),
+          buildMockBaseProduct({ec_name: 'product-1'}),
+          buildMockBaseProduct({ec_name: 'product-2'}),
         ],
         pagination: {
           page: 2,
@@ -121,8 +121,8 @@ describe('recommendation-slice', () => {
     const responseId = 'some-response-id';
     const response = buildMockRecommendationsResponse({
       products: [
-        buildMockRawProduct({ec_name: 'product-3'}),
-        buildMockRawProduct({ec_name: 'product-4'}),
+        buildMockBaseProduct({ec_name: 'product-3'}),
+        buildMockBaseProduct({ec_name: 'product-4'}),
       ],
       responseId,
     });
@@ -156,7 +156,7 @@ describe('recommendation-slice', () => {
 
     it('when slot exists, sets the #position of each product to its 1-based position in the unpaginated list', () => {
       const response = buildMockRecommendationsResponse({
-        products: [buildMockRawProduct({ec_name: 'product-3'})],
+        products: [buildMockBaseProduct({ec_name: 'product-3'})],
         pagination: {
           page: 1,
           perPage: 2,

@@ -2,7 +2,7 @@ import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce
 import {
   buildMockChildProduct,
   buildMockProduct,
-  buildMockRawProduct,
+  buildMockBaseProduct,
 } from '../../../test/mock-product';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {
@@ -29,7 +29,7 @@ describe('product-listing-slice', () => {
 
   describe('on #fetchProductListing.fulfilled', () => {
     it('updates the product listing state with the received payload', () => {
-      const result = buildMockRawProduct({ec_name: 'product1'});
+      const result = buildMockBaseProduct({ec_name: 'product1'});
       const facet = buildMockCommerceRegularFacetResponse();
       const responseId = 'some-response-id';
       const response = buildFetchProductListingV2Response({
@@ -54,8 +54,8 @@ describe('product-listing-slice', () => {
     it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
       const response = buildFetchProductListingV2Response({
         products: [
-          buildMockRawProduct({ec_name: 'product1'}),
-          buildMockRawProduct({ec_name: 'product2'}),
+          buildMockBaseProduct({ec_name: 'product1'}),
+          buildMockBaseProduct({ec_name: 'product2'}),
         ],
         pagination: {
           page: 2,
@@ -90,7 +90,7 @@ describe('product-listing-slice', () => {
         buildMockProduct({ec_name: 'product1'}),
         buildMockProduct({ec_name: 'product2'}),
       ];
-      const result = buildMockRawProduct({ec_name: 'product3'});
+      const result = buildMockBaseProduct({ec_name: 'product3'});
       const facet = buildMockCommerceRegularFacetResponse();
       const responseId = 'some-response-id';
       const response = buildFetchProductListingV2Response({
@@ -124,7 +124,7 @@ describe('product-listing-slice', () => {
         }),
       ];
       const response = buildFetchProductListingV2Response({
-        products: [buildMockRawProduct({ec_name: 'product3'})],
+        products: [buildMockBaseProduct({ec_name: 'product3'})],
         pagination: {
           page: 1,
           perPage: 2,

@@ -5,12 +5,12 @@ import {
   SearchAPIErrorWithStatusCode,
 } from '../../search/search-api-error-response';
 import {Pagination} from './pagination';
-import {RawProduct} from './product';
+import {BaseProduct} from './product';
 import {Sort} from './sort';
 
 export interface BaseCommerceSuccessResponse {
   responseId: string;
-  products: RawProduct[];
+  products: BaseProduct[];
   pagination: Pagination;
   triggers: Trigger[];
 }

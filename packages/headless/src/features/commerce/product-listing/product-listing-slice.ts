@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product, RawProduct} from '../../../api/commerce/common/product';
+import {Product, BaseProduct} from '../../../api/commerce/common/product';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {QueryCommerceAPIThunkReturn} from '../common/actions';
 import {
@@ -112,7 +112,7 @@ function getPaginationOffset(payload: QueryCommerceAPIThunkReturn): number {
   return pagination.page * pagination.perPage;
 }
 
-function preprocessProduct(product: RawProduct, position: number): Product {
+function preprocessProduct(product: BaseProduct, position: number): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
