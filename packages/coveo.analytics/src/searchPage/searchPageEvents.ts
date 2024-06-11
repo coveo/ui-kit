@@ -346,6 +346,10 @@ export enum SearchPageEvents {
      * Identifies the search event that gets logged when a user clicks the rephrase button in a generated answer.
      */
     rephraseGeneratedAnswer = 'rephraseGeneratedAnswer',
+    /**
+     * Identifies the new version of custom event that gets logged when a user submits a feedback of a generated answer.
+     */
+    generatedAnswerFeedbackSubmitV2 = 'generatedAnswerFeedbackSubmitV2',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
@@ -393,6 +397,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.generatedAnswerExpand]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerCollapse]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerFeedbackSubmit]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerFeedbackSubmitV2]: 'generatedAnswer',
     [InsightEvents.expandToFullUI]: 'interface',
     [InsightEvents.openUserActions]: 'User Actions',
     [InsightEvents.showPrecedingSessions]: 'User Actions',
@@ -564,4 +569,20 @@ export interface GeneratedAnswerRephraseMeta extends GeneratedAnswerBaseMeta {
 export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {
     reason: GeneratedAnswerFeedbackReason;
     details?: string;
+}
+
+export type GeneratedAnswerFeedbackReasonOption = 'yes' | 'unknown' | 'no';
+
+export type GeneratedAnswerFeedbackReasonCorrectness = {
+    documented: GeneratedAnswerFeedbackReasonOption;
+    correctTopic: GeneratedAnswerFeedbackReasonOption;
+    hallucinationFree: GeneratedAnswerFeedbackReasonOption;
+};
+
+export interface GeneratedAnswerFeedbackMetaV2 extends GeneratedAnswerBaseMeta {
+    helpful: boolean;
+    readable: GeneratedAnswerFeedbackReasonOption;
+    correctness: GeneratedAnswerFeedbackReasonCorrectness;
+    details?: string;
+    documentUrl?: string;
 }

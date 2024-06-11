@@ -7,6 +7,7 @@ import {
     StaticFilterToggleValueMetadata,
     GeneratedAnswerFeedbackReason,
     GeneratedAnswerRephraseFormat,
+    GeneratedAnswerFeedbackReasonOption,
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -1599,6 +1600,23 @@ describe('SearchPageClient', () => {
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCollapse, meta);
         expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCollapse, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerFeedbackSubmitV2', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            helpful: true,
+            readable: <GeneratedAnswerFeedbackReasonOption>'yes',
+            correctness: {
+                documented: <GeneratedAnswerFeedbackReasonOption>'no',
+                correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+                hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
+            },
+            details: 'a few additional details',
+            documentUrl: 'https://document.com',
+        };
+        await client.logGeneratedAnswerFeedbackSubmitV2(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmitV2, meta);
     });
 
     it('should send proper payload for #logGeneratedAnswerFeedbackSubmit', async () => {

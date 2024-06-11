@@ -4,6 +4,7 @@ import {NoopAnalytics} from '../client/noopAnalytics';
 import {
     CustomEventsTypes,
     GeneratedAnswerFeedbackReason,
+    GeneratedAnswerFeedbackReasonOption,
     GeneratedAnswerRephraseFormat,
     PartialDocumentInformation,
     SearchPageEvents,
@@ -650,6 +651,27 @@ describe('InsightClient', () => {
             };
             await client.logCreateArticle(exampleCreateArticleMetadata);
             expectMatchCustomEventPayload(InsightEvents.createArticle, exampleCreateArticleMetadata);
+        });
+
+        it('should send proper payload for #generatedAnswerFeedbackSubmitV2', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+                helpful: true,
+                readable: <GeneratedAnswerFeedbackReasonOption>'yes',
+                correctness: {
+                    documented: <GeneratedAnswerFeedbackReasonOption>'no',
+                    correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+                    hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
+                },
+                details: 'foo',
+                documentUrl: 'https://document.com',
+            };
+
+            await client.logGeneratedAnswerFeedbackSubmitV2(exampleGeneratedAnswerMetadata);
+            expectMatchCustomEventPayload(
+                SearchPageEvents.generatedAnswerFeedbackSubmitV2,
+                exampleGeneratedAnswerMetadata
+            );
         });
     });
 
@@ -1397,6 +1419,28 @@ describe('InsightClient', () => {
 
             await client.logGeneratedAnswerFeedbackSubmit(exampleGeneratedAnswerMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmit, expectedMetadata);
+        });
+
+        it('should send proper payload for #generatedAnswerFeedbackSubmitV2', async () => {
+            const exampleGeneratedAnswerMetadata = {
+                generativeQuestionAnsweringId: '123',
+                helpful: true,
+                readable: <GeneratedAnswerFeedbackReasonOption>'yes',
+                correctness: {
+                    documented: <GeneratedAnswerFeedbackReasonOption>'no',
+                    correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+                    hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
+                },
+                details: 'foo',
+                documentUrl: 'https://document.com',
+            };
+            const expectedMetadata = {
+                ...exampleGeneratedAnswerMetadata,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logGeneratedAnswerFeedbackSubmitV2(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmitV2, expectedMetadata);
         });
 
         it('should send proper payload for #rephraseGeneratedAnswer', async () => {
