@@ -70,7 +70,15 @@ export class AtomicProductText
           logger={this.bindings.engine.logger}
           defaultValue={this.default}
           itemValueRaw={productValueAsString}
-        ></ItemTextFallback>
+        >
+          <atomic-commerce-text
+            value={getFieldValueCaption(
+              this.field,
+              this.default!,
+              this.bindings.i18n
+            )}
+          ></atomic-commerce-text>
+        </ItemTextFallback>
       );
     }
 

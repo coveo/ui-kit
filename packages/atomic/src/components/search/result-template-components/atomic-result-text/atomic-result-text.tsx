@@ -56,7 +56,15 @@ export class AtomicResultText implements InitializableComponent {
           logger={this.bindings.engine.logger}
           defaultValue={this.default}
           itemValueRaw={resultValueAsString}
-        ></ItemTextFallback>
+        >
+          <atomic-text
+            value={getFieldValueCaption(
+              this.field,
+              this.default!,
+              this.bindings.i18n
+            )}
+          ></atomic-text>
+        </ItemTextFallback>
       );
     }
 
