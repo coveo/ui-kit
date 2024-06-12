@@ -10,7 +10,7 @@ import generatedTextContentTemplate from './templates/generatedTextContent.html'
 
 export default class QuanticGeneratedAnswerContent extends LightningElement {
   @api isStreaming;
-  @api answerContentFormat;
+  @api answerContentFormat = 'text/plain';
   @api
   get answer() {
     return this._answer;
