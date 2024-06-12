@@ -1,8 +1,7 @@
 import type {Args, StoryContext} from '@storybook/web-components';
 import {html, unsafeStatic} from 'lit/static-html.js';
 
-const unfurlArg = (arg: string) =>
-  arg.split('-storybook-special-coveo-separator-').pop()!;
+const unfurlArg = (arg: string) => arg.slice(arg.indexOf('-') + 1);
 
 export const parseSlots = (args: Args, slotsControls: string[]) =>
   `${slotsControls.map((slotName) => {
