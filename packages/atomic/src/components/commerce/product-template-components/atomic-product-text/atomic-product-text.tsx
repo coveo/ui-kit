@@ -69,7 +69,8 @@ export class AtomicProductText
           host={this.host}
           logger={this.bindings.engine.logger}
           defaultValue={this.default}
-          itemValueRaw={productValueAsString}
+          item={this.product}
+          getProperty={ProductTemplatesHelpers.getProductProperty}
         >
           <atomic-commerce-text
             value={getFieldValueCaption(

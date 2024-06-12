@@ -55,7 +55,8 @@ export class AtomicResultText implements InitializableComponent {
           host={this.host}
           logger={this.bindings.engine.logger}
           defaultValue={this.default}
-          itemValueRaw={resultValueAsString}
+          item={this.result}
+          getProperty={ResultTemplatesHelpers.getResultProperty}
         >
           <atomic-text
             value={getFieldValueCaption(
