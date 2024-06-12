@@ -1,3 +1,9 @@
+## 1.7.15 (2024-06-12)
+
+### Bug Fixes
+
+- remove clearStorage method (#92) ([0599c31](/commits/0599c316134e5f7855ed07dde5ca738c24d1a0b4)), closes [#92](/issues/92)
+
 ## 1.7.14 (2024-06-04)
 
 ## 1.7.13 (2024-03-27)
