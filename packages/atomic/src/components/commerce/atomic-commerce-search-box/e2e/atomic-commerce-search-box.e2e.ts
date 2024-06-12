@@ -397,4 +397,10 @@ test.describe('standalone searchbox', () => {
     );
     await expect(searchBox.searchInput).toHaveValue(suggestionText);
   });
+
+  test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    await searchBox.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
+  });
 });
