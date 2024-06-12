@@ -318,11 +318,15 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     this.onUpdateQueryForCorrection(correction);
     const state = this.getState();
     const {actionCause} = didYouMeanAutomatic();
-
     const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(state, {
-        actionCause,
-      }),
+      await buildSearchRequest(
+        state,
+        this.extra.navigatorContext,
+        this.extra.relay,
+        {
+          actionCause,
+        }
+      ),
       {origin: 'mainSearch'}
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
@@ -340,7 +344,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(this.getState()),
+      await buildSearchRequest(
+        this.getState(),
+        this.extra.navigatorContext,
+        this.extra.relay
+      ),
       {origin: 'mainSearch'}
     );
 

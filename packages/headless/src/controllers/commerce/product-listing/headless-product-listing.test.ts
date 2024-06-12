@@ -20,7 +20,7 @@ import {
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
+import {productListingReducer} from '../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -77,7 +77,7 @@ describe('headless product-listing', () => {
 
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      productListing: productListingV2Reducer,
+      productListing: productListingReducer,
       commerceContext: contextReducer,
       configuration,
     });

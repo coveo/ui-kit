@@ -54,9 +54,9 @@ import {
   mapSearchResponse,
   SuccessResponse,
 } from '../search-mappings';
-import {buildSearchRequest} from '../search-request';
 import {getSearchInitialState} from '../search-state';
 import {ExecuteSearchThunkReturn} from './search-actions';
+import {buildSearchRequest} from './search-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<

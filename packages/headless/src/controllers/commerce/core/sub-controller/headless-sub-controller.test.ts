@@ -6,6 +6,7 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../test/mock-engine-v2';
+import {buildMockProduct} from '../../../../test/mock-product';
 import * as DidYouMean from '../../search/did-you-mean/headless-did-you-mean';
 import {SearchSummaryState} from '../../search/summary/headless-search-summary';
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager';
@@ -254,12 +255,13 @@ describe('sub-controllers', () => {
 
       const props = {
         options: {
-          product: {
-            productId: '1',
-            name: 'Product name',
-            price: 17.99,
-          },
-          position: 1,
+          product: buildMockProduct({
+            ec_product_id: '1',
+            ec_name: 'Product name',
+            ec_promo_price: 15.99,
+            ec_price: 17.99,
+            position: 1,
+          }),
         },
       };
 

@@ -35,9 +35,17 @@ export interface FieldSuggestionsGenerator extends Controller {
    */
   fieldSuggestions: GeneratedFieldSuggestionsControllers;
 
+  /**
+   * The state of the field suggestions generator.
+   */
   state: FieldSuggestionsFacet[];
 }
 
+/**
+ * Builds a field suggestions generator controller for a given commerce engine.
+ * @param engine The commerce engine.
+ * @returns The field suggestions generator controller.
+ */
 export function buildFieldSuggestionsGenerator(
   engine: CommerceEngine
 ): FieldSuggestionsGenerator {

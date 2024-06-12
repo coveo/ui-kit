@@ -53,13 +53,16 @@ export class AtomicCommerceTimeframeFacet
    * The date facet controller instance.
    */
   @Prop() public facet!: DateFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   @BindStateToController('facet')
   @State()
   public facetState?: DateFacetState;
   @State() public error!: Error;
 
-  @State() private isCollapsed = false;
   @State() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;

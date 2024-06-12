@@ -29,7 +29,7 @@ import {
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
+import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
