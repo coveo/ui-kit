@@ -5,10 +5,10 @@ const unfurlArg = (arg: string) => arg.slice(arg.indexOf('-') + 1);
 
 export const parseSlots = (args: Args, slotsControls: string[]) =>
   `${slotsControls.map((slotName) => {
-    slotName = unfurlArg(slotName);
-    return slotName === 'default'
+    const unfurledSlotName = unfurlArg(slotName);
+    return unfurledSlotName === 'default'
       ? args[slotName]
-      : `<template slot="${slotName}">${args[slotName]}</template>`;
+      : `<template slot="${unfurledSlotName}">${args[slotName]}</template>`;
   })}`;
 
 export const renderComponent = (args: Args, context: StoryContext) => {
