@@ -1,36 +1,36 @@
-import {Relay} from '@coveo/relay';
 import {EventDescription} from 'coveo.analytics';
 import {getAnalyticsSource} from '../../api/analytics/analytics-selectors';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {getPageID} from '../../api/analytics/search-analytics';
 import {AnalyticsParam} from '../../api/search/search-api-params';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {AnalyticsState} from './configuration-state';
 
-export const fromAnalyticsStateToAnalyticsParams = (
+export const fromAnalyticsStateToAnalyticsParams = async (
   s: AnalyticsState,
-  navigatorContext: NavigatorContext,
-  relay: Relay,
   eventDescription?: EventDescription
-): AnalyticsParam => {
+): Promise<AnalyticsParam> => {
+  const isNextAnalytics = s.analyticsMode === 'next';
   return {
     analytics: {
-      clientId: relay.getMeta('').clientId,
+      clientId: await getVisitorID(s),
       clientTimestamp: new Date().toISOString(),
-      documentReferrer: navigatorContext.referrer,
-      documentLocation: navigatorContext.location,
+      documentReferrer: s.originLevel3,
       originContext: s.originContext,
       ...(eventDescription && {
         actionCause: eventDescription.actionCause,
-      }),
-      ...(eventDescription && {
         customData: eventDescription.customData,
       }),
+      ...(eventDescription &&
+        !isNextAnalytics && {
+          customData: eventDescription.customData,
+        }),
       ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
+      ...(s.documentLocation && {documentLocation: s.documentLocation}),
       ...(s.deviceId && {deviceId: s.deviceId}),
       ...(getPageID() && {pageId: getPageID()}),
-      ...(s.trackingId && {trackingId: s.trackingId}),
-      ...{capture: true},
-      ...{source: getAnalyticsSource(s)},
+      ...(isNextAnalytics && s.trackingId && {trackingId: s.trackingId}),
+      ...{capture: isNextAnalytics},
+      ...(isNextAnalytics && {source: getAnalyticsSource(s)}),
     },
   };
 };
