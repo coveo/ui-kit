@@ -120,7 +120,7 @@ test.describe('with number-of-pages=3', () => {
 test.describe('with numberOfPages=-5', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=storyargs=number-of-pages=-5'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=number-of-pages:-5'
     );
   });
   assertContainsComponentError(true);
