@@ -39,7 +39,7 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `.* suggested query\\. Button\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `.* suggested query\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }
@@ -51,7 +51,7 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `.* recent query\\. Button\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `.* recent query\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }
@@ -63,7 +63,7 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `instant result\\. Button. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `instant result\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }
