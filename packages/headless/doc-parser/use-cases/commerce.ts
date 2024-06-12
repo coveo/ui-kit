@@ -12,7 +12,23 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
+    initializer: 'buildFieldSuggestionsGenerator',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInstantProducts',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildNotifyTrigger',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildProductListing',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildProductTemplatesManager',
     samplePaths: {},
   },
   {
@@ -20,7 +36,19 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
+    initializer: 'buildQueryTrigger',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildRecommendations',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildRedirectionTrigger',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildRecentQueriesList',
     samplePaths: {},
   },
   {
@@ -29,6 +57,10 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildSearchBox',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildStandaloneSearchBox',
     samplePaths: {},
   },
 ];

@@ -1,3 +1,27 @@
+# 2.65.0 (2024-06-06)
+
+### Features
+
+- **commerce:** toggle `capture` from analytics configuration ([#4057](https://github.com/coveo/ui-kit/issues/4057)) ([9e16744](https://github.com/coveo/ui-kit/commits/9e16744338e67dd293b064da8387a3bfd21e6c4e))
+
+# 2.64.0 (2024-06-06)
+
+### Bug Fixes
+
+- **atomic:** handle category facet on new query ([#4050](https://github.com/coveo/ui-kit/issues/4050)) ([ef37005](https://github.com/coveo/ui-kit/commits/ef370059f64e161ab9241d418ca18ddf82301e14))
+- **headless commerce:** dispatch fetchProductsActionCreator when calling core breadcrumb manager deselectAll ([#4049](https://github.com/coveo/ui-kit/issues/4049)) ([236e35c](https://github.com/coveo/ui-kit/commits/236e35ce02c613c312edc087fcf396c54debff73))
+- **headless:** add commerce executeSearch to slice ([#4040](https://github.com/coveo/ui-kit/issues/4040)) ([fedded8](https://github.com/coveo/ui-kit/commits/fedded8aa9c50cd4bd036dc28576dceb25a97ff8))
+- remove userId, email and ip properties ([#4021](https://github.com/coveo/ui-kit/issues/4021)) ([96dcd08](https://github.com/coveo/ui-kit/commits/96dcd080e47ea3dedaeac1f4ed888fec06008109))
+
+### Features
+
+- **atomic,headless:** support for atomic-commerce-did-you-mean ([#4029](https://github.com/coveo/ui-kit/issues/4029)) ([5e860a5](https://github.com/coveo/ui-kit/commits/5e860a52ea93a7fa7fa442a5c9612ba5febadaf1))
+- **atomic:** add date facet ([#4024](https://github.com/coveo/ui-kit/issues/4024)) ([ea5c9b1](https://github.com/coveo/ui-kit/commits/ea5c9b1443311048d1f2cfb80a174c6f6023816d))
+- **Commerce Headless:** change the way selectors are exposed ([#4016](https://github.com/coveo/ui-kit/issues/4016)) ([534e1c2](https://github.com/coveo/ui-kit/commits/534e1c2d402c740de0e5f824b7cf6854eeb1f1fd))
+- **commerce:** provide restore parameters action loaders ([#4022](https://github.com/coveo/ui-kit/issues/4022)) ([91d4f8f](https://github.com/coveo/ui-kit/commits/91d4f8f838b28e36effdaa7a30853891a755b143)), closes [/github.com/coveo/ui-kit/pull/3979#discussion_r1616296539](https://github.com//github.com/coveo/ui-kit/pull/3979/issues/discussion_r1616296539)
+- **headless:** add method to set range on Date Facet ([#4023](https://github.com/coveo/ui-kit/issues/4023)) ([f99453f](https://github.com/coveo/ui-kit/commits/f99453f681b72faa72efebdad9fce24c19b42bc6))
+- simplify the arguments for the `setRanges()` method in numeric and date facets ([#4042](https://github.com/coveo/ui-kit/issues/4042)) ([20c0978](https://github.com/coveo/ui-kit/commits/20c0978a783122e55ebe4de975d34abc45817fce))
+
 ## 2.63.5 (2024-05-29)
 
 ## 2.63.4 (2024-05-22)

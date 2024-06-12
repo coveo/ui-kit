@@ -1,11 +1,11 @@
 import {Product, ProductTemplateCondition} from '@coveo/headless/commerce';
 import {Component, Prop, h, Element} from '@stencil/core';
-import {MapProp} from '../../../utils/props-utils';
-import {ProductContext} from '../product-template-components/product-template-decorators';
+import {MapProp} from '../../../../utils/props-utils';
 import {
   makeDefinedConditions,
   makeMatchConditions,
-} from '../product-template/product-template-common';
+} from '../../product-template/product-template-common';
+import {ProductContext} from '../product-template-decorators';
 
 /**
  * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.

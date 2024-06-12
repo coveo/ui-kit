@@ -46,6 +46,7 @@ describe('commerce common actions', () => {
             url: 'https://example.com',
             referrer: 'https://referrer.com',
           },
+          capture: true,
           cart: [
             {
               productId: product.productId,
@@ -188,6 +189,19 @@ describe('commerce common actions', () => {
         facets: [],
       });
     });
+
+    it.each([true, false])(
+      'sets the capture property from the analytics configuration',
+      async (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = await Actions.buildCommerceAPIRequest(state);
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+
+        expect(request.context.capture).toEqual(analyticsEnabled);
+      }
+    );
 
     describe('given a state that has the commerceFacetSet and facetOrder sections', () => {
       let facet1: CommerceFacetSlice;
