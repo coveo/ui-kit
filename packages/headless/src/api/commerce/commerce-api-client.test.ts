@@ -138,7 +138,7 @@ describe('commerce api client', () => {
     });
   });
 
-  it('#recommendations should call the platform endpoint with the correct arguments', async () => {
+  it('#getRecommendations should call the platform endpoint with the correct arguments', async () => {
     const request = await buildRecommendationsCommerceAPIRequest();
 
     mockPlatformCall({
@@ -164,6 +164,39 @@ describe('commerce api client', () => {
         currency: request.currency,
       },
       requestMetadata: {method: 'recommendations'},
+    });
+  });
+
+  it('#productSuggestions should call the platform endpoint with the correct arguments', async () => {
+    const request = {
+      ...(await buildCommerceAPIRequest()),
+      query: 'some query',
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.productSuggestions(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/search/productSuggest`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        query: 'some query',
+        trackingId: request.trackingId,
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
+      },
+      requestMetadata: {method: 'search/productSuggest'},
     });
   });
 
