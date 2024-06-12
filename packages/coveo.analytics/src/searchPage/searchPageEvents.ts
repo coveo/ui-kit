@@ -573,16 +573,12 @@ export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {
 
 export type GeneratedAnswerFeedbackReasonOption = 'yes' | 'unknown' | 'no';
 
-export type GeneratedAnswerFeedbackReasonCorrectness = {
-    documented: GeneratedAnswerFeedbackReasonOption;
-    correctTopic: GeneratedAnswerFeedbackReasonOption;
-    hallucinationFree: GeneratedAnswerFeedbackReasonOption;
-};
-
 export interface GeneratedAnswerFeedbackMetaV2 extends GeneratedAnswerBaseMeta {
     helpful: boolean;
     readable: GeneratedAnswerFeedbackReasonOption;
-    correctness: GeneratedAnswerFeedbackReasonCorrectness;
+    documented: GeneratedAnswerFeedbackReasonOption;
+    correctTopic: GeneratedAnswerFeedbackReasonOption;
+    hallucinationFree: GeneratedAnswerFeedbackReasonOption;
     details?: string;
     documentUrl?: string;
 }
