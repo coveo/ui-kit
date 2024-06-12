@@ -1,5 +1,6 @@
 import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
+import {VERSION} from '../../utils/version';
 import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
 import {CommerceAPIRequest} from './common/request';
@@ -47,6 +48,7 @@ describe('commerce api client', () => {
         referrer: 'https://example.org/referrer',
       },
       capture: true,
+      source: [`@coveo/headless@${VERSION}`],
     },
   });
 
@@ -69,6 +71,7 @@ describe('commerce api client', () => {
           referrer: 'https://example.org/referrer',
         },
         capture: true,
+        source: [`@coveo/headless@${VERSION}`],
       },
     };
   };
