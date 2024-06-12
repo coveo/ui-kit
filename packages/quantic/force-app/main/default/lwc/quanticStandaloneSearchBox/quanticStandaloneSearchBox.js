@@ -241,7 +241,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}#q=${encodeURIComponent(value)}`,
+          url: `${this.redirectUrl}${value ? `#q=${encodeURIComponent(value)}` : ''}`,
         },
       },
       false

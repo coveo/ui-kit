@@ -1,5 +1,6 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as Selectors from './selectors/commerce-selectors.index';
+import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -302,6 +303,7 @@ export type {Parameters} from './features/commerce/parameters/parameters-actions
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
 
 // Types & Helpers
+export {HighlightUtils};
 export {
   deserializeRelativeDate,
   validateRelativeDate,
