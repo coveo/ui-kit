@@ -3,16 +3,14 @@ import { EnvironmentManager } from "../environment/manager/manager";
 
 export interface ClientIdManager {
   getClientId: () => string;
-  clear: () => void;
 }
 
 export function createClientIdManager(
   environmentManager: EnvironmentManager
 ): ClientIdManager {
-  const key = "visitorId";
-
   return {
     getClientId: () => {
+      const key = "visitorId";
       const environment = environmentManager.get();
       const storage = environment.storage;
 
@@ -23,9 +21,6 @@ export function createClientIdManager(
           : environment.generateUUID();
       storage.setItem(key, clientId);
       return clientId;
-    },
-    clear: () => {
-      environmentManager.get().storage.removeItem(key);
     },
   };
 }

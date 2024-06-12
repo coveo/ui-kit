@@ -58,30 +58,4 @@ describe("createClientIdManager", () => {
     );
     expect(clientIdManager.getClientId()).toBe("UUID-generated");
   });
-
-  it("clears clientId from storage", () => {
-    let increment = 0;
-    const storage = createMockStorage({
-      getItem: jest.fn(),
-      removeItem: jest.fn(),
-    });
-    const environmentManagerWithStorage = createMockEnvironmentManager({
-      get: () =>
-        createMockEnvironment({
-          generateUUID: () => "UUID-generated-" + increment++,
-          storage,
-        }),
-    });
-
-    const clientIdManager = createClientIdManager(
-      environmentManagerWithStorage
-    );
-
-    expect(clientIdManager.getClientId()).toBe("UUID-generated-0");
-
-    clientIdManager.clear();
-
-    expect(storage.removeItem).toHaveBeenCalledWith("visitorId");
-    expect(clientIdManager.getClientId()).toBe("UUID-generated-1");
-  });
 });

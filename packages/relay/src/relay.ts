@@ -67,12 +67,6 @@ interface Relay {
    * Current version of the Relay library.
    */
   version: string;
-
-  /**
-   * Removes the visitorId cookie and localStorage key.
-   * @returns {void}
-   */
-  clearStorage: () => void;
 }
 
 /**
@@ -120,9 +114,6 @@ export function createRelay(initialConfig: RelayConfig): Relay {
     updateConfig: (config: Partial<RelayConfig>) =>
       configManager.update(config),
     version,
-    clearStorage: () => {
-      clientIdManager.clear();
-    },
   };
 }
 
