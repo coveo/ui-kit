@@ -11,11 +11,10 @@ const completeUnclosedElement = (text) => {
     const symbol = match[1];
 
     const replacements = {
-      '***':
-        '<strong part="answer-strong"><em part="answer-emphasis">$2</em></strong>',
-      '**': '<strong part="answer-strong">$2</strong>',
-      '*': '<em part="answer-emphasis">$2</em>',
-      '`': '<code part="answer-inline-code">$2</code>',
+      '***': '<strong><em part="answer-emphasis">$2</em></strong>',
+      '**': '<strong>$2</strong>',
+      '*': '<em>$2</em>',
+      '`': '<code>$2</code>',
     };
 
     return text.replace(unclosedElement, replacements[symbol]);
