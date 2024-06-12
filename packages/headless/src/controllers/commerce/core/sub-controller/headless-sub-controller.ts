@@ -77,9 +77,8 @@ export interface BaseSolutionTypeSubControllers<S extends SummaryState> {
   pagination(props?: PaginationProps): Pagination;
 
   /**
-   * Builds a `Summary` controller.
-   *
-   * @returns A `Summary` controller.
+   * Creates a `Summary` sub-controller.
+   * @returns A `Summary` sub-controller.
    */
   summary(): Summary<S>;
 }

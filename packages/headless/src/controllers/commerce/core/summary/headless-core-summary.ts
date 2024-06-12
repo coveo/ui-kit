@@ -25,15 +25,15 @@ export interface SummaryState {
    */
   totalNumberOfProducts: number;
   /**
-   * Whether the query has returned any products.
+   * Whether the request has returned any products.
    */
   hasProducts: boolean;
   /**
-   * Whether the query is currently loading.
+   * Whether the request is currently loading.
    */
   isLoading: boolean;
   /**
-   * Whether the query has returned an error.
+   * Whether the request has returned an error.
    */
   hasError: boolean;
 }
@@ -64,11 +64,11 @@ interface SummaryProps<State extends SummaryState> {
 }
 
 /**
- * Builds a `Summary` controller.
+ * Creates a `Summary` sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Summary` properties.
- * @returns A `Summary` controller.
+ * @returns A `Summary` sub-controller.
  */
 export const buildCoreSummary = <State extends SummaryState = SummaryState>(
   engine: CommerceEngine,
