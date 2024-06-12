@@ -60,8 +60,6 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns A `StandaloneSearchBox` controller instance.
- *
- * @internal
  */
 export function buildStandaloneSearchBox(
   engine: CommerceEngine,
