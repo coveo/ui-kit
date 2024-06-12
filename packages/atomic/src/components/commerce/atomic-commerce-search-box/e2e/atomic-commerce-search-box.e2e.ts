@@ -123,7 +123,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
   });
 });
 
-test.describe('with minimum-query-length=3', () => {
+test.describe('with minimum-query-length=4', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
       'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-minimum-query-length:4;attributes-suggestion-timeout:5000'

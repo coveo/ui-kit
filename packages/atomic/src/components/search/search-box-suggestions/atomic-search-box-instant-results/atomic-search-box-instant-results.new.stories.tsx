@@ -82,7 +82,7 @@ export const Default: Story = {
         </template>
       </atomic-result-template>
     `,
-    imageSize: 'small',
+    'attributes-imageSize': 'small',
   },
   decorators: [
     (story) => html`
