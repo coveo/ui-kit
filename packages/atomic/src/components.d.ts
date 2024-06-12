@@ -1963,6 +1963,10 @@ export namespace Components {
           * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
          */
         "field": string;
+        /**
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
+         */
+        "shouldHighlight": boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -7266,6 +7270,10 @@ declare namespace LocalJSX {
           * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
          */
         "field": string;
+        /**
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
+         */
+        "shouldHighlight"?: boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
