@@ -35,17 +35,45 @@ test.describe('default', () => {
       );
     });
 
-    test.describe('after focusing a suggestion', () => {
+    test.describe('after clicking a suggestion', () => {
+      let suggestionText: string;
+
       test.beforeEach(async ({searchBox}) => {
+        suggestionText =
+          (await searchBox.searchSuggestions().last().textContent()) ?? '';
+        await searchBox.searchSuggestions().last().click();
+      });
+
+      test('should update the searchbox input', async ({searchBox}) => {
+        await expect(searchBox.searchInput).toHaveValue(suggestionText);
+      });
+
+      test('should collapse the suggested queries', async ({searchBox}) => {
+        await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
+      });
+    });
+
+    test.describe('after focusing a suggestion', () => {
+      let suggestionText: string;
+
+      test.beforeEach(async ({searchBox}) => {
+        suggestionText =
+          (await searchBox.searchSuggestions().first().textContent()) ?? '';
         await searchBox.searchInput.press('ArrowDown');
       });
 
       test('should update the searchbox input', async ({searchBox}) => {
-        const expectedText = await searchBox
-          .searchSuggestions()
-          .first()
-          .textContent();
-        await expect(searchBox.searchInput).toHaveValue(expectedText ?? '');
+        await expect(searchBox.searchInput).toHaveValue(suggestionText);
+      });
+
+      test.describe('after pressing Enter', () => {
+        test.beforeEach(async ({searchBox}) => {
+          await searchBox.searchInput.press('Enter');
+        });
+
+        test('should collapse the suggested queries', async ({searchBox}) => {
+          await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
+        });
       });
     });
   });
@@ -333,5 +361,40 @@ test.describe('with enable-query-syntax=true', () => {
     await searchBox.submitButton.click();
     await expect(loadMore.summary({total: 1})).toBeVisible();
     await expect(page.getByText('WiLife Life Jacket WiLife')).toBeVisible();
+  });
+});
+
+test.describe('standalone searchbox', () => {
+  test.beforeEach(async ({page}) => {
+    await page.goto(
+      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--standalone-search-box&viewMode=story&args=suggestion-timeout:5000'
+    );
+  });
+
+  test('should redirect to the specified url after submitting a query', async ({
+    page,
+    searchBox,
+  }) => {
+    await searchBox.searchInput.fill('kayak');
+    await searchBox.submitButton.click();
+    await page.waitForURL(
+      '**/iframe.html?id=atomic-commerce-search-box--in-page*'
+    );
+    await expect(searchBox.searchInput).toHaveValue('kayak');
+  });
+
+  test('should redirect to the specified url after selecting a suggestion', async ({
+    page,
+    searchBox,
+  }) => {
+    await searchBox.searchInput.click();
+    const suggestionText =
+      (await searchBox.searchSuggestions().first().textContent()) ?? '';
+
+    await searchBox.searchSuggestions().first().click();
+    await page.waitForURL(
+      '**/iframe.html?id=atomic-commerce-search-box--in-page*'
+    );
+    await expect(searchBox.searchInput).toHaveValue(suggestionText);
   });
 });
