@@ -29,7 +29,6 @@ export interface SearchParametersActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the action creators.
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export function loadSearchParametersActions(
   engine: CommerceEngine

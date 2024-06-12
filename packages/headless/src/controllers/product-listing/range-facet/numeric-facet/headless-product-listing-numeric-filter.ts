@@ -33,6 +33,7 @@ export type {
 };
 
 /**
+ * @deprecated TBD CAPI-98
  * @param engine - The headless engine.
  * @param props - The configurable `NumericFilter` properties.
  * @returns - A `NumericFilter` controller instance.

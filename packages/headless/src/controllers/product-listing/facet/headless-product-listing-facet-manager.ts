@@ -15,6 +15,7 @@ export type {FacetManager, FacetManagerState, FacetManagerPayload};
 
 /**
  * Creates a `FacetManager` instance for the product listing.
+ * @deprecated TBD CAPI-98
  *
  * @param productListingEngine - The headless engine.
  */

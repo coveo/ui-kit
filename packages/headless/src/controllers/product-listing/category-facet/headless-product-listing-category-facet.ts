@@ -61,6 +61,7 @@ export type {
 
 /**
  * Creates a `CategoryFacet` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CategoryFacet` properties.

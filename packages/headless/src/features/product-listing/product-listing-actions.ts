@@ -32,6 +32,7 @@ import {logProductListing} from './product-listing-analytics';
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
+   * @deprecated TBD CAPI-98
    */
   url: string;
 }

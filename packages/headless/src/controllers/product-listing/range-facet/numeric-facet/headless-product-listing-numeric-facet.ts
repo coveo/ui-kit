@@ -40,6 +40,7 @@ export {buildNumericRange};
 
 /**
  * Creates a `NumericFacet` controller instance for the product listing.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `NumericFacet` properties.

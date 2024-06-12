@@ -13,6 +13,7 @@ import {
 
 /**
  * The product listing engine configuration.
+ * @deprecated TBD CAPI-98
  */
 export interface ProductListingEngineConfiguration
   extends EngineConfiguration {}
@@ -60,6 +61,7 @@ export const productListingEngineConfigurationSchema =
 
 /**
  * Creates a sample product listing engine configuration.
+ * @deprecated TBD CAPI-98
  *
  * @returns The sample product listing engine configuration.
  */

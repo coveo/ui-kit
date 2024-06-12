@@ -13,6 +13,10 @@ export type {
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
 };
+
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
    * The query result.
@@ -20,6 +24,9 @@ export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   result: ProductRecommendation;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface InteractiveResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
@@ -29,11 +36,13 @@ export interface InteractiveResultProps extends InteractiveResultCoreProps {
 
 /**
  * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ * @deprecated TBD CAPI-98
  */
 export interface InteractiveResult extends InteractiveResultCore {}
 
 /**
  * Creates an `InteractiveResult` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `InteractiveResult` properties.

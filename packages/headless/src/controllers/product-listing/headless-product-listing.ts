@@ -25,6 +25,9 @@ const optionsSchema = new Schema({
   }),
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface ProductListingOptions {
   /**
    * The initial URL used to retrieve the product listing.
@@ -37,6 +40,9 @@ export interface ProductListingOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface ProductListingProps {
   /**
    * The initial options that should be applied to this `ProductListing` controller.
@@ -46,6 +52,7 @@ export interface ProductListingProps {
 
 /**
  * The `ProductListing` controller allows the end user to configure and retrieve product listing data.
+ * @deprecated TBD CAPI-98
  */
 export interface ProductListing extends Controller {
   /**
@@ -71,6 +78,9 @@ export interface ProductListing extends Controller {
   state: ProductListingState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface ProductListingState {
   products: ProductRecommendation[];
   error: ProductListingAPIErrorStatusResponse | null;
@@ -80,10 +90,14 @@ export interface ProductListingState {
   url: string;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export type ProductListingControllerState = ProductListing['state'];
 
 /**
  * Creates a `ProductListingController` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ProductListingController` properties.

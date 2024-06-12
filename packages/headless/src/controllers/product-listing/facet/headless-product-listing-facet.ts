@@ -59,6 +59,9 @@ export type {
   CoreFacetState,
 };
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FacetProps {
   /**
    * The options for the `Facet` controller.
@@ -68,6 +71,7 @@ export interface FacetProps {
 
 /**
  * Creates a `Facet` controller instance for the product listing.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.

@@ -25,6 +25,7 @@ export type {
 
 /**
  * Creates a `ResultsPerPage` controller instance for the product listing.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ResultsPerPage` properties.
