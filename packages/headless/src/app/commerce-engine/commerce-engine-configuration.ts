@@ -39,6 +39,7 @@ export const commerceEngineConfigurationSchema =
     }),
   });
 
+// TODO KIT-3244: Use a different sample organization
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {
     accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
