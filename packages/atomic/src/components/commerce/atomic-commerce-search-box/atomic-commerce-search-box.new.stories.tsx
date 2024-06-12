@@ -11,7 +11,7 @@ const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box',
-  title: 'Atomic-Commerce/Searchbox',
+  title: 'Atomic-Commerce/Interface Components/atomic-commerce-search-box',
   id: 'atomic-commerce-search-box',
   render: renderComponent,
   decorators: [decorator],
