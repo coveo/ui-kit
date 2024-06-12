@@ -98,6 +98,7 @@ describe('commerce api client', () => {
         language: request.language,
         currency: request.currency,
       },
+      requestMetadata: {method: 'listing'},
     });
   });
 
@@ -130,6 +131,7 @@ describe('commerce api client', () => {
         language: request.language,
         currency: request.currency,
       },
+      requestMetadata: {method: 'search'},
     });
   });
 
@@ -158,6 +160,7 @@ describe('commerce api client', () => {
         language: request.language,
         currency: request.currency,
       },
+      requestMetadata: {method: 'recommendations'},
     });
   });
 
@@ -190,6 +193,7 @@ describe('commerce api client', () => {
         language: request.language,
         currency: request.currency,
       },
+      requestMetadata: {method: 'search/querySuggest'},
     });
   });
 
@@ -225,6 +229,7 @@ describe('commerce api client', () => {
         query: 'some query',
         ...searchContext,
       },
+      requestMetadata: {method: 'facet'},
     });
   });
 
