@@ -1,3 +1,17 @@
+# 2.66.0 (2024-06-12)
+
+### Bug Fixes
+
+- **commerce:** reset pagination on search box submit ([#4065](https://github.com/coveo/ui-kit/issues/4065)) ([35e1517](https://github.com/coveo/ui-kit/commits/35e151707c87fe36d0168d5d6d2d7b0f49bd12f7))
+
+### Features
+
+- **atomic commerce:** add interactive product controller support ([#4026](https://github.com/coveo/ui-kit/issues/4026)) ([a07f4b9](https://github.com/coveo/ui-kit/commits/a07f4b9eafd14931c917baf39ec10edaba5ec11c))
+- **headless,atomic:** fix issues for commerce did you mean + handle query trigger for commerce ([#4053](https://github.com/coveo/ui-kit/issues/4053)) ([d1d098d](https://github.com/coveo/ui-kit/commits/d1d098dab142c8bada5767ea1a9a04f77b643e4b))
+- **headless:** enforce organization endpoints usage for headless commerce ([#4060](https://github.com/coveo/ui-kit/issues/4060)) ([8bb77af](https://github.com/coveo/ui-kit/commits/8bb77af019e326380a424646b226055f36038d2e))
+- **headless:** expose deselectAll method on automatic facet generator controller ([#4067](https://github.com/coveo/ui-kit/issues/4067)) ([893d7a6](https://github.com/coveo/ui-kit/commits/893d7a6c8b6fb8555ff25afed1f969789951e593))
+- use navigator relay & context on search-actions ([#3820](https://github.com/coveo/ui-kit/issues/3820)) ([dba90d1](https://github.com/coveo/ui-kit/commits/dba90d19187271c21707601490b020c896fb6f6e)), closes [#3819](https://github.com/coveo/ui-kit/issues/3819)
+
 # 2.65.0 (2024-06-06)
 
 ### Features
