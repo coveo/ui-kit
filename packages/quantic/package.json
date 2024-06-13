@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.45.9",
-    "@coveo/headless": "2.66.0"
+    "@coveo/headless": "2.66.0",
+    "marked": "12.0.2"
   },
   "engines": {
     "node": ">=14.0.0"
