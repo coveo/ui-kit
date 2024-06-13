@@ -246,6 +246,7 @@ export type {
 export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager';
 
 export type {
+  BreadcrumbManagerState,
   BreadcrumbManager,
   Breadcrumb,
   BreadcrumbValue,
