@@ -13,7 +13,7 @@ import {
 
 /**
  * The product listing engine configuration.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingEngineConfiguration
   extends EngineConfiguration {}
@@ -61,7 +61,7 @@ export const productListingEngineConfigurationSchema =
 
 /**
  * Creates a sample product listing engine configuration.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @returns The sample product listing engine configuration.
  */

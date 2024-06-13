@@ -26,7 +26,7 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingOptions {
   /**
@@ -41,7 +41,7 @@ export interface ProductListingOptions {
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingProps {
   /**
@@ -52,7 +52,7 @@ export interface ProductListingProps {
 
 /**
  * The `ProductListing` controller allows the end user to configure and retrieve product listing data.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListing extends Controller {
   /**
@@ -79,7 +79,7 @@ export interface ProductListing extends Controller {
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingState {
   products: ProductRecommendation[];
@@ -91,13 +91,13 @@ export interface ProductListingState {
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export type ProductListingControllerState = ProductListing['state'];
 
 /**
  * Creates a `ProductListingController` controller instance.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ProductListingController` properties.

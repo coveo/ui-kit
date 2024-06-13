@@ -33,7 +33,7 @@ export type {
 };
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @param engine - The headless engine.
  * @param props - The configurable `DateFilter` properties.
  * @returns - A `DateFilter` controller instance.

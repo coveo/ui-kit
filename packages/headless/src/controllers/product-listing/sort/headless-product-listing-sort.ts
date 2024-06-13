@@ -40,7 +40,7 @@ export {
 };
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingSortProps {
   /**
@@ -50,7 +50,7 @@ export interface ProductListingSortProps {
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingSortInitialState {
   /**
@@ -75,7 +75,7 @@ function validateSortInitialState(
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingSort extends Controller {
   /**
@@ -100,7 +100,7 @@ export interface ProductListingSort extends Controller {
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingSortState {
   /**
@@ -111,7 +111,7 @@ export interface ProductListingSortState {
 
 /**
  * Creates a `Sort` controller instance for the product listing.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.

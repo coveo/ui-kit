@@ -50,7 +50,7 @@ export interface GetProductRecommendationsThunkReturn {
 }
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsRecommenderIdActionCreatorPayload {
   /**
@@ -68,7 +68,7 @@ export const setProductRecommendationsRecommenderId = createAction(
 );
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsSkusActionCreatorPayload {
   /**
@@ -90,7 +90,7 @@ export const setProductRecommendationsSkus = createAction(
 );
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsBrandFilterActionCreatorPayload {
   /**
@@ -108,7 +108,7 @@ export const setProductRecommendationsBrandFilter = createAction(
 );
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsCategoryFilterActionCreatorPayload {
   /**
@@ -126,7 +126,7 @@ export const setProductRecommendationsCategoryFilter = createAction(
 );
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsAdditionalFieldsActionCreatorPayload {
   /**
@@ -147,7 +147,7 @@ export const setProductRecommendationsAdditionalFields = createAction(
 );
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload {
   /**

@@ -60,7 +60,7 @@ export type {
 };
 
 /**
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface FacetProps {
   /**
@@ -71,7 +71,7 @@ export interface FacetProps {
 
 /**
  * Creates a `Facet` controller instance for the product listing.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.

@@ -37,7 +37,7 @@ type ProductListingEngineState =
 
 /**
  * The engine for powering production listing experiences.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingEngine<State extends object = {}>
   extends CoreEngine<
@@ -47,7 +47,7 @@ export interface ProductListingEngine<State extends object = {}>
 
 /**
  * The product listing engine options.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListingEngineOptions
   extends ExternalEngineOptions<ProductListingEngineState> {
@@ -59,7 +59,7 @@ export interface ProductListingEngineOptions
 
 /**
  * Creates a product listing engine instance.
- * @deprecated TBD CAPI-98
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param options - The product listing engine options.
  * @returns A product listing engine instance.
