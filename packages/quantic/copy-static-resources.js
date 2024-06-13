@@ -28,6 +28,8 @@ const copyMarked = async () => {
     '../../node_modules/marked/marked.min.js',
     './force-app/main/default/staticresources/marked/marked.min.js'
   );
+
+  console.log('Marked copied.');
 };
 
 const copyHeadless = async () => {
