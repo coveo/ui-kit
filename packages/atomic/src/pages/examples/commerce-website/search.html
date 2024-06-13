@@ -31,6 +31,54 @@
             <atomic-layout-section section="facets"
               ><atomic-commerce-facets></atomic-commerce-facets
             ></atomic-layout-section>
+            <atomic-layout-section section="main">
+              <atomic-layout-section section="status">
+                <atomic-commerce-query-summary></atomic-commerce-query-summary>
+                <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+                <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
+              </atomic-layout-section>
+              <atomic-layout-section section="products">
+                <atomic-commerce-product-list display="grid" density="compact" image-size="small">
+                  <atomic-product-template>
+                    <template>
+                      <atomic-product-section-name>
+                        <atomic-product-link class="font-bold"></atomic-product-link>
+                      </atomic-product-section-name>
+                      <atomic-product-section-visual>
+                        <atomic-product-field-condition if-defined="ec_thumbnails">
+                          <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                        </atomic-product-field-condition>
+                      </atomic-product-section-visual>
+                      <atomic-product-section-metadata>
+                        <atomic-product-field-condition if-defined="ec_brand">
+                          <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+                        </atomic-product-field-condition>
+                        <atomic-product-field-condition if-defined="ec_rating">
+                          <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                        </atomic-product-field-condition>
+                      </atomic-product-section-metadata>
+                      <atomic-product-section-emphasized>
+                        <atomic-product-price currency="USD"></atomic-product-price>
+                      </atomic-product-section-emphasized>
+                      <atomic-product-section-description>
+                        <atomic-product-text field="excerpt" class="block text-neutral-dark"></atomic-product-text>
+                      </atomic-product-section-description>
+                      <atomic-product-section-children>
+                        <atomic-product-children></atomic-product-children>
+                      </atomic-product-section-children>
+                    </template>
+                  </atomic-product-template>
+                </atomic-commerce-product-list>
+                <atomic-commerce-query-error></atomic-commerce-query-error>
+                <atomic-commerce-no-products></atomic-commerce-no-products>
+              </atomic-layout-section>
+              <atomic-layout-section section="pagination">
+                <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+                <!-- Alternative pagination
+                <atomic-commerce-pager></atomic-commerce-pager>
+                -->
+              </atomic-layout-section>
+            </atomic-layout-section>
           </atomic-commerce-layout>
         </atomic-commerce-interface>
       </section>

@@ -39,7 +39,7 @@ export const Default: Story = {
     `,
   ],
   args: {
-    default: `
+    'slots-default': `
       <atomic-facet field="author" label="Authors"></atomic-facet>
       <atomic-facet field="language" label="Language"></atomic-facet>
       <atomic-facet

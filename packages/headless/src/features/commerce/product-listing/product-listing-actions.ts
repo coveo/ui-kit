@@ -4,7 +4,7 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
-import {ProductListingV2Section} from '../../../state/state-sections';
+import {ProductListingSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
@@ -19,7 +19,7 @@ import {
 } from './product-listing-selectors';
 
 export type StateNeededByFetchProductListing =
-  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingV2Section;
+  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingSection;
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,

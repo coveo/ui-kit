@@ -82,7 +82,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
+  @Prop({reflect: true}) nextButtonIcon: string = ArrowRightIcon;
 
   private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-pager-');
