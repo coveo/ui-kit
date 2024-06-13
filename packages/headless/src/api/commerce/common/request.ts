@@ -12,6 +12,7 @@ import {
   SortParam,
   PerPageParam,
 } from '../commerce-api-params';
+import {CommerceApiMethod} from '../commerce-metadata';
 
 export type BaseCommerceAPIRequest = BaseParam &
   TrackingIdParam &
@@ -27,7 +28,10 @@ export type CommerceAPIRequest = BaseCommerceAPIRequest &
   FacetsParam &
   SortParam;
 
-export const buildRequest = (req: CommerceAPIRequest, path: string) => {
+export const buildRequest = (
+  req: CommerceAPIRequest,
+  path: CommerceApiMethod
+) => {
   return {
     ...baseRequest(req, path),
     requestParams: prepareRequestParams(req),
@@ -63,10 +67,15 @@ const prepareRequestParams = (req: CommerceAPIRequest) => {
 
 export const baseRequest = (
   req: BaseParam,
-  path: string
+  path: CommerceApiMethod
 ): Pick<
   PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
+  | 'accessToken'
+  | 'method'
+  | 'contentType'
+  | 'url'
+  | 'origin'
+  | 'requestMetadata'
 > => {
   const {url, organizationId, accessToken} = req;
   const baseUrl = `${url}/rest/organizations/${organizationId}/commerce/v2/${path}`;
@@ -77,5 +86,6 @@ export const baseRequest = (
     contentType: 'application/json',
     url: baseUrl,
     origin: 'commerceApiFetch',
+    requestMetadata: {method: path},
   };
 };

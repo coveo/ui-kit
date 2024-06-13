@@ -27,7 +27,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-sort-expression',
   args: {
-    label: 'Relevance',
-    expression: 'relevancy',
+    'attributes-label': 'Relevance',
+    'attributes-expression': 'relevancy',
   },
 };

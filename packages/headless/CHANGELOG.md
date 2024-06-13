@@ -1,3 +1,14 @@
+# 2.67.0 (2024-06-13)
+
+### Bug Fixes
+
+- **commerce:** forward analytics source on `context.source` ([#4086](https://github.com/coveo/ui-kit/issues/4086)) ([c9822ed](https://github.com/coveo/ui-kit/commits/c9822ed0710644c0973546e8e2c2cdb3609554b9))
+
+### Features
+
+- **atomic:** add excerpt and product name highlights ([#4046](https://github.com/coveo/ui-kit/issues/4046)) ([fe412e0](https://github.com/coveo/ui-kit/commits/fe412e0077084e4ed4b5da8f7c7210e1f0dc8de8))
+- **commerce:** mark v2 listings as non-v2 and non-v2 listings as old ([#4087](https://github.com/coveo/ui-kit/issues/4087)) ([19c6363](https://github.com/coveo/ui-kit/commits/19c6363614cfac3ba7b6880ec8e9c4ea40186606))
+
 # 2.66.0 (2024-06-12)
 
 ### Bug Fixes
