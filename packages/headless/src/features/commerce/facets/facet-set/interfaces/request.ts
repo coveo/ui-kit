@@ -31,7 +31,7 @@ export type DateFacetRequest = BaseCommerceFacetRequest<
 >;
 
 export type NumericFacetRequest = BaseCommerceFacetRequest<
-  NumericRangeRequest, // TODO: this is where we want to extend the value with the additional parameter (isCustomRange)
+  NumericRangeRequest,
   'numericalRange'
 > &
   NumericFacetExtraProperties;

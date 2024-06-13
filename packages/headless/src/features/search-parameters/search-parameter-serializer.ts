@@ -249,9 +249,6 @@ function processObjectValues(key: string, values: string[]) {
 }
 
 export function buildNumericRanges(ranges: string[], isCustomRange?: boolean) {
-  // TODO: check for custom range
-  console.log('*******ranges strings**************', ranges);
-
   return ranges
     .map((str) => {
       const {startAsString, endAsString, isEndInclusive} =
