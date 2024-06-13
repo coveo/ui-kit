@@ -182,7 +182,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   /**
    * Sends the "quantic__selectSuggestion" event.
-   * @param {string} value
+   * @param {string} selectedSuggestion
    */
   sendSelectSuggestionEvent(selectedSuggestion, isRecentQuery = false) {
     const selectSuggestionEvent = new CustomEvent('quantic__selectsuggestion', {
