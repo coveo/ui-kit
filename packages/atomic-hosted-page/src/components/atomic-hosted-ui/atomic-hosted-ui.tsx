@@ -65,7 +65,7 @@ export class AtomicHostedUI implements ComponentInterface {
     const paths = {
       page: {
         pagePathPrefix: 'searchpage/v1/interfaces',
-        pagePath: '/loader',
+        pagePath: '/json',
       },
       legacy: {
         pagePathPrefix: 'searchinterfaces',
