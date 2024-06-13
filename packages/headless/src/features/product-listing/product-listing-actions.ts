@@ -29,6 +29,9 @@ import {SortBy} from '../sort/sort';
 import {OldProductListingState} from './old-product-listing-state';
 import {logProductListing} from './product-listing-analytics';
 
+/**
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
