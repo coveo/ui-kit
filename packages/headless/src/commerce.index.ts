@@ -138,6 +138,7 @@ export type {
 export type {
   NumericFacet,
   NumericFacetState,
+  NumericFilterRange,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {

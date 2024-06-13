@@ -1,10 +1,12 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
+import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {NumericFilterRange} from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -14,6 +16,8 @@ import {
   NumericRangeRequest,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+
+export type {NumericFilterRange};
 
 export type NumericFacetOptions = Omit<
   CoreCommerceFacetOptions,
@@ -25,6 +29,11 @@ export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
+  /**
+   * The last range set by setRanges method // TODO: better doc
+   * undefined if the range has been defined by selecting facet values
+   */
+  range?: NumericFilterRange;
 };
 
 type NumericFacetDomain = {
@@ -90,8 +99,34 @@ export function buildCommerceNumericFacet(
   });
 
   const {dispatch} = engine;
+  const getState = () => engine[stateKey];
+  const getRequest = () => getState().commerceFacetSet[facetId]!.request;
+  // TODO: register facet input
+
   const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
     options;
+
+  const extractRange = (response: NumericFacetResponse) => {
+    const {isCustomRange} = getRequest();
+    const range = isCustomRange ? response.values[0] : undefined;
+    return {
+      range,
+    };
+  };
+
+  const extractDomain = (response: NumericFacetResponse) => {
+    if (response.domain === undefined) {
+      return;
+    }
+    const {min, max} = response.domain;
+    return {
+      ...coreController.state,
+      domain: {
+        min,
+        max,
+      },
+    };
+  };
 
   return {
     ...coreController,
@@ -106,16 +141,13 @@ export function buildCommerceNumericFacet(
       dispatch(fetchProductsActionCreator());
     },
 
-    get state() {
+    get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
-      if (response?.type === 'numericalRange' && response.domain) {
-        const {min, max} = response.domain;
+      if (response?.type === 'numericalRange') {
         return {
           ...coreController.state,
-          domain: {
-            min,
-            max,
-          },
+          ...extractDomain(response),
+          ...extractRange(response),
         };
       }
 

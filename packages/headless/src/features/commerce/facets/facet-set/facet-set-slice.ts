@@ -340,6 +340,18 @@ export const commerceFacetSetReducer = createReducer(
           facetRequest.request.initialNumberOfValues
         );
       })
+      // TODO: not needed anymore
+      // .addCase(updateNumericFacetFilter, (state, action) => {
+      //   const {facetId, values} = action.payload;
+      //   const request = state[facetId]?.request;
+
+      //   if (!request || !ensureNumericFacetRequest(request)) {
+      //     return;
+      //   }
+      //   request.customRange = values[0]; // TODO: can be a toggle instead
+      //   request.values = convertToNumericRangeRequests(values);
+      //   request.numberOfValues = values.length;
+      // })
       .addCase(updateNumericFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
         const request = state[facetId]?.request;
@@ -348,9 +360,24 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        // TODO: clear custom range if facet select
+        // TODO: set custom ranges id setRanges() called
         // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
         request.values = convertToNumericRangeRequests(values);
+        request.isCustomRange = request.values.length > 0;
         request.numberOfValues = values.length;
+
+        // TODO:  this logic should be having its own reducer
+        if (request.isCustomRange) {
+          state[`${facetId}_input_range`] = {request};
+          console.log(
+            'request.customRange',
+            request.isCustomRange,
+            state[`${facetId}_input_range`]
+          );
+        } else {
+          delete state[`${facetId}_input_range`]; // TODO: that is ugly
+        }
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
@@ -362,6 +389,18 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.numberOfValues = numberOfValues;
       })
+      // TODO: to implement
+      // .addCase(registerNumericFilter, (state, action) => {
+      //   const {facetId} = action.payload;
+
+      //   if (facetId in state) {
+      //     return;
+      //   }
+
+      //   state[facetId] = getFacetSetSliceInitialState(
+      //     buildFacetRequest(action.payload)
+      //   );
+      // })
       .addCase(updateDateFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
         const request = state[facetId]?.request;
@@ -635,5 +674,6 @@ function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
 function clearAllFacetValues(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values = [];
+    facet.request.isCustomRange = false; // TODO: maybe put directly into the facetVAlue interface to avoid clearing this property
   });
 }

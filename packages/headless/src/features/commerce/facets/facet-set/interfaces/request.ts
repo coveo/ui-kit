@@ -10,7 +10,7 @@ import {
 import {
   CategoryFacetDelimitingCharacter,
   FacetType,
-  NumericFacetExtraProperties,
+  NumericFacetRequestExtraProperties,
 } from './common';
 
 export type CategoryFacetRequest = BaseCommerceFacetRequest<
@@ -31,10 +31,10 @@ export type DateFacetRequest = BaseCommerceFacetRequest<
 >;
 
 export type NumericFacetRequest = BaseCommerceFacetRequest<
-  NumericRangeRequest,
+  NumericRangeRequest, // TODO: this is where we want to extend the value with the additional parameter (isCustomRange)
   'numericalRange'
 > &
-  NumericFacetExtraProperties;
+  NumericFacetRequestExtraProperties;
 
 export type RegularFacetRequest = BaseCommerceFacetRequest<
   FacetValueRequest,
@@ -77,7 +77,9 @@ export type AnyFacetRequest = Pick<
   initialNumberOfValues: number;
   numberOfValues?: number;
   freezeCurrentValues?: boolean;
-} & Partial<CategoryFacetDelimitingCharacter & NumericFacetExtraProperties>;
+} & Partial<
+    CategoryFacetDelimitingCharacter & NumericFacetRequestExtraProperties
+  >;
 
 type MappedFacetRequest = {
   [T in FacetType]: T extends 'numericalRange'
