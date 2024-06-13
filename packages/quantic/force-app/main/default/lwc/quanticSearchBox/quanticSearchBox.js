@@ -233,7 +233,7 @@ export default class QuanticSearchBox extends LightningElement {
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const {value, isRecentQuery} = event.detail;
+    const {selectedSuggestion: value, isRecentQuery} = event.detail;
     if (isRecentQuery) {
       this.recentQueriesList.executeRecentQuery(
         this.recentQueries.indexOf(value)
