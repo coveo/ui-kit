@@ -71,7 +71,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api
   get inputValue() {
-    return this.input.value;
+    return this.input?.value;
   }
   set inputValue(newValue) {
     this.input.value = newValue;
@@ -104,7 +104,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {number}
    * @defaultValue 7
    */
-  @api maxNumberOfSuggestions;
+  @api maxNumberOfSuggestions = 7;
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
@@ -364,7 +364,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
     return this.template.querySelector('.slds-combobox');
   }
 
-  get hasSuggestions() {
+  get shouldDisplaySuggestions() {
     return this.suggestions?.length || this.recentQueries?.length;
   }
 

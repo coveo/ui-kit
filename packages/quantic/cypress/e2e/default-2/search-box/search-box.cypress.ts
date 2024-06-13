@@ -402,7 +402,7 @@ describe('quantic-search-box', () => {
           });
         });
 
-        describe('when a custom value is set for the property numberOfSuggestions', () => {
+        describe('when a custom value is set for the property #numberOfSuggestions', () => {
           const exampleRecentQueries = ['foo', 'bar'];
           const customNumberOfSuggestions = 3;
 
@@ -438,7 +438,7 @@ describe('quantic-search-box', () => {
           });
         });
 
-        describe('when a the property disableRecentQuerySuggestions is set to true', () => {
+        describe('when a the property #disableRecentQuerySuggestions is set to true', () => {
           const exampleRecentQueries = ['foo', 'bar'];
 
           describe('when the local storage contains recent query suggestions', () => {

@@ -54,7 +54,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @type {number}
    * @defaultValue 7
    */
-  @api maxNumberOfSuggestions;
+  @api maxNumberOfSuggestions = 7;
 
   labels = {
     clear,
@@ -127,13 +127,15 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   get allOptions() {
     if (this.shouldDisplayRecentQueries) {
       const options = [
-        ...this.filteredRecentQueries,
-        ...this.filteredSuggestions,
+        ...this.recentQueriesThatStartWithCurrentQuery,
+        ...this.querySuggestionsNotInRecentQueries,
       ]?.map((option, index) => ({
         ...option,
         key: index + 1,
         isSelected: this.selectionIndex === index + 1,
-        containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index + 1 ? 'slds-has-focus' : ''}`,
+        containerCSSClass: `${optionCSSClass} ${
+          this.selectionIndex === index + 1 ? 'slds-has-focus' : ''
+        }`,
         icon: option.isRecentQuery ? 'utility:clock' : 'utility:search',
         clickHandler: () => {
           this.handleSuggestionSelection(option.rawValue, option.isRecentQuery);
@@ -148,12 +150,14 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         ...options,
       ].slice(0, this.maxNumberOfSuggestions + 1);
     }
-    return this.filteredSuggestions
+    return this.querySuggestionsNotInRecentQueries
       .map((option, index) => ({
         ...option,
         key: index,
         isSelected: this.selectionIndex === index,
-        containerCSSClass: `${optionCSSClass} ${this.selectionIndex === index ? 'slds-has-focus' : ''}`,
+        containerCSSClass: `${optionCSSClass} ${
+          this.selectionIndex === index ? 'slds-has-focus' : ''
+        }`,
         icon: 'utility:search',
         clickHandler: () => {
           this.handleSuggestionSelection(option.rawValue);
@@ -162,24 +166,30 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       .slice(0, this.maxNumberOfSuggestions);
   }
 
-  get filteredSuggestions() {
+  /**
+   * Returns the query suggestions that are not already in the recent queries list.
+   */
+  get querySuggestionsNotInRecentQueries() {
     return (
       this.suggestions?.filter(
         (suggestion) =>
-          !this.filteredRecentQueries.some(
+          !this.recentQueriesThatStartWithCurrentQuery.some(
             (recentQuery) => recentQuery.rawValue === suggestion.rawValue
           )
       ) || []
     );
   }
 
-  get filteredRecentQueries() {
+  /**
+   * Returns the recent queries that start with the query currently typed by the end user.
+   */
+  get recentQueriesThatStartWithCurrentQuery() {
     return (
       this.recentQueries
         ?.filter(
           (recentQuery) =>
             recentQuery !== this.query &&
-            recentQuery.toLowerCase().startsWith(this.query.toLowerCase())
+            recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
         )
         .map((recentQuery) => ({
           value: this.formatRecentQuery(recentQuery),
@@ -189,6 +199,11 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     );
   }
 
+  /**
+   * Highlights a recent query based on the letters that match the current query.
+   * @param {String} value
+   * @returns {String}
+   */
   formatRecentQuery(value) {
     const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
       content: value,
@@ -214,7 +229,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
 
   get shouldDisplayRecentQueries() {
-    return !!this.filteredRecentQueries?.length;
+    return !!this.recentQueriesThatStartWithCurrentQuery?.length;
   }
 
   clearRecentQueries() {
@@ -242,7 +257,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
 
   get clearRecentQueriesOptionCSSClass() {
-    return `${optionCSSClass} ${this.selectionIndex === 0 ? 'slds-has-focus' : ''} recent-searches__label`;
+    return `${optionCSSClass} ${
+      this.selectionIndex === 0 ? 'slds-has-focus' : ''
+    } recent-searches__label`;
   }
 
   get listboxCssClass() {

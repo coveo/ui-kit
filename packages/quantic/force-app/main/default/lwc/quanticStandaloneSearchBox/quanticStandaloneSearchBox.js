@@ -241,7 +241,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}${value ? `#q=${encodeURIComponent(value)}` : ''}`,
+          url: `${this.redirectUrl}${
+            value ? `#q=${encodeURIComponent(value)}` : ''
+          }`,
         },
       },
       false
@@ -286,8 +288,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const selectedSuggestion = event.detail.selectedSuggestion;
-    this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
+    const {value} = event.detail;
+    this.standaloneSearchBox?.selectSuggestion(value);
   };
 
   /**
