@@ -16,7 +16,7 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface UserInterestRecommendationsListOptions {
   /**
@@ -33,7 +33,7 @@ export interface UserInterestRecommendationsListOptions {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface UserInterestRecommendationsListProps {
   options?: UserInterestRecommendationsListOptions;
@@ -43,7 +43,7 @@ export interface UserInterestRecommendationsListProps {
  * The `UserInterestRecommendationsList` controller recommends products to the current user based on their general interests.
  * To achieve this, ML models learn from users' previous actions, and use this information to find other customers that share similar browsing patterns.
  * The model then suggests products that have been previously browsed by customers who share similar interests with the current user.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface UserInterestRecommendationsList extends Controller {
   /**
@@ -58,7 +58,7 @@ export interface UserInterestRecommendationsList extends Controller {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface UserInterestRecommendationsListState {
   /**
@@ -84,7 +84,7 @@ export interface UserInterestRecommendationsListState {
 
 /**
  * Creates a `UserInterestRecommendationsList` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `UserInterestRecommendationsList` properties.

@@ -16,7 +16,7 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface CartRecommendationsListOptions {
   /**
@@ -38,7 +38,7 @@ export interface CartRecommendationsListOptions {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface CartRecommendationsListProps {
   options?: CartRecommendationsListOptions;
@@ -46,7 +46,7 @@ export interface CartRecommendationsListProps {
 
 /**
  * The `CartRecommendationsList` controller recommends other products that were frequently purchased together in previous similar carts.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface CartRecommendationsList extends Controller {
   /**
@@ -68,7 +68,7 @@ export interface CartRecommendationsList extends Controller {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface CartRecommendationsListState {
   /**
@@ -99,7 +99,7 @@ export interface CartRecommendationsListState {
 
 /**
  * Creates a `CartRecommendationsList` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CartRecommendationsList` properties.

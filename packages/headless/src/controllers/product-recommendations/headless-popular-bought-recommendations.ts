@@ -16,7 +16,7 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularBoughtRecommendationsListOptions {
   /**
@@ -33,7 +33,7 @@ export interface PopularBoughtRecommendationsListOptions {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularBoughtRecommendationsListProps {
   options?: PopularBoughtRecommendationsListOptions;
@@ -41,7 +41,7 @@ export interface PopularBoughtRecommendationsListProps {
 
 /**
  * The `PopularBoughtRecommendationsList` controller recommends the most purchased products.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularBoughtRecommendationsList extends Controller {
   /**
@@ -56,7 +56,7 @@ export interface PopularBoughtRecommendationsList extends Controller {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularBoughtRecommendationsListState {
   /**
@@ -82,7 +82,7 @@ export interface PopularBoughtRecommendationsListState {
 
 /**
  * Creates a `PopularBoughtRecommendationsList` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularBoughtRecommendationsList` properties.

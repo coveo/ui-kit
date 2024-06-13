@@ -16,7 +16,7 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularViewedRecommendationsListOptions {
   /**
@@ -33,7 +33,7 @@ export interface PopularViewedRecommendationsListOptions {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularViewedRecommendationsListProps {
   options?: PopularViewedRecommendationsListOptions;
@@ -41,7 +41,7 @@ export interface PopularViewedRecommendationsListProps {
 
 /**
  * The `PopularViewedRecommendationsList` controller recommends the most viewed products.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularViewedRecommendationsList extends Controller {
   /**
@@ -56,7 +56,7 @@ export interface PopularViewedRecommendationsList extends Controller {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface PopularViewedRecommendationsListState {
   /**
@@ -82,7 +82,7 @@ export interface PopularViewedRecommendationsListState {
 
 /**
  * Creates a `PopularViewedRecommendationsList` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularViewedRecommendationsList` properties.
