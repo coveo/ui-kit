@@ -16,6 +16,7 @@ import {
 
 /**
  * The product recommendation engine configuration.
+ * @deprecated TBD CAPI-98
  */
 export interface ProductRecommendationEngineConfiguration
   extends EngineConfiguration {
@@ -92,6 +93,7 @@ export const productRecommendationEngineConfigurationSchema =
 
 /**
  * Creates a sample product recommendation engine configuration.
+ * @deprecated TBD CAPI-98
  *
  * @returns The sample product recommendation engine configuration.
  */

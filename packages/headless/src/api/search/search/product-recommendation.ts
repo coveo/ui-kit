@@ -1,3 +1,6 @@
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface ProductRecommendation {
   /**
    * This parameter is no longer used by the Coveo Usage Analytics service.

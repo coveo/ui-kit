@@ -15,6 +15,9 @@ const optionsSchema = new Schema({
   additionalFields: baseProductRecommendationsOptionsSchema.additionalFields,
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface PopularViewedRecommendationsListOptions {
   /**
    * The maximum number of recommendations, from 1 to 50.
@@ -29,12 +32,16 @@ export interface PopularViewedRecommendationsListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface PopularViewedRecommendationsListProps {
   options?: PopularViewedRecommendationsListOptions;
 }
 
 /**
  * The `PopularViewedRecommendationsList` controller recommends the most viewed products.
+ * @deprecated TBD CAPI-98
  */
 export interface PopularViewedRecommendationsList extends Controller {
   /**
@@ -48,6 +55,9 @@ export interface PopularViewedRecommendationsList extends Controller {
   state: PopularViewedRecommendationsListState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface PopularViewedRecommendationsListState {
   /**
    * The maximum number of recommendations.
@@ -72,6 +82,7 @@ export interface PopularViewedRecommendationsListState {
 
 /**
  * Creates a `PopularViewedRecommendationsList` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularViewedRecommendationsList` properties.

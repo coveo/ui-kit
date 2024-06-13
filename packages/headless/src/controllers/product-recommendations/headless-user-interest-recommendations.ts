@@ -15,6 +15,9 @@ const optionsSchema = new Schema({
   additionalFields: baseProductRecommendationsOptionsSchema.additionalFields,
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface UserInterestRecommendationsListOptions {
   /**
    * The maximum number of recommendations, from 1 to 50.
@@ -29,6 +32,9 @@ export interface UserInterestRecommendationsListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface UserInterestRecommendationsListProps {
   options?: UserInterestRecommendationsListOptions;
 }
@@ -37,6 +43,7 @@ export interface UserInterestRecommendationsListProps {
  * The `UserInterestRecommendationsList` controller recommends products to the current user based on their general interests.
  * To achieve this, ML models learn from users' previous actions, and use this information to find other customers that share similar browsing patterns.
  * The model then suggests products that have been previously browsed by customers who share similar interests with the current user.
+ * @deprecated TBD CAPI-98
  */
 export interface UserInterestRecommendationsList extends Controller {
   /**
@@ -50,6 +57,9 @@ export interface UserInterestRecommendationsList extends Controller {
   state: UserInterestRecommendationsListState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface UserInterestRecommendationsListState {
   /**
    * The maximum number of recommendations.
@@ -74,6 +84,7 @@ export interface UserInterestRecommendationsListState {
 
 /**
  * Creates a `UserInterestRecommendationsList` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `UserInterestRecommendationsList` properties.

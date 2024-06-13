@@ -13,6 +13,9 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedTogetherListOptions {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -32,12 +35,16 @@ export interface FrequentlyViewedTogetherListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedTogetherListProps {
   options?: FrequentlyViewedTogetherListOptions;
 }
 
 /**
  * The `FrequentlyViewedTogetherList` controller recommends products that are often viewed in the same shopping session.
+ * @deprecated TBD CAPI-98
  */
 export interface FrequentlyViewedTogetherList extends Controller {
   /**
@@ -58,6 +65,9 @@ export interface FrequentlyViewedTogetherList extends Controller {
   state: FrequentlyViewedTogetherListState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedTogetherListState {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -87,6 +97,7 @@ export interface FrequentlyViewedTogetherListState {
 
 /**
  * Creates a `FrequentlyViewedTogetherList` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedTogetherList` properties.

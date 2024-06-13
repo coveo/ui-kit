@@ -15,6 +15,9 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface CartRecommendationsListOptions {
   /**
    * The SKUs of the products in the cart.
@@ -34,12 +37,16 @@ export interface CartRecommendationsListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface CartRecommendationsListProps {
   options?: CartRecommendationsListOptions;
 }
 
 /**
  * The `CartRecommendationsList` controller recommends other products that were frequently purchased together in previous similar carts.
+ * @deprecated TBD CAPI-98
  */
 export interface CartRecommendationsList extends Controller {
   /**
@@ -60,6 +67,9 @@ export interface CartRecommendationsList extends Controller {
   state: CartRecommendationsListState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface CartRecommendationsListState {
   /**
    * The SKUs of the products in the cart.
@@ -89,6 +99,7 @@ export interface CartRecommendationsListState {
 
 /**
  * Creates a `CartRecommendationsList` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CartRecommendationsList` properties.

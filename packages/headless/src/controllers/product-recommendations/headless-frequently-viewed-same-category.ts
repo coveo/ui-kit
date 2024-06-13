@@ -13,6 +13,9 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedSameCategoryListOptions {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -32,6 +35,9 @@ export interface FrequentlyViewedSameCategoryListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedSameCategoryListProps {
   options?: FrequentlyViewedSameCategoryListOptions;
 }
@@ -39,6 +45,7 @@ export interface FrequentlyViewedSameCategoryListProps {
 /**
  * The `FrequentlyViewedSameCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
  * The recommendations are filtered to show products that have the same category as the ones the user is currently viewing.
+ * @deprecated TBD CAPI-98
  */
 export interface FrequentlyViewedSameCategoryList extends Controller {
   /**
@@ -59,6 +66,9 @@ export interface FrequentlyViewedSameCategoryList extends Controller {
   state: FrequentlyViewedSameCategoryListState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedSameCategoryListState {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -88,6 +98,7 @@ export interface FrequentlyViewedSameCategoryListState {
 
 /**
  * Creates a `FrequentlyViewedSameCategoryList` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedSameCategoryList` properties.

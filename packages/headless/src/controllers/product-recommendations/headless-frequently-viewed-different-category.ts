@@ -13,6 +13,9 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedDifferentCategoryListOptions {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -32,6 +35,9 @@ export interface FrequentlyViewedDifferentCategoryListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedDifferentCategoryListProps {
   options?: FrequentlyViewedDifferentCategoryListOptions;
 }
@@ -39,6 +45,7 @@ export interface FrequentlyViewedDifferentCategoryListProps {
 /**
  * The `FrequentlyViewedDifferentCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
  * The recommendations are filtered to show products that have a different category than the ones the user is currently viewing.
+ * @deprecated TBD CAPI-98
  */
 export interface FrequentlyViewedDifferentCategoryList extends Controller {
   /**
@@ -59,6 +66,9 @@ export interface FrequentlyViewedDifferentCategoryList extends Controller {
   state: FrequentlyViewedDifferentCategoryListState;
 }
 
+/**
+ * @deprecated TBD CAPI-98
+ */
 export interface FrequentlyViewedDifferentCategoryListState {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -88,6 +98,7 @@ export interface FrequentlyViewedDifferentCategoryListState {
 
 /**
  * Creates a `FrequentlyViewedDifferentCategoryList` controller instance.
+ * @deprecated TBD CAPI-98
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedDifferentCategoryListProps` properties.

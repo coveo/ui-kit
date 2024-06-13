@@ -39,6 +39,7 @@ type ProductRecommendationEngineState =
 
 /**
  * The engine for powering production recommendation experiences.
+ * @deprecated TBD CAPI-98
  */
 export interface ProductRecommendationEngine<State extends object = {}>
   extends CoreEngine<
@@ -48,6 +49,7 @@ export interface ProductRecommendationEngine<State extends object = {}>
 
 /**
  * The product recommendation engine options.
+ * @deprecated TBD CAPI-98
  */
 export interface ProductRecommendationEngineOptions
   extends ExternalEngineOptions<ProductRecommendationEngineState> {
@@ -59,6 +61,7 @@ export interface ProductRecommendationEngineOptions
 
 /**
  * Creates a product recommendation engine instance.
+ * @deprecated TBD CAPI-98
  *
  * @param options - The product recommendation engine options.
  * @returns A product recommendation engine instance.
