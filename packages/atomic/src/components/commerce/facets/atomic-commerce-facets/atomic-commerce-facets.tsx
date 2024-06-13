@@ -96,7 +96,6 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
         <FacetPlaceholder isCollapsed={false} numberOfValues={8} />
       ));
     }
-
     return (
       <Fragment>
         {this.facetGenerator.facets.map((facet, index) => {
