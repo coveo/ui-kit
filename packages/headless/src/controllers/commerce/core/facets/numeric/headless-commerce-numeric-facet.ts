@@ -106,20 +106,14 @@ export function buildCommerceNumericFacet(
   const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
     options;
 
-  const extractRange = () => {
+  const range = (): Pick<NumericFacetState, 'range'> | undefined => {
     const request = getRequest();
     if (!ensureNumericFacetRequest(request)) {
       return;
     }
 
-    const range = request.values.find((value) => value.isCustomRange);
-
-    if (!range) {
-      return;
-    }
-
     return {
-      range,
+      range: request.values.find((value) => value.isCustomRange),
     };
   };
 
@@ -158,7 +152,7 @@ export function buildCommerceNumericFacet(
         return {
           ...coreController.state,
           ...extractDomain(response),
-          ...extractRange(),
+          ...range(),
         };
       }
 
