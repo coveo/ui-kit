@@ -1,13 +1,4 @@
 {
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["cached:build", "cached:build:stencil"]
-      }
-    }
-  },
-  "plugins": ["@coveo/nx-plugin"],
   "namedInputs": {
     "sharedGlobals": [
       {
@@ -38,7 +29,10 @@
       "!{projectRoot}/*.md",
       "!{projectRoot}/*.tsbuildinfo",
       "!{projectRoot}/LICENSE",
-      "!{projectRoot}/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
+      "!{projectRoot}/**/?(*.)spec.{ts,tsx}",
+      "!{projectRoot}/**/?(*.)spec.{ts,tsx}.snap}",
+      "!{projectRoot}/**/?(*.)stories.{tsx,css}",
+      "!{projectRoot}/**/?(*.)mdx"
     ],
     "negativeBuildOutputs": [
       "!{projectRoot}/dist",
@@ -58,7 +52,10 @@
       "buildInputs",
       "negativeNonBuildOutputs",
       "negativeBuildOutputs",
-      "negativeCommonNonProduction"
+      "negativeCommonNonProduction",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
     ]
   },
   "targetDefaults": {
@@ -77,7 +74,8 @@
         "{projectRoot}/.next",
         "{projectRoot}/next-env.d.ts"
       ],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "cache": true
     },
     "dev": {
       "dependsOn": ["^build"]
@@ -100,18 +98,38 @@
       "dependsOn": ["build"]
     },
     "release:phase1": {
-      "dependsOn": ["^release:phase1", "^release:phase2"]
+      "dependsOn": ["^release:phase1"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npm run publish:bump",
+          "npm run build",
+          "npm run publish:npm"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
     },
-    "release:build": {
-      "dependsOn": ["^release:build", "release:phase1"]
+    "release:phase4": {
+      "dependsOn": ["^release:phase4"],
+      "//": "Currently disabled TODO KIT-3074",
+      "executor": "nx:noop",
+      "options": {"script": "publish:bump"}
     },
-    "release:phase2": {
-      "dependsOn": ["release:build", "release:phase1"]
+    "cached:build:stencil": {
+      "cache": true
     },
-    "release:phase5": {
-      "dependsOn": ["^release:phase5"]
+    "build-storybook": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ]
     }
   },
   "defaultBase": "master",
-  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "useInferencePlugins": false
 }

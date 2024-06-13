@@ -1,0 +1,65 @@
+name: 'Publish PR review site'
+description: Publish PR review stuff
+
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+  copy:
+    description: 'Files to copy'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: coveo/ui-kit-prs
+        path: prs
+        sparse-checkout: '${{ github.event.pull_request.number }}'
+        token: ${{inputs.token}}
+    - name: 'Setup branch'
+      run: |
+        if [[ -z $(git ls-remote --heads origin refs/heads/${{github.event.pull_request.number}} | tr -s '[:blank:]') ]]; then
+          git switch -c "${{github.event.pull_request.number}}"
+        else
+          git fetch origin "refs/heads/${{github.event.pull_request.number}}"
+          git switch "${{github.event.pull_request.number}}"
+          git reset --hard main
+        fi
+      working-directory: prs
+      shell: bash
+    - name: 'Ensure clean directory exists'
+      run: |
+        rm -rf "${{github.event.pull_request.number}}"
+        mkdir -p "${{github.event.pull_request.number}}"
+      working-directory: prs
+      shell: bash
+    - name: 'Copy files'
+      if: ${{inputs.copy}}
+      run: |
+        cp -R packages/atomic/dist-storybook prs/${{github.event.pull_request.number}}
+        cp -R packages/atomic/playwright-report prs/${{github.event.pull_request.number}}
+      shell: bash
+    - name: 'Commit/Push'
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git add "${{github.event.pull_request.number}}"
+        git commit -m "Add ${{github.sha}}"
+        git push --set-upstream origin ${{github.event.pull_request.number}} -f
+      working-directory: prs
+      shell: bash
+    - name: 'Ensure PR exists'
+      run: gh pr new -f
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{inputs.token}}
+      working-directory: prs
+      shell: bash
+    - name: 'Merge PR'
+      run: gh pr merge
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{inputs.token}}
+      working-directory: prs
+      shell: bash

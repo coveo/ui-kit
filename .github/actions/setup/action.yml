@@ -1,10 +1,6 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
-  fail-on-cache-miss:
-    description: 'Fail when cache miss occurs'
-    required: false
-    default: 'true'
   load-cache:
     description: 'Whether to restore the Nx cache.'
     required: false
@@ -27,19 +23,22 @@ runs:
       with:
         path: |
           **/node_modules/
-          !node_modules/.cache/nx/
-        key: npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
+          !.nx/cache/
+        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}}}
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+      with:
+        path: packages/quantic/force-app/main/default/staticresources
+        key: quantic-${{ hashFiles('package-lock.json') }}}}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
+        key: cy-${{ hashFiles('package-lock.json') }}}}
     - if: inputs.load-cache == 'true'
       uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: nx-cache
       with:
-        path: node_modules/.cache/nx
+        path: .nx/cache
         key: nx-${{ github.sha }}
-        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash

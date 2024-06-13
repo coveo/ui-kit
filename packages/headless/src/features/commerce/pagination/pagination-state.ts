@@ -1,6 +1,6 @@
 export interface PaginationSlice {
   page: number;
-  perPage?: number;
+  perPage: number;
   totalEntries: number;
   totalPages: number;
 }
@@ -20,6 +20,7 @@ export function getCommercePaginationInitialState(): CommercePaginationState {
 export function getCommercePaginationInitialSlice(): PaginationSlice {
   return {
     page: 0,
+    perPage: 0,
     totalEntries: 0,
     totalPages: 0,
   };

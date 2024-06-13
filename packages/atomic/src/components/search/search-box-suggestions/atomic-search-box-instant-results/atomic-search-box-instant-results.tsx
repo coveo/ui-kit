@@ -39,6 +39,8 @@ export type AriaLabelGenerator = (
  * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
  *
  * This component is not supported on mobile.
+ *
+ * @slot default - The default slot where the instant results are rendered.
  */
 @Component({
   tag: 'atomic-search-box-instant-results',

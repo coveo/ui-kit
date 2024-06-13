@@ -365,13 +365,13 @@ export {buildFoldedResultList} from './controllers/folded-result-list/headless-f
 export type {
   RedirectionTrigger,
   RedirectionTriggerState,
-} from './controllers/triggers/headless-redirection-trigger';
+} from './controllers/core/triggers/headless-core-redirection-trigger';
 export {buildRedirectionTrigger} from './controllers/triggers/headless-redirection-trigger';
 
 export type {
   QueryTrigger,
   QueryTriggerState,
-} from './controllers/triggers/headless-query-trigger';
+} from './controllers/core/triggers/headless-core-query-trigger';
 export {buildQueryTrigger} from './controllers/triggers/headless-query-trigger';
 
 export type {

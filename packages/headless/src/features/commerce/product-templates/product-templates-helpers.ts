@@ -1,5 +1,5 @@
 import {isArray, isNullOrUndefined} from '@coveo/bueno';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {ProductTemplateCondition} from './product-templates-manager';
 
 /**
@@ -8,7 +8,10 @@ import {ProductTemplateCondition} from './product-templates-manager';
  * @param property (string) - The property to extract.
  * @returns (unknown) The value of the specified property in the specified product, or null if the property does not exist.
  */
-export const getProductProperty = (product: Product, property: string) => {
+export const getProductProperty = (
+  product: Product | ChildProduct,
+  property: string
+) => {
   const anyProduct = product as unknown as Record<string, unknown>;
 
   if (!isNullOrUndefined(anyProduct[property])) {
@@ -94,7 +97,10 @@ export const fieldMustNotMatch = (
   };
 };
 
-const getFieldValuesFromProduct = (fieldName: string, product: Product) => {
+const getFieldValuesFromProduct = (
+  fieldName: string,
+  product: Product | ChildProduct
+) => {
   const rawValue = getProductProperty(product, fieldName);
   return isArray(rawValue) ? rawValue : [rawValue];
 };

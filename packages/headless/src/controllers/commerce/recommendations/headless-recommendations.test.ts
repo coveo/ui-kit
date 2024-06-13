@@ -1,4 +1,7 @@
-import {fetchRecommendations} from '../../../features/commerce/recommendations/recommendations-actions';
+import {
+  fetchRecommendations,
+  promoteChildToParent,
+} from '../../../features/commerce/recommendations/recommendations-actions';
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
@@ -26,6 +29,19 @@ describe('headless recommendations', () => {
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       recommendations: recommendationsReducer,
+    });
+  });
+
+  it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
+    const childPermanentId = 'childPermanentId';
+    const parentPermanentId = 'parentPermanentId';
+
+    recommendations.promoteChildToParent(childPermanentId, parentPermanentId);
+
+    expect(promoteChildToParent).toHaveBeenCalledWith({
+      childPermanentId,
+      parentPermanentId,
+      slotId: 'slot-id',
     });
   });
 

@@ -96,7 +96,7 @@ export class AtomicQuerySummary
         <QuerySummaryContainer>
           <LocalizedString
             key={i18nKey}
-            bindings={this.bindings}
+            i18n={this.bindings.i18n}
             params={highlights}
             count={lastProduct}
           />

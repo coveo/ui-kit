@@ -79,10 +79,10 @@ describe('headless commerce context', () => {
 
   it('setUser dispatches #setUser', () => {
     context.setUser({
-      userId: 'some-user-id',
+      userAgent: 'some-user-agent',
     });
     expect(setUser).toHaveBeenCalledWith(
-      expect.objectContaining({userId: 'some-user-id'})
+      expect.objectContaining({userAgent: 'some-user-agent'})
     );
   });
 

@@ -8,6 +8,10 @@ import {
   buildProductListing,
   buildSearch,
   FacetGenerator,
+  buildListingSummary,
+  buildSearchSummary,
+  ListingSummary,
+  SearchSummary,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, Host, State, Prop} from '@stencil/core';
 import {
@@ -26,7 +30,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 @Component({
   tag: 'atomic-commerce-facets',
   styleUrl: 'atomic-commerce-facets.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
@@ -45,16 +49,27 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @BindStateToController('facetGenerator')
   @State()
   public facetGeneratorState!: FacetGeneratorState[];
+  public summary!: ListingSummary | SearchSummary;
 
   @State() public error!: Error;
 
   public initialize() {
     this.validateProps();
-    const controller =
-      this.bindings.interfaceElement.type === 'product-listing'
-        ? buildProductListing
-        : buildSearch;
-    this.facetGenerator = controller(this.bindings.engine).facetGenerator();
+    const {engine} = this.bindings;
+    this.facetGenerator = this.facetGeneratorBuilder(engine).facetGenerator();
+    this.summary = this.summaryBuilder(engine);
+  }
+
+  private isProductListing() {
+    return this.bindings.interfaceElement.type === 'product-listing';
+  }
+
+  private get facetGeneratorBuilder() {
+    return this.isProductListing() ? buildProductListing : buildSearch;
+  }
+
+  private get summaryBuilder() {
+    return this.isProductListing() ? buildListingSummary : buildSearchSummary;
   }
 
   private validateProps() {
@@ -81,35 +96,36 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
           if (facet.state.values.length === 0) {
             return;
           }
-          const props = {isCollapsed: this.shouldCollapseFacet(index)};
+
+          const props = <T,>() => ({
+            isCollapsed: this.shouldCollapseFacet(index),
+            summary: this.summary,
+            facet: facet as T,
+          });
 
           switch (facet.state.type) {
             case 'regular':
               return (
                 <atomic-commerce-facet
-                  {...props}
-                  facet={facet as RegularFacet}
+                  {...props<RegularFacet>()}
                 ></atomic-commerce-facet>
               );
             case 'numericalRange':
               return (
                 <atomic-commerce-numeric-facet
-                  {...props}
-                  facet={facet as NumericFacet}
+                  {...props<NumericFacet>()}
                 ></atomic-commerce-numeric-facet>
               );
             case 'dateRange':
               return (
                 <atomic-commerce-timeframe-facet
-                  {...props}
-                  facet={facet as DateFacet}
+                  {...props<DateFacet>()}
                 ></atomic-commerce-timeframe-facet>
               );
             case 'hierarchical':
               return (
                 <atomic-commerce-category-facet
-                  {...props}
-                  facet={facet as CategoryFacet}
+                  {...props<CategoryFacet>()}
                 ></atomic-commerce-category-facet>
               );
             default: {

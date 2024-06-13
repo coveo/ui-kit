@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
@@ -9,8 +10,11 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
+import {Parameters} from '../parameters/parameters-actions';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
 import {
   nextPage,
@@ -93,6 +97,9 @@ export const paginationReducer = createReducer(
 
         state.recommendations[slotId] = getCommercePaginationInitialSlice();
       })
+      .addCase(restoreSearchParameters, handleRestoreParameters)
+      .addCase(restoreProductListingParameters, handleRestoreParameters)
+      .addCase(deselectAllBreadcrumbs, handlePaginationReset)
       .addCase(deselectAllFacetValues, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
@@ -115,4 +122,17 @@ function getEffectiveSlice(
 
 function handlePaginationReset(state: CommercePaginationState) {
   state.principal.page = getCommercePaginationInitialSlice().page;
+}
+
+function handleRestoreParameters(
+  state: CommercePaginationState,
+  action: {payload: Parameters}
+) {
+  if (action.payload.page) {
+    state.principal.page = action.payload.page;
+  }
+
+  if (action.payload.perPage) {
+    state.principal.perPage = action.payload.perPage;
+  }
 }

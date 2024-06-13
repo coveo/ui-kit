@@ -55,7 +55,7 @@ export type NumericFacet = CoreCommerceFacet<
    *
    * @param ranges - The new ranges to set.
    */
-  setRanges: (ranges: NumericFacetValue[]) => void;
+  setRanges: (ranges: NumericRangeRequest[]) => void;
   /**
    * The state of the `NumericFacet` controller.
    */
@@ -96,11 +96,11 @@ export function buildCommerceNumericFacet(
   return {
     ...coreController,
 
-    setRanges(ranges: NumericFacetValue[]) {
+    setRanges(ranges: NumericRangeRequest[]) {
       dispatch(
         updateNumericFacetValues({
           facetId,
-          values: ranges,
+          values: ranges.map((range) => ({...range, numberOfResults: 0})),
         })
       );
       dispatch(fetchProductsActionCreator());

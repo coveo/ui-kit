@@ -122,7 +122,7 @@ export class AtomicProductDescription
       <Button
         style="text-primary"
         part="label-button"
-        class={`my-2 p-1 text-xs ${this.isExpanded ? 'hidden' : ''}`}
+        class={`my-2 p-1 text-xs ${this.isExpanded || !this.isTruncated || this.truncateAfter === 'none' ? 'invisible' : ''}`}
         title={this.bindings.i18n.t('show-more')}
         onClick={() => this.onToggleExpand()}
       >
@@ -139,9 +139,7 @@ export class AtomicProductDescription
     return (
       <div class="flex flex-col items-start">
         {this.renderProductDescription()}
-        {this.isTruncated &&
-          this.truncateAfter !== 'none' &&
-          this.renderShowMoreButton()}
+        {this.renderShowMoreButton()}
       </div>
     );
   }

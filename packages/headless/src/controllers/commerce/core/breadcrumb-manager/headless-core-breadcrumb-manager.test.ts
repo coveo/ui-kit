@@ -10,12 +10,13 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
+  updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -107,9 +108,16 @@ describe('core breadcrumb manager', () => {
     expect(breadcrumbManager.subscribe).toBeTruthy();
   });
 
-  it('#deselectAll deselects all breadcrumbs', () => {
-    breadcrumbManager.deselectAll();
-    expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+  describe('#deselectAll', () => {
+    it('deselects all breadcrumbs', () => {
+      breadcrumbManager.deselectAll();
+      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+    });
+
+    it('dispatches #fetchProductsActionCreator', () => {
+      breadcrumbManager.deselectAll();
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
+    });
   });
 
   describe('regular facet breadcrumbs', () => {
@@ -199,12 +207,17 @@ describe('core breadcrumb manager', () => {
   });
 
   describe('category facet breadcrumbs', () => {
-    const breadcrumb = {
+    const breadcrumb: CategoryFacetValue = {
       value: 'Shoes',
       path: ['Shoes'],
       children: [],
       state: 'selected',
-    } as unknown as CategoryFacetValue;
+      moreValuesAvailable: false,
+      isAutoSelected: false,
+      isLeafValue: true,
+      isSuggested: false,
+      numberOfResults: 10,
+    };
 
     beforeEach(() => {
       setFacetsState(
@@ -217,7 +230,6 @@ describe('core breadcrumb manager', () => {
               children: [],
               state: 'idle',
               moreValuesAvailable: false,
-              numberOfResults: 10,
               isLeafValue: true,
             },
             breadcrumb,
@@ -230,17 +242,10 @@ describe('core breadcrumb manager', () => {
       expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    describe('#deselect when facet is selected', () =>
-      generateDeselectionTestCases(breadcrumb)(
-        'selected',
-        toggleSelectCategoryFacetValue
-      ));
-
-    it('#deselect does not exclude when facet is excluded', () => {
-      breadcrumb.state = 'excluded';
+    it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-
-      expect(fetchProductsActionCreator).not.toHaveBeenCalled();
+      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -273,6 +278,13 @@ describe('core breadcrumb manager', () => {
 
       it('dispatches #fetchProductsActionCreator', () => {
         expect(fetchProductsActionCreator).toHaveBeenCalled();
+      });
+
+      it('dispatches #updateFreezeCurrentValues', () => {
+        expect(updateFreezeCurrentValues).toHaveBeenCalledWith({
+          facetId,
+          freezeCurrentValues: false,
+        });
       });
     };
   }

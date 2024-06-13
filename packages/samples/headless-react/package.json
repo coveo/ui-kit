@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/auth": "1.11.20",
-    "@coveo/headless": "2.63.3",
+    "@coveo/auth": "1.11.21",
+    "@coveo/headless": "2.66.0",
     "@testing-library/jest-dom": "6.4.5",
     "@testing-library/react": "14.3.0",
     "@testing-library/user-event": "14.5.2",

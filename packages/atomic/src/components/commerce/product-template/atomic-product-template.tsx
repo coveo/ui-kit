@@ -46,6 +46,7 @@ export class AtomicProductTemplate {
       validParents: [
         'atomic-commerce-product-list',
         'atomic-commerce-recommendation-list',
+        'atomic-commerce-search-box-instant-products',
       ],
       allowEmpty: true,
     });

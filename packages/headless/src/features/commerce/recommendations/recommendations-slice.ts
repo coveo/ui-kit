@@ -1,10 +1,13 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
+import {BaseProduct, Product} from '../../../api/commerce/common/product';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {
   fetchRecommendations,
   registerRecommendationsSlot,
   fetchMoreRecommendations,
+  promoteChildToParent,
+  QueryRecommendationsCommerceAPIThunkReturn,
 } from './recommendations-actions';
 import {
   getRecommendationsInitialState,
@@ -43,7 +46,11 @@ export const recommendationsReducer = createReducer(
         if (!recommendations) {
           return;
         }
-        recommendations.products = response.products;
+        const paginationOffset = getPaginationOffset(action.payload);
+
+        recommendations.products = response.products.map((product, index) =>
+          preprocessProduct(product, paginationOffset + index + 1)
+        );
       })
       .addCase(fetchMoreRecommendations.fulfilled, (state, action) => {
         if (!action.payload) {
@@ -58,8 +65,13 @@ export const recommendationsReducer = createReducer(
         if (!recommendations) {
           return;
         }
+
+        const paginationOffset = getPaginationOffset(action.payload);
+
         recommendations.products = recommendations.products.concat(
-          response.products
+          response.products.map((product, index) =>
+            preprocessProduct(product, paginationOffset + index + 1)
+          )
         );
       })
       .addCase(fetchRecommendations.pending, (state, action) => {
@@ -67,6 +79,43 @@ export const recommendationsReducer = createReducer(
       })
       .addCase(fetchMoreRecommendations.pending, (state, action) => {
         handlePending(state, action.meta.arg.slotId);
+      })
+      .addCase(promoteChildToParent, (state, action) => {
+        const recommendations = state[action.payload.slotId];
+
+        if (!recommendations) {
+          return;
+        }
+
+        const {products} = recommendations;
+        const currentParentIndex = products.findIndex(
+          (product) => product.permanentid === action.payload.parentPermanentId
+        );
+
+        if (currentParentIndex === -1) {
+          return;
+        }
+
+        const position = products[currentParentIndex].position;
+
+        const {children, totalNumberOfChildren} = products[currentParentIndex];
+
+        const childToPromote = children.find(
+          (child) => child.permanentid === action.payload.childPermanentId
+        );
+
+        if (childToPromote === undefined) {
+          return;
+        }
+
+        const newParent: Product = {
+          ...childToPromote,
+          children,
+          totalNumberOfChildren,
+          position,
+        };
+
+        products.splice(currentParentIndex, 1, newParent);
       });
   }
 );
@@ -119,4 +168,28 @@ function handlePending(state: RecommendationsState, slotId: string) {
     return;
   }
   recommendations.isLoading = true;
+}
+
+function getPaginationOffset(
+  actionPayload: QueryRecommendationsCommerceAPIThunkReturn
+): number {
+  const pagination = actionPayload.response.pagination;
+  return pagination.page * pagination.perPage;
+}
+
+function preprocessProduct(product: BaseProduct, position: number): Product {
+  const isParentAlreadyInChildren = product.children.some(
+    (child) => child.permanentid === product.permanentid
+  );
+  if (product.children.length === 0 || isParentAlreadyInChildren) {
+    return {...product, position};
+  }
+
+  const {children, totalNumberOfChildren, ...restOfProduct} = product;
+
+  return {
+    ...product,
+    children: [restOfProduct, ...children],
+    position,
+  };
 }

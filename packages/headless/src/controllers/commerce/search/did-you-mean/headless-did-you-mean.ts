@@ -24,9 +24,10 @@ export interface DidYouMean extends Controller {
 }
 
 /**
- * The DidYouMean controller is responsible for handling query corrections.
+ * The `DidYouMean` controller is responsible for handling query corrections.
  *
- * @param engine - The headless commerce engine.
+ * @param engine - The commerce engine.
+ * @returns A `DidYouMean` controller.
  */
 export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {

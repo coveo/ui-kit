@@ -73,7 +73,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) previousButtonIcon = ArrowLeftIcon;
+  @Prop({reflect: true}) previousButtonIcon: string = ArrowLeftIcon;
 
   /**
    * The SVG icon to use to display the Next button.
@@ -82,7 +82,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
+  @Prop({reflect: true}) nextButtonIcon: string = ArrowRightIcon;
 
   private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-pager-');
@@ -100,17 +100,17 @@ export class AtomicPager implements InitializableComponent {
         {...this.searchStatusState}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
-        <PagerNavigation label={this.bindings.i18n.t('pagination')}>
+        <PagerNavigation i18n={this.bindings.i18n}>
           <PagerPreviousButton
             icon={this.previousButtonIcon}
             disabled={!this.pagerState.hasPreviousPage}
-            ariaLabel={this.bindings.i18n.t('previous')}
+            i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.previousPage();
               this.focusOnFirstResultAndScrollToTop();
             }}
           />
-          <PagerPageButtons>
+          <PagerPageButtons i18n={this.bindings.i18n}>
             {this.pagerState.currentPages.map((pageNumber) => {
               return (
                 <PagerPageButton
@@ -136,7 +136,7 @@ export class AtomicPager implements InitializableComponent {
           <PagerNextButton
             icon={this.nextButtonIcon}
             disabled={!this.pagerState.hasNextPage}
-            ariaLabel={this.bindings.i18n.t('next')}
+            i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.nextPage();
               this.focusOnFirstResultAndScrollToTop();

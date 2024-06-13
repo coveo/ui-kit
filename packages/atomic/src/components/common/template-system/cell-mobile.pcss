@@ -8,10 +8,11 @@
     'title-metadata'
     'emphasized'
     'excerpt'
+    'children'
     'bottom-metadata'
     'actions';
   grid-template-columns: 100%;
-  grid-template-rows: repeat(8, auto);
+  grid-template-rows: repeat(9, auto);
 
   /* == Density styles == */
   &.density-comfortable {
@@ -63,6 +64,12 @@
 
       margin-top: 1rem;
       max-height: 3rem;
+    }
+
+    $(section-children) {
+      @mixin set-font-size var(--atomic-text-base);
+
+      margin-top: 1.25rem;
     }
   }
 
@@ -116,6 +123,12 @@
       margin-top: 0.75rem;
       max-height: 3rem;
     }
+
+    $(section-children) {
+      @mixin set-font-size var(--atomic-text-base);
+
+      margin-top: 1rem;
+    }
   }
 
   &.density-compact {
@@ -167,6 +180,12 @@
 
       margin-top: 0.5rem;
       max-height: 3rem;
+    }
+
+    $(section-children) {
+      @mixin set-font-size var(--atomic-text-base);
+
+      margin-top: 0.75rem;
     }
   }
 

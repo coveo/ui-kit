@@ -1,9 +1,13 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {searchSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
+import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
+import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema';
 import * as SearchActions from '../../../features/commerce/search/search-actions';
 import {
+  activeParametersSelector,
+  enrichedParametersSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors';
@@ -19,7 +23,6 @@ import {
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
 import {buildSearch, Search} from './headless-search';
-import {buildSearchParameterManager} from './parameter-manager/headless-search-parameter-manager';
 
 describe('headless search', () => {
   let search: Search;
@@ -58,13 +61,30 @@ describe('headless search', () => {
       facetResponseSelector,
       isFacetLoadingResponseSelector,
       requestIdSelector,
-      parameterManagerBuilder: buildSearchParameterManager,
       serializer: searchSerializer,
+      parametersDefinition: searchParametersDefinition,
+      restoreActionCreator: restoreSearchParameters,
+      activeParametersSelector,
+      enrichParameters: enrichedParametersSelector,
     });
   });
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-244: Handle analytics
+  it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
+    const promoteChildToParent = jest.spyOn(
+      SearchActions,
+      'promoteChildToParent'
+    );
+    const childPermanentId = 'childPermanentId';
+    const parentPermanentId = 'parentPermanentId';
+
+    search.promoteChildToParent(childPermanentId, parentPermanentId);
+
+    expect(promoteChildToParent).toHaveBeenCalledWith({
+      childPermanentId,
+      parentPermanentId,
+    });
+  });
+
   it('executeFirstSearch dispatches #executeSearch', () => {
     const executeSearch = jest.spyOn(SearchActions, 'executeSearch');
 

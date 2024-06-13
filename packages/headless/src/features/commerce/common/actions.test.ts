@@ -7,6 +7,7 @@ import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-r
 import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {VERSION} from '../../../utils/version';
 import {CommerceFacetSlice} from '../facets/facet-set/facet-set-state';
 import {
   getCommercePaginationInitialSlice,
@@ -40,21 +41,20 @@ describe('commerce common actions', () => {
         clientId: expect.any(String),
         context: {
           user: {
-            userId: 'user_id',
-            email: 'email',
-            userIp: 'user_ip',
             userAgent: 'user_agent',
           },
           view: {
             url: 'https://example.com',
             referrer: 'https://referrer.com',
           },
+          capture: true,
           cart: [
             {
               productId: product.productId,
               quantity: product.quantity,
             },
           ],
+          source: [`@coveo/headless@${VERSION}`, '@coveo/atomic@version'],
         },
       };
 
@@ -64,6 +64,9 @@ describe('commerce common actions', () => {
       state.configuration.accessToken = expected.accessToken;
       state.configuration.organizationId = expected.organizationId;
       state.configuration.analytics.trackingId = expected.trackingId;
+      state.configuration.analytics.source = {
+        '@coveo/atomic': 'version',
+      };
       state.commerceContext.language = expected.language;
       state.commerceContext.country = expected.country;
       state.commerceContext.currency = expected.currency as CurrencyCodeISO4217;
@@ -191,6 +194,19 @@ describe('commerce common actions', () => {
         facets: [],
       });
     });
+
+    it.each([true, false])(
+      'sets the capture property from the analytics configuration',
+      async (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = await Actions.buildCommerceAPIRequest(state);
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+
+        expect(request.context.capture).toEqual(analyticsEnabled);
+      }
+    );
 
     describe('given a state that has the commerceFacetSet and facetOrder sections', () => {
       let facet1: CommerceFacetSlice;

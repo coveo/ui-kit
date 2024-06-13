@@ -63,11 +63,34 @@ const isOnSearchPage = () => {
 
 if (!isOnSearchPage()) {
   const standaloneSearchBoxHTML = `
-    <atomic-commerce-search-box redirection-url="./search.html" textarea  style="max-width: 1000px; margin: auto">
-      <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-      <atomic-commerce-search-box-instant-products image-size="small"></atomic-commerce-search-box-instant-products>
-    </atomic-commerce-search-box>
+    <atomic-layout-section section="search">
+      <atomic-commerce-search-box redirection-url="./search.html">
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+        <atomic-commerce-search-box-instant-products image-size="small">
+          <atomic-product-template>
+            <template>
+              <atomic-product-section-name>
+                <atomic-product-link class="font-bold"></atomic-product-link>
+              </atomic-product-section-name>
+              <atomic-product-section-visual>
+                <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+              </atomic-product-section-visual>
+              <atomic-product-section-metadata>
+                <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+                <atomic-product-rating field="ec_rating"></atomic-product-rating>
+              </atomic-product-section-metadata>
+              <atomic-product-section-emphasized>
+                <atomic-product-price currency="USD"></atomic-product-price>
+              </atomic-product-section-emphasized>
+              <atomic-product-section-children>
+                <atomic-product-children></atomic-product-children>
+              </atomic-product-section-children>
+            </template>
+          </atomic-product-template>
+        </atomic-commerce-search-box-instant-products>
+      </atomic-commerce-search-box>
+    </atomic-layout-section>
   `;
 
   const standaloneSearchBox = document.createElement('search');
@@ -78,23 +101,33 @@ if (!isOnSearchPage()) {
 
   if (atomicCommerceInterface) {
     standaloneSearchBox.innerHTML = standaloneSearchBoxHTML;
-    atomicCommerceInterface.insertAdjacentElement(
-      'afterbegin',
-      standaloneSearchBox
+    const atomicCommerceLayout = atomicCommerceInterface.querySelector(
+      'atomic-commerce-layout'
     );
+    if (atomicCommerceLayout) {
+      atomicCommerceLayout.insertAdjacentHTML(
+        'afterbegin',
+        standaloneSearchBoxHTML
+      );
+    } else {
+      atomicCommerceInterface.insertAdjacentElement(
+        'afterbegin',
+        standaloneSearchBox
+      );
+    }
   } else {
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.src = './init-standalone-search-box.js';
-    document.head.insertAdjacentElement('beforeend', script);
-
     standaloneSearchBox.innerHTML = `
-      <atomic-commerce-interface id="standaloneSearchBox" type="search">
+      <atomic-commerce-interface type="search">
         ${standaloneSearchBoxHTML}
       </atomic-commerce-interface>`;
 
     document.body
       .querySelector('main')
       .insertAdjacentElement('afterbegin', standaloneSearchBox);
+
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = './init-standalone-search-box.js';
+    document.body.insertAdjacentElement('beforeend', script);
   }
 }

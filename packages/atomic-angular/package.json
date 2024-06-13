@@ -7,10 +7,8 @@
     "build": "nx build",
     "build:bundles": "ng build",
     "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
-    "release:phase1": "node ./scripts/bump.mjs",
-    "release:phase2": "npm run publish:npm",
-    "release:phase5": "npm run publish:npm",
-    "publish:npm": "node ./scripts/publish-npm.mjs"
+    "publish:npm": "node ./scripts/publish-npm.mjs",
+    "publish:bump": "node ./scripts/bump.mjs"
   },
   "private": true,
   "dependencies": {
@@ -22,17 +20,17 @@
     "@angular/platform-browser": "17.3.5",
     "@angular/platform-browser-dynamic": "17.3.5",
     "@angular/router": "17.3.5",
-    "@coveo/atomic": "2.65.3",
+    "@coveo/atomic": "2.67.0",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.63.3"
+    "@coveo/headless": "2.66.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "17.3.5",
     "@angular/cli": "17.3.5",
     "@angular/compiler-cli": "17.3.5",
-    "@coveo/headless": "2.63.3",
+    "@coveo/headless": "2.66.0",
     "@types/jasmine": "5.1.4",
     "@types/node": "20.12.12",
     "jasmine-core": "5.1.2",

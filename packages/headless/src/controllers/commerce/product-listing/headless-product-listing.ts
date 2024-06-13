@@ -4,16 +4,24 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
+import {
+  activeParametersSelector,
+  enrichedParametersSelector,
+} from '../../../features/commerce/parameters/parameters-selectors';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
 import {
   fetchProductListing,
   fetchMoreProducts,
+  promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions';
 import {
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {productListingSerializer} from '../../../features/commerce/search-parameters/search-parameter-serializer';
+import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -27,18 +35,38 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
-import {buildProductListingParameterManager} from './parameter-manager/headless-product-listing-parameter-manager';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
 export interface ProductListing
   extends Controller,
-    SearchAndListingSubControllers {
+    SearchAndListingSubControllers<Parameters> {
   /**
    * Fetches the product listing.
    */
   refresh(): void;
+
+  /**
+   * Finds the specified parent product and the specified child product of that parent, and makes that child the new
+   * parent. The `children` and `totalNumberOfChildren` properties of the original parent are preserved in the new
+   * parent.
+   *
+   * This method is useful when leveraging the product grouping feature to allow users to select nested products.
+   *
+   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * to make that child the new parent product, and re-render the product as such in the storefront.
+   *
+   * **Note:** In the controller state, a product that has children will always include itself as its own child so that
+   * it can be rendered as a nested product, and restored as the parent product through this method as needed.
+   *
+   * @param childPermanentId The permanentid of the child product that will become the new parent.
+   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   */
+  promoteChildToParent(
+    childPermanentId: string,
+    parentPermanentId: string
+  ): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
@@ -74,13 +102,20 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
-    parameterManagerBuilder: buildProductListingParameterManager,
     serializer: productListingSerializer,
+    parametersDefinition,
+    activeParametersSelector,
+    restoreActionCreator: restoreProductListingParameters,
+    enrichParameters: enrichedParametersSelector,
   });
 
   return {
     ...controller,
     ...subControllers,
+
+    promoteChildToParent(childPermanentId, parentPermanentId) {
+      dispatch(promoteChildToParent({childPermanentId, parentPermanentId}));
+    },
 
     get state() {
       const {products, error, isLoading, responseId} =

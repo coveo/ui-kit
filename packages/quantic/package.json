@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.50.4",
+  "version": "2.50.9",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -38,18 +38,15 @@
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "npm run publish:sfdx -- --promote",
     "promote:sfdx:ci": "npm run publish:sfdx -- --promote --ci",
-    "release:phase1": "npm run-script -w=@coveo/release bump",
-    "release:phase2": "npm run publish:npm",
-    "release:phase5": "npm run publish:npm",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/bueno": "0.45.8",
-    "@coveo/headless": "2.63.3",
-    "marked": "12.0.2"
+    "@coveo/bueno": "0.45.9",
+    "@coveo/headless": "2.66.0"
   },
   "engines": {
     "node": ">=14.0.0"

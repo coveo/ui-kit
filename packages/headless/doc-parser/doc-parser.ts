@@ -13,9 +13,7 @@ import {
   resolveEngine,
 } from './src/headless-export-resolvers/engine-resolver';
 import {caseAssistUseCase} from './use-cases/case-assist';
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
-//import {commerceUseCase} from './use-cases/commerce';
+import {commerceUseCase} from './use-cases/commerce';
 import {insightUseCase} from './use-cases/insight';
 import {productListingUseCase} from './use-cases/product-listing';
 import {productRecommendationUseCase} from './use-cases/product-recommendation';
@@ -73,13 +71,11 @@ export const useCases: UseCase[] = [
     entryFile: 'temp/ssr-search.api.json',
     config: ssrSearchUseCase,
   },
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
-  //{
-  //  name: 'commerce',
-  //  entryFile: 'temp/commerce.api.json',
-  //  config: commerceUseCase,
-  //},
+  {
+    name: 'commerce',
+    entryFile: 'temp/commerce.api.json',
+    config: commerceUseCase,
+  },
 ];
 
 function resolveUseCase(useCase: UseCase): ResolvedUseCase {

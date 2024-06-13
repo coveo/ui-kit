@@ -8,7 +8,7 @@ import {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
 
 type StateNeededByQuerySuggest = ConfigurationSection &
   InsightConfigurationSection &

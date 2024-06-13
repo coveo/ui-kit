@@ -7,7 +7,15 @@ import {
   Search,
   Product,
 } from '@coveo/headless/commerce';
-import {Component, Element, Method, Prop, State, h} from '@stencil/core';
+import {
+  Component,
+  Element,
+  Listen,
+  Method,
+  Prop,
+  State,
+  h,
+} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -37,6 +45,7 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * @internal
@@ -118,7 +127,7 @@ export class AtomicCommerceProductList
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
       this.productListing.refresh();
-    } else if (this.bindings.interfaceElement.type === 'search') {
+    } else {
       this.search = buildSearch(this.bindings.engine);
     }
 
@@ -148,6 +157,21 @@ export class AtomicCommerceProductList
     });
   }
 
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    const {parentPermanentId, childPermanentId} = event.detail;
+
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.productListing.promoteChildToParent(
+        childPermanentId,
+        parentPermanentId
+      );
+    } else if (this.bindings.interfaceElement.type === 'search') {
+      this.search.promoteChildToParent(childPermanentId, parentPermanentId);
+    }
+  }
+
   get productState() {
     return this.bindings.interfaceElement.type === 'product-listing'
       ? this.productListingState
@@ -167,7 +191,7 @@ export class AtomicCommerceProductList
           numberOfPlaceholders={this.productState.products.length}
         ></ResultsPlaceholdersGuard>
         <ItemDisplayGuard
-          firstRequestExecuted={!!this.searchState.responseId}
+          firstRequestExecuted={!!this.productState.responseId}
           hasItems={this.productState.products.length > 0}
         >
           {this.display === 'table'
@@ -193,12 +217,24 @@ export class AtomicCommerceProductList
     );
   }
 
+  private logWarningIfNeeded(message?: string) {
+    if (message) {
+      this.bindings.engine.logger.warn(message);
+    }
+  }
+
+  private getInteractiveProduct(product: Product) {
+    const parentController =
+      this.bindings.interfaceElement.type === 'product-listing'
+        ? this.productListing
+        : this.search;
+
+    return parentController.interactiveProduct({options: {product}});
+  }
+
   private getPropsForAtomicProduct(product: Product) {
     return {
-      // TODO: add back once interactive result is implemented for products in KIT-3149
-      /* interactiveResult: buildInteractiveResult(this.bindings.engine, {
-        options: {result},
-      }), */
+      interactiveProduct: this.getInteractiveProduct(product),
       product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
@@ -219,6 +255,7 @@ export class AtomicCommerceProductList
   private renderAsGrid() {
     return this.productState.products.map((product, i) => {
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
+      const {interactiveProduct} = propsForAtomicProduct;
       return (
         <DisplayGrid
           item={{
@@ -226,23 +263,24 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          // TODO KIT-3149: add back once the interactive result is implemented
-          //{...propsForAtomicProduct.interactiveResult}
-          // TODO KIT-3149: Remove these back once the interactive result is implemented
+          {...propsForAtomicProduct.interactiveProduct}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
-          select={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          select={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.select();
           }}
-          beginDelayedSelect={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          beginDelayedSelect={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.beginDelayedSelect();
           }}
-          cancelPendingSelect={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          cancelPendingSelect={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.cancelPendingSelect();
           }}
         >
-          <atomic-product {...this} {...propsForAtomicProduct}></atomic-product>
+          <atomic-product {...propsForAtomicProduct}></atomic-product>
         </DisplayGrid>
       );
     });
@@ -304,7 +342,6 @@ export class AtomicCommerceProductList
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
       return (
         <atomic-product
-          {...this}
           {...propsForAtomicProduct}
           ref={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)

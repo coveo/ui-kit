@@ -1,8 +1,10 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {SortBy, SortDirection} from '../../sort/sort';
 import {setContext, setUser, setView} from '../context/context-actions';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
 import {applySort} from './sort-actions';
 import {sortReducer} from './sort-slice';
@@ -54,7 +56,7 @@ describe('product-listing-sort-slice', () => {
     };
 
     it('on #fetchProductListing.fulfilled', () => {
-      const response = buildFetchProductListingV2Response(sortResponse);
+      const response = buildFetchProductListingResponse(sortResponse);
 
       expect(
         sortReducer(state, fetchProductListing.fulfilled(response, ''))
@@ -75,6 +77,39 @@ describe('product-listing-sort-slice', () => {
       expect(
         sortReducer(state, executeSearch.fulfilled(response, '')).availableSorts
       ).toEqual([sort]);
+    });
+  });
+
+  describe.each([
+    {
+      action: restoreSearchParameters,
+      actionName: 'restoreSearchParameters',
+    },
+    {
+      action: restoreProductListingParameters,
+      actionName: 'restoreProductListingParameters',
+    },
+  ])('$actionName', ({action}) => {
+    it('restores appliedSort', () => {
+      const parameters = {
+        sortCriteria: {
+          by: 'relevance' as SortBy.Relevance,
+        },
+      };
+
+      const finalState = sortReducer(state, action(parameters));
+
+      expect(finalState.appliedSort).toEqual(parameters.sortCriteria);
+    });
+
+    it('does not restore appliedSort when parameters are not defined', () => {
+      const parameters = {
+        sortCriteria: undefined,
+      };
+
+      const finalState = sortReducer(state, action(parameters));
+
+      expect(finalState.appliedSort).toBe(state.appliedSort);
     });
   });
 

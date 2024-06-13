@@ -376,6 +376,11 @@ export class SuggestionManager<SearchBoxController> {
     }
   }
 
+  public forceUpdate() {
+    this.updateSuggestionElements(this.suggestedQuery);
+    forceUpdate(this.ownerSearchBoxProps.getHost());
+  }
+
   private isPanelInFocus(
     panel: HTMLElement | undefined,
     query: string

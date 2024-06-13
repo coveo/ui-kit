@@ -1,10 +1,8 @@
-import {SchemaValidationError, StringValue} from '@coveo/bueno';
-import {
-  CommerceSearchParameters,
-  restoreSearchParameters,
-} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {searchParametersDefinition} from '../../../../features/commerce/search-parameters/search-parameter-schema';
-import {executeSearch} from '../../../../features/commerce/search/search-actions';
+import {SchemaValidationError} from '@coveo/bueno';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
+import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {buildRelevanceSortCriterion} from '../../../../features/sort/sort';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -16,31 +14,28 @@ import {
   ParameterManager,
 } from './headless-core-parameter-manager';
 
-jest.mock(
-  '../../../../features/commerce/search-parameters/search-parameter-actions'
-);
-jest.mock('../../../../features/commerce/search/search-actions');
-
-describe('product listing parameter manager', () => {
+describe('parameter manager', () => {
   let engine: MockedCommerceEngine;
-  let parameterManager: ParameterManager<CommerceSearchParameters>;
+  let parameterManager: ParameterManager<Parameters>;
+  const mockActiveParametersSelector = jest.fn();
+  const mockRestoreActionCreator = jest.fn();
+  const mockFetchProductsActionCreator = jest.fn();
+  const mockEnrichParameters = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
   function initParameterManager(
-    props: Partial<CoreParameterManagerProps<CommerceSearchParameters>> = {}
+    props: Partial<CoreParameterManagerProps<Parameters>> = {}
   ) {
     parameterManager = buildCoreParameterManager(engine, {
       initialState: {parameters: {}},
-      parametersDefinition: searchParametersDefinition,
-      activeParametersSelector: (_) => ({q: ''}),
-      restoreActionCreator: restoreSearchParameters,
-      fetchProductsActionCreator: executeSearch,
-      enrichParameters: (_, activeParams) => ({
-        q: activeParams.q!,
-      }),
+      parametersDefinition,
+      activeParametersSelector: mockActiveParametersSelector,
+      restoreActionCreator: mockRestoreActionCreator,
+      fetchProductsActionCreator: mockFetchProductsActionCreator,
+      enrichParameters: mockEnrichParameters,
       ...props,
     });
   }
@@ -63,22 +58,17 @@ describe('product listing parameter manager', () => {
     it('validates initial state against schema', () => {
       expect(() =>
         initParameterManager({
-          parametersDefinition: {
-            q: new StringValue({required: true}),
-          },
+          initialState: {parameters: {page: -1}},
+          parametersDefinition,
         })
       ).toThrow(SchemaValidationError);
     });
 
     it('dispatches #restoreActionCreator with initial parameters', () => {
-      const mockedRestoreSearchParameters = jest.mocked(
-        restoreSearchParameters
-      );
+      initParameterManager({initialState: {parameters: {page: 2}}});
 
-      initParameterManager({initialState: {parameters: {q: 'initial query'}}});
-
-      expect(mockedRestoreSearchParameters).toHaveBeenCalledWith({
-        q: 'initial query',
+      expect(mockRestoreActionCreator).toHaveBeenCalledWith({
+        page: 2,
       });
     });
   });
@@ -86,50 +76,73 @@ describe('product listing parameter manager', () => {
   describe('#synchronize', () => {
     describe('when new parameters are the same as the old ones', () => {
       it('does not dispatch any action', () => {
-        const mockedRestoreSearchParameters = jest.mocked(
-          restoreSearchParameters
-        );
-        mockedRestoreSearchParameters.mockReset();
+        mockRestoreActionCreator.mockReset();
 
-        const parameters = {q: ''};
+        const parameters = {page: 2};
         parameterManager.synchronize(parameters);
 
-        expect(mockedRestoreSearchParameters).not.toHaveBeenCalled();
+        expect(mockRestoreActionCreator).not.toHaveBeenCalled();
       });
     });
 
     describe('when there is a difference in parameters', () => {
+      beforeEach(() => {
+        mockActiveParametersSelector.mockReturnValue({page: 1});
+        mockEnrichParameters.mockImplementation((_, params) => params);
+      });
+
       it('dispatches #restoreActionCreator', () => {
-        const mockedRestoreSearchParameters = jest.mocked(
-          restoreSearchParameters
-        );
         const parameters = {
-          q: 'new query',
+          page: 2,
         };
         parameterManager.synchronize(parameters);
-        expect(mockedRestoreSearchParameters).toHaveBeenCalledWith({
-          q: 'new query',
-        });
+        expect(mockRestoreActionCreator).toHaveBeenCalledWith(parameters);
       });
 
       it('dispatches #fetchProductsActionCreator', () => {
-        const mockedExecuteSearch = jest.mocked(executeSearch);
-        const parameters = {};
-        parameterManager.synchronize(parameters);
-        expect(mockedExecuteSearch).toHaveBeenCalled();
+        parameterManager.synchronize({page: 2});
+        expect(mockFetchProductsActionCreator).toHaveBeenCalled();
       });
     });
   });
 
   describe('#state', () => {
     it('contains #parameters', () => {
-      initParameterManager({
-        activeParametersSelector: () => ({q: 'active parameter!'}),
-      });
+      const parameters = {
+        nf: {
+          rating: [
+            {
+              state: 'selected' as FacetValueState,
+              start: 4,
+              end: 5,
+              endInclusive: true,
+            },
+          ],
+        },
+        page: 1,
+        perPage: 2,
+        df: {
+          year: [
+            {
+              state: 'selected' as FacetValueState,
+              start: '2010/01/01',
+              end: '2011/01/01',
+              endInclusive: false,
+            },
+          ],
+        },
+        f: {
+          size: ['small', 'medium'],
+        },
+        sortCriteria: buildRelevanceSortCriterion(),
+        cf: {
+          category: ['electronics'],
+        },
+      };
 
-      expect(parameterManager.state.parameters).toEqual({
-        q: 'active parameter!',
-      });
+      mockActiveParametersSelector.mockReturnValue(parameters);
+
+      expect(parameterManager.state.parameters).toEqual(parameters);
     });
   });
 });

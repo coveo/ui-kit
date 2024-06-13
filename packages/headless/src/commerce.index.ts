@@ -1,4 +1,6 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+import * as Selectors from './selectors/commerce-selectors.index';
+import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -11,7 +13,11 @@ export type {
 } from './app/commerce-engine/commerce-engine';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine';
 
-export type {CoreEngine, ExternalEngineOptions} from './app/engine';
+export type {
+  CoreEngine,
+  ExternalEngineOptions,
+  CoreEngineNext,
+} from './app/engine';
 export type {
   EngineConfiguration,
   AnalyticsConfiguration,
@@ -20,7 +26,11 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
-export type {Product} from './api/commerce/common/product';
+export type {
+  BaseProduct,
+  Product,
+  ChildProduct,
+} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
@@ -28,6 +38,11 @@ export * from './features/commerce/product-listing/product-listing-actions-loade
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
+export * from './features/commerce/search-parameters/search-parameters-actions-loader';
+export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
+
+// Selectors
+export {Selectors};
 
 // Controllers
 export type {
@@ -55,6 +70,8 @@ export {buildProductListing} from './controllers/commerce/product-listing/headle
 export type {
   Recommendations,
   RecommendationsState,
+  RecommendationsProps,
+  RecommendationsOptions,
 } from './controllers/commerce/recommendations/headless-recommendations';
 export {buildRecommendations} from './controllers/commerce/recommendations/headless-recommendations';
 
@@ -71,6 +88,8 @@ export type {
   InteractiveProductProps,
 } from './controllers/commerce/core/product-list/headless-core-interactive-product';
 
+export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result';
+
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view';
 export {buildProductView} from './controllers/commerce/product-view/headless-product-view';
 
@@ -81,7 +100,16 @@ export type {
   Cart,
   CartState,
 } from './controllers/commerce/context/cart/headless-cart';
+export type {Transaction} from './features/commerce/context/cart/cart-selector';
+export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-state';
+export type {CartItemParam} from './api/commerce/commerce-api-params';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
+
+export type {
+  BaseSolutionTypeSubControllers,
+  SearchAndListingSubControllers,
+  SearchSubControllers,
+} from './controllers/commerce/core/sub-controller/headless-sub-controller';
 
 export type {
   SortByRelevance,
@@ -112,10 +140,12 @@ export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
+export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
 export type {
   DateFacet,
   DateFacetState,
 } from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
+export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter';
 export type {
   FacetType,
   FacetValueRequest,
@@ -149,28 +179,42 @@ export type {
 export {buildSearch} from './controllers/commerce/search/headless-search';
 
 export {updateQuery} from './features/commerce/query/query-actions';
+export type {UpdateQueryActionCreatorPayload} from './features/commerce/query/query-actions';
 
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {
   SearchBox,
   SearchBoxState,
+  SearchBoxProps,
   Suggestion,
   SearchBoxOptions,
 } from './controllers/commerce/search-box/headless-search-box';
 
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesListInitialState,
+  RecentQueriesState,
+} from './controllers/recent-queries-list/headless-recent-queries-list.ts';
 
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
   InstantProducts,
   InstantProductsState,
+  InstantProductsOptions,
+  InstantProductsProps,
 } from './controllers/commerce/instant-products/headless-instant-products';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+export type {
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxOptions,
+} from './controllers/standalone-search-box/headless-standalone-search-box.ts';
 
 export type {
   UrlManagerProps,
@@ -179,6 +223,7 @@ export type {
   UrlManager,
 } from './controllers/commerce/core/url-manager/headless-core-url-manager';
 
+export type {Template} from './features/templates/templates-manager.ts';
 export type {
   ProductTemplate,
   ProductTemplateCondition,
@@ -210,6 +255,8 @@ export {getOrganizationEndpoints} from './api/platform-client';
 export type {
   DidYouMean,
   DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
 } from './controllers/commerce/search/did-you-mean/headless-did-you-mean';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
@@ -220,6 +267,19 @@ export type {
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
 
 export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+} from './controllers/core/triggers/headless-core-redirection-trigger';
+
+export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
+
+export type {
+  QueryTrigger,
+  QueryTriggerState,
+} from './controllers/core/triggers/headless-core-query-trigger';
+export {buildQueryTrigger} from './controllers/commerce/triggers/headless-commerce-query-trigger';
+
+export type {
   FieldSuggestions,
   FieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-field-suggestions';
@@ -228,4 +288,23 @@ export type {
   CategoryFieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
 export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+
+export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';
+
+export type {
+  ParameterManager,
+  ParameterManagerState,
+  ParameterManagerProps,
+  ParameterManagerInitialState,
+} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager';
+export type {Parameters} from './features/commerce/parameters/parameters-actions';
+export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
+
+// Types & Helpers
+export {HighlightUtils};
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date';

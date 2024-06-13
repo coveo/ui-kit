@@ -4,6 +4,7 @@
   grid-template-areas:
     'badges'
     'visual'
+    'children'
     'title'
     'title-metadata'
     'emphasized'
@@ -11,7 +12,7 @@
     'bottom-metadata'
     'actions';
   grid-template-columns: 100%;
-  grid-template-rows: repeat(8, auto);
+  grid-template-rows: repeat(9, auto);
 
   /* == Density styles == */
   &.density-comfortable {
@@ -220,13 +221,6 @@
     $(section-visual) {
       @mixin aspect-ratio-h 1 / 1, 14rem;
       width: 100%;
-    }
-  }
-
-  &.image-icon {
-    $(section-visual) {
-      width: 2rem;
-      height: 2rem;
     }
   }
 

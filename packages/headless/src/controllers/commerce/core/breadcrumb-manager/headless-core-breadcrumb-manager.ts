@@ -11,12 +11,18 @@ import {
   AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
+  CategoryFacetResponse,
+  DateFacetResponse,
+  NumericFacetResponse,
+  RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {toggleSelectCategoryFacetValue} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
+import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {
+  deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
+  updateFreezeCurrentValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -74,7 +80,7 @@ export type CoreBreadcrumbManagerOptions = Pick<
 >;
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` sub-controller.
  */
 interface BreadcrumbManagerState {
   /**
@@ -89,14 +95,14 @@ interface BreadcrumbManagerState {
 }
 
 /**
- * The `BreadcrumbManager` controller manages a summary of the currently active facet filters.
+ * The `BreadcrumbManager` sub-controller manages a summary of the currently active facet filters.
  */
 export type BreadcrumbManager = Omit<
   CoreBreadcrumbManager,
   'deselectBreadcrumb' | 'state'
 > & {
   /**
-   * The state of the `BreadcrumbManager` controller.
+   * The state of the `BreadcrumbManager` sub-controller.
    */
   state: BreadcrumbManagerState;
 };
@@ -122,17 +128,17 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
   [facetTypeWithoutExcludeAction]: {
-    toggleSelectActionCreator: toggleSelectCategoryFacetValue,
+    toggleSelectActionCreator: deselectAllFacetValues,
   },
 };
 
 /**
  * @internal
- * Creates a `BreadcrumbManager` controller instance.
+ * Creates a `BreadcrumbManager` sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `BreadcrumbManager` options used internally.
- * @returns A `BreadcrumbManager` controller instance.
+ * @returns A `BreadcrumbManager` sub-controller.
  **/
 export function buildCoreBreadcrumbManager(
   engine: CommerceEngine,
@@ -150,7 +156,16 @@ export function buildCoreBreadcrumbManager(
     facetDisplayName: facet.displayName,
     field: facet.field,
     type: facet.type,
-    values: facet.values
+    values:
+      facet.type === 'hierarchical'
+        ? getValuesForCategoryFacet(facet)
+        : getValuesForNonCategoryFacet(facet),
+  });
+
+  const getValuesForNonCategoryFacet = (
+    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse
+  ) => {
+    return facet.values
       .filter((value) => value.state !== 'idle')
       .map((selection) => ({
         value: selection,
@@ -160,6 +175,12 @@ export function buildCoreBreadcrumbManager(
               actions[facet.type].toggleSelectActionCreator({
                 facetId: facet.facetId,
                 selection,
+              })
+            );
+            dispatch(
+              updateFreezeCurrentValues({
+                facetId: facet.facetId,
+                freezeCurrentValues: false,
               })
             );
             dispatch(options.fetchProductsActionCreator());
@@ -173,11 +194,39 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
+            dispatch(
+              updateFreezeCurrentValues({
+                facetId: facet.facetId,
+                freezeCurrentValues: false,
+              })
+            );
             dispatch(options.fetchProductsActionCreator());
           }
         },
-      })),
-  });
+      }));
+  };
+
+  const getValuesForCategoryFacet = (facet: CategoryFacetResponse) => {
+    const ancestry = findActiveValueAncestry(facet.values);
+    const activeValue =
+      ancestry.length > 0 ? ancestry[ancestry.length - 1] : undefined;
+
+    if (activeValue === undefined) {
+      return [];
+    }
+
+    return [
+      {
+        value: activeValue,
+        deselect: () => {
+          dispatch(
+            actions['hierarchical'].toggleSelectActionCreator(facet.facetId)
+          );
+          dispatch(options.fetchProductsActionCreator());
+        },
+      },
+    ];
+  };
 
   const commerceFacetSelector = createSelector(
     (state: CommerceEngineState) => state.facetOrder,
@@ -201,6 +250,7 @@ export function buildCoreBreadcrumbManager(
 
     deselectAll: () => {
       dispatch(deselectAllBreadcrumbs());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     get state() {

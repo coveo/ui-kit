@@ -18,11 +18,16 @@ import {
 import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice';
 import {fetchQuerySuggestions} from './query-suggest-actions';
 
+export type BaseQuerySuggestActionCreators = Omit<
+  QuerySuggestActionCreators,
+  'fetchQuerySuggestions'
+>;
+
 /**
  * The query suggest action creators for commerce.
  */
 export interface CommerceQuerySuggestActionCreators
-  extends Omit<QuerySuggestActionCreators, 'fetchQuerySuggestions'> {
+  extends BaseQuerySuggestActionCreators {
   /**
    * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
    *

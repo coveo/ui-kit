@@ -2,7 +2,9 @@ import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
+  updateDateFacetValues,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -25,8 +27,19 @@ export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
  * facet UI component.
  */
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
+  /**
+   * Replaces the current range values with the specified ones.
+   *
+   * @param ranges - The new ranges to set.
+   */
+  setRanges: (ranges: DateRangeRequest[]) => void;
+  /**
+   * The state of the `DateFacet` controller.
+   */
   state: DateFacetState;
 } & FacetControllerType<'dateRange'>;
+
+export {buildDateRange};
 
 /**
  * @internal
@@ -54,8 +67,27 @@ export function buildCommerceDateFacet(
       toggleExcludeActionCreator: toggleExcludeDateFacetValue,
     },
   });
+
+  const {dispatch} = engine;
+  const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
+    options;
+
   return {
     ...coreController,
+
+    setRanges(ranges: DateRangeRequest[]) {
+      dispatch(
+        updateDateFacetValues({
+          facetId,
+          values: ranges.map((range) => ({...range, numberOfResults: 0})),
+        })
+      );
+      dispatch(fetchProductsActionCreator());
+    },
+
+    get state() {
+      return coreController.state;
+    },
 
     type: 'dateRange',
   };

@@ -10,6 +10,7 @@
     "negativeNonBuildOutputs": ["!{projectRoot}/reports"]
   },
   "targets": {
+    "release:phase1": {},
     "cached:build": {
       "outputs": [
         "{projectRoot}/docs/out",

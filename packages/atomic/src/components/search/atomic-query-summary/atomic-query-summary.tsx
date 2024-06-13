@@ -81,7 +81,7 @@ export class AtomicQuerySummary implements InitializableComponent {
         <QuerySummaryContainer>
           <LocalizedString
             key={i18nKey}
-            bindings={this.bindings}
+            i18n={this.bindings.i18n}
             params={highlights}
             count={total}
           />
@@ -89,7 +89,7 @@ export class AtomicQuerySummary implements InitializableComponent {
             &nbsp;
             <LocalizedString
               key="in-seconds"
-              bindings={this.bindings}
+              i18n={this.bindings.i18n}
               params={{
                 count: durationInSeconds.toLocaleString(),
               }}

@@ -3,6 +3,7 @@ import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-se
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
+  updateDateFacetValues,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
@@ -14,6 +15,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
+import {DateRangeRequest} from '../headless-core-commerce-facet';
 import {
   DateFacet,
   DateFacetOptions,
@@ -29,6 +31,7 @@ describe('DateFacet', () => {
   const type: FacetType = 'dateRange';
   const start = '2023-01-01';
   const end = '2024-01-01';
+  const fetchProductsActionCreator = jest.fn();
   let options: DateFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -49,9 +52,11 @@ describe('DateFacet', () => {
   }
 
   beforeEach(() => {
+    jest.resetAllMocks();
+
     options = {
       facetId,
-      fetchProductsActionCreator: jest.fn(),
+      fetchProductsActionCreator,
       facetResponseSelector: jest.fn(),
       isFacetLoadingResponseSelector: jest.fn(),
     };
@@ -89,6 +94,31 @@ describe('DateFacet', () => {
         facetId,
         selection: facetValue,
       });
+    });
+  });
+
+  describe('#setRanges', () => {
+    let values: DateRangeRequest[];
+    beforeEach(() => {
+      values = [buildMockCommerceDateFacetValue()].map(
+        ({start, end, endInclusive, state}) => ({
+          start,
+          end,
+          endInclusive,
+          state,
+        })
+      );
+      facet.setRanges(values);
+    });
+    it('dispatches #updateDateFacetValues with the correct payload', () => {
+      expect(updateDateFacetValues).toHaveBeenCalledWith({
+        facetId,
+        values: values.map((value) => ({...value, numberOfResults: 0})),
+      });
+    });
+
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
     });
   });
 

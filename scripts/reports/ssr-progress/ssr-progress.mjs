@@ -76,17 +76,16 @@ function buildVisualReport(rows, logs) {
     return `<b>${useCase}</b> : ${controller}<br>`;
   });
   const printableLogs = logsFormatted.join(' ');
-  return `
-  **SSR Progress**
-
-  | Use case | SSR (#) | CSR (#) | Progress (%)
-  | ---- |:--------:|:--------:|:------:
-  ${printableRows}
-  <details>
-    <summary>Detailed logs</summary>
-    ${printableLogs}
-  </details>
-  `;
+  const tableHeader = `
+| Use case | SSR (#) | CSR (#) | Progress (%)
+| ---- |:--------:|:--------:|:------:`;
+  const detailedLogs = `
+<details>
+  <summary>Detailed logs</summary>
+  ${printableLogs}
+</details>`;
+  const message = [tableHeader, printableRows, detailedLogs].join('\n');
+  return ['## SSR Progress', message].join('\n\n');
 }
 
 export async function buildSSRProgressReport() {

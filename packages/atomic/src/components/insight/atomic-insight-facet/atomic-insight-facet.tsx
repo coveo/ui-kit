@@ -182,6 +182,9 @@ export class AtomicInsightFacet
   }
 
   public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
     this.facetConditionsManager?.stopWatching();
   }
 

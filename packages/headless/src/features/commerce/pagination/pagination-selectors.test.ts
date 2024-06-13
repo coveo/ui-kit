@@ -28,6 +28,7 @@ describe('commerce pagination selectors', () => {
     const state = buildMockCommerceState({
       commercePagination: {
         principal: {
+          perPage: 0,
           page: 0,
           totalEntries: 0,
           totalPages: 0,
@@ -69,6 +70,7 @@ describe('commerce pagination selectors', () => {
     const state = buildMockCommerceState({
       commercePagination: {
         principal: {
+          perPage: 0,
           page: 0,
           totalEntries: 0,
           totalPages: 0,
@@ -115,6 +117,7 @@ describe('commerce pagination selectors', () => {
     const state = buildMockCommerceState({
       commercePagination: {
         principal: {
+          perPage: 0,
           page: 0,
           totalEntries: 0,
           totalPages: 0,

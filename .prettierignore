@@ -7,8 +7,10 @@
 dist
 **/*.d.ts
 LICENSE.md
-**/.storybook/**
+utils/**/.storybook/**
 **/.angular/**
 **/.next/**
 **/www/**
 scripts/deploy/execute-deployment-pipeline.mjs
+**/staticresources/**
+/.nx/cache

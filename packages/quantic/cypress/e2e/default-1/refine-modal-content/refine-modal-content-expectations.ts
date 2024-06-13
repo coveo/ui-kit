@@ -38,10 +38,10 @@ const DATE_FACET_PROPERTIES = ['numberOfValues', 'formattingFunction'];
 
 function refineContentExpectations(selector: RefineContentSelector) {
   return {
-    displayFiltersTitle: () => {
+    displayFiltersTitle: (display: boolean) => {
       selector
         .filtersTitle()
-        .should('exist')
+        .should(display ? 'exist' : 'not.exist')
         .logDetail('should display the filters title');
     },
 

@@ -2,7 +2,7 @@ import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
 import {UnknownAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
-import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {

@@ -4,10 +4,13 @@ import {
   updatePullRequestComment,
   createPullRequestComment,
 } from './github-client.mjs';
+import {buildLiveExampleReport} from './live-examples/live-examples.mjs';
 import {buildSSRProgressReport} from './ssr-progress/ssr-progress.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';
 
-const reportTitle = 'Pull Request Report';
+const reportCommentIdentifier = '<!-- pr-report -->';
+
+const reportTitle = '# Pull Request Report';
 
 async function main() {
   const report = await buildReport();
@@ -16,18 +19,18 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
-  const ssrProgress = await buildSSRProgressReport();
+  const liveExamplesReport = await buildLiveExampleReport();
   const bundleSizeReport = await buildBundleSizeReport();
+  const ssrProgress = await buildSSRProgressReport();
 
-  return `
-  **${reportTitle}**
-
-  ${titleFormatReport}
-
-  ${bundleSizeReport}
-
-  ${ssrProgress}
-  `;
+  return [
+    reportTitle,
+    titleFormatReport,
+    liveExamplesReport,
+    bundleSizeReport,
+    ssrProgress,
+    reportCommentIdentifier,
+  ].join('\n\n');
 }
 
 async function sendReport(report) {
@@ -39,9 +42,11 @@ async function sendReport(report) {
     ? updatePullRequestComment(comment.id, report)
     : createPullRequestComment(report);
 }
-
+''.en;
 function findBundleSizeComment(comments) {
-  return comments.find((comment) => comment.body.indexOf(reportTitle) !== -1);
+  return comments.find((comment) =>
+    comment.body.endsWith(reportCommentIdentifier)
+  );
 }
 
 main();

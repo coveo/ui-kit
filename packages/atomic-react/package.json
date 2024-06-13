@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "2.9.3",
+  "version": "2.10.2",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -15,10 +15,8 @@
     "build:bundles:cjs": "tsc -p tsconfig.cjs.json",
     "build:bundles:iife": "rollup --config rollup.config.mjs",
     "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:cjs\"  \"npm run build:bundles:iife\"",
-    "release:phase1": "npm run-script -w=@coveo/release bump",
-    "release:phase2": "npm run publish:npm",
-    "release:phase5": "npm run publish:npm",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
@@ -27,14 +25,15 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "recommendation/"
+    "recommendation/",
+    "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "2.65.3"
+    "@coveo/atomic": "2.67.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@coveo/headless": "2.63.3",
+    "@coveo/headless": "2.66.0",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-replace": "^5.0.0",
@@ -50,7 +49,7 @@
     "@rollup/plugin-terser": "0.4.4"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.63.3",
+    "@coveo/headless": "2.66.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   }

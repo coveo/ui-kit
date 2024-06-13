@@ -7,6 +7,35 @@ interface EventMetadata {
   config: {trackingId: string};
 }
 
+async function validateEventWithEventAPI(request: {
+  url: string;
+  body: unknown;
+}) {
+  const validateUrl = request.url.replace('/v1', '/v1/validate');
+  const response = await fetch(validateUrl, {
+    method: 'post',
+    body: JSON.stringify(request.body),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const parsedResponse = (await response.json())[0];
+
+  parsedResponse?.errors?.forEach(
+    (error: {message: string; type: string; path: string}) => {
+      Cypress.log({
+        name: 'Event protocol validation',
+        displayName: '❌❌❌ EP validation ❌❌❌',
+        message: error.message,
+        consoleProps: () => error,
+      });
+    }
+  );
+  expect(parsedResponse).to.have.property('valid', true);
+}
+
 function validateSubmitFeedbackEvent(
   interception: Interception,
   expectedEvent: Qna.SubmitFeedback,
@@ -40,6 +69,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           `should emit the Qna.AnswerAction event with action "${expectedEvent.action}"`
@@ -62,6 +93,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the Qna.CitationHover event');
     },
@@ -83,6 +116,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the Qna.CitationClick event');
     },
@@ -98,6 +133,8 @@ function nextAnalyticsExpectations() {
             expectedEvent,
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the Qna.SubmitFeedback event for the like action'
@@ -115,6 +152,8 @@ function nextAnalyticsExpectations() {
             expectedEvent,
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the Qna.SubmitFeedback event for the dislike action'
@@ -132,6 +171,8 @@ function nextAnalyticsExpectations() {
             expectedEvent,
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the Qna.SubmitFeedback event for the feedback reason submission'
@@ -164,6 +205,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
     },
@@ -190,6 +233,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
     },
@@ -214,6 +259,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
     },
@@ -241,6 +288,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the CaseAssist.DocumentSuggestionFeedback event'
@@ -275,6 +324,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the CaseAssist.DocumentSuggestionFeedback event'

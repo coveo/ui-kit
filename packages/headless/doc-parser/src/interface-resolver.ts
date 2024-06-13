@@ -94,6 +94,9 @@ function resolveInheritedMembers(
   apiInterface: ApiInterface,
   ancestorNames: string[]
 ) {
+  if (!apiInterface.extendsTypes) {
+    return [];
+  }
   return apiInterface.extendsTypes
     .map((m) => {
       const typeName = extractSearchableTypeName(m.excerpt);

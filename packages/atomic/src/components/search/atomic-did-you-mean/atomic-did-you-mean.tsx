@@ -6,14 +6,16 @@ import {
   buildQueryTrigger,
   QueryTriggerState,
 } from '@coveo/headless';
-import {Component, Fragment, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {LocalizedString} from '../../../utils/jsx-utils';
-import {Hidden} from '../../common/hidden';
+import {AutoCorrection} from '../../common/query-correction/auto-correction';
+import {Correction} from '../../common/query-correction/correction';
+import {QueryCorrectionGuard} from '../../common/query-correction/guard';
+import {TriggerCorrection} from '../../common/query-correction/trigger-correction';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -77,111 +79,59 @@ export class AtomicDidYouMean implements InitializableComponent {
     this.queryTrigger = buildQueryTrigger(this.bindings.engine);
   }
 
-  private withQuery(
-    key:
-      | 'no-results-for-did-you-mean'
-      | 'query-auto-corrected-to'
-      | 'showing-results-for',
-    query: string
-  ) {
-    return (
-      <LocalizedString
-        bindings={this.bindings}
-        key={key}
-        params={{query: <b part="highlight">{query}</b>}}
-      />
-    );
-  }
+  private get content() {
+    if (!this.queryTriggerState || !this.didYouMeanState) {
+      return;
+    }
 
-  private renderQueryTriggerAutomaticallyCorrected() {
-    return (
-      <Fragment>
-        <p
-          class="text-on-background leading-6 text-lg"
-          part="showing-results-for"
-        >
-          {this.withQuery(
-            'showing-results-for',
-            this.queryTriggerState!.newQuery
-          )}
-        </p>
-        <p
-          class="text-on-background leading-5 text-base"
-          part="search-instead-for"
-        >
-          <LocalizedString
-            bindings={this.bindings}
-            key="search-instead-for"
-            params={{
-              query: (
-                <button
-                  class="link py-1"
-                  part="undo-btn"
-                  onClick={() => this.queryTrigger.undo()}
-                >
-                  {this.queryTriggerState?.originalQuery}
-                </button>
-              ),
-            }}
-          />
-        </p>
-      </Fragment>
-    );
-  }
+    const {hasQueryCorrection, wasAutomaticallyCorrected} =
+      this.didYouMeanState;
+    const hasTrigger = this.queryTriggerState.wasQueryModified;
 
-  private renderDidYouMeanAutomaticallyCorrected() {
-    return (
-      <Fragment>
-        <p class="text-on-background mb-1" part="no-results">
-          {this.withQuery(
-            'no-results-for-did-you-mean',
-            this.didYouMeanState!.originalQuery
-          )}
-        </p>
-        <p class="text-on-background" part="auto-corrected">
-          {this.withQuery(
-            'query-auto-corrected-to',
-            this.didYouMeanState!.wasCorrectedTo
-          )}
-        </p>
-      </Fragment>
-    );
-  }
-
-  private renderDidYouMeanCorrection() {
-    return (
-      <p class="text-on-background" part="did-you-mean">
-        <LocalizedString
-          bindings={this.bindings}
-          key="did-you-mean"
-          params={{
-            query: (
-              <button
-                class="link py-1"
-                part="correction-btn"
-                onClick={() => this.didYouMean.applyCorrection()}
-              >
-                {this.didYouMeanState!.queryCorrection.correctedQuery}
-              </button>
-            ),
-          }}
+    if (hasQueryCorrection && wasAutomaticallyCorrected) {
+      return (
+        <AutoCorrection
+          correctedTo={this.didYouMeanState.wasCorrectedTo}
+          originalQuery={this.didYouMeanState.originalQuery}
+          i18n={this.bindings.i18n}
         />
-      </p>
-    );
+      );
+    }
+    if (hasQueryCorrection) {
+      return (
+        <Correction
+          correctedQuery={this.didYouMeanState.queryCorrection.correctedQuery}
+          i18n={this.bindings.i18n}
+          onClick={() => this.didYouMean.applyCorrection()}
+        />
+      );
+    }
+    if (hasTrigger) {
+      return (
+        <TriggerCorrection
+          i18n={this.bindings.i18n}
+          correctedQuery={this.queryTriggerState.newQuery}
+          originalQuery={this.queryTriggerState.originalQuery}
+          onClick={() => this.queryTrigger.undo()}
+        />
+      );
+    }
   }
 
   public render() {
-    if (this.didYouMeanState?.hasQueryCorrection) {
-      if (this.didYouMeanState.wasAutomaticallyCorrected) {
-        return this.renderDidYouMeanAutomaticallyCorrected();
-      }
-      return this.renderDidYouMeanCorrection();
+    if (!this.didYouMeanState || !this.queryTriggerState) {
+      return;
     }
 
-    if (this.queryTriggerState?.wasQueryModified) {
-      return this.renderQueryTriggerAutomaticallyCorrected();
-    }
-
-    return <Hidden></Hidden>;
+    return (
+      <QueryCorrectionGuard
+        hasCorrection={
+          this.didYouMeanState.hasQueryCorrection ||
+          this.queryTriggerState.wasQueryModified
+        }
+      >
+        {this.content}
+      </QueryCorrectionGuard>
+    );
   }
 }

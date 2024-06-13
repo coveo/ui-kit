@@ -162,6 +162,8 @@ const excludedBaseProperties = [
   'trackingId',
   'source',
   'customData',
+  'documentReferrer',
+  'documentLocation',
 ];
 
 const ANY_FACET_VALUE = 'any facet value';

@@ -1,6 +1,6 @@
 import type {JSX, i18n} from '@coveo/atomic';
 import React, {useEffect, useRef} from 'react';
-import {AtomicCommerceInterface} from '../stencil-generated/index';
+import {AtomicCommerceInterface} from '../stencil-generated/commerce';
 
 type ExecuteSearch = HTMLAtomicCommerceInterfaceElement['executeFirstSearch'];
 

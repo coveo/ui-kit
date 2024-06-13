@@ -14,9 +14,15 @@
     "dist/**/*",
     "www/**/*",
     "loader/**/*",
-    "docs/**/*"
+    "docs/**/*",
+    "dist-storybook"
   ],
   "overrides": [
-    {"files": "**/*.config.js", "parserOptions": {"sourceType": "module"}}
+    {
+      "files": "**/*.config.js",
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    }
   ]
 }

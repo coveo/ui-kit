@@ -30,11 +30,13 @@
               ></c-quantic-generated-answer-copy-to-clipboard>
             </div>
           </template>
-          <div class="slds-grid flex-one slds-grid_align-end">
-            <c-quantic-generated-answer-toggle
-              is-generated-answer-visible={isVisible}
-            ></c-quantic-generated-answer-toggle>
-          </div>
+          <template lwc:if={withToggle}>
+            <div class="slds-grid flex-one slds-grid_align-end">
+              <c-quantic-generated-answer-toggle
+                is-generated-answer-visible={isVisible}
+              ></c-quantic-generated-answer-toggle>
+            </div>
+          </template>
         </div>
       </div>
       <template lwc:if={isVisible}>
