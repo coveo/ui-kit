@@ -1,4 +1,4 @@
-import {BrowserRouter, NavLink, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, NavLink, Routes, Route} from 'react-router-dom';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
 import {DependentFacetPage} from './pages/DependentFacetPage';
