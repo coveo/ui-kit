@@ -35,7 +35,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part active-page-button - The active page button.
  * @part previous-button - The previous button.
  * @part next-button - The next button.
- * @part previous-button-icon-2 - Icon of the previous button.
+ * @part previous-button-icon - Icon of the previous button.
  * @part next-button-icon - Icon of the next button.
  */
 @Component({

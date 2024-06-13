@@ -79,6 +79,7 @@ export class AtomicCommerceInterface
   private summary!: SearchSummary | ListingSummary;
   private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
+  private unsubscribeSearchStatus: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: AtomicCommerceStore;
@@ -220,6 +221,7 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
+    this.unsubscribeSearchStatus();
     this.unsubscribeSummary();
     window.removeEventListener('hashchange', this.onHashChange);
   }
@@ -366,6 +368,15 @@ export class AtomicCommerceInterface
       this.type === 'product-listing'
         ? buildProductListing(this.engine!)
         : buildSearch(this.engine!);
+
+    this.unsubscribeSearchStatus = this.searchOrListing.subscribe(() => {
+      if (
+        !this.searchOrListing.state.isLoading &&
+        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
+      ) {
+        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
+      }
+    });
   }
 
   private initSummary() {
@@ -390,10 +401,6 @@ export class AtomicCommerceInterface
         firstSearchExecutedSelector,
         firstSearchExecuted
       );
-
-      if (firstSearchExecuted) {
-        this.bindings.store.unsetLoadingFlag(FirstSearchExecutedFlag);
-      }
     });
   }
 
