@@ -106,7 +106,6 @@ export function buildCommerceNumericFacet(
   const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
     options;
 
-  // TODO: move to NumericRangeFilter
   const extractRange = () => {
     const request = getRequest();
     if (!ensureNumericFacetRequest(request)) {
@@ -141,31 +140,24 @@ export function buildCommerceNumericFacet(
 
   return {
     ...coreController,
-    // ...numericRangeFilter,
 
     setRanges(ranges: NumericRangeRequest[]) {
       dispatch(deselectAllFacetValues(facetId));
-      // TODO: move to input filter controller
       dispatch(
         updateNumericFacetValues({
           facetId,
           values: ranges.map((range) => ({...range, numberOfResults: 0})),
         })
       );
-      // dispatch(toggleCustomRange({toggle: false}));
-      // numericRangeFilter.setRanges(ranges);
       dispatch(fetchProductsActionCreator());
     },
 
     get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
       if (response?.type === 'numericalRange') {
-        // console.log('extractRange', extractRange());
-
         return {
           ...coreController.state,
-          // ...numericRangeFilter.state,
-          ...extractDomain(response), // TODO: maybe range prop should be in NumericRangeFilter
+          ...extractDomain(response),
           ...extractRange(),
         };
       }

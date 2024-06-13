@@ -115,10 +115,6 @@ export class AtomicCommerceNumericFacet
   }
 
   public render() {
-    console.log('*********************');
-    console.log(this.facetState.range);
-    console.log('*********************');
-
     const {
       bindings: {i18n},
     } = this;
@@ -152,8 +148,7 @@ export class AtomicCommerceNumericFacet
                   bindings={this.bindings}
                   label={this.displayName}
                   facet={this.facet}
-                  inputRange={this.facetState.range} // TODO: check if can only use the facet prop instead of haveing an additional prop
-                  // No becaus of non commerce setup
+                  inputRange={this.facetState.range}
                 ></atomic-commerce-facet-number-input>
               ),
             ]}
@@ -216,7 +211,6 @@ export class AtomicCommerceNumericFacet
   }
 
   private get shouldRenderValues() {
-    // TODO: load commerce selector to know if it is custom selected values
     return !this.hasInputRange && !!this.valuesToRender.length;
   }
 
