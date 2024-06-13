@@ -6,9 +6,7 @@ import {
   FacetGenerator,
   FacetGeneratorState,
   ProductListing,
-  ProductListingState,
   Search,
-  SearchState,
   buildProductListing,
   buildSearch,
   NumericFacetValue,
@@ -17,7 +15,7 @@ import {
   Breadcrumb,
   CategoryFacetValue,
 } from '@coveo/headless/commerce';
-import {Component, h, State, Element, VNode, Prop} from '@stencil/core';
+import {Component, h, State, Element, VNode, Prop, Host} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
@@ -70,7 +68,7 @@ export class AtomicCommerceBreadbox
   @InitializeBindings() public bindings!: CommerceBindings;
   public productListing!: ProductListing;
   public search!: Search;
-  private breadcrumbManager!: BreadcrumbManager;
+
   private resizeObserver?: ResizeObserver;
   private showMore!: HTMLButtonElement;
   private showLess!: HTMLButtonElement;
@@ -79,21 +77,16 @@ export class AtomicCommerceBreadbox
   private numberOfCollapsedBreadcrumbs = 0;
   private firstExpandedBreadcrumbIndex?: number;
   facetGenerator!: FacetGenerator;
+  breadcrumbManager!: BreadcrumbManager;
 
   @Element() private host!: HTMLElement;
 
-  @BindStateToController('productListing')
-  @State()
-  private productListingState!: ProductListingState;
-  @BindStateToController('search')
-  @State()
-  private searchState!: SearchState;
   @BindStateToController('breadcrumbManager')
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
-  @BindStateToController('facetManager')
+  @BindStateToController('facetGenerator')
   @State()
-  public facetGeneratorState!: FacetGeneratorState;
+  public facetGeneratorState!: FacetGeneratorState[];
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
@@ -121,20 +114,10 @@ export class AtomicCommerceBreadbox
 
   public initialize() {
     this.validateProps();
+    const {engine} = this.bindings;
 
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.productListing = buildProductListing(this.bindings.engine);
-      this.productListing.refresh();
-    } else {
-      this.search = buildSearch(this.bindings.engine);
-    }
-    const parentController =
-      this.bindings.interfaceElement.type === 'product-listing'
-        ? this.productListing
-        : this.search;
-
-    this.breadcrumbManager = parentController.breadcrumbManager();
-    this.facetGenerator = parentController.facetGenerator();
+    this.breadcrumbManager = this.controllerBuilder(engine).breadcrumbManager();
+    this.facetGenerator = this.controllerBuilder(engine).facetGenerator();
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
@@ -142,10 +125,12 @@ export class AtomicCommerceBreadbox
     }
   }
 
-  get productState() {
-    return this.bindings.interfaceElement.type === 'product-listing'
-      ? this.productListingState
-      : this.searchState;
+  private isProductListing() {
+    return this.bindings.interfaceElement.type === 'product-listing';
+  }
+
+  private get controllerBuilder() {
+    return this.isProductListing() ? buildProductListing : buildSearch;
   }
 
   private validateProps() {
@@ -453,9 +438,13 @@ export class AtomicCommerceBreadbox
   private get categoryFacetBreadcrumbs(): IBreadcrumb[] {
     return (
       this.breadcrumbManagerState.facetBreadcrumbs.filter(
-        ({facetId, type}) =>
-          this.bindings.store.state.categoryFacets[facetId] &&
-          type === 'hierarchical'
+        ({facetId, type, values}) => {
+          return (
+            values.length > 0 &&
+            this.bindings.store.state.categoryFacets[facetId] &&
+            type === 'hierarchical'
+          );
+        }
       ) as Breadcrumb<CategoryFacetValue>[]
     ).map(({facetId, field, values}) => {
       const deselectAll = () => {
@@ -555,25 +544,26 @@ export class AtomicCommerceBreadbox
     if (!allBreadcrumbs.length) {
       return <Hidden></Hidden>;
     }
-
     return (
-      <div part="container" class="flex text-sm text-on-background">
-        <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
-          {this.bindings.i18n.t('with-colon', {
-            text: this.bindings.i18n.t('filters'),
-          })}
-        </span>
-        <div part="breadcrumb-list-container" class="relative grow">
-          <ul
-            part="breadcrumb-list"
-            class={`flex gap-1 ${
-              this.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
-            }`}
-          >
-            {this.renderBreadcrumbs(allBreadcrumbs)}
-          </ul>
+      <Host>
+        <div part="container" class="flex text-sm text-on-background">
+          <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
+            {this.bindings.i18n.t('with-colon', {
+              text: this.bindings.i18n.t('filters'),
+            })}
+          </span>
+          <div part="breadcrumb-list-container" class="relative grow">
+            <ul
+              part="breadcrumb-list"
+              class={`flex gap-1 ${
+                this.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
+              }`}
+            >
+              {this.renderBreadcrumbs(allBreadcrumbs)}
+            </ul>
+          </div>
         </div>
-      </div>
+      </Host>
     );
   }
 
