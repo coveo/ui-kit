@@ -1607,11 +1607,9 @@ describe('SearchPageClient', () => {
             generativeQuestionAnsweringId: fakeStreamId,
             helpful: true,
             readable: <GeneratedAnswerFeedbackReasonOption>'yes',
-            correctness: {
-                documented: <GeneratedAnswerFeedbackReasonOption>'no',
-                correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
-                hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
-            },
+            documented: <GeneratedAnswerFeedbackReasonOption>'no',
+            correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+            hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
             details: 'a few additional details',
             documentUrl: 'https://document.com',
         };

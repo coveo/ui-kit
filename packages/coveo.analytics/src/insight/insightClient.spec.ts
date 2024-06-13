@@ -658,11 +658,9 @@ describe('InsightClient', () => {
                 generativeQuestionAnsweringId: '123',
                 helpful: true,
                 readable: <GeneratedAnswerFeedbackReasonOption>'yes',
-                correctness: {
-                    documented: <GeneratedAnswerFeedbackReasonOption>'no',
-                    correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
-                    hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
-                },
+                documented: <GeneratedAnswerFeedbackReasonOption>'no',
+                correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+                hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
                 details: 'foo',
                 documentUrl: 'https://document.com',
             };
@@ -1426,11 +1424,9 @@ describe('InsightClient', () => {
                 generativeQuestionAnsweringId: '123',
                 helpful: true,
                 readable: <GeneratedAnswerFeedbackReasonOption>'yes',
-                correctness: {
-                    documented: <GeneratedAnswerFeedbackReasonOption>'no',
-                    correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
-                    hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
-                },
+                documented: <GeneratedAnswerFeedbackReasonOption>'no',
+                correctTopic: <GeneratedAnswerFeedbackReasonOption>'unknown',
+                hallucinationFree: <GeneratedAnswerFeedbackReasonOption>'yes',
                 details: 'foo',
                 documentUrl: 'https://document.com',
             };
