@@ -6,7 +6,7 @@ export default class ExampleQuanticSearchBox extends LightningElement {
 
   pageTitle = 'Quantic Search Box';
   pageDescription =
-    'The `QuanticSearchBox` component creates a search box with built-in support for query suggestions.';
+    'The `QuanticSearchBox` component creates a search box with built-in support for query suggestions and query history.';
   options = [
     {
       attribute: 'engineId',
