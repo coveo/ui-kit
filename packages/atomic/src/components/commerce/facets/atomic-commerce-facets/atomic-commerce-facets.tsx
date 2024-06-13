@@ -100,7 +100,6 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
       <Fragment>
         {this.facetGenerator.facets.map((facet, index) => {
           if (facet.state.values.length === 0) {
-            console.log('yo');
             return;
           }
 
