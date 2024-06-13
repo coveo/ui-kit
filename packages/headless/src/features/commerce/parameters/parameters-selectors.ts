@@ -35,6 +35,7 @@ export function initialParametersSelector(
       state.commerceSort.appliedSort ??
       getCommerceSortInitialState().appliedSort,
     cf: {},
+    cnf: {},
     nf: {},
     df: {},
     f: {},
@@ -83,6 +84,12 @@ export function activeParametersSelector(
       facetIsOfType(state, 'numericalRange'),
       getSelectedRangeValues,
       'nf'
+    ),
+    ...getFacets(
+      state.commerceFacetSet,
+      facetIsOfType(state, 'numericalRange'),
+      getCustomRangeValues,
+      'cnf'
     ),
   };
 }
@@ -133,7 +140,13 @@ export function getSelectedValues(request: AnyFacetRequest) {
 
 export function getSelectedRangeValues(request: AnyFacetRequest) {
   return (request as NumericFacetRequest | DateFacetRequest).values.filter(
-    (fv) => fv.state === 'selected'
+    (fv) => fv.state === 'selected' && fv.isCustomRange !== true
+  );
+}
+
+export function getCustomRangeValues(request: AnyFacetRequest) {
+  return (request as NumericFacetRequest | DateFacetRequest).values.filter(
+    (fv) => fv.state === 'selected' && fv.isCustomRange === true
   );
 }
 

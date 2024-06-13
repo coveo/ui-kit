@@ -44,12 +44,13 @@ export const productListingSerializer = {
 } as Serializer<ProductListingParameters>;
 
 type ParametersKey = keyof CommerceSearchParameters;
-type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'df'>;
+type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'cnf' | 'df'>;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
   cf: true,
+  cnf: true,
   nf: true,
   df: true,
 };
@@ -73,7 +74,7 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'df') {
+  if (key === 'nf' || key === 'cnf' || key === 'df') {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 

@@ -183,8 +183,7 @@ export function serializeRangeFacets(
           }${end}`;
         })
         .join(',');
-      const customRangeTag = custom ? 'c' : '';
-      return `${customRangeTag}${key}-${facetId}${equal}${value}`;
+      return `${key}-${facetId}${equal}${value}`;
     })
     .join(delimiter);
 }

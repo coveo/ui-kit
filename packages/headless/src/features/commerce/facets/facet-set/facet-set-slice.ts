@@ -555,21 +555,6 @@ function updateStateFromFacetResponse(
   facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
-  // TODO: clean thi mess!!!!!
-  const customValuesRequested =
-    facetRequest.values && ensureNumericFacetRequest(facetRequest)
-      ? facetRequest.values.some((v) => v.isCustomRange)
-      : false;
-  facetRequest.values =
-    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
-
-  if (ensureNumericFacetRequest(facetRequest) && customValuesRequested) {
-    facetRequest.values = facetRequest.values.map((v) => ({
-      ...v,
-      isCustomRange: true,
-    }));
-  }
-
   facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
   if (
@@ -577,7 +562,10 @@ function updateStateFromFacetResponse(
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
-  } else if (facetResponse.type === 'numericalRange') {
+  } else if (
+    facetResponse.type === 'numericalRange' &&
+    ensureNumericFacetRequest(facetRequest)
+  ) {
     facetRequest.interval = facetResponse.interval;
     if (facetResponse.domain) {
       facetRequest.domain = {
@@ -586,7 +574,21 @@ function updateStateFromFacetResponse(
         increment: facetResponse.domain.increment,
       };
     }
+    // TODO: clean this mess
+    const customValuesRequested = facetRequest.values
+      ? facetRequest.values.some((v) => v.isCustomRange)
+      : false;
+
+    const response = (getFacetRequestValuesFromFacetResponse(facetResponse) ??
+      []) as NumericRangeRequest[];
+    facetRequest.values = response.map((v) => ({
+      ...v,
+      isCustomRange: customValuesRequested,
+    }));
+    return;
   }
+  facetRequest.values =
+    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
 }
 
 function getFacetRequestValuesFromFacetResponse(
