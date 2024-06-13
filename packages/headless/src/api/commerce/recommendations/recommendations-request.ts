@@ -1,11 +1,12 @@
 import {SlotIdParam} from '../commerce-api-params';
+import {CommerceApiMethod} from '../commerce-metadata';
 import {BaseCommerceAPIRequest, baseRequest} from '../common/request';
 
 export type CommerceRecommendationsRequest = BaseCommerceAPIRequest &
   SlotIdParam;
 export const buildRecommendationsRequest = (
   req: CommerceRecommendationsRequest,
-  path: string
+  path: CommerceApiMethod
 ) => {
   return {
     ...baseRequest(req, path),

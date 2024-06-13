@@ -3,7 +3,7 @@ import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce
 import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {Parameters} from '../../commerce/parameters/parameters-actions';
@@ -74,7 +74,7 @@ describe('facet-order slice', () => {
     {
       actionName: '#fetchProductListing.fulfilled',
       action: fetchProductListing.fulfilled,
-      responseBuilder: buildFetchProductListingV2Response,
+      responseBuilder: buildFetchProductListingResponse,
     },
     {
       actionName: '#executeCommerceSearch.fulfilled',

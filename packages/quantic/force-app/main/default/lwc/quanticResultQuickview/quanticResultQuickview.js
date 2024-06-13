@@ -186,7 +186,7 @@ export default class QuanticResultQuickview extends LightningElement {
       this.engine
     );
 
-    // Destructuring transfers the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
+    // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
     this.engine.dispatch(
       pushRecentResult({...this.result, raw: {...this.result.raw}})
     );

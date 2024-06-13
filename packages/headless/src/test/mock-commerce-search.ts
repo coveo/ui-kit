@@ -1,6 +1,6 @@
 import {SearchCommerceSuccessResponse} from '../api/commerce/search/response';
 import {QuerySearchCommerceAPIThunkReturn} from '../features/commerce/search/search-actions';
-import {buildFetchProductListingV2Response as buildFetchProductsCoreResponse} from './mock-product-listing-v2';
+import {buildFetchProductListingResponse as buildFetchProductsCoreResponse} from './mock-product-listing';
 
 export function buildSearchResponse(
   response: Partial<SearchCommerceSuccessResponse> = {},
