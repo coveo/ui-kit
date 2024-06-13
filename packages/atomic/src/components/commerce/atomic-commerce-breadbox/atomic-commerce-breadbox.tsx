@@ -474,10 +474,11 @@ export class AtomicCommerceBreadbox
 
   private get numericFacetBreadcrumbs(): IBreadcrumb[] {
     return (
-      this.breadcrumbManagerState.facetBreadcrumbs.filter(({facetId, type}) => {
-        this.bindings.store.state.numericFacets[facetId] &&
-          type === 'numericalRange';
-      }) as Breadcrumb<NumericFacetValue>[]
+      this.breadcrumbManagerState.facetBreadcrumbs.filter(
+        ({facetId, type}) =>
+          this.bindings.store.state.numericFacets[facetId] &&
+          type === 'numericalRange'
+      ) as Breadcrumb<NumericFacetValue>[]
     )
       .map(({facetId, field, values, type}) =>
         values.map((value) => ({value, facetId, field, type}))
