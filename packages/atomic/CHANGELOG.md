@@ -1,3 +1,13 @@
+# 2.68.0 (2024-06-13)
+
+### Bug Fixes
+
+- **atomic:** fix facet and product list loading state ([#4080](https://github.com/coveo/ui-kit/issues/4080)) ([6500ea1](https://github.com/coveo/ui-kit/commits/6500ea15c61326ca6425028c3f6df0016cf2ecb3))
+
+### Features
+
+- **atomic:** add excerpt and product name highlights ([#4046](https://github.com/coveo/ui-kit/issues/4046)) ([fe412e0](https://github.com/coveo/ui-kit/commits/fe412e0077084e4ed4b5da8f7c7210e1f0dc8de8))
+
 # 2.67.0 (2024-06-12)
 
 ### Bug Fixes
