@@ -59,6 +59,11 @@ export interface SearchParameters {
   nf?: Record<string, NumericRangeRequest[]>;
 
   /**
+   * TODO: A record of custom numeric filters
+   */
+  cnf?: Record<string, NumericRangeRequest[]>;
+
+  /**
    * The number of results to return.
    */
   numberOfResults?: number;

@@ -1,6 +1,8 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
+import {ensureNumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -99,28 +101,37 @@ export function buildCommerceNumericFacet(
   });
 
   const {dispatch} = engine;
-  const getState = () => engine[stateKey];
-  const getRequest = () => getState().commerceFacetSet[facetId]!.request;
-  // TODO: register facet input
+  const getRequest = () => engine[stateKey].commerceFacetSet[facetId].request;
 
   const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
     options;
 
-  const extractRange = (response: NumericFacetResponse) => {
-    const {isCustomRange} = getRequest();
-    const range = isCustomRange ? response.values[0] : undefined;
+  // TODO: move to NumericRangeFilter
+  const extractRange = () => {
+    const request = getRequest();
+    if (!ensureNumericFacetRequest(request)) {
+      return;
+    }
+
+    const range = request.values.find((value) => value.isCustomRange);
+
+    if (!range) {
+      return;
+    }
+
     return {
       range,
     };
   };
 
-  const extractDomain = (response: NumericFacetResponse) => {
+  const extractDomain = (
+    response: NumericFacetResponse
+  ): Pick<NumericFacetState, 'domain'> | undefined => {
     if (response.domain === undefined) {
       return;
     }
     const {min, max} = response.domain;
     return {
-      ...coreController.state,
       domain: {
         min,
         max,
@@ -130,24 +141,32 @@ export function buildCommerceNumericFacet(
 
   return {
     ...coreController,
+    // ...numericRangeFilter,
 
     setRanges(ranges: NumericRangeRequest[]) {
+      dispatch(deselectAllFacetValues(facetId));
+      // TODO: move to input filter controller
       dispatch(
         updateNumericFacetValues({
           facetId,
           values: ranges.map((range) => ({...range, numberOfResults: 0})),
         })
       );
+      // dispatch(toggleCustomRange({toggle: false}));
+      // numericRangeFilter.setRanges(ranges);
       dispatch(fetchProductsActionCreator());
     },
 
     get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
       if (response?.type === 'numericalRange') {
+        // console.log('extractRange', extractRange());
+
         return {
           ...coreController.state,
-          ...extractDomain(response),
-          ...extractRange(response),
+          // ...numericRangeFilter.state,
+          ...extractDomain(response), // TODO: maybe range prop should be in NumericRangeFilter
+          ...extractRange(),
         };
       }
 

@@ -26,7 +26,6 @@ import {
 } from '../../../common/formats/format-common';
 import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -43,8 +42,6 @@ export class AtomicCommerceNumericFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   @Element() private host!: HTMLElement;
-
-  @State() private range?: Range;
 
   @BindStateToController('facet')
   @State()
@@ -117,12 +114,11 @@ export class AtomicCommerceNumericFacet
     this.formatter = event.detail;
   }
 
-  @Listen('atomic/numberInputApply')
-  public applyNumberInput({detail}: CustomEvent<Range>) {
-    this.range = {start: detail.start, end: detail.end};
-  }
-
   public render() {
+    console.log('*********************');
+    console.log(this.facetState.range);
+    console.log('*********************');
+
     const {
       bindings: {i18n},
     } = this;
@@ -141,7 +137,6 @@ export class AtomicCommerceNumericFacet
               label={this.displayName}
               onClearFilters={() => {
                 this.focusTarget.focusAfterSearch();
-                this.facet.deselectAll();
                 this.facet.setRanges([]);
               }}
               numberOfActiveValues={this.numberOfSelectedValues}
@@ -157,7 +152,8 @@ export class AtomicCommerceNumericFacet
                   bindings={this.bindings}
                   label={this.displayName}
                   facet={this.facet}
-                  range={this.range}
+                  inputRange={this.facetState.range} // TODO: check if can only use the facet prop instead of haveing an additional prop
+                  // No becaus of non commerce setup
                 ></atomic-commerce-facet-number-input>
               ),
             ]}
@@ -205,7 +201,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get numberOfSelectedValues() {
-    if (this.range) {
+    if (this.facetState.range) {
       return 1;
     }
 
@@ -216,10 +212,11 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasInputRange() {
-    return !!this.range;
+    return !!this.facetState.range;
   }
 
   private get shouldRenderValues() {
+    // TODO: load commerce selector to know if it is custom selected values
     return !this.hasInputRange && !!this.valuesToRender.length;
   }
 

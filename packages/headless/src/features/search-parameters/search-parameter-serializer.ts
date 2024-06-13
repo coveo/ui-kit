@@ -15,13 +15,13 @@ import {SearchParameters} from './search-parameter-actions';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
-export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|cnf|df|sf|af)-(.+)$/;
 export type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
 
 type FacetSearchParameters = keyof Pick<
   SearchParameters,
-  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df'
+  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'cnf' | 'df'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
@@ -32,6 +32,7 @@ const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
   cf: true,
   sf: true,
   af: true,
+  cnf: true,
   nf: true,
   df: true,
 };
@@ -69,12 +70,13 @@ export function isValidBasicKey(
 
 export function isRangeFacetKey(
   key: string
-): key is Extract<FacetKey, 'nf' | 'df'> {
+): key is Extract<FacetKey, 'nf' | 'df' | 'cnf'> {
   const supportedRangeFacetParameters: Pick<
     typeof supportedFacetParameters,
-    'df' | 'nf'
+    'df' | 'nf' | 'cnf'
   > = {
     nf: true,
+    cnf: true,
     df: true,
   };
   const isRangeFacet = key in supportedRangeFacetParameters;
@@ -105,7 +107,7 @@ export function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'df') {
+  if (key === 'nf' || key === 'cnf' || key === 'df') {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
@@ -172,15 +174,17 @@ export function serializeRangeFacets(
 ) {
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
+      let custom = false;
       const value = ranges
-        .map(
-          ({start, end, endInclusive}) =>
-            `${start}${
-              endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-            }${end}`
-        )
+        .map(({start, end, endInclusive, isCustomRange}) => {
+          custom = custom || Boolean(isCustomRange);
+          return `${start}${
+            endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+          }${end}`;
+        })
         .join(',');
-      return `${key}-${facetId}${equal}${value}`;
+      const customRangeTag = custom ? 'c' : '';
+      return `${customRangeTag}${key}-${facetId}${equal}${value}`;
     })
     .join(delimiter);
 }
@@ -234,6 +238,10 @@ function processObjectValues(key: string, values: string[]) {
     return buildNumericRanges(values);
   }
 
+  if (key === 'cnf') {
+    return buildNumericRanges(values, true);
+  }
+
   if (key === 'df') {
     return buildDateRanges(values);
   }
@@ -241,7 +249,10 @@ function processObjectValues(key: string, values: string[]) {
   return values;
 }
 
-export function buildNumericRanges(ranges: string[]) {
+export function buildNumericRanges(ranges: string[], isCustomRange?: boolean) {
+  // TODO: check for custom range
+  console.log('*******ranges strings**************', ranges);
+
   return ranges
     .map((str) => {
       const {startAsString, endAsString, isEndInclusive} =
@@ -255,7 +266,13 @@ export function buildNumericRanges(ranges: string[]) {
     })
     .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
     .map(({start, end, endInclusive}) =>
-      buildNumericRange({start, end, state: 'selected', endInclusive})
+      buildNumericRange({
+        start,
+        end,
+        state: 'selected',
+        endInclusive,
+        isCustomRange,
+      })
     );
 }
 

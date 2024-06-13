@@ -1,12 +1,7 @@
-export type NumericFacetResponseExtraProperties = {
+export type NumericFacetExtraProperties = {
   domain?: NumericFacetDomain;
   interval: NumericFacetInterval;
 };
-
-export type NumericFacetRequestExtraProperties =
-  NumericFacetResponseExtraProperties & {
-    isCustomRange?: boolean;
-  };
 
 type NumericFacetDomain = {
   min: number;

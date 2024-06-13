@@ -2,7 +2,7 @@ import {FacetValueState} from '../../../../facets/facet-api/value';
 import {
   CategoryFacetDelimitingCharacter,
   FacetType,
-  NumericFacetResponseExtraProperties,
+  NumericFacetExtraProperties,
 } from './common';
 
 export type CategoryFacetResponse = BaseFacetResponse<
@@ -26,7 +26,7 @@ export type NumericFacetResponse = BaseFacetResponse<
   NumericFacetValue,
   'numericalRange'
 > &
-  NumericFacetResponseExtraProperties;
+  NumericFacetExtraProperties;
 
 export type NumericFacetValue = RangeFacetValue<number>;
 
