@@ -2,7 +2,7 @@ import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-l
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response';
 
-export interface ProductListingState {
+export interface OldProductListingState {
   url: string;
   clientId: string;
   additionalFields: string[];
@@ -18,7 +18,7 @@ export interface ProductListingState {
   responseId: string;
 }
 
-export const getProductListingInitialState = (): ProductListingState => ({
+export const getProductListingInitialState = (): OldProductListingState => ({
   url: '',
   clientId: '',
   additionalFields: [],

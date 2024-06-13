@@ -1,5 +1,5 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {
@@ -176,7 +176,7 @@ describe('pagination slice', () => {
   );
 
   it('sets the principal pagination on #fetchProductListing.fulfilled', () => {
-    const response = buildFetchProductListingV2Response({
+    const response = buildFetchProductListingResponse({
       pagination,
     });
 
