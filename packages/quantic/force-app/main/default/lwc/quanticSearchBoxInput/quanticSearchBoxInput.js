@@ -324,8 +324,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleSuggestionSelection(event) {
-    const {value, isRecentQuery} = event.detail;
-    this.sendSelectSuggestionEvent(value, isRecentQuery);
+    const {selectedSuggestion, isRecentQuery} = event.detail;
+    this.sendSelectSuggestionEvent(selectedSuggestion, isRecentQuery);
     this.blur();
   }
 

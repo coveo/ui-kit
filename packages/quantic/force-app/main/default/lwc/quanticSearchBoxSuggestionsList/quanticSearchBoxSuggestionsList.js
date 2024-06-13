@@ -243,7 +243,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   handleSuggestionSelection(rawValue, isRecentQuery = false) {
     const suggestionSelectedEvent = new CustomEvent('suggestionselected', {
-      detail: {value: rawValue, isRecentQuery},
+      detail: {selectedSuggestion: rawValue, isRecentQuery},
     });
     this.dispatchEvent(suggestionSelectedEvent);
   }
