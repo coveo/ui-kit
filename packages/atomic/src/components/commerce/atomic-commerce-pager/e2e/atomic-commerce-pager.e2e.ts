@@ -1,12 +1,4 @@
 import {test, expect} from './fixture';
-import {
-  assertAccessibility,
-  assertContainsComponentError,
-  assertDisabled,
-  assertEnabled,
-  assertPageInHash,
-  assertPagerSelected,
-} from './pager-assertions';
 
 test.describe('Default', () => {
   test.beforeEach(async ({page}) => {
@@ -15,9 +7,19 @@ test.describe('Default', () => {
     );
   });
 
-  assertEnabled('nextButton');
-  assertDisabled('previousButton');
-  assertAccessibility();
+  test('nextButton should be enabled', async ({pager}) => {
+    await expect(pager.nextButton).toBeEnabled();
+  });
+
+  test('previousButton should be disabled', async ({pager}) => {
+    await expect(pager.previousButton).toBeDisabled();
+  });
+
+  test('should be A11y compliant', async ({pager, makeAxeBuilder}) => {
+    await pager.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
+  });
 
   test('should display 5 pages', async ({pager}) => {
     await expect(pager.pages).toHaveCount(5);
@@ -42,11 +44,31 @@ test.describe('Default', () => {
       await pager.nextButton.click();
     });
 
-    assertPagerSelected(2, true);
-    assertPagerSelected(1, false);
-    assertPageInHash(2);
-    assertEnabled('nextButton');
-    assertEnabled('previousButton');
+    test('pager button 2 should be selected', async ({pager}) => {
+      await expect(pager.numericButton(2)).toHaveAttribute(
+        'part',
+        expect.stringContaining('active-page-button')
+      );
+    });
+
+    test('pager button 1 should not be selected', async ({pager}) => {
+      await expect(pager.numericButton(1)).not.toHaveAttribute(
+        'part',
+        'active-page-button'
+      );
+    });
+
+    test('should include the page in the hash', async ({page}) => {
+      await expect(page.url()).toContain('#page=1');
+    });
+
+    test('nextButton should be enabled', async ({pager}) => {
+      await expect(pager.nextButton).toBeEnabled();
+    });
+
+    test('previousButton should be enabled', async ({pager}) => {
+      await expect(pager.previousButton).toBeEnabled();
+    });
   });
 
   test.describe('after clicking the button previous', () => {
@@ -55,11 +77,31 @@ test.describe('Default', () => {
       await pager.previousButton.click();
     });
 
-    assertPagerSelected(1, true);
-    assertPagerSelected(2, false);
-    assertPageInHash(1);
-    assertEnabled('nextButton');
-    assertDisabled('previousButton');
+    test('pager button 1 should be selected', async ({pager}) => {
+      await expect(pager.numericButton(1)).toHaveAttribute(
+        'part',
+        expect.stringContaining('active-page-button')
+      );
+    });
+
+    test('pager button 2 should not be selected', async ({pager}) => {
+      await expect(pager.numericButton(2)).not.toHaveAttribute(
+        'part',
+        'active-page-button'
+      );
+    });
+
+    test('should not include the first page in the hash', async ({page}) => {
+      await expect(page.url()).not.toContain('#page');
+    });
+
+    test('nextButton should be enabled', async ({pager}) => {
+      await expect(pager.nextButton).toBeEnabled();
+    });
+
+    test('previousButton should be disabled', async ({pager}) => {
+      await expect(pager.previousButton).toBeDisabled();
+    });
   });
 
   test.describe('after clicking the pager button', () => {
@@ -67,11 +109,30 @@ test.describe('Default', () => {
       await pager.numericButton(3).click();
     });
 
-    assertPagerSelected(3, true);
-    assertPagerSelected(1, false);
-    assertPageInHash(3);
-    assertEnabled('nextButton');
-    assertEnabled('previousButton');
+    test('pager button 3 should be selected', async ({pager}) => {
+      await expect(pager.numericButton(3)).toHaveAttribute(
+        'part',
+        expect.stringContaining('active-page-button')
+      );
+    });
+
+    test('pager button 1 should not be selected', async ({pager}) => {
+      await expect(pager.numericButton(1)).not.toHaveAttribute(
+        'part',
+        'active-page-button'
+      );
+    });
+
+    test('should include the page in the hash', async ({page}) => {
+      await expect(page.url()).toContain('#page=2');
+    });
+
+    test('nextButton should be enabled', async ({pager}) => {
+      await expect(pager.nextButton).toBeEnabled();
+    });
+    test('previousButton should be enabled', async ({pager}) => {
+      await expect(pager.previousButton).toBeEnabled();
+    });
   });
 
   test.describe('after clicking on page 5', () => {
@@ -79,7 +140,12 @@ test.describe('Default', () => {
       await pager.numericButton(5).click();
     });
 
-    assertPagerSelected(5, false);
+    test('pager button 5 should not be selected', async ({pager}) => {
+      await expect(pager.numericButton(5)).not.toHaveAttribute(
+        'part',
+        'active-page-button'
+      );
+    });
   });
 });
 
@@ -90,8 +156,18 @@ test.describe('with a valid page in the hash', () => {
     );
   });
 
-  assertPagerSelected(3, true);
-  assertAccessibility();
+  test('pager button 3 should be selected', async ({pager}) => {
+    await expect(pager.numericButton(3)).toHaveAttribute(
+      'part',
+      expect.stringContaining('active-page-button')
+    );
+  });
+
+  test('should be A11y compliant', async ({pager, makeAxeBuilder}) => {
+    await pager.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
+  });
 });
 
 test.describe('with an invalid page in the hash', () => {
@@ -101,8 +177,18 @@ test.describe('with an invalid page in the hash', () => {
     );
   });
 
-  assertPagerSelected(9, true);
-  assertAccessibility();
+  test('pager button 9 should be selected', async ({pager}) => {
+    await expect(pager.numericButton(9)).toHaveAttribute(
+      'part',
+      expect.stringContaining('active-page-button')
+    );
+  });
+
+  test('should be A11y compliant', async ({pager, makeAxeBuilder}) => {
+    await pager.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
+  });
 });
 
 test.describe('with number-of-pages=3', () => {
@@ -123,7 +209,10 @@ test.describe('with numberOfPages=-5', () => {
       'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=number-of-pages:-5'
     );
   });
-  assertContainsComponentError(true);
+
+  test('should display an error component', async ({pager}) => {
+    await expect(pager.errorComponent).toBeVisible();
+  });
 });
 
 test.describe('should allow custom icons', () => {
