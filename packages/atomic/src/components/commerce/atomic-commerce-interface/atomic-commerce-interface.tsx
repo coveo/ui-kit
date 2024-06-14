@@ -284,14 +284,14 @@ export class AtomicCommerceInterface
       );
 
     if (!standaloneSearchBoxData) {
-      this.engine.executeFirstSearch();
+      buildSearch(this.engine).executeFirstSearch();
       return;
     }
 
     safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
     const {value} = standaloneSearchBoxData;
-    this.engine!.dispatch(updateQuery({query: value}));
-    this.engine.executeFirstSearch();
+    this.engine.dispatch(updateQuery({query: value}));
+    buildSearch(this.engine).executeFirstSearch();
   }
 
   public get bindings(): CommerceBindings {

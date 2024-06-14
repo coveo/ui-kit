@@ -152,11 +152,7 @@ export function buildMockCaseAssistEngine<
 export function buildMockCommerceEngine<
   State extends StateFromEngineNext<CommerceEngine>,
 >(initialState: State): CommerceEngine {
-  return {
-    ...buildMockCoreEngineNext(initialState),
-    executeFirstSearch: jest.fn(),
-    executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
-  };
+  return buildMockCoreEngineNext(initialState);
 }
 
 export function buildMockInsightEngine<
