@@ -172,10 +172,8 @@ export function serializeRangeFacets(
 ) {
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
-      let custom = false;
       const value = ranges
-        .map(({start, end, endInclusive, isCustomRange}) => {
-          custom = custom || Boolean(isCustomRange);
+        .map(({start, end, endInclusive}) => {
           return `${start}${
             endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
           }${end}`;
