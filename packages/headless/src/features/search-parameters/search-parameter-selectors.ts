@@ -26,7 +26,6 @@ export function initialSearchParameterSelector(
     f: {},
     fExcluded: {},
     cf: {},
-    cnf: {},
     nf: {},
     df: {},
     debug: getDebugInitialState(),

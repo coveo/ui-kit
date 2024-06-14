@@ -15,13 +15,13 @@ import {SearchParameters} from './search-parameter-actions';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
-export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|cnf|df|sf|af)-(.+)$/;
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
 export type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
 
 type FacetSearchParameters = keyof Pick<
   SearchParameters,
-  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'cnf' | 'df'
+  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
@@ -32,7 +32,6 @@ const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
   cf: true,
   sf: true,
   af: true,
-  cnf: true,
   nf: true,
   df: true,
 };
@@ -70,13 +69,12 @@ export function isValidBasicKey(
 
 export function isRangeFacetKey(
   key: string
-): key is Extract<FacetKey, 'nf' | 'df' | 'cnf'> {
+): key is Extract<FacetKey, 'nf' | 'df'> {
   const supportedRangeFacetParameters: Pick<
     typeof supportedFacetParameters,
-    'df' | 'nf' | 'cnf'
+    'df' | 'nf'
   > = {
     nf: true,
-    cnf: true,
     df: true,
   };
   const isRangeFacet = key in supportedRangeFacetParameters;
@@ -107,7 +105,7 @@ export function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'cnf' || key === 'df') {
+  if (key === 'nf' || key === 'df') {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
@@ -192,7 +190,7 @@ function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessObjectPairs)
+    .map((part) => preprocessObjectPairs(part, facetSearchParamRegex))
     .filter(isValidPair)
     .map((pair) => cast(pair));
 
@@ -215,9 +213,12 @@ export function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-export function preprocessObjectPairs(pair: string[]) {
+export function preprocessObjectPairs(
+  pair: string[],
+  regex = facetSearchParamRegex
+) {
   const [key, val] = pair;
-  const result = facetSearchParamRegex.exec(key);
+  const result = regex.exec(key);
 
   if (!result) {
     return pair;
