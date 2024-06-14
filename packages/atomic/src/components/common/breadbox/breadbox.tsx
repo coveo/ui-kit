@@ -1,5 +1,5 @@
 import {FacetValueState} from '@coveo/headless';
-import {h, VNode, Host, FunctionalComponent, Fragment} from '@stencil/core';
+import {h, VNode, FunctionalComponent, Fragment} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {Button} from '../button';
@@ -25,25 +25,23 @@ export const BreadcrumbContainer: FunctionalComponent<
   BreadcrumbContainerProps
 > = (props, children) => {
   return (
-    <Host>
-      <div part="container" class="flex text-sm text-on-background">
-        <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
-          {props.bindings.i18n.t('with-colon', {
-            text: props.bindings.i18n.t('filters'),
-          })}
-        </span>
-        <div part="breadcrumb-list-container" class="relative grow">
-          <ul
-            part="breadcrumb-list"
-            class={`flex gap-1 ${
-              props.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
-            }`}
-          >
-            {...children}
-          </ul>
-        </div>
+    <div part="container" class="flex text-sm text-on-background">
+      <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
+        {props.bindings.i18n.t('with-colon', {
+          text: props.bindings.i18n.t('filters'),
+        })}
+      </span>
+      <div part="breadcrumb-list-container" class="relative grow">
+        <ul
+          part="breadcrumb-list"
+          class={`flex gap-1 ${
+            props.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
+          }`}
+        >
+          {...children}
+        </ul>
       </div>
-    </Host>
+    </div>
   );
 };
 
@@ -110,7 +108,7 @@ export interface BreadcrumbShowLessProps {
 export const BreadcrumbShowLess: FunctionalComponent<
   BreadcrumbShowLessProps
 > = (props) => {
-  if (props.isCollapsed) {
+  if (!props.isCollapsed) {
     return;
   }
   return (
@@ -143,7 +141,7 @@ export interface BreadcrumbShowMoreProps {
 export const BreadcrumbShowMore: FunctionalComponent<
   BreadcrumbShowMoreProps
 > = (props) => {
-  if (!props.isCollapsed) {
+  if (props.isCollapsed) {
     return;
   }
   return (
