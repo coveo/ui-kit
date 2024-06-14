@@ -194,7 +194,7 @@ test.describe('with an invalid page in the hash', () => {
 test.describe('with number-of-pages=3', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=number-of-pages:3'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=attributes-number-of-pages:3'
     );
   });
 
@@ -206,7 +206,7 @@ test.describe('with number-of-pages=3', () => {
 test.describe('with numberOfPages=-5', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=number-of-pages:-5'
+      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=attributes-number-of-pages:-5'
     );
   });
 
@@ -216,7 +216,6 @@ test.describe('with numberOfPages=-5', () => {
 });
 
 test.describe('should allow custom icons', () => {
-  // TODO: pass the argument via the URL instead of creating a story
   const customIcon =
     'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
 

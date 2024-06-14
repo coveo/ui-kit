@@ -12,20 +12,6 @@ const meta: Meta = {
   component: 'atomic-commerce-pager',
   title: 'Atomic-Commerce/Pager',
   id: 'atomic-commerce-pager',
-  argTypes: {
-    'previous-button-icon': {
-      control: 'text',
-      table: {
-        category: 'attributes',
-      },
-    },
-    'next-button-icon': {
-      control: 'text',
-      table: {
-        category: 'attributes',
-      },
-    },
-  },
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -46,9 +32,9 @@ export const CustomIcon: Story = {
   name: 'With custom icon',
   tags: ['commerce'],
   args: {
-    'previous-button-icon':
+    'attributes-previous-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
-    'next-button-icon':
+    'attributes-next-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
   },
   play: async (context) => {
