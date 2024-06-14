@@ -74,27 +74,22 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   private static options: {
-    id: string;
     localeKey: string;
     correspondingAnswer: keyof GeneratedAnswerFeedback;
   }[] = [
     {
-      id: 'correctTopic',
       localeKey: 'feedback-correct-topic',
       correspondingAnswer: 'correctTopic',
     },
     {
-      id: 'hallucinationFree',
       localeKey: 'feedback-hallucination-free',
       correspondingAnswer: 'hallucinationFree',
     },
     {
-      id: ' documented',
       localeKey: 'feedback-documented',
       correspondingAnswer: 'documented',
     },
     {
-      id: 'readable',
       localeKey: 'feedback-readable',
       correspondingAnswer: 'readable',
     },
@@ -239,7 +234,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     return (
       <div class="block">
         <div class="flex">
-          <label part="reason-label text-base">
+          <label class="text-base">
             {this.bindings.i18n.t(label)}
             <span class="text-error-red ml-0.5">*</span>
           </label>
@@ -256,11 +251,10 @@ export class AtomicGeneratedAnswerFeedbackModal
       <fieldset>
         <h5 class="font-bold">{this.bindings.i18n.t('answer-evaluation')}</h5>
         {AtomicGeneratedAnswerFeedbackModal.options.map(
-          ({id, localeKey, correspondingAnswer}) => (
+          ({localeKey, correspondingAnswer}) => (
             <div
-              class={`flex items-center justify-between mt-3 ${correspondingAnswer}`}
-              key={id}
-              part="reason"
+              class={`answer-evaluation flex items-center justify-between mt-3 ${correspondingAnswer}`}
+              key={correspondingAnswer}
             >
               {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
               <div class="options flex text-base">
@@ -291,7 +285,6 @@ export class AtomicGeneratedAnswerFeedbackModal
           {this.bindings.i18n.t('generated-answer-additional-notes')}
         </h5>
         <textarea
-          part="details-input"
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
           class="mt-4 px-4 py-2 w-full placeholder-neutral-dark leading-5 border border-neutral resize-none rounded-md hover:border-primary-light focus-visible:border-primary focus:outline-none focus-visible:ring-2 "
@@ -336,54 +329,67 @@ export class AtomicGeneratedAnswerFeedbackModal
     }
   }
 
-  private renderFooter() {
+  private renderFeedbackFormFooter() {
+    const buttonClasses =
+      'flex items-center justify-center text-sm leading-4 p-2 rounded-md';
+
     return (
-      <div slot="footer" part="modalFooter">
-        {!this.feedbackSubmitted ? (
-          <div part="buttons" class="flex items-center justify-between">
-            <div class="text-base required-label">
-              <span class="text-error mr-0.5">*</span>
-              {this.bindings.i18n.t('required-fields')}
-            </div>
-            <div class="flex gap-2">
-              <Button
-                part="cancel-button"
-                style="outline-primary"
-                class="flex justify-center text-sm leading-4 p-2 rounded-md"
-                ariaLabel={this.bindings.i18n.t('skip')}
-                onClick={() => this.close()}
-              >
-                {this.bindings.i18n.t('skip')}
-              </Button>
-              <Button
-                part="submit-button"
-                style="primary"
-                type="submit"
-                form={this.formId}
-                class="flex justify-center text-sm leading-4 p-2 rounded-md"
-                ariaLabel={this.bindings.i18n.t(
-                  'generated-answer-send-feedback'
-                )}
-              >
-                {this.bindings.i18n.t('generated-answer-send-feedback')}
-              </Button>
-            </div>
+      <div slot="footer">
+        <div class="flex items-center justify-between">
+          <div class="text-base required-label">
+            <span class="text-error mr-0.5">*</span>
+            {this.bindings.i18n.t('required-fields')}
           </div>
-        ) : (
-          <div part="buttons" class="flex justify-end gap-2 p-2">
+          <div class="flex gap-2">
             <Button
               part="cancel-button"
-              style="primary"
+              style="outline-primary"
+              class={buttonClasses}
+              ariaLabel={this.bindings.i18n.t('skip')}
               onClick={() => this.close()}
-              class="flex justify-center text-sm leading-4 p-2"
-              ariaLabel={this.bindings.i18n.t('modal-done')}
             >
-              {this.bindings.i18n.t('modal-done')}
+              {this.bindings.i18n.t('skip')}
+            </Button>
+            <Button
+              part="submit-button"
+              style="primary"
+              type="submit"
+              form={this.formId}
+              class={buttonClasses}
+              ariaLabel={this.bindings.i18n.t('generated-answer-send-feedback')}
+            >
+              {this.bindings.i18n.t('generated-answer-send-feedback')}
             </Button>
           </div>
-        )}
+        </div>
       </div>
     );
+  }
+
+  private renderSuccessFormFooter() {
+    return (
+      <div slot="footer">
+        <div class="flex justify-end gap-2 p-2">
+          <Button
+            part="cancel-button"
+            style="primary"
+            onClick={() => this.close()}
+            class="flex justify-center text-sm leading-4 p-2"
+            ariaLabel={this.bindings.i18n.t('modal-done')}
+          >
+            {this.bindings.i18n.t('modal-done')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  private renderFooter() {
+    if (!this.feedbackSubmitted) {
+      return this.renderFeedbackFormFooter();
+    } else {
+      return this.renderSuccessFormFooter();
+    }
   }
 
   public render() {
