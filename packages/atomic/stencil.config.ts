@@ -29,7 +29,15 @@ function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
     .flatMap((m) => m![1]);
 }
 function getPackageVersion(): string {
-  return JSON.parse(readFileSync('package.json', 'utf-8')).version;
+  return JSON.parse(
+    readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
+  ).version;
+}
+
+function getHeadlessVersion(): string {
+  return JSON.parse(
+    readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
+  ).peerDependencies['@coveo/headless'];
 }
 
 function replaceHeadlessMap() {
@@ -48,6 +56,46 @@ function replaceHeadlessMap() {
       bundle[headlessBundle].code +=
         '//# sourceMappingURL=./headless/headless.esm.js.map';
       return bundle;
+    },
+  };
+}
+
+function externalizeHeadless() {
+  switch (process.env.TARGET) {
+    case 'cdn':
+      return externalizeHeadlessForCDN();
+    case 'npm':
+    default:
+      return externalizeHeadlessForNPM();
+  }
+}
+
+function externalizeHeadlessForNPM() {
+  return {
+    name: 'externalize-headless',
+    resolveId(id: string) {
+      if (id.startsWith('@coveo/headless')) {
+        return {
+          id,
+          external: true,
+        };
+      }
+    },
+  };
+}
+
+function externalizeHeadlessForCDN() {
+  console.log('Externalizing headless for CDN');
+  const headlessVersion = getHeadlessVersion();
+  return {
+    name: 'externalize-headless',
+    resolveId(id: string) {
+      if (id.startsWith('@coveo/headless')) {
+        return {
+          id: `/headless/v${headlessVersion}${id.replace('@coveo/headless', '')}/headless.esm.js`,
+          external: 'absolute',
+        };
+      }
     },
   };
 }
@@ -241,6 +289,7 @@ export const config: Config = {
         include: 'src/templates/**/*.html',
       }),
       isDevWatch && replaceHeadlessMap(),
+      externalizeHeadless(),
     ],
   },
   extras: {
