@@ -112,7 +112,7 @@ export class AtomicCommerceRecommendationInterface
    *
    * Will default to the value set in the Headless engine context if not provided.
    */
-  @Prop({reflect: true}) public language!: string;
+  @Prop({reflect: true, mutable: true}) public language!: string;
 
   /**
    * Whether to enable analytics.
