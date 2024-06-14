@@ -21,7 +21,7 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `suggested query\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `suggested query\\..*? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }
