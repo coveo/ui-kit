@@ -1,3 +1,27 @@
+# 2.68.0 (2024-06-13)
+
+### Bug Fixes
+
+- **atomic:** fix facet and product list loading state ([#4080](https://github.com/coveo/ui-kit/issues/4080)) ([6500ea1](https://github.com/coveo/ui-kit/commits/6500ea15c61326ca6425028c3f6df0016cf2ecb3))
+
+### Features
+
+- **atomic:** add excerpt and product name highlights ([#4046](https://github.com/coveo/ui-kit/issues/4046)) ([fe412e0](https://github.com/coveo/ui-kit/commits/fe412e0077084e4ed4b5da8f7c7210e1f0dc8de8))
+
+# 2.67.0 (2024-06-12)
+
+### Bug Fixes
+
+- **atomic:** fix collapse-facets-after support for atomic-commerce-facets ([#4075](https://github.com/coveo/ui-kit/issues/4075)) ([bf72e1e](https://github.com/coveo/ui-kit/commits/bf72e1ee965823fe6c60e14ce5ac95e90e8809f1))
+- **atomic:** fix grid system for commerce when no results or error ([#4058](https://github.com/coveo/ui-kit/issues/4058)) ([7d0bddc](https://github.com/coveo/ui-kit/commits/7d0bddc2fb88e7d07c570738a73d93882229cdcd))
+- **atomic:** no break word for product-price + truncate/wrap ([#4055](https://github.com/coveo/ui-kit/issues/4055)) ([a538557](https://github.com/coveo/ui-kit/commits/a538557f9129c7f1c946df671069e01a4953154d))
+- **atomic:** remove boundary validation on numeric inputs ([#4073](https://github.com/coveo/ui-kit/issues/4073)) ([51848ee](https://github.com/coveo/ui-kit/commits/51848ee2e2b8484a1d07d469a38a037c907cbe1e))
+
+### Features
+
+- **atomic commerce:** add interactive product controller support ([#4026](https://github.com/coveo/ui-kit/issues/4026)) ([a07f4b9](https://github.com/coveo/ui-kit/commits/a07f4b9eafd14931c917baf39ec10edaba5ec11c))
+- **headless:** enforce organization endpoints usage for headless commerce ([#4060](https://github.com/coveo/ui-kit/issues/4060)) ([8bb77af](https://github.com/coveo/ui-kit/commits/8bb77af019e326380a424646b226055f36038d2e))
+
 # 2.66.0 (2024-06-06)
 
 ### Bug Fixes

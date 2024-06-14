@@ -81,6 +81,11 @@ export class AtomicCommerceProductList
   @State() private templateHasError = false;
 
   /**
+   * The desired number of placeholders to display while the product list is loading.
+   */
+  @Prop({reflect: true}) numberOfPlaceholders = 24;
+
+  /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
   @Prop({reflect: true}) display: ItemDisplayLayout = 'grid';
@@ -188,7 +193,7 @@ export class AtomicCommerceProductList
           display={this.display}
           imageSize={this.imageSize}
           displayPlaceholders={!this.bindings.store.isAppLoaded()}
-          numberOfPlaceholders={this.productState.products.length}
+          numberOfPlaceholders={this.numberOfPlaceholders}
         ></ResultsPlaceholdersGuard>
         <ItemDisplayGuard
           firstRequestExecuted={!!this.productState.responseId}

@@ -4,26 +4,26 @@ import {
   buildMockProduct,
   buildMockBaseProduct,
 } from '../../../test/mock-product';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
 } from './product-listing-actions';
-import {productListingV2Reducer} from './product-listing-slice';
+import {productListingReducer} from './product-listing-slice';
 import {
-  getProductListingV2InitialState,
-  ProductListingV2State,
+  getProductListingInitialState,
+  ProductListingState,
 } from './product-listing-state';
 
 describe('product-listing-slice', () => {
-  let state: ProductListingV2State;
+  let state: ProductListingState;
   beforeEach(() => {
-    state = getProductListingV2InitialState();
+    state = getProductListingInitialState();
   });
   it('should have an initial state', () => {
-    expect(productListingV2Reducer(undefined, {type: 'foo'})).toEqual(
-      getProductListingV2InitialState()
+    expect(productListingReducer(undefined, {type: 'foo'})).toEqual(
+      getProductListingInitialState()
     );
   });
 
@@ -32,14 +32,14 @@ describe('product-listing-slice', () => {
       const result = buildMockBaseProduct({ec_name: 'product1'});
       const facet = buildMockCommerceRegularFacetResponse();
       const responseId = 'some-response-id';
-      const response = buildFetchProductListingV2Response({
+      const response = buildFetchProductListingResponse({
         products: [result],
         facets: [facet],
         responseId,
       });
 
       const action = fetchProductListing.fulfilled(response, '');
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState.products).toEqual(
         response.response.products.map((p) =>
@@ -52,7 +52,7 @@ describe('product-listing-slice', () => {
     });
 
     it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
-      const response = buildFetchProductListingV2Response({
+      const response = buildFetchProductListingResponse({
         products: [
           buildMockBaseProduct({ec_name: 'product1'}),
           buildMockBaseProduct({ec_name: 'product2'}),
@@ -66,7 +66,7 @@ describe('product-listing-slice', () => {
       });
 
       const action = fetchProductListing.fulfilled(response, '');
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState.products[0].position).toBe(21);
       expect(finalState.products[1].position).toBe(22);
@@ -76,10 +76,10 @@ describe('product-listing-slice', () => {
       const err = {message: 'message', statusCode: 500, type: 'type'};
       state.error = err;
 
-      const response = buildFetchProductListingV2Response();
+      const response = buildFetchProductListingResponse();
 
       const action = fetchProductListing.fulfilled(response, '');
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
       expect(finalState.error).toBeNull();
     });
   });
@@ -93,14 +93,14 @@ describe('product-listing-slice', () => {
       const result = buildMockBaseProduct({ec_name: 'product3'});
       const facet = buildMockCommerceRegularFacetResponse();
       const responseId = 'some-response-id';
-      const response = buildFetchProductListingV2Response({
+      const response = buildFetchProductListingResponse({
         products: [result],
         facets: [facet],
         responseId,
       });
 
       const action = fetchMoreProducts.fulfilled(response, '');
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState.products.map((p) => p.ec_name)).toEqual([
         'product1',
@@ -123,7 +123,7 @@ describe('product-listing-slice', () => {
           position: 2,
         }),
       ];
-      const response = buildFetchProductListingV2Response({
+      const response = buildFetchProductListingResponse({
         products: [buildMockBaseProduct({ec_name: 'product3'})],
         pagination: {
           page: 1,
@@ -134,7 +134,7 @@ describe('product-listing-slice', () => {
       });
 
       const action = fetchMoreProducts.fulfilled(response, '');
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState.products[0].position).toBe(1);
       expect(finalState.products[1].position).toBe(2);
@@ -145,9 +145,9 @@ describe('product-listing-slice', () => {
       const err = {message: 'message', statusCode: 500, type: 'type'};
       state.error = err;
 
-      const response = buildFetchProductListingV2Response();
+      const response = buildFetchProductListingResponse();
       const action = fetchMoreProducts.fulfilled(response, '');
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
       expect(finalState.error).toBeNull();
     });
   });
@@ -163,7 +163,7 @@ describe('product-listing-slice', () => {
         type: 'commerce/productListing/fetch/rejected',
         payload: err,
       };
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
       expect(finalState.error).toEqual(err);
       expect(finalState.isLoading).toBe(false);
     });
@@ -179,7 +179,7 @@ describe('product-listing-slice', () => {
         type: 'commerce/productListing/fetch/rejected',
         payload: err,
       };
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
       expect(finalState.isLoading).toBe(false);
     });
   });
@@ -195,7 +195,7 @@ describe('product-listing-slice', () => {
         type: 'commerce/productListing/fetchMoreProducts/rejected',
         payload: err,
       };
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
       expect(finalState.error).toEqual(err);
       expect(finalState.isLoading).toBe(false);
     });
@@ -211,7 +211,7 @@ describe('product-listing-slice', () => {
         type: 'commerce/productListing/fetchMoreProducts/rejected',
         payload: err,
       };
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
       expect(finalState.isLoading).toBe(false);
     });
   });
@@ -219,13 +219,13 @@ describe('product-listing-slice', () => {
   describe('on #fetchProductListing.pending', () => {
     it('sets #isLoading to true', () => {
       const pendingAction = fetchProductListing.pending('');
-      const finalState = productListingV2Reducer(state, pendingAction);
+      const finalState = productListingReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
     });
 
     it('sets #requestId', () => {
       const pendingAction = fetchProductListing.pending('request-id');
-      const finalState = productListingV2Reducer(state, pendingAction);
+      const finalState = productListingReducer(state, pendingAction);
       expect(finalState.requestId).toBe('request-id');
     });
   });
@@ -233,13 +233,13 @@ describe('product-listing-slice', () => {
   describe('on #fetchMoreProducts.pending', () => {
     it('sets #isLoading to true', () => {
       const pendingAction = fetchMoreProducts.pending('');
-      const finalState = productListingV2Reducer(state, pendingAction);
+      const finalState = productListingReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
     });
 
     it('sets #requestId', () => {
       const pendingAction = fetchMoreProducts.pending('request-id');
-      const finalState = productListingV2Reducer(state, pendingAction);
+      const finalState = productListingReducer(state, pendingAction);
       expect(finalState.requestId).toBe('request-id');
     });
   });
@@ -257,7 +257,7 @@ describe('product-listing-slice', () => {
     });
 
     it('when parent does not exist, it does not change the state', () => {
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState).toEqual(state);
     });
@@ -267,7 +267,7 @@ describe('product-listing-slice', () => {
         buildMockProduct({permanentid: parentPermanentId, children: []}),
       ];
 
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState).toEqual(state);
     });
@@ -302,7 +302,7 @@ describe('product-listing-slice', () => {
 
       state.products = [parentProduct];
 
-      const finalState = productListingV2Reducer(state, action);
+      const finalState = productListingReducer(state, action);
 
       expect(finalState.products).toEqual([
         buildMockProduct({
