@@ -1,5 +1,4 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {FacetValueState} from '@coveo/headless';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
@@ -15,8 +14,7 @@ import {
   Breadcrumb,
   CategoryFacetValue,
 } from '@coveo/headless/commerce';
-import {Component, h, State, Element, VNode, Prop, Host} from '@stencil/core';
-import CloseIcon from '../../../images/close.svg';
+import {Component, h, State, Element, Prop, Host} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
@@ -24,24 +22,20 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+import {
+  IBreadcrumb,
+  BreadcrumbContainer,
+  BreadcrumbButton,
+  BreadcrumbControls,
+} from '../../common/breadbox/breadbox';
 import {Hidden} from '../../common/hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-
-interface IBreadcrumb {
-  facetId: string;
-  label: string;
-  formattedValue: string[];
-  state?: FacetValueState;
-  content?: VNode;
-  deselect: () => void;
-}
 
 const SEPARATOR = ' / ';
 const ELLIPSIS = '...';
 
 /**
- * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+ * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
  *
  * @part container - The container of the whole component, list & label.
  * @part breadcrumb-list-container - The container of the list of breadcrumb buttons.
@@ -241,90 +235,6 @@ export class AtomicCommerceBreadbox
     return ellipsedPath.join(SEPARATOR);
   }
 
-  private renderBreadcrumb(
-    breadcrumb: IBreadcrumb,
-    index: number,
-    totalBreadcrumbs: number
-  ) {
-    const classNames = [
-      'py-2',
-      'px-3',
-      'flex',
-      'items-center',
-      'btn-pill',
-      'group',
-    ];
-
-    const fullValue = Array.isArray(breadcrumb.formattedValue)
-      ? breadcrumb.formattedValue.join(SEPARATOR)
-      : breadcrumb.formattedValue;
-    const value = Array.isArray(breadcrumb.formattedValue)
-      ? this.limitPath(breadcrumb.formattedValue)
-      : breadcrumb.formattedValue;
-    const title = `${breadcrumb.label}: ${fullValue}`;
-    const isLastBreadcrumb = totalBreadcrumbs === 1;
-    const isExclusion = breadcrumb.state === 'excluded';
-    const activeColor = isExclusion ? 'error' : 'primary';
-
-    return (
-      <li class="breadcrumb" key={value}>
-        <Button
-          part="breadcrumb-button"
-          style={isExclusion ? 'outline-error' : 'outline-bg-neutral'}
-          class={classNames.join(' ')}
-          title={title}
-          // TODO: [KIT-2939] Replace `remove-filter-on` by `remove-include-filter-on`.
-          ariaLabel={this.bindings.i18n.t(
-            isExclusion ? 'remove-exclusion-filter-on' : 'remove-filter-on',
-            {
-              value: title,
-            }
-          )}
-          onClick={() => {
-            if (isLastBreadcrumb) {
-              this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-            } else if (this.numberOfBreadcrumbs > 1) {
-              this.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
-            }
-
-            this.lastRemovedBreadcrumbIndex = index;
-            breadcrumb.deselect();
-          }}
-          ref={(ref) => {
-            if (this.lastRemovedBreadcrumbIndex === index) {
-              this.focusTargets.breadcrumbRemovedFocus.setTarget(ref);
-            }
-            if (this.firstExpandedBreadcrumbIndex === index) {
-              this.focusTargets.breadcrumbShowMoreFocus.setTarget(ref);
-            }
-          }}
-        >
-          <span
-            part="breadcrumb-label"
-            class={`max-w-snippet truncate group-hover:text-${activeColor} group-focus-visible:text-${activeColor} ${breadcrumb.state}`}
-          >
-            {this.bindings.i18n.t('with-colon', {text: breadcrumb.label})}
-          </span>
-          <span
-            part="breadcrumb-value"
-            class={
-              breadcrumb.content
-                ? ''
-                : `max-w-snippet truncate ${breadcrumb.state}`
-            }
-          >
-            {breadcrumb.content ?? value}
-          </span>
-          <atomic-icon
-            part="breadcrumb-clear"
-            class="w-2.5 h-2.5 ml-2 mt-px"
-            icon={CloseIcon}
-          ></atomic-icon>
-        </Button>
-      </li>
-    );
-  }
-
   private updateShowMoreValue(value: number) {
     this.numberOfCollapsedBreadcrumbs = value;
     if (value === 0) {
@@ -342,71 +252,6 @@ export class AtomicCommerceBreadbox
       this.bindings.i18n.t('show-n-more-filters', {
         value,
       })
-    );
-  }
-
-  private renderShowMore() {
-    return (
-      <li key="show-more">
-        <Button
-          ref={(ref) => {
-            this.focusTargets.breadcrumbShowLessFocus.setTarget(ref!);
-            this.showMore = ref!;
-          }}
-          part="show-more"
-          style="outline-primary"
-          class="p-2 btn-pill whitespace-nowrap"
-          onClick={() => {
-            this.firstExpandedBreadcrumbIndex =
-              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
-            this.isCollapsed = false;
-          }}
-        ></Button>
-      </li>
-    );
-  }
-
-  private renderShowLess() {
-    return (
-      <li key="show-less">
-        <Button
-          ref={(ref) => (this.showLess = ref!)}
-          part="show-less"
-          style="outline-primary"
-          text={this.bindings.i18n.t('show-less')}
-          class="p-2 btn-pill"
-          onClick={() => {
-            this.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
-            this.isCollapsed = true;
-          }}
-        ></Button>
-      </li>
-    );
-  }
-
-  private renderClearAll() {
-    const isFocusTarget =
-      this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
-    return (
-      <li key="clear-all">
-        <Button
-          part="clear"
-          style="text-primary"
-          text={this.bindings.i18n.t('clear')}
-          class="p-2 btn-pill"
-          ariaLabel={this.bindings.i18n.t('clear-all-filters')}
-          onClick={async () => {
-            this.breadcrumbManager.deselectAll();
-            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-          }}
-          ref={
-            isFocusTarget
-              ? this.focusTargets.breadcrumbRemovedFocus.setTarget
-              : undefined
-          }
-        ></Button>
-      </li>
     );
   }
 
@@ -526,12 +371,34 @@ export class AtomicCommerceBreadbox
     this.numberOfBreadcrumbs = sortedBreadcrumbs.length;
 
     return [
-      sortedBreadcrumbs.map((breadcrumb, i) =>
-        this.renderBreadcrumb(breadcrumb, i, allBreadcrumbs.length)
-      ),
-      this.isCollapsed && this.renderShowMore(),
-      !this.isCollapsed && this.renderShowLess(),
-      this.renderClearAll(),
+      sortedBreadcrumbs.map((breadcrumb, index) => (
+        <BreadcrumbButton
+          limitPath={this.limitPath}
+          numberOfBreadcrumbs={this.numberOfBreadcrumbs}
+          focusTargets={this.focusTargets}
+          lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
+          firstExpandedBreadcrumbIndex={this.firstExpandedBreadcrumbIndex}
+          breadcrumb={breadcrumb}
+          index={index}
+          totalBreadcrumbs={allBreadcrumbs.length}
+          bindings={this.bindings}
+        ></BreadcrumbButton>
+      )),
+      <BreadcrumbControls
+        numberOfBreadcrumbs={this.numberOfBreadcrumbs}
+        numberOfCollapsedBreadcrumbs={this.numberOfCollapsedBreadcrumbs}
+        firstExpandedBreadcrumbIndex={this.firstExpandedBreadcrumbIndex ?? 0}
+        showMore={this.showMore}
+        focusTargets={this.focusTargets}
+        isCollapsed={this.isCollapsed}
+        bindings={this.bindings}
+        lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
+        onClickClearAll={async () => {
+          this.breadcrumbManager.deselectAll();
+          this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+        }}
+        showLess={this.showLess}
+      ></BreadcrumbControls>,
     ];
   }
 
@@ -543,23 +410,9 @@ export class AtomicCommerceBreadbox
     }
     return (
       <Host>
-        <div part="container" class="flex text-sm text-on-background">
-          <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
-            {this.bindings.i18n.t('with-colon', {
-              text: this.bindings.i18n.t('filters'),
-            })}
-          </span>
-          <div part="breadcrumb-list-container" class="relative grow">
-            <ul
-              part="breadcrumb-list"
-              class={`flex gap-1 ${
-                this.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
-              }`}
-            >
-              {this.renderBreadcrumbs(allBreadcrumbs)}
-            </ul>
-          </div>
-        </div>
+        <BreadcrumbContainer isCollapsed bindings={this.bindings}>
+          {this.renderBreadcrumbs(allBreadcrumbs)}
+        </BreadcrumbContainer>
       </Host>
     );
   }

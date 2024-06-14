@@ -266,7 +266,7 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface AtomicCommerceBreadbox {
         /**
@@ -3491,7 +3491,7 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface HTMLAtomicCommerceBreadboxElement extends Components.AtomicCommerceBreadbox, HTMLStencilElement {
     }
@@ -5726,7 +5726,7 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface AtomicCommerceBreadbox {
         /**
@@ -8862,7 +8862,7 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
-             * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
              */
             "atomic-commerce-breadbox": LocalJSX.AtomicCommerceBreadbox & JSXBase.HTMLAttributes<HTMLAtomicCommerceBreadboxElement>;
             /**
