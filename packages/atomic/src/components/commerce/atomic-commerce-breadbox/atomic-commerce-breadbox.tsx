@@ -66,8 +66,6 @@ export class AtomicCommerceBreadbox
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
-  public productListing!: ProductListing;
-  public search!: Search;
 
   private resizeObserver?: ResizeObserver;
   private showMore!: HTMLButtonElement;
@@ -80,6 +78,8 @@ export class AtomicCommerceBreadbox
   breadcrumbManager!: BreadcrumbManager;
 
   @Element() private host!: HTMLElement;
+
+  public searchOrListing!: Search | ProductListing;
 
   @BindStateToController('breadcrumbManager')
   @State()
@@ -114,23 +114,20 @@ export class AtomicCommerceBreadbox
 
   public initialize() {
     this.validateProps();
-    const {engine} = this.bindings;
 
-    this.breadcrumbManager = this.controllerBuilder(engine).breadcrumbManager();
-    this.facetGenerator = this.controllerBuilder(engine).facetGenerator();
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.searchOrListing = buildProductListing(this.bindings.engine);
+    } else {
+      this.searchOrListing = buildSearch(this.bindings.engine);
+    }
+
+    this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
+    this.facetGenerator = this.searchOrListing.facetGenerator();
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
       this.resizeObserver.observe(this.host.parentElement!);
     }
-  }
-
-  private isProductListing() {
-    return this.bindings.interfaceElement.type === 'product-listing';
-  }
-
-  private get controllerBuilder() {
-    return this.isProductListing() ? buildProductListing : buildSearch;
   }
 
   private validateProps() {
