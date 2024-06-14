@@ -198,10 +198,12 @@ export class AtomicGeneratedAnswerFeedbackModal
     correspondingAnswer: keyof GeneratedAnswerFeedback
   ) {
     const buttonClasses = [
+      'min-w-20',
       'flex',
       'items-center',
+      'justify-center',
       'px-3',
-      'py-2',
+      'py-1.5',
       'mr-1',
       'text-neutral-dark',
     ];
@@ -212,7 +214,6 @@ export class AtomicGeneratedAnswerFeedbackModal
     }
     return (
       <Button
-        part={option}
         style="outline-primary"
         class={buttonClasses.join(' ')}
         type="button"
@@ -293,7 +294,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           part="details-input"
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="mt-4 px-4 py-2 w-full placeholder-neutral-dark leading-5 border border-neutral resize-none rounded-md hover:border-primary-light"
+          class="mt-4 px-4 py-2 w-full placeholder-neutral-dark leading-5 border border-neutral resize-none rounded-md hover:border-primary-light focus-visible:border-primary focus:outline-none focus-visible:ring-2 "
           rows={4}
           placeholder={this.bindings.i18n.t('add-notes')}
         ></textarea>
