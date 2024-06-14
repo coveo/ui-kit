@@ -115,8 +115,10 @@ export class AtomicCommerceInterface
 
   /**
    * the commerce interface language.
+   *
+   * Will default to the value set in the Headless engine context if not provided.
    */
-  @Prop({reflect: true}) public language = 'en';
+  @Prop({reflect: true, mutable: true}) public language!: string;
 
   /**
    * The commerce interface headless engine.
@@ -408,6 +410,12 @@ export class AtomicCommerceInterface
     this.context = buildContext(this.engine!);
   }
 
+  private initLanguage() {
+    if (!this.language) {
+      this.language = this.context.state.language;
+    }
+  }
+
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
 
@@ -433,6 +441,7 @@ export class AtomicCommerceInterface
     this.initSummary();
     this.initUrlManager();
     this.initContext();
+    this.initLanguage();
     this.initialized = true;
   }
 
