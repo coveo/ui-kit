@@ -9,12 +9,12 @@ import {
   promoteChildToParent,
 } from './product-listing-actions';
 import {
-  ProductListingV2State,
-  getProductListingV2InitialState,
+  ProductListingState,
+  getProductListingInitialState,
 } from './product-listing-state';
 
-export const productListingV2Reducer = createReducer(
-  getProductListingV2InitialState(),
+export const productListingReducer = createReducer(
+  getProductListingInitialState(),
 
   (builder) => {
     builder
@@ -85,7 +85,7 @@ export const productListingV2Reducer = createReducer(
 );
 
 function handleError(
-  state: ProductListingV2State,
+  state: ProductListingState,
   error?: CommerceAPIErrorStatusResponse
 ) {
   state.error = error || null;
@@ -93,7 +93,7 @@ function handleError(
 }
 
 function handleFullfilled(
-  state: ProductListingV2State,
+  state: ProductListingState,
   response: CommerceSuccessResponse
 ) {
   state.error = null;
@@ -102,7 +102,7 @@ function handleFullfilled(
   state.isLoading = false;
 }
 
-function handlePending(state: ProductListingV2State, requestId: string) {
+function handlePending(state: ProductListingState, requestId: string) {
   state.isLoading = true;
   state.requestId = requestId;
 }

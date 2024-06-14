@@ -10,7 +10,7 @@ import {contextReducer} from '../../features/commerce/context/context-slice';
 import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
-import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
+import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
 import {executeSearch} from '../../features/commerce/search/search-actions';
@@ -39,7 +39,7 @@ import {
 export type {CommerceEngineConfiguration};
 
 const commerceEngineReducers = {
-  productListing: productListingV2Reducer,
+  productListing: productListingReducer,
   recommendations: recommendationsReducer,
   commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,

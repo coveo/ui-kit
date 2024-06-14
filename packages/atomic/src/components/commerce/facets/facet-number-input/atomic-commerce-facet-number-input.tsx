@@ -56,19 +56,18 @@ export class FacetNumberInput {
     ]);
   }
 
-  private get minimumInputValue() {
-    const {domain} = this.facet.state;
-    const ensureValue = (num?: number) =>
-      isUndefined(num) ? Number.MIN_SAFE_INTEGER : num;
-    return Math.max(ensureValue(this.start), ensureValue(domain?.min));
+  private get absoluteMinimum(): number {
+    const {field} = this.facet.state;
+    const isPriceField = ['ec_price', 'ec_promo_price'].includes(field);
+    return isPriceField ? 0 : Number.MIN_SAFE_INTEGER;
+  }
+
+  private get minimumInputValue(): number {
+    return isUndefined(this.start) ? this.absoluteMinimum : this.start;
   }
 
   private get maximumInputValue() {
-    const {domain} = this.facet.state;
-    const ensureValue = (num?: number) =>
-      isUndefined(num) ? Number.MAX_SAFE_INTEGER : num;
-
-    return Math.min(ensureValue(this.end), ensureValue(domain?.max));
+    return isUndefined(this.end) ? Number.MAX_SAFE_INTEGER : this.end;
   }
 
   render() {
@@ -112,7 +111,7 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={minAria}
           required
-          min={Number.MIN_SAFE_INTEGER}
+          min={this.absoluteMinimum}
           max={this.maximumInputValue}
           value={this.range?.start}
           onInput={(e) =>

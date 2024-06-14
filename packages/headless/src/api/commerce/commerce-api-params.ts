@@ -36,6 +36,7 @@ export interface ContextParams {
   cart?: CartItemParam[];
   purchased?: CartItemParam[];
   capture: boolean;
+  source: string[];
 }
 
 export interface ViewParams {

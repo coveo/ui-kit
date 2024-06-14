@@ -21,7 +21,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-segmented-facet-scrollable',
   args: {
-    default: `
+    'slots-default': `
     <atomic-segmented-facet
       field="source"
       label="Sources"
