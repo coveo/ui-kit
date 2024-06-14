@@ -181,6 +181,7 @@ export class AtomicCommerceInterface
   }
 
   public connectedCallback() {
+    this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,

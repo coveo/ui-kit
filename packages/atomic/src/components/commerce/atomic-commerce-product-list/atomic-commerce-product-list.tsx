@@ -81,6 +81,11 @@ export class AtomicCommerceProductList
   @State() private templateHasError = false;
 
   /**
+   * The desired number of placeholders to display while the product list is loading.
+   */
+  @Prop({reflect: true}) numberOfPlaceholders = 24;
+
+  /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
   @Prop({reflect: true}) display: ItemDisplayLayout = 'grid';
@@ -188,7 +193,7 @@ export class AtomicCommerceProductList
           display={this.display}
           imageSize={this.imageSize}
           displayPlaceholders={!this.bindings.store.isAppLoaded()}
-          numberOfPlaceholders={this.productState.products.length}
+          numberOfPlaceholders={this.numberOfPlaceholders}
         ></ResultsPlaceholdersGuard>
         <ItemDisplayGuard
           firstRequestExecuted={!!this.productState.responseId}
@@ -217,12 +222,24 @@ export class AtomicCommerceProductList
     );
   }
 
+  private logWarningIfNeeded(message?: string) {
+    if (message) {
+      this.bindings.engine.logger.warn(message);
+    }
+  }
+
+  private getInteractiveProduct(product: Product) {
+    const parentController =
+      this.bindings.interfaceElement.type === 'product-listing'
+        ? this.productListing
+        : this.search;
+
+    return parentController.interactiveProduct({options: {product}});
+  }
+
   private getPropsForAtomicProduct(product: Product) {
     return {
-      // TODO: add back once interactive result is implemented for products in KIT-3149
-      /* interactiveResult: buildInteractiveResult(this.bindings.engine, {
-        options: {result},
-      }), */
+      interactiveProduct: this.getInteractiveProduct(product),
       product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
@@ -243,6 +260,7 @@ export class AtomicCommerceProductList
   private renderAsGrid() {
     return this.productState.products.map((product, i) => {
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
+      const {interactiveProduct} = propsForAtomicProduct;
       return (
         <DisplayGrid
           item={{
@@ -250,23 +268,24 @@ export class AtomicCommerceProductList
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
-          // TODO KIT-3149: add back once the interactive result is implemented
-          //{...propsForAtomicProduct.interactiveResult}
-          // TODO KIT-3149: Remove these back once the interactive result is implemented
+          {...propsForAtomicProduct.interactiveProduct}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
-          select={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          select={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.select();
           }}
-          beginDelayedSelect={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          beginDelayedSelect={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.beginDelayedSelect();
           }}
-          cancelPendingSelect={function (): void {
-            throw new Error('Function not implemented. TODO KIT-3149');
+          cancelPendingSelect={() => {
+            this.logWarningIfNeeded(interactiveProduct.warningMessage);
+            interactiveProduct.cancelPendingSelect();
           }}
         >
-          <atomic-product {...this} {...propsForAtomicProduct}></atomic-product>
+          <atomic-product {...propsForAtomicProduct}></atomic-product>
         </DisplayGrid>
       );
     });
@@ -328,7 +347,6 @@ export class AtomicCommerceProductList
       const propsForAtomicProduct = this.getPropsForAtomicProduct(product);
       return (
         <atomic-product
-          {...this}
           {...propsForAtomicProduct}
           ref={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)

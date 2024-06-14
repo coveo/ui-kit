@@ -6,13 +6,13 @@ import {
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
 import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {getProductListingInitialState} from '../../features/product-listing/old-product-listing-state';
 import {
   ConfigurationSection,
-  ProductListingSection,
+  OldProductListingSection,
   SearchHubSection,
 } from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
-import {getProductListingInitialState} from './../../features/product-listing/product-listing-state';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
   wrapAnalyticsClientSendEventHook,
@@ -21,7 +21,7 @@ import {
 
 export type StateNeededByProductListingAnalyticsProvider =
   ConfigurationSection &
-    ProductListingSection &
+    OldProductListingSection &
     Partial<SearchHubSection & SectionNeededForFacetMetadata>;
 
 export class ProductListingAnalyticsProvider

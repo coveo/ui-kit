@@ -1,4 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {
   AsyncThunkCommerceOptions,
@@ -81,6 +82,7 @@ export const buildQuerySuggestRequest = async (
       view,
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
+      source: getAnalyticsSource(state.configuration.analytics),
     },
   };
 };

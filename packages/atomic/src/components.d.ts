@@ -275,6 +275,10 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -289,6 +293,10 @@ export namespace Components {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
@@ -395,6 +403,10 @@ export namespace Components {
          */
         "facet": NumericFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The Summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -434,6 +446,10 @@ export namespace Components {
           * The expected size of the image displayed for products.
          */
         "imageSize": ItemDisplayImageSize;
+        /**
+          * The desired number of placeholders to display while the product list is loading.
+         */
+        "numberOfPlaceholders": number;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param productRenderingFunction
@@ -658,6 +674,10 @@ export namespace Components {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The summary controller instance.
          */
@@ -1947,6 +1967,10 @@ export namespace Components {
           * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
          */
         "field": string;
+        /**
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
+         */
+        "shouldHighlight": boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -5664,6 +5688,10 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -5678,6 +5706,10 @@ declare namespace LocalJSX {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
@@ -5773,6 +5805,10 @@ declare namespace LocalJSX {
          */
         "facet": NumericFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The Summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -5813,6 +5849,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed for products.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The desired number of placeholders to display while the product list is loading.
+         */
+        "numberOfPlaceholders"?: number;
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -6008,6 +6048,10 @@ declare namespace LocalJSX {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The summary controller instance.
          */
@@ -7234,6 +7278,10 @@ declare namespace LocalJSX {
           * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
          */
         "field": string;
+        /**
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
+         */
+        "shouldHighlight"?: boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.

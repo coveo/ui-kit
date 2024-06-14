@@ -1,5 +1,6 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as Selectors from './selectors/commerce-selectors.index';
+import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -25,7 +26,11 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
-export type {Product, ChildProduct} from './api/commerce/common/product';
+export type {
+  BaseProduct,
+  Product,
+  ChildProduct,
+} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
@@ -187,17 +192,29 @@ export type {
 
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesListInitialState,
+  RecentQueriesState,
+} from './controllers/recent-queries-list/headless-recent-queries-list.ts';
 
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
   InstantProducts,
   InstantProductsState,
+  InstantProductsOptions,
+  InstantProductsProps,
 } from './controllers/commerce/instant-products/headless-instant-products';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+export type {
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxOptions,
+} from './controllers/standalone-search-box/headless-standalone-search-box.ts';
 
 export type {
   UrlManagerProps,
@@ -206,6 +223,7 @@ export type {
   UrlManager,
 } from './controllers/commerce/core/url-manager/headless-core-url-manager';
 
+export type {Template} from './features/templates/templates-manager.ts';
 export type {
   ProductTemplate,
   ProductTemplateCondition,
@@ -270,6 +288,7 @@ export type {
   CategoryFieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
 export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 
 export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';
@@ -284,6 +303,7 @@ export type {Parameters} from './features/commerce/parameters/parameters-actions
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
 
 // Types & Helpers
+export {HighlightUtils};
 export {
   deserializeRelativeDate,
   validateRelativeDate,

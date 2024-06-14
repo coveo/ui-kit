@@ -1,3 +1,4 @@
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
@@ -61,6 +62,7 @@ export const buildBaseCommerceAPIRequest = async (
       view,
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
+      source: getAnalyticsSource(state.configuration.analytics),
     },
     ...effectivePagination(state, slotId),
   };

@@ -29,7 +29,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-folded-result-list',
   args: {
-    default: `
+    'slots-default': `
       <atomic-result-template>
         <template>
           <atomic-result-section-visual>
