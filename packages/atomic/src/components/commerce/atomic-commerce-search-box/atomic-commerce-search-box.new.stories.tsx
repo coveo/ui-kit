@@ -39,7 +39,7 @@ export const RichSearchBox: Story = {
 export const StandaloneSearchBox: Story = {
   name: 'Standalone search box',
   args: {
-    'redirection-url':
+    'attributes-redirection-url':
       './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000',
   },
 };
