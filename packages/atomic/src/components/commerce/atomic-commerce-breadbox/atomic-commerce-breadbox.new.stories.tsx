@@ -1,18 +1,19 @@
+import {
+  playExecuteFirstSearch,
+  wrapInCommerceInterface,
+} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
 
-const {decorator, play} = wrapInSearchInterface();
-
+const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
   title: 'Atomic-commerce/Breadbox',
   id: 'atomic-commerce-breadbox',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -30,26 +31,13 @@ export const Default: Story = {
         Select facet value(s) to see the Breadbox component.
       </div>
       <div style="display: flex; justify-content: flex-start;">
-        <atomic-facet
-          field="objecttype"
-          style="flex-grow:1"
-          label="Object type"
-        ></atomic-facet>
-        <atomic-facet
-          field="filetype"
-          style="flex-grow:1"
-          label="File type"
-        ></atomic-facet>
-        <atomic-facet
-          field="source"
-          style="flex-grow:1"
-          label="Source"
-        ></atomic-facet>
+        <atomic-commerce-facets> </atomic-commerce-facets>
       </div>
     `,
   ],
   play: async (context) => {
     await play(context);
+    await playExecuteFirstSearch(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await step('Wait for the facet values to render', async () => {
