@@ -78,7 +78,11 @@ import {
 } from '../features/static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {clearMicrotaskQueue} from '../test/unit-test-utils';
-import {assertNextEqualsLegacy} from './analytics-migration.test';
+import {
+  assertActionCause,
+  assertNextEqualsLegacy,
+  excludedBaseProperties,
+} from './analytics-migration.test';
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
@@ -442,10 +446,13 @@ describe('Analytics Search Migration', () => {
     });
 
     legacyInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+    assertActionCause(callSpy, 1, 'pagerNext');
+    assertActionCause(callSpy, 2, 'browseResults');
   });
 
   it('analytics/pager/previous', async () => {
@@ -455,10 +462,13 @@ describe('Analytics Search Migration', () => {
     });
 
     legacyInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+    assertActionCause(callSpy, 1, 'pagerPrevious');
+    assertActionCause(callSpy, 2, 'browseResults');
   });
 
   it('analytics/pager/number', async () => {
@@ -468,10 +478,13 @@ describe('Analytics Search Migration', () => {
     });
 
     legacyInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+    assertActionCause(callSpy, 1, 'pagerNumber');
+    assertActionCause(callSpy, 2, 'browseResults');
   });
 
   it('analytics/facet/showMore', async () => {
