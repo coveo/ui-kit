@@ -356,9 +356,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -499,9 +499,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -5758,7 +5758,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -5887,7 +5887,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
