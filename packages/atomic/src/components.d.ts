@@ -356,9 +356,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -500,9 +500,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -1901,10 +1901,6 @@ export namespace Components {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency": string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -5760,7 +5756,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -5890,7 +5886,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -7218,10 +7214,6 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
