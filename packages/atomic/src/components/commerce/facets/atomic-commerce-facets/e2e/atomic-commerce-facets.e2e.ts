@@ -31,7 +31,9 @@ test.describe('default', async () => {
     await expect(facets.collapsedFacets).toHaveCount(0);
     await expect(facets.expandedFacets).toHaveCount(5);
   });
+});
 
+test.describe('loading state', async () => {
   test('should display placeholder equal to the collapse facet after property', async ({
     facets,
   }) => {
