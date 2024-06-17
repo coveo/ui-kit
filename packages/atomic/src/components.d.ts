@@ -389,6 +389,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface AtomicCommerceLoadMoreProducts {
     }
@@ -3527,6 +3528,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
     }
@@ -5791,6 +5793,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface AtomicCommerceLoadMoreProducts {
     }
@@ -8804,6 +8807,7 @@ declare module "@stencil/core" {
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+             * @alpha 
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;
