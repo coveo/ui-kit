@@ -13,6 +13,6 @@ runs:
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: atomic-playwright-report
+        name: atomic-hosted-page-playwright-report
         path: packages/atomic-hosted-page/playwright-report/
         retention-days: 5
