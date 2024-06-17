@@ -29,7 +29,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of products available.
  * @part load-more-results-button - The "Load more products" button.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-load-more-products',
