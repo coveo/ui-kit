@@ -82,7 +82,15 @@ test.describe('with instant results & query suggestions', () => {
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
+  let querySuggestionRequestPerformed = false;
+
   test.beforeEach(async ({page}) => {
+    querySuggestionRequestPerformed = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/querySuggest')) {
+        querySuggestionRequestPerformed = true;
+      }
+    });
     await page.goto(
       'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-disable-search:!true;attributes-minimum-query-length:1;attributes-suggestion-timeout:5000'
     );
@@ -101,6 +109,10 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
+    });
+
+    test('should not perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(false);
     });
   };
 
@@ -124,7 +136,14 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 });
 
 test.describe('with minimum-query-length=4', () => {
+  let querySuggestionRequestPerformed = false;
   test.beforeEach(async ({page}) => {
+    querySuggestionRequestPerformed = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/querySuggest')) {
+        querySuggestionRequestPerformed = true;
+      }
+    });
     await page.goto(
       'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-minimum-query-length:4;attributes-suggestion-timeout:5000'
     );
@@ -143,6 +162,10 @@ test.describe('with minimum-query-length=4', () => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
+    });
+
+    test('should not perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(false);
     });
   };
 
@@ -169,12 +192,16 @@ test.describe('with minimum-query-length=4', () => {
       await page.getByPlaceholder('Search').fill('kayak');
     });
 
-    test('the submit button is disabled', async ({searchBox}) => {
+    test('the submit button is enabled', async ({searchBox}) => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
-    test('there are no search suggestions', async ({searchBox}) => {
+    test('there are search suggestions', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
+    });
+
+    test('should perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(true);
     });
   });
 });
