@@ -118,7 +118,7 @@ export class AtomicCommerceInterface
    *
    * Will default to the value set in the Headless engine context if not provided.
    */
-  @Prop({reflect: true, mutable: true}) public language!: string;
+  @Prop({reflect: true, mutable: true}) public language?: string;
 
   /**
    * The commerce interface headless engine.
@@ -209,6 +209,9 @@ export class AtomicCommerceInterface
   @Watch('language')
   public updateLanguage() {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+    if (!this.language) {
       return;
     }
 
