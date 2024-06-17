@@ -1,7 +1,8 @@
+// Any number of `*` between 1 and 3, or a single backtick, followed by a word character or whitespace character
 const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 
 /**
- * complete unclosed markdown elements in a string
+ * Complete unclosed elements such as bold, italic, and code.
  * @param {string} text
  * @returns {string}
  */
@@ -11,7 +12,7 @@ const completeUnclosedElement = (text) => {
     const symbol = match[1];
 
     const replacements = {
-      '***': '<strong><em part="answer-emphasis">$2</em></strong>',
+      '***': '<strong><em>$2</em></strong>',
       '**': '<strong>$2</strong>',
       '*': '<em>$2</em>',
       '`': '<code>$2</code>',
@@ -38,6 +39,7 @@ const customRenderer = {
   },
 
   /**
+   * Custom Marked renderer to replace heading elements with div elements.
    * @param {string} text
    * @param {string} level
    */

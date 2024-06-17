@@ -8,9 +8,32 @@ import generatedMarkdownContentTemplate from './templates/generatedMarkdownConte
 // @ts-ignore
 import generatedTextContentTemplate from './templates/generatedTextContent.html';
 
+/**
+ * The `QuanticGeneratedAnswerContent` component displays the generated answer content.
+ * @category Search
+ * @example
+ * <c-quantic-generated-answer-content answer-content-format={answerContentFormat} answer={answer} is-streaming={isStreaming}></c-quantic-generated-answer-content>
+ */
 export default class QuanticGeneratedAnswerContent extends LightningElement {
+  /**
+   * If the answer is streaming. It will render a blinking cursor at the end of the answer.
+   * @api
+   * @type {boolean}
+   */
   @api isStreaming;
+  /**
+   * The format of the answer content. Can be either `text/plain` or `text/markdown`.
+   * When `text/markdown` is selected, the answer content will be converted from markdown to HTML.
+   * @api
+   * @type {'text/plain' | 'text/markdown'}
+   * @default {'text/plain'}
+   */
   @api answerContentFormat = 'text/plain';
+  /**
+   * The answer content to display.
+   * @api
+   * @type {string}
+   */
   @api
   get answer() {
     return this._answer;
@@ -22,18 +45,16 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     }
   }
 
-  _ready = false;
   _answer;
 
   connectedCallback() {
     if (this.answerContentFormat === 'text/markdown') {
       loadScript(this, MARKED_JS + '/marked.min.js')
         .then(() => {
-          this._ready = true;
           this.updateHtmlContent();
         })
         .catch((error) => {
-          console.error('Error loading marked', error);
+          console.error('Error loading the Marked library.', error);
         });
     }
   }
@@ -52,11 +73,11 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     }
   }
 
-  get generatedAnswerClass() {
+  get generatedAnswerContentClass() {
     return `generated-answer-content__answer ${this.isStreaming ? 'generated-answer-content__answer--streaming' : ''}`;
   }
 
-  get content() {
+  get contentAsText() {
     return this._answer;
   }
 

@@ -450,9 +450,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         ? 'generated-answer__answer--expanded'
         : 'generated-answer__answer--collapsed';
     }
-    return `generated-answer__answer ${
-      this.isStreaming ? 'generated-answer__answer--streaming' : ''
-    } ${collapsedStateClass}`;
+    return `generated-answer__answer ${collapsedStateClass}`;
   }
 
   get hasRetryableError() {

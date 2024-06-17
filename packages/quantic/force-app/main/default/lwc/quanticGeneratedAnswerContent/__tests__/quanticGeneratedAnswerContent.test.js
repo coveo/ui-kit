@@ -9,6 +9,11 @@ global.marked = {
   parse: mockMarkedParse,
 };
 
+const SELECTORS = {
+  textAnswerContainer: 'span.generated-answer-content__answer',
+  markdownAnswerContainer: 'div.generated-answer-content__answer',
+};
+
 const defaultOptions = {
   isStreaming: false,
   answerContentFormat: 'text/plain',
@@ -55,7 +60,7 @@ describe('c-quantic-generated-answer-content', () => {
       await flushPromises();
 
       const answerContent = element.shadowRoot.querySelector(
-        'span.generated-answer-content__answer'
+        SELECTORS.textAnswerContainer
       );
 
       expect(answerContent.textContent).toBe('Hello, world!');
@@ -71,7 +76,7 @@ describe('c-quantic-generated-answer-content', () => {
       await flushPromises();
 
       const answerContent = element.shadowRoot.querySelector(
-        'span.generated-answer-content__answer'
+        SELECTORS.textAnswerContainer
       );
 
       expect(answerContent.textContent).toBe('Hello, world!');
@@ -91,7 +96,7 @@ describe('c-quantic-generated-answer-content', () => {
       await flushPromises();
 
       const answerContent = element.shadowRoot.querySelector(
-        'div.generated-answer-content__answer'
+        SELECTORS.markdownAnswerContainer
       );
 
       expect(answerContent.textContent).toBe('Hello, world!');
@@ -108,7 +113,7 @@ describe('c-quantic-generated-answer-content', () => {
       await flushPromises();
 
       const answerContent = element.shadowRoot.querySelector(
-        'div.generated-answer-content__answer'
+        SELECTORS.markdownAnswerContainer
       );
 
       expect(answerContent.textContent).toBe('Hello, world!');
