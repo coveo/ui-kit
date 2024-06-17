@@ -40,7 +40,6 @@ export const Default: Story = {
         <atomic-layout-section section="search">
           <atomic-commerce-search-box
             role="searchbox"
-            data-testid="searchbox"
           ></atomic-commerce-search-box>
         </atomic-layout-section>
 
@@ -66,7 +65,6 @@ export const WithResults: Story = {
         <atomic-layout-section section="search">
           <atomic-commerce-search-box
             role="searchbox"
-            data-testid="searchbox"
           ></atomic-commerce-search-box>
         </atomic-layout-section>
 
