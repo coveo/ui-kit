@@ -1900,10 +1900,6 @@ export namespace Components {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency": string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -7215,10 +7211,6 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
