@@ -4,6 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
+    <slot><!-- Custom sort options --></slot>
     <template if:true={hasResults}>
       <div class="sort__container">
         <lightning-layout-item class="sort__header slds-var-p-right_small">
@@ -13,7 +14,7 @@
           <lightning-combobox name="sort" value={value} variant="label-hidden" label={labels.sortBy} placeholder={labels.relevancy} options={options} onchange={handleChange}>
           </lightning-combobox>
         </lightning-layout-item>
-      </div>
+        </div>
     </template>
   </template>
 </template>
