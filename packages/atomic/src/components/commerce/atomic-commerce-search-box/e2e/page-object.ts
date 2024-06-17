@@ -14,6 +14,10 @@ export class AtomicCommerceSearchBoxLocators {
     return this.page.getByRole('combobox', {name: 'Search'});
   }
 
+  get clearRecentQueriesButton() {
+    return this.page.getByLabel('Clear recent searches.');
+  }
+
   searchSuggestions({
     index,
     total,
@@ -21,7 +25,19 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `suggested query\\..*? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `suggested query\\.(?: Button\\.) ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+      )
+    );
+  }
+
+  recentQueries({
+    index,
+    total,
+    listSide,
+  }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
+    return this.page.getByLabel(
+      new RegExp(
+        `recent query\\.(?: Button\\.) ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }
@@ -33,7 +49,7 @@ export class AtomicCommerceSearchBoxLocators {
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `instant result\\. ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `instant result\\.(?: Button\\.) ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }

@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {test, expect, setRecentQueries} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({page}) => {
@@ -54,6 +54,33 @@ test.describe('with instant results & query suggestions', () => {
     await page.goto(
       'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story&args=attributes-suggestion-timeout:5000'
     );
+  });
+
+  test.describe('with recent queries', () => {
+    test.beforeEach(async ({searchBox, page}) => {
+      await setRecentQueries(page, 4);
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+    });
+
+    test('should display recent queries', async ({searchBox}) => {
+      await expect(searchBox.recentQueries().first()).toBeVisible();
+    });
+
+    test('should clear recent queries when clicking the clear button', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.click();
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
+
+    test('should clear recent queries when pressing enter while the clear button is focused', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.hover();
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
   });
 
   test.describe('after clicking the searchbox input', () => {
