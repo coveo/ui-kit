@@ -10,7 +10,7 @@ const urls = [
 
 for (const url of urls) {
   test(`smoke test for ${url}`, async ({page}) => {
-    await page.goto('url');
+    await page.goto(url);
     await page.getByLabel('Search field with suggestions').click();
     await page.getByLabel('Search field with suggestions').fill('test');
     await page.getByLabel('Search field with suggestions').press('Enter');
