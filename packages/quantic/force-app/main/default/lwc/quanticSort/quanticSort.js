@@ -96,6 +96,10 @@ export default class QuanticSort extends LightningElement {
   }
 
   buildOptions() {
+    if (this.customSortOptions.length > 0) {
+      return this.customSortOptions;
+    }
+
     return [
       {
         label: this.labels.relevancy,
@@ -149,5 +153,32 @@ export default class QuanticSort extends LightningElement {
 
   get value() {
     return this.state?.sortCriteria;
+  }
+
+  /**
+   * Returns an array of custom sort options passed via slots.
+   * @returns {SortOption[]} The specified custom sort options.
+   */
+  get customSortOptions() {
+    const elements = Array.from(this.querySelectorAll('c-quantic-sort-option'));
+    if (elements.length === 0) {
+      return [];
+    }
+    return elements.map((element) => {
+      return {
+        // @ts-ignore
+        label: element.label,
+        // @ts-ignore
+        value: element.value,
+        criterion: {
+          // @ts-ignore
+          by: element.criterion.by,
+          // @ts-ignore
+          order: element.criterion.order,
+          // @ts-ignore
+          field: element.criterion.field,
+        },
+      };
+    });
   }
 }
