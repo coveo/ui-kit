@@ -275,9 +275,15 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
+    }
+    interface AtomicCommerceDidYouMean {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -287,6 +293,10 @@ export namespace Components {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
@@ -330,12 +340,6 @@ export namespace Components {
          */
         "executeFirstSearch": () => Promise<void>;
         /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
-        /**
           * the commerce interface i18next instance.
          */
         "i18n": i18n;
@@ -352,9 +356,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -399,6 +403,10 @@ export namespace Components {
          */
         "facet": NumericFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The Summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -438,6 +446,10 @@ export namespace Components {
           * The expected size of the image displayed for products.
          */
         "imageSize": ItemDisplayImageSize;
+        /**
+          * The desired number of placeholders to display while the product list is loading.
+         */
+        "numberOfPlaceholders": number;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param productRenderingFunction
@@ -487,9 +499,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -548,6 +560,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -661,6 +674,10 @@ export namespace Components {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The summary controller instance.
          */
@@ -1950,6 +1967,10 @@ export namespace Components {
           * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
          */
         "field": string;
+        /**
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
+         */
+        "shouldHighlight": boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -3447,6 +3468,12 @@ declare global {
         prototype: HTMLAtomicCommerceCategoryFacetElement;
         new (): HTMLAtomicCommerceCategoryFacetElement;
     };
+    interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceDidYouMeanElement: {
+        prototype: HTMLAtomicCommerceDidYouMeanElement;
+        new (): HTMLAtomicCommerceDidYouMeanElement;
+    };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      */
@@ -3586,6 +3613,7 @@ declare global {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxElement extends Components.AtomicCommerceSearchBox, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommerceSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceSearchBoxElement, ev: AtomicCommerceSearchBoxCustomEvent<HTMLAtomicCommerceSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5273,6 +5301,7 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
+        "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5659,9 +5688,15 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
+    }
+    interface AtomicCommerceDidYouMean {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -5671,6 +5706,10 @@ declare namespace LocalJSX {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
@@ -5719,7 +5758,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -5766,6 +5805,10 @@ declare namespace LocalJSX {
          */
         "facet": NumericFacet;
         /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The Summary controller instance.
          */
         "summary": SearchSummary | ListingSummary;
@@ -5806,6 +5849,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed for products.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The desired number of placeholders to display while the product list is loading.
+         */
+        "numberOfPlaceholders"?: number;
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -5840,7 +5887,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -5888,6 +5935,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBox {
         /**
@@ -6000,6 +6048,10 @@ declare namespace LocalJSX {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * Specifies whether the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The summary controller instance.
          */
@@ -7226,6 +7278,10 @@ declare namespace LocalJSX {
           * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
          */
         "field": string;
+        /**
+          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
+         */
+        "shouldHighlight"?: boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -8504,6 +8560,7 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
+        "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -8729,6 +8786,7 @@ declare module "@stencil/core" {
              * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
+            "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              */
@@ -8773,6 +8831,7 @@ declare module "@stencil/core" {
             "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
              * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+             * @alpha 
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**

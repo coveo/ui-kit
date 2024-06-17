@@ -17,7 +17,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
@@ -53,7 +52,6 @@ export class AtomicCommerceNumericFacet
 
   @State() public error!: Error;
 
-  @State() private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
@@ -65,6 +63,10 @@ export class AtomicCommerceNumericFacet
    * The numeric facet controller instance.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private headerFocus?: FocusTargetController;
 
@@ -132,7 +134,7 @@ export class AtomicCommerceNumericFacet
         hasError={hasError}
         hasResults={this.shouldRenderFacet}
       >
-        {firstSearchExecuted ? (
+        {
           <FacetContainer>
             <FacetHeader
               i18n={i18n}
@@ -160,9 +162,7 @@ export class AtomicCommerceNumericFacet
               ),
             ]}
           </FacetContainer>
-        ) : (
-          <FacetPlaceholder isCollapsed={this.isCollapsed} numberOfValues={8} />
-        )}
+        }
       </FacetGuard>
     );
   }

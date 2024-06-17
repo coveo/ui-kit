@@ -1,5 +1,5 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {SortBy, SortDirection} from '../../sort/sort';
 import {setContext, setUser, setView} from '../context/context-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
@@ -56,7 +56,7 @@ describe('product-listing-sort-slice', () => {
     };
 
     it('on #fetchProductListing.fulfilled', () => {
-      const response = buildFetchProductListingV2Response(sortResponse);
+      const response = buildFetchProductListingResponse(sortResponse);
 
       expect(
         sortReducer(state, fetchProductListing.fulfilled(response, ''))

@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.63.5",
+  "version": "2.67.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -36,10 +36,8 @@
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
-    "release:phase1": "npm run-script -w=@coveo/release bump",
-    "release:phase2": "npm run publish:npm",
-    "release:phase5": "npm run publish:npm",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "build:doc": "npm run build:doc:extract && npm run build:doc:parse",
     "build:doc:extract": "node ./scripts/extract-documentation.mjs",
@@ -50,7 +48,7 @@
     "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.45.8",
+    "@coveo/bueno": "0.45.9",
     "@coveo/relay": "0.7.7",
     "@coveo/relay-event-types": "7.11.0",
     "@microsoft/fetch-event-source": "2.0.1",
@@ -61,6 +59,7 @@
     "dayjs": "1.11.11",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
+    "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "^3.0.0",
     "pino": "8.21.0",
     "redux-thunk": "3.1.0",

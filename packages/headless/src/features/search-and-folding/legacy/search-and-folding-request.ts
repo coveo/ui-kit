@@ -7,7 +7,7 @@ import {
 import {SearchRequest} from '../../../api/search/search/search-request';
 import {SearchAppState} from '../../../state/search-app-state';
 import {ConfigurationSection} from '../../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams} from '../../configuration/legacy-analytics-params';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;

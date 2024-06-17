@@ -198,7 +198,8 @@ function getUpdateAnalyticsConfigurationPayload(
     apiBaseUrl,
   };
 
-  if (doNotTrack()) {
+  // TODO KIT-2844
+  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,

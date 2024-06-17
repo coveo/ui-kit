@@ -20,7 +20,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-sort-dropdown',
   args: {
-    default: `
+    'slots-default': `
       <atomic-sort-expression
         label="relevance"
         expression="relevancy"

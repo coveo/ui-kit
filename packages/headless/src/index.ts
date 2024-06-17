@@ -371,7 +371,7 @@ export {buildRedirectionTrigger} from './controllers/triggers/headless-redirecti
 export type {
   QueryTrigger,
   QueryTriggerState,
-} from './controllers/triggers/headless-query-trigger';
+} from './controllers/core/triggers/headless-core-query-trigger';
 export {buildQueryTrigger} from './controllers/triggers/headless-query-trigger';
 
 export type {

@@ -55,6 +55,8 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
  *
+ * @slot default - The default slot where you can add child components to the search box.
+ *
  * @part wrapper - The search box wrapper.
  * @part input - The search box input.
  * @part loading - The search box loading animation.
@@ -92,7 +94,7 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-search-box',

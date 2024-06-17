@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.65.5",
+  "version": "2.68.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -41,15 +41,13 @@
     "e2e:snapshots:watch": "cypress open --config-file cypress-screenshots.config.ts --browser chrome",
     "e2e:insight": "cypress run --config-file cypress-insight-panel.config.ts --browser chrome",
     "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.ts --browser chrome",
-    "release:phase1": "npm run-script -w=@coveo/release bump",
-    "release:phase2": "npm run publish:npm",
-    "release:phase5": "npm run publish:npm",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "0.45.8",
+    "@coveo/bueno": "0.45.9",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "4.15.0",
@@ -65,9 +63,10 @@
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.9.1",
     "@babel/core": "7.24.5",
-    "@coveo/atomic": "2.65.5",
-    "@coveo/headless": "2.63.5",
+    "@coveo/atomic": "file:.",
+    "@coveo/headless": "2.67.0",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.2",
     "@fullhuman/postcss-purgecss": "6.0.0",
@@ -81,18 +80,18 @@
     "@stencil-community/postcss": "2.2.0",
     "@stencil/angular-output-target": "0.8.4",
     "@stencil/react-output-target": "0.5.3",
-    "@storybook/addon-a11y": "8.1.4",
-    "@storybook/addon-essentials": "8.1.2",
-    "@storybook/addon-interactions": "8.1.2",
-    "@storybook/core-events": "8.1.2",
-    "@storybook/core-server": "8.1.2",
+    "@storybook/addon-a11y": "8.1.5",
+    "@storybook/addon-essentials": "8.1.5",
+    "@storybook/addon-interactions": "8.1.5",
+    "@storybook/core-events": "8.1.5",
+    "@storybook/core-server": "8.1.5",
     "@storybook/jest": "^0.2.3",
-    "@storybook/manager-api": "8.1.2",
-    "@storybook/test": "8.1.2",
-    "@storybook/test-runner": "0.18.1",
+    "@storybook/manager-api": "8.1.5",
+    "@storybook/test": "8.1.5",
+    "@storybook/test-runner": "0.18.2",
     "@storybook/testing-library": "^0.2.2",
-    "@storybook/web-components": "8.1.2",
-    "@storybook/web-components-vite": "8.1.2",
+    "@storybook/web-components": "8.1.5",
+    "@storybook/web-components-vite": "8.1.5",
     "@swc-node/register": "~1.8.0",
     "@swc/core": "~1.3.85",
     "@swc/helpers": "~0.5.2",
@@ -138,7 +137,7 @@
     "wait-on": "7.2.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.63.5"
+    "@coveo/headless": "2.67.0"
   },
   "license": "Apache-2.0",
   "engines": {

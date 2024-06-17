@@ -110,7 +110,6 @@ export function validateRecentQueriesProps(
  * @param props - The configuration `RecentQueriesList` properties.
  * @returns A `RecentQueriesList` controller instance.
  *
- * @internal
  * */
 export function buildRecentQueriesList(
   engine: CommerceEngine,
