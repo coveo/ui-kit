@@ -177,7 +177,10 @@ test.describe('with minimum-query-length=4', () => {
 
 test.describe('with a facet & clear-filters set to true', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({clearFilters: true, suggestionTimeout: 5000});
+    await searchBox.load(
+      {clearFilters: true, suggestionTimeout: 5000},
+      'in-page'
+    );
   });
 
   test('clicking the submit button should clear the facet value', async ({
