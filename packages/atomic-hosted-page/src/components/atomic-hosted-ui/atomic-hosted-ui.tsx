@@ -44,8 +44,8 @@ export class AtomicHostedUI implements ComponentInterface {
   /**
    * The type of hosted search page to load.
    */
-  @Prop({reflect: true}) public hostedType: 'legacy' | 'page' | 'custom' =
-    'page';
+  @Prop({reflect: true}) public hostedType: 'trial' | 'next-gen' | 'cli' =
+    'cli';
 
   @Method() public async initialize(
     options: AtomicHostedUIInitializationOptions
