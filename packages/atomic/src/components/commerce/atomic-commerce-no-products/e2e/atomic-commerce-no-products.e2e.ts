@@ -31,9 +31,9 @@ test.describe('when there are results', () => {
   });
 
   test.describe('after executing a search query that returns results', () => {
-    test.beforeEach(async ({page, searchBox}) => {
+    test.beforeEach(async ({searchBox}) => {
       await searchBox.hydrated.waitFor();
-      await page.getByPlaceholder('Search').fill('kayak');
+      await searchBox.searchInput.fill('kayak');
       await searchBox.submitButton.click();
     });
 
