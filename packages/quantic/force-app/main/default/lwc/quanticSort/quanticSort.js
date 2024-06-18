@@ -16,7 +16,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").SortCriterion} SortCriterion */
 
 /**
- * @typedef {Object} SortOption
+ * @typedef SortOption
  * @property {string} label
  * @property {string} value
  * @property {SortCriterion} criterion

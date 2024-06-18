@@ -3,13 +3,6 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").SortCriterion} SortCriterion */
 
 /**
- * @typedef SortOption
- * @property {string} label
- * @property {string} value
- * @property {SortCriterion} criterion
- */
-
-/**
  * The `QuanticSortOption` component defines a sort option for a `c-quantic-sort` component.
  * It must therefore be defined within a `c-quantic-sort` component.
  *
