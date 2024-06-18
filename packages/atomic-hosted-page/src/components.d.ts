@@ -36,7 +36,7 @@ export namespace Components {
         /**
           * The type of hosted search page to load.
          */
-        "hostedType": 'legacy' | 'page' | 'custom';
+        "hostedType": 'trial' | 'next-gen' | 'cli';
         "initialize": (options: AtomicHostedUIInitializationOptions) => Promise<void>;
     }
     /**
@@ -109,7 +109,7 @@ declare namespace LocalJSX {
         /**
           * The type of hosted search page to load.
          */
-        "hostedType"?: 'legacy' | 'page' | 'custom';
+        "hostedType"?: 'trial' | 'next-gen' | 'cli';
     }
     /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
