@@ -10,7 +10,7 @@ import generatedTextContentTemplate from './templates/generatedTextContent.html'
 
 /**
  * The `QuanticGeneratedAnswerContent` component displays the generated answer content.
- * @category Search
+ * @category Internal
  * @example
  * <c-quantic-generated-answer-content answer-content-format={answerContentFormat} answer={answer} is-streaming={isStreaming}></c-quantic-generated-answer-content>
  */
