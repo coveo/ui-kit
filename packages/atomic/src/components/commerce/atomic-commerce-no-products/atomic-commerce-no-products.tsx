@@ -47,7 +47,7 @@ export class AtomicCommerceNoProducts
   @State()
   private summaryState!: SearchSummaryState | ListingSummaryState;
   @State() public error!: Error;
-  @AriaLiveRegion('no-results')
+  @AriaLiveRegion('no-products')
   protected ariaMessage!: string;
 
   public initialize() {
