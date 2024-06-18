@@ -79,7 +79,6 @@ export class AtomicCommerceInterface
   private summary!: SearchSummary | ListingSummary;
   private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
-  private unsubscribeSearchStatus: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: AtomicCommerceStore;
@@ -115,8 +114,10 @@ export class AtomicCommerceInterface
 
   /**
    * the commerce interface language.
+   *
+   * Will default to the value set in the Headless engine context if not provided.
    */
-  @Prop({reflect: true}) public language = 'en';
+  @Prop({reflect: true, mutable: true}) public language?: string;
 
   /**
    * The commerce interface headless engine.
@@ -209,6 +210,9 @@ export class AtomicCommerceInterface
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
+    if (!this.language) {
+      return;
+    }
 
     this.context.setLanguage(this.language);
     this.commonInterfaceHelper.onLanguageChange();
@@ -221,7 +225,6 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
     this.unsubscribeSummary();
     window.removeEventListener('hashchange', this.onHashChange);
   }
@@ -368,15 +371,6 @@ export class AtomicCommerceInterface
       this.type === 'product-listing'
         ? buildProductListing(this.engine!)
         : buildSearch(this.engine!);
-
-    this.unsubscribeSearchStatus = this.searchOrListing.subscribe(() => {
-      if (
-        !this.searchOrListing.state.isLoading &&
-        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
-      ) {
-        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
-      }
-    });
   }
 
   private initSummary() {
@@ -401,11 +395,21 @@ export class AtomicCommerceInterface
         firstSearchExecutedSelector,
         firstSearchExecuted
       );
+
+      if (firstSearchExecuted) {
+        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
+      }
     });
   }
 
   private initContext() {
     this.context = buildContext(this.engine!);
+  }
+
+  private initLanguage() {
+    if (!this.language) {
+      this.language = this.context.state.language;
+    }
   }
 
   private updateHash() {
@@ -433,6 +437,7 @@ export class AtomicCommerceInterface
     this.initSummary();
     this.initUrlManager();
     this.initContext();
+    this.initLanguage();
     this.initialized = true;
   }
 
