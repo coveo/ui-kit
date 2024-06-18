@@ -9,7 +9,6 @@ const {decorator, play} = wrapInCommerceInterface({
   skipFirstSearch: true,
 });
 
-// TODO: simplify by creating a requestProcessor
 const noResultsEngineConfig: Partial<CommerceEngineConfiguration> = {
   preprocessRequest: (r) => {
     const parsed = JSON.parse(r.body as string);
