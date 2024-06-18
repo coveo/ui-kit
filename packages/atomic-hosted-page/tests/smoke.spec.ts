@@ -15,7 +15,7 @@ for (const url of urls) {
     await page.getByLabel('Search field with suggestions').fill('test');
     await page.getByLabel('Search field with suggestions').press('Enter');
     await expect(
-      page.getByText(/Results 1-10 of [\d,]+/, {exact: true})
+      page.getByText(/Results 1-10 of [\d,]+/).first()
     ).toBeVisible();
   });
 }
