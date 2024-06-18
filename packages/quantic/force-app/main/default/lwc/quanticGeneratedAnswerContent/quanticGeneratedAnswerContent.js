@@ -16,7 +16,7 @@ import generatedTextContentTemplate from './templates/generatedTextContent.html'
  */
 export default class QuanticGeneratedAnswerContent extends LightningElement {
   /**
-   * If the answer is streaming. It will render a blinking cursor at the end of the answer.
+   * If the answer is streaming, it will render a blinking cursor at the end of the answer.
    * @api
    * @type {boolean}
    */
