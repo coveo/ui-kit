@@ -25,6 +25,9 @@ export interface NumericRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+
+  // TODO: document
+  isCustomRange?: boolean;
 }
 
 export interface NumericFacetRequest

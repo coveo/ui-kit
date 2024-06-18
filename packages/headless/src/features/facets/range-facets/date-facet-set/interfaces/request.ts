@@ -26,6 +26,7 @@ export interface DateRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+  isCustomRange?: boolean;
 }
 
 export function isDateFacetRequest(

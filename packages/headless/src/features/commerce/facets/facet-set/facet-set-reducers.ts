@@ -26,6 +26,9 @@ export function restoreFromParameters(
   if (action.payload.nf) {
     restoreRangeFacets(state, action.payload.nf, 'numericalRange');
   }
+  if (action.payload.cnf) {
+    restoreRangeFacets(state, action.payload.cnf, 'numericalRange', true);
+  }
   if (action.payload.df) {
     restoreRangeFacets(state, action.payload.df, 'dateRange');
   }
@@ -58,7 +61,8 @@ function restoreRegularFacets(
 function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
   state: CommerceFacetSetState,
   parameterFacets: Record<string, T['values']>,
-  type: 'dateRange' | 'numericalRange'
+  type: 'dateRange' | 'numericalRange',
+  isCustomRange?: boolean
 ) {
   const entries = Object.entries(parameterFacets);
   for (const [facetId, values] of entries) {
@@ -71,6 +75,7 @@ function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
             start: value.start,
             end: value.end,
             endInclusive: value.endInclusive,
+            isCustomRange,
             ...restoreFacetValue(),
           };
           switch (type) {

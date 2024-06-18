@@ -25,6 +25,9 @@ export interface NumericRangeOptions {
    * @defaultValue `idle`
    */
   state?: FacetValueState;
+
+  // TODO: revisit this
+  isCustomRange?: boolean;
 }
 
 /**

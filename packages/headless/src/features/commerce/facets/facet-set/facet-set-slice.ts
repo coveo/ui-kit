@@ -348,8 +348,13 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        // TODO: clear custom range if facet select
+        // TODO: set custom ranges id setRanges() called
         // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
-        request.values = convertToNumericRangeRequests(values);
+        request.values = convertToNumericRangeRequests(values).map((v) => ({
+          ...v,
+          isCustomRange: true,
+        }));
         request.numberOfValues = values.length;
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
@@ -423,7 +428,7 @@ function ensureRegularFacetRequest(
   return facetRequest.type === 'regular';
 }
 
-function ensureNumericFacetRequest(
+export function ensureNumericFacetRequest(
   facetRequest: AnyFacetRequest
 ): facetRequest is NumericFacetRequest {
   return facetRequest.type === 'numericalRange';
@@ -550,8 +555,6 @@ function updateStateFromFacetResponse(
   facetRequest.numberOfValues = facetResponse.numberOfValues;
   facetRequest.field = facetResponse.field;
   facetRequest.type = facetResponse.type;
-  facetRequest.values =
-    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
   facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
   if (
@@ -559,7 +562,10 @@ function updateStateFromFacetResponse(
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
-  } else if (facetResponse.type === 'numericalRange') {
+  } else if (
+    facetResponse.type === 'numericalRange' &&
+    ensureNumericFacetRequest(facetRequest)
+  ) {
     facetRequest.interval = facetResponse.interval;
     if (facetResponse.domain) {
       facetRequest.domain = {
@@ -568,7 +574,21 @@ function updateStateFromFacetResponse(
         increment: facetResponse.domain.increment,
       };
     }
+    // TODO: clean this mess
+    const customValuesRequested = facetRequest.values
+      ? facetRequest.values.some((v) => v.isCustomRange)
+      : false;
+
+    const response = (getFacetRequestValuesFromFacetResponse(facetResponse) ??
+      []) as NumericRangeRequest[];
+    facetRequest.values = response.map((v) => ({
+      ...v,
+      isCustomRange: customValuesRequested,
+    }));
+    return;
   }
+  facetRequest.values =
+    getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
 }
 
 function getFacetRequestValuesFromFacetResponse(

@@ -173,12 +173,11 @@ export function serializeRangeFacets(
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
       const value = ranges
-        .map(
-          ({start, end, endInclusive}) =>
-            `${start}${
-              endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-            }${end}`
-        )
+        .map(({start, end, endInclusive}) => {
+          return `${start}${
+            endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+          }${end}`;
+        })
         .join(',');
       return `${key}-${facetId}${equal}${value}`;
     })
@@ -189,7 +188,7 @@ function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessObjectPairs)
+    .map((part) => preprocessObjectPairs(part, facetSearchParamRegex))
     .filter(isValidPair)
     .map((pair) => cast(pair));
 
@@ -212,9 +211,12 @@ export function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-export function preprocessObjectPairs(pair: string[]) {
+export function preprocessObjectPairs(
+  pair: string[],
+  regex = facetSearchParamRegex
+) {
   const [key, val] = pair;
-  const result = facetSearchParamRegex.exec(key);
+  const result = regex.exec(key);
 
   if (!result) {
     return pair;
@@ -234,6 +236,10 @@ function processObjectValues(key: string, values: string[]) {
     return buildNumericRanges(values);
   }
 
+  if (key === 'cnf') {
+    return buildNumericRanges(values, true);
+  }
+
   if (key === 'df') {
     return buildDateRanges(values);
   }
@@ -241,7 +247,7 @@ function processObjectValues(key: string, values: string[]) {
   return values;
 }
 
-export function buildNumericRanges(ranges: string[]) {
+export function buildNumericRanges(ranges: string[], isCustomRange?: boolean) {
   return ranges
     .map((str) => {
       const {startAsString, endAsString, isEndInclusive} =
@@ -255,7 +261,13 @@ export function buildNumericRanges(ranges: string[]) {
     })
     .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
     .map(({start, end, endInclusive}) =>
-      buildNumericRange({start, end, state: 'selected', endInclusive})
+      buildNumericRange({
+        start,
+        end,
+        state: 'selected',
+        endInclusive,
+        isCustomRange,
+      })
     );
 }
 

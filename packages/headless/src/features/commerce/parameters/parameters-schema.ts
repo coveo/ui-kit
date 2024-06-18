@@ -4,6 +4,7 @@ export const parametersDefinition = {
   f: new RecordValue(),
   cf: new RecordValue(),
   nf: new RecordValue(),
+  cnf: new RecordValue(),
   df: new RecordValue(),
   sortCriteria: new RecordValue(),
   page: new NumberValue({min: 0}),

@@ -24,6 +24,11 @@ export interface Parameters {
   nf?: Record<string, NumericRangeRequest[]>;
 
   /**
+   * TODO: doc
+   */
+  cnf?: Record<string, NumericRangeRequest[]>;
+
+  /**
    * The sort expression to order returned results by.
    */
   sortCriteria?: SortCriterion;

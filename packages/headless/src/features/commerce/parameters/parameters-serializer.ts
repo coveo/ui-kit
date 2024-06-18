@@ -4,7 +4,6 @@ import {
   delimiter,
   isFacetObject,
   isObject,
-  isRangeFacetKey,
   isRangeFacetObject,
   preprocessObjectPairs,
   SearchParameterKey,
@@ -43,16 +42,33 @@ export const productListingSerializer = {
   deserialize,
 } as Serializer<ProductListingParameters>;
 
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|cnf|df|sf|af)-(.+)$/;
 type ParametersKey = keyof CommerceSearchParameters;
-type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'df'>;
+type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'cnf' | 'df'>;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
   cf: true,
+  cnf: true,
   nf: true,
   df: true,
 };
+
+export function isRangeFacetKey(
+  key: string
+): key is Extract<FacetKey, 'nf' | 'df' | 'cnf'> {
+  const supportedRangeFacetParameters: Pick<
+    typeof supportedFacetParameters,
+    'df' | 'nf' | 'cnf'
+  > = {
+    nf: true,
+    cnf: true,
+    df: true,
+  };
+  const isRangeFacet = key in supportedRangeFacetParameters;
+  return keyHasObjectValue(key) && isRangeFacet;
+}
 
 function serialize(parameters: CommerceSearchParameters): string {
   return coreSerialize(serializePair)(parameters);
@@ -73,7 +89,7 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'df') {
+  if (key === 'nf' || key === 'cnf' || key === 'df') {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
@@ -150,7 +166,7 @@ function deserialize<T extends Parameters>(fragment: string): T {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map(splitOnFirstEqual)
-    .map(preprocessObjectPairs)
+    .map((part) => preprocessObjectPairs(part, facetSearchParamRegex))
     .filter(isValidPair)
     .map(cast);
 

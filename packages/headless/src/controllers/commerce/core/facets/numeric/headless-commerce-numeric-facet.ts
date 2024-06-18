@@ -1,10 +1,14 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
+import {ensureNumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
+import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {NumericFilterRange} from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -14,6 +18,8 @@ import {
   NumericRangeRequest,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet';
+
+export type {NumericFilterRange};
 
 export type NumericFacetOptions = Omit<
   CoreCommerceFacetOptions,
@@ -25,6 +31,11 @@ export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
+  /**
+   * The last range set by setRanges method // TODO: better doc
+   * undefined if the range has been defined by selecting facet values
+   */
+  range?: NumericFilterRange;
 };
 
 type NumericFacetDomain = {
@@ -90,13 +101,42 @@ export function buildCommerceNumericFacet(
   });
 
   const {dispatch} = engine;
+  const getRequest = () => engine[stateKey].commerceFacetSet[facetId].request;
+
   const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
     options;
+
+  const range = (): Pick<NumericFacetState, 'range'> | undefined => {
+    const request = getRequest();
+    if (!ensureNumericFacetRequest(request)) {
+      return;
+    }
+
+    return {
+      range: request.values.find((value) => value.isCustomRange),
+    };
+  };
+
+  const extractDomain = (
+    response: NumericFacetResponse
+  ): Pick<NumericFacetState, 'domain'> | undefined => {
+    if (response.domain === undefined) {
+      return;
+    }
+    const {min, max} = response.domain;
+    return {
+      domain: {
+        min,
+        max,
+      },
+    };
+  };
 
   return {
     ...coreController,
 
     setRanges(ranges: NumericRangeRequest[]) {
+      dispatch(deselectAllFacetValues(facetId));
       dispatch(
         updateNumericFacetValues({
           facetId,
@@ -106,16 +146,13 @@ export function buildCommerceNumericFacet(
       dispatch(fetchProductsActionCreator());
     },
 
-    get state() {
+    get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
-      if (response?.type === 'numericalRange' && response.domain) {
-        const {min, max} = response.domain;
+      if (response?.type === 'numericalRange') {
         return {
           ...coreController.state,
-          domain: {
-            min,
-            max,
-          },
+          ...extractDomain(response),
+          ...range(),
         };
       }
 

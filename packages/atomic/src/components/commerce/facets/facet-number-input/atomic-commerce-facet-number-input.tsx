@@ -1,10 +1,8 @@
 import {isUndefined} from '@coveo/bueno';
-import {NumericFacet} from '@coveo/headless/commerce';
-import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
+import {NumericFacet, NumericFilterRange} from '@coveo/headless/commerce';
+import {Component, h, Prop, Event, State, EventEmitter} from '@stencil/core';
 import {Button} from '../../../common/button';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-
-export type Range = {start: number; end: number};
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -24,17 +22,16 @@ export class FacetNumberInput {
 
   @Prop() public bindings!: Bindings;
   @Prop() public label!: string;
-  @Prop() public range?: Range;
+  @Prop() public inputRange?: NumericFilterRange;
   @Prop() public facet!: NumericFacet;
 
   @Event({
     eventName: 'atomic/numberInputApply',
   })
   private applyInput!: EventEmitter;
-
   public connectedCallback() {
-    this.start = this.range?.start;
-    this.end = this.range?.end;
+    this.start = this.inputRange?.start;
+    this.end = this.inputRange?.end;
   }
 
   private apply() {
@@ -42,10 +39,7 @@ export class FacetNumberInput {
       return;
     }
 
-    this.applyInput.emit({
-      start: this.start,
-      end: this.end,
-    });
+    this.applyInput.emit();
     this.facet.setRanges([
       {
         start: this.start!,
@@ -113,7 +107,7 @@ export class FacetNumberInput {
           required
           min={this.absoluteMinimum}
           max={this.maximumInputValue}
-          value={this.range?.start}
+          value={this.inputRange?.start}
           onInput={(e) =>
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
           }
@@ -132,7 +126,7 @@ export class FacetNumberInput {
           required
           min={this.minimumInputValue}
           max={Number.MAX_SAFE_INTEGER}
-          value={this.range?.end}
+          value={this.inputRange?.end}
           onInput={(e) =>
             (this.end = (e.target as HTMLInputElement).valueAsNumber)
           }
