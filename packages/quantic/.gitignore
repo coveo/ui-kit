@@ -39,6 +39,7 @@ scratch-def.ci.json
 force-app/main/default/staticresources/coveoheadless
 force-app/main/default/staticresources/coveobueno
 force-app/main/default/staticresources/marked
+force-app/main/default/staticresources/dompurify
 
 # Test Coverage & Report
 coverage

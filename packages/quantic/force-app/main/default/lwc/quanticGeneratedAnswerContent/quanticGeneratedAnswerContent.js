@@ -1,7 +1,7 @@
-import MARKED_JS from '@salesforce/resourceUrl/marked';
-import {transformMarkdownToHtml} from 'c/quanticUtils';
-// @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
+import {
+  transformMarkdownToHtml,
+  loadMarkdownDependencies,
+} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import generatedMarkdownContentTemplate from './templates/generatedMarkdownContent.html';
@@ -40,36 +40,63 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
   }
   set answer(value) {
     this._answer = value;
-    if (this.answerContentFormat === 'text/markdown') {
+    if (
+      this.answerContentFormat === 'text/markdown' &&
+      this._markedLoaded &&
+      this._domPurifyLoaded
+    ) {
       this.updateHtmlContent();
     }
   }
 
   _answer;
+  _markedLoaded = false;
+  _domPurifyLoaded = false;
 
   connectedCallback() {
     if (this.answerContentFormat === 'text/markdown') {
-      loadScript(this, MARKED_JS + '/marked.min.js')
+      loadMarkdownDependencies(this)
         .then(() => {
+          // @ts-ignore
+          this._markedLoaded = true;
+          // @ts-ignore
+          this._domPurifyLoaded = true;
           this.updateHtmlContent();
         })
         .catch((error) => {
           console.error('Error loading the Marked library.', error);
+          this._markedLoadingError = true;
         });
     }
   }
 
   updateHtmlContent() {
-    const newHTMLContent =
-      // @ts-ignore
-      (window.marked && transformMarkdownToHtml(this.answer, window.marked)) ||
-      '';
     const answerContainer = this.template.querySelector(
       '.generated-answer-content__answer'
     );
-    if (answerContainer) {
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      answerContainer.innerHTML = newHTMLContent;
+    if (this._markedLoaded && this._domPurifyLoaded) {
+      // Transform the markdown answer to HTML and update the innerHTML of the container
+      const newHTMLContent =
+        // @ts-ignore
+        (window.marked &&
+          // @ts-ignore
+          transformMarkdownToHtml(this.answer, window.marked)) ||
+        '';
+      if (answerContainer) {
+        try {
+          // @ts-ignore
+          // eslint-disable-next-line @lwc/lwc/no-inner-html
+          answerContainer.innerHTML = DOMPurify.sanitize(newHTMLContent);
+        } catch (error) {
+          // DOMPurify is not compatible with Locker Service, but Locker already sanitizes HTML.
+          // eslint-disable-next-line @lwc/lwc/no-inner-html
+          answerContainer.innerHTML = newHTMLContent;
+        }
+      }
+    }
+    // Fallback to display answer as text if the Marked library failed to load
+    else {
+      answerContainer.textContent = this.answer;
     }
   }
 

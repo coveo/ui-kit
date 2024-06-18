@@ -1,3 +1,8 @@
+import DOMPURIFY from '@salesforce/resourceUrl/dompurify';
+import MARKED_JS from '@salesforce/resourceUrl/marked';
+// @ts-ignore
+import {loadScript} from 'lightning/platformResourceLoader';
+
 // Any number of `*` between 1 and 3, or a single backtick, followed by a word character or whitespace character
 const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 
@@ -48,6 +53,15 @@ const customRenderer = {
   },
 
   /**
+   * Returns escaped HTML.
+   * @param {string} text
+   * @returns
+   */
+  html(text) {
+    return escapeHtml(text);
+  },
+
+  /**
    * Custom Marked renderer to remove wrapping `<p>` element around list item content.
    * @param {string} text The element text content.
    * @returns {string} The list item element to render.
@@ -84,7 +98,21 @@ const customRenderer = {
  * @param {object} marked The marked library object
  * @returns {string} HTML text corresponding to markdown
  */
-export const transformMarkdownToHtml = (text, marked) => {
+const transformMarkdownToHtml = (text, marked) => {
   marked.use({renderer: customRenderer});
   return marked.parse(text);
 };
+
+/**
+ * Load the libraries Marked and DOMPurify.
+ * @param  element
+ * @returns {Promise<any>}
+ */
+const loadMarkdownDependencies = (element) => {
+  return Promise.all([
+    loadScript(element, MARKED_JS + '/marked.min.js'),
+    loadScript(element, DOMPURIFY + '/purify.min.js'),
+  ]);
+};
+
+export {transformMarkdownToHtml, loadMarkdownDependencies};

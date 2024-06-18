@@ -16,6 +16,22 @@ const main = async () => {
   await copyHeadless();
   await copyBueno();
   await copyMarked();
+  await copyDompurify();
+};
+
+const copyDompurify = async () => {
+  console.info('Begin copy DOMPurify.');
+
+  await mkdir('./force-app/main/default/staticresources/dompurify', {
+    recursive: true,
+  });
+
+  await copy(
+    '../../node_modules/dompurify/dist/purify.min.js',
+    './force-app/main/default/staticresources/dompurify/purify.min.js'
+  );
+
+  console.info('DOMPurify copied.');
 };
 
 const copyMarked = async () => {
