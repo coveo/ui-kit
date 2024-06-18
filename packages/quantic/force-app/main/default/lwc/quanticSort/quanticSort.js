@@ -14,8 +14,9 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SortCriterion} SortCriterion */
+
 /**
- * @typedef SortOption
+ * @typedef {Object} SortOption
  * @property {string} label
  * @property {string} value
  * @property {SortCriterion} criterion
@@ -160,18 +161,17 @@ export default class QuanticSort extends LightningElement {
    * @returns {SortOption[]} The specified custom sort options.
    */
   get customSortOptions() {
+    /** @type {SortOption[]} */
+    // @ts-ignore
     const elements = Array.from(this.querySelectorAll('c-quantic-sort-option'));
     if (elements.length === 0) {
       return [];
     }
     return elements.map((element) => {
       return {
-        // @ts-ignore
         label: element.label,
-        // @ts-ignore
         value: element.value,
         criterion: {
-          // @ts-ignore
           by: element.criterion.by,
           // @ts-ignore
           order: element.criterion.order,
