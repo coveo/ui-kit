@@ -25,12 +25,11 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  *
  * @part container - The container for the whole summary.
  * @part results - The container for the results.
- * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-query-summary',
