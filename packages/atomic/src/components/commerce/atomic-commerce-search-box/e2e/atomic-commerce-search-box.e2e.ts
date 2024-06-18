@@ -196,7 +196,10 @@ test.describe('with a facet & clear-filters set to true', () => {
 
 test.describe('with a facet & clear-filters set to false', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({clearFilters: false, suggestionTimeout: 5000});
+    await searchBox.load(
+      {clearFilters: false, suggestionTimeout: 5000},
+      'in-page'
+    );
   });
 
   test('clicking the submit button should not clear the facet value', async ({
