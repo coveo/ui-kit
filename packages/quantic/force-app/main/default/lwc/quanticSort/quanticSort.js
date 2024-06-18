@@ -14,7 +14,6 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SortCriterion} SortCriterion */
-
 /**
  * @typedef SortOption
  * @property {string} label
@@ -100,7 +99,6 @@ export default class QuanticSort extends LightningElement {
     if (this.customSortOptions.length > 0) {
       return this.customSortOptions;
     }
-
     return [
       {
         label: this.labels.relevancy,
