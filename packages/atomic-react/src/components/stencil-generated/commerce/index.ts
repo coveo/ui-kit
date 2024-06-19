@@ -18,6 +18,7 @@ export const AtomicCommerceNoProducts = /*@__PURE__*/createReactComponent<JSX.At
 export const AtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNumericFacet, HTMLAtomicCommerceNumericFacetElement>('atomic-commerce-numeric-facet');
 export const AtomicCommercePager = /*@__PURE__*/createReactComponent<JSX.AtomicCommercePager, HTMLAtomicCommercePagerElement>('atomic-commerce-pager');
 export const AtomicCommerceProductList = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductList, HTMLAtomicCommerceProductListElement>('atomic-commerce-product-list');
+export const AtomicCommerceProductsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductsPerPage, HTMLAtomicCommerceProductsPerPageElement>('atomic-commerce-products-per-page');
 export const AtomicCommerceRecommendationInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationInterface, HTMLAtomicCommerceRecommendationInterfaceElement>('atomic-commerce-recommendation-interface');
 export const AtomicCommerceRecommendationList = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationList, HTMLAtomicCommerceRecommendationListElement>('atomic-commerce-recommendation-list');
 export const AtomicCommerceSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBox, HTMLAtomicCommerceSearchBoxElement>('atomic-commerce-search-box');
