@@ -460,6 +460,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
      */
     interface AtomicCommerceProductsPerPage {
         /**
@@ -3598,6 +3599,7 @@ declare global {
     }
     /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
      */
     interface HTMLAtomicCommerceProductsPerPageElement extends Components.AtomicCommerceProductsPerPage, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5897,6 +5899,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
      */
     interface AtomicCommerceProductsPerPage {
         /**
@@ -8873,6 +8876,7 @@ declare module "@stencil/core" {
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+             * @alpha 
              */
             "atomic-commerce-products-per-page": LocalJSX.AtomicCommerceProductsPerPage & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductsPerPageElement>;
             /**

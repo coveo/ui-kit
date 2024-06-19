@@ -26,6 +26,8 @@ import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/at
  * @part buttons - The list of buttons.
  * @part button - The product per page button.
  * @part active-button - The active product per page button.
+ *
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-products-per-page',
