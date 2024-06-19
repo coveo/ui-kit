@@ -314,6 +314,7 @@ export namespace Components {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface AtomicCommerceFacets {
         /**
@@ -356,9 +357,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -389,6 +390,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface AtomicCommerceLoadMoreProducts {
     }
@@ -499,9 +501,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -1900,10 +1902,6 @@ export namespace Components {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency": string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -3506,6 +3504,7 @@ declare global {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
     }
@@ -3527,6 +3526,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
     }
@@ -5728,6 +5728,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface AtomicCommerceFacets {
         /**
@@ -5758,7 +5759,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -5791,6 +5792,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface AtomicCommerceLoadMoreProducts {
     }
@@ -5887,7 +5889,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -7215,10 +7217,6 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8798,12 +8796,14 @@ declare module "@stencil/core" {
             /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+             * @alpha 
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+             * @alpha 
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;

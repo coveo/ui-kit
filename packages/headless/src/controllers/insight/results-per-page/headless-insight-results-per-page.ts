@@ -2,7 +2,7 @@ import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
   logPagerResize,
-  pagerResize,
+  browseResults,
 } from '../../../features/pagination/pagination-analytics-actions';
 import {
   ResultsPerPage,
@@ -44,7 +44,9 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(executeSearch({legacy: logPagerResize(), next: pagerResize()}));
+      dispatch(
+        executeSearch({legacy: logPagerResize(), next: browseResults()})
+      );
     },
   };
 }
