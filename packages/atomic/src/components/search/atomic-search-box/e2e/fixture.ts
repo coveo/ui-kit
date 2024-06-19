@@ -1,4 +1,4 @@
-import {Page, test as base} from '@playwright/test';
+import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
@@ -15,16 +15,5 @@ export const test = base.extend<AtomicSearchBoxE2EFixtures & AxeFixture>({
     await use(new SearchBoxPageObject(page));
   },
 });
-
-export async function setRecentQueries(page: Page, count: number) {
-  await page.evaluate((count: number) => {
-    const recentQueries = Array.from(
-      {length: count},
-      (_, i) => `Recent query ${i}`
-    );
-    const stringified = JSON.stringify(recentQueries);
-    localStorage.setItem('coveo-recent-queries', stringified);
-  }, count);
-}
 
 export {expect} from '@playwright/test';

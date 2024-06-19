@@ -1,4 +1,4 @@
-import {test, expect, setRecentQueries} from './fixture';
+import {test, expect} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({searchBox}) => {
@@ -54,9 +54,15 @@ test.describe('with instant results & query suggestions', () => {
 
   test.describe('with recent queries', () => {
     test.beforeEach(async ({searchBox, page}) => {
-      await setRecentQueries(page, 4);
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('kayak');
+      await searchBox.searchInput.press('Enter');
+      await page.waitForResponse(
+        (res) =>
+          res.url().endsWith('/commerce/v2/search') && res.status() === 200
+      );
+      await searchBox.searchInput.fill('');
     });
 
     test('should display recent queries', async ({searchBox}) => {
