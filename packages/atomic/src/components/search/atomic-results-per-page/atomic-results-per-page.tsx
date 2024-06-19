@@ -14,6 +14,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
+import {PagerGuard} from '../../common/pager/pager-guard';
 import {RadioButton} from '../../common/radio-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
@@ -130,36 +131,36 @@ export class AtomicResultsPerPage implements InitializableComponent {
     }
   }
 
+  private get label() {
+    return this.bindings.i18n.t('results-per-page');
+  }
+
   public render() {
-    if (
-      !this.bindings.store.isAppLoaded() ||
-      !this.searchStatusState.hasResults
-    ) {
-      return;
-    }
-
-    const label = this.bindings.i18n.t('results-per-page');
-
     return (
-      <div class="flex items-center">
-        <span
-          part="label"
-          class="self-start text-on-background text-lg mr-3 leading-10"
-          aria-hidden="true"
-        >
-          {label}
-        </span>
-        <FieldsetGroup label={label}>
-          <div
-            part="buttons"
-            role="radiogroup"
-            aria-label={this.bindings.i18n.t('results-per-page')}
-            class="flex flex-wrap gap-2"
+      <PagerGuard
+        {...this.searchStatusState}
+        isAppLoaded={this.bindings.store.isAppLoaded()}
+      >
+        <div class="flex items-center">
+          <span
+            part="label"
+            class="self-start text-on-background text-lg mr-3 leading-10"
+            aria-hidden="true"
           >
-            {this.choices.map((choice) => this.buildChoice(choice))}
-          </div>
-        </FieldsetGroup>
-      </div>
+            {this.label}
+          </span>
+          <FieldsetGroup label={this.label}>
+            <div
+              part="buttons"
+              role="radiogroup"
+              aria-label={this.label}
+              class="flex flex-wrap gap-2"
+            >
+              {this.choices.map((choice) => this.buildChoice(choice))}
+            </div>
+          </FieldsetGroup>
+        </div>
+      </PagerGuard>
     );
   }
 }
