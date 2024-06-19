@@ -1,11 +1,12 @@
 import {
-  ResultsPerPage,
-  buildResultsPerPage,
-  ResultsPerPageState,
-  buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
+  Pagination,
+  PaginationState,
+  buildSearch,
+  buildProductListing,
+  SearchSummaryState,
+  ProductListingSummaryState,
+  Summary,
+} from '@coveo/headless/commerce';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
@@ -16,42 +17,46 @@ import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
 import {PagerGuard} from '../../common/pager/pager-guard';
 import {RadioButton} from '../../common/radio-button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-results-per-page` component determines how many results to display per page.
+ * The `atomic-commerce-products-per-page` component determines how many products to display per page.
  *
- * @part label - The "Results per page" label.
+ * @part label - The "Products per page" label.
  * @part buttons - The list of buttons.
- * @part button - The result per page button.
- * @part active-button - The active result per page button.
+ * @part button - The product per page button.
+ * @part active-button - The active product per page button.
  */
 @Component({
-  tag: 'atomic-results-per-page',
-  styleUrl: 'atomic-results-per-page.pcss',
+  tag: 'atomic-commerce-products-per-page',
+  styleUrl: 'atomic-commerce-products-per-page.pcss',
   shadow: true,
 })
-export class AtomicResultsPerPage implements InitializableComponent {
+export class AtomicResultsPerPage implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
-  private resultPerPage!: ResultsPerPage;
-  public searchStatus!: SearchStatus;
-  private choices!: number[];
-  private readonly radioGroupName = randomID('atomic-results-per-page-');
 
+  public pagination!: Pagination;
+  @BindStateToController('pagination')
   @State()
-  @BindStateToController('resultPerPage')
-  public resultPerPageState!: ResultsPerPageState;
-  @BindStateToController('searchStatus')
+  private paginationState!: PaginationState;
+
+  public summary!: Summary;
+  @BindStateToController('summary')
   @State()
-  private searchStatusState!: SearchStatusState;
+  private summaryState!: SearchSummaryState | ProductListingSummaryState;
+
   @State() public error!: Error;
+  private choices!: number[];
+  private readonly radioGroupName = randomID(
+    'atomic-commerce-products-per-page-'
+  );
 
   /**
-   * A list of choices for the number of results to display per page, separated by commas.
+   * A list of choices for the number of products to display per page, separated by commas.
    */
   @Prop({reflect: true}) choicesDisplayed = '10,25,50,100';
   /**
-   * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+   * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
   @Prop({mutable: true, reflect: true}) initialChoice?: number;
 
@@ -64,10 +69,14 @@ export class AtomicResultsPerPage implements InitializableComponent {
     this.choices = this.validateChoicesDisplayed();
     this.validateInitialChoice();
 
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
-      initialState: {numberOfResults: this.initialChoice},
-    });
+    const controller =
+      this.bindings.interfaceElement.type === 'search'
+        ? buildSearch(this.bindings.engine)
+        : buildProductListing(this.bindings.engine);
+
+    this.summary = controller.summary();
+    this.pagination = controller.pagination();
+    this.pagination.setPageSize(this.initialChoice!);
   }
 
   private validateChoicesDisplayed() {
@@ -96,7 +105,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   private buildChoice(choice: number) {
-    const isSelected = this.resultPerPage.isSetTo(choice);
+    const isSelected = this.paginationState.pageSize === choice;
     const parts = ['button'];
     if (isSelected) {
       parts.push('active-button');
@@ -112,7 +121,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
         ariaLabel={text}
         onChecked={() => {
           this.focusOnProperResultDependingOnChoice(choice);
-          this.resultPerPage.set(choice);
+          this.pagination.setPageSize(choice);
         }}
         class="btn-page focus-visible:bg-neutral-light"
         part={parts.join(' ')}
@@ -122,24 +131,24 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   private focusOnProperResultDependingOnChoice(choice: number) {
-    if (choice < this.resultPerPageState.numberOfResults) {
+    if (choice < this.paginationState.pageSize) {
       this.bindings.store.state.resultList
         ?.focusOnFirstResultAfterNextSearch()
         .then(() => this.scrollToTopEvent.emit());
-    } else if (choice > this.resultPerPageState.numberOfResults) {
+    } else if (choice > this.paginationState.pageSize) {
       this.bindings.store.state.resultList?.focusOnNextNewResult();
     }
   }
 
   private get label() {
-    return this.bindings.i18n.t('results-per-page');
+    return this.bindings.i18n.t('products-per-page');
   }
 
   public render() {
     return (
       <PagerGuard
-        hasError={this.searchStatusState.hasError}
-        hasItems={this.searchStatusState.hasResults}
+        hasError={this.summaryState.hasError}
+        hasItems={this.summaryState.hasProducts}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
         <div class="flex items-center">
