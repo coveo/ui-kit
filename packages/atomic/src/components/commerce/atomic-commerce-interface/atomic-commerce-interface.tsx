@@ -47,7 +47,7 @@ import {
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicCommerceStore, createAtomicCommerceStore} from './store';
 
-const FirstSearchExecutedFlag = 'firstSearchExecuted';
+const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
@@ -181,7 +181,7 @@ export class AtomicCommerceInterface
   }
 
   public connectedCallback() {
-    this.store.setLoadingFlag(FirstSearchExecutedFlag);
+    this.store.setLoadingFlag(FirstRequestExecutedFlag);
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -392,8 +392,8 @@ export class AtomicCommerceInterface
         firstRequestExecuted
       );
 
-      if (firstSearchExecuted) {
-        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
+      if (firstRequestExecuted) {
+        this.store.unsetLoadingFlag(FirstRequestExecutedFlag);
       }
     });
   }
