@@ -16,6 +16,18 @@ export type GeneratedAnswerFeedback =
   | 'notAccurate'
   | 'outOfDate'
   | 'harmful';
+
+export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
+
+export type GeneratedAnswerFeedbackV2 = {
+  helpful: boolean;
+  documented: GeneratedAnswerFeedbackOption;
+  correctTopic: GeneratedAnswerFeedbackOption;
+  hallucinationFree: GeneratedAnswerFeedbackOption;
+  readable: GeneratedAnswerFeedbackOption;
+  details?: string;
+  documentUrl?: string;
+};
 const RGAType = 'RGA';
 
 //TODO: SFINT-5435
@@ -149,15 +161,13 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'like',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: RGAType,
-        },
-        feedback: {
-          liked: true,
         },
       };
     },
@@ -179,20 +189,19 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'dislike',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: RGAType,
-        },
-        feedback: {
-          liked: false,
         },
       };
     },
   });
 
+//Method deprecated after v3, EP event no longer available, TODO: SFINT-5585
 export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback
 ): InsightAction =>
@@ -214,21 +223,61 @@ export const logGeneratedAnswerFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+  });
+
+export const logGeneratedAnswerFeedbackV2 = (
+  feedback: GeneratedAnswerFeedbackV2
+): InsightAction =>
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.generatedAnswerFeedbackSubmit
+  )({
+    prefix: 'analytics/generatedAnswer/sendFeedback',
+    __legacy__getBuilder: (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.logGeneratedAnswerFeedbackSubmitV2(
+        {
+          generativeQuestionAnsweringId,
+          ...feedback,
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+    analyticsType: 'Qna.SubmitRgaFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitRgaFeedback => {
+      const {search} = state;
+      const {response} = search || {};
+      const responseId = response?.searchUid || '';
+      const {
+        helpful,
+        readable,
+        documented,
+        hallucinationFree,
+        correctTopic,
+        details,
+        documentUrl,
+      } = feedback;
       return {
         answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
+          responseId,
         },
         feedback: {
-          liked: false,
-          reason: feedback,
+          helpful,
+          readable,
+          documented,
+          details,
+          hallucination_free: hallucinationFree,
+          correct_topic: correctTopic,
+          document_url: documentUrl,
         },
       };
     },
   });
 
+//Method deprecated after v3, EP event no longer available, TODO: SFINT-5585
 export const logGeneratedAnswerDetailedFeedback = (
   details: string
 ): InsightAction =>
@@ -250,20 +299,6 @@ export const logGeneratedAnswerDetailedFeedback = (
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
-    },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        feedback: {
-          liked: false,
-          reason: 'other',
-          details,
-        },
-      };
     },
   });
 
@@ -442,6 +477,7 @@ export const generatedAnswerInsightAnalyticsClient = {
   logGeneratedAnswerStreamEnd,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
+  logGeneratedAnswerFeedbackV2,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logHoverCitation,

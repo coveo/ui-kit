@@ -1,4 +1,4 @@
-import {Qna, Feedback} from '@coveo/relay-event-types';
+import {Qna} from '@coveo/relay-event-types';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   InsightAction,
@@ -69,15 +69,13 @@ export const logLikeSmartSnippet = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'like',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: 'SmartSnippet',
-        },
-        feedback: {
-          liked: true,
         },
       };
     },
@@ -92,14 +90,12 @@ export const logDislikeSmartSnippet = (): InsightAction =>
       );
     },
     analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'dislike',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: 'SmartSnippet',
-        },
-        feedback: {
-          liked: false,
         },
       };
     },
@@ -199,16 +195,15 @@ export const logSmartSnippetFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
       return {
         answer: {
           responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
         },
         feedback: {
-          liked: false,
-          reason: feedback as Feedback['reason'],
+          reason:
+            feedback as Qna.SubmitSmartSnippetFeedback['feedback']['reason'],
         },
       };
     },
@@ -226,15 +221,13 @@ export const logSmartSnippetDetailedFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
       return {
         answer: {
           responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
         },
         feedback: {
-          liked: false,
           reason: 'other',
           details: details,
         },

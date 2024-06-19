@@ -23,6 +23,7 @@ import {
   logOpenGeneratedAnswerSource,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
+  GeneratedAnswerFeedbackV2,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
 import {
@@ -146,6 +147,19 @@ describe('generated answer', () => {
     expect(logGeneratedAnswerDetailedFeedback).toHaveBeenCalledWith(
       exampleDetails
     );
+  });
+
+  it('#sendFeedbackV2 dispatches the right actions', () => {
+    const exampleFeedback: GeneratedAnswerFeedbackV2 = {
+      helpful: true,
+      documented: 'yes',
+      correctTopic: 'no',
+      hallucinationFree: 'unknown',
+      readable: 'yes',
+    };
+    generatedAnswer.sendFeedbackV2(exampleFeedback);
+    expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
+    expect(logGeneratedAnswerFeedback).toHaveBeenCalledWith(exampleFeedback);
   });
 
   it('#logCitationClick dispatches analytics action', () => {

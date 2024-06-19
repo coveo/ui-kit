@@ -23,6 +23,8 @@ import {
   logCopyGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
+  GeneratedAnswerFeedbackV2,
+  logGeneratedAnswerFeedbackV2,
 } from './generated-answer-insight-analytics-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -78,6 +80,13 @@ jest.mock('coveo.analytics', () => {
 });
 
 const exampleFeedback = 'irrelevant';
+const exampleFeedbackV2: GeneratedAnswerFeedbackV2 = {
+  helpful: true,
+  documented: 'yes',
+  correctTopic: 'no',
+  hallucinationFree: 'unknown',
+  readable: 'yes',
+};
 const exampleGenerativeQuestionAnsweringId = '123';
 const exampleSearchUid = '456';
 const exampleDetails = 'example details';
@@ -306,6 +315,26 @@ describe('generated answer insight analytics actions', () => {
       );
     });
 
+    it('should log #logGeneratedAnswerFeedbackV2 with the right payload', async () => {
+      await logGeneratedAnswerFeedbackV2(exampleFeedbackV2)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        reason: exampleFeedbackV2,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
     it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
       await logGeneratedAnswerStreamEnd(true)()(
         engine.dispatch,
@@ -485,6 +514,17 @@ describe('generated answer insight analytics actions', () => {
 
     it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
       await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logGeneratedAnswerFeedbackV2 with the right payload', async () => {
+      await logGeneratedAnswerFeedbackV2(exampleFeedbackV2)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
