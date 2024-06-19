@@ -1,3 +1,3 @@
 import {SummaryState} from '../../core/summary/headless-core-summary';
 
-export interface ProductListingSummaryState extends SummaryState {}
+export interface RecommendationsSummaryState extends SummaryState {}
