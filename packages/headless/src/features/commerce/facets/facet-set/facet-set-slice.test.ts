@@ -22,7 +22,7 @@ import {
 import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
-import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {
@@ -101,7 +101,7 @@ describe('commerceFacetSetReducer', () => {
     {
       actionName: '#fetchProductListing.fulfilled',
       action: fetchProductListing.fulfilled,
-      responseBuilder: buildFetchProductListingV2Response,
+      responseBuilder: buildFetchProductListingResponse,
     },
     {
       actionName: '#executeSearch.fulfilled',
@@ -118,7 +118,7 @@ describe('commerceFacetSetReducer', () => {
         | typeof fetchProductListing.fulfilled
         | typeof executeSearch.fulfilled;
       responseBuilder: () => ReturnType<
-        typeof buildSearchResponse | typeof buildFetchProductListingV2Response
+        typeof buildSearchResponse | typeof buildFetchProductListingResponse
       >;
     }) => {
       const facetId = '1';

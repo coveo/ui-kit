@@ -1,6 +1,7 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
@@ -181,7 +182,7 @@ describe('pagination slice', () => {
   );
 
   it('sets the principal pagination on #fetchProductListing.fulfilled', () => {
-    const response = buildFetchProductListingV2Response({
+    const response = buildFetchProductListingResponse({
       pagination,
     });
 
@@ -250,6 +251,10 @@ describe('pagination slice', () => {
 
   describe.each([
     {
+      actionName: '#deselectAllBreadcrumbs',
+      action: deselectAllBreadcrumbs,
+    },
+    {
       actionName: '#deselectAllFacetValues',
       action: deselectAllFacetValues,
     },
@@ -297,8 +302,7 @@ describe('pagination slice', () => {
     it('resets principal pagination', () => {
       state.principal.page = 5;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const finalState = paginationReducer(state, action({} as any));
+      const finalState = paginationReducer(state, action({} as never));
 
       expect(finalState.principal.page).toBe(0);
     });

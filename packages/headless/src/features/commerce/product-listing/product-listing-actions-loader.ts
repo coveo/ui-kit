@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
+import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {QueryCommerceAPIThunkReturn} from '../common/actions';
 import {
   StateNeededByFetchProductListing,

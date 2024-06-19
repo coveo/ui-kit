@@ -1,9 +1,10 @@
 import {
   CategoryFacetState,
   CategoryFacetValue,
-  ListingSummary,
-  SearchSummary,
   CategoryFacet,
+  SearchSummaryState,
+  ProductListingSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
@@ -59,18 +60,20 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   /**
    * The summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The category facet controller instance.
    */
   @Prop() public facet!: CategoryFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
   @State() public error!: Error;
-
-  @State() private isCollapsed = false;
 
   private resultIndexToFocusOnShowMore = 0;
   private showLessFocus?: FocusTargetController;
@@ -393,12 +396,12 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
       facetState: {facetSearch, selectedValueAncestry, values},
     } = this;
 
-    const {hasError, firstSearchExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summary.state;
 
     return (
       <FacetGuard
         enabled={true}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasError={hasError}
         hasResults={values.length > 0}
       >

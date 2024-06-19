@@ -1,3 +1,4 @@
+import {isUndefined} from '@coveo/bueno';
 import {NumericFacet} from '@coveo/headless/commerce';
 import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
 import {Button} from '../../../common/button';
@@ -55,8 +56,22 @@ export class FacetNumberInput {
     ]);
   }
 
+  private get absoluteMinimum(): number {
+    const {field} = this.facet.state;
+    const isPriceField = ['ec_price', 'ec_promo_price'].includes(field);
+    return isPriceField ? 0 : Number.MIN_SAFE_INTEGER;
+  }
+
+  private get minimumInputValue(): number {
+    return isUndefined(this.start) ? this.absoluteMinimum : this.start;
+  }
+
+  private get maximumInputValue() {
+    return isUndefined(this.end) ? Number.MAX_SAFE_INTEGER : this.end;
+  }
+
   render() {
-    const {facetId, domain} = this.facet.state;
+    const {facetId} = this.facet.state;
     const label = this.bindings.i18n.t(this.label);
     const minText = this.bindings.i18n.t('min');
     const maxText = this.bindings.i18n.t('max');
@@ -96,8 +111,8 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={minAria}
           required
-          min={Number.MIN_SAFE_INTEGER}
-          max={domain!.max}
+          min={this.absoluteMinimum}
+          max={this.maximumInputValue}
           value={this.range?.start}
           onInput={(e) =>
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
@@ -115,7 +130,7 @@ export class FacetNumberInput {
           class={inputClasses}
           aria-label={maxAria}
           required
-          min={domain!.min}
+          min={this.minimumInputValue}
           max={Number.MAX_SAFE_INTEGER}
           value={this.range?.end}
           onInput={(e) =>

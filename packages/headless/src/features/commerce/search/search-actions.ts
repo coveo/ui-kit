@@ -5,32 +5,28 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {
-  CommerceQuerySection,
-  CommerceSearchSection,
-} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
 } from '../../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
-import {updatePage} from '../../pagination/pagination-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
-import {
-  buildCommerceAPIRequest,
-  ListingAndSearchStateNeededByQueryCommerceAPI,
-} from '../common/actions';
+import {buildCommerceAPIRequest} from '../common/actions';
+import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
   UpdateQueryActionCreatorPayload,
   updateQuery,
 } from '../query/query-actions';
 import {
+  AsyncSearchThunkProcessor,
+  StateNeededByExecuteSearch,
+} from './search-actions-thunk-processor';
+import {
   querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
-  queryExecutedFromResponseSelector,
 } from './search-selectors';
 
 export interface QuerySearchCommerceAPIThunkReturn {
@@ -41,11 +37,6 @@ export interface QuerySearchCommerceAPIThunkReturn {
   /** The original query expression that was received and automatically corrected. */
   originalQuery: string;
 }
-
-export type StateNeededByExecuteSearch =
-  ListingAndSearchStateNeededByQueryCommerceAPI &
-    CommerceSearchSection &
-    CommerceQuerySection;
 
 export interface PrepareForSearchWithQueryOptions {
   /**
@@ -79,69 +70,52 @@ export const executeSearch = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->(
-  'commerce/search/executeSearch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const {apiClient} = extra;
+>('commerce/search/executeSearch', async (_action, config) => {
+  const {getState} = config;
+  const state = getState();
 
-    const query = querySelector(state);
-    const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
-      query,
-    });
+  const request = await buildCommerceAPIRequest(state);
+  const query = querySelector(state);
 
-    if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
-      return rejectWithValue(fetched.error);
-    }
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >(config);
+  const fetchedResponse = await processor.fetchFromAPI({...request, query});
 
-    return {
-      response: fetched.success,
-      originalQuery: query,
-      queryExecuted: queryExecutedFromResponseSelector(state, fetched.success),
-    };
-  }
-);
+  return processor.process(fetchedResponse);
+});
 
 export const fetchMoreProducts = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn | null,
   void,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->(
-  'commerce/search/fetchMoreProducts',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
-    const moreProductsAvailable = moreProductsAvailableSelector(state);
-    if (!moreProductsAvailable) {
-      return null;
-    }
+>('commerce/search/fetchMoreProducts', async (_action, config) => {
+  const {getState} = config;
+  const state = getState();
 
-    const {apiClient} = extra;
-
-    const perPage = perPagePrincipalSelector(state);
-    const numberOfProducts = numberOfProductsSelector(state);
-    const nextPageToRequest = numberOfProducts / perPage;
-    const query = querySelector(state);
-
-    const fetched = await apiClient.search({
-      ...(await buildCommerceAPIRequest(state)),
-      query,
-      page: nextPageToRequest,
-    });
-
-    if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: fetched.success,
-      originalQuery: query,
-      queryExecuted: queryExecutedFromResponseSelector(state, fetched.success),
-    };
+  const moreProductsAvailable = moreProductsAvailableSelector(state);
+  if (!moreProductsAvailable) {
+    return null;
   }
-);
+
+  const perPage = perPagePrincipalSelector(state);
+  const numberOfProducts = numberOfProductsSelector(state);
+  const nextPageToRequest = numberOfProducts / perPage;
+  const query = querySelector(state);
+
+  const request = await buildCommerceAPIRequest(state);
+
+  const processor = new AsyncSearchThunkProcessor<
+    ReturnType<typeof config.rejectWithValue>
+  >(config);
+  const fetchedResponse = await processor.fetchFromAPI({
+    ...request,
+    query,
+    page: nextPageToRequest,
+  });
+
+  return processor.process(fetchedResponse);
+});
 
 export type PrepareForSearchWithQueryActionCreatorPayload =
   UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions;
@@ -168,7 +142,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
       query: payload.query,
     })
   );
-  dispatch(updatePage(1));
+  dispatch(selectPage({page: 0}));
 });
 
 export const fetchInstantProducts = createAsyncThunk<

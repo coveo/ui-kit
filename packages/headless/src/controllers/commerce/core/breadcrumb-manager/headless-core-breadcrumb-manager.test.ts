@@ -109,9 +109,16 @@ describe('core breadcrumb manager', () => {
     expect(breadcrumbManager.subscribe).toBeTruthy();
   });
 
-  it('#deselectAll deselects all breadcrumbs', () => {
-    breadcrumbManager.deselectAll();
-    expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+  describe('#deselectAll', () => {
+    it('deselects all breadcrumbs', () => {
+      breadcrumbManager.deselectAll();
+      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+    });
+
+    it('dispatches #fetchProductsActionCreator', () => {
+      breadcrumbManager.deselectAll();
+      expect(fetchProductsActionCreator).toHaveBeenCalled();
+    });
   });
 
   describe('regular facet breadcrumbs', () => {

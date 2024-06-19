@@ -1,9 +1,10 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {getOrganizationEndpoints} from '../../api/platform-client';
 import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart';
 import {ContextOptions} from '../../controllers/commerce/context/headless-context';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation';
 import {contextDefinition} from '../../features/commerce/context/context-validation';
+import {PlatformEnvironment} from '../../utils/url-utils';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
@@ -17,6 +18,7 @@ import {
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;
   cart?: CartInitialState;
+  environment?: PlatformEnvironment;
 }
 
 export const commerceEngineConfigurationSchema =
@@ -29,31 +31,60 @@ export const commerceEngineConfigurationSchema =
     cart: new RecordValue({
       values: cartDefinition,
     }),
+    environment: new StringValue<PlatformEnvironment>({
+      required: false,
+      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+      emptyAllowed: false,
+      default: 'prod',
+    }),
   });
 
+// TODO KIT-3244: Use a different sample organization
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {
-    organizationId: 'fashioncoveodemocomgzh7iep8',
-    // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
-    accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+    accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
+    organizationId: 'barcasportsmcy01fvu',
     organizationEndpoints: getOrganizationEndpoints(
-      'fashioncoveodemocomgzh7iep8'
+      'barcasportsmcy01fvu',
+      'dev'
     ),
+    analytics: {
+      trackingId: 'sports',
+    },
     context: {
       language: 'en',
-      country: 'CA',
-      currency: 'CAD',
+      country: 'US',
+      currency: 'USD',
       view: {
-        url: 'https://www.example.com',
+        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        referrer: document.referrer,
       },
     },
     cart: {
       items: [
         {
-          name: 'Sample Product',
+          productId: 'SP01057_00001',
           quantity: 1,
-          price: 100,
-          productId: 'sample-product-id',
+          name: 'Kayaker Canoe',
+          price: 800,
+        },
+        {
+          productId: 'SP00081_00001',
+          quantity: 1,
+          name: 'Bamboo Canoe Paddle',
+          price: 120,
+        },
+        {
+          productId: 'SP04236_00005',
+          quantity: 1,
+          name: 'Eco-Brave Rashguard',
+          price: 33,
+        },
+        {
+          productId: 'SP04236_00005',
+          quantity: 1,
+          name: 'Eco-Brave Rashguard',
+          price: 33,
         },
       ],
     },
