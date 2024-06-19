@@ -12,10 +12,9 @@ import {
   ProductListing,
   Context,
   buildContext,
-  buildSearchSummary,
-  buildListingSummary,
-  SearchSummary,
-  ListingSummary,
+  Summary,
+  SearchSummaryState,
+  ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -48,7 +47,7 @@ import {
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicCommerceStore, createAtomicCommerceStore} from './store';
 
-const FirstSearchExecutedFlag = 'firstSearchExecuted';
+const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
@@ -76,10 +75,9 @@ export class AtomicCommerceInterface
 {
   private urlManager!: UrlManager;
   private searchOrListing!: Search | ProductListing;
-  private summary!: SearchSummary | ListingSummary;
+  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
-  private unsubscribeSearchStatus: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: AtomicCommerceStore;
@@ -183,7 +181,7 @@ export class AtomicCommerceInterface
   }
 
   public connectedCallback() {
-    this.store.setLoadingFlag(FirstSearchExecutedFlag);
+    this.store.setLoadingFlag(FirstRequestExecutedFlag);
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -226,7 +224,6 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
     this.unsubscribeSummary();
     window.removeEventListener('hashchange', this.onHashChange);
   }
@@ -373,39 +370,31 @@ export class AtomicCommerceInterface
       this.type === 'product-listing'
         ? buildProductListing(this.engine!)
         : buildSearch(this.engine!);
-
-    this.unsubscribeSearchStatus = this.searchOrListing.subscribe(() => {
-      if (
-        !this.searchOrListing.state.isLoading &&
-        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
-      ) {
-        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
-      }
-    });
   }
 
   private initSummary() {
-    this.summary =
-      this.type === 'product-listing'
-        ? buildListingSummary(this.engine!)
-        : buildSearchSummary(this.engine!);
+    this.summary = this.searchOrListing.summary();
 
     this.unsubscribeSummary = this.summary.subscribe(() => {
-      const {firstSearchExecuted, hasProducts, hasError} = this.summary.state;
-      const hasNoProductsAfterInitialSearch =
-        firstSearchExecuted && !hasError && !hasProducts;
+      const {firstRequestExecuted, hasProducts, hasError} = this.summary.state;
+      const hasNoProductsAfterInitialQuery =
+        firstRequestExecuted && !hasError && !hasProducts;
 
       this.host.classList.toggle(
         noProductsSelector,
-        hasNoProductsAfterInitialSearch
+        hasNoProductsAfterInitialQuery
       );
 
       this.host.classList.toggle(errorSelector, hasError);
 
       this.host.classList.toggle(
         firstSearchExecutedSelector,
-        firstSearchExecuted
+        firstRequestExecuted
       );
+
+      if (firstRequestExecuted) {
+        this.store.unsetLoadingFlag(FirstRequestExecutedFlag);
+      }
     });
   }
 

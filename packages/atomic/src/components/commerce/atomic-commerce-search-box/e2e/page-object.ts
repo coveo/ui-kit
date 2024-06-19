@@ -1,9 +1,9 @@
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class AtomicCommerceSearchBoxLocators {
-  private page: Page;
+export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-box'> {
   constructor(page: Page) {
-    this.page = page;
+    super(page, 'atomic-commerce-search-box');
   }
 
   get submitButton() {
@@ -52,10 +52,6 @@ export class AtomicCommerceSearchBoxLocators {
         `instant result\\.(?: Button\\.) ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
       )
     );
-  }
-
-  get hydrated() {
-    return this.page.locator('atomic-commerce-search-box[class*="hydrated"]');
   }
 
   private listSideAffix(listSide?: 'Left' | 'Right') {
