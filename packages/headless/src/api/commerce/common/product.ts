@@ -117,16 +117,22 @@ export interface BaseProduct {
   /**
    * The total number of child products fetched through [product grouping](https://docs.coveo.com/en/l78i2152).
    */
-  totalNumberOfChildren: number;
-}
-
-export interface ProductWithPosition extends BaseProduct {
+  totalNumberOfChildren: number | null;
   /**
-   * The 1-based product's position across the non-paginated result set.
+   * The contextual excerpt generated for the product.
    *
-   * E.g., if the product is the third one on the second page, and there are 10 products per page, its position is 13 (not 3).
+   * @example
+   * ... This orange sea kayak is perfect for beginner and experienced kayakers ... and want to enjoy the water without having to deal with the hassle of attaching a boat to their kayak.
    */
-  position: number;
+  excerpt?: string | null;
+  /**
+   * The length and offset of each word to highlight in the product name.
+   */
+  nameHighlights?: HighlightKeyword[];
+  /**
+   * The length and offset of each word to highlight in the product excerpt string.
+   */
+  excerptsHighlights?: HighlightKeyword[];
 }
 
 export interface Product extends BaseProduct {
@@ -137,23 +143,3 @@ export interface Product extends BaseProduct {
    */
   position: number;
 }
-
-export interface SearchProduct extends ProductWithPosition {
-  /**
-   * The contextual excerpt generated for the product.
-   *
-   * @example
-   * ... This orange sea kayak is perfect for beginner and experienced kayakers ... and want to enjoy the water without having to deal with the hassle of attaching a boat to their kayak.
-   */
-  excerpt: string | null;
-  /**
-   * The length and offset of each word to highlight in the product name.
-   */
-  nameHighlights: HighlightKeyword[];
-  /**
-   * The length and offset of each word to highlight in the product excerpt string.
-   */
-  excerptsHighlights: HighlightKeyword[];
-}
-
-export interface ListingProduct extends ProductWithPosition {}
