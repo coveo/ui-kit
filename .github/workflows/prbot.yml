@@ -228,14 +228,15 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
-  e2e-atomic-hosted-page-test:
+  playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-hosted-page
+      - run: npm run build
+      - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
     needs: build
@@ -305,6 +306,7 @@ jobs:
       - 'lint-check'
       - 'unit-test'
       - 'playwright-atomic'
+      - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
       - 'e2e-quantic'
@@ -315,7 +317,6 @@ jobs:
       - 'e2e-atomic-angular-test'
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
-      - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
       - 'e2e-headless-ssr-test-app-dev'
       - 'e2e-headless-ssr-test-app-prod'
@@ -340,6 +341,7 @@ jobs:
       - 'lint-check'
       - 'unit-test'
       - 'playwright-atomic'
+      - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'
       - 'e2e-atomic-react-test'
@@ -348,7 +350,6 @@ jobs:
       - 'e2e-atomic-angular-test'
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
-      - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
       - 'e2e-headless-ssr-test-app-dev'
       - 'e2e-headless-ssr-test-app-prod'
