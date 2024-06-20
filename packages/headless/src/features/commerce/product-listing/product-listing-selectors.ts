@@ -51,5 +51,5 @@ export const isLoadingSelector = createSelector(
 
 export const errorSelector = createSelector(
   (state: Partial<ProductListingSection>) => state.productListing?.error,
-  (error) => error
+  (error) => error ?? null
 );

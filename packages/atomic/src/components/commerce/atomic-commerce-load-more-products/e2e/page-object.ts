@@ -1,9 +1,9 @@
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class AtomicCommerceLoadMoreProductsLocators {
-  private page: Page;
+export class LoadMoreProductsPageObject extends BasePageObject<'atomic-commerce-load-more-products'> {
   constructor(page: Page) {
-    this.page = page;
+    super(page, 'atomic-commerce-load-more-products');
   }
 
   summary({index, total}: {index?: number; total?: number} = {}) {

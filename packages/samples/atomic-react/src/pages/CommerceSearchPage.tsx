@@ -125,7 +125,7 @@ function MyTemplate() {
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>
       <AtomicProductSectionEmphasized>
-        <AtomicProductPrice currency="USD" />
+        <AtomicProductPrice />
       </AtomicProductSectionEmphasized>
       <AtomicProductSectionDescription>
         <AtomicProductDescription />

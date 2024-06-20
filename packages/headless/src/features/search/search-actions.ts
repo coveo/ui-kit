@@ -183,7 +183,7 @@ export const fetchMoreResults = createAsyncThunk<
   }
 
   const analyticsAction = makeBasicNewSearchAnalyticsAction(
-    SearchPageEvents.pagerScrolling,
+    SearchPageEvents.browseResults,
     config.getState
   );
 
