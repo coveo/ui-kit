@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.65.0",
+  "version": "2.68.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -59,6 +59,7 @@
     "dayjs": "1.11.11",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
+    "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "^3.0.0",
     "pino": "8.21.0",
     "redux-thunk": "3.1.0",

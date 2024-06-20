@@ -3,6 +3,8 @@ import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-face
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
+import {mockRelay} from '../../../../test/mock-engine-v2';
+import {buildMockNavigatorContextProvider} from '../../../../test/mock-navigator-context-provider';
 import {createMockState} from '../../../../test/mock-state';
 import {buildSearchRequest} from '../../../search/search-request';
 import {buildCategoryFacetSearchRequest} from './category-facet-search-request-builder';
@@ -18,7 +20,13 @@ describe('#buildCategoryFacetSearchRequest', () => {
   }
 
   function buildParams() {
-    return buildCategoryFacetSearchRequest(id, state, false);
+    return buildCategoryFacetSearchRequest(
+      id,
+      state,
+      buildMockNavigatorContextProvider()(),
+      mockRelay(),
+      false
+    );
   }
 
   beforeEach(() => setupState());
@@ -77,7 +85,11 @@ describe('#buildCategoryFacetSearchRequest', () => {
 
   it('sets the #searchContext to the search request params', async () => {
     const facet = state.categoryFacetSet[id]!.request;
-    const builtRequest = await buildSearchRequest(state);
+    const builtRequest = await buildSearchRequest(
+      state,
+      buildMockNavigatorContextProvider()(),
+      mockRelay()
+    );
     const request = {...builtRequest.request, facets: [facet]};
 
     expect((await buildParams()).searchContext).toEqual({

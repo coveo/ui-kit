@@ -12,6 +12,18 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
+    initializer: 'buildFieldSuggestionsGenerator',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInstantProducts',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildNotifyTrigger',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildProductListing',
     samplePaths: {
       react_fn: [
@@ -20,7 +32,15 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildProductTemplatesManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildProductView',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildQueryTrigger',
     samplePaths: {},
   },
   {
@@ -32,6 +52,14 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildRedirectionTrigger',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildRecentQueriesList',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildSearch',
     samplePaths: {
       react_fn: [
@@ -41,6 +69,10 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildSearchBox',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildStandaloneSearchBox',
     samplePaths: {},
   },
 ];

@@ -1,11 +1,10 @@
 import {
-  ListingSummary,
-  ListingSummaryState,
+  buildProductListing,
+  buildSearch,
   Pagination,
-  SearchSummary,
+  ProductListingSummaryState,
   SearchSummaryState,
-  buildListingSummary,
-  buildSearchSummary,
+  Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -41,14 +40,16 @@ export class AtomicQuerySummary
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
-  public listingOrSearchSummary!: SearchSummary | ListingSummary;
+  public listingOrSearchSummary!: Summary<
+    SearchSummaryState | ProductListingSummaryState
+  >;
   public pagination!: Pagination;
 
   @BindStateToController('listingOrSearchSummary')
   @State()
   private listingOrSearchSummaryState!:
     | SearchSummaryState
-    | ListingSummaryState;
+    | ProductListingSummaryState;
 
   @State() public error!: Error;
 
@@ -56,17 +57,17 @@ export class AtomicQuerySummary
   protected ariaMessage!: string;
 
   public initialize() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.listingOrSearchSummary = buildListingSummary(this.bindings.engine);
-    } else {
-      this.listingOrSearchSummary = buildSearchSummary(this.bindings.engine);
-    }
+    const controller =
+      this.bindings.interfaceElement.type === 'product-listing'
+        ? buildProductListing(this.bindings.engine)
+        : buildSearch(this.bindings.engine);
+    this.listingOrSearchSummary = controller.summary();
   }
 
   public render() {
     const {
       firstProduct,
-      firstSearchExecuted,
+      firstRequestExecuted,
       lastProduct,
       totalNumberOfProducts,
       hasProducts,
@@ -89,7 +90,7 @@ export class AtomicQuerySummary
 
     return (
       <QuerySummaryGuard
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasResults={hasProducts}
         hasError={hasError}
       >
@@ -106,7 +107,7 @@ export class AtomicQuerySummary
   }
 
   private isSearch(
-    state: ListingSummaryState | SearchSummaryState
+    state: ProductListingSummaryState | SearchSummaryState
   ): state is SearchSummaryState {
     return 'query' in state;
   }
