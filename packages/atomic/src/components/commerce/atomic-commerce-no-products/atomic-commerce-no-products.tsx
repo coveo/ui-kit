@@ -1,10 +1,9 @@
 import {
-  SearchSummary,
-  ListingSummary,
-  buildSearchSummary,
-  buildListingSummary,
   SearchSummaryState,
-  ListingSummaryState,
+  ProductListingSummaryState,
+  Summary,
+  buildSearch,
+  buildProductListing,
 } from '@coveo/headless/commerce';
 import {Component, State, h} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -42,19 +41,20 @@ export class AtomicCommerceNoProducts
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
-  public summary!: SearchSummary | ListingSummary;
+  public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
   @BindStateToController('summary')
   @State()
-  private summaryState!: SearchSummaryState | ListingSummaryState;
+  private summaryState!: SearchSummaryState | ProductListingSummaryState;
   @State() public error!: Error;
   @AriaLiveRegion('no-products')
   protected ariaMessage!: string;
 
   public initialize() {
-    this.summary =
+    const controller =
       this.bindings.interfaceElement.type === 'search'
-        ? buildSearchSummary(this.bindings.engine)
-        : buildListingSummary(this.bindings.engine);
+        ? buildSearch(this.bindings.engine)
+        : buildProductListing(this.bindings.engine);
+    this.summary = controller.summary();
   }
   render() {
     const {
@@ -69,7 +69,8 @@ export class AtomicCommerceNoProducts
 
     return (
       <NoItemsGuard
-        {...this.summaryState}
+        isLoading={this.summaryState.isLoading}
+        firstSearchExecuted={this.summaryState.firstRequestExecuted}
         hasResults={this.summaryState.hasProducts}
       >
         <NoItemsContainer>

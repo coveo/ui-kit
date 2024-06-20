@@ -1,3 +1,10 @@
+# 2.68.0 (2024-06-19)
+
+### Features
+
+- **headless/commerce:** add basic plp, search and recs use case examples ([#4079](https://github.com/coveo/ui-kit/issues/4079)) ([7dcb7ac](https://github.com/coveo/ui-kit/commits/7dcb7ac80523c64c125a208b1b99465a2bc33296))
+- update search action cause to browseResults in insight-search and pagination ([#4068](https://github.com/coveo/ui-kit/issues/4068)) ([a5ee23a](https://github.com/coveo/ui-kit/commits/a5ee23a90cbecc2cde33a1482fbaed70285f3e53))
+
 # 2.67.0 (2024-06-13)
 
 ### Bug Fixes
