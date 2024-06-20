@@ -1,5 +1,10 @@
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
 import {
   activeParametersSelector,
@@ -9,6 +14,9 @@ import {productListingSerializer} from '../../../features/commerce/parameters/pa
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions';
 import {
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
@@ -58,6 +66,12 @@ describe('headless product-listing', () => {
       activeParametersSelector,
       restoreActionCreator: restoreProductListingParameters,
       enrichParameters: enrichedParametersSelector,
+      isLoadingSelector,
+      errorSelector,
+      pageSelector: pagePrincipalSelector,
+      perPageSelector: perPagePrincipalSelector,
+      totalEntriesSelector: totalEntriesPrincipalSelector,
+      numberOfProductsSelector,
     });
   });
 
