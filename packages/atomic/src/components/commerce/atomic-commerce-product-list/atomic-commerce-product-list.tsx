@@ -31,11 +31,11 @@ import {
   DisplayTableRow,
 } from '../../common/item-list/display-table';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
-import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {
   ItemListCommon,
   ItemRenderingFunction,
 } from '../../common/item-list/item-list-common';
+import {ItemListGuard} from '../../common/item-list/item-list-guard';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -183,29 +183,39 @@ export class AtomicCommerceProductList
       : this.searchState;
   }
 
+  get summaryState() {
+    return this.bindings.interfaceElement.type === 'product-listing'
+      ? this.productListing.summary().state
+      : this.search.summary().state;
+  }
+
   public render() {
     const listClasses = this.computeListDisplayClasses();
 
+    const {firstRequestExecuted, hasError, hasProducts} = this.summaryState;
     return (
-      <DisplayWrapper display={this.display} listClasses={listClasses}>
-        <ResultsPlaceholdersGuard
-          density={this.density}
-          display={this.display}
-          imageSize={this.imageSize}
-          displayPlaceholders={!this.bindings.store.isAppLoaded()}
-          numberOfPlaceholders={this.numberOfPlaceholders}
-        ></ResultsPlaceholdersGuard>
-        <ItemDisplayGuard
-          firstRequestExecuted={!!this.productState.responseId}
-          hasItems={this.productState.products.length > 0}
-        >
+      <ItemListGuard
+        hasError={hasError}
+        hasTemplate={this.resultTemplateRegistered}
+        templateHasError={this.productTemplateProvider.hasError}
+        firstRequestExecuted={firstRequestExecuted}
+        hasItems={hasProducts}
+      >
+        <DisplayWrapper display={this.display} listClasses={listClasses}>
+          <ResultsPlaceholdersGuard
+            density={this.density}
+            display={this.display}
+            imageSize={this.imageSize}
+            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            numberOfPlaceholders={this.numberOfPlaceholders}
+          ></ResultsPlaceholdersGuard>
           {this.display === 'table'
             ? this.renderAsTable()
             : this.display === 'grid'
               ? this.renderAsGrid()
               : this.renderAsList()}
-        </ItemDisplayGuard>
-      </DisplayWrapper>
+        </DisplayWrapper>
+      </ItemListGuard>
     );
   }
 
