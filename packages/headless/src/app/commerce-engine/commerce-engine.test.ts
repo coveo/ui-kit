@@ -17,6 +17,10 @@ describe('buildCommerceEngine', () => {
   }
 
   beforeEach(() => {
+    Object.defineProperty(global, 'document', {
+      value: {referrer: 'referrer'},
+      configurable: true,
+    });
     options = {
       configuration: getSampleCommerceEngineConfiguration(),
       loggerOptions: {level: 'silent'},

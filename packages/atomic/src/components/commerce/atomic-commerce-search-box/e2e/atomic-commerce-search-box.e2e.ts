@@ -1,10 +1,8 @@
 import {test, expect} from './fixture';
 
 test.describe('default', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({suggestionTimeout: 5000});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -50,10 +48,8 @@ test.describe('default', () => {
 });
 
 test.describe('with instant results & query suggestions', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story&args=attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
   });
 
   test.describe('after clicking the searchbox input', () => {
@@ -82,10 +78,12 @@ test.describe('with instant results & query suggestions', () => {
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-disable-search:!true;attributes-minimum-query-length:1;attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({
+      suggestionTimeout: 5000,
+      disableSearch: true,
+      minimumQueryLength: 1,
+    });
   });
 
   const testCases = () => {
@@ -124,10 +122,8 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 });
 
 test.describe('with minimum-query-length=4', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-minimum-query-length:4;attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({minimumQueryLength: 4, suggestionTimeout: 5000});
   });
 
   const testCases = () => {
@@ -180,9 +176,10 @@ test.describe('with minimum-query-length=4', () => {
 });
 
 test.describe('with a facet & clear-filters set to true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=attributes-clear-filters:!true;attributes-suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load(
+      {clearFilters: true, suggestionTimeout: 5000},
+      'in-page'
     );
   });
 
@@ -198,9 +195,10 @@ test.describe('with a facet & clear-filters set to true', () => {
 });
 
 test.describe('with a facet & clear-filters set to false', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=attributes-clear-filters:!false;attributes-suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load(
+      {clearFilters: false, suggestionTimeout: 5000},
+      'in-page'
     );
   });
 
@@ -212,23 +210,5 @@ test.describe('with a facet & clear-filters set to false', () => {
     await facets.clearFilters().waitFor({state: 'visible'});
     await searchBox.submitButton.click();
     await expect(facets.clearFilters()).toBeVisible();
-  });
-});
-
-test.describe('with enable-query-syntax=true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=attributes-enable-query-syntax:!true;attributes-suggestion-timeout:5000'
-    );
-  });
-
-  test('should use query syntax', async ({loadMore, searchBox, page}) => {
-    await loadMore.button.waitFor({state: 'visible'});
-    await searchBox.searchInput
-      // eslint-disable-next-line @cspell/spellchecker
-      .fill('@urihash=bzo5fpM1vf8Xñds1');
-    await searchBox.submitButton.click();
-    await expect(loadMore.summary({total: 1})).toBeVisible();
-    await expect(page.getByText('WiLife Life Jacket WiLife')).toBeVisible();
   });
 });

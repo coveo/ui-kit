@@ -1,6 +1,12 @@
-import {Product} from '@coveo/headless/commerce';
-import {Component, h, Prop} from '@stencil/core';
 import {
+  buildContext,
+  Product,
+  Context,
+  ContextState,
+} from '@coveo/headless/commerce';
+import {Component, h} from '@stencil/core';
+import {
+  BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
@@ -22,11 +28,12 @@ export class AtomicProductPrice
   public error!: Error;
 
   @ProductContext() private product!: Product;
+  public context!: Context;
+  @BindStateToController('context') contextState!: ContextState;
 
-  /**
-   * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-   */
-  @Prop({reflect: true}) public currency: string = 'USD';
+  public initialize(): void {
+    this.context = buildContext(this.bindings.engine);
+  }
 
   public render() {
     const hasPromotionalPrice =
@@ -34,15 +41,15 @@ export class AtomicProductPrice
       this.product?.ec_price !== undefined &&
       this.product?.ec_promo_price < this.product?.ec_price;
 
+    const {currency} = this.contextState;
+
     return (
       <div class="flex flex-wrap">
         <atomic-product-numeric-field-value
           class={`truncate break-keep mx-1 ${hasPromotionalPrice && 'text-error'}`}
           field={hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'}
         >
-          <atomic-format-currency
-            currency={this.currency}
-          ></atomic-format-currency>
+          <atomic-format-currency currency={currency}></atomic-format-currency>
         </atomic-product-numeric-field-value>
         {hasPromotionalPrice && (
           <atomic-product-numeric-field-value
@@ -50,7 +57,7 @@ export class AtomicProductPrice
             field="ec_price"
           >
             <atomic-format-currency
-              currency={this.currency}
+              currency={currency}
             ></atomic-format-currency>
           </atomic-product-numeric-field-value>
         )}
