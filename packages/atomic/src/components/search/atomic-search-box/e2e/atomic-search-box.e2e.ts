@@ -53,15 +53,12 @@ test.describe('with instant results & query suggestions', () => {
   });
 
   test.describe('with recent queries', () => {
-    test.beforeEach(async ({searchBox, page}) => {
+    test.beforeEach(async ({searchBox}) => {
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
       await searchBox.searchInput.fill('kayak');
       await searchBox.searchInput.press('Enter');
-      await page.waitForResponse(
-        (res) =>
-          res.url().endsWith('/commerce/v2/search') && res.status() === 200
-      );
+      await searchBox.clearButton.waitFor({state: 'visible'});
       await searchBox.searchInput.fill('');
     });
 
