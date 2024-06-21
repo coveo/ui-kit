@@ -16,10 +16,51 @@ export default class ExampleQuanticSort extends LightningElement {
         'Define which use case to test. Possible values are: search, insight',
       defaultValue: 'search',
     },
+    {
+      attribute: 'customSortOptionsEnabled',
+      label: 'Custom Sort Options Enabled',
+      description: 'Enable the custom Sort options',
+      defaultValue: false,
+    },
+  ];
+
+  customSortOptionsArray = [
+    {
+      label: 'Date ascending',
+      value: 'date ascending',
+      criterion: {
+        by: 'date',
+        order: 'ascending',
+      },
+    },
+    {
+      label: 'Views Descending',
+      value: '@ytviewcount descending',
+      criterion: {
+        by: 'field',
+        field: 'ytviewcount',
+        order: 'descending',
+      },
+    },
+    {
+      label: 'No Sort',
+      value: 'nosort',
+      criterion: {
+        by: 'nosort',
+      },
+    },
   ];
 
   get notConfigured() {
     return !this.isConfigured;
+  }
+
+  get customSortOptionsEnabled() {
+    return this.config.customSortOptionsEnabled;
+  }
+
+  get customSortOptions() {
+    return this.customSortOptionsArray;
   }
 
   handleTryItNow(evt) {

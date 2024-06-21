@@ -33,8 +33,35 @@ describe('quantic-sort', () => {
   ];
   const sortOptionValues = sortOptions.map((option) => option.value);
 
+  const customSortOptions = [
+    {
+      label: 'Date ascending',
+      value: 'date ascending',
+      criterion: {
+        by: 'date',
+        order: 'ascending',
+      },
+    },
+    {
+      label: 'Views Descending',
+      value: '@ytviewcount descending',
+      criterion: {
+        by: 'field',
+        field: 'ytviewcount',
+        order: 'descending',
+      },
+    },
+    {
+      label: 'No Sort',
+      value: 'nosort',
+    },
+  ];
+  const customSortOptionsValues = customSortOptions.map(
+    (option) => option.value
+  );
   interface SortOptions {
     useCase: string;
+    customSortOptionsEnabled: boolean;
   }
 
   function visitSort(options: Partial<SortOptions>, waitForSearch = true) {
@@ -102,6 +129,41 @@ describe('quantic-sort', () => {
               Expect.logSortResults(value);
             });
           });
+      });
+
+      describe('when passing custom options as slots to the component', () => {
+        it('should display the custom options properly', () => {
+          visitSort({useCase: param.useCase, customSortOptionsEnabled: true});
+
+          Expect.displaySortDropdown(true);
+          Expect.labelContains('Sort by');
+
+          Actions.openDropdown();
+
+          Expect.containsOptions(customSortOptionsValues);
+          Expect.optionsEqual(customSortOptions);
+        });
+
+        customSortOptions.forEach(({label, value}) => {
+          describe('when selecting a custom option', () => {
+            it(`should update the shown selected option to ${label}`, () => {
+              visitSort({
+                useCase: param.useCase,
+                customSortOptionsEnabled: true,
+              });
+              Actions.selectOption(value);
+
+              Expect.selectedOption(value);
+
+              Expect.completeSearchRequest(
+                'resultsSort',
+                param.useCase,
+                (body) => Expect.sortCriteriaInSearchRequest(body, value)
+              );
+              Expect.logSortResults(value);
+            });
+          });
+        });
       });
 
       if (param.useCase === useCaseEnum.search) {
