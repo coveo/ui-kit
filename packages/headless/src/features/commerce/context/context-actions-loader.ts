@@ -23,7 +23,7 @@ export type {
  */
 export interface ContextActionCreators {
   /**
-   * Sets the context.
+   * Sets the entire context.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -33,7 +33,7 @@ export interface ContextActionCreators {
   ): PayloadAction<SetContextActionCreatorPayload>;
 
   /**
-   * Sets the user.
+   * Sets the user context property without modifying any other context properties.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -43,7 +43,7 @@ export interface ContextActionCreators {
   ): PayloadAction<SetUserActionCreatorPayload>;
 
   /**
-   * Sets the view.
+   * Sets the view context property without modifying any other context properties.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
