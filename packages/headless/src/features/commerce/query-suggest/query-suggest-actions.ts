@@ -1,6 +1,6 @@
+import {Relay} from '@coveo/relay';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
-import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
@@ -45,11 +45,11 @@ export const fetchQuerySuggestions = createAsyncThunk<
   'commerce/querySuggest/fetch',
   async (
     payload: {id: string},
-    {getState, rejectWithValue, extra: {apiClient, validatePayload}}
+    {getState, rejectWithValue, extra: {apiClient, validatePayload, relay}}
   ) => {
     validatePayload(payload, idDefinition);
     const state = getState();
-    const request = await buildQuerySuggestRequest(payload.id, state);
+    const request = buildQuerySuggestRequest(payload.id, state, relay);
     const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
@@ -64,11 +64,13 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-export const buildQuerySuggestRequest = async (
+export const buildQuerySuggestRequest = (
   id: string,
-  state: StateNeededByQuerySuggest
-): Promise<QuerySuggestRequest> => {
-  const {view, user, ...restOfContext} = state.commerceContext;
+  state: StateNeededByQuerySuggest,
+  relay: Relay
+): QuerySuggestRequest => {
+  const {view, ...restOfContext} = state.commerceContext;
+  const meta = relay.getMeta('');
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
@@ -76,10 +78,19 @@ export const buildQuerySuggestRequest = async (
     trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
+    clientId: meta.clientId,
     context: {
-      user,
-      view,
+      ...(meta.userAgent
+        ? {
+            user: {
+              userAgent: meta.userAgent,
+            },
+          }
+        : {}),
+      view: {
+        ...view,
+        ...(meta.referrer ? {referrer: meta.referrer} : {}),
+      },
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),

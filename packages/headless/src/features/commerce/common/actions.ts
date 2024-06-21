@@ -51,17 +51,27 @@ export const buildBaseCommerceAPIRequest = async (
   relay: Relay,
   slotId?: string
 ): Promise<BaseCommerceAPIRequest> => {
-  const {view, user, ...restOfContext} = state.commerceContext;
+  const {view, ...restOfContext} = state.commerceContext;
+  const meta = relay.getMeta('');
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: relay.getMeta('').clientId,
+    clientId: meta.clientId,
     context: {
-      user,
-      view,
+      ...(meta.userAgent
+        ? {
+            user: {
+              userAgent: meta.userAgent,
+            },
+          }
+        : {}),
+      view: {
+        ...view,
+        ...(meta.referrer ? {referrer: meta.referrer} : {}),
+      },
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),

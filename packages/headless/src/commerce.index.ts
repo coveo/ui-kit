@@ -54,7 +54,6 @@ export {buildController} from './controllers/controller/headless-controller';
 
 export type {
   ContextOptions,
-  User,
   View,
   ContextProps,
   Context,

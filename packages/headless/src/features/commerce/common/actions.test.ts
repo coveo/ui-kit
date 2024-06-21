@@ -1,4 +1,4 @@
-import {Relay, createRelay} from '@coveo/relay';
+import {Meta, Relay, createRelay} from '@coveo/relay';
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {
   BaseCommerceAPIRequest,
@@ -18,15 +18,37 @@ import {SortBy, SortCriterion, SortDirection} from '../sort/sort';
 import {getCommerceSortInitialState} from '../sort/sort-state';
 import * as Actions from './actions';
 
+jest.mock('@coveo/relay');
+
 describe('commerce common actions', () => {
   let relay: Relay;
+
   beforeEach(() => {
-    relay = createRelay({
+    const mockedCreateRelay = jest
+      .mocked(createRelay)
+      .mockImplementation(() => ({
+        emit: jest.fn(),
+        on: jest.fn(),
+        off: jest.fn(),
+        clearStorage: jest.fn(),
+        getMeta: jest.fn(
+          () =>
+            ({
+              clientId: 'client_id',
+              referrer: 'referrer',
+              userAgent: 'user_agent',
+            }) as Meta
+        ),
+        updateConfig: jest.fn(),
+        version: 'test',
+      }));
+    relay = mockedCreateRelay({
       token: 'token',
       trackingId: 'trackingId',
       url: 'url',
     });
   });
+
   describe('#buildBaseCommerceAPIRequest', () => {
     let expected: BaseCommerceAPIRequest;
     let state: Actions.StateNeededByQueryCommerceAPI;
@@ -47,14 +69,14 @@ describe('commerce common actions', () => {
         language: 'en',
         country: 'CA',
         currency: 'CAD',
-        clientId: expect.any(String),
+        clientId: 'client_id',
         context: {
           user: {
             userAgent: 'user_agent',
           },
           view: {
             url: 'https://example.com',
-            referrer: 'https://referrer.com',
+            referrer: 'referrer',
           },
           capture: true,
           cart: [
@@ -79,7 +101,6 @@ describe('commerce common actions', () => {
       state.commerceContext.language = expected.language;
       state.commerceContext.country = expected.country;
       state.commerceContext.currency = expected.currency as CurrencyCodeISO4217;
-      state.commerceContext.user = expected.context.user;
       state.commerceContext.view = expected.context.view;
       state.cart.cartItems = [product.productId];
       state.cart.cart = {
