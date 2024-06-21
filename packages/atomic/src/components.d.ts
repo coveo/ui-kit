@@ -275,6 +275,10 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
@@ -293,6 +297,10 @@ export namespace Components {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -404,6 +412,10 @@ export namespace Components {
           * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -676,6 +688,10 @@ export namespace Components {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -5688,6 +5704,10 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
@@ -5706,6 +5726,10 @@ declare namespace LocalJSX {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -5806,6 +5830,10 @@ declare namespace LocalJSX {
           * The numeric facet controller instance.
          */
         "facet": NumericFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -6050,6 +6078,10 @@ declare namespace LocalJSX {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
