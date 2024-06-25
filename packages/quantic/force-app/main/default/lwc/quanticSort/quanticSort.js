@@ -6,6 +6,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, track, api} from 'lwc';
 
@@ -19,6 +20,7 @@ import {LightningElement, track, api} from 'lwc';
  * @property {string} label
  * @property {string} value
  * @property {SortCriterion} criterion
+ * @example {label: 'Youtube views ascending', value: '@ytviewcount ascending', criterion: {by: 'field', field: '@ytviewcount', order: 'ascending'}
  */
 
 /**
@@ -26,7 +28,13 @@ import {LightningElement, track, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-sort engine-id={engineId}></c-quantic-sort>
+ * <c-quantic-sort engine-id={engineId}>
+ *  <c-quantic-sort-option
+      key={sortOptionValue}
+      label={sortOptionLabel}
+      value={sortOptionValue}
+      criterion={sortOptionCriterion}
+    ></c-quantic-sort-option></c-quantic-sort>
  */
 export default class QuanticSort extends LightningElement {
   /**
@@ -56,6 +64,9 @@ export default class QuanticSort extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
 
+  /** @type {string} */
+  error;
+
   labels = {
     sortBy,
     relevancy,
@@ -65,6 +76,42 @@ export default class QuanticSort extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    getBueno(this).then(() => {
+      this.customSortOptions.forEach((option) => {
+        const criterion = option.criterion;
+        // Checks that the label of the custom sort option is a string
+        if (!option.label || !Bueno.isString(option.label)) {
+          console.error(
+            `The ${this.template.host.localName} component requires a label to be specified.`
+          );
+          this.setSortOptionsConfigurationError();
+        }
+        // Checks that the value of the custom sort option is a string
+        if (!option.value || !Bueno.isString(option.value)) {
+          console.error(
+            `The ${this.template.host.localName} component requires a value to be specified.`
+          );
+          this.setSortOptionsConfigurationError();
+        }
+        /**
+         * Checks that the criterion of the custom sort option is an object which respects the following:
+         * By should be a string
+         * If sorting by field, field must be a string
+         * If sorting by field or date, order must be a string
+         */
+        if (
+          !Bueno.isString(criterion.by) ||
+          (criterion.by === 'field' && !Bueno.isString(criterion.field)) ||
+          ((criterion.by === 'field' || criterion.by === 'date') &&
+            !Bueno.isString(criterion.order))
+        ) {
+          console.error(
+            `The ${this.template.host.localName} component requires a criterion of type sortCriterion to be specified.`
+          );
+          this.setSortOptionsConfigurationError();
+        }
+      });
+    });
   }
 
   renderedCallback() {
@@ -134,6 +181,13 @@ export default class QuanticSort extends LightningElement {
     this.hasInitializationError = true;
   }
 
+  /**
+   * Sets the error when custom sort options have an invalid configuration.
+   */
+  setSortOptionsConfigurationError() {
+    this.error = `${this.template.host.localName} Error`;
+  }
+
   get relevancy() {
     return this.headless.buildRelevanceSortCriterion();
   }
@@ -165,16 +219,17 @@ export default class QuanticSort extends LightningElement {
     if (elements.length === 0) {
       return [];
     }
-    return elements.map((element) => {
+
+    return elements.map((option) => {
       return {
-        label: element.label,
-        value: element.value,
+        label: option.label,
+        value: option.value,
         criterion: {
-          by: element.criterion.by,
+          by: option.criterion.by,
           // @ts-ignore
-          order: element.criterion.order,
+          order: option.criterion.order,
           // @ts-ignore
-          field: element.criterion.field,
+          field: option.criterion.field,
         },
       };
     });
