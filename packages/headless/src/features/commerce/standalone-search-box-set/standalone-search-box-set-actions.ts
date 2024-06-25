@@ -82,7 +82,7 @@ export const fetchRedirectUrl = createAsyncThunk<
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
     const state = getState();
-    const request = await buildPlanRequest(state, relay, navigatorContext);
+    const request = buildPlanRequest(state, relay, navigatorContext);
     const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -95,13 +95,13 @@ export const fetchRedirectUrl = createAsyncThunk<
   }
 );
 
-export const buildPlanRequest = async (
+export const buildPlanRequest = (
   state: StateNeededForRedirect,
   relay: Relay,
   navigatorContext: NavigatorContext
-): Promise<CommerceSearchRequest> => {
+): CommerceSearchRequest => {
   return {
     query: state.commerceQuery.query,
-    ...(await buildBaseCommerceAPIRequest(state, relay, navigatorContext)),
+    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
   };
 };

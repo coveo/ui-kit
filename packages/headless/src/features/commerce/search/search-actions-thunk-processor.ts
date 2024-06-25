@@ -191,11 +191,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI({
-      ...(await buildCommerceAPIRequest(
+      ...buildCommerceAPIRequest(
         this.getState(),
         this.relay,
         this.navigatorContext
-      )),
+      ),
       query: modified,
     });
 

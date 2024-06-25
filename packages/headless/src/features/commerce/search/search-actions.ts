@@ -75,7 +75,7 @@ export const executeSearch = createAsyncThunk<
   const state = getState();
   const {relay, navigatorContext} = config.extra;
 
-  const request = await buildCommerceAPIRequest(state, relay, navigatorContext);
+  const request = buildCommerceAPIRequest(state, relay, navigatorContext);
   const query = querySelector(state);
 
   const processor = new AsyncSearchThunkProcessor<
@@ -105,7 +105,7 @@ export const fetchMoreProducts = createAsyncThunk<
   const nextPageToRequest = numberOfProducts / perPage;
   const query = querySelector(state);
 
-  const request = await buildCommerceAPIRequest(state, relay, navigatorContext);
+  const request = buildCommerceAPIRequest(state, relay, navigatorContext);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -155,7 +155,7 @@ export const fetchInstantProducts = createAsyncThunk<
     const {apiClient, relay, navigatorContext} = extra;
     const {q} = payload;
     const fetched = await apiClient.productSuggestions({
-      ...(await buildCommerceAPIRequest(state, relay, navigatorContext)),
+      ...buildCommerceAPIRequest(state, relay, navigatorContext),
       query: q,
     });
 

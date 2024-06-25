@@ -21,7 +21,7 @@ test.describe('default', async () => {
       collapseFacetsAfter: 1,
     });
     await expect(facets.expandedFacets).toHaveCount(1);
-    await expect(facets.collapsedFacets).toHaveCount(4);
+    await expect(facets.collapsedFacets).toHaveCount(7);
   });
 
   test('should disable collapse facets when set to -1', async ({facets}) => {
@@ -29,7 +29,7 @@ test.describe('default', async () => {
       collapseFacetsAfter: -1,
     });
     await expect(facets.collapsedFacets).toHaveCount(0);
-    await expect(facets.expandedFacets).toHaveCount(5);
+    await expect(facets.expandedFacets).toHaveCount(8);
   });
 });
 

@@ -34,13 +34,13 @@ export interface QueryCommerceAPIThunkReturn {
   response: CommerceSuccessResponse;
 }
 
-export const buildCommerceAPIRequest = async (
+export const buildCommerceAPIRequest = (
   state: ListingAndSearchStateNeededByQueryCommerceAPI,
   relay: Relay,
   navigatorContext: NavigatorContext
-): Promise<CommerceAPIRequest> => {
+): CommerceAPIRequest => {
   return {
-    ...(await buildBaseCommerceAPIRequest(state, relay, navigatorContext)),
+    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -48,12 +48,12 @@ export const buildCommerceAPIRequest = async (
   };
 };
 
-export const buildBaseCommerceAPIRequest = async (
+export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
   relay: Relay,
   navigatorContext: NavigatorContext,
   slotId?: string
-): Promise<BaseCommerceAPIRequest> => {
+): BaseCommerceAPIRequest => {
   const {view, ...restOfContext} = state.commerceContext;
   const meta = relay.getMeta('');
   return {
