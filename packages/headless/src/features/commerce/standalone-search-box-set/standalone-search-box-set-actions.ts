@@ -7,6 +7,7 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceSearchRequest} from '../../../api/commerce/search/request';
 import {isRedirectTrigger} from '../../../api/common/trigger';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {
   CartSection,
   CommerceContextSection,
@@ -75,10 +76,13 @@ export const fetchRedirectUrl = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededForRedirect>
 >(
   'commerce/standaloneSearchBox/fetchRedirect',
-  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+  ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
     const state = getState();
-    const request = await buildPlanRequest(state, relay);
+    const request = await buildPlanRequest(state, relay, navigatorContext);
     const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -93,10 +97,11 @@ export const fetchRedirectUrl = createAsyncThunk<
 
 export const buildPlanRequest = async (
   state: StateNeededForRedirect,
-  relay: Relay
+  relay: Relay,
+  navigatorContext: NavigatorContext
 ): Promise<CommerceSearchRequest> => {
   return {
     query: state.commerceQuery.query,
-    ...(await buildBaseCommerceAPIRequest(state, relay)),
+    ...(await buildBaseCommerceAPIRequest(state, relay, navigatorContext)),
   };
 };

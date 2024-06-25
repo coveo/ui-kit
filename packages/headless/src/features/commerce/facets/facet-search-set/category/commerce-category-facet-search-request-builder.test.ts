@@ -1,4 +1,5 @@
 import {Relay, createRelay} from '@coveo/relay';
+import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import * as Actions from '../../../../../features/commerce/common/actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
@@ -7,12 +8,14 @@ import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-fac
 import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options';
+import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider';
 import {CategoryFacetValueRequest} from '../../facet-set/interfaces/request';
 import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-request-builder';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   let state: CommerceAppState;
   let relay: Relay;
+  let navigatorContext: NavigatorContext;
   let facetId: string;
   let query: string;
   let buildCommerceAPIRequestMock: jest.SpyInstance;
@@ -37,6 +40,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     );
 
     relay = createRelay({token: 'token', url: 'url', trackingId: 'trackingId'});
+    navigatorContext = buildMockNavigatorContextProvider()();
   });
 
   it('returned object has a #facetId property whose value is the passed facet ID argument', async () => {
@@ -44,7 +48,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay
+      relay,
+      navigatorContext
     );
 
     expect(request.facetId).toBe(facetId);
@@ -55,7 +60,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay
+      relay,
+      navigatorContext
     );
 
     expect(request.facetQuery).toBe(
@@ -69,7 +75,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
         facetId,
         state,
         false,
-        relay
+        relay,
+        navigatorContext
       );
 
       expect(request.ignorePaths).toStrictEqual([]);
@@ -82,7 +89,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
         facetId,
         state,
         false,
-        relay
+        relay,
+        navigatorContext
       );
 
       expect(request.ignorePaths).toStrictEqual([
@@ -115,7 +123,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
         facetId,
         state,
         false,
-        relay
+        relay,
+        navigatorContext
       );
 
       expect(request.ignorePaths).toStrictEqual([
@@ -147,7 +156,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay
+      relay,
+      navigatorContext
     );
 
     expect(request).toEqual({
@@ -164,7 +174,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       true,
-      relay
+      relay,
+      navigatorContext
     );
 
     const {facets, page, sort, ...expectedBaseRequest} =

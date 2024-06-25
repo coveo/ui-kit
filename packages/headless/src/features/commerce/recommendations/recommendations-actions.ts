@@ -7,6 +7,7 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {RecommendationsSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
@@ -33,11 +34,13 @@ const buildRecommendationCommerceAPIRequest = async (
   slotId: string,
   state: StateNeededByFetchRecommendations,
   relay: Relay,
+  navigatorContext: NavigatorContext,
   productId?: string
 ): Promise<CommerceRecommendationsRequest> => {
   const commerceAPIRequest = await buildBaseCommerceAPIRequest(
     state,
     relay,
+    navigatorContext,
     slotId
   );
   return {
@@ -65,12 +68,16 @@ export const fetchRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetch',
-  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+  ) => {
     const {slotId, productId} = payload;
     const request = await buildRecommendationCommerceAPIRequest(
       slotId,
       getState(),
       relay,
+      navigatorContext,
       productId
     );
     const fetched = await apiClient.getRecommendations(request);
@@ -91,7 +98,10 @@ export const fetchMoreRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
-  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+  ) => {
     const slotId = payload.slotId;
     const state = getState();
     const moreRecommendationsAvailable = moreRecommendationsAvailableSelector(
@@ -107,7 +117,12 @@ export const fetchMoreRecommendations = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const request = {
-      ...(await buildRecommendationCommerceAPIRequest(slotId, state, relay)),
+      ...(await buildRecommendationCommerceAPIRequest(
+        slotId,
+        state,
+        relay,
+        navigatorContext
+      )),
       page: nextPageToRequest,
     };
     const fetched = await apiClient.getRecommendations(request);
