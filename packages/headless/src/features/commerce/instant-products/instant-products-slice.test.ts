@@ -399,7 +399,7 @@ describe('instant products slice', () => {
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
         ec_brand: 'child brand',
-        ec_category: 'child category',
+        ec_category: ['child category'],
         ec_description: 'child description',
         ec_gender: 'child gender',
         ec_images: ['child image'],
