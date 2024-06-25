@@ -43,8 +43,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     navigatorContext = buildMockNavigatorContextProvider()();
   });
 
-  it('returned object has a #facetId property whose value is the passed facet ID argument', async () => {
-    const request = await buildCategoryFacetSearchRequest(
+  it('returned object has a #facetId property whose value is the passed facet ID argument', () => {
+    const request = buildCategoryFacetSearchRequest(
       facetId,
       state,
       false,
@@ -55,8 +55,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     expect(request.facetId).toBe(facetId);
   });
 
-  it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', async () => {
-    const request = await buildCategoryFacetSearchRequest(
+  it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', () => {
+    const request = buildCategoryFacetSearchRequest(
       facetId,
       state,
       false,
@@ -70,8 +70,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
   });
 
   describe('returned object #ignorePaths property', () => {
-    it('when the facet request has no selected value, is an empty array', async () => {
-      const request = await buildCategoryFacetSearchRequest(
+    it('when the facet request has no selected value, is an empty array', () => {
+      const request = buildCategoryFacetSearchRequest(
         facetId,
         state,
         false,
@@ -82,10 +82,10 @@ describe('#buildCategoryFacetSearchRequest', () => {
       expect(request.ignorePaths).toStrictEqual([]);
     });
 
-    it('when the facet request has a selected value with no ancestry, is an array with a single array containing the selected value', async () => {
+    it('when the facet request has a selected value with no ancestry, is an array with a single array containing the selected value', () => {
       state.commerceFacetSet[facetId].request.values[0] =
         buildMockCategoryFacetValue({state: 'selected', value: 'test'});
-      const request = await buildCategoryFacetSearchRequest(
+      const request = buildCategoryFacetSearchRequest(
         facetId,
         state,
         false,
@@ -103,7 +103,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       ]);
     });
 
-    it('when the facet request has a selected value with ancestry, is an array with a single array containing the selected value and its ancestors', async () => {
+    it('when the facet request has a selected value with ancestry, is an array with a single array containing the selected value and its ancestors', () => {
       state.commerceFacetSet[facetId].request.values[0] =
         buildMockCategoryFacetValue({
           value: 'test',
@@ -119,7 +119,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
             }),
           ],
         });
-      const request = await buildCategoryFacetSearchRequest(
+      const request = buildCategoryFacetSearchRequest(
         facetId,
         state,
         false,
@@ -146,13 +146,13 @@ describe('#buildCategoryFacetSearchRequest', () => {
     });
   });
 
-  it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', async () => {
+  it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', () => {
     const buildCommerceAPIRequestMock = jest.spyOn(
       Actions,
       'buildCommerceAPIRequest'
     );
 
-    const request = await buildCategoryFacetSearchRequest(
+    const request = buildCategoryFacetSearchRequest(
       facetId,
       state,
       false,
@@ -161,7 +161,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     );
 
     expect(request).toEqual({
-      ...(await buildCommerceAPIRequestMock.mock.results[0].value),
+      ...buildCommerceAPIRequestMock.mock.results[0].value,
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
@@ -169,8 +169,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     });
   });
 
-  it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', async () => {
-    const request = await buildCategoryFacetSearchRequest(
+  it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
+    const request = buildCategoryFacetSearchRequest(
       facetId,
       state,
       true,
@@ -179,7 +179,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     );
 
     const {facets, page, sort, ...expectedBaseRequest} =
-      await buildCommerceAPIRequestMock.mock.results[0].value;
+      buildCommerceAPIRequestMock.mock.results[0].value;
 
     expect(request).toEqual({
       ...expectedBaseRequest,

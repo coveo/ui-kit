@@ -320,7 +320,7 @@ describe('commerce common actions', () => {
           [facet2.request.facetId]: facet2,
         };
       });
-      it('includes all non-empty facets in the #facets array of the returned request', async () => {
+      it('includes all non-empty facets in the #facets array of the returned request', () => {
         const request = Actions.buildCommerceAPIRequest(
           state,
           relay,

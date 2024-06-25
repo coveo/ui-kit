@@ -8,13 +8,13 @@ import {
 } from '../../facet-set/interfaces/request';
 import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state';
 
-export const buildCategoryFacetSearchRequest = async (
+export const buildCategoryFacetSearchRequest = (
   facetId: string,
   state: StateNeededForCategoryFacetSearch,
   isFieldSuggestionsRequest: boolean,
   relay: Relay,
   navigatorContext: NavigatorContext
-): Promise<CategoryFacetSearchRequest> => {
+): CategoryFacetSearchRequest => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
   const categoryFacet = state.commerceFacetSet[facetId]?.request;

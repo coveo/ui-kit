@@ -35,8 +35,8 @@ describe('#buildFacetSearchRequest', () => {
     navigatorContext = buildMockNavigatorContextProvider()();
   });
 
-  it('returned object has a #facetId property whose value is the passed facet ID argument', async () => {
-    const request = await buildFacetSearchRequest(
+  it('returned object has a #facetId property whose value is the passed facet ID argument', () => {
+    const request = buildFacetSearchRequest(
       facetId,
       state,
       false,
@@ -47,8 +47,8 @@ describe('#buildFacetSearchRequest', () => {
     expect(request.facetId).toBe(facetId);
   });
 
-  it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', async () => {
-    const request = await buildFacetSearchRequest(
+  it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', () => {
+    const request = buildFacetSearchRequest(
       facetId,
       state,
       false,
@@ -61,13 +61,13 @@ describe('#buildFacetSearchRequest', () => {
     );
   });
 
-  it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', async () => {
+  it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', () => {
     const buildCommerceAPIRequestMock = jest.spyOn(
       Actions,
       'buildCommerceAPIRequest'
     );
 
-    const request = await buildFacetSearchRequest(
+    const request = buildFacetSearchRequest(
       facetId,
       state,
       false,
@@ -76,15 +76,15 @@ describe('#buildFacetSearchRequest', () => {
     );
 
     expect(request).toEqual({
-      ...(await buildCommerceAPIRequestMock.mock.results[0].value),
+      ...buildCommerceAPIRequestMock.mock.results[0].value,
       facetId,
       facetQuery: `*${query}*`,
       query: state.commerceQuery?.query,
     });
   });
 
-  it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', async () => {
-    const request = await buildFacetSearchRequest(
+  it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
+    const request = buildFacetSearchRequest(
       facetId,
       state,
       true,
@@ -93,7 +93,7 @@ describe('#buildFacetSearchRequest', () => {
     );
 
     const {facets, page, sort, ...expectedBaseRequest} =
-      await buildCommerceAPIRequestMock.mock.results[0].value;
+      buildCommerceAPIRequestMock.mock.results[0].value;
 
     expect(request).toEqual({
       ...expectedBaseRequest,
