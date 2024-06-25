@@ -42,8 +42,7 @@ test.describe('default', () => {
       let suggestionText: string = '';
 
       test.beforeEach(async ({searchBox}) => {
-        const suggestionCount = await searchBox.searchSuggestions().count();
-        expect(suggestionCount).toBeGreaterThan(0);
+        await expect(searchBox.searchSuggestions().first()).toBeVisible();
 
         suggestionText =
           (await searchBox.searchSuggestions().last().textContent()) ?? '';
@@ -63,8 +62,7 @@ test.describe('default', () => {
       let suggestionText: string;
 
       test.beforeEach(async ({searchBox}) => {
-        const suggestionCount = await searchBox.searchSuggestions().count();
-        expect(suggestionCount).toBeGreaterThan(0);
+        await expect(searchBox.searchSuggestions().first()).toBeVisible();
 
         suggestionText =
           (await searchBox.searchSuggestions().first().textContent()) ?? '';
@@ -92,6 +90,7 @@ test.describe('default', () => {
       await setSuggestions(page, 0);
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
+      await searchBox.searchSuggestions().first().waitFor({state: 'hidden'});
     });
 
     test('should not display suggested queries', async ({searchBox}) => {
