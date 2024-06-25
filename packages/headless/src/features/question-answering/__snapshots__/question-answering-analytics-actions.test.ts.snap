@@ -30,12 +30,10 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
 [
   "Qna.SubmitFeedback",
   {
+    "action": "dislike",
     "answer": {
       "responseId": "456",
       "type": "SmartSnippet",
-    },
-    "feedback": {
-      "liked": false,
     },
   },
 ]
@@ -71,12 +69,10 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
 [
   "Qna.SubmitFeedback",
   {
+    "action": "like",
     "answer": {
       "responseId": "456",
       "type": "SmartSnippet",
-    },
-    "feedback": {
-      "liked": true,
     },
   },
 ]
@@ -152,11 +148,9 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
   {
     "answer": {
       "responseId": "456",
-      "type": "SmartSnippet",
     },
     "feedback": {
       "details": "example feedback details",
-      "liked": false,
       "reason": "other",
     },
   },
@@ -169,10 +163,8 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
   {
     "answer": {
       "responseId": "456",
-      "type": "SmartSnippet",
     },
     "feedback": {
-      "liked": false,
       "reason": "does_not_answer",
     },
   },
