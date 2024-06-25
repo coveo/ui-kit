@@ -1226,14 +1226,14 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 
 @ProxyCmp({
-  inputs: ['fallback', 'field']
+  inputs: ['fallback', 'field', 'imageAltField']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fallback', 'field'],
+  inputs: ['fallback', 'field', 'imageAltField'],
 })
 export class AtomicResultImage {
   protected el: HTMLElement;
