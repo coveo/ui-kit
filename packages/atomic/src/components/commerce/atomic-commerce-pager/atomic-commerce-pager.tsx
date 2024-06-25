@@ -109,7 +109,7 @@ export class AtomicCommercePager
     return (
       <PagerGuard
         hasError={false}
-        hasResults={this.pagerState.totalPages > 1}
+        hasItems={this.pagerState.totalPages > 1}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
         <PagerNavigation i18n={this.bindings.i18n}>
