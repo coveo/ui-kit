@@ -30,15 +30,23 @@ test.describe('default', () => {
 
     test('should update aria-live message', async ({searchBox}) => {
       await searchBox.searchSuggestions().first().waitFor({state: 'visible'});
-      await expect(searchBox.ariaLive).toContainText(
-        (await searchBox.searchSuggestions().count()).toString()
+      const count = await searchBox.searchSuggestions().count();
+      const regexMessage = new RegExp(
+        `${count} search suggestion(s are)? available.`
       );
+
+      expect(
+        (await searchBox.ariaLive.filter({hasText: regexMessage}).count()) === 1
+      ).toBe(true);
     });
 
     test.describe('after clicking a suggestion', () => {
-      let suggestionText: string;
+      let suggestionText: string = '';
 
       test.beforeEach(async ({searchBox}) => {
+        const suggestionCount = await searchBox.searchSuggestions().count();
+        expect(suggestionCount).toBeGreaterThan(0);
+
         suggestionText =
           (await searchBox.searchSuggestions().last().textContent()) ?? '';
         await searchBox.searchSuggestions().last().click();
@@ -57,6 +65,9 @@ test.describe('default', () => {
       let suggestionText: string;
 
       test.beforeEach(async ({searchBox}) => {
+        const suggestionCount = await searchBox.searchSuggestions().count();
+        expect(suggestionCount).toBeGreaterThan(0);
+
         suggestionText =
           (await searchBox.searchSuggestions().first().textContent()) ?? '';
         await searchBox.searchInput.press('ArrowDown');
@@ -85,12 +96,16 @@ test.describe('default', () => {
       await searchBox.searchInput.click();
     });
 
-    test('should display suggested queries', async ({searchBox}) => {
+    test('should not display suggested queries', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
     });
 
     test('should update aria-live message', async ({searchBox}) => {
-      await expect(searchBox.ariaLive).toContainText('no ');
+      const searchSuggestionElement = searchBox.ariaLive.filter({
+        hasText: 'There are no search suggestions.',
+      });
+
+      expect((await searchSuggestionElement.count()) > 0).toBe(true);
     });
   });
 
@@ -108,13 +123,19 @@ test.describe('default', () => {
 
     test('should update aria-live message', async ({searchBox}) => {
       await searchBox.recentQueries().first().waitFor({state: 'visible'});
-      await expect(searchBox.ariaLive).toContainText(
-        Math.min(
-          (await searchBox.recentQueries().count()) +
-            (await searchBox.searchSuggestions().count()),
-          parseInt((await searchBox.numberOfQueries) ?? '')
-        ).toString()
+      const count = Math.min(
+        (await searchBox.recentQueries().count()) +
+          (await searchBox.searchSuggestions().count()),
+        parseInt((await searchBox.numberOfQueries) ?? '')
+      ).toString();
+
+      const regexMessage = new RegExp(
+        `${count} search suggestion(s)? are available.`
       );
+
+      expect(
+        (await searchBox.ariaLive.filter({hasText: regexMessage}).count()) === 1
+      ).toBe(true);
     });
 
     test('should clear recent queries when clicking the clear button', async ({
@@ -388,14 +409,19 @@ test.describe('standalone searchbox', () => {
     searchBox,
   }) => {
     await searchBox.searchInput.click();
-    const suggestionText =
-      (await searchBox.searchSuggestions().first().textContent()) ?? '';
+
+    const suggestionText = await searchBox
+      .searchSuggestions()
+      .first()
+      .textContent();
+
+    expect(suggestionText).not.toBeNull();
 
     await searchBox.searchSuggestions().first().click();
     await page.waitForURL(
       '**/iframe.html?id=atomic-commerce-search-box--in-page*'
     );
-    await expect(searchBox.searchInput).toHaveValue(suggestionText);
+    await expect(searchBox.searchInput).toHaveValue(suggestionText ?? '');
   });
 
   test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
