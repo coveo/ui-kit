@@ -155,12 +155,30 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the generated answer should contain "${answer}"`);
     },
 
+    generatedAnswerContentContainsHTML: (findSelector: string) => {
+      selector
+        .generatedAnswerContentContainer()
+        .find(findSelector)
+        .log(
+          `the generated answer content should contain an element matching "${findSelector}"`
+        );
+    },
+
+    generatedAnswerContentContainsText: (text: string) => {
+      selector
+        .generatedAnswerContentContainer()
+        .contains(text)
+        .log(
+          `the generated answer content should contain text matching "${text}"`
+        );
+    },
+
     generatedAnswerIsStreaming: (isStreaming: boolean) => {
       selector
-        .generatedAnswer()
+        .generatedAnswerContentContainer()
         .should(
           isStreaming ? 'have.class' : 'not.have.class',
-          'generated-answer__answer--streaming'
+          'generated-answer-content__answer--streaming'
         )
         .log(`the generated answer ${should(isStreaming)} be streaming`);
     },
