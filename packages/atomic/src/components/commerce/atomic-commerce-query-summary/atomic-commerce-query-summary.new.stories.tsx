@@ -12,7 +12,8 @@ const {decorator, play} = wrapInCommerceInterface({
 const noResultsEngineConfig: Partial<CommerceEngineConfiguration> = {
   preprocessRequest: (r) => {
     const parsed = JSON.parse(r.body as string);
-    parsed.query = 'NOT @URI';
+    // eslint-disable-next-line @cspell/spellchecker
+    parsed.query = 'qnjssoptjhyalwnmrbgtyslsd';
     r.body = JSON.stringify(parsed);
     return r;
   },
