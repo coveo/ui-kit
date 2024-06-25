@@ -1,4 +1,4 @@
-import {Relay} from '@coveo/relay';
+import {createRelay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../../api/commerce/commerce-api-client';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
@@ -29,7 +29,11 @@ describe('commerce AsyncSearchThunkProcessor', () => {
         logger: jest.fn() as unknown as Logger,
         validatePayload: jest.fn(),
         preprocessRequest: jest.fn(),
-        relay: jest.fn() as unknown as Relay,
+        relay: createRelay({
+          token: 'token',
+          url: 'url',
+          trackingId: 'trackingId',
+        }),
         navigatorContext: defaultNodeJSNavigatorContextProvider(),
       },
       getState: jest.fn().mockReturnValue(state),
@@ -48,7 +52,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       response,
       duration: 123,
       queryExecuted: 'foo',
-      requestExecuted: await buildCommerceAPIRequest(state),
+      requestExecuted: buildCommerceAPIRequest(state, config.extra.relay),
     };
     return processor.process(fetched);
   }

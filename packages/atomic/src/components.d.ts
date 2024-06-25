@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -36,7 +36,7 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, ListingSummary, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummary } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -275,13 +275,17 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
         /**
           * The summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     interface AtomicCommerceDidYouMean {
     }
@@ -294,13 +298,17 @@ export namespace Components {
          */
         "facet": RegularFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -314,6 +322,7 @@ export namespace Components {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface AtomicCommerceFacets {
         /**
@@ -356,9 +365,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -389,6 +398,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface AtomicCommerceLoadMoreProducts {
     }
@@ -403,13 +413,17 @@ export namespace Components {
          */
         "facet": NumericFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
         /**
           * The Summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -499,9 +513,9 @@ export namespace Components {
          */
         "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
@@ -675,13 +689,17 @@ export namespace Components {
          */
         "facet": DateFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
         /**
           * The summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -1900,10 +1918,6 @@ export namespace Components {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency": string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -3506,6 +3520,7 @@ declare global {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
     }
@@ -3527,6 +3542,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
     }
@@ -5688,13 +5704,17 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
         /**
           * The summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     interface AtomicCommerceDidYouMean {
     }
@@ -5707,13 +5727,17 @@ declare namespace LocalJSX {
          */
         "facet": RegularFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -5728,6 +5752,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
      * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
      */
     interface AtomicCommerceFacets {
         /**
@@ -5758,7 +5783,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * the commerce interface language.
+          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -5791,6 +5816,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+     * @alpha 
      */
     interface AtomicCommerceLoadMoreProducts {
     }
@@ -5805,13 +5831,17 @@ declare namespace LocalJSX {
          */
         "facet": NumericFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
         /**
           * The Summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
@@ -5887,7 +5917,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The commerce interface language.
+          * The commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
         "language"?: string;
         /**
@@ -6049,13 +6079,17 @@ declare namespace LocalJSX {
          */
         "facet": DateFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
         /**
           * The summary controller instance.
          */
-        "summary": SearchSummary | ListingSummary;
+        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
@@ -7215,10 +7249,6 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicProductPrice {
-        /**
-          * The currency to use in currency formatting. Allowed values are the [ISO 4217 currency codes](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency), such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-         */
-        "currency"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8798,12 +8828,14 @@ declare module "@stencil/core" {
             /**
              * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
              * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+             * @alpha 
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
+             * @alpha 
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;

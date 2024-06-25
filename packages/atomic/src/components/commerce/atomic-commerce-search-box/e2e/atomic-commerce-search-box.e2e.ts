@@ -1,10 +1,8 @@
 import {test, expect, setSuggestions, setRecentQueries} from './fixture';
 
 test.describe('default', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({suggestionTimeout: 5000});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -202,10 +200,38 @@ test.describe('default', () => {
 });
 
 test.describe('with instant results & query suggestions', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story&args=attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
+  });
+
+  test.describe('with recent queries', () => {
+    test.beforeEach(async ({searchBox}) => {
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('kayak');
+      await searchBox.searchInput.press('Enter');
+      await searchBox.clearButton.waitFor({state: 'visible'});
+      await searchBox.searchInput.fill('');
+    });
+
+    test('should display recent queries', async ({searchBox}) => {
+      await expect(searchBox.recentQueries().first()).toBeVisible();
+    });
+
+    test('should clear recent queries when clicking the clear button', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.click();
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
+
+    test('should clear recent queries when pressing enter while the clear button is focused', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.hover();
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
   });
 
   test.describe('after clicking the searchbox input', () => {
@@ -230,14 +256,35 @@ test.describe('with instant results & query suggestions', () => {
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
     });
+
+    test('should display in the search box what has been submitted', async ({
+      searchBox,
+    }) => {
+      await searchBox.searchInput.fill('Rec');
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.searchInput).toHaveValue('Rec');
+    });
+
+    test.describe('after focusing on suggestion with the mouse', () => {
+      test('should submit what is in the search box regardless of the mouse position', async ({
+        searchBox,
+      }) => {
+        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
+        await searchBox.searchInput.press('Enter');
+        await expect(searchBox.searchInput).toHaveValue('Rec');
+      });
+    });
   });
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-disable-search:!true;attributes-minimum-query-length:1;attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({
+      suggestionTimeout: 5000,
+      disableSearch: true,
+      minimumQueryLength: 1,
+    });
   });
 
   const testCases = () => {
@@ -276,10 +323,8 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 });
 
 test.describe('with minimum-query-length=4', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=attributes-minimum-query-length:4;attributes-suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({minimumQueryLength: 4, suggestionTimeout: 5000});
   });
 
   const testCases = () => {
@@ -332,9 +377,10 @@ test.describe('with minimum-query-length=4', () => {
 });
 
 test.describe('with a facet & clear-filters set to true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=attributes-clear-filters:!true;attributes-suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load(
+      {clearFilters: true, suggestionTimeout: 5000},
+      'in-page'
     );
   });
 
@@ -350,9 +396,10 @@ test.describe('with a facet & clear-filters set to true', () => {
 });
 
 test.describe('with a facet & clear-filters set to false', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=attributes-clear-filters:!false;attributes-suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load(
+      {clearFilters: false, suggestionTimeout: 5000},
+      'in-page'
     );
   });
 
