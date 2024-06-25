@@ -105,7 +105,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public onSubmit() {
-    this.updateActiveDescendant();
+    this.clickOnActiveElement();
     this.clearSuggestions();
   }
 

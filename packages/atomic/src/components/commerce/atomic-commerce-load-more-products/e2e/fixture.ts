@@ -4,11 +4,11 @@ import {
   makeAxeBuilder,
 } from '../../../../../playwright-utils/base-fixture';
 import {SearchBoxPageObject as SearchBox} from '../../atomic-commerce-search-box/e2e/page-object';
-import {AtomicCommerceProductsLocators as Products} from '../../atomic-product/e2e/page-object';
+import {ProductsPageObject as Products} from '../../atomic-product/e2e/page-object';
 import {LoadMoreProductsPageObject as LoadMore} from './page-object';
 
 type MyFixtures = {
-  searchBox: SearchBox; //
+  searchBox: SearchBox;
   loadMore: LoadMore;
   products: Products;
 };
