@@ -47,6 +47,10 @@ function sortExpectations(selector: SortSelector) {
         expect(customData).to.have.property('resultsSortBy', value);
       });
     },
+
+    displayErrorMessage: (display: boolean) => {
+      selector.errorMessage().should(display ? 'exist' : 'not.exist');
+    },
   };
 }
 

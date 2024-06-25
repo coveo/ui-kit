@@ -56,12 +56,14 @@ describe('quantic-sort', () => {
       value: 'nosort',
     },
   ];
+
   const customSortOptionsValues = customSortOptions.map(
     (option) => option.value
   );
   interface SortOptions {
     useCase: string;
     customSortOptionsEnabled: boolean;
+    invalidCustomSortOptionsEnabled: boolean;
   }
 
   function visitSort(options: Partial<SortOptions>, waitForSearch = true) {
@@ -162,6 +164,18 @@ describe('quantic-sort', () => {
               );
               Expect.logSortResults(value);
             });
+          });
+        });
+
+        describe('when the custom option passed has an invalid property', () => {
+          it('should display an error message instead of the quanticSort component', () => {
+            visitSort({
+              useCase: param.useCase,
+              customSortOptionsEnabled: true,
+              invalidCustomSortOptionsEnabled: true,
+            });
+
+            Expect.displayErrorMessage(true);
           });
         });
       });

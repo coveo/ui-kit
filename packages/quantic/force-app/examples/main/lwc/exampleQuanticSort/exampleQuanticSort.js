@@ -22,6 +22,12 @@ export default class ExampleQuanticSort extends LightningElement {
       description: 'Enable the custom Sort options',
       defaultValue: false,
     },
+    {
+      attribute: 'invalidCustomSortOptionsEnabled',
+      label: 'Invalid Custom Sort Options Enabled',
+      description: 'Enable the invalid custom Sort options',
+      defaultValue: false,
+    },
   ];
 
   customSortOptionsArray = [
@@ -51,6 +57,33 @@ export default class ExampleQuanticSort extends LightningElement {
     },
   ];
 
+  invalidCustomSortOptionsArray = [
+    {
+      label: undefined,
+      value: 'date ascending',
+      criterion: {
+        by: 'nosort',
+      },
+    },
+    {
+      label: 'Date ascending',
+      value: undefined,
+      criterion: {
+        by: 'date',
+        order: 'ascending',
+      },
+    },
+    {
+      label: 'Views Descending',
+      value: '@ytviewcount descending',
+      criterion: {
+        by: 'field',
+        field: undefined,
+        order: 'descending',
+      },
+    },
+  ];
+
   get notConfigured() {
     return !this.isConfigured;
   }
@@ -60,7 +93,9 @@ export default class ExampleQuanticSort extends LightningElement {
   }
 
   get customSortOptions() {
-    return this.customSortOptionsArray;
+    return this.config.invalidCustomSortOptionsEnabled
+      ? this.invalidCustomSortOptionsArray
+      : this.customSortOptionsArray;
   }
 
   handleTryItNow(evt) {
