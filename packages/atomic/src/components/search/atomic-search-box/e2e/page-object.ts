@@ -18,10 +18,6 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-
     return this.page.getByLabel('Clear recent searches.');
   }
 
-  get clearButton() {
-    return this.page.getByLabel('Clear', {exact: true});
-  }
-
   searchSuggestions({
     index,
     total,

@@ -103,6 +103,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             isCollapsed: this.shouldCollapseFacet(index),
             summary: this.summary,
             facet: facet as T,
+            field: facet.state.field,
           });
 
           switch (facet.state.type) {
