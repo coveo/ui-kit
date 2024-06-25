@@ -1,10 +1,10 @@
+import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
-} from '@coveo/atomic/playwrightUtils/base-fixture';
-import {test as base} from '@playwright/test';
-import {AtomicCommerceSearchBoxLocators as SearchBox} from '../../atomic-commerce-search-box/e2e/page-object';
-import {AtomicCommerceQuerySummaryLocators as QuerySummary} from './page-object';
+} from '../../../../../playwright-utils/base-fixture';
+import {SearchBoxPageObject as SearchBox} from '../../atomic-commerce-search-box/e2e/page-object';
+import {QuerySummaryPageObject as QuerySummary} from './page-object';
 
 type MyFixtures = {
   searchBox: SearchBox;

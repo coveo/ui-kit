@@ -1,6 +1,6 @@
 import type {Page} from '@playwright/test';
 
-export class AtomicCommerceQuerySummaryLocators {
+export class QuerySummaryPageObject {
   private page: Page;
   constructor(page: Page) {
     this.page = page;
