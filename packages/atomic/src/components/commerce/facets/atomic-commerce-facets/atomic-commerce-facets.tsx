@@ -8,10 +8,9 @@ import {
   buildProductListing,
   buildSearch,
   FacetGenerator,
-  buildListingSummary,
-  buildSearchSummary,
-  ListingSummary,
-  SearchSummary,
+  Summary,
+  SearchSummaryState,
+  ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
 import {
@@ -36,7 +35,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   public facetGenerator!: FacetGenerator;
-  public summary!: ListingSummary | SearchSummary;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   @Element() host!: HTMLElement;
 
   /**
@@ -57,20 +56,17 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   public initialize() {
     this.validateProps();
     const {engine} = this.bindings;
-    this.facetGenerator = this.facetGeneratorBuilder(engine).facetGenerator();
-    this.summary = this.summaryBuilder(engine);
+    const controller = this.controllerBuilder(engine);
+    this.facetGenerator = controller.facetGenerator();
+    this.summary = controller.summary();
   }
 
   private isProductListing() {
     return this.bindings.interfaceElement.type === 'product-listing';
   }
 
-  private get facetGeneratorBuilder() {
+  private get controllerBuilder() {
     return this.isProductListing() ? buildProductListing : buildSearch;
-  }
-
-  private get summaryBuilder() {
-    return this.isProductListing() ? buildListingSummary : buildSearchSummary;
   }
 
   private validateProps() {
@@ -107,6 +103,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             isCollapsed: this.shouldCollapseFacet(index),
             summary: this.summary,
             facet: facet as T,
+            field: facet.state.field,
           });
 
           switch (facet.state.type) {

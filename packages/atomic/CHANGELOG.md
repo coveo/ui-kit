@@ -1,3 +1,12 @@
+## 2.68.1 (2024-06-19)
+
+### Bug Fixes
+
+- **atomic:** collapsed answer gradient colour ([#4081](https://github.com/coveo/ui-kit/issues/4081)) ([56da0e3](https://github.com/coveo/ui-kit/commits/56da0e3db32bb31ea375f4e2d47dbcb23d6e38cd))
+- **atomic:** fallback language to commerce engine value instead of always defaulting to english ([#4094](https://github.com/coveo/ui-kit/issues/4094)) ([fc4c312](https://github.com/coveo/ui-kit/commits/fc4c31293738589d5c4142c8a2f0de1a23b11c6e))
+- **atomic:** use currency from context instead of prop for atomic-product-price ([#4091](https://github.com/coveo/ui-kit/issues/4091)) ([1bfee6b](https://github.com/coveo/ui-kit/commits/1bfee6b4a314a86a5b2049bc09ff810019312552))
+- expose atomic-commerce-load-more-products to react ([#4097](https://github.com/coveo/ui-kit/issues/4097)) ([d7214c7](https://github.com/coveo/ui-kit/commits/d7214c7b988e169ccb4bb9b84a4b471721f329cb))
+
 # 2.68.0 (2024-06-13)
 
 ### Bug Fixes

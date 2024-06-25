@@ -73,8 +73,9 @@ export const executeSearch = createAsyncThunk<
 >('commerce/search/executeSearch', async (_action, config) => {
   const {getState} = config;
   const state = getState();
+  const {relay} = config.extra;
 
-  const request = await buildCommerceAPIRequest(state);
+  const request = buildCommerceAPIRequest(state, relay);
   const query = querySelector(state);
 
   const processor = new AsyncSearchThunkProcessor<
@@ -92,6 +93,7 @@ export const fetchMoreProducts = createAsyncThunk<
 >('commerce/search/fetchMoreProducts', async (_action, config) => {
   const {getState} = config;
   const state = getState();
+  const {relay} = config.extra;
 
   const moreProductsAvailable = moreProductsAvailableSelector(state);
   if (!moreProductsAvailable) {
@@ -103,7 +105,7 @@ export const fetchMoreProducts = createAsyncThunk<
   const nextPageToRequest = numberOfProducts / perPage;
   const query = querySelector(state);
 
-  const request = await buildCommerceAPIRequest(state);
+  const request = buildCommerceAPIRequest(state, relay);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -150,10 +152,10 @@ export const fetchInstantProducts = createAsyncThunk<
   'commerce/search/fetchInstantProducts',
   async (payload, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
+    const {apiClient, relay} = extra;
     const {q} = payload;
-    const {apiClient} = extra;
     const fetched = await apiClient.productSuggestions({
-      ...(await buildCommerceAPIRequest(state)),
+      ...buildCommerceAPIRequest(state, relay),
       query: q,
     });
 
