@@ -34,7 +34,7 @@ export const buildCategoryFacetSearchRequest = async (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = await buildCommerceAPIRequest(state, relay);
+  } = buildCommerceAPIRequest(state, relay);
 
   return {
     url,

@@ -29,17 +29,13 @@ export interface QueryRecommendationsCommerceAPIThunkReturn {
 export type StateNeededByFetchRecommendations = StateNeededByQueryCommerceAPI &
   RecommendationsSection;
 
-const buildRecommendationCommerceAPIRequest = async (
+const buildRecommendationCommerceAPIRequest = (
   slotId: string,
   state: StateNeededByFetchRecommendations,
   relay: Relay,
   productId?: string
-): Promise<CommerceRecommendationsRequest> => {
-  const commerceAPIRequest = await buildBaseCommerceAPIRequest(
-    state,
-    relay,
-    slotId
-  );
+): CommerceRecommendationsRequest => {
+  const commerceAPIRequest = buildBaseCommerceAPIRequest(state, relay, slotId);
   return {
     ...commerceAPIRequest,
     context: {
@@ -67,7 +63,7 @@ export const fetchRecommendations = createAsyncThunk<
   'commerce/recommendations/fetch',
   async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
     const {slotId, productId} = payload;
-    const request = await buildRecommendationCommerceAPIRequest(
+    const request = buildRecommendationCommerceAPIRequest(
       slotId,
       getState(),
       relay,
@@ -107,7 +103,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const request = {
-      ...(await buildRecommendationCommerceAPIRequest(slotId, state, relay)),
+      ...buildRecommendationCommerceAPIRequest(slotId, state, relay),
       page: nextPageToRequest,
     };
     const fetched = await apiClient.getRecommendations(request);

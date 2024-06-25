@@ -89,15 +89,15 @@ describe('commerce common actions', () => {
       };
     });
 
-    it('given a state with no commercePagination section, returns the expected base request', async () => {
+    it('given a state with no commercePagination section, returns the expected base request', () => {
       delete state.commercePagination;
 
-      const request = await Actions.buildBaseCommerceAPIRequest(state, relay);
+      const request = Actions.buildBaseCommerceAPIRequest(state, relay);
 
       expect(request).toEqual({...expected});
     });
 
-    it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', async () => {
+    it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', () => {
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
         principal: {
@@ -113,12 +113,12 @@ describe('commerce common actions', () => {
         perPage: state.commercePagination.principal.perPage,
       };
 
-      const request = await Actions.buildBaseCommerceAPIRequest(state, relay);
+      const request = Actions.buildBaseCommerceAPIRequest(state, relay);
 
       expect(request).toEqual(expectedWithPagination);
     });
 
-    it('given a slotId, returns expected base request with the effective pagination for that slot', async () => {
+    it('given a slotId, returns expected base request with the effective pagination for that slot', () => {
       const slotId = 'slot_id';
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
@@ -137,11 +137,7 @@ describe('commerce common actions', () => {
         perPage: state.commercePagination.recommendations[slotId]!.perPage,
       };
 
-      const request = await Actions.buildBaseCommerceAPIRequest(
-        state,
-        relay,
-        slotId
-      );
+      const request = Actions.buildBaseCommerceAPIRequest(state, relay, slotId);
 
       expect(request).toEqual(expectedWithPagination);
     });
@@ -159,12 +155,12 @@ describe('commerce common actions', () => {
       );
     });
 
-    it('given a state with none of the optional sections, returns the expected base request along an empty #facets array', async () => {
+    it('given a state with none of the optional sections, returns the expected base request along an empty #facets array', () => {
       delete state.commerceSort;
       delete state.facetOrder;
       delete state.commerceFacetSet;
 
-      const request = await Actions.buildCommerceAPIRequest(state, relay);
+      const request = Actions.buildCommerceAPIRequest(state, relay);
 
       expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
         state,
@@ -172,18 +168,18 @@ describe('commerce common actions', () => {
       );
 
       expect(request).toEqual({
-        ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+        ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
         facets: [],
       });
     });
 
-    it('given a state that has the facetOrder section but not the commerceFacetSet section, returns the expected base request with an empty #facets array', async () => {
+    it('given a state that has the facetOrder section but not the commerceFacetSet section, returns the expected base request with an empty #facets array', () => {
       delete state.commerceSort;
       delete state.commerceFacetSet;
 
       state.facetOrder = ['facet_id'];
 
-      const request = await Actions.buildCommerceAPIRequest(state, relay);
+      const request = Actions.buildCommerceAPIRequest(state, relay);
 
       expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
         state,
@@ -191,12 +187,12 @@ describe('commerce common actions', () => {
       );
 
       expect(request).toEqual({
-        ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+        ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
         facets: [],
       });
     });
 
-    it('given a state that has the commerceFacetSet section but not the facetOrder section, returns the expected base request with an empty #facets array', async () => {
+    it('given a state that has the commerceFacetSet section but not the facetOrder section, returns the expected base request with an empty #facets array', () => {
       delete state.commerceSort;
       delete state.commerceFacetSet;
 
@@ -204,7 +200,7 @@ describe('commerce common actions', () => {
         facet_id: buildMockCommerceFacetSlice(),
       };
 
-      const request = await Actions.buildCommerceAPIRequest(state, relay);
+      const request = Actions.buildCommerceAPIRequest(state, relay);
 
       expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
         state,
@@ -212,17 +208,17 @@ describe('commerce common actions', () => {
       );
 
       expect(request).toEqual({
-        ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+        ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
         facets: [],
       });
     });
 
     it.each([true, false])(
       'sets the capture property from the analytics configuration',
-      async (analyticsEnabled) => {
+      (analyticsEnabled) => {
         state.configuration.analytics.enabled = analyticsEnabled;
 
-        const request = await Actions.buildCommerceAPIRequest(state, relay);
+        const request = Actions.buildCommerceAPIRequest(state, relay);
 
         expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
           state,
@@ -265,8 +261,8 @@ describe('commerce common actions', () => {
           [facet2.request.facetId]: facet2,
         };
       });
-      it('includes all non-empty facets in the #facets array of the returned request', async () => {
-        const request = await Actions.buildCommerceAPIRequest(state, relay);
+      it('includes all non-empty facets in the #facets array of the returned request', () => {
+        const request = Actions.buildCommerceAPIRequest(state, relay);
 
         expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
           state,
@@ -274,12 +270,12 @@ describe('commerce common actions', () => {
         );
 
         expect(request).toEqual({
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [facet1.request, facet2.request],
         });
       });
 
-      it('does not include empty facets in the #facets array of the returned request', async () => {
+      it('does not include empty facets in the #facets array of the returned request', () => {
         const facet3 = buildMockCommerceFacetSlice({
           request: {
             ...buildMockCommerceFacetRequest({
@@ -293,7 +289,7 @@ describe('commerce common actions', () => {
         state.commerceFacetSet![facet3.request.facetId] = facet3;
         state.facetOrder.push(facet3.request.facetId);
 
-        const request = await Actions.buildCommerceAPIRequest(state, relay);
+        const request = Actions.buildCommerceAPIRequest(state, relay);
 
         expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
           state,
@@ -301,7 +297,7 @@ describe('commerce common actions', () => {
         );
 
         expect(request).toEqual({
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [facet1.request, facet2.request],
         });
       });
@@ -313,7 +309,7 @@ describe('commerce common actions', () => {
         delete state.commerceFacetSet;
       });
 
-      it('when applied sort is "relevance", returns expected base request with expected #sort.sortCriteria', async () => {
+      it('when applied sort is "relevance", returns expected base request with expected #sort.sortCriteria', () => {
         state.commerceSort = {
           ...getCommerceSortInitialState(),
           appliedSort: {
@@ -321,7 +317,7 @@ describe('commerce common actions', () => {
           },
         };
 
-        const request = await Actions.buildCommerceAPIRequest(state, relay);
+        const request = Actions.buildCommerceAPIRequest(state, relay);
 
         expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
           state,
@@ -329,7 +325,7 @@ describe('commerce common actions', () => {
         );
 
         const expectedWithSort: CommerceAPIRequest = {
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [],
           sort: {
             sortCriteria: SortBy.Relevance,
@@ -339,7 +335,7 @@ describe('commerce common actions', () => {
         expect(request).toEqual(expectedWithSort);
       });
 
-      it('when applied sort is "fields", returns expected base request with expected #sort.sortCriteria and #sort.fields', async () => {
+      it('when applied sort is "fields", returns expected base request with expected #sort.sortCriteria and #sort.fields', () => {
         const sortCriterion: SortCriterion = {
           by: SortBy.Fields,
           fields: [
@@ -355,7 +351,7 @@ describe('commerce common actions', () => {
           appliedSort: sortCriterion,
         };
 
-        const request = await Actions.buildCommerceAPIRequest(state, relay);
+        const request = Actions.buildCommerceAPIRequest(state, relay);
 
         expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
           state,
@@ -363,7 +359,7 @@ describe('commerce common actions', () => {
         );
 
         const expectedWithSort: CommerceAPIRequest = {
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [],
           sort: {
             sortCriteria: sortCriterion.by,

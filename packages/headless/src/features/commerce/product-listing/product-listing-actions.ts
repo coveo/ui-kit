@@ -33,7 +33,7 @@ export const fetchProductListing = createAsyncThunk<
   ) => {
     const state = getState();
     const fetched = await apiClient.getProductListing(
-      await buildCommerceAPIRequest(state, relay)
+      buildCommerceAPIRequest(state, relay)
     );
 
     if (isErrorResponse(fetched)) {
@@ -67,7 +67,7 @@ export const fetchMoreProducts = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({
-      ...(await buildCommerceAPIRequest(state, relay)),
+      ...buildCommerceAPIRequest(state, relay),
       page: nextPageToRequest,
     });
 
