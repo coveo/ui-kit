@@ -81,17 +81,14 @@ export interface GeneratedAnswer extends Controller {
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
-  sendFeedback(feedback: GeneratedAnswerFeedback): void;
+  sendFeedback(
+    feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
+  ): void;
   /**
    * Sends detailed feedback about why the generated answer was not relevant.
    * @param details - Details on why the generated answer was not relevant.
    */
   sendDetailedFeedback(details: string): void;
-  /**
-   * Sends new version of feedback about why the generated answer was not relevant.
-   * @param feedback - The feedback that the end user wishes to send.
-   */
-  sendFeedbackV2(feedback: GeneratedAnswerFeedbackV2): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param id - The ID of the clicked citation.
@@ -327,12 +324,20 @@ export function buildCoreGeneratedAnswer(
     },
 
     sendFeedback(feedback) {
-      dispatch(analyticsClient.logGeneratedAnswerFeedback(feedback));
-      dispatch(sendGeneratedAnswerFeedback());
-    },
+      if ((feedback as GeneratedAnswerFeedbackV2).helpful !== undefined) {
+        dispatch(
+          analyticsClient.logGeneratedAnswerFeedbackV2(
+            feedback as GeneratedAnswerFeedbackV2
+          )
+        );
+      } else {
+        dispatch(
+          analyticsClient.logGeneratedAnswerFeedback(
+            feedback as GeneratedAnswerFeedback
+          )
+        );
+      }
 
-    sendFeedbackV2(feedback) {
-      dispatch(analyticsClient.logGeneratedAnswerFeedbackV2(feedback));
       dispatch(sendGeneratedAnswerFeedback());
     },
 
