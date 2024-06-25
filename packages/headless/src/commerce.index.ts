@@ -2,6 +2,8 @@ import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as Selectors from './selectors/commerce-selectors.index';
 import * as HighlightUtils from './utils/highlight';
 
+export type {HighlightKeyword} from './utils/highlight';
+
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
