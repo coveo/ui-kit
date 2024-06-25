@@ -25,4 +25,5 @@ export const test = base.extend<MyFixtures & AxeFixture>({
     await use(new LoadMoreProductsPageObject(page));
   },
 });
+
 export {expect} from '@playwright/test';
