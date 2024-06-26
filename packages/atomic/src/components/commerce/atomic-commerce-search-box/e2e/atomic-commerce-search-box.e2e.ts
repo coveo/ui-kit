@@ -52,6 +52,36 @@ test.describe('with instant results & query suggestions', () => {
     await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
   });
 
+  test.describe('with recent queries', () => {
+    test.beforeEach(async ({searchBox}) => {
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('kayak');
+      await searchBox.searchInput.press('Enter');
+      await searchBox.clearButton.waitFor({state: 'visible'});
+      await searchBox.searchInput.fill('');
+    });
+
+    test('should display recent queries', async ({searchBox}) => {
+      await expect(searchBox.recentQueries().first()).toBeVisible();
+    });
+
+    test('should clear recent queries when clicking the clear button', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.click();
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
+
+    test('should clear recent queries when pressing enter while the clear button is focused', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.hover();
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
+  });
+
   test.describe('after clicking the searchbox input', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.searchInput.click();
@@ -73,6 +103,25 @@ test.describe('with instant results & query suggestions', () => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
+    });
+
+    test('should display in the search box what has been submitted', async ({
+      searchBox,
+    }) => {
+      await searchBox.searchInput.fill('Rec');
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.searchInput).toHaveValue('Rec');
+    });
+
+    test.describe('after focusing on suggestion with the mouse', () => {
+      test('should submit what is in the search box regardless of the mouse position', async ({
+        searchBox,
+      }) => {
+        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
+        await searchBox.searchInput.press('Enter');
+        await expect(searchBox.searchInput).toHaveValue('Rec');
+      });
     });
   });
 });
