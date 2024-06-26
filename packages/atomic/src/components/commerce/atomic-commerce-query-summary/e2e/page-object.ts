@@ -1,15 +1,9 @@
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class QuerySummaryPageObject {
-  private page: Page;
+export class QuerySummaryPageObject extends BasePageObject<'atomic-commerce-query-summary'> {
   constructor(page: Page) {
-    this.page = page;
-  }
-
-  get hydrated() {
-    return this.page.locator(
-      'atomic-commerce-query-summary[class*="hydrated"]'
-    );
+    super(page, 'atomic-commerce-query-summary');
   }
 
   get placeholder() {
