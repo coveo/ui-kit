@@ -60,7 +60,7 @@ export class AtomicBreadbox implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   private resizeObserver?: ResizeObserver;
   private showMore!: HTMLButtonElement;
-  private showLess!: HTMLButtonElement | undefined;
+  private showLess!: HTMLButtonElement;
   private lastRemovedBreadcrumbIndex = 0;
   private numberOfBreadcrumbs = 0;
   private numberOfCollapsedBreadcrumbs = 0;
@@ -176,11 +176,9 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private updateShowLessDisplay() {
-    if (this.showLess) {
-      this.show(this.showLess);
-      if (this.showLess.offsetTop === 0) {
-        this.hide(this.showLess);
-      }
+    this.show(this.showLess);
+    if (this.showLess.offsetTop === 0) {
+      this.hide(this.showLess);
     }
   }
 
