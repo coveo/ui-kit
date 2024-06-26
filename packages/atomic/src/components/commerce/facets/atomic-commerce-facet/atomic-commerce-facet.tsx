@@ -112,6 +112,10 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
    * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The field identifier for this facet.
+   */
+  @Prop({reflect: true}) field?: string;
 
   @BindStateToController('facet')
   @State()
