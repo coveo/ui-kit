@@ -299,11 +299,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (
-          !facetRequest ||
-          (facetRequest.type !== 'regular' &&
-            facetRequest.type !== 'hierarchical')
-        ) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
@@ -355,16 +351,6 @@ export const commerceFacetSetReducer = createReducer(
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
-      .addCase(updateFacetNumberOfValues, (state, action) => {
-        const {facetId, numberOfValues} = action.payload;
-        const facetRequest = state[facetId]?.request;
-
-        if (!facetRequest) {
-          return;
-        }
-
-        facetRequest.numberOfValues = numberOfValues;
-      })
       .addCase(updateDateFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
         const request = state[facetId]?.request;
@@ -375,6 +361,16 @@ export const commerceFacetSetReducer = createReducer(
 
         request.values = convertToDateRangeRequests(values);
         request.numberOfValues = values.length;
+      })
+      .addCase(updateFacetNumberOfValues, (state, action) => {
+        const {facetId, numberOfValues} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.numberOfValues = numberOfValues;
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
