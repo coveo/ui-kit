@@ -25,7 +25,7 @@ import {
   InteractiveProduct,
   InteractiveProductProps,
   buildCoreInteractiveProduct,
-} from '../core/product-list/headless-core-interactive-product';
+} from '../core/interactive-product/headless-core-interactive-product';
 
 export interface InstantProductsOptions {
   /**
