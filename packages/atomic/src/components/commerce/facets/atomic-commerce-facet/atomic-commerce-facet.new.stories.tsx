@@ -25,16 +25,10 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-commerce-facet',
   decorators: [
-    (story) => {
-      /*let style = '<style>';
-      Object.entries(context.args).forEach(([key, value]) => {
-        console.log(key, value);
-        style += `atomic-commerce-facet::${key.split('css-part')[1]} {${value.toString()}}`;
-      });
-      style += '</style>';
-      console.log(style);*/
-
-      return html`${story()}<atomic-commerce-facets></atomic-commerce-facets>`;
+    (_) => {
+      return html`<div id="code-root">
+        <atomic-commerce-facets></atomic-commerce-facets>
+      </div>`;
     },
   ],
   play: async (context) => {
