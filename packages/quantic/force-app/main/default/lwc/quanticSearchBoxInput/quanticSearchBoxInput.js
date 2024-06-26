@@ -193,27 +193,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.input.blur();
   }
 
-  handleKeyDownOnClearButton(event) {
-    if (event.key === keys.ENTER) {
-      // Ignore the next enter key press in the searchbox input to prevent submitting a search when we press enter on the clear button.
-      this.ignoreNextEnterKeyPress = true;
-    }
-  }
-
-  /**
-   * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
-   * @param {KeyboardEvent} event
-   */
-  onKeydown(event) {
-    if (event.key === keys.ENTER && !event.shiftKey) {
-      event.preventDefault();
-    }
-  }
-
   /**
    * @param {KeyboardEvent} event
    */
-  onKeyup(event) {
+  onKeyDown(event) {
     switch (event.key) {
       case keys.ESC:
         this.input.removeAttribute('aria-activedescendant');

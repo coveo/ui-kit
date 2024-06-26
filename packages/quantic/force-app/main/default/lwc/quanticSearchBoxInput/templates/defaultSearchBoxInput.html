@@ -22,7 +22,7 @@
                 class={searchBoxInputClass}
                 placeholder={placeholder}
                 type="search"
-                onkeydown={onKeyup}
+                onkeydown={onKeyDown}
                 onfocus={onFocus}
                 onblur={onBlur}
                 oninput={handleValueChange}
@@ -36,7 +36,6 @@
               <template if:false={isQueryEmpty}>
                 <lightning-button-icon
                   onclick={clearInput}
-                  onkeydown={handleKeyDownOnClearButton}
                   icon-name="utility:close"
                   variant="bare"
                   class="slds-input__icon slds-input__icon_right input__icon_cursor slds-grid searchbox__clear-button"
