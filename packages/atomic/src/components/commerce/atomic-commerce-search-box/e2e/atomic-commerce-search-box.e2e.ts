@@ -274,11 +274,19 @@ test.describe('with instant results & query suggestions', () => {
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
-  test.beforeEach(async ({searchBox}) => {
+  let querySuggestionRequestPerformed = false;
+
+  test.beforeEach(async ({page, searchBox}) => {
+    querySuggestionRequestPerformed = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/querySuggest')) {
+        querySuggestionRequestPerformed = true;
+      }
+    });
     await searchBox.load({
-      suggestionTimeout: 5000,
       disableSearch: true,
       minimumQueryLength: 1,
+      suggestionTimeout: 5000,
     });
   });
 
@@ -295,6 +303,10 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
+    });
+
+    test('should not perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(false);
     });
   };
 
@@ -318,7 +330,14 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 });
 
 test.describe('with minimum-query-length=4', () => {
-  test.beforeEach(async ({searchBox}) => {
+  let querySuggestionRequestPerformed = false;
+  test.beforeEach(async ({page, searchBox}) => {
+    querySuggestionRequestPerformed = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/querySuggest')) {
+        querySuggestionRequestPerformed = true;
+      }
+    });
     await searchBox.load({minimumQueryLength: 4, suggestionTimeout: 5000});
   });
 
@@ -361,12 +380,16 @@ test.describe('with minimum-query-length=4', () => {
       await page.getByPlaceholder('Search').fill('kayak');
     });
 
-    test('the submit button is disabled', async ({searchBox}) => {
+    test('the submit button is enabled', async ({searchBox}) => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
-    test('there are no search suggestions', async ({searchBox}) => {
+    test('there are search suggestions', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
+    });
+
+    test('should perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(true);
     });
   });
 });
