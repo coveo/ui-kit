@@ -1,3 +1,9 @@
+## 2.10.5 (2024-06-26)
+
+### Bug Fixes
+
+- **atomic:** add query-summary E2E tests ([#4102](https://github.com/coveo/ui-kit/issues/4102)) ([6f73da7](https://github.com/coveo/ui-kit/commits/6f73da703b5d948b713680d187f03da1d207976a))
+
 ## 2.10.4 (2024-06-19)
 
 ### Bug Fixes
