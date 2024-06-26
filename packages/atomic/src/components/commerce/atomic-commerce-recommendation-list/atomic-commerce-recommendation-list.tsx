@@ -352,6 +352,7 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
+        gridTarget={this.gridCellLinkTarget}
         select={() => {
           this.logWarningIfNeeded(interactiveProduct.warningMessage);
           interactiveProduct.select();
