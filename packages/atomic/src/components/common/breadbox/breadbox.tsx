@@ -1,5 +1,5 @@
 import {FacetValueState} from '@coveo/headless';
-import {h, VNode, FunctionalComponent, Fragment} from '@stencil/core';
+import {h, VNode, FunctionalComponent} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {Button} from '../button';
@@ -20,6 +20,7 @@ export interface BreadcrumbContainerProps {
 }
 
 const SEPARATOR = ' / ';
+const ELLIPSIS = '...';
 
 export const BreadcrumbContainer: FunctionalComponent<
   BreadcrumbContainerProps
@@ -45,62 +46,9 @@ export const BreadcrumbContainer: FunctionalComponent<
   );
 };
 
-export interface BreadcrumbControlsProps {
-  numberOfCollapsedBreadcrumbs: number;
-  lastRemovedBreadcrumbIndex: number | undefined;
-  onClickClearAll: ((event?: MouseEvent | undefined) => void) | undefined;
-  numberOfBreadcrumbs: number;
-  firstExpandedBreadcrumbIndex: number | undefined;
-  focusTargets: BreadboxFocusTargets;
-  showMore: HTMLButtonElement;
-  showLess: HTMLButtonElement;
-  isCollapsed: boolean;
-  bindings: AnyBindings;
-}
-
-export const BreadcrumbControls: FunctionalComponent<
-  BreadcrumbControlsProps
-> = (props) => {
-  if (props.isCollapsed) {
-    return;
-  }
-  return (
-    <Fragment>
-      <BreadcrumbShowMore
-        numberOfBreadcrumbs={props.numberOfBreadcrumbs}
-        firstExpandedBreadcrumbIndex={props.firstExpandedBreadcrumbIndex ?? 0}
-        showMore={props.showMore}
-        focusTargets={props.focusTargets}
-        isCollapsed={props.isCollapsed}
-        bindings={props.bindings}
-        numberOfCollapsedBreadcrumbs={props.numberOfCollapsedBreadcrumbs}
-      ></BreadcrumbShowMore>
-      ,
-      <BreadcrumbShowLess
-        focusTargets={props.focusTargets}
-        showLess={props.showLess}
-        isCollapsed={props.isCollapsed}
-        bindings={props.bindings}
-      ></BreadcrumbShowLess>
-      ,
-      <BreadcrumbClearAll
-        onClick={props.onClickClearAll}
-        numberOfBreadcrumbs={props.numberOfBreadcrumbs}
-        firstExpandedBreadcrumbIndex={props.firstExpandedBreadcrumbIndex}
-        showMore={props.showMore}
-        focusTargets={props.focusTargets}
-        isCollapsed={props.isCollapsed}
-        bindings={props.bindings}
-        lastRemovedBreadcrumbIndex={props.lastRemovedBreadcrumbIndex}
-      ></BreadcrumbClearAll>
-      ,
-    </Fragment>
-  );
-};
-
 export interface BreadcrumbShowLessProps {
-  focusTargets: BreadboxFocusTargets;
-  showLess: HTMLButtonElement;
+  onShowLess: () => void;
+  setRef: (el: HTMLButtonElement) => void;
   isCollapsed: boolean;
   bindings: AnyBindings;
 }
@@ -108,21 +56,19 @@ export interface BreadcrumbShowLessProps {
 export const BreadcrumbShowLess: FunctionalComponent<
   BreadcrumbShowLessProps
 > = (props) => {
-  if (!props.isCollapsed) {
+  if (props.isCollapsed) {
     return;
   }
+
   return (
     <li key="show-less">
       <Button
-        ref={(ref) => (props.showLess = ref!)}
+        ref={props.setRef}
         part="show-less"
         style="outline-primary"
         text={props.bindings.i18n.t('show-less')}
         class="p-2 btn-pill"
-        onClick={() => {
-          props.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
-          props.isCollapsed = true;
-        }}
+        onClick={props.onShowLess}
       ></Button>
     </li>
   );
@@ -130,10 +76,8 @@ export const BreadcrumbShowLess: FunctionalComponent<
 
 export interface BreadcrumbShowMoreProps {
   numberOfCollapsedBreadcrumbs: number;
-  numberOfBreadcrumbs: number;
-  firstExpandedBreadcrumbIndex: number;
-  showMore: HTMLButtonElement;
-  focusTargets: BreadboxFocusTargets;
+  setRef: (el: HTMLButtonElement) => void;
+  onShowMore: () => void;
   isCollapsed: boolean;
   bindings: AnyBindings;
 }
@@ -141,25 +85,20 @@ export interface BreadcrumbShowMoreProps {
 export const BreadcrumbShowMore: FunctionalComponent<
   BreadcrumbShowMoreProps
 > = (props) => {
-  if (props.isCollapsed) {
+  if (!props.isCollapsed) {
     return;
   }
   return (
     <li key="show-more">
       <Button
-        ref={(ref) => {
-          props.focusTargets.breadcrumbShowLessFocus.setTarget(ref!);
-          props.showMore = ref!;
-        }}
+        ref={props.setRef}
         part="show-more"
         style="outline-primary"
         class="p-2 btn-pill whitespace-nowrap"
-        onClick={() => {
-          props.firstExpandedBreadcrumbIndex =
-            props.numberOfBreadcrumbs - props.numberOfCollapsedBreadcrumbs;
-          props.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
-          props.isCollapsed = false;
-        }}
+        onClick={props.onShowMore}
+        ariaLabel={props.bindings.i18n.t('show-n-more-filters', {
+          value: props.numberOfCollapsedBreadcrumbs,
+        })}
       ></Button>
     </li>
   );
@@ -175,8 +114,6 @@ export interface BreadcrumbClearAllProps {
   lastRemovedBreadcrumbIndex: number | undefined;
   onClick: ((event?: MouseEvent | undefined) => void) | undefined;
   numberOfBreadcrumbs: number;
-  firstExpandedBreadcrumbIndex: number | undefined;
-  showMore: HTMLButtonElement;
   focusTargets: BreadboxFocusTargets;
   isCollapsed: boolean;
   bindings: AnyBindings;
@@ -207,15 +144,27 @@ export const BreadcrumbClearAll: FunctionalComponent<
   );
 };
 
+function limitPath(path: string[], pathLimit: number) {
+  if (path.length <= pathLimit) {
+    return path.join(SEPARATOR);
+  }
+
+  if (pathLimit === 1 && path.length > 1) {
+    return [ELLIPSIS, path[path.length - 1]].join(SEPARATOR);
+  }
+
+  const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-(pathLimit - 1))];
+  return ellipsedPath.join(SEPARATOR);
+}
+
 export interface BreadcrumbButtonProps {
-  limitPath(path: string[]): string;
-  numberOfBreadcrumbs: number;
+  pathLimit: number;
+  onSelectBreadcrumb: () => void;
   focusTargets: BreadboxFocusTargets;
   lastRemovedBreadcrumbIndex: number | undefined;
   firstExpandedBreadcrumbIndex: number | undefined;
   breadcrumb: IBreadcrumb;
   index: number;
-  totalBreadcrumbs: number;
   bindings: AnyBindings;
 }
 
@@ -234,13 +183,12 @@ export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
   const fullValue = Array.isArray(props.breadcrumb.formattedValue)
     ? props.breadcrumb.formattedValue.join(SEPARATOR)
     : props.breadcrumb.formattedValue;
+  const value = Array.isArray(props.breadcrumb.formattedValue)
+    ? limitPath(props.breadcrumb.formattedValue, props.pathLimit)
+    : props.breadcrumb.formattedValue;
   const title = `${props.breadcrumb.label}: ${fullValue}`;
-  const isLastBreadcrumb = props.totalBreadcrumbs === 1;
   const isExclusion = props.breadcrumb.state === 'excluded';
   const activeColor = isExclusion ? 'error' : 'primary';
-  const value = Array.isArray(props.breadcrumb.formattedValue)
-    ? props.limitPath(props.breadcrumb.formattedValue)
-    : props.breadcrumb.formattedValue;
 
   return (
     <li class="breadcrumb" key={value}>
@@ -256,16 +204,7 @@ export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
             value: title,
           }
         )}
-        onClick={() => {
-          if (isLastBreadcrumb) {
-            props.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-          } else if (props.numberOfBreadcrumbs > 1) {
-            props.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
-          }
-
-          props.lastRemovedBreadcrumbIndex = props.index;
-          props.breadcrumb.deselect();
-        }}
+        onClick={props.onSelectBreadcrumb}
         ref={(ref) => {
           if (props.lastRemovedBreadcrumbIndex === props.index) {
             props.focusTargets.breadcrumbRemovedFocus.setTarget(ref);
