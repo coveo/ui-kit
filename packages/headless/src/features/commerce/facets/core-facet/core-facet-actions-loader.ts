@@ -29,7 +29,11 @@ export type {
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CoreFacetActionsCreators {
+  /**
+   * Clears all facets.
+   */
   clearAllCoreFacets(): PayloadAction<void>;
+
   /**
    * Deselects all values of a facet.
    *
