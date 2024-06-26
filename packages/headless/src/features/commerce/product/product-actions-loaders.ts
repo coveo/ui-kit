@@ -21,7 +21,7 @@ export type {ProductClickActionCreatorPayload, ProductViewActionCreatorPayload};
  */
 export interface ProductActionCreators {
   /**
-   * Trigger a click event for a product.
+   * Logs a click analytics event for a product.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -35,7 +35,7 @@ export interface ProductActionCreators {
   >;
 
   /**
-   * Trigger a view event for a product.
+   * Logs a view analytics event for a product.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
