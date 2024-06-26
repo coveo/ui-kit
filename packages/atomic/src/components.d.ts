@@ -275,6 +275,10 @@ export namespace Components {
          */
         "facet": CategoryFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
@@ -293,6 +297,10 @@ export namespace Components {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -405,6 +413,10 @@ export namespace Components {
          */
         "facet": NumericFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed": boolean;
@@ -465,6 +477,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     * @alpha 
      */
     interface AtomicCommerceQuerySummary {
     }
@@ -676,6 +689,10 @@ export namespace Components {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -1874,7 +1891,7 @@ export namespace Components {
         /**
           * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
          */
-        "imagesAltField"?: string;
+        "imageAltField"?: string;
         /**
           * Navigates to the specified image index.
           * @param index - The index of the image to navigate to.
@@ -2531,6 +2548,10 @@ export namespace Components {
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
+        /**
+          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
+         */
+        "imageAltField"?: string;
     }
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -3586,6 +3607,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     * @alpha 
      */
     interface HTMLAtomicCommerceQuerySummaryElement extends Components.AtomicCommerceQuerySummary, HTMLStencilElement {
     }
@@ -5688,6 +5710,10 @@ declare namespace LocalJSX {
          */
         "facet": CategoryFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
@@ -5706,6 +5732,10 @@ declare namespace LocalJSX {
           * The facet controller instance.
          */
         "facet": RegularFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -5807,6 +5837,10 @@ declare namespace LocalJSX {
          */
         "facet": NumericFacet;
         /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
+        /**
           * Specifies whether the facet is collapsed.
          */
         "isCollapsed"?: boolean;
@@ -5863,6 +5897,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+     * @alpha 
      */
     interface AtomicCommerceQuerySummary {
     }
@@ -6050,6 +6085,10 @@ declare namespace LocalJSX {
           * The date facet controller instance.
          */
         "facet": DateFacet;
+        /**
+          * The field identifier for this facet.
+         */
+        "field"?: string;
         /**
           * Specifies whether the facet is collapsed.
          */
@@ -7202,7 +7241,7 @@ declare namespace LocalJSX {
         /**
           * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
          */
-        "imagesAltField"?: string;
+        "imageAltField"?: string;
     }
     interface AtomicProductLink {
         /**
@@ -7810,6 +7849,10 @@ declare namespace LocalJSX {
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
+        /**
+          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
+         */
+        "imageAltField"?: string;
     }
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -8822,6 +8865,7 @@ declare module "@stencil/core" {
             "atomic-commerce-query-error": LocalJSX.AtomicCommerceQueryError & JSXBase.HTMLAttributes<HTMLAtomicCommerceQueryErrorElement>;
             /**
              * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+             * @alpha 
              */
             "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
             "atomic-commerce-recommendation-interface": LocalJSX.AtomicCommerceRecommendationInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationInterfaceElement>;

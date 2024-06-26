@@ -37,9 +37,9 @@ export class AtomicProductPrice
 
   public render() {
     const hasPromotionalPrice =
-      this.product?.ec_promo_price !== undefined &&
-      this.product?.ec_price !== undefined &&
-      this.product?.ec_promo_price < this.product?.ec_price;
+      this.product.ec_promo_price !== null &&
+      this.product.ec_price !== null &&
+      this.product.ec_promo_price < this.product.ec_price;
 
     const {currency} = this.contextState;
 

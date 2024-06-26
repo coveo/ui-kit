@@ -1,4 +1,5 @@
 import {StringValue} from '@coveo/bueno';
+import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -28,12 +29,13 @@ export interface QueryRecommendationsCommerceAPIThunkReturn {
 export type StateNeededByFetchRecommendations = StateNeededByQueryCommerceAPI &
   RecommendationsSection;
 
-const buildRecommendationCommerceAPIRequest = async (
+const buildRecommendationCommerceAPIRequest = (
   slotId: string,
   state: StateNeededByFetchRecommendations,
+  relay: Relay,
   productId?: string
-): Promise<CommerceRecommendationsRequest> => {
-  const commerceAPIRequest = await buildBaseCommerceAPIRequest(state, slotId);
+): CommerceRecommendationsRequest => {
+  const commerceAPIRequest = buildBaseCommerceAPIRequest(state, relay, slotId);
   return {
     ...commerceAPIRequest,
     context: {
@@ -59,11 +61,12 @@ export const fetchRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetch',
-  async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
     const {slotId, productId} = payload;
-    const request = await buildRecommendationCommerceAPIRequest(
+    const request = buildRecommendationCommerceAPIRequest(
       slotId,
       getState(),
+      relay,
       productId
     );
     const fetched = await apiClient.getRecommendations(request);
@@ -87,7 +90,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
-  async (payload, {getState, rejectWithValue, extra: {apiClient}}) => {
+  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
     const slotId = payload.slotId;
     const state = getState();
     const moreRecommendationsAvailable = moreRecommendationsAvailableSelector(
@@ -103,7 +106,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const request = {
-      ...(await buildRecommendationCommerceAPIRequest(slotId, state)),
+      ...buildRecommendationCommerceAPIRequest(slotId, state, relay),
       page: nextPageToRequest,
     };
     const fetched = await apiClient.getRecommendations(request);
