@@ -1,7 +1,7 @@
 import clear from '@salesforce/label/c.quantic_Clear';
 import recentQueries from '@salesforce/label/c.quantic_RecentQueries';
 import {AriaLiveRegion} from 'c/quanticUtils';
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 const optionCSSClass =
   'slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-grid option';
@@ -111,9 +111,11 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
 
   /** @type {number} */
-  @track selectionIndex = -1;
+  selectionIndex = -1;
   /** @type {boolean} */
   initialRender = true;
+  /** @type {string} */
+  previousQuery = '';
 
   renderedCallback() {
     if (this.initialRender) {
@@ -136,9 +138,14 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         `${this.shouldDisplayRecentQueries ? this.allOptions.length - 1 : this.allOptions.length} suggestions found, to navigate use up and down arrows.`
       );
     }
+    if (this.previousQuery !== this.query) {
+      this.previousQuery = this.query;
+      this.selectionIndex = -1;
+    }
   }
 
   /**
+   * Returns all the options to be displayed inside the suggestion list.
    * @returns {Array<Object>}
    */
   get allOptions() {
