@@ -21,6 +21,7 @@ import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
+import {applySort} from '../sort/sort-actions';
 import {
   nextPage,
   previousPage,
@@ -113,6 +114,7 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectDateFacetValue, handlePaginationReset)
       .addCase(toggleExcludeDateFacetValue, handlePaginationReset)
       .addCase(toggleSelectCategoryFacetValue, handlePaginationReset)
+      .addCase(applySort, handlePaginationReset)
       .addCase(setContext, handlePaginationReset)
       .addCase(setView, handlePaginationReset)
       .addCase(setUser, handlePaginationReset);
