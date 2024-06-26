@@ -1,3 +1,9 @@
+# 2.51.0 (2024-06-26)
+
+### Features
+
+- **quantic:** rich text formatting for quantic RGA ([#4015](https://github.com/coveo/ui-kit/issues/4015)) ([bb4f76a](https://github.com/coveo/ui-kit/commits/bb4f76aa2ee627e0315b7930e89a2f399d35e914))
+
 ## 2.50.9 (2024-06-12)
 
 ### Bug Fixes
