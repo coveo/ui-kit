@@ -4,6 +4,11 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
@@ -16,6 +21,10 @@ import {
 import {
   activeParametersSelector,
   enrichedParametersSelector,
+  enrichedSummarySelector,
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors';
@@ -99,6 +108,13 @@ export function buildSearch(engine: CommerceEngine): Search {
     restoreActionCreator: restoreSearchParameters,
     activeParametersSelector,
     enrichParameters: enrichedParametersSelector,
+    isLoadingSelector,
+    errorSelector,
+    pageSelector: pagePrincipalSelector,
+    perPageSelector: perPagePrincipalSelector,
+    totalEntriesSelector: totalEntriesPrincipalSelector,
+    numberOfProductsSelector,
+    enrichSummary: enrichedSummarySelector,
   });
 
   return {
