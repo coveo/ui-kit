@@ -49,7 +49,7 @@ export interface RecommendationsActionCreator {
   >;
 
   /**
-   * Fetches more recommendations.
+   * Fetches an additional page of recommendations and appends it to the current list.
    * @param payload - The action creator payload.
    *
    * @returns A dispatchable action.
