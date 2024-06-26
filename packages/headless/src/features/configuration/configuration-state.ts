@@ -51,6 +51,10 @@ export interface ConfigurationState {
    * The global headless engine Usage Analytics API configuration.
    */
   analytics: AnalyticsState;
+  /**
+   * The global headless engine Knowledge configuration.
+   */
+  knowledge: KnowledgeState;
 }
 
 export interface AnalyticsState {
@@ -148,6 +152,10 @@ export interface AnalyticsState {
 export const searchAPIEndpoint = '/rest/search/v2';
 export const analyticsAPIEndpoint = '/rest/ua';
 
+interface KnowledgeState {
+  answerConfigurationId: string;
+}
+
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
@@ -172,5 +180,8 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     trackingId: '',
     analyticsMode: 'legacy',
     source: {},
+  },
+  knowledge: {
+    answerConfigurationId: '',
   },
 });
