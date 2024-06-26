@@ -1,11 +1,11 @@
 <template>
-    <div id="listbox-id" class={listboxCssClass} role="listbox">
-        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+    <div class={listboxCssClass}>
+        <ul id="listbox-id" data-cy="suggestion-list" class="slds-listbox slds-listbox_vertical" tabindex="-1" role="listbox">
             <template for:each={allOptions} for:item="option">
                 <template lwc:if={option.isClearRecentQueryButton}>
-                    <li data-cy="clear-recent-queries" key={option.key} role="button" class="slds-listbox__item"
-                        onclick={clearRecentQueries} onmouseover={preventDefault} onmousedown={preventDefault}>
-                        <div class={clearRecentQueriesOptionCSSClass} role="option">
+                    <li id={option.id} key={option.key} onmousedown={option.onClick} tabindex="-1" data-cy="clear-recent-queries" role="option"
+                        class="slds-listbox__item" aria-selected={option.isSelected}>
+                        <div class={clearRecentQueriesOptionCSSClass} data-role="option">
                             <span class="slds-media__body slds-text-title_bold">
                                 {labels.recentQueries}
                             </span>
@@ -14,20 +14,19 @@
                     </li>
                 </template>
                 <template lwc:else>
-                    <li data-cy="suggestions-option" key={option.rawValue} role="presentation"
-                        class="slds-listbox__item" data-rawvalue={option.rawValue} onclick={option.clickHandler}
-                        onmouseover={handleSuggestionHover} onmousedown={preventDefault}>
-                        <div class={option.containerCSSClass} role="option" aria-selected={option.isSelected}>
+                    <div id={option.id} key={option.key} onmousedown={option.onClick} tabindex="-1" data-cy="suggestions-option" role="option"
+                        class="slds-listbox__item" data-rawvalue={option.rawValue} aria-selected={option.isHighlighted}>
+                        <div class={option.containerCSSClass}>
                             <span class="slds-media__figure slds-listbox__option-icon suggestion-option__icon">
-                                <lightning-icon icon-name={option.icon} size="xx-small" alternative-text="Connected"
-                                    title="Connected"></lightning-icon>
+                                <lightning-icon icon-name={option.icon} size="xx-small"
+                                    alternative-text={option.iconTitle}></lightning-icon>
                             </span>
                             <span class="slds-media__body slds-grid">
                                 <lightning-formatted-rich-text class="slds-truncate"
                                     value={option.value}></lightning-formatted-rich-text>
                             </span>
                         </div>
-                    </li>
+                    </div>
                 </template>
             </template>
         </ul>

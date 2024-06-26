@@ -24,7 +24,7 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     ),
   suggestionList: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input c-quantic-search-box-suggestions-list li'
+      'c-quantic-search-box-input c-quantic-search-box-suggestions-list [data-cy="suggestion-list"]'
     ),
   searchButton: () =>
     SearchBoxSelectors.get().find(

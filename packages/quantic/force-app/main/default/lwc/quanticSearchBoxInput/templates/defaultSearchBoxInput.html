@@ -3,10 +3,7 @@
     <div class="slds-form-element__control">
       <div class="slds-combobox_container">
         <div
-          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          role="combobox"
+          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open"
         >
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
@@ -21,17 +18,19 @@
 
               <input
                 id="combobox-with-button-id"
+                aria-label="Search field with suggestions. Suggestions may be available under this field. To send, press Enter."
                 class={searchBoxInputClass}
                 placeholder={placeholder}
                 type="search"
-                onkeyup={onKeyup}
+                onkeydown={onKeyup}
                 onfocus={onFocus}
                 onblur={onBlur}
                 oninput={handleValueChange}
-                aria-autocomplete="list"
+                aria-autocomplete="both"
                 autocomplete="off"
-                role="textbox"
+                role="combobox"
                 data-cy="search-box-input"
+                value={value}
               />
 
               <template if:false={isQueryEmpty}>
@@ -71,10 +70,9 @@
           </div>
           <template if:true={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
+              onselection={handleSelection}
               suggestions={suggestions}
-              onhighlightchange={handleHighlightChange}
-              onsuggestionselected={handleSuggestionSelection}
-              query={inputValue}
+              query={value}
               recent-queries={recentQueries}
               max-number-of-suggestions={maxNumberOfSuggestions}
             ></c-quantic-search-box-suggestions-list>

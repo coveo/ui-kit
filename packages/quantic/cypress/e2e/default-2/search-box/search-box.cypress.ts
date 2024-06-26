@@ -20,6 +20,10 @@ interface StandaloneSearchBoxOptions {
   disableRecentQuerySuggestions: boolean;
 }
 
+const expectedAriaLiveMessage = (suggestionsCount: number) => {
+  return `${suggestionsCount} suggestions found, to navigate use up and down arrows.`;
+};
+
 const variants = [
   {variantName: 'default', textarea: false},
   {variantName: 'expandable', textarea: true},
@@ -278,11 +282,15 @@ describe('quantic-search-box', () => {
 
               Expect.logClearRecentQueries();
               Expect.displayClearRecentQueriesButton(false);
-              Expect.numberOfQuerySuggestions(exampleQuerySuggestions.length);
-              Expect.querySuggestionsEquals(exampleQuerySuggestions);
+              Expect.displaySuggestionList(false);
             });
 
             scope('when selecting a query suggestion', () => {
+              Actions.focusSearchBox(textarea);
+              cy.wait(InterceptAliases.QuerySuggestions);
+              Expect.displaySuggestionList(true);
+              Expect.numberOfQuerySuggestions(exampleQuerySuggestions.length);
+              Expect.querySuggestionsEquals(exampleQuerySuggestions);
               const clickedSuggestionIndex = 0;
               Actions.clickQuerySuggestion(clickedSuggestionIndex);
               Expect.searchWithQuery(
@@ -515,6 +523,222 @@ describe('quantic-search-box', () => {
                     LSkey: recentQueriesLSKey,
                     queries: [],
                   }
+                );
+              });
+            });
+          });
+        });
+      });
+
+      describe('accessibility', () => {
+        const exampleQuerySuggestions = ['ABC', 'EFG'];
+
+        describe('the aria-owns attribute', () => {
+          beforeEach(() => {
+            setRecentQueriesInLocalStorage([]);
+            visitSearchBox({...defaultOptions, textarea});
+            mockQuerySuggestions(exampleQuerySuggestions);
+          });
+
+          it('the search input should have the id of the suggestion list as its value for the ariaOwns attribute', () => {
+            scope('when loading standalone search box', () => {
+              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchButton(true);
+            });
+
+            scope('when focusing on the search box input', () => {
+              Actions.focusSearchBox(textarea);
+              cy.wait(InterceptAliases.QuerySuggestions);
+
+              Expect.displaySuggestionList(true);
+              Expect.searchInputHasCorretAriaOwnsValue(textarea);
+            });
+          });
+        });
+
+        describe('the aria-activedescendant attribute', () => {
+          describe('when only query suggestions are displayed', () => {
+            beforeEach(() => {
+              setRecentQueriesInLocalStorage([]);
+              visitSearchBox({...defaultOptions, textarea});
+              mockQuerySuggestions(exampleQuerySuggestions);
+            });
+
+            it('the search input should have the id of the heighlighted suggestion as its value for the ariaActivedescendant attribute', () => {
+              scope('when loading standalone search box', () => {
+                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchButton(true);
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+              });
+
+              scope('when highlighting the first suggestion', () => {
+                Actions.pressDownArrowOnSearchBox(textarea);
+                Expect.searchInputHasCorretAriaActivedescendantValue(
+                  textarea,
+                  0
+                );
+              });
+
+              scope('when highlighting the second suggestion', () => {
+                Actions.pressDownArrowOnSearchBox(textarea);
+                Expect.searchInputHasCorretAriaActivedescendantValue(
+                  textarea,
+                  1
+                );
+              });
+
+              scope('when the suggestions list is closed', () => {
+                Actions.blurSearchBox(textarea);
+                Expect.searchInputHasNotAriaActivedescendantValue(textarea);
+              });
+            });
+          });
+
+          describe('when both query suggestions and recent queries are displayed', () => {
+            const exampleRecentQueries = ['foo'];
+
+            beforeEach(() => {
+              setRecentQueriesInLocalStorage(exampleRecentQueries);
+              visitSearchBox({...defaultOptions, textarea});
+              mockQuerySuggestions(exampleQuerySuggestions);
+            });
+
+            it('the search input should have the id of the heighlighted suggestion as its value for the ariaActivedescendant attribute', () => {
+              scope('when loading standalone search box', () => {
+                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchButton(true);
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+              });
+
+              scope('when highlighting the first recent query', () => {
+                // First down arrow click in order to surpass the clear recent queries option.
+                Actions.pressDownArrowOnSearchBox(textarea);
+                // Second down arrow click in order to highlight the first recent query option.
+                Actions.pressDownArrowOnSearchBox(textarea);
+                Expect.searchInputHasCorretAriaActivedescendantValue(
+                  textarea,
+                  0
+                );
+              });
+
+              scope('when highlighting the first query suggestion', () => {
+                Actions.pressDownArrowOnSearchBox(textarea);
+                Expect.searchInputHasCorretAriaActivedescendantValue(
+                  textarea,
+                  1
+                );
+              });
+
+              scope('when the suggestions list is closed', () => {
+                Actions.blurSearchBox(textarea);
+                Expect.searchInputHasNotAriaActivedescendantValue(textarea);
+              });
+            });
+          });
+        });
+
+        describe('aria live', () => {
+          describe('when only query suggestions are displayed', () => {
+            beforeEach(() => {
+              setRecentQueriesInLocalStorage([]);
+              visitSearchBox({...defaultOptions, textarea});
+              mockQuerySuggestions(exampleQuerySuggestions);
+            });
+
+            it('should have the aria live message the properly the number of query suggestions available', () => {
+              scope('when loading standalone search box', () => {
+                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchButton(true);
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+                Expect.ariaLive.displayRegion('suggestions', true);
+                Expect.ariaLive.regionContains(
+                  'suggestions',
+                  expectedAriaLiveMessage(exampleQuerySuggestions.length)
+                );
+              });
+
+              scope('when the suggestions list is closed', () => {
+                Actions.blurSearchBox(textarea);
+              });
+
+              scope(
+                'when focusing again on the search box input and getting new suggestions',
+                () => {
+                  const newSuggestions = [...exampleQuerySuggestions, 'FOO'];
+                  mockQuerySuggestions(newSuggestions);
+
+                  Actions.focusSearchBox(textarea);
+                  cy.wait(InterceptAliases.QuerySuggestions);
+
+                  Expect.displaySuggestionList(true);
+                  Expect.ariaLive.displayRegion('suggestions', true);
+                  Expect.ariaLive.regionContains(
+                    'suggestions',
+                    expectedAriaLiveMessage(newSuggestions.length)
+                  );
+                }
+              );
+            });
+          });
+
+          describe('when both query suggestions and recent queries are displayed', () => {
+            const exampleRecentQueries = ['foo', 'bar'];
+            const expectedDisplayedSuggestions = [
+              ...exampleRecentQueries,
+              ...exampleQuerySuggestions,
+            ];
+
+            beforeEach(() => {
+              setRecentQueriesInLocalStorage(exampleRecentQueries);
+              visitSearchBox({...defaultOptions, textarea});
+              mockQuerySuggestions(exampleQuerySuggestions);
+            });
+
+            it('should have the aria live message the properly the number of query suggestions available', () => {
+              scope('when loading standalone search box', () => {
+                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchButton(true);
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+                Expect.ariaLive.displayRegion('suggestions', true);
+                Expect.ariaLive.regionContains(
+                  'suggestions',
+                  expectedAriaLiveMessage(expectedDisplayedSuggestions.length)
+                );
+              });
+
+              scope('when focusing on the search box input', () => {
+                Actions.focusSearchBox(textarea);
+                cy.wait(InterceptAliases.QuerySuggestions);
+
+                Expect.displaySuggestionList(true);
+                Expect.ariaLive.displayRegion('suggestions', true);
+                Expect.ariaLive.regionContains(
+                  'suggestions',
+                  expectedAriaLiveMessage(expectedDisplayedSuggestions.length)
                 );
               });
             });

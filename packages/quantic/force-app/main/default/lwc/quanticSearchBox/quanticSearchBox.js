@@ -130,12 +130,6 @@ export default class QuanticSearchBox extends LightningElement {
     this.addEventListener('quantic__submitsearch', this.handleSubmit);
     this.addEventListener('quantic__showsuggestions', this.showSuggestion);
     this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
-    if (!this.disableRecentQuerySuggestions) {
-      this.addEventListener(
-        'quantic__clearrecentqueries',
-        this.clearRecentQueries
-      );
-    }
   }
 
   renderedCallback() {
@@ -154,16 +148,13 @@ export default class QuanticSearchBox extends LightningElement {
       'quantic__selectsuggestion',
       this.selectSuggestion
     );
-    this.removeEventListener(
-      'quantic__clearrecentqueries',
-      this.clearRecentQueries
-    );
+  }
+
+  get searchBoxValue() {
+    return this.searchBox?.state.value || '';
   }
 
   updateState() {
-    if (this.state?.value !== this.searchBox.state.value) {
-      this.quanticSearchBoxInput.inputValue = this.searchBox.state.value;
-    }
     this.state = this.searchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((suggestion, index) => ({
@@ -183,14 +174,6 @@ export default class QuanticSearchBox extends LightningElement {
     }
   }
 
-  /**
-   * Clears the recent queries.
-   */
-  clearRecentQueries = (event) => {
-    event.stopPropagation();
-    this.recentQueriesList.clear();
-  };
-
   get localStorageKey() {
     return `${this.engineId}_quantic-recent-queries`;
   }
@@ -200,13 +183,9 @@ export default class QuanticSearchBox extends LightningElement {
    */
   handleInputValueChange = (event) => {
     event.stopPropagation();
-    const updatedValue = event.detail.newInputValue;
-    const isSelectionReset = event.detail.resetSelection;
-    if (this.searchBox?.state?.value !== updatedValue) {
-      if (isSelectionReset) {
-        this.quanticSearchBoxInput.resetSelection();
-      }
-      this.searchBox.updateText(updatedValue);
+    const newValue = event.detail.value;
+    if (this.searchBox?.state?.value !== newValue) {
+      this.searchBox.updateText(newValue);
     }
   };
 
@@ -233,8 +212,12 @@ export default class QuanticSearchBox extends LightningElement {
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const {selectedSuggestion: value, isRecentQuery} = event.detail;
-    if (isRecentQuery) {
+    const {
+      selectedSuggestion: {value, isRecentQuery, isClearRecentQueryButton},
+    } = event.detail;
+    if (isClearRecentQueryButton) {
+      this.recentQueriesList.clear();
+    } else if (isRecentQuery) {
       this.recentQueriesList.executeRecentQuery(
         this.recentQueries.indexOf(value)
       );

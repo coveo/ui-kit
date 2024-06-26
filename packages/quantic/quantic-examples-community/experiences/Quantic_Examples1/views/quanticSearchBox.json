@@ -2,7 +2,7 @@
   "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName": "siteforce:dynamicLayout",
   "dataProviders": [],
-  "id": "95849f03-a0c6-4386-ad69-0e73b1544f5e",
+  "id": "c70cec8c-2c8f-4b49-8882-aa161077a137",
   "label": "Quantic Search Box",
   "regions": [
     {
@@ -13,10 +13,10 @@
             "backgroundOverlay": "rgba(0,0,0,0.5)",
             "contentAreaWidth": 100,
             "sectionConfig": {
-              "UUID": "3d290e19-2388-4853-bb18-b28bb421f42d",
+              "UUID": "559ad4cb-657b-4880-88fb-ddbcf7102824",
               "columns": [
                 {
-                  "UUID": "70721eaf-ecc4-406e-8611-976be9becef7",
+                  "UUID": "74ca10a1-047c-48a8-b10d-621f195a318d",
                   "columnKey": "1",
                   "columnName": "Column 1",
                   "columnWidth": "12",
@@ -27,20 +27,20 @@
             "sectionHeight": 300
           },
           "componentName": "forceCommunity:section",
-          "id": "3d290e19-2388-4853-bb18-b28bb421f42d",
+          "id": "559ad4cb-657b-4880-88fb-ddbcf7102824",
           "regions": [
             {
               "components": [
                 {
                   "componentAttributes": {},
                   "componentName": "c:exampleQuanticSearchBox",
-                  "id": "dfb4a8f6-edad-41d7-99fd-39a859229a5b",
+                  "id": "35fb984f-2aeb-493d-8054-dcab26946708",
                   "renderPriority": "NEUTRAL",
                   "renditionMap": {},
                   "type": "component"
                 }
               ],
-              "id": "70721eaf-ecc4-406e-8611-976be9becef7",
+              "id": "74ca10a1-047c-48a8-b10d-621f195a318d",
               "regionLabel": "Column 1",
               "regionName": "1",
               "renditionMap": {},
@@ -52,7 +52,7 @@
           "type": "component"
         }
       ],
-      "id": "7c908f3b-6ca8-47ef-a2d8-6a79e8b18034",
+      "id": "4f83428f-d6ac-40af-b519-7346a9c38065",
       "regionName": "content",
       "type": "region"
     },
@@ -65,12 +65,12 @@
             "title": "Quantic Search Box"
           },
           "componentName": "forceCommunity:seoAssistant",
-          "id": "8a1081cf-f6d7-474b-be6c-a727d820bab8",
+          "id": "28118818-7cbe-4574-937d-fc15a4676429",
           "renditionMap": {},
           "type": "component"
         }
       ],
-      "id": "db70c3cd-7130-4376-ab19-0b7dfa95977a",
+      "id": "8ab0e600-8f10-467c-9c66-d606f8c7d8b8",
       "regionName": "sfdcHiddenRegion",
       "type": "region"
     }

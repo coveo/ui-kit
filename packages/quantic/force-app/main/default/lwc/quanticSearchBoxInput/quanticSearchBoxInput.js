@@ -64,34 +64,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {Suggestion[]}
    */
   @api suggestions = [];
-  /**
-   * Returns and set the input value.
-   * @api
-   * @type {string}
-   */
-  @api
-  get inputValue() {
-    return this.input?.value;
-  }
-  set inputValue(newValue) {
-    this.input.value = newValue;
-  }
-  /**
-   * The blur function.
-   * @api
-   * @type {VoidFunction}
-   */
-  @api blur() {
-    this.input.blur();
-  }
-  /**
-   * The reset selection function.
-   * @api
-   * @type {VoidFunction}
-   */
-  @api resetSelection() {
-    this.suggestionListElement?.resetSelection();
-  }
+  @api value;
   /**
    * The list containing the recent query suggestions.
    * @api
@@ -108,6 +81,9 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
+  /** @type {string} */
+  ariaActiveDescendant;
+  inputIsFocused = false;
 
   connectedCallback() {
     this.addEventListener(
@@ -141,14 +117,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   /**
    * Sends the "quantic__inputValueChange" event.
-   * @param {string} newInputValue
-   * @param {boolean} resetSelection
+   * @param {string} value
    */
-  sendInputValueChangeEvent(newInputValue, resetSelection) {
+  sendInputValueChangeEvent(value) {
     const inputValueChangeEvent = new CustomEvent('quantic__inputvaluechange', {
       detail: {
-        newInputValue,
-        resetSelection,
+        value,
       },
       bubbles: true,
       composed: true,
@@ -182,13 +156,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   /**
    * Sends the "quantic__selectSuggestion" event.
-   * @param {string} selectedSuggestion
+   * @param {{value: string, isRecentQuery: boolean, isClearRecentQueryButton: boolean}} selectedSuggestion
    */
-  sendSelectSuggestionEvent(selectedSuggestion, isRecentQuery = false) {
+  sendSelectSuggestionEvent(selectedSuggestion) {
     const selectSuggestionEvent = new CustomEvent('quantic__selectsuggestion', {
       detail: {
         selectedSuggestion,
-        isRecentQuery,
       },
       bubbles: true,
       composed: true,
@@ -201,11 +174,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
     if (!(this.ignoreNextEnterKeyPress || isLineBreak)) {
       const selectedSuggestion =
         this.suggestionListElement?.getCurrentSelectedValue();
-      if (this.areSuggestionsOpen && selectedSuggestion) {
-        this.sendSelectSuggestionEvent(
-          selectedSuggestion.rawValue,
-          selectedSuggestion.isRecentQuery
-        );
+      if (selectedSuggestion) {
+        this.sendSelectSuggestionEvent(selectedSuggestion);
       } else {
         this.sendSubmitSearchEvent();
       }
@@ -214,12 +184,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleValueChange() {
-    this.sendInputValueChangeEvent(this.input.value, false);
+    this.sendInputValueChangeEvent(this.input.value);
   }
 
   onSubmit(event) {
     event.stopPropagation();
-    this.sendInputValueChangeEvent(this.input.value, false);
     this.sendSubmitSearchEvent();
     this.input.blur();
   }
@@ -246,35 +215,66 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   onKeyup(event) {
     switch (event.key) {
+      case keys.ESC:
+        this.input.removeAttribute('aria-activedescendant');
+        this.input.blur();
+        break;
+
+      case keys.ARROWRIGHT:
+        // eslint-disable-next-line no-case-declarations
+        const selectedOption =
+          this.suggestionListElement?.getCurrentSelectedValue?.();
+        this.sendInputValueChangeEvent(selectedOption.value);
+        this.input.value = selectedOption.value;
+        this.input.setAttribute('aria-activedescendant', selectedOption.id);
+        break;
+
       case keys.ENTER:
         this.handleEnter(event);
         break;
+
       case keys.ARROWUP:
-        this.suggestionListElement?.selectionUp();
+        event.preventDefault();
+        this.ariaActiveDescendant = this.suggestionListElement?.selectionUp();
+        this.input.setAttribute(
+          'aria-activedescendant',
+          this.ariaActiveDescendant
+        );
         break;
+
       case keys.ARROWDOWN:
-        this.suggestionListElement?.selectionDown();
+        event.preventDefault();
+        this.ariaActiveDescendant = this.suggestionListElement?.selectionDown();
+        this.input.setAttribute(
+          'aria-activedescendant',
+          this.ariaActiveDescendant
+        );
         break;
       default:
-        // Reset selection set to true for key pressed other than ARROW keys and ENTER.
-        this.sendInputValueChangeEvent(this.input.value, true);
     }
     this.ignoreNextEnterKeyPress = false;
   }
 
   onFocus() {
-    this.showSuggestions();
+    this.inputIsFocused = true;
+    this.sendShowSuggestionsEvent();
     this.adjustTextAreaHeight();
   }
 
   onBlur() {
-    this.hideSuggestions();
+    this.inputIsFocused = false;
+    this.input.removeAttribute('aria-activedescendant');
     this.collapseTextArea();
   }
 
   onTextAreaInput() {
-    this.sendInputValueChangeEvent(this.input.value, true);
+    this.sendInputValueChangeEvent(this.input.value);
     this.adjustTextAreaHeight();
+  }
+
+  handleSelection(event) {
+    this.sendSelectSuggestionEvent(event.detail.selection);
+    this.input.blur();
   }
 
   adjustTextAreaHeight() {
@@ -299,40 +299,17 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   clearInput() {
     this.input.value = '';
-    this.sendInputValueChangeEvent(this.input.value, false);
+    this.sendInputValueChangeEvent(this.input.value);
     this.input.focus();
     if (this.textarea) {
       this.adjustTextAreaHeight();
     }
   }
 
-  showSuggestions() {
-    this.sendShowSuggestionsEvent();
-    this.combobox?.classList.add('slds-is-open');
-    this.combobox?.setAttribute('aria-expanded', 'true');
-  }
-
-  hideSuggestions() {
-    this.combobox?.classList.remove('slds-is-open');
-    this.combobox?.setAttribute('aria-expanded', 'false');
-    this.suggestionListElement?.resetSelection();
-  }
-
-  handleHighlightChange(event) {
-    this.input.value = event.detail?.rawValue;
-    this.adjustTextAreaHeight();
-  }
-
-  handleSuggestionSelection(event) {
-    const {selectedSuggestion, isRecentQuery} = event.detail;
-    this.sendSelectSuggestionEvent(selectedSuggestion, isRecentQuery);
-    this.blur();
-  }
-
   handleSuggestionListEvent = (event) => {
     event.stopPropagation();
     const id = event.detail;
-    this.input.setAttribute('aria-controls', id);
+    this.input.setAttribute('aria-owns', id);
   };
 
   get searchBoxContainerClass() {
@@ -349,12 +326,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
     }`;
   }
 
-  get areSuggestionsOpen() {
-    return this.combobox?.classList.contains('slds-is-open');
-  }
-
   get isQueryEmpty() {
-    return !this.input?.value?.length;
+    return !this.value?.length;
   }
 
   /**
@@ -365,7 +338,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get shouldDisplaySuggestions() {
-    return this.suggestions?.length || this.recentQueries?.length;
+    return (
+      this.inputIsFocused &&
+      (this.suggestions?.length || this.recentQueries?.length)
+    );
   }
 
   render() {

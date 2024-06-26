@@ -1,4 +1,3 @@
-import {InterceptAliases} from '../../../page-objects/search';
 import {SearchBoxSelector, SearchBoxSelectors} from './search-box-selectors';
 
 const standaloneSearchBoxActions = (selector: SearchBoxSelector) => {
@@ -12,8 +11,7 @@ const standaloneSearchBoxActions = (selector: SearchBoxSelector) => {
             updateText += letter;
             cy.wrap(searchbox)
               .invoke('val', updateText)
-              .trigger('keyup', {which: letter.charCodeAt(0)});
-            cy.wait(InterceptAliases.QuerySuggestions);
+              .trigger('input', {which: letter.charCodeAt(0)});
           });
         })
         .logAction(`when typing "${query}" in search box`);
@@ -34,6 +32,9 @@ const standaloneSearchBoxActions = (selector: SearchBoxSelector) => {
       selector.input(textarea).then((searchbox) => {
         cy.wrap(searchbox).focus();
       });
+    },
+    blurSearchBox: (textarea = false) => {
+      selector.input(textarea).blur({force: true});
     },
   };
 };

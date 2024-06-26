@@ -1,5 +1,6 @@
 import clear from '@salesforce/label/c.quantic_Clear';
 import recentQueries from '@salesforce/label/c.quantic_RecentQueries';
+import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 
 const optionCSSClass =
@@ -61,6 +62,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     recentQueries,
   };
 
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  suggestionsAriaLiveMessage;
+
   /**
    * Move highlighted selection up.
    */
@@ -70,6 +74,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     if (this.selectionIndex < 0) {
       this.selectionIndex = this.allOptions.length - 1;
     }
+    return this.template
+      .querySelectorAll('.slds-listbox__item')
+      [this.selectionIndex].getAttribute('id');
   }
 
   /**
@@ -81,6 +88,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     if (this.selectionIndex >= this.allOptions.length) {
       this.selectionIndex = 0;
     }
+    return this.template
+      .querySelectorAll('.slds-listbox__item')
+      [this.selectionIndex].getAttribute('id');
   }
 
   /**
@@ -89,18 +99,15 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    */
   @api
   getCurrentSelectedValue() {
-    if (this.selectionIndex > -1) {
-      return this.allOptions[this.selectionIndex];
+    if (this.allOptions?.[this.selectionIndex]) {
+      return {
+        value: this.allOptions[this.selectionIndex].rawValue,
+        isClearRecentQueryButton:
+          this.allOptions[this.selectionIndex].isClearRecentQueryButton,
+        isRecentQuery: this.allOptions[this.selectionIndex].isRecentQuery,
+      };
     }
-    return undefined;
-  }
-
-  /**
-   * Reset the current selection.
-   */
-  @api
-  resetSelection() {
-    this.selectionIndex = -1;
+    return null;
   }
 
   /** @type {number} */
@@ -109,11 +116,13 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   initialRender = true;
 
   renderedCallback() {
-    if (this.selectionIndex > -1) {
-      this.emitSuggestionHighlighted();
-    }
     if (this.initialRender) {
-      const listboxId = this.template.querySelector('div').getAttribute('id');
+      this.suggestionsAriaLiveMessage = AriaLiveRegion(
+        'suggestions',
+        this,
+        true
+      );
+      const listboxId = this.template.querySelector('ul').getAttribute('id');
       const suggestionListEvent = new CustomEvent('suggestionlistrender', {
         detail: listboxId,
         bubbles: true,
@@ -122,49 +131,64 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       this.dispatchEvent(suggestionListEvent);
       this.initialRender = false;
     }
+    if (this.allOptions?.length) {
+      this.suggestionsAriaLiveMessage.dispatchMessage(
+        `${this.shouldDisplayRecentQueries ? this.allOptions.length - 1 : this.allOptions.length} suggestions found, to navigate use up and down arrows.`
+      );
+    }
   }
 
+  /**
+   * @returns {Array<Object>}
+   */
   get allOptions() {
-    if (this.shouldDisplayRecentQueries) {
-      const options = [
-        ...this.recentQueriesThatStartWithCurrentQuery,
-        ...this.querySuggestionsNotInRecentQueries,
-      ]?.map((option, index) => ({
-        ...option,
-        key: index + 1,
-        isSelected: this.selectionIndex === index + 1,
-        containerCSSClass: `${optionCSSClass} ${
-          this.selectionIndex === index + 1 ? 'slds-has-focus' : ''
-        }`,
-        icon: option.isRecentQuery ? 'utility:clock' : 'utility:search',
-        clickHandler: () => {
-          this.handleSuggestionSelection(option.rawValue, option.isRecentQuery);
-        },
-      }));
-      return [
-        {
-          key: 0,
-          isSelected: this.selectionIndex === 0,
-          isClearRecentQueryButton: true,
-        },
-        ...options,
-      ].slice(0, this.maxNumberOfSuggestions + 1);
-    }
-    return this.querySuggestionsNotInRecentQueries
-      .map((option, index) => ({
-        ...option,
-        key: index,
-        isSelected: this.selectionIndex === index,
-        containerCSSClass: `${optionCSSClass} ${
-          this.selectionIndex === index ? 'slds-has-focus' : ''
-        }`,
-        icon: 'utility:search',
-        clickHandler: () => {
-          this.handleSuggestionSelection(option.rawValue);
-        },
-      }))
+    /** @type {Array} */
+    const options = [
+      ...this.recentQueriesThatStartWithCurrentQuery,
+      ...this.querySuggestionsNotInRecentQueries,
+    ]
+      ?.map(this.buildOption)
       .slice(0, this.maxNumberOfSuggestions);
+
+    if (this.shouldDisplayRecentQueries) {
+      const clearRecentQueriesOption = {
+        key: 0,
+        id: 'selection-0',
+        isSelected: this.selectionIndex === 0,
+        isClearRecentQueryButton: true,
+        onClick: (event) => {
+          this.handleSelection(event, 0);
+        },
+      };
+      options.unshift(clearRecentQueriesOption);
+    }
+    return options;
   }
+
+  /**
+   * Augments a suggestion with the necessary information needed to display the suggestion as an option in the suggestion list
+   */
+  buildOption = (suggestion, index) => {
+    const optionIndex = this.shouldDisplayRecentQueries ? index + 1 : index;
+    const optionIsSelected = this.selectionIndex === optionIndex;
+
+    return {
+      ...suggestion,
+      id: `selection-${optionIndex}`,
+      key: optionIndex,
+      isSelected: optionIsSelected,
+      containerCSSClass: `${optionCSSClass} ${
+        optionIsSelected ? 'slds-has-focus' : ''
+      }`,
+      icon: suggestion.isRecentQuery ? 'utility:clock' : 'utility:search',
+      iconTitle: suggestion.isRecentQuery
+        ? 'recent query,'
+        : 'suggested query,',
+      onClick: (event) => {
+        this.handleSelection(event, optionIndex);
+      },
+    };
+  };
 
   /**
    * Returns the query suggestions that are not already in the recent queries list.
@@ -179,6 +203,19 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       ) || []
     );
   }
+
+  handleSelection = (event, index) => {
+    event.preventDefault();
+    const selection = {
+      value: this.allOptions[index].rawValue,
+      isClearRecentQueryButton: this.allOptions[index].isClearRecentQueryButton,
+      isRecentQuery: this.allOptions[index].isRecentQuery,
+    };
+    const suggestionSelectedEvent = new CustomEvent('selection', {
+      detail: {selection},
+    });
+    this.dispatchEvent(suggestionSelectedEvent);
+  };
 
   /**
    * Returns the recent queries that start with the query currently typed by the end user.
@@ -219,41 +256,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     return highlightedValue;
   }
 
-  emitSuggestionHighlighted() {
-    if (!(this.shouldDisplayRecentQueries && this.selectionIndex === 0)) {
-      const highlightChangeEvent = new CustomEvent('highlightchange', {
-        detail: this.allOptions[this.selectionIndex],
-      });
-      this.dispatchEvent(highlightChangeEvent);
-    }
-  }
-
   get shouldDisplayRecentQueries() {
     return !!this.recentQueriesThatStartWithCurrentQuery?.length;
-  }
-
-  clearRecentQueries() {
-    this.dispatchEvent(
-      new CustomEvent('quantic__clearrecentqueries', {
-        bubbles: true,
-        composed: true,
-      })
-    );
-  }
-
-  handleSuggestionSelection(rawValue, isRecentQuery = false) {
-    const suggestionSelectedEvent = new CustomEvent('suggestionselected', {
-      detail: {selectedSuggestion: rawValue, isRecentQuery},
-    });
-    this.dispatchEvent(suggestionSelectedEvent);
-  }
-
-  handleSuggestionHover() {
-    this.resetSelection();
-  }
-
-  preventDefault(event) {
-    event.preventDefault();
   }
 
   get clearRecentQueriesOptionCSSClass() {

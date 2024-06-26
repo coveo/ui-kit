@@ -1,5 +1,6 @@
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
+import {AriaLiveExpectations} from '../../default-1/aria-live/aria-live-expectations';
 import {SearchBoxSelectors, SearchBoxSelector} from './search-box-selectors';
 
 function searchBoxExpectations(selector: SearchBoxSelector) {
@@ -65,6 +66,47 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
         .should('have.length', value)
         .logDetail(`should display ${value} query suggestions`);
     },
+    searchInputHasCorretAriaOwnsValue: (textarea = false) => {
+      selector
+        .input(textarea)
+        .then((inputElement) => {
+          selector.suggestionList().then((suggestionListElement) => {
+            const actualValue = inputElement[0].getAttribute('aria-owns');
+            expect(actualValue).to.equal(suggestionListElement[0].id);
+          });
+          return;
+        })
+        .logDetail(
+          'The search input should have the id of the suggestion list as its value for the ariaOwns attribute'
+        );
+    },
+    searchInputHasCorretAriaActivedescendantValue: (
+      textarea = false,
+      index: number
+    ) => {
+      selector
+        .input(textarea)
+        .then((inputElement) => {
+          selector.querySuggestion(index).then((suggestionOptionElement) => {
+            const actualValue = inputElement[0].getAttribute(
+              'aria-activedescendant'
+            );
+            expect(actualValue).to.equal(suggestionOptionElement[0].id);
+          });
+          return;
+        })
+        .logDetail(
+          `the search input should have the id of the suggestion at index ${index} as its value for the ariaActivedescendant attribute`
+        );
+    },
+    searchInputHasNotAriaActivedescendantValue: (textarea = false) => {
+      selector
+        .input(textarea)
+        .should('not.have.attr', 'aria-activedescendant')
+        .logDetail(
+          'The search input should not have the ariaActivedescendant attribute'
+        );
+    },
     logClearRecentQueries: () => {
       cy.wait(InterceptAliases.UA.RecentQueries.ClearRecentQueries)
         .then((interception) => {
@@ -94,4 +136,7 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
 
 export const SearchBoxExpectations = {
   ...searchBoxExpectations(SearchBoxSelectors),
+  ariaLive: {
+    ...AriaLiveExpectations,
+  },
 };
