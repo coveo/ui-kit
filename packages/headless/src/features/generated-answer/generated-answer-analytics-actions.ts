@@ -31,6 +31,12 @@ export type GeneratedAnswerFeedbackV2 = {
 };
 const RGAType = 'RGA';
 
+export function isGeneratedAnswerFeedbackV2(
+  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
+): feedback is GeneratedAnswerFeedbackV2 {
+  return typeof feedback === 'object';
+}
+
 //TODO: KIT-2859
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
@@ -173,9 +179,8 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     },
   });
 
-//Method deprecated after v3, EP event no longer available, TODO: SFINT-5585
 export const logGeneratedAnswerFeedback = (
-  feedback: GeneratedAnswerFeedback
+  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/sendFeedback',
@@ -185,14 +190,52 @@ export const logGeneratedAnswerFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.makeGeneratedAnswerFeedbackSubmit({
-        generativeQuestionAnsweringId,
-        reason: feedback,
-      });
+      return isGeneratedAnswerFeedbackV2(feedback)
+        ? client.makeGeneratedAnswerFeedbackSubmitV2({
+            generativeQuestionAnsweringId,
+            ...feedback,
+          })
+        : client.makeGeneratedAnswerFeedbackSubmit({
+            generativeQuestionAnsweringId,
+            reason: feedback,
+          });
     },
+    analyticsType: isGeneratedAnswerFeedbackV2(feedback)
+      ? 'Qna.SubmitRgaFeedback'
+      : undefined,
+    analyticsPayloadBuilder: isGeneratedAnswerFeedbackV2(feedback)
+      ? (state): Qna.SubmitRgaFeedback => {
+          const {search} = state;
+          const {response} = search || {};
+          const responseId = response?.searchUid || '';
+          const {
+            helpful,
+            readable,
+            documented,
+            hallucinationFree,
+            correctTopic,
+            details,
+            documentUrl,
+          } = feedback;
+          return {
+            answer: {
+              responseId,
+            },
+            feedback: {
+              helpful,
+              readable,
+              documented,
+              details,
+              hallucination_free: hallucinationFree,
+              correct_topic: correctTopic,
+              document_url: documentUrl,
+            },
+          };
+        }
+      : undefined,
   });
 
-//Method deprecated after v3, EP event no longer available, TODO: SFINT-5585
+//Method deprecated after v3, it will no longer be used, TODO: SFINT-5585
 export const logGeneratedAnswerDetailedFeedback = (
   details: string
 ): CustomAction =>
@@ -209,53 +252,6 @@ export const logGeneratedAnswerDetailedFeedback = (
         reason: 'other',
         details,
       });
-    },
-  });
-
-export const logGeneratedAnswerFeedbackV2 = (
-  feedback: GeneratedAnswerFeedbackV2
-): CustomAction =>
-  makeAnalyticsAction({
-    prefix: 'analytics/generatedAnswer/sendFeedback',
-    __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerFeedbackSubmitV2({
-        generativeQuestionAnsweringId,
-        ...feedback,
-      });
-    },
-    analyticsType: 'Qna.SubmitRgaFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitRgaFeedback => {
-      const {search} = state;
-      const {response} = search || {};
-      const responseId = response?.searchUid || '';
-      const {
-        helpful,
-        readable,
-        documented,
-        hallucinationFree,
-        correctTopic,
-        details,
-        documentUrl,
-      } = feedback;
-      return {
-        answer: {
-          responseId,
-        },
-        feedback: {
-          helpful,
-          readable,
-          documented,
-          details,
-          hallucination_free: hallucinationFree,
-          correct_topic: correctTopic,
-          document_url: documentUrl,
-        },
-      };
     },
   });
 
@@ -423,7 +419,6 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerStreamEnd,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
-  logGeneratedAnswerFeedbackV2,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logHoverCitation,

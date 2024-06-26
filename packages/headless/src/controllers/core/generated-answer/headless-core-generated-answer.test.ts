@@ -24,7 +24,6 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
   GeneratedAnswerFeedbackV2,
-  logGeneratedAnswerFeedbackV2,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
 import {
@@ -151,7 +150,7 @@ describe('generated answer', () => {
     };
     generatedAnswer.sendFeedback(exampleFeedback);
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
-    expect(logGeneratedAnswerFeedbackV2).toHaveBeenCalledWith(exampleFeedback);
+    expect(logGeneratedAnswerFeedback).toHaveBeenCalledWith(exampleFeedback);
   });
 
   it('#sendDetailedFeedback dispatches the right actions', () => {

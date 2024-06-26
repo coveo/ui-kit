@@ -221,12 +221,9 @@ export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
   logDislikeGeneratedAnswer: () => CustomAction;
   logGeneratedAnswerFeedback: (
-    feedback: GeneratedAnswerFeedback
+    feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
   ) => CustomAction;
   logGeneratedAnswerDetailedFeedback: (details: string) => CustomAction;
-  logGeneratedAnswerFeedbackV2: (
-    feedback: GeneratedAnswerFeedbackV2
-  ) => CustomAction;
   logOpenGeneratedAnswerSource: (citationId: string) => CustomAction;
   logHoverCitation: (
     citationId: string,
@@ -324,20 +321,7 @@ export function buildCoreGeneratedAnswer(
     },
 
     sendFeedback(feedback) {
-      if ((feedback as GeneratedAnswerFeedbackV2).helpful !== undefined) {
-        dispatch(
-          analyticsClient.logGeneratedAnswerFeedbackV2(
-            feedback as GeneratedAnswerFeedbackV2
-          )
-        );
-      } else {
-        dispatch(
-          analyticsClient.logGeneratedAnswerFeedback(
-            feedback as GeneratedAnswerFeedback
-          )
-        );
-      }
-
+      dispatch(analyticsClient.logGeneratedAnswerFeedback(feedback));
       dispatch(sendGeneratedAnswerFeedback());
     },
 

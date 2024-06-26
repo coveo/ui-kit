@@ -24,7 +24,6 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
   GeneratedAnswerFeedbackV2,
-  logGeneratedAnswerFeedbackV2,
 } from './generated-answer-insight-analytics-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -41,6 +40,7 @@ const mockLogGeneratedAnswerHideAnswers = jest.fn();
 const mockLogCopyGeneratedAnswer = jest.fn();
 const mockLogGeneratedAnswerExpand = jest.fn();
 const mockLogGeneratedAnswerCollapse = jest.fn();
+const mockLogGeneratedAnswerFeedbackSubmitV2 = jest.fn();
 const emit = jest.fn();
 
 jest.mock('@coveo/relay');
@@ -71,6 +71,7 @@ jest.mock('coveo.analytics', () => {
     logGeneratedAnswerCopyToClipboard: mockLogCopyGeneratedAnswer,
     logGeneratedAnswerExpand: mockLogGeneratedAnswerExpand,
     logGeneratedAnswerCollapse: mockLogGeneratedAnswerCollapse,
+    logGeneratedAnswerFeedbackSubmitV2: mockLogGeneratedAnswerFeedbackSubmitV2,
   }));
 
   return {
@@ -274,7 +275,7 @@ describe('generated answer insight analytics actions', () => {
       );
     });
 
-    it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
+    it('should log #logGeneratedAnswerFeedback with V1 payload', async () => {
       await logGeneratedAnswerFeedback(exampleFeedback)()(
         engine.dispatch,
         () => engine.state,
@@ -285,6 +286,26 @@ describe('generated answer insight analytics actions', () => {
       const expectedMetadata = {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
         reason: exampleFeedback,
+      };
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith(
+        expectedMetadata,
+        expectedCaseContext
+      );
+    });
+
+    it('should log #logGeneratedAnswerFeedback with V2 payload', async () => {
+      await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockLogGeneratedAnswerFeedbackSubmitV2;
+      const expectedMetadata = {
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        ...exampleFeedbackV2,
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -306,26 +327,6 @@ describe('generated answer insight analytics actions', () => {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
         reason: 'other',
         details: exampleDetails,
-      };
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
-    });
-
-    it('should log #logGeneratedAnswerFeedbackV2 with the right payload', async () => {
-      await logGeneratedAnswerFeedbackV2(exampleFeedbackV2)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        reason: exampleFeedbackV2,
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -519,12 +520,12 @@ describe('generated answer insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledTimes(0);
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
-    it('should log #logGeneratedAnswerFeedbackV2 with the right payload', async () => {
-      await logGeneratedAnswerFeedbackV2(exampleFeedbackV2)()(
+    it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
+      await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
