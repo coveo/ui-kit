@@ -7,13 +7,13 @@
     "@coveo/atomic-react": "2.10.5",
     "@coveo/headless": "2.69.0",
     "next": "14.2.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
-    "@types/react": "18.0.17",
-    "@types/react-dom": "18.0.6",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
     "cypress": "13.9.0",
     "cypress-repeat": "2.3.4",
     "ncp": "2.0.0",
