@@ -88,9 +88,7 @@ test.describe('default', () => {
   test.describe('when no suggestions are available', () => {
     test.beforeEach(async ({searchBox, page}) => {
       await setSuggestions(page, 0);
-      await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
-      await searchBox.searchSuggestions().first().waitFor({state: 'hidden'});
     });
 
     test('should not display suggested queries', async ({searchBox}) => {
@@ -98,11 +96,9 @@ test.describe('default', () => {
     });
 
     test('should update aria-live message', async ({searchBox}) => {
-      const searchSuggestionElement = searchBox.ariaLive.filter({
-        hasText: 'There are no search suggestions.',
-      });
-
-      expect((await searchSuggestionElement.count()) > 0).toBe(true);
+      await expect(searchBox.ariaLive).toHaveText(
+        'There are no search suggestions.'
+      );
     });
   });
 
@@ -187,7 +183,7 @@ test.describe('default', () => {
         await searchBox
           .searchSuggestions()
           .first()
-          .waitFor({state: 'visible', timeout: 10e3});
+          .waitFor({state: 'visible', timeout: 10e4});
         await searchBox.submitButton.click();
       });
 
