@@ -20,7 +20,17 @@ export type {
   UpdateItemQuantityActionCreatorPayload,
 };
 
+/**
+ * The cart action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ */
 export interface CartActionCreators {
+  /**
+   * Emits an ec_purchase analytics events with the current cart state.
+   *
+   * @param payload - The action creator payload.
+   */
   purchase(
     payload: PurchaseActionCreatorPayload
   ): AsyncThunkAction<
@@ -29,10 +39,22 @@ export interface CartActionCreators {
     AsyncThunkCommerceOptions<CommerceEngineState>
   >;
 
+  // TODO KIT-3346: Add/expose action to emit ec_cartAction analytics events
+
+  /**
+   * Sets the items in the cart.
+   *
+   * @param payload - The action creator payload.
+   */
   setItems(
     payload: SetItemsActionCreatorPayload
   ): PayloadAction<SetItemsActionCreatorPayload>;
 
+  /**
+   * Updates the quantity of an item in the cart.
+   *
+   * @param payload - The action creator payload.
+   */
   updateItemQuantity(
     payload: UpdateItemQuantityActionCreatorPayload
   ): PayloadAction<UpdateItemQuantityActionCreatorPayload>;
