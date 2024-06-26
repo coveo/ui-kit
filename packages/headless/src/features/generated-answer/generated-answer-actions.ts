@@ -44,6 +44,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
 const booleanValue = new BooleanValue({required: true});
+// const optionalBooleanValue = new BooleanValue();
 const citationSchema = {
   id: stringValue,
   title: stringValue,
@@ -72,6 +73,7 @@ export const updateMessage = createAction(
   (payload: GeneratedAnswerMessagePayload) =>
     validatePayload(payload, {
       textDelta: stringValue,
+      // replaceCurrent: optionalBooleanValue,
     })
 );
 

@@ -41,6 +41,10 @@ export const generatedAnswerReducer = createReducer(
         }
 
         state.answer += payload.textDelta;
+        // payload.replaceCurrent
+        //   ? (state.answer = payload.textDelta)
+        //   : (state.answer += payload.textDelta);
+
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {

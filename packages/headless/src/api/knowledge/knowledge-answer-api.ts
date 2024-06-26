@@ -72,7 +72,7 @@ const messageSchema = new Schema({
   textDelta: new StringValue(),
 });
 
-const validateCitations = new Schema({
+const citationsSchema = new Schema({
   citation: new ArrayValue(
     new RecordValue({
       values: {
@@ -98,7 +98,7 @@ const validateMessage = (message: {textDelta: string}) => {
 const validateCitationsMessage = (citations: {
   citation: GeneratedAnswerCitation[];
 }) => {
-  validateCitations.validate(citations);
+  citationsSchema.validate(citations);
 };
 
 const validateEndOfStream = (endOfStream: {answerGenerated: boolean}) => {

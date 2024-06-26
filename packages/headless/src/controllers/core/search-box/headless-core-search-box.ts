@@ -5,6 +5,7 @@ import {
   InsightAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
+import {generatedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -49,6 +50,10 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {
+  buildKnowledgeGeneratedAnswer,
+  KnowledgeEngine,
+} from '../../knowledge/generatedAnswer/headless-knowledge-generated-answer';
 import {
   defaultSearchBoxOptions,
   SearchBoxOptions,
@@ -213,6 +218,13 @@ export function buildCoreSearchBox(
     throw loadReducerError;
   }
 
+  // const KnowledgeController = buildKnowledgeGeneratedAnswer(engine);
+
+  const knowledgeController = buildKnowledgeGeneratedAnswer(
+    engine as unknown as KnowledgeEngine, // TODO: types
+    generatedAnswerAnalyticsClient
+  );
+
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -255,6 +267,11 @@ export function buildCoreSearchBox(
     }
   };
 
+  const performGeneratedAnswerSearch = () => {
+    // knowledgeController.reset();
+    knowledgeController.requestGeneratedAnswer();
+  };
+
   return {
     ...controller,
 
@@ -291,6 +308,7 @@ export function buildCoreSearchBox(
       nextAnalytics: SearchAction
     ) {
       performSearch({legacy: legacyAnalytics, next: nextAnalytics});
+      performGeneratedAnswerSearch();
       dispatch(clearQuerySuggest({id}));
     },
 

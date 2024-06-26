@@ -19,6 +19,7 @@ import {
   updateAnalyticsConfiguration,
   UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
+  updateKnowledgeConfiguration,
 } from '../features/configuration/configuration-actions';
 import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
@@ -260,6 +261,15 @@ export function buildEngine<
       platformUrl,
     })
   );
+
+  if (options.configuration.knowledgeConfigurationId) {
+    engine.dispatch(
+      updateKnowledgeConfiguration({
+        knowledgeConfigurationId:
+          options.configuration.knowledgeConfigurationId,
+      })
+    );
+  }
 
   const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
     options.configuration,

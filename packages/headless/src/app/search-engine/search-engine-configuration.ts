@@ -45,6 +45,11 @@ export interface SearchConfigurationOptions {
    */
   searchHub?: string;
   /**
+   * Specifies the unique identifier for a Knowledge configuration.
+   * When this identifier is utilized, the `answerApi` is engaged to deliver responses, thereby activating Coveo's answer management capabilities.
+   */
+  knowledgeConfigurationId?: string;
+  /**
    * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    *
    * Notes:

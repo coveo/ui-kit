@@ -15,6 +15,7 @@ import {
   getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   PlatformEnvironment,
 } from '@coveo/headless';
+import {KnowledgeEngine} from '@coveo/headless/dist/definitions/controllers/knowledge/generatedAnswer/headless-knowledge-generated-answer';
 import {
   Component,
   Prop,
@@ -47,7 +48,7 @@ import {AtomicStore, createAtomicStore} from './store';
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
 export type Bindings = CommonBindings<
-  SearchEngine,
+  SearchEngine & KnowledgeEngine, // TODO: types
   AtomicStore,
   HTMLAtomicSearchInterfaceElement
 > &
@@ -403,7 +404,7 @@ export class AtomicSearchInterface
 
   public get bindings(): Bindings {
     return {
-      engine: this.engine!,
+      engine: this.engine! as SearchEngine & KnowledgeEngine, // TODO: types
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
