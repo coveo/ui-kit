@@ -12,6 +12,7 @@ import {
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
+  clearAllCoreFacets,
 } from './core-facet-actions';
 
 export type {
@@ -28,6 +29,7 @@ export type {
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CoreFacetActionsCreators {
+  clearAllCoreFacets(): PayloadAction<void>;
   /**
    * Deselects all values of a facet.
    *
@@ -85,6 +87,7 @@ export function loadCoreFacetActions(
 ): CoreFacetActionsCreators {
   engine.addReducers({commerceFacetSet});
   return {
+    clearAllCoreFacets,
     deselectAllValuesInCoreFacet,
     updateAutoSelectionForAllCoreFacets,
     updateCoreFacetFreezeCurrentValues,

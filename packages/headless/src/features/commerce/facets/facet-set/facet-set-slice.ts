@@ -5,7 +5,6 @@ import {
   FacetValueRequest,
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
@@ -33,6 +32,7 @@ import {
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
+  clearAllCoreFacets,
 } from '../core-facet/core-facet-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -407,7 +407,7 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(clearAllCoreFacets, setAllFacetValuesToIdle)
       .addCase(setContext, clearAllFacetValues)
       .addCase(setView, clearAllFacetValues)
       .addCase(setUser, clearAllFacetValues)

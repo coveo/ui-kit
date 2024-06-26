@@ -35,6 +35,8 @@ export const updateCoreFacetIsFieldExpanded = createAction(
     })
 );
 
+export const clearAllCoreFacets = createAction('commerce/facets/core/clearAll');
+
 export type DeselectAllValuesInCoreFacetActionCreatorPayload = {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

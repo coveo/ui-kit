@@ -1,8 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
+import {
+  clearAllCoreFacets,
+  deselectAllValuesInCoreFacet,
+} from '../facets/core-facet/core-facet-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -105,8 +107,8 @@ export const paginationReducer = createReducer(
       })
       .addCase(restoreSearchParameters, handleRestoreParameters)
       .addCase(restoreProductListingParameters, handleRestoreParameters)
-      .addCase(deselectAllBreadcrumbs, handlePaginationReset)
-      .addCase(deselectAllFacetValues, handlePaginationReset)
+      .addCase(clearAllCoreFacets, handlePaginationReset)
+      .addCase(deselectAllValuesInCoreFacet, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)

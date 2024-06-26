@@ -4,8 +4,8 @@ import {
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
-import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {
+  clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
   updateCoreFacetFreezeCurrentValues,
 } from '../../../../features/commerce/facets/core-facet/core-facet-actions';
@@ -251,7 +251,7 @@ export function buildCoreBreadcrumbManager(
     ...controller,
 
     deselectAll: () => {
-      dispatch(deselectAllBreadcrumbs());
+      dispatch(clearAllCoreFacets());
       dispatch(options.fetchProductsActionCreator());
     },
 

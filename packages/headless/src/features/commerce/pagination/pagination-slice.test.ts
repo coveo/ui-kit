@@ -1,10 +1,12 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {deselectAllFacetValues} from '../../facets/facet-set/facet-set-actions';
 import {setContext, setUser, setView} from '../context/context-actions';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
+import {
+  clearAllCoreFacets,
+  deselectAllValuesInCoreFacet,
+} from '../facets/core-facet/core-facet-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -252,12 +254,12 @@ describe('pagination slice', () => {
 
   describe.each([
     {
-      actionName: '#deselectAllBreadcrumbs',
-      action: deselectAllBreadcrumbs,
+      actionName: '#clearAllCoreFacets',
+      action: clearAllCoreFacets,
     },
     {
-      actionName: '#deselectAllFacetValues',
-      action: deselectAllFacetValues,
+      actionName: '#deselectAllValuesInCoreFacet',
+      action: deselectAllValuesInCoreFacet,
     },
     {
       actionName: '#toggleSelectFacetValue',

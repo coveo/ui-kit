@@ -1,7 +1,7 @@
 import {Action} from '@reduxjs/toolkit';
 import {stateKey} from '../../../../app/state-key';
-import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {
+  clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
   updateCoreFacetFreezeCurrentValues,
 } from '../../../../features/commerce/facets/core-facet/core-facet-actions';
@@ -51,7 +51,6 @@ jest.mock(
   '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
 jest.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
-jest.mock('../../../../features/breadcrumb/breadcrumb-actions');
 
 jest.mock(
   '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
@@ -112,7 +111,7 @@ describe('core breadcrumb manager', () => {
   describe('#deselectAll', () => {
     it('deselects all breadcrumbs', () => {
       breadcrumbManager.deselectAll();
-      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+      expect(clearAllCoreFacets).toHaveBeenCalled();
     });
 
     it('dispatches #fetchProductsActionCreator', () => {

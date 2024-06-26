@@ -23,7 +23,6 @@ import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {
   FacetValueState,
@@ -54,6 +53,7 @@ import {
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
+  clearAllCoreFacets,
 } from '../core-facet/core-facet-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -2438,7 +2438,7 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  it('#deselectAllBreadcrumbs resets the state of all facet values to "idle"', () => {
+  it('#clearAllCoreFacets resets the state of all facet values to "idle"', () => {
     const facetIds = ['1', '2'];
     for (const facetId of facetIds) {
       state[facetId] = buildMockCommerceFacetSlice({
@@ -2453,7 +2453,7 @@ describe('commerceFacetSetReducer', () => {
       });
     }
 
-    const finalState = commerceFacetSetReducer(state, deselectAllBreadcrumbs());
+    const finalState = commerceFacetSetReducer(state, clearAllCoreFacets());
 
     for (const facetId in finalState) {
       for (const value of finalState[facetId]!.request.values) {

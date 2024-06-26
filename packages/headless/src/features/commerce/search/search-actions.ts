@@ -6,13 +6,13 @@ import {
 } from '../../../api/commerce/commerce-api-client';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {validatePayload} from '../../../utils/validate-payload';
-import {
-  deselectAllBreadcrumbs,
-  deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
+import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {buildCommerceAPIRequest} from '../common/actions';
-import {updateAutoSelectionForAllCoreFacets} from '../facets/core-facet/core-facet-actions';
+import {
+  clearAllCoreFacets,
+  updateAutoSelectionForAllCoreFacets,
+} from '../facets/core-facet/core-facet-actions';
 import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
@@ -134,7 +134,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   });
 
   if (payload.clearFilters) {
-    dispatch(deselectAllBreadcrumbs());
+    dispatch(clearAllCoreFacets());
     dispatch(deselectAllNonBreadcrumbs());
   }
 
