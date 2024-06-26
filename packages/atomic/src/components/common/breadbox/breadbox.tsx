@@ -14,13 +14,43 @@ export interface IBreadcrumb {
   deselect: () => void;
 }
 
+type BreadboxFocusTargets = {
+  breadcrumbRemovedFocus: FocusTargetController;
+  breadcrumbShowLessFocus: FocusTargetController;
+  breadcrumbShowMoreFocus: FocusTargetController;
+};
+
+const SEPARATOR = ' / ';
+const ELLIPSIS = '...';
+
+function limitPath(path: string[], pathLimit: number) {
+  if (path.length <= pathLimit) {
+    return path.join(SEPARATOR);
+  }
+
+  if (pathLimit === 1 && path.length > 1) {
+    return [ELLIPSIS, path[path.length - 1]].join(SEPARATOR);
+  }
+
+  const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-(pathLimit - 1))];
+  return ellipsedPath.join(SEPARATOR);
+}
+
+export interface BreadcrumbButtonProps {
+  pathLimit: number;
+  onSelectBreadcrumb: () => void;
+  focusTargets: BreadboxFocusTargets;
+  lastRemovedBreadcrumbIndex: number | undefined;
+  firstExpandedBreadcrumbIndex: number | undefined;
+  breadcrumb: IBreadcrumb;
+  index: number;
+  bindings: AnyBindings;
+}
+
 export interface BreadcrumbContainerProps {
   isCollapsed: boolean;
   bindings: AnyBindings;
 }
-
-const SEPARATOR = ' / ';
-const ELLIPSIS = '...';
 
 export const BreadcrumbContainer: FunctionalComponent<
   BreadcrumbContainerProps
@@ -104,12 +134,6 @@ export const BreadcrumbShowMore: FunctionalComponent<
   );
 };
 
-type BreadboxFocusTargets = {
-  breadcrumbRemovedFocus: FocusTargetController;
-  breadcrumbShowLessFocus: FocusTargetController;
-  breadcrumbShowMoreFocus: FocusTargetController;
-};
-
 export interface BreadcrumbClearAllProps {
   lastRemovedBreadcrumbIndex: number | undefined;
   onClick: ((event?: MouseEvent | undefined) => void) | undefined;
@@ -143,30 +167,6 @@ export const BreadcrumbClearAll: FunctionalComponent<
     </li>
   );
 };
-
-function limitPath(path: string[], pathLimit: number) {
-  if (path.length <= pathLimit) {
-    return path.join(SEPARATOR);
-  }
-
-  if (pathLimit === 1 && path.length > 1) {
-    return [ELLIPSIS, path[path.length - 1]].join(SEPARATOR);
-  }
-
-  const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-(pathLimit - 1))];
-  return ellipsedPath.join(SEPARATOR);
-}
-
-export interface BreadcrumbButtonProps {
-  pathLimit: number;
-  onSelectBreadcrumb: () => void;
-  focusTargets: BreadboxFocusTargets;
-  lastRemovedBreadcrumbIndex: number | undefined;
-  firstExpandedBreadcrumbIndex: number | undefined;
-  breadcrumb: IBreadcrumb;
-  index: number;
-  bindings: AnyBindings;
-}
 
 export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
   props
