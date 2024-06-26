@@ -45,6 +45,7 @@ export * from './features/commerce/pagination/pagination-actions-loader';
 export * from './features/commerce/product/product-actions-loaders';
 export * from './features/commerce/context/cart/cart-actions-loader';
 export * from './features/commerce/sort/sort-actions-loader';
+export * from './features/commerce/facets/core-facet/core-facet-actions-loader';
 export * from './features/commerce/facets/category-facet/category-facet-actions-loader';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader';

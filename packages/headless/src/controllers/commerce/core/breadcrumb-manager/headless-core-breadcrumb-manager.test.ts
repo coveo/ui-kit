@@ -2,6 +2,10 @@ import {Action} from '@reduxjs/toolkit';
 import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
+import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../features/commerce/facets/date-facet/date-facet-actions';
@@ -24,10 +28,6 @@ import {
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
-import {
-  deselectAllFacetValues,
-  updateFreezeCurrentValues,
-} from '../../../../features/facets/facet-set/facet-set-actions';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCategoryFacetResponse,
@@ -46,7 +46,7 @@ import {
   CoreBreadcrumbManagerOptions,
 } from './headless-core-breadcrumb-manager';
 
-jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock(
   '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
@@ -245,7 +245,7 @@ describe('core breadcrumb manager', () => {
 
     it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
+      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith(facetId);
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
@@ -282,7 +282,7 @@ describe('core breadcrumb manager', () => {
       });
 
       it('dispatches #updateFreezeCurrentValues', () => {
-        expect(updateFreezeCurrentValues).toHaveBeenCalledWith({
+        expect(updateCoreFacetFreezeCurrentValues).toHaveBeenCalledWith({
           facetId,
           freezeCurrentValues: false,
         });

@@ -10,9 +10,9 @@ import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
 } from '../../breadcrumb/breadcrumb-actions';
-import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {buildCommerceAPIRequest} from '../common/actions';
+import {updateAutoSelectionForAllCoreFacets} from '../facets/core-facet/core-facet-actions';
 import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
 import {
@@ -138,7 +138,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
     dispatch(deselectAllNonBreadcrumbs());
   }
 
-  dispatch(updateFacetAutoSelection({allow: true}));
+  dispatch(updateAutoSelectionForAllCoreFacets({allow: true}));
   dispatch(
     updateQuery({
       query: payload.query,

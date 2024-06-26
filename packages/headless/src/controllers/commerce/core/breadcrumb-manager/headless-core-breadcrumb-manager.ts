@@ -6,6 +6,10 @@ import {
 import {stateKey} from '../../../../app/state-key';
 import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
 import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
+import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../features/commerce/facets/date-facet/date-facet-actions';
@@ -30,10 +34,6 @@ import {
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
-import {
-  deselectAllFacetValues,
-  updateFreezeCurrentValues,
-} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   CommerceFacetSetSection,
   FacetOrderSection,
@@ -130,7 +130,7 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
   [facetTypeWithoutExcludeAction]: {
-    toggleSelectActionCreator: deselectAllFacetValues,
+    toggleSelectActionCreator: deselectAllValuesInCoreFacet,
   },
 };
 
@@ -180,7 +180,7 @@ export function buildCoreBreadcrumbManager(
               })
             );
             dispatch(
-              updateFreezeCurrentValues({
+              updateCoreFacetFreezeCurrentValues({
                 facetId: facet.facetId,
                 freezeCurrentValues: false,
               })
@@ -197,7 +197,7 @@ export function buildCoreBreadcrumbManager(
               })
             );
             dispatch(
-              updateFreezeCurrentValues({
+              updateCoreFacetFreezeCurrentValues({
                 facetId: facet.facetId,
                 freezeCurrentValues: false,
               })

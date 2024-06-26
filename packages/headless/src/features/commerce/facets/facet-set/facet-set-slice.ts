@@ -12,14 +12,7 @@ import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {
-  deselectAllFacetValues,
-  updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues,
-  updateFreezeCurrentValues,
-} from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
@@ -34,6 +27,13 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../category-facet/category-facet-actions';
+import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+  updateCoreFacetIsFieldExpanded,
+  updateCoreFacetNumberOfValues,
+  updateAutoSelectionForAllCoreFacets,
+} from '../core-facet/core-facet-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -362,7 +362,7 @@ export const commerceFacetSetReducer = createReducer(
         request.values = convertToDateRangeRequests(values);
         request.numberOfValues = values.length;
       })
-      .addCase(updateFacetNumberOfValues, (state, action) => {
+      .addCase(updateCoreFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -372,7 +372,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.numberOfValues = numberOfValues;
       })
-      .addCase(updateFacetIsFieldExpanded, (state, action) => {
+      .addCase(updateCoreFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -382,12 +382,12 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.isFieldExpanded = isFieldExpanded;
       })
-      .addCase(updateFacetAutoSelection, (state, action) =>
+      .addCase(updateAutoSelectionForAllCoreFacets, (state, action) =>
         Object.values(state).forEach((slice) => {
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
-      .addCase(updateFreezeCurrentValues, (state, action) => {
+      .addCase(updateCoreFacetFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -397,8 +397,8 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
-      .addCase(deselectAllFacetValues, (state, action) => {
-        const facetId = action.payload;
+      .addCase(deselectAllValuesInCoreFacet, (state, action) => {
+        const {facetId} = action.payload;
         const request = state[facetId]?.request;
 
         if (!request) {
