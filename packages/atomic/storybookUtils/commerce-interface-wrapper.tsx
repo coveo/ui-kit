@@ -113,11 +113,6 @@ export const playKeepOnlyFirstFacetOfType = (
   context: StoryContext
 ) => {
   const observer = new MutationObserver(() => {
-    /*const firstFacetOfType = context.canvasElement.querySelector(facetType);
-    if (!firstFacetOfType) {
-      return;
-    }
-*/
     const childNodes = Array.from(
       context.canvasElement.querySelector('atomic-commerce-facets')
         ?.childNodes || []
@@ -136,18 +131,6 @@ export const playKeepOnlyFirstFacetOfType = (
 
     allAtomicElementNotOfType.forEach((node) => node.remove());
     allFacetsMatching.slice(1).forEach((node) => node.remove());
-
-    /*context.canvasElement
-      .querySelector('atomic-commerce-facets')
-      ?.childNodes.forEach((node) => {
-        if (
-          node.nodeName.toLowerCase().indexOf('atomic') !== -1 &&
-          node.nodeName.toLowerCase() !== facetType
-        ) {
-          console.log('removing', node.nodeName);
-          node.remove();
-        }
-      });*/
   });
 
   observer.observe(context.canvasElement, {

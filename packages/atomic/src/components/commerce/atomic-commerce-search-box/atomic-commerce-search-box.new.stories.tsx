@@ -7,10 +7,7 @@ import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 
-const {decorator, play} = wrapInCommerceInterface({
-  skipFirstSearch: true,
-  engineConfig: {},
-});
+const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box',
