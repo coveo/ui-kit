@@ -8,7 +8,7 @@ export class LoadMoreProductsPageObject extends BasePageObject<'atomic-commerce-
 
   summary({index, total}: {index?: number; total?: number} = {}) {
     return this.page.getByText(
-      new RegExp(`Showing ${index ?? '\\d+'} of ${total ?? '\\d+'} result`)
+      new RegExp(`Showing ${index ?? '\\d+'} of ${total ?? '\\d+'} results`)
     );
   }
 
