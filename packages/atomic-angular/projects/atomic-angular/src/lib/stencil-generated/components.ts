@@ -139,14 +139,13 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
-  inputs: ['facet', 'isCollapsed', 'summary']
 })
 @Component({
   selector: 'atomic-commerce-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['facet', 'isCollapsed', 'summary'],
+  inputs: [],
 })
 export class AtomicCommerceFacet {
   protected el: HTMLElement;
