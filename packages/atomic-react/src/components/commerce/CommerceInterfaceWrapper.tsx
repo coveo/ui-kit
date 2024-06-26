@@ -2,7 +2,7 @@ import type {JSX, i18n} from '@coveo/atomic';
 import React, {useEffect, useRef} from 'react';
 import {AtomicCommerceInterface} from '../stencil-generated/commerce';
 
-type ExecuteSearch = HTMLAtomicCommerceInterfaceElement['executeFirstSearch'];
+type ExecuteRequest = HTMLAtomicCommerceInterfaceElement['executeFirstRequest'];
 
 /**
  * The properties of the AtomicCommerceInterface component
@@ -10,11 +10,11 @@ type ExecuteSearch = HTMLAtomicCommerceInterfaceElement['executeFirstSearch'];
 interface WrapperProps
   extends Omit<JSX.AtomicCommerceInterface, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
-   * An optional callback function that can be used to control the execution of the first query.
+   * An optional callback function that can be used to control the execution of the first request.
    *
-   * If not provided, a default function will be used, which execute the first query immediately after initialization.
+   * If not provided, a default function will be used, which execute the request query immediately after initialization.
    */
-  onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
+  onReady?: (executeFirstRequest: ExecuteRequest) => Promise<void>;
   /**
    * An optional callback that lets you control the interface localization.
    *
@@ -25,8 +25,8 @@ interface WrapperProps
 }
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
-  onReady: (executeFirstSearch) => {
-    return executeFirstSearch();
+  onReady: (executeFirstRequest) => {
+    return executeFirstRequest();
   },
   localization: () => {},
 };
@@ -55,7 +55,7 @@ export const InterfaceWrapper = (
       initialization.then(() => {
         localization(commerceInterfaceAtomic.i18n);
         onReady(
-          commerceInterfaceAtomic.executeFirstSearch.bind(
+          commerceInterfaceAtomic.executeFirstRequest.bind(
             commerceInterfaceAtomic
           )
         );
