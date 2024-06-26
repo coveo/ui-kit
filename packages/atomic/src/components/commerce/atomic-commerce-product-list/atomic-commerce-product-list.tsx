@@ -6,6 +6,9 @@ import {
   SearchState,
   Search,
   Product,
+  Summary,
+  ProductListingSummaryState,
+  SearchSummaryState,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -76,6 +79,10 @@ export class AtomicCommerceProductList
   @BindStateToController('search')
   @State()
   private searchState!: SearchState;
+  public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
+  @BindStateToController('summary')
+  @State()
+  private summaryState!: SearchSummaryState | ProductListingSummaryState;
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
@@ -132,8 +139,10 @@ export class AtomicCommerceProductList
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
       this.productListing.refresh();
+      this.summary = this.productListing.summary();
     } else {
       this.search = buildSearch(this.bindings.engine);
+      this.summary = this.search.summary();
     }
 
     this.productTemplateProvider = new ProductTemplateProvider({
@@ -181,12 +190,6 @@ export class AtomicCommerceProductList
     return this.bindings.interfaceElement.type === 'product-listing'
       ? this.productListingState
       : this.searchState;
-  }
-
-  get summaryState() {
-    return this.bindings.interfaceElement.type === 'product-listing'
-      ? this.productListing.summary().state
-      : this.search.summary().state;
   }
 
   public render() {
