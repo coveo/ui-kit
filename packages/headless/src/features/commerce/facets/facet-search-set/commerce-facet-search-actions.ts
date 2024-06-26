@@ -36,17 +36,26 @@ const getExecuteFacetSearchThunkPayloadCreator =
     ExecuteCommerceFacetSearchThunkArg,
     ExecuteCommerceFacetSearchThunkApiConfig
   > =>
-  async (facetId: string, {getState, extra: {apiClient, validatePayload}}) => {
+  async (
+    facetId: string,
+    {getState, extra: {validatePayload, relay, apiClient}}
+  ) => {
     const state = getState();
     validatePayload(facetId, requiredNonEmptyString);
     const req =
       isRegularFacetSearchState(state, facetId) ||
       isRegularFieldSuggestionsState(state, facetId)
-        ? buildFacetSearchRequest(facetId, state, isFieldSuggestionsRequest)
+        ? buildFacetSearchRequest(
+            facetId,
+            state,
+            isFieldSuggestionsRequest,
+            relay
+          )
         : buildCategoryFacetSearchRequest(
             facetId,
             state,
-            isFieldSuggestionsRequest
+            isFieldSuggestionsRequest,
+            relay
           );
 
     const response = await apiClient.facetSearch(await req);

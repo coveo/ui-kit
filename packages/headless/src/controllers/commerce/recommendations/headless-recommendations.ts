@@ -6,6 +6,11 @@ import {
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
+import {
+  pageRecommendationSelector,
+  perPageRecommendationSelector,
+  totalEntriesRecommendationSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
   fetchMoreRecommendations,
@@ -13,6 +18,10 @@ import {
   promoteChildToParent,
   registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
+import {
+  isLoadingSelector,
+  numberOfRecommendationsSelector,
+} from '../../../features/commerce/recommendations/recommendations-selectors';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {validateInitialState} from '../../../utils/validate-payload';
@@ -24,13 +33,15 @@ import {
   BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {SummaryState} from '../core/summary/headless-core-summary';
+import {RecommendationsSummaryState} from './summary/headless-recommendations-summary';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  */
 export interface Recommendations
   extends Controller,
-    BaseSolutionTypeSubControllers {
+    BaseSolutionTypeSubControllers<SummaryState> {
   /**
    * Fetches the recommendations.
    */
@@ -121,12 +132,23 @@ export function buildRecommendations(
     (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
-  const subControllers = buildBaseSubControllers(engine, {
-    slotId,
-    responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
-    fetchProductsActionCreator: () => fetchRecommendations({slotId}),
-    fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
-  });
+  const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
+    engine,
+    {
+      slotId,
+      responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
+      fetchProductsActionCreator: () => fetchRecommendations({slotId}),
+      fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
+      isLoadingSelector: (state) => isLoadingSelector(state, slotId),
+      errorSelector: (state) => state.recommendations[slotId]!.error,
+      pageSelector: (state) => pageRecommendationSelector(state, slotId),
+      perPageSelector: (state) => perPageRecommendationSelector(state, slotId),
+      totalEntriesSelector: (state) =>
+        totalEntriesRecommendationSelector(state, slotId),
+      numberOfProductsSelector: (state) =>
+        numberOfRecommendationsSelector(state, slotId),
+    }
+  );
 
   return {
     ...controller,

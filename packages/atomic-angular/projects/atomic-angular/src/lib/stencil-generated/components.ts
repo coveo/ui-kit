@@ -139,6 +139,49 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+  inputs: ['collapseFacetsAfter']
+})
+@Component({
+  selector: 'atomic-commerce-facets',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseFacetsAfter'],
+})
+export class AtomicCommerceFacets {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceFacets extends Components.AtomicCommerceFacets {}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-load-more-products',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceLoadMoreProducts {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceLoadMoreProducts extends Components.AtomicCommerceLoadMoreProducts {}
+
+
+@ProxyCmp({
   inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
 })
 @Component({
@@ -1183,14 +1226,14 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 
 @ProxyCmp({
-  inputs: ['fallback', 'field']
+  inputs: ['fallback', 'field', 'imageAltField']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fallback', 'field'],
+  inputs: ['fallback', 'field', 'imageAltField'],
 })
 export class AtomicResultImage {
   protected el: HTMLElement;

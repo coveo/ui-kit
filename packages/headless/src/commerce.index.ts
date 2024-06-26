@@ -2,6 +2,8 @@ import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as Selectors from './selectors/commerce-selectors.index';
 import * as HighlightUtils from './utils/highlight';
 
+export type {HighlightKeyword} from './utils/highlight';
+
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
@@ -12,6 +14,7 @@ export type {
   CommerceEngineOptions,
 } from './app/commerce-engine/commerce-engine';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine';
+export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration';
 
 export type {
   CoreEngine,
@@ -238,17 +241,10 @@ export type {
   DeselectableValue,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 
-export {buildSearchSummary} from './controllers/commerce/search/summary/headless-search-summary';
-export type {
-  SearchSummary,
-  SearchSummaryState,
-} from './controllers/commerce/search/summary/headless-search-summary';
-
-export {buildListingSummary} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
-export type {
-  ListingSummary,
-  ListingSummaryState,
-} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary';
+export type {ProductListingSummaryState} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+export type {RecommendationsSummaryState} from './controllers/commerce/recommendations/summary/headless-recommendations-summary';
+export type {Summary} from './controllers/commerce/core/summary/headless-core-summary';
 
 export {getOrganizationEndpoints} from './api/platform-client';
 
