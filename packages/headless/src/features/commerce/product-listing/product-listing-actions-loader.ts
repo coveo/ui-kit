@@ -27,7 +27,7 @@ export interface ProductListingActionCreators {
   >;
 
   /**
-   * Fetches and additional page of products and apprends it to the current list.
+   * Fetches and additional page of products and appends it to the current list.
    *
    * @returns A dispatchable action.
    */
