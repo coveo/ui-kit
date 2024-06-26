@@ -6,11 +6,11 @@ import {paginationReducer as commercePagination} from '../pagination/pagination-
 import {
   PrepareForSearchWithQueryActionCreatorPayload,
   QuerySearchCommerceAPIThunkReturn,
-  StateNeededByExecuteSearch,
   executeSearch,
   fetchMoreProducts,
   prepareForSearchWithQuery,
 } from './search-actions';
+import {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 import {commerceSearchReducer as commerceSearch} from './search-slice';
 
 export type {PrepareForSearchWithQueryActionCreatorPayload};
