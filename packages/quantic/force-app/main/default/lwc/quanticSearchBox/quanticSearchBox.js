@@ -3,6 +3,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {getItemFromLocalStorage, setItemInLocalStorage} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
@@ -12,6 +13,7 @@ import searchBox from './templates/searchBox.html';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
 /** @typedef {import("coveo").SearchBox} SearchBox */
+/** @typedef {import("coveo").RecentQueriesList} RecentQueriesList */
 /** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
 /** @typedef {import("c/quanticSearchBoxInput").default} quanticSearchBoxInput */
 
@@ -43,12 +45,12 @@ export default class QuanticSearchBox extends LightningElement {
    */
   @api withoutSubmitButton = false;
   /**
-   * The maximum number of suggestions to display.
+   * The maximum number of suggestions and recent search queries to display.
    * @api
    * @type {number}
-   * @defaultValue 5
+   * @defaultValue 7
    */
-  @api numberOfSuggestions = 5;
+  @api numberOfSuggestions = 7;
   /**
    * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
    * The resulting component will expand to support multi-line queries.
@@ -57,6 +59,13 @@ export default class QuanticSearchBox extends LightningElement {
    * @defaultValue false
    */
   @api textarea = false;
+  /**
+   * Whether to disable rendering the recent queries as suggestions.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api disableRecentQuerySuggestions = false;
 
   /** @type {SearchBoxState} */
   @track state;
@@ -71,6 +80,10 @@ export default class QuanticSearchBox extends LightningElement {
   suggestions = [];
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {RecentQueriesList} */
+  recentQueriesList;
+  /** @type {Array} */
+  recentQueries;
 
   /**
    * @param {SearchEngine} engine
@@ -88,6 +101,23 @@ export default class QuanticSearchBox extends LightningElement {
         },
       },
     });
+
+    if (
+      !this.disableRecentQuerySuggestions &&
+      this.headless.buildRecentQueriesList
+    ) {
+      this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
+        initialState: {
+          queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
+        },
+        options: {
+          maxLength: 100,
+        },
+      });
+      this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
+        this.updateRecentQueriesListState()
+      );
+    }
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   };
 
@@ -100,6 +130,12 @@ export default class QuanticSearchBox extends LightningElement {
     this.addEventListener('quantic__submitsearch', this.handleSubmit);
     this.addEventListener('quantic__showsuggestions', this.showSuggestion);
     this.addEventListener('quantic__selectsuggestion', this.selectSuggestion);
+    if (!this.disableRecentQuerySuggestions) {
+      this.addEventListener(
+        'quantic__clearrecentqueries',
+        this.clearRecentQueries
+      );
+    }
   }
 
   renderedCallback() {
@@ -118,6 +154,10 @@ export default class QuanticSearchBox extends LightningElement {
       'quantic__selectsuggestion',
       this.selectSuggestion
     );
+    this.removeEventListener(
+      'quantic__clearrecentqueries',
+      this.clearRecentQueries
+    );
   }
 
   updateState() {
@@ -126,11 +166,33 @@ export default class QuanticSearchBox extends LightningElement {
     }
     this.state = this.searchBox?.state;
     this.suggestions =
-      this.state?.suggestions?.map((s, index) => ({
+      this.state?.suggestions?.map((suggestion, index) => ({
         key: index,
-        rawValue: s.rawValue,
-        value: s.highlightedValue,
+        rawValue: suggestion.rawValue,
+        value: suggestion.highlightedValue,
       })) ?? [];
+  }
+
+  updateRecentQueriesListState() {
+    if (this.recentQueriesList.state?.queries) {
+      this.recentQueries = this.recentQueriesList.state.queries;
+      setItemInLocalStorage(
+        this.localStorageKey,
+        this.recentQueriesList.state.queries
+      );
+    }
+  }
+
+  /**
+   * Clears the recent queries.
+   */
+  clearRecentQueries = (event) => {
+    event.stopPropagation();
+    this.recentQueriesList.clear();
+  };
+
+  get localStorageKey() {
+    return `${this.engineId}_quantic-recent-queries`;
   }
 
   /**
@@ -171,8 +233,14 @@ export default class QuanticSearchBox extends LightningElement {
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const selectedSuggestion = event.detail.selectedSuggestion;
-    this.searchBox?.selectSuggestion(selectedSuggestion);
+    const {selectedSuggestion: value, isRecentQuery} = event.detail;
+    if (isRecentQuery) {
+      this.recentQueriesList.executeRecentQuery(
+        this.recentQueries.indexOf(value)
+      );
+    } else {
+      this.searchBox?.selectSuggestion(value);
+    }
   };
 
   /**

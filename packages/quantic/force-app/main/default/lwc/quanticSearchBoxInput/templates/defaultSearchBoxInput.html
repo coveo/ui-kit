@@ -69,11 +69,14 @@
               </button>
             </template>
           </div>
-          <template if:true={hasSuggestions}>
+          <template if:true={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
               suggestions={suggestions}
               onhighlightchange={handleHighlightChange}
               onsuggestionselected={handleSuggestionSelection}
+              query={inputValue}
+              recent-queries={recentQueries}
+              max-number-of-suggestions={maxNumberOfSuggestions}
             ></c-quantic-search-box-suggestions-list>
           </template>
         </div>

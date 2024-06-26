@@ -71,7 +71,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    */
   @api
   get inputValue() {
-    return this.input.value;
+    return this.input?.value;
   }
   set inputValue(newValue) {
     this.input.value = newValue;
@@ -92,6 +92,19 @@ export default class QuanticSearchBoxInput extends LightningElement {
   @api resetSelection() {
     this.suggestionListElement?.resetSelection();
   }
+  /**
+   * The list containing the recent query suggestions.
+   * @api
+   * @type {String[]}
+   */
+  @api recentQueries;
+  /**
+   * The maximum number of suggestions to display.
+   * @api
+   * @type {number}
+   * @defaultValue 7
+   */
+  @api maxNumberOfSuggestions = 7;
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
@@ -171,10 +184,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * Sends the "quantic__selectSuggestion" event.
    * @param {string} selectedSuggestion
    */
-  sendSelectSuggestionEvent(selectedSuggestion) {
+  sendSelectSuggestionEvent(selectedSuggestion, isRecentQuery = false) {
     const selectSuggestionEvent = new CustomEvent('quantic__selectsuggestion', {
       detail: {
         selectedSuggestion,
+        isRecentQuery,
       },
       bubbles: true,
       composed: true,
@@ -188,7 +202,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
       const selectedSuggestion =
         this.suggestionListElement?.getCurrentSelectedValue();
       if (this.areSuggestionsOpen && selectedSuggestion) {
-        this.sendSelectSuggestionEvent(selectedSuggestion.rawValue);
+        this.sendSelectSuggestionEvent(
+          selectedSuggestion.rawValue,
+          selectedSuggestion.isRecentQuery
+        );
       } else {
         this.sendSubmitSearchEvent();
       }
@@ -307,8 +324,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   handleSuggestionSelection(event) {
-    const textValue = event.detail;
-    this.sendSelectSuggestionEvent(textValue);
+    const {selectedSuggestion, isRecentQuery} = event.detail;
+    this.sendSelectSuggestionEvent(selectedSuggestion, isRecentQuery);
     this.blur();
   }
 
@@ -347,8 +364,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
     return this.template.querySelector('.slds-combobox');
   }
 
-  get hasSuggestions() {
-    return this.suggestions?.length;
+  get shouldDisplaySuggestions() {
+    return this.suggestions?.length || this.recentQueries?.length;
   }
 
   render() {

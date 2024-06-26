@@ -1,34 +1,34 @@
 <template>
-    <div
-        id="listbox-id"
-        class={listboxCssClass}
-        role="listbox">
+    <div id="listbox-id" class={listboxCssClass} role="listbox">
         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-            <template for:each={suggestionsToRender} for:item="suggestion">
-                <li key={suggestion.rawValue}
-                    role="presentation"
-                    class="slds-listbox__item"
-                    data-rawvalue={suggestion.rawValue}
-                    onclick={handleSuggestionSelection}
-                    onmouseover={handleSuggestionHover}
-                    onmousedown={preventDefault}>
-                    <template if:true={suggestion.isSelected}>
-                        <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-has-focus" role="option" aria-selected="true">
-                            <span class="slds-media__figure slds-listbox__option-icon"></span>
-                            <span class="slds-media__body">
-                                <lightning-formatted-rich-text class="slds-truncate" value={suggestion.value}></lightning-formatted-rich-text>
+            <template for:each={allOptions} for:item="option">
+                <template lwc:if={option.isClearRecentQueryButton}>
+                    <li data-cy="clear-recent-queries" key={option.key} role="button" class="slds-listbox__item"
+                        onclick={clearRecentQueries} onmouseover={preventDefault} onmousedown={preventDefault}>
+                        <div class={clearRecentQueriesOptionCSSClass} role="option">
+                            <span class="slds-media__body slds-text-title_bold">
+                                {labels.recentQueries}
+                            </span>
+                            <span class="slds-text-color_weak"> {labels.clear} </span>
+                        </div>
+                    </li>
+                </template>
+                <template lwc:else>
+                    <li data-cy="suggestions-option" key={option.rawValue} role="presentation"
+                        class="slds-listbox__item" data-rawvalue={option.rawValue} onclick={option.clickHandler}
+                        onmouseover={handleSuggestionHover} onmousedown={preventDefault}>
+                        <div class={option.containerCSSClass} role="option" aria-selected={option.isSelected}>
+                            <span class="slds-media__figure slds-listbox__option-icon suggestion-option__icon">
+                                <lightning-icon icon-name={option.icon} size="xx-small" alternative-text="Connected"
+                                    title="Connected"></lightning-icon>
+                            </span>
+                            <span class="slds-media__body slds-grid">
+                                <lightning-formatted-rich-text class="slds-truncate"
+                                    value={option.value}></lightning-formatted-rich-text>
                             </span>
                         </div>
-                    </template>
-                    <template if:false={suggestion.isSelected}>
-                        <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
-                            <span class="slds-media__figure slds-listbox__option-icon"></span>
-                            <span class="slds-media__body">
-                                <lightning-formatted-rich-text class="slds-truncate" value={suggestion.value}></lightning-formatted-rich-text>
-                            </span>
-                        </div>
-                    </template>
-                </li>
+                    </li>
+                </template>
             </template>
         </ul>
     </div>
