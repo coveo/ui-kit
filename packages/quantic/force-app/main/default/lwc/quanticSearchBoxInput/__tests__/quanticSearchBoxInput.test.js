@@ -7,7 +7,6 @@ const functionsMocks = {
   exampleHandleSubmitSearch: jest.fn(() => {}),
   exampleShowSuggestions: jest.fn(() => {}),
   exampleSelectSuggestion: jest.fn(() => {}),
-  exampleHandleKeyup: jest.fn(() => {}),
 };
 
 const defaultPlaceholder = 'Search...';
@@ -53,7 +52,6 @@ function setupEventListeners(element) {
     'quantic__selectsuggestion',
     functionsMocks.exampleSelectSuggestion
   );
-  element.addEventListener('keyup', functionsMocks.exampleHandleKeyup);
 }
 
 function createTestComponent(options = defaultOptions) {
@@ -188,6 +186,15 @@ describe('c-quantic-search-box-input', () => {
           });
           await flushPromises();
 
+          const input = element.shadowRoot.querySelector(
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
+          );
+          expect(input).not.toBeNull();
+
+          await input.focus();
+
           const suggestionsList = element.shadowRoot.querySelector(
             selectors.searchBoxSuggestionsList
           );
@@ -250,6 +257,15 @@ describe('c-quantic-search-box-input', () => {
             setupEventListeners(element);
             await flushPromises();
 
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
             const suggestionsList = element.shadowRoot.querySelector(
               selectors.searchBoxSuggestionsList
             );
@@ -266,9 +282,12 @@ describe('c-quantic-search-box-input', () => {
             ).toHaveBeenCalledTimes(1);
 
             const eventData =
-              functionsMocks.exampleSelectSuggestion.mock.calls[0][0] &&
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
-            const expectedFirstSuggestionSelected = mockSuggestions[0].rawValue;
+            const expectedFirstSuggestionSelected = {
+              isClearRecentQueryButton: undefined,
+              isRecentQuery: undefined,
+              value: mockSuggestions[0].rawValue,
+            };
 
             // @ts-ignore
             expect(eventData.detail.selectedSuggestion).toEqual(
@@ -283,11 +302,10 @@ describe('c-quantic-search-box-input', () => {
           const element = createTestComponent({
             ...defaultOptions,
             textarea: textareaValue,
+            value: mockInputValue,
           });
           setupEventListeners(element);
           await flushPromises();
-
-          element.inputValue = mockInputValue;
 
           const input = element.shadowRoot.querySelector(
             textareaValue
@@ -296,7 +314,7 @@ describe('c-quantic-search-box-input', () => {
           );
           expect(input).not.toBeNull();
 
-          input.dispatchEvent(new KeyboardEvent('keyup', {key: 'a'}));
+          input.dispatchEvent(new KeyboardEvent('input'));
           expect(
             functionsMocks.exampleHandleInputValueChange
           ).toHaveBeenCalledTimes(1);
@@ -305,7 +323,7 @@ describe('c-quantic-search-box-input', () => {
           const eventData =
             functionsMocks.exampleHandleInputValueChange.mock.calls[0][0];
           // @ts-ignore
-          expect(eventData.detail.newInputValue).toEqual(mockInputValue);
+          expect(eventData.detail.value).toEqual(mockInputValue);
         });
 
         describe('when clicking on the submit button', () => {
@@ -347,7 +365,7 @@ describe('c-quantic-search-box-input', () => {
             expect(input).not.toBeNull();
 
             await input.focus();
-            input.dispatchEvent(new KeyboardEvent('keyup', {key: 'Enter'}));
+            input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
             expect(
               functionsMocks.exampleHandleSubmitSearch
@@ -373,7 +391,7 @@ describe('c-quantic-search-box-input', () => {
 
             await input.focus();
             input.dispatchEvent(
-              new KeyboardEvent('keyup', {key: 'Enter', shiftKey: true})
+              new KeyboardEvent('keydown', {key: 'Enter', shiftKey: true})
             );
 
             expect(

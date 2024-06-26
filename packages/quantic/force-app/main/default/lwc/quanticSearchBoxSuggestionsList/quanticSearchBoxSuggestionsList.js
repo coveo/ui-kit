@@ -124,24 +124,40 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         this,
         true
       );
-      const listboxId = this.template.querySelector('ul').getAttribute('id');
-      const suggestionListEvent = new CustomEvent('suggestionlistrender', {
-        detail: listboxId,
-        bubbles: true,
-        composed: true,
-      });
-      this.dispatchEvent(suggestionListEvent);
+      this.sendSuggestionListIdToInput();
       this.initialRender = false;
     }
-    if (this.allOptions?.length) {
-      this.suggestionsAriaLiveMessage.dispatchMessage(
-        `${this.shouldDisplayRecentQueries ? this.allOptions.length - 1 : this.allOptions.length} suggestions found, to navigate use up and down arrows.`
-      );
-    }
+    this.announceNewSuggestionsToScreenReader();
     if (this.previousQuery !== this.query) {
       this.previousQuery = this.query;
       this.selectionIndex = -1;
     }
+  }
+
+  announceNewSuggestionsToScreenReader() {
+    if (this.allOptions?.length) {
+      const suggestionsCount = this.shouldDisplayRecentQueries
+        ? this.allOptions.length - 1
+        : this.allOptions.length;
+
+      this.suggestionsAriaLiveMessage.dispatchMessage(
+        `${suggestionsCount} suggestions found, to navigate use up and down arrows.`
+      );
+    } else {
+      this.suggestionsAriaLiveMessage.dispatchMessage(
+        'There are no search suggestions.'
+      );
+    }
+  }
+
+  sendSuggestionListIdToInput() {
+    const listboxId = this.template.querySelector('ul').getAttribute('id');
+    const suggestionListEvent = new CustomEvent('suggestionlistrender', {
+      detail: listboxId,
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(suggestionListEvent);
   }
 
   /**

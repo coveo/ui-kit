@@ -3,7 +3,7 @@
         <ul id="listbox-id" data-cy="suggestion-list" class="slds-listbox slds-listbox_vertical" tabindex="-1" role="listbox">
             <template for:each={allOptions} for:item="option">
                 <template lwc:if={option.isClearRecentQueryButton}>
-                    <li id={option.id} key={option.key} onmousedown={option.onClick} tabindex="-1" data-cy="clear-recent-queries" role="option"
+                    <li id={option.id} key={option.key} onclick={option.onClick} tabindex="-1" data-cy="clear-recent-queries" role="option"
                         class="slds-listbox__item" aria-selected={option.isSelected}>
                         <div class={clearRecentQueriesOptionCSSClass} data-role="option">
                             <span class="slds-media__body slds-text-title_bold">
@@ -14,7 +14,7 @@
                     </li>
                 </template>
                 <template lwc:else>
-                    <div id={option.id} key={option.key} onmousedown={option.onClick} tabindex="-1" data-cy="suggestions-option" role="option"
+                    <li id={option.id} key={option.key} onclick={option.onClick} tabindex="-1" data-cy="suggestions-option" role="option"
                         class="slds-listbox__item" data-rawvalue={option.rawValue} aria-selected={option.isSelected}>
                         <div class={option.containerCSSClass}>
                             <span class="slds-media__figure slds-listbox__option-icon suggestion-option__icon">
@@ -26,7 +26,7 @@
                                     value={option.value}></lightning-formatted-rich-text>
                             </span>
                         </div>
-                    </div>
+                    </li>
                 </template>
             </template>
         </ul>
