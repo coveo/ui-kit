@@ -55,14 +55,13 @@ export const buildBaseCommerceAPIRequest = (
   slotId?: string
 ): BaseCommerceAPIRequest => {
   const {view, ...restOfContext} = state.commerceContext;
-  const meta = relay.getMeta('');
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: meta.clientId,
+    clientId: relay.getMeta('').clientId,
     context: {
       ...(navigatorContext.userAgent
         ? {
