@@ -43,3 +43,5 @@ export const updateItemQuantity = createAction(
   (payload: UpdateItemQuantityActionCreatorPayload) =>
     validatePayload(payload, itemPayloadDefinition)
 );
+
+// TODO KIT-3346: Add/expose action to emit ec_cartAction analytics events
