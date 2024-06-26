@@ -1,11 +1,12 @@
 <template>
   <template lwc:if={hasInitializationError}>
-    <c-quantic-component-error component-name={template.host.localName}>
-    </c-quantic-component-error>
+    <c-quantic-component-error component-name={template.host.localName}></c-quantic-component-error>
   </template>
   <template lwc:else>
     <template lwc:if={error}>
-    <div class="error-message slds-text-color_destructive slds-align_absolute-center">{error}</div>
+      <div class="error-message slds-text-color_destructive slds-align_absolute-center">
+        {error}
+      </div>
     </template>
     <template lwc:else>
       <slot><!-- Custom sort options --></slot>
@@ -15,7 +16,15 @@
             <lightning-formatted-text value={labels.sortBy}></lightning-formatted-text>
           </lightning-layout-item>
           <lightning-layout-item>
-            <lightning-combobox name="sort" value={value} variant="label-hidden" label={labels.sortBy} placeholder={labels.relevancy} options={options} onchange={handleChange}>
+            <lightning-combobox
+              name="sort"
+              value={value}
+              variant="label-hidden"
+              label={labels.sortBy}
+              placeholder={labels.relevancy}
+              options={options}
+              onchange={handleChange}
+            >
             </lightning-combobox>
           </lightning-layout-item>
         </div>

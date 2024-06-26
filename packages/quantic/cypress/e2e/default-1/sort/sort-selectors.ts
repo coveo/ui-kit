@@ -1,4 +1,8 @@
-import {ComponentSelector, CypressSelector} from '../../common-selectors';
+import {
+  ComponentErrorSelector,
+  ComponentSelector,
+  CypressSelector,
+} from '../../common-selectors';
 
 export const sortComponent = 'c-quantic-sort';
 
@@ -9,10 +13,9 @@ export interface SortSelector extends ComponentSelector {
   options: () => CypressSelector;
   option: (value: string) => CypressSelector;
   selectedOption: () => CypressSelector;
-  errorMessage: () => CypressSelector;
 }
 
-export const SortSelectors: SortSelector = {
+export const SortSelectors: SortSelector & ComponentErrorSelector = {
   get: () => cy.get(sortComponent),
 
   label: () => SortSelectors.get().find('.sort__header'),
@@ -23,5 +26,9 @@ export const SortSelectors: SortSelector = {
     SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
   selectedOption: () =>
     SortSelectors.get().find('.slds-listbox__option[aria-checked="true"]'),
-  errorMessage: () => SortSelectors.get().find('.error-message'),
+  componentError: () => SortSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    SortSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
+    ),
 };

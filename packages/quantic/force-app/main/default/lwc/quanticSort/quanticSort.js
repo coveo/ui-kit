@@ -30,7 +30,6 @@ import {LightningElement, track, api} from 'lwc';
  * @example
  * <c-quantic-sort engine-id={engineId}>
  *  <c-quantic-sort-option
-      key={sortOptionValue}
       label={sortOptionLabel}
       value={sortOptionValue}
       criterion={sortOptionCriterion}
@@ -79,14 +78,12 @@ export default class QuanticSort extends LightningElement {
     getBueno(this).then(() => {
       this.customSortOptions.forEach((option) => {
         const criterion = option.criterion;
-        // Checks that the label of the custom sort option is a string
         if (!option.label || !Bueno.isString(option.label)) {
           console.error(
             `The ${this.template.host.localName} component requires a label to be specified.`
           );
           this.setSortOptionsConfigurationError();
         }
-        // Checks that the value of the custom sort option is a string
         if (!option.value || !Bueno.isString(option.value)) {
           console.error(
             `The ${this.template.host.localName} component requires a value to be specified.`
@@ -143,7 +140,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   buildOptions() {
-    if (this.customSortOptions.length > 0) {
+    if (this.hasCustomSortOptions) {
       return this.customSortOptions;
     }
     return [
@@ -205,7 +202,13 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    return this.state?.sortCriteria;
+    return this.hasCustomSortOptions
+      ? this.customSortOptions[0].value
+      : this.state?.sortCriteria;
+  }
+
+  get hasCustomSortOptions() {
+    return this.customSortOptions.length > 0;
   }
 
   /**
@@ -224,13 +227,7 @@ export default class QuanticSort extends LightningElement {
       return {
         label: option.label,
         value: option.value,
-        criterion: {
-          by: option.criterion.by,
-          // @ts-ignore
-          order: option.criterion.order,
-          // @ts-ignore
-          field: option.criterion.field,
-        },
+        criterion: option.criterion,
       };
     });
   }
