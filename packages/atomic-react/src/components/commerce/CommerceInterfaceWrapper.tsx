@@ -12,7 +12,7 @@ interface WrapperProps
   /**
    * An optional callback function that can be used to control the execution of the first request.
    *
-   * If not provided, a default function will be used, which execute the request query immediately after initialization.
+   * If not provided, a default function will be used, which executes the first request immediately after initialization.
    */
   onReady?: (executeFirstRequest: ExecuteRequest) => Promise<void>;
   /**
