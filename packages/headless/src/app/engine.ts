@@ -18,6 +18,7 @@ import {
   enableAnalytics,
   updateAnalyticsConfiguration,
   UpdateAnalyticsConfigurationActionCreatorPayload,
+  updateAnswerConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
 import {versionReducer as version} from '../features/debug/version-slice';
@@ -260,6 +261,14 @@ export function buildEngine<
       platformUrl,
     })
   );
+
+  if (options.configuration.answerConfigurationId) {
+    engine.dispatch(
+      updateAnswerConfiguration({
+        answerConfigurationId: options.configuration.answerConfigurationId,
+      })
+    );
+  }
 
   const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
     options.configuration,

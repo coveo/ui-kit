@@ -51,6 +51,11 @@ export interface EngineConfiguration<
    */
   accessToken: string;
   /**
+   * Specifies the unique identifier for a Knowledge configuration.
+   * When this identifier is utilized, the `answerApi` is engaged to deliver responses, thereby activating Coveo's answer management capabilities.
+   */
+  answerConfigurationId?: string;
+  /**
    * A function that fetches a new access token. The function must return a Promise that resolves to a string (the new access token).
    */
   renewAccessToken?: () => Promise<string>;

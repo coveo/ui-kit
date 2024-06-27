@@ -189,6 +189,25 @@ describe('engine', () => {
     expect(() => initEngine()).toThrowErrorMatchingSnapshot();
   });
 
+  describe('answer config', () => {
+    it('will dispatch an action to update the answer config if present in the options', () => {
+      const answerConfigurationId = 'answerConfigId';
+      options.configuration.answerConfigurationId = answerConfigurationId;
+      initEngine();
+
+      expect(engine.state.configuration.knowledge.answerConfigurationId).toBe(
+        answerConfigurationId
+      );
+    });
+    it('will not dispatch an action to update the answer config if not present in the options', () => {
+      initEngine();
+
+      expect(engine.state.configuration.knowledge.answerConfigurationId).toBe(
+        ''
+      );
+    });
+  });
+
   describe('with preloaded state', () => {
     const testAction = createAction('increment');
     const testReducer = createReducer(0, (builder) =>

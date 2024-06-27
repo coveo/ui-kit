@@ -10,6 +10,7 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel3,
   setOriginLevel2,
+  updateAnswerConfiguration,
 } from './configuration-actions';
 import {configurationReducer} from './configuration-slice';
 import {
@@ -325,6 +326,17 @@ describe('configuration slice', () => {
 
     const finalState = configurationReducer(state, updateActiveTab('tab'));
     expect(finalState.analytics.originLevel2).toBe('tab');
+  });
+
+  describe('#updateAnswerConfiguration', () => {
+    it('updates the answerConfigurationId', () => {
+      const state = getConfigurationInitialState();
+      const finalState = configurationReducer(
+        state,
+        updateAnswerConfiguration({answerConfigurationId: 'answer'})
+      );
+      expect(finalState.knowledge.answerConfigurationId).toBe('answer');
+    });
   });
 
   describe('#restoreSearchParameters', () => {

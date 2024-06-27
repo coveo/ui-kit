@@ -1,6 +1,7 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {LegacyGeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {answerAPI} from '../../api/knowledge/knowledge-answer-api';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -111,20 +112,25 @@ export interface SearchEngineOptions
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
-
   const searchAPIClient = createSearchAPIClient(options.configuration, logger);
-  const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
-    streamingClient: generatedAnswerClient,
+    // The legacy client is used when the knowledgeConfigurationId is not provided
+    ...(options.configuration.answerConfigurationId
+      ? {}
+      : {streamingClient: createLegacyGeneratedAnswerAPIClient(logger)}),
   };
 
   const augmentedOptions: EngineOptions<SearchEngineReducers> = {
     ...options,
     reducers: searchEngineReducers,
     crossReducer: jwtReducer(logger),
+    // The middleware for the answer API is only added when the knowledgeConfigurationId is provided
+    ...(options.configuration.answerConfigurationId
+      ? {middlewares: [answerAPI.middleware]}
+      : {}),
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
@@ -208,8 +214,8 @@ function createSearchAPIClient(
   });
 }
 
-function createGeneratedAnswerAPIClient(logger: Logger) {
-  return new GeneratedAnswerAPIClient({
+function createLegacyGeneratedAnswerAPIClient(logger: Logger) {
+  return new LegacyGeneratedAnswerAPIClient({
     logger,
   });
 }
