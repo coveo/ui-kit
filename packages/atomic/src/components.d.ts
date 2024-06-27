@@ -291,10 +291,12 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
+          * @
          */
         "facet": RegularFacet;
         /**
@@ -3495,6 +3497,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
     }
@@ -5726,10 +5729,12 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
+          * @
          */
         "facet": RegularFacet;
         /**
@@ -8830,6 +8835,7 @@ declare module "@stencil/core" {
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+             * @alpha 
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
