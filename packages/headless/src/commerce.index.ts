@@ -43,6 +43,7 @@ export * from './features/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
+export * from './features/commerce/query-set/query-set-actions-loader';
 
 // Selectors
 export {Selectors};
