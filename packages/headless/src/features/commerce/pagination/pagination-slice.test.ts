@@ -11,7 +11,7 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {setContext, setUser, setView} from '../context/context-actions';
+import {setContext, setView} from '../context/context-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
@@ -275,10 +275,6 @@ describe('pagination slice', () => {
     {
       actionName: '#setView',
       action: setView,
-    },
-    {
-      actionName: '#setUser',
-      action: setUser,
     },
   ])('$actionName', ({action}) => {
     it('resets principal pagination', () => {

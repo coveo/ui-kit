@@ -1,5 +1,6 @@
 import {Relay} from '@coveo/relay';
 import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request';
+import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import {buildCommerceAPIRequest} from '../../../common/actions';
 import {
   AnyFacetRequest,
@@ -7,12 +8,13 @@ import {
 } from '../../facet-set/interfaces/request';
 import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state';
 
-export const buildCategoryFacetSearchRequest = async (
+export const buildCategoryFacetSearchRequest = (
   facetId: string,
   state: StateNeededForCategoryFacetSearch,
   isFieldSuggestionsRequest: boolean,
-  relay: Relay
-): Promise<CategoryFacetSearchRequest> => {
+  relay: Relay,
+  navigatorContext: NavigatorContext
+): CategoryFacetSearchRequest => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
   const categoryFacet = state.commerceFacetSet[facetId]?.request;
@@ -34,7 +36,7 @@ export const buildCategoryFacetSearchRequest = async (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = buildCommerceAPIRequest(state, relay);
+  } = buildCommerceAPIRequest(state, relay, navigatorContext);
 
   return {
     url,

@@ -57,7 +57,6 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
       currency: 'USD',
       view: {
         url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
-        referrer: document.referrer,
       },
     },
     cart: {
