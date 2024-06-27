@@ -16,6 +16,7 @@ const mockSuggestions = [
   {key: '2', value: 'suggestion2', rawValue: 'suggestion2'},
   {key: '3', value: 'suggestion3', rawValue: 'suggestion3'},
 ];
+const exampleRecentQueries = ['foo', 'bar'];
 
 const defaultOptions = {
   withoutSubmitButton: false,
@@ -80,6 +81,15 @@ describe('c-quantic-search-box-input', () => {
       document.body.removeChild(document.body.firstChild);
     }
   }
+
+  beforeAll(() => {
+    // @ts-ignore
+    global.CoveoHeadless = {
+      HighlightUtils: {
+        highlightString: () => {},
+      },
+    };
+  });
 
   afterEach(() => {
     cleanup();
@@ -212,17 +222,7 @@ describe('c-quantic-search-box-input', () => {
         });
 
         describe('when both query suggestions and recent queries are displayed', () => {
-          beforeEach(() => {
-            // @ts-ignore
-            global.CoveoHeadless = {
-              HighlightUtils: {
-                highlightString: () => {},
-              },
-            };
-          });
-
           it('should display the query suggestions and the recent queries in the suggestions list', async () => {
-            const exampleRecentQueries = ['foo', 'bar'];
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -325,12 +325,14 @@ describe('c-quantic-search-box-input', () => {
             );
             expect(suggestionsList).not.toBeNull();
 
+            const querySuggestionIndex = 0;
             const firstSuggestion =
-              suggestionsList.shadowRoot.querySelectorAll('li')[0];
+              suggestionsList.shadowRoot.querySelectorAll('li')[
+                querySuggestionIndex
+              ];
             expect(firstSuggestion).not.toBeNull();
 
-            firstSuggestion.click();
-
+            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
             expect(
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
@@ -340,7 +342,110 @@ describe('c-quantic-search-box-input', () => {
             const expectedFirstSuggestionSelected = {
               isClearRecentQueryButton: undefined,
               isRecentQuery: undefined,
-              value: mockSuggestions[0].rawValue,
+              value: mockSuggestions[querySuggestionIndex].rawValue,
+            };
+
+            // @ts-ignore
+            expect(eventData.detail.selectedSuggestion).toEqual(
+              expectedFirstSuggestionSelected
+            );
+          });
+        });
+
+        describe('when selecting the clear recent query option from the suggestions list', () => {
+          it('should dispatch a #quantic__selectsuggestion event with the selected suggestion as payload', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+              recentQueries: exampleRecentQueries,
+              value: '',
+            });
+            setupEventListeners(element);
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const firstSuggestion =
+              suggestionsList.shadowRoot.querySelectorAll('li')[0];
+            expect(firstSuggestion).not.toBeNull();
+
+            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
+            expect(
+              functionsMocks.exampleSelectSuggestion
+            ).toHaveBeenCalledTimes(1);
+
+            const eventData =
+              functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
+            const expectedFirstSuggestionSelected = {
+              isClearRecentQueryButton: true,
+              isRecentQuery: undefined,
+              value: undefined,
+            };
+
+            // @ts-ignore
+            expect(eventData.detail.selectedSuggestion).toEqual(
+              expectedFirstSuggestionSelected
+            );
+          });
+        });
+
+        describe('when selecting a recent query from the suggestions list', () => {
+          it('should dispatch a #quantic__selectsuggestion event with the selected suggestion as payload', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+              recentQueries: exampleRecentQueries,
+              value: '',
+            });
+            setupEventListeners(element);
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const recentQueryIndex = 0;
+            const firstSuggestion =
+              suggestionsList.shadowRoot.querySelectorAll('li')[
+                recentQueryIndex + 1
+              ];
+            expect(firstSuggestion).not.toBeNull();
+
+            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
+            expect(
+              functionsMocks.exampleSelectSuggestion
+            ).toHaveBeenCalledTimes(1);
+
+            const eventData =
+              functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
+            const expectedFirstSuggestionSelected = {
+              isClearRecentQueryButton: undefined,
+              isRecentQuery: true,
+              value: exampleRecentQueries[recentQueryIndex],
             };
 
             // @ts-ignore

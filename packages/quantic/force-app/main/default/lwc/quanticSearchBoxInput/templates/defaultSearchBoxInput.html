@@ -18,19 +18,21 @@
 
               <input
                 id="combobox-with-button-id"
-                aria-label={labels.searchFieldWithSuggestions}
                 class={searchBoxInputClass}
-                placeholder={placeholder}
                 type="search"
+                value={value}
+                placeholder={placeholder}
                 onkeydown={onKeyDown}
                 onfocus={onFocus}
                 onblur={onBlur}
                 oninput={handleValueChange}
-                aria-autocomplete="both"
                 autocomplete="off"
                 role="combobox"
+                aria-label={labels.searchFieldWithSuggestions}
+                aria-expanded={shouldDisplaySuggestions}
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
                 data-cy="search-box-input"
-                value={value}
               />
 
               <template if:false={isQueryEmpty}>

@@ -21,7 +21,6 @@
               </template>
               <textarea
                 id="combobox-with-button-id"
-                aria-label={labels.searchFieldWithSuggestions}
                 class={searchBoxInputClass}
                 placeholder={placeholder}
                 type="search"
@@ -29,9 +28,12 @@
                 onfocus={onFocus}
                 onblur={onBlur}
                 oninput={onTextAreaInput}
-                aria-autocomplete="both"
                 autocomplete="off"
                 role="combobox"
+                aria-label={labels.searchFieldWithSuggestions}
+                aria-expanded={shouldDisplaySuggestions}
+                aria-autocomplete="list"
+                aria-haspopup="listbox"
                 style="white-space: nowrap"
                 data-cy="search-box-textarea"
               >

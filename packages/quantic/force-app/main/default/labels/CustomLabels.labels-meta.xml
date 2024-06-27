@@ -1470,4 +1470,18 @@
     <protected>false</protected>
     <shortDescription>There are no search suggestions.</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_RecentQueryAriaLabel</fullName>
+    <value>Recent query,</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Recent query,</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_QuerySuggestionAriaLabel</fullName>
+    <value>Query suggestion,</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Query suggestions,</shortDescription>
+  </labels>
 </CustomLabels>

@@ -106,6 +106,7 @@ export default class QuanticSearchBox extends LightningElement {
       !this.disableRecentQuerySuggestions &&
       this.headless.buildRecentQueriesList
     ) {
+      this.localStorageKey = `${this.engineId}_quantic-recent-queries`;
       this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
         initialState: {
           queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
@@ -172,10 +173,6 @@ export default class QuanticSearchBox extends LightningElement {
         this.recentQueriesList.state.queries
       );
     }
-  }
-
-  get localStorageKey() {
-    return `${this.engineId}_quantic-recent-queries`;
   }
 
   /**

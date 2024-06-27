@@ -1,9 +1,11 @@
 import clear from '@salesforce/label/c.quantic_Clear';
+import querySuggestionAriaLabel from '@salesforce/label/c.quantic_QuerySuggestionAriaLabel';
 import recentQueries from '@salesforce/label/c.quantic_RecentQueries';
+import recentQueryAriaLabel from '@salesforce/label/c.quantic_RecentQueryAriaLabel';
 import suggestionFound from '@salesforce/label/c.quantic_SuggestionFound';
 import suggestionFound_plural from '@salesforce/label/c.quantic_SuggestionFound_Plural';
-import suggestionNotFound from '@salesforce/label/c.quantic_SuggestionNotFound';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import suggestionsNotFound from '@salesforce/label/c.quantic_SuggestionNotFound';
+import {AriaLiveRegion, I18nUtils, RecentQueryUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 const optionCSSClass =
@@ -65,7 +67,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     recentQueries,
     suggestionFound,
     suggestionFound_plural,
-    suggestionNotFound,
+    suggestionsNotFound,
+    recentQueryAriaLabel,
+    querySuggestionAriaLabel,
   };
 
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
@@ -80,9 +84,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     if (this.selectionIndex < 0) {
       this.selectionIndex = this.allOptions.length - 1;
     }
-    return this.template
-      .querySelectorAll('.slds-listbox__item')
-      [this.selectionIndex].getAttribute('id');
+    return this.allOptionsHTMLElements[this.selectionIndex].getAttribute('id');
   }
 
   /**
@@ -94,9 +96,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     if (this.selectionIndex >= this.allOptions.length) {
       this.selectionIndex = 0;
     }
-    return this.template
-      .querySelectorAll('.slds-listbox__item')
-      [this.selectionIndex].getAttribute('id');
+    return this.allOptionsHTMLElements[this.selectionIndex].getAttribute('id');
   }
 
   /**
@@ -199,6 +199,10 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     return options;
   }
 
+  get allOptionsHTMLElements() {
+    return this.template.querySelectorAll('.slds-listbox__item');
+  }
+
   /**
    * Augments a suggestion with the necessary information needed to display the suggestion as an option in the suggestion list
    */
@@ -216,8 +220,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       }`,
       icon: suggestion.isRecentQuery ? 'utility:clock' : 'utility:search',
       iconTitle: suggestion.isRecentQuery
-        ? 'recent query,'
-        : 'suggested query,',
+        ? this.labels.recentQueryAriaLabel
+        : this.labels.querySuggestionAriaLabel,
       onClick: (event) => {
         this.handleSelection(event, optionIndex);
       },
@@ -263,31 +267,11 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
             recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
         )
         .map((recentQuery) => ({
-          value: this.formatRecentQuery(recentQuery),
+          value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
           rawValue: recentQuery,
           isRecentQuery: true,
         })) || []
     );
-  }
-
-  /**
-   * Highlights a recent query based on the letters that match the current query.
-   * @param {String} value
-   * @returns {String}
-   */
-  formatRecentQuery(value) {
-    const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
-      content: value,
-      openingDelimiter: '<b>',
-      closingDelimiter: '</b>',
-      highlights: [
-        {
-          offset: this.query.length,
-          length: value.length - this.query.length,
-        },
-      ],
-    });
-    return highlightedValue;
   }
 
   get shouldDisplayRecentQueries() {

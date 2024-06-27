@@ -812,4 +812,12 @@
     <label>Il n'y a pas de suggestions de recherche.</label>
     <name>quantic_SuggestionNotFound</name>
   </customLabels>
+  <customLabels>
+    <label>Requête récente,</label>
+    <name>quantic_RecentQueryAriaLabel</name>
+  </customLabels>
+    <customLabels>
+    <label>Requête suggérée,</label>
+    <name>quantic_QuerySuggestionAriaLabel</name>
+  </customLabels>
 </Translations>
