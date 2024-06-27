@@ -51,7 +51,7 @@ export interface EngineConfiguration<
    */
   accessToken: string;
   /**
-   * Specifies the unique identifier for a  answer configuration.
+   * Specifies the unique identifier for a answer configuration.
    * When this identifier is utilized, the `answerApi` is engaged to deliver responses, thereby activating Coveo's answer management capabilities.
    */
   answerConfigurationId?: string;

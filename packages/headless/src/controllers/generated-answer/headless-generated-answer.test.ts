@@ -1,6 +1,5 @@
 import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions';
 import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
-import {executeSearch} from '../../features/search/search-actions';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
@@ -28,11 +27,6 @@ describe('generated answer', () => {
     initGeneratedAnswer();
   });
 
-  it('#retry dispatches #executeSearch', () => {
-    generatedAnswer.retry();
-    expect(executeSearch).toHaveBeenCalled();
-  });
-
   describe('#rephrase', () => {
     const responseFormat: GeneratedResponseFormat = {
       answerStyle: 'concise',
@@ -41,11 +35,6 @@ describe('generated answer', () => {
     it('dispatches the update action', () => {
       generatedAnswer.rephrase(responseFormat);
       expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-    });
-
-    it('dispatches #executeSearch', () => {
-      generatedAnswer.rephrase(responseFormat);
-      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });

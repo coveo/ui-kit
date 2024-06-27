@@ -1,5 +1,6 @@
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   retryGeneratedAnswer,
   rephraseGeneratedAnswer,
@@ -11,8 +12,8 @@ import {executeSearch} from '../../../features/insight-search/insight-search-act
 import {
   GeneratedAnswer,
   GeneratedAnswerProps,
-  buildCoreGeneratedAnswer,
 } from '../../core/generated-answer/headless-core-generated-answer';
+import {buildSearchAPIGeneratedAnswer} from '../../core/generated-answer/headless-searchapi-generated-answer';
 
 export type {
   GeneratedAnswerCitation,
@@ -34,8 +35,8 @@ export function buildGeneratedAnswer(
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
   const {dispatch} = engine;
-  const controller = buildCoreGeneratedAnswer(
-    engine,
+  const controller = buildSearchAPIGeneratedAnswer(
+    engine as unknown as SearchEngine, // TODO: types
     generatedAnswerInsightAnalyticsClient,
     props
   );
