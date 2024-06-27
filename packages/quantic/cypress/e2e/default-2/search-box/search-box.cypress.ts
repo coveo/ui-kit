@@ -21,7 +21,7 @@ interface StandaloneSearchBoxOptions {
 }
 
 const expectedAriaLiveMessage = (suggestionsCount: number) => {
-  return `${suggestionsCount} suggestions found, to navigate use up and down arrows.`;
+  return `${suggestionsCount} search suggestions found, to navigate use up and down arrows.`;
 };
 
 const variants = [

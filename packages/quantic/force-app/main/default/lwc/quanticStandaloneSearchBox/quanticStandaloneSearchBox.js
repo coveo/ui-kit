@@ -194,12 +194,11 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     );
   }
 
+  get searchBoxValue() {
+    return this.standaloneSearchBox?.state.value || '';
+  }
+
   updateStandaloneState() {
-    if (this.state?.value !== this.standaloneSearchBox.state.value) {
-      // @ts-ignore
-      this.quanticSearchBoxInput.inputValue =
-        this.standaloneSearchBox.state.value;
-    }
     this.state = this.standaloneSearchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((s, index) => ({
@@ -284,8 +283,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const selectedSuggestion = event.detail.selectedSuggestion;
-    this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
+    const {
+      selectedSuggestion: {value},
+    } = event.detail;
+    this.standaloneSearchBox?.selectSuggestion(value);
   };
 
   /**
