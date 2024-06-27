@@ -30,6 +30,7 @@ import {LightningElement, track, api} from 'lwc';
  * @example
  * <c-quantic-sort engine-id={engineId}>
  *  <c-quantic-sort-option
+      slot="sortOption"
       label={sortOptionLabel}
       value={sortOptionValue}
       criterion={sortOptionCriterion}
