@@ -3,7 +3,6 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {
   setContext,
-  setUser,
   setView,
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
@@ -19,17 +18,11 @@ export interface ContextOptions {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
-  user?: User;
   view: View;
 }
 
-export type User = {
-  userAgent?: string;
-};
-
 export interface View {
   url: string;
-  referrer?: string;
 }
 
 export interface ContextProps {
@@ -62,12 +55,6 @@ export interface Context extends Controller {
   setCurrency(currency: CurrencyCodeISO4217): void;
 
   /**
-   * Sets the user.
-   * @param user - The new user.
-   */
-  setUser(user: User): void;
-
-  /**
    * Sets the view.
    * @param view - The new view.
    */
@@ -83,7 +70,6 @@ export interface ContextState {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
-  user?: User;
   view: View;
 }
 
@@ -141,8 +127,6 @@ export function buildContext(
           currency,
         })
       ),
-
-    setUser: (user: User) => dispatch(setUser(user)),
 
     setView: (view: View) => dispatch(setView(view)),
   };
