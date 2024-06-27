@@ -1,4 +1,5 @@
-import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
+import {Relay} from '@coveo/relay';
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
   BaseCommerceAPIRequest,
@@ -32,11 +33,12 @@ export interface QueryCommerceAPIThunkReturn {
   response: CommerceSuccessResponse;
 }
 
-export const buildCommerceAPIRequest = async (
-  state: ListingAndSearchStateNeededByQueryCommerceAPI
-): Promise<CommerceAPIRequest> => {
+export const buildCommerceAPIRequest = (
+  state: ListingAndSearchStateNeededByQueryCommerceAPI,
+  relay: Relay
+): CommerceAPIRequest => {
   return {
-    ...(await buildBaseCommerceAPIRequest(state)),
+    ...buildBaseCommerceAPIRequest(state, relay),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -44,10 +46,11 @@ export const buildCommerceAPIRequest = async (
   };
 };
 
-export const buildBaseCommerceAPIRequest = async (
+export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
+  relay: Relay,
   slotId?: string
-): Promise<BaseCommerceAPIRequest> => {
+): BaseCommerceAPIRequest => {
   const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
@@ -55,11 +58,13 @@ export const buildBaseCommerceAPIRequest = async (
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
+    clientId: relay.getMeta('').clientId,
     context: {
       user,
       view,
+      capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
+      source: getAnalyticsSource(state.configuration.analytics),
     },
     ...effectivePagination(state, slotId),
   };

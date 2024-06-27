@@ -12,7 +12,45 @@ const copy = async (source, dest) => {
 };
 
 const main = async () => {
-  console.info('Begin copy.');
+  console.info('Begin copy static resources');
+  await copyHeadless();
+  await copyBueno();
+  await copyMarked();
+  await copyDompurify();
+};
+
+const copyDompurify = async () => {
+  console.info('Begin copy DOMPurify.');
+
+  await mkdir('./force-app/main/default/staticresources/dompurify', {
+    recursive: true,
+  });
+
+  await copy(
+    '../../node_modules/dompurify/dist/purify.min.js',
+    './force-app/main/default/staticresources/dompurify/purify.min.js'
+  );
+
+  console.info('DOMPurify copied.');
+};
+
+const copyMarked = async () => {
+  console.info('Begin copy Marked.');
+
+  await mkdir('./force-app/main/default/staticresources/marked', {
+    recursive: true,
+  });
+
+  await copy(
+    '../../node_modules/marked/marked.min.js',
+    './force-app/main/default/staticresources/marked/marked.min.js'
+  );
+
+  console.info('Marked copied.');
+};
+
+const copyHeadless = async () => {
+  console.info('Begin copy Headless.');
 
   await mkdir(
     './force-app/main/default/staticresources/coveoheadless/case-assist',
@@ -29,15 +67,6 @@ const main = async () => {
   await mkdir(
     './force-app/main/default/staticresources/coveoheadless/definitions/',
     {recursive: true}
-  );
-  await mkdir('./force-app/main/default/staticresources/coveobueno/browser', {
-    recursive: true,
-  });
-  await mkdir(
-    './force-app/main/default/staticresources/coveobueno/definitions',
-    {
-      recursive: true,
-    }
   );
   await copy(
     '../../node_modules/@coveo/headless/dist/quantic/headless.js',
@@ -59,6 +88,22 @@ const main = async () => {
     '../../node_modules/@coveo/headless/dist/definitions',
     './force-app/main/default/staticresources/coveoheadless/definitions'
   );
+
+  console.info('Headless copied.');
+};
+
+const copyBueno = async () => {
+  console.info('Begin copy Bueno.');
+
+  await mkdir('./force-app/main/default/staticresources/coveobueno/browser', {
+    recursive: true,
+  });
+  await mkdir(
+    './force-app/main/default/staticresources/coveobueno/definitions',
+    {
+      recursive: true,
+    }
+  );
   await copy(
     '../../node_modules/@coveo/bueno/dist/browser/bueno.js',
     './force-app/main/default/staticresources/coveobueno/browser/bueno.js'
@@ -68,7 +113,7 @@ const main = async () => {
     './force-app/main/default/staticresources/coveobueno/definitions'
   );
 
-  console.info('Headless copied.');
+  console.info('Bueno copied.');
 };
 
 main().then(() => {

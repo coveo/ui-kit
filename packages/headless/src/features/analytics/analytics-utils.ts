@@ -34,11 +34,6 @@ import {
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
 import {
-  StateNeededByCommerceAnalyticsProvider,
-  CommerceAnalyticsProvider,
-  configureCommerceAnalytics,
-} from '../../api/analytics/commerce-analytics';
-import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
@@ -144,9 +139,6 @@ export type ProductRecommendationAction =
 
 export type ProductListingAction =
   PreparableAnalyticsAction<StateNeededByProductListingAnalyticsProvider>;
-
-export type ProductListingV2Action =
-  PreparableAnalyticsAction<StateNeededByCommerceAnalyticsProvider>;
 
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
@@ -599,17 +591,6 @@ export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
   );
   return makeInsightAnalyticsAction;
 };
-
-export const makeCommerceAnalyticsAction = makeAnalyticsActionFactory<
-  StateNeededByCommerceAnalyticsProvider,
-  StateNeededByCommerceAnalyticsProvider,
-  CoveoSearchPageClient,
-  CommerceAnalyticsProvider
->(
-  configureCommerceAnalytics,
-  (original) => original,
-  CommerceAnalyticsProvider
-);
 
 export const makeProductListingAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededByProductListingAnalyticsProvider,

@@ -26,4 +26,10 @@ describe('#highlightSearchResult', () => {
       '&lt;script&gt;<span part="search-highlight" class="font-bold">con</span>sole.log(&quot;hmm&quot;)&lt;script&gt;'
     );
   });
+
+  it('should not highlight in the middle of an escaped character', () => {
+    expect(highlightSearchResult('foo&bar', 'foo&')).toBe(
+      '<span part="search-highlight" class="font-bold">foo&amp;</span>bar'
+    );
+  });
 });

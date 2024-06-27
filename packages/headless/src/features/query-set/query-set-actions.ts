@@ -5,7 +5,7 @@ import {
   requiredEmptyAllowedString,
 } from '../../utils/validate-payload';
 
-const querySetDefinition = {
+export const querySetDefinition = {
   id: requiredNonEmptyString,
   query: requiredEmptyAllowedString,
 };

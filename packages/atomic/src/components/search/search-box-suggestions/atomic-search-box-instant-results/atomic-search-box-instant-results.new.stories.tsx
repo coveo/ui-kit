@@ -36,7 +36,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-instant-results',
   args: {
-    default: `
+    'slots-default': `
       <atomic-result-template>
         <template>
           <style>
@@ -82,7 +82,7 @@ export const Default: Story = {
         </template>
       </atomic-result-template>
     `,
-    imageSize: 'small',
+    'attributes-imageSize': 'small',
   },
   decorators: [
     (story) => html`

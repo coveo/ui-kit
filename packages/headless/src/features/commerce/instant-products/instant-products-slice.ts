@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Product} from '../../../api/commerce/common/product';
+import {Product, BaseProduct} from '../../../api/commerce/common/product';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -53,7 +53,9 @@ export const instantProductsReducer = createReducer(
           },
           state,
           {
-            products: products.map(prependProductInItsOwnChildrenIfNeeded),
+            products: products.map((product, index) =>
+              preprocessProduct(product, index + 1)
+            ),
           }
         );
       })
@@ -72,9 +74,10 @@ export const instantProductsReducer = createReducer(
         );
 
         if (currentParentIndex === -1) {
-          console.log('parent not found');
           return;
         }
+
+        const position = products[currentParentIndex].position;
 
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
@@ -83,7 +86,6 @@ export const instantProductsReducer = createReducer(
         );
 
         if (childToPromote === undefined) {
-          console.log('child not found');
           return;
         }
 
@@ -91,6 +93,7 @@ export const instantProductsReducer = createReducer(
           ...childToPromote,
           children,
           totalNumberOfChildren,
+          position,
         };
 
         const newProducts = [...products];
@@ -101,12 +104,12 @@ export const instantProductsReducer = createReducer(
   }
 );
 
-function prependProductInItsOwnChildrenIfNeeded(product: Product) {
+function preprocessProduct(product: BaseProduct, position: number): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
   if (product.children.length === 0 || isParentAlreadyInChildren) {
-    return product;
+    return {...product, position};
   }
 
   const {children, totalNumberOfChildren, ...restOfProduct} = product;
@@ -114,5 +117,6 @@ function prependProductInItsOwnChildrenIfNeeded(product: Product) {
   return {
     ...product,
     children: [restOfProduct, ...children],
+    position,
   };
 }

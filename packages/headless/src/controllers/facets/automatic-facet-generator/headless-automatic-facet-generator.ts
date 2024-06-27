@@ -1,6 +1,7 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
@@ -36,6 +37,10 @@ export interface AutomaticFacetGenerator extends Controller {
    * The state of the `AutomaticFacetGenerator` controller.
    */
   state: AutomaticFacetGeneratorState;
+  /**
+   * Deselects all values in all facets.
+   * */
+  deselectAll(): void;
 }
 
 export interface AutomaticFacetGeneratorState {
@@ -117,6 +122,10 @@ export function buildAutomaticFacetGenerator(
 
   return {
     ...controller,
+
+    deselectAll: () => {
+      dispatch(deselectAllBreadcrumbs());
+    },
 
     get state() {
       const automaticFacets =

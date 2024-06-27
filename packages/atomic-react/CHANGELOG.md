@@ -1,3 +1,15 @@
+## 2.10.5 (2024-06-26)
+
+### Bug Fixes
+
+- **atomic:** add query-summary E2E tests ([#4102](https://github.com/coveo/ui-kit/issues/4102)) ([6f73da7](https://github.com/coveo/ui-kit/commits/6f73da703b5d948b713680d187f03da1d207976a))
+
+## 2.10.4 (2024-06-19)
+
+### Bug Fixes
+
+- expose atomic-commerce-load-more-products to react ([#4097](https://github.com/coveo/ui-kit/issues/4097)) ([d7214c7](https://github.com/coveo/ui-kit/commits/d7214c7b988e169ccb4bb9b84a4b471721f329cb))
+
 # 2.10.0 (2024-06-06)
 
 ### Features

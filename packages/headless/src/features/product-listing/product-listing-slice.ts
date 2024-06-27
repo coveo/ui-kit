@@ -1,10 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {getProductListingInitialState} from './old-product-listing-state';
 import {
   fetchProductListing,
   setAdditionalFields,
   setProductListingUrl,
 } from './product-listing-actions';
-import {getProductListingInitialState} from './product-listing-state';
 
 export const productListingReducer = createReducer(
   getProductListingInitialState(),

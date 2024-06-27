@@ -23,7 +23,7 @@ export const Default: Story = {
   name: 'atomic-timeframe-facet',
   decorators: [facetDecorator],
   args: {
-    default: `
+    'slots-default': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>

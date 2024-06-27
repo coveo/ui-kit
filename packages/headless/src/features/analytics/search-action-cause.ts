@@ -80,25 +80,9 @@ export enum SearchPageEvents {
    */
   triggerRedirect = 'redirect',
   /**
-   * Identifies the custom event that gets logged when the Results per page component is selected.
+   * Identifies the search cause that gets logged for pagination and other user navigation that do not express a new search intent.
    */
-  pagerResize = 'pagerResize',
-  /**
-   * Identifies the custom event that gets logged when a page number is selected and more items are loaded.
-   */
-  pagerNumber = 'pagerNumber',
-  /**
-   * Identifies the custom event that gets logged when the Next Page link is selected and more items are loaded.
-   */
-  pagerNext = 'pagerNext',
-  /**
-   * Identifies the custom event that gets logged when the Previous Page link is selected and more items are loaded.
-   */
-  pagerPrevious = 'pagerPrevious',
-  /**
-   * Identifies the custom event that gets logged when the user scrolls to the bottom of the item page and more results are loaded.
-   */
-  pagerScrolling = 'pagerScrolling',
+  browseResults = 'browseResults',
   /**
    * Identifies the search event that gets logged when the clearing all selected values of a static filter.
    */

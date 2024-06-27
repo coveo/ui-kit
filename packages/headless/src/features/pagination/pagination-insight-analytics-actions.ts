@@ -3,12 +3,12 @@ import {
   makeInsightAnalyticsActionFactory,
   InsightAction,
 } from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
+import {LegacySearchPageEvents} from '../analytics/legacy-search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {currentPageSelector} from './pagination-selectors';
 
 export const logPageNumber = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerNumber)(
+  makeInsightAnalyticsActionFactory(LegacySearchPageEvents.pagerNumber)(
     'analytics/pager/number',
     (client, state) =>
       client.logPagerNumber({
@@ -18,7 +18,7 @@ export const logPageNumber = (): InsightAction =>
   );
 
 export const logPageNext = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerNext)(
+  makeInsightAnalyticsActionFactory(LegacySearchPageEvents.pagerNext)(
     'analytics/pager/next',
     (client, state) =>
       client.logPagerNext({
@@ -28,7 +28,7 @@ export const logPageNext = (): InsightAction =>
   );
 
 export const logPagePrevious = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerPrevious)(
+  makeInsightAnalyticsActionFactory(LegacySearchPageEvents.pagerPrevious)(
     'analytics/pager/previous',
     (client, state) =>
       client.logPagerPrevious({

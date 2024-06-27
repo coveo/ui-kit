@@ -2,8 +2,9 @@ import {
   NumericFacet,
   NumericFacetState,
   NumericRangeRequest,
-  ListingSummary,
-  SearchSummary,
+  ProductListingSummaryState,
+  SearchSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -52,18 +53,25 @@ export class AtomicCommerceNumericFacet
 
   @State() public error!: Error;
 
-  @State() private isCollapsed = false;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
   /**
    * The Summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The numeric facet controller instance.
    */
   @Prop({reflect: true}) public facet!: NumericFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The field identifier for this facet.
+   */
+  @Prop({reflect: true}) field?: string;
 
   private headerFocus?: FocusTargetController;
 
@@ -123,11 +131,11 @@ export class AtomicCommerceNumericFacet
     const {
       bindings: {i18n},
     } = this;
-    const {firstSearchExecuted, hasError} = this.summary.state;
+    const {firstRequestExecuted, hasError} = this.summary.state;
     return (
       <FacetGuard
         enabled={true}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasError={hasError}
         hasResults={this.shouldRenderFacet}
       >
@@ -230,7 +238,7 @@ export class AtomicCommerceNumericFacet
 
   private get shouldRenderInput() {
     const {
-      firstSearchExecuted,
+      firstRequestExecuted: firstSearchExecuted,
       hasError,
       isLoading,
       hasProducts: hasResults,

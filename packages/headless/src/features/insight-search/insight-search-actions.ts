@@ -184,7 +184,7 @@ export const fetchMoreResults = createAsyncThunk<
   });
 
   const eventDescription = buildEventDescription({
-    actionCause: SearchPageEvents.pagerScrolling,
+    actionCause: SearchPageEvents.browseResults,
   });
 
   const request = await buildInsightFetchMoreResultsRequest(

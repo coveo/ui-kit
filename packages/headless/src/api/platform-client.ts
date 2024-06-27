@@ -79,19 +79,17 @@ export class PlatformClient {
           return shouldRetry;
         },
       });
-
-      if (response.status === 419) {
-        logger.info('Platform renewing token');
-        throw new ExpiredTokenError();
+      switch (response.status) {
+        case 419:
+        case 401:
+          logger.info('Platform renewing token');
+          throw new ExpiredTokenError();
+        case 404:
+          throw new DisconnectedError(url, response.status);
+        default:
+          logger.info({response, requestInfo}, 'Platform response');
+          return response;
       }
-
-      if (response.status === 404) {
-        throw new DisconnectedError(url, response.status);
-      }
-
-      logger.info({response, requestInfo}, 'Platform response');
-
-      return response;
     } catch (error) {
       if ((error as PlatformClientCallError).message === 'Failed to fetch') {
         return new DisconnectedError(url);

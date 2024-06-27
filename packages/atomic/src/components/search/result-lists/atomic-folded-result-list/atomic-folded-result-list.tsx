@@ -265,7 +265,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       interactiveResult: buildInteractiveResult(this.bindings.engine, {
         options: {result},
       }),
-      result,
+      result: collection,
       renderingFunction: this.resultRenderingFunction,
       loadingFlag: this.loadingFlag,
       key: this.itemListCommon.getResultId(

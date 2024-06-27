@@ -23,7 +23,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   languageAssetsPath: string;
   iconAssetsPath: string;
   logLevel?: LogLevel;
-  language: string;
+  language?: string;
   host: HTMLStencilElement;
   bindings: AnyBindings;
   error?: Error;
@@ -104,7 +104,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     if (this.atomicInterface.registerFieldsToInclude) {
       this.atomicInterface.registerFieldsToInclude();
     }
-    loadDayjsLocale(this.atomicInterface.language);
+    loadDayjsLocale(this.language);
     await this.i18nPromise;
     this.initComponents();
   }
@@ -126,13 +126,13 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   public onLanguageChange() {
     const {i18n, language} = this.atomicInterface;
 
-    loadDayjsLocale(language);
+    loadDayjsLocale(this.language);
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
-      language,
+      this.language,
       i18nTranslationNamespace,
       (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
-          language,
+          this.language,
           i18nTranslationNamespace,
           data,
           true,
@@ -163,5 +163,9 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     this.hangingComponentsInitialization.forEach((event) =>
       event.detail(this.atomicInterface.bindings)
     );
+  }
+
+  private get language() {
+    return this.atomicInterface.language || 'en';
   }
 }

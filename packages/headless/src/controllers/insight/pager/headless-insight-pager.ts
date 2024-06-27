@@ -1,10 +1,6 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {fetchPage} from '../../../features/insight-search/insight-search-actions';
-import {
-  pagerNext,
-  pagerNumber,
-  pagerPrevious,
-} from '../../../features/pagination/pagination-analytics-actions';
+import {browseResults} from '../../../features/pagination/pagination-analytics-actions';
 import {
   logPageNumber,
   logPageNext,
@@ -44,17 +40,17 @@ export function buildPager(
 
     selectPage(page: number) {
       pager.selectPage(page);
-      dispatch(fetchPage({legacy: logPageNumber(), next: pagerNumber()}));
+      dispatch(fetchPage({legacy: logPageNumber(), next: browseResults()}));
     },
 
     nextPage() {
       pager.nextPage();
-      dispatch(fetchPage({legacy: logPageNext(), next: pagerNext()}));
+      dispatch(fetchPage({legacy: logPageNext(), next: browseResults()}));
     },
 
     previousPage() {
       pager.previousPage();
-      dispatch(fetchPage({legacy: logPagePrevious(), next: pagerPrevious()}));
+      dispatch(fetchPage({legacy: logPagePrevious(), next: browseResults()}));
     },
   };
 }

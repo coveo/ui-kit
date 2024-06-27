@@ -201,7 +201,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
         isVisible: initialVisibility,
-        responseFormat: {answerStyle: this.answerStyle},
+        responseFormat: {
+          answerStyle: this.answerStyle,
+          contentFormat: ['text/markdown', 'text/plain'],
+        },
       },
       fieldsToIncludeInCitations: this.citationFields,
     });
@@ -404,6 +407,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.citations;
   }
 
+  get answerContentFormat() {
+    return this?.state?.answerContentFormat;
+  }
+
   get shouldDisplayCitations() {
     const hasCitations = !!this.citations?.length;
     return hasCitations && !this.isAnswerCollapsed;
@@ -443,9 +450,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         ? 'generated-answer__answer--expanded'
         : 'generated-answer__answer--collapsed';
     }
-    return `generated-answer__answer ${
-      this.isStreaming ? 'generated-answer__answer--streaming' : ''
-    } ${collapsedStateClass}`;
+    return `generated-answer__answer ${collapsedStateClass}`;
   }
 
   get hasRetryableError() {

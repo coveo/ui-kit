@@ -45,7 +45,12 @@
           class="generated-answer__content slds-var-m-top_medium"
         >
           <div data-cy="generated-answer__answer" class={generatedAnswerClass}>
-            <span>{answer}</span>
+            <c-quantic-generated-answer-content
+              answer-content-format={answerContentFormat}
+              answer={answer}
+              is-streaming={isStreaming}
+              data-cy="generated-answer__content">
+            </c-quantic-generated-answer-content>
           </div>
           <div
             data-cy="generated-answer__footer"

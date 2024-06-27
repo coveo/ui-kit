@@ -7,6 +7,7 @@ import {
   SearchBoxState,
   buildSearchBox,
   buildStandaloneSearchBox,
+  loadQuerySetActions,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -354,7 +355,7 @@ export class AtomicCommerceSearchBox
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private async onInput(value: string) {
-    this.searchBox.updateText(value);
+    this.updateQueryWithoutQuerySuggestionTrigger(value);
 
     if (this.isSearchDisabledForEndUser(value)) {
       this.suggestionManager.clearSuggestions();
@@ -366,20 +367,27 @@ export class AtomicCommerceSearchBox
   }
 
   private async onFocus() {
+    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
+      return;
+    }
     this.isExpanded = true;
     await this.suggestionManager.triggerSuggestions();
     this.announceNewSuggestionsToScreenReader();
   }
 
   private onSubmit() {
-    if (this.suggestionManager.isRightPanelInFocus()) {
-      this.suggestionManager.clickOnActiveElement();
+    this.isExpanded = false;
+    if (
+      this.suggestionManager.isRightPanelInFocus() ||
+      this.suggestionManager.activeDescendantElement?.part.contains(
+        'recent-query-title-item'
+      )
+    ) {
+      this.suggestionManager.onSubmit();
       return;
     }
 
-    this.isExpanded = false;
     this.searchBox.submit();
-    this.suggestionManager.onSubmit();
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -648,6 +656,16 @@ export class AtomicCommerceSearchBox
           count: elsLength,
         })
       : this.bindings.i18n.t('query-suggestions-unavailable');
+  }
+
+  private updateQueryWithoutQuerySuggestionTrigger(query: string) {
+    const {engine} = this.bindings;
+    engine.dispatch(
+      loadQuerySetActions(engine).updateQuerySetQuery({
+        id: this.id,
+        query,
+      })
+    );
   }
 
   public render() {

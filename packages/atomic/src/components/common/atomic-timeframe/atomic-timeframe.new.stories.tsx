@@ -21,7 +21,7 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-timeframe',
-  args: {unit: 'year'},
+  args: {'attributes-unit': 'year'},
   decorators: [
     (story) => html`
       <atomic-timeframe-facet field="date"> ${story()} </atomic-timeframe-facet>

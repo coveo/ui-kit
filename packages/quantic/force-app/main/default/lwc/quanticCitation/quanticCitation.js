@@ -16,9 +16,9 @@ const debounceDurationBeforeHoverMs = 200;
  */
 export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
+   * The citation item information.
    * @api
    * @type {{title: string, index: number, text: string, clickUri: string, fields: object}}
-   * The citation item information.
    */
   @api citation;
   /**

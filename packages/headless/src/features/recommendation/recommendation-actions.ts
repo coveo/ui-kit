@@ -19,7 +19,7 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
 import {AnalyticsAsyncThunk} from '../analytics/analytics-utils';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
 import {SearchAction} from '../search/search-actions';
 import {
   logRecommendationUpdate,

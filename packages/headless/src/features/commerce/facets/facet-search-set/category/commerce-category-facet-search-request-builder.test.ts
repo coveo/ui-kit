@@ -1,3 +1,4 @@
+import {Relay, createRelay} from '@coveo/relay';
 import * as Actions from '../../../../../features/commerce/common/actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
@@ -11,6 +12,7 @@ import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-
 
 describe('#buildCategoryFacetSearchRequest', () => {
   let state: CommerceAppState;
+  let relay: Relay;
   let facetId: string;
   let query: string;
   let buildCommerceAPIRequestMock: jest.SpyInstance;
@@ -33,13 +35,16 @@ describe('#buildCategoryFacetSearchRequest', () => {
       Actions,
       'buildCommerceAPIRequest'
     );
+
+    relay = createRelay({token: 'token', url: 'url', trackingId: 'trackingId'});
   });
 
   it('returned object has a #facetId property whose value is the passed facet ID argument', async () => {
     const request = await buildCategoryFacetSearchRequest(
       facetId,
       state,
-      false
+      false,
+      relay
     );
 
     expect(request.facetId).toBe(facetId);
@@ -49,7 +54,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const request = await buildCategoryFacetSearchRequest(
       facetId,
       state,
-      false
+      false,
+      relay
     );
 
     expect(request.facetQuery).toBe(
@@ -62,7 +68,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       const request = await buildCategoryFacetSearchRequest(
         facetId,
         state,
-        false
+        false,
+        relay
       );
 
       expect(request.ignorePaths).toStrictEqual([]);
@@ -74,7 +81,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       const request = await buildCategoryFacetSearchRequest(
         facetId,
         state,
-        false
+        false,
+        relay
       );
 
       expect(request.ignorePaths).toStrictEqual([
@@ -106,7 +114,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
       const request = await buildCategoryFacetSearchRequest(
         facetId,
         state,
-        false
+        false,
+        relay
       );
 
       expect(request.ignorePaths).toStrictEqual([
@@ -137,7 +146,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const request = await buildCategoryFacetSearchRequest(
       facetId,
       state,
-      false
+      false,
+      relay
     );
 
     expect(request).toEqual({
@@ -150,7 +160,12 @@ describe('#buildCategoryFacetSearchRequest', () => {
   });
 
   it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', async () => {
-    const request = await buildCategoryFacetSearchRequest(facetId, state, true);
+    const request = await buildCategoryFacetSearchRequest(
+      facetId,
+      state,
+      true,
+      relay
+    );
 
     const {facets, page, sort, ...expectedBaseRequest} =
       await buildCommerceAPIRequestMock.mock.results[0].value;

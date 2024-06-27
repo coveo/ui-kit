@@ -1,4 +1,5 @@
 import {configuration} from '../../../app/common-reducers';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
@@ -18,6 +19,8 @@ import {
 jest.mock(
   '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'
 );
+
+jest.mock('../../../features/breadcrumb/breadcrumb-actions');
 
 describe('automatic facets', () => {
   let engine: MockedSearchEngine;
@@ -60,5 +63,12 @@ describe('automatic facets', () => {
 
   it('should return automatic facets as empty array if the response is empty', () => {
     expect(automaticFacets.state.automaticFacets).toEqual([]);
+  });
+
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllBreadcrumbs', () => {
+      automaticFacets.deselectAll();
+      expect(deselectAllBreadcrumbs).toHaveBeenCalledTimes(1);
+    });
   });
 });

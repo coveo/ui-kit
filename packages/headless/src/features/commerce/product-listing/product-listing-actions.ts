@@ -4,7 +4,7 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
-import {ProductListingV2Section} from '../../../state/state-sections';
+import {ProductListingSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {
@@ -19,7 +19,7 @@ import {
 } from './product-listing-selectors';
 
 export type StateNeededByFetchProductListing =
-  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingV2Section;
+  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingSection;
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
@@ -27,11 +27,13 @@ export const fetchProductListing = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (
+    _action,
+    {getState, dispatch, rejectWithValue, extra: {apiClient, relay}}
+  ) => {
     const state = getState();
-    const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      await buildCommerceAPIRequest(state)
+      buildCommerceAPIRequest(state, relay)
     );
 
     if (isErrorResponse(fetched)) {
@@ -51,19 +53,21 @@ export const fetchMoreProducts = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetchMoreProducts',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+  async (
+    _action,
+    {getState, dispatch, rejectWithValue, extra: {apiClient, relay}}
+  ) => {
     const state = getState();
     const moreProductsAvailable = moreProductsAvailableSelector(state);
     if (!moreProductsAvailable) {
       return null;
     }
-    const {apiClient} = extra;
     const perPage = perPagePrincipalSelector(state);
     const numberOfProducts = numberOfProductsSelector(state);
     const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({
-      ...(await buildCommerceAPIRequest(state)),
+      ...buildCommerceAPIRequest(state, relay),
       page: nextPageToRequest,
     });
 

@@ -129,7 +129,7 @@ export class AtomicProductChildren
     return (
       <button
         class={`product-child${child.permanentid === this.activeChildId ? this.activeChildClasses : ' '}`}
-        title={child.ec_name}
+        title={child.ec_name || undefined}
         onKeyPress={(event) =>
           event.key === 'Enter' &&
           this.onSelectChild(child.permanentid, this.product.permanentid)
@@ -144,7 +144,7 @@ export class AtomicProductChildren
         <img
           class="aspect-square p-1"
           src={this.getImageUrl(child)}
-          alt={child.ec_name}
+          alt={child.ec_name || undefined}
           loading="lazy"
         />
       </button>

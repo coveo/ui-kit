@@ -70,15 +70,6 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  async getRecommendations(
-    req: CommerceRecommendationsRequest
-  ): Promise<CommerceAPIResponse<RecommendationsCommerceSuccessResponse>> {
-    return this.query({
-      ...buildRecommendationsRequest(req, 'recommendations'),
-      ...this.options,
-    });
-  }
-
   async search(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
@@ -89,6 +80,15 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         ...requestOptions.requestParams,
         query: req?.query,
       },
+      ...this.options,
+    });
+  }
+
+  async getRecommendations(
+    req: CommerceRecommendationsRequest
+  ): Promise<CommerceAPIResponse<RecommendationsCommerceSuccessResponse>> {
+    return this.query({
+      ...buildRecommendationsRequest(req, 'recommendations'),
       ...this.options,
     });
   }

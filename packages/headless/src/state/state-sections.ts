@@ -12,7 +12,7 @@ import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet
 import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
-import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
+import {ProductListingState} from '../features/commerce/product-listing/product-listing-state';
 import {CommerceQueryState} from '../features/commerce/query/query-state';
 import {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state';
 import {CommerceSearchState} from '../features/commerce/search/search-state';
@@ -41,7 +41,7 @@ import {InsightConfigurationState} from '../features/insight-configuration/insig
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
-import {ProductListingState} from '../features/product-listing/product-listing-state';
+import {OldProductListingState} from '../features/product-listing/old-product-listing-state';
 import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
@@ -299,11 +299,11 @@ export interface ProductRecommendationsSection {
   productRecommendations: ProductRecommendationsState;
 }
 
-export interface ProductListingSection {
+export interface OldProductListingSection {
   /**
    * The information related to the product listing endpoint.
    */
-  productListing: ProductListingState;
+  productListing: OldProductListingState;
 }
 
 export interface CommercePaginationSection {
@@ -341,11 +341,11 @@ export interface CartSection {
   cart: CartState;
 }
 
-export interface ProductListingV2Section {
+export interface ProductListingSection {
   /**
    * The information related to the product listing endpoint.
    */
-  productListing: ProductListingV2State;
+  productListing: ProductListingState;
 }
 
 export interface RecommendationsSection {

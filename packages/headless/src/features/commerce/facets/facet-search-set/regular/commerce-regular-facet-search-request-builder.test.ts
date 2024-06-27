@@ -1,3 +1,4 @@
+import {Relay, createRelay} from '@coveo/relay';
 import * as Actions from '../../../../../features/commerce/common/actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
@@ -7,6 +8,7 @@ import {buildFacetSearchRequest} from './commerce-regular-facet-search-request-b
 
 describe('#buildFacetSearchRequest', () => {
   let state: CommerceAppState;
+  let relay: Relay;
   let facetId: string;
   let query: string;
   let buildCommerceAPIRequestMock: jest.SpyInstance;
@@ -25,16 +27,18 @@ describe('#buildFacetSearchRequest', () => {
       Actions,
       'buildCommerceAPIRequest'
     );
+
+    relay = createRelay({token: 'token', url: 'url', trackingId: 'trackingId'});
   });
 
   it('returned object has a #facetId property whose value is the passed facet ID argument', async () => {
-    const request = await buildFacetSearchRequest(facetId, state, false);
+    const request = await buildFacetSearchRequest(facetId, state, false, relay);
 
     expect(request.facetId).toBe(facetId);
   });
 
   it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', async () => {
-    const request = await buildFacetSearchRequest(facetId, state, false);
+    const request = await buildFacetSearchRequest(facetId, state, false, relay);
 
     expect(request.facetQuery).toBe(
       `*${state.facetSearchSet[facetId].options.query}*`
@@ -47,7 +51,7 @@ describe('#buildFacetSearchRequest', () => {
       'buildCommerceAPIRequest'
     );
 
-    const request = await buildFacetSearchRequest(facetId, state, false);
+    const request = await buildFacetSearchRequest(facetId, state, false, relay);
 
     expect(request).toEqual({
       ...(await buildCommerceAPIRequestMock.mock.results[0].value),
@@ -58,7 +62,7 @@ describe('#buildFacetSearchRequest', () => {
   });
 
   it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', async () => {
-    const request = await buildFacetSearchRequest(facetId, state, true);
+    const request = await buildFacetSearchRequest(facetId, state, true, relay);
 
     const {facets, page, sort, ...expectedBaseRequest} =
       await buildCommerceAPIRequestMock.mock.results[0].value;

@@ -1,4 +1,6 @@
+import {Relay} from '@coveo/relay';
 import {EventDescription} from 'coveo.analytics';
+import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
@@ -18,6 +20,8 @@ type StateNeededBySearchRequest = ConfigurationSection &
 
 export const buildSearchRequest = async (
   state: StateNeededBySearchRequest,
+  navigatorContext: NavigatorContext,
+  relay: Relay,
   eventDescription?: EventDescription
 ) => {
   const cq = buildConstantQuery(state);
@@ -29,8 +33,10 @@ export const buildSearchRequest = async (
           state,
           eventDescription
         )
-      : await buildSearchAndFoldingLoadCollectionRequest(
+      : buildSearchAndFoldingLoadCollectionRequest(
           state,
+          navigatorContext,
+          relay,
           eventDescription
         );
 

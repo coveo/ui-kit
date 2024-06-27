@@ -28,8 +28,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-        with:
-          fail-on-cache-miss: 'false'
       - name: Release
         run: npm run release
         env:
@@ -82,6 +80,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      discussions: write
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:

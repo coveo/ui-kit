@@ -5,7 +5,6 @@ import {
   AtomicProductText,
   AtomicProductPrice,
   AtomicProductDescription,
-  getOrganizationEndpoints,
   buildCommerceEngine,
   AtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts,
@@ -32,10 +31,7 @@ export const CommerceSearchPage = () => {
         configuration: {
           accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
           organizationId: 'barcasportsmcy01fvu',
-          organizationEndpoints: getOrganizationEndpoints(
-            'barcasportsmcy01fvu',
-            'dev'
-          ),
+          environment: 'dev',
           analytics: {
             trackingId: 'sports',
           },
@@ -129,7 +125,7 @@ function MyTemplate() {
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>
       <AtomicProductSectionEmphasized>
-        <AtomicProductPrice currency="USD" />
+        <AtomicProductPrice />
       </AtomicProductSectionEmphasized>
       <AtomicProductSectionDescription>
         <AtomicProductDescription />

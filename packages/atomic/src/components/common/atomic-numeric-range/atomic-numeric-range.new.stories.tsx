@@ -21,7 +21,7 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-numeric-range',
-  args: {start: 0, end: 1000},
+  args: {'attributes-start': 0, 'attributes-end': 1000},
   decorators: [
     (story) => html`  
         <atomic-numeric-facet

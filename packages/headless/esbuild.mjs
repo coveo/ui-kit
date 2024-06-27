@@ -150,7 +150,10 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      inject: ['ponyfills/abortable-fetch-shim.js'],
+      inject: [
+        'ponyfills/abortable-fetch-shim.js',
+        '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
+      ],
       plugins: [umdWrapper({libraryName: globalName})],
     },
     outDir

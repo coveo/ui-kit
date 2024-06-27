@@ -12,7 +12,27 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
+    initializer: 'buildFieldSuggestionsGenerator',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInstantProducts',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildNotifyTrigger',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildProductListing',
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildProductTemplatesManager',
     samplePaths: {},
   },
   {
@@ -20,15 +40,39 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
+    initializer: 'buildQueryTrigger',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildRecommendations',
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/recommendations.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRedirectionTrigger',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildRecentQueriesList',
     samplePaths: {},
   },
   {
     initializer: 'buildSearch',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/search.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildSearchBox',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildStandaloneSearchBox',
     samplePaths: {},
   },
 ];

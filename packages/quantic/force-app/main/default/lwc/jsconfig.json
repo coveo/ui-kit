@@ -79,6 +79,9 @@
       ],
       "c/quanticRadioButtonsGroup": [
         "quanticRadioButtonsGroup/quanticRadioButtonsGroup.js"
+      ],
+      "c/quanticGeneratedAnswerContent": [
+        "quanticGeneratedAnswerContent/quanticGeneratedAnswerContent.js"
       ]
     }
   },

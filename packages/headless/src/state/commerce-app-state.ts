@@ -3,7 +3,7 @@ import {
   CartSection,
   CommerceContextSection,
   ConfigurationSection,
-  ProductListingV2Section,
+  ProductListingSection,
   RecommendationsSection,
   VersionSection,
   CommerceSortSection,
@@ -31,7 +31,7 @@ export type CommerceSearchParametersState =
 
 export type CommerceAppState = ConfigurationSection &
   CommerceStandaloneSearchBoxSection &
-  ProductListingV2Section &
+  ProductListingSection &
   RecommendationsSection &
   CommerceSearchSection &
   CommerceQuerySection &

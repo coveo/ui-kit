@@ -13,14 +13,14 @@ export interface ProductTemplatesManager<Content = unknown> {
    * Registers any number of product templates in the manager.
    * @param templates (...Template<Product, Content>) A list of templates to register.
    */
-  registerTemplates(...templates: Template<Product, Content>[]): void;
+  registerTemplates: (...templates: Template<Product, Content>[]) => void;
   /**
    * Selects the highest priority template for which the given product satisfies all conditions.
    * In the case where satisfied templates have equal priority, the template that was registered first is returned.
    * @param product (Product) The product for which to select a template.
    * @returns (Content) The content of the selected template, or null if no template can be selected for the given product.
    */
-  selectTemplate(product: Product): Content | null;
+  selectTemplate: (product: Product) => Content | null;
 }
 
 /**

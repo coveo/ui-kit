@@ -7,6 +7,10 @@ import {RecommendationPage} from './pages/RecommendationPage';
 import {SamlPage} from './pages/SamlPage';
 import {SearchPage, SearchPageProps} from './pages/SearchPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
+import {CommerceApp} from './pages/commerce/CommerceApp';
+import {ProductListingPage} from './pages/commerce/ProductListingPage';
+import {RecommendationsPage} from './pages/commerce/RecommendationsPage';
+import {SearchPage as CommerceSearchPage} from './pages/commerce/SearchPage';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
@@ -80,6 +84,14 @@ function App(props: SearchPageProps) {
               Product Recommendations
             </NavLink>
           </button>
+          <button>
+            <NavLink
+              to="/commerce"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
+              Commerce
+            </NavLink>
+          </button>
         </nav>
         <Routes>
           <Route path="/recommendation" element={<RecommendationPage />} />
@@ -95,6 +107,11 @@ function App(props: SearchPageProps) {
             path="/product-recommendations"
             element={<ProductRecommendationsPage />}
           />
+          <Route path="/commerce" element={<CommerceApp />}>
+            <Route path="search" element={<CommerceSearchPage />} />
+            <Route path="product-listing" element={<ProductListingPage />} />
+            <Route path="recommendations" element={<RecommendationsPage />} />
+          </Route>
           <Route path="/search-page" element={<SearchPage {...props} />} />
           <Route path="/" element={<SearchPage {...props} />} />
         </Routes>

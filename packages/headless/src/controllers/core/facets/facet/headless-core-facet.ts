@@ -39,7 +39,7 @@ import {
   FacetOptionsSection,
   FacetSearchSection,
   FacetSection,
-  ProductListingSection,
+  OldProductListingSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
@@ -511,7 +511,7 @@ function loadFacetReducers(
     FacetOptionsSection &
     ConfigurationSection &
     FacetSearchSection &
-    (SearchSection | ProductListingSection),
+    (SearchSection | OldProductListingSection),
   SearchThunkExtraArguments
 > {
   engine.addReducers({facetSet, facetOptions, configuration, facetSearchSet});

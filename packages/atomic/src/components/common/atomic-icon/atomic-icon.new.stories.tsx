@@ -26,7 +26,8 @@ const meta: Meta = {
   parameters,
   play,
   argTypes: {
-    icon: {
+    'attributes-icon': {
+      name: 'icon',
       options: AssetsList.assets,
       mapping: AssetsList.assets.reduce<Record<string, string>>(
         (acc, asset) => {
@@ -45,7 +46,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-icon',
   args: {
-    icon: 'assets://account.svg',
+    'attributes-icon': 'assets://account.svg',
   },
   decorators: [
     (story) =>
@@ -86,6 +87,18 @@ export const Default: Story = {
 
 export const AllIcons: Story = {
   name: 'All available icons',
+  argTypes: {
+    'attributes-icon': {
+      name: 'icon',
+      control: {
+        disable: true,
+      },
+      table: {
+        disable: true,
+      },
+    },
+  },
+  args: {},
   decorators: [
     () =>
       html` <style>

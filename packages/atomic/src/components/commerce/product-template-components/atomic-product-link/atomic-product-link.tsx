@@ -56,6 +56,12 @@ export class AtomicProductLink
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
 
+  private logWarningIfNeed(warning?: string) {
+    if (warning) {
+      this.bindings.engine.logger.warn(warning);
+    }
+  }
+
   public initialize() {
     this.host.dispatchEvent(
       buildCustomEvent(
@@ -78,16 +84,27 @@ export class AtomicProductLink
       ? this.product.clickUri
       : 'test';
 
+    if (!this.interactiveProduct) {
+      return;
+    }
+
+    const {warningMessage} = this.interactiveProduct;
+
     return (
       <LinkWithItemAnalytics
         href={href}
-        onSelect={() => this.interactiveProduct.select()}
-        onBeginDelayedSelect={() =>
-          this.interactiveProduct.beginDelayedSelect()
-        }
-        onCancelPendingSelect={() =>
-          this.interactiveProduct.cancelPendingSelect()
-        }
+        onSelect={() => {
+          this.logWarningIfNeed(warningMessage);
+          this.interactiveProduct.select();
+        }}
+        onBeginDelayedSelect={() => {
+          this.logWarningIfNeed(warningMessage);
+          this.interactiveProduct.beginDelayedSelect();
+        }}
+        onCancelPendingSelect={() => {
+          this.logWarningIfNeed(warningMessage);
+          this.interactiveProduct.cancelPendingSelect();
+        }}
         attributes={this.linkAttributes}
         stopPropagation={this.stopPropagation}
       >

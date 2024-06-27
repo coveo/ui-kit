@@ -1,10 +1,8 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {Relay} from '@coveo/relay';
 import {EventDescription} from 'coveo.analytics';
-import {
-  getVisitorID,
-  historyStore,
-} from '../../api/analytics/coveo-analytics-utils';
 import {SearchRequest} from '../../api/search/search/search-request';
+import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
@@ -12,10 +10,12 @@ import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-pa
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
 
-export const buildSearchAndFoldingLoadCollectionRequest = async (
+export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding,
+  navigatorContext: NavigatorContext,
+  relay: Relay,
   eventDescription?: EventDescription
-): Promise<SearchRequest> => {
+): SearchRequest => {
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -23,11 +23,10 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     locale: state.configuration.search.locale,
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,
-    referrer: state.configuration.analytics.originLevel3,
+    referrer: navigatorContext.referrer,
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
-      actionsHistory: historyStore.getHistory(),
+      visitorId: relay.getMeta('').clientId,
     }),
     ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
@@ -65,10 +64,12 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
       sortCriteria: state.sortCriteria,
     }),
     ...(state.configuration.analytics.enabled &&
-      (await fromAnalyticsStateToAnalyticsParams(
+      fromAnalyticsStateToAnalyticsParams(
         state.configuration.analytics,
+        navigatorContext,
+        relay,
         eventDescription
-      ))),
+      )),
     ...(state.excerptLength &&
       !isNullOrUndefined(state.excerptLength.length) && {
         excerptLength: state.excerptLength.length,

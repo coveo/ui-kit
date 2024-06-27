@@ -10,11 +10,13 @@ export function buildSearchLayoutCommon(
   element: HTMLElement,
   mobileBreakpoint: string,
   layoutWebComponentTagName: string,
-  containerWebComponentTagName: string
+  containerWebComponentTagName: string,
+  noItemsSelector: string,
+  errorSelector: string
 ) {
   const id = element.id;
   const layoutSelector = `${layoutWebComponentTagName}#${id}`;
-  const cleanStatusSelector = `${containerWebComponentTagName}:not(.${containerWebComponentTagName}-no-results, .${containerWebComponentTagName}-error)`;
+  const cleanStatusSelector = `${containerWebComponentTagName}:not(.${noItemsSelector}, .${errorSelector})`;
   const mediaQuerySelector = `@media ${makeDesktopQuery(mobileBreakpoint)}`;
 
   const display = `${layoutSelector} { display: grid }`;

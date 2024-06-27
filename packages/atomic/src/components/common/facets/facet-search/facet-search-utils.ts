@@ -52,7 +52,7 @@ export function highlightSearchResult(resultValue: string, searchQuery = '') {
     return sanitizedResult;
   }
 
-  const regex = new RegExp(`(${regexEncode(searchQuery)})`, 'i');
+  const regex = new RegExp(`(${regexEncode(escape(searchQuery))})`, 'i');
   return escape(resultValue).replace(
     regex,
     '<span part="search-highlight" class="font-bold">$1</span>'

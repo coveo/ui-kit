@@ -1,5 +1,5 @@
 import {Action} from '@reduxjs/toolkit';
-import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
+import {buildFetchProductListingResponse} from '../../test/mock-old-product-listing';
 import {buildMockSearch} from '../../test/mock-search';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';

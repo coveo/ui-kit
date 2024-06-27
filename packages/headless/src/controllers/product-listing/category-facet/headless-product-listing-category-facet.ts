@@ -24,7 +24,7 @@ import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
-  ProductListingSection,
+  OldProductListingSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -145,7 +145,7 @@ function loadCategoryFacetReducers(
   CategoryFacetSection &
     CategoryFacetSearchSection &
     ConfigurationSection &
-    ProductListingSection
+    OldProductListingSection
 > {
   engine.addReducers({
     categoryFacetSet,

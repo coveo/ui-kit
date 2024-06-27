@@ -31,7 +31,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-result-number',
   args: {
-    default: `
+    'slots-default': `
       <span style="font-weight: bold; margin-right: 0.25rem;">File size:</span>
       <atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>
     `,

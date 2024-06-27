@@ -21,10 +21,10 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-category-facet',
   args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
+    'attributes-field': 'geographicalhierarchy',
+    'attributes-label': 'Geographical Hierarchy',
+    'attributes-with-search': true,
+    'attributes-number-of-values': 5,
+    'attributes-sort-criteria': 'occurrences',
   },
 };

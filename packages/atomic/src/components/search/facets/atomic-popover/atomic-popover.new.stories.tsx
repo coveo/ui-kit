@@ -21,7 +21,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-popover',
   args: {
-    default: `
+    'slots-default': `
       <atomic-facet
         field="objecttype"
         label="Object type"

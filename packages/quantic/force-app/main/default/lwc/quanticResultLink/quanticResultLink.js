@@ -121,7 +121,8 @@ export default class QuanticResultLink extends NavigationMixin(
     this.engine = engine;
     ResultUtils.bindClickEventsOnResult(
       this.engine,
-      this.result,
+      // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
+      {...this.result, raw: {...this.result.raw}},
       this.template,
       this.headless.buildInteractiveResult
     );

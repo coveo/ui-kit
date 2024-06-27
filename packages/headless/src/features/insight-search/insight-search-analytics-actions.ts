@@ -8,7 +8,7 @@ import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-stat
 import {getQueryInitialState} from '../query/query-state';
 
 export const logFetchMoreResults = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.pagerScrolling)(
+  makeInsightAnalyticsActionFactory(SearchPageEvents.browseResults)(
     'search/logFetchMoreResults',
     (client, state) =>
       client.logFetchMoreResults(

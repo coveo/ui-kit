@@ -524,8 +524,20 @@ export function mockStreamResponse(streamId: string, body: unknown) {
       url: `**/machinelearning/streaming/${streamId}`,
     },
     (request) => {
-      request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
-        'content-type': 'text/event-stream',
+      let bodyText = '';
+      if (!Array.isArray(body)) {
+        bodyText = `data: ${JSON.stringify(body)} \n\n`;
+      } else {
+        body.forEach((data) => {
+          bodyText += `data: ${JSON.stringify(data)} \n\n`;
+        });
+      }
+      request.reply({
+        statusCode: 200,
+        body: bodyText,
+        headers: {
+          'content-type': 'text/event-stream',
+        },
       });
     }
   ).as(getStreamInterceptAlias(streamId).substring(1));

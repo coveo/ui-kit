@@ -38,11 +38,11 @@ function mockLogger(logger: Logger): MockedLogger {
 
 type MockedRelay = Relay & Pick<Relay, 'emit'>;
 
-function mockRelay(): MockedRelay {
+export function mockRelay(): MockedRelay {
   return {
     clearStorage: jest.fn(),
     emit: jest.fn(),
-    getMeta: jest.fn(),
+    getMeta: jest.fn().mockReturnValue({clientId: 'test'}),
     off: jest.fn(),
     on: jest.fn(),
     updateConfig: jest.fn(),
