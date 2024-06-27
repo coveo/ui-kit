@@ -1,4 +1,3 @@
-import {Relay} from '@coveo/relay';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {
@@ -49,7 +48,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     {
       getState,
       rejectWithValue,
-      extra: {apiClient, validatePayload, relay, navigatorContext},
+      extra: {apiClient, validatePayload, navigatorContext},
     }
   ) => {
     validatePayload(payload, idDefinition);
@@ -57,7 +56,6 @@ export const fetchQuerySuggestions = createAsyncThunk<
     const request = buildQuerySuggestRequest(
       payload.id,
       state,
-      relay,
       navigatorContext
     );
     const response = await apiClient.querySuggest(request);
@@ -77,7 +75,6 @@ export const fetchQuerySuggestions = createAsyncThunk<
 export const buildQuerySuggestRequest = (
   id: string,
   state: StateNeededByQuerySuggest,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): QuerySuggestRequest => {
   const {view, ...restOfContext} = state.commerceContext;
@@ -88,7 +85,7 @@ export const buildQuerySuggestRequest = (
     trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: relay.getMeta('').clientId,
+    clientId: navigatorContext.clientId,
     context: {
       ...(navigatorContext.userAgent
         ? {
