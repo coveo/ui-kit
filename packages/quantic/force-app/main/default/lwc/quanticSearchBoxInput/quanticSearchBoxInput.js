@@ -98,11 +98,18 @@ export default class QuanticSearchBoxInput extends LightningElement {
       this.handleSuggestionListEvent
     );
   }
+
   disconnectedCallback() {
     this.removeEventListener(
       'suggestionlistrender',
       this.handleSuggestionListEvent
     );
+  }
+
+  renderedCallback() {
+    if (this.input.value !== this.value) {
+      this.input.value = this.value;
+    }
   }
 
   /**
@@ -215,7 +222,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
         const selectedOption =
           this.suggestionListElement?.getCurrentSelectedValue?.();
         this.sendInputValueChangeEvent(selectedOption.value);
-        this.input.value = selectedOption.value;
         this.input.setAttribute('aria-activedescendant', selectedOption.id);
         break;
 
@@ -288,8 +294,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   clearInput() {
-    this.input.value = '';
-    this.sendInputValueChangeEvent(this.input.value);
+    this.sendInputValueChangeEvent('');
     this.input.focus();
     if (this.textarea) {
       this.adjustTextAreaHeight();
