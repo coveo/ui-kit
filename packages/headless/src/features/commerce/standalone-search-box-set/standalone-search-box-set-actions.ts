@@ -1,5 +1,4 @@
 import {StringValue} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -78,11 +77,11 @@ export const fetchRedirectUrl = createAsyncThunk<
   'commerce/standaloneSearchBox/fetchRedirect',
   async (
     payload,
-    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
     const state = getState();
-    const request = buildPlanRequest(state, relay, navigatorContext);
+    const request = buildPlanRequest(state, navigatorContext);
     const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -97,11 +96,10 @@ export const fetchRedirectUrl = createAsyncThunk<
 
 export const buildPlanRequest = (
   state: StateNeededForRedirect,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): CommerceSearchRequest => {
   return {
     query: state.commerceQuery.query,
-    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
   };
 };

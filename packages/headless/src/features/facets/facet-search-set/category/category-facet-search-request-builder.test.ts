@@ -3,7 +3,6 @@ import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-face
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
-import {mockRelay} from '../../../../test/mock-engine-v2';
 import {buildMockNavigatorContextProvider} from '../../../../test/mock-navigator-context-provider';
 import {createMockState} from '../../../../test/mock-state';
 import {buildSearchRequest} from '../../../search/search-request';
@@ -24,7 +23,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
       id,
       state,
       buildMockNavigatorContextProvider()(),
-      mockRelay(),
       false
     );
   }
@@ -87,8 +85,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const facet = state.categoryFacetSet[id]!.request;
     const builtRequest = await buildSearchRequest(
       state,
-      buildMockNavigatorContextProvider()(),
-      mockRelay()
+      buildMockNavigatorContextProvider()()
     );
     const request = {...builtRequest.request, facets: [facet]};
 

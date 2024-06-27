@@ -7,7 +7,6 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice'
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
-import {mockRelay} from '../../test/mock-engine-v2';
 import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
@@ -33,11 +32,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #query', async () => {
     state.query.q = 'hello';
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.q).toBe(state.query.q);
@@ -46,11 +41,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #enableQuerySyntax', async () => {
     state.query.enableQuerySyntax = true;
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.enableQuerySyntax).toBe(state.query.enableQuerySyntax);
@@ -59,11 +50,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #sortCriteria', async () => {
     state.sortCriteria = 'qre';
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.sortCriteria).toBe(state.sortCriteria);
@@ -72,11 +59,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #numberOfResults', async () => {
     state.pagination.numberOfResults = 10;
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.numberOfResults).toBe(state.pagination.numberOfResults);
@@ -87,11 +70,7 @@ describe('search request', () => {
     state.pagination.firstResult = maximumNumberOfResultsFromIndex - 9;
 
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.numberOfResults).toBe(9);
@@ -100,11 +79,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #firstResult', async () => {
     state.pagination.firstResult = 10;
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.firstResult).toBe(state.pagination.firstResult);
@@ -114,11 +89,7 @@ describe('search request', () => {
     const contextValues = {price: 'cad'};
     state.dictionaryFieldContext.contextValues = contextValues;
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.dictionaryFieldContext).toBe(contextValues);
@@ -128,11 +99,7 @@ describe('search request', () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = buildMockFacetSlice({request});
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(facets).toContainEqual(request);
@@ -145,11 +112,7 @@ describe('search request', () => {
     });
     state.facetSet[1] = buildMockFacetSlice({request});
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
@@ -166,11 +129,7 @@ describe('search request', () => {
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(request);
   });
@@ -184,11 +143,7 @@ describe('search request', () => {
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(
       buildMockNumericFacetRequest({
@@ -211,11 +166,7 @@ describe('search request', () => {
     state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(request);
   });
@@ -228,11 +179,7 @@ describe('search request', () => {
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(request);
   });
@@ -246,11 +193,7 @@ describe('search request', () => {
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(
       buildMockDateFacetRequest({
@@ -273,11 +216,7 @@ describe('search request', () => {
     state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(request);
   });
@@ -285,11 +224,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #generateAutomaticFacets.desiredCount', async () => {
     state.automaticFacetSet.desiredCount = 5;
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.generateAutomaticFacets?.desiredCount).toBe(
@@ -300,11 +235,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #generateAutomaticFacets.numberOfValues', async () => {
     state.automaticFacetSet.numberOfValues = 5;
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(params.generateAutomaticFacets?.numberOfValues).toBe(
@@ -328,11 +259,7 @@ describe('search request', () => {
     });
 
     const {generateAutomaticFacets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
   });
@@ -351,11 +278,7 @@ describe('search request', () => {
     });
 
     const {generateAutomaticFacets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
   });
@@ -363,11 +286,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #generatedAnswer.responseFormat', async () => {
     state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(
@@ -379,11 +298,7 @@ describe('search request', () => {
   it('#searchRequest returns the state #generatedAnswer.citationsFieldToInclude', async () => {
     state.generatedAnswer.fieldsToIncludeInCitations = ['foo', 'bar'];
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
 
     expect(
@@ -397,11 +312,7 @@ describe('search request', () => {
     state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(request);
   });
@@ -471,11 +382,7 @@ describe('search request', () => {
     state.facetOptions.facets['h'] = buildFacetOptionsSlice({enabled: false});
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(enabledFacetRequest);
     expect(facets).toContainEqual(enabledNumericFacetRequest);
@@ -489,11 +396,7 @@ describe('search request', () => {
 
   it('when no facets are configured, the #searchRequestParams does not contain a #facets key', async () => {
     const request = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(request.facets).toBe(undefined);
   });
@@ -513,11 +416,7 @@ describe('search request', () => {
     });
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toEqual([
       state.facetSet[facetId2].request,
@@ -540,11 +439,7 @@ describe('search request', () => {
     });
 
     const {facets} = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toEqual([
       state.facetSet[facetId2].request,
@@ -556,11 +451,7 @@ describe('search request', () => {
     state.facetOptions = buildMockFacetOptions({freezeFacetOrder: true});
 
     const params = (
-      await buildSearchRequest(
-        state,
-        buildMockNavigatorContextProvider()(),
-        mockRelay()
-      )
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(params.facetOptions).toEqual({
       freezeFacetOrder: state.facetOptions.freezeFacetOrder,
@@ -570,26 +461,16 @@ describe('search request', () => {
   it('should send visitorId if analytics is enable', async () => {
     state.configuration.analytics.enabled = true;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.visitorId
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.visitorId
     ).toBeDefined();
   });
 
   it('should not send visitorId if analytics is disabled', async () => {
     state.configuration.analytics.enabled = false;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.visitorId
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.visitorId
     ).not.toBeDefined();
   });
 
@@ -597,13 +478,8 @@ describe('search request', () => {
     const originLevel2 = 'youtube';
     state.configuration.analytics.originLevel2 = originLevel2;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.tab
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.tab
     ).toBe(originLevel2);
   });
 
@@ -611,26 +487,16 @@ describe('search request', () => {
     const originLevel3 = 'www.coveo.com';
     state.configuration.analytics.originLevel3 = originLevel3;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.referrer
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.referrer
     ).toBe(originLevel3);
   });
 
   it('#searchRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.fieldsToInclude
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.fieldsToInclude
     ).toEqual(expect.arrayContaining(['foo', 'bar']));
   });
 
@@ -638,51 +504,31 @@ describe('search request', () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
     state.fields.fetchAllFields = true;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.fieldsToInclude
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.fieldsToInclude
     ).not.toBeDefined();
   });
 
   it('when there are no cq expressions in state, cq is undefined', async () => {
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe(undefined);
   });
 
   it('when there is a cq expression, it sets the cq to the expression', async () => {
     state.advancedSearchQueries.cq = 'a';
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('a');
   });
 
   it('when there is an active tab, it sets cq to the active tab expression', async () => {
     state.tabSet.a = buildMockTabSlice({expression: 'a', isActive: true});
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('a');
   });
 
@@ -692,13 +538,8 @@ describe('search request', () => {
     state.tabSet.b = buildMockTabSlice({expression: 'b', isActive: true});
 
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('a AND b');
   });
 
@@ -708,13 +549,8 @@ describe('search request', () => {
     state.tabSet.b = buildMockTabSlice({expression: ' b ', isActive: true});
 
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('a AND b');
   });
 
@@ -725,13 +561,8 @@ describe('search request', () => {
     });
     state.staticFilterSet.a = buildMockStaticFilterSlice({values: [value]});
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('a');
   });
 
@@ -750,13 +581,8 @@ describe('search request', () => {
       values: [valueA, valueB],
     });
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('(a OR b)');
   });
 
@@ -775,13 +601,8 @@ describe('search request', () => {
       values: [valueA, valueB],
     });
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.cq
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.cq
     ).toBe('a');
   });
 
@@ -789,13 +610,8 @@ describe('search request', () => {
     state.didYouMean.enableDidYouMean = true;
     state.didYouMean.queryCorrectionMode = 'next';
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.queryCorrection?.enabled
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.queryCorrection?.enabled
     ).toBe(true);
   });
 
@@ -804,13 +620,8 @@ describe('search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = true;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.queryCorrection?.options?.automaticallyCorrect
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.queryCorrection?.options?.automaticallyCorrect
     ).toBe('whenNoResults');
   });
 
@@ -819,13 +630,8 @@ describe('search request', () => {
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = false;
     expect(
-      (
-        await buildSearchRequest(
-          state,
-          buildMockNavigatorContextProvider()(),
-          mockRelay()
-        )
-      ).request.queryCorrection?.options?.automaticallyCorrect
+      (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
+        .request.queryCorrection?.options?.automaticallyCorrect
     ).toBe('never');
   });
 });

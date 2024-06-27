@@ -191,11 +191,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI({
-      ...buildCommerceAPIRequest(
-        this.getState(),
-        this.relay,
-        this.navigatorContext
-      ),
+      ...buildCommerceAPIRequest(this.getState(), this.navigatorContext),
       query: modified,
     });
 
@@ -212,10 +208,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private getState() {
     return this.config.getState();
-  }
-
-  private get relay() {
-    return this.config.extra.relay;
   }
 
   private get navigatorContext() {

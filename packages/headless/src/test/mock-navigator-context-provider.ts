@@ -10,5 +10,6 @@ export const buildMockNavigatorContextProvider = (
     referrer: context?.referrer || '',
     userAgent: context?.userAgent || '',
     location: context?.location || '',
+    clientId: context?.clientId || '',
   });
 };

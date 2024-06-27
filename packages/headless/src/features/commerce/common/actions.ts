@@ -1,4 +1,3 @@
-import {Relay} from '@coveo/relay';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
@@ -36,11 +35,10 @@ export interface QueryCommerceAPIThunkReturn {
 
 export const buildCommerceAPIRequest = (
   state: ListingAndSearchStateNeededByQueryCommerceAPI,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): CommerceAPIRequest => {
   return {
-    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -50,7 +48,6 @@ export const buildCommerceAPIRequest = (
 
 export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
-  relay: Relay,
   navigatorContext: NavigatorContext,
   slotId?: string
 ): BaseCommerceAPIRequest => {
@@ -61,7 +58,7 @@ export const buildBaseCommerceAPIRequest = (
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: relay.getMeta('').clientId,
+    clientId: navigatorContext.clientId,
     context: {
       ...(navigatorContext.userAgent
         ? {

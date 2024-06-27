@@ -1,4 +1,3 @@
-import {Relay} from '@coveo/relay';
 import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request';
 import {NavigatorContext} from '../../../../app/navigatorContextProvider';
 import {buildSearchRequest} from '../../../search/search-request';
@@ -8,7 +7,6 @@ export const buildSpecificFacetSearchRequest = async (
   id: string,
   state: StateNeededForSpecificFacetSearch,
   navigatorContext: NavigatorContext,
-  relay: Relay,
   isFieldSuggestionsRequest: boolean
 ): Promise<SpecificFacetSearchRequest> => {
   const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
@@ -36,9 +34,8 @@ export const buildSpecificFacetSearchRequest = async (
     ...(isFieldSuggestionsRequest
       ? {}
       : {
-          searchContext: (
-            await buildSearchRequest(state, navigatorContext, relay)
-          ).request,
+          searchContext: (await buildSearchRequest(state, navigatorContext))
+            .request,
         }),
   };
 };
