@@ -57,6 +57,7 @@ export * from './features/commerce/query/query-actions-loader';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
 export * from './features/commerce/triggers/triggers-actions-loader';
+export * from './features/commerce/instant-products/instant-products-actions-loader';
 // TODO: KIT-3350: Create/use/export remaining commerce actions/loaders
 
 // Selectors

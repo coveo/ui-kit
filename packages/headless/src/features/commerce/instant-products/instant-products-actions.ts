@@ -37,19 +37,19 @@ const instantProductsQueryDefinition = {
 };
 
 export const registerInstantProducts = createAction(
-  'instantProducts/register',
+  'commerce/instantProducts/register',
   (payload: RegisterInstantProductActionCreatorPayload) =>
     validatePayload(payload, instantProductsIdDefinition)
 );
 
 export const updateInstantProductsQuery = createAction(
-  'instantProducts/updateQuery',
+  'commerce/instantProducts/updateQuery',
   (payload: UpdateInstantProductQueryActionCreatorPayload) =>
     validatePayload(payload, instantProductsQueryDefinition)
 );
 
 export const clearExpiredProducts = createAction(
-  'instantProducts/clearExpired',
+  'commerce/instantProducts/clearExpired',
   (payload: ClearExpiredInstantProductsActionCreatorPayload) =>
     validatePayload(payload, instantProductsIdDefinition)
 );
