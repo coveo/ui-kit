@@ -64,7 +64,7 @@ export default class QuanticSort extends LightningElement {
   hasInitializationError = false;
 
   /** @type {string} */
-  error;
+  errorMessage;
 
   labels = {
     sortBy,
@@ -182,7 +182,7 @@ export default class QuanticSort extends LightningElement {
    * Sets the error when custom sort options have an invalid configuration.
    */
   setSortOptionsConfigurationError() {
-    this.error = `${this.template.host.localName} Error`;
+    this.errorMessage = `Custom sort options configuration is invalid.`;
   }
 
   get relevancy() {
@@ -209,6 +209,10 @@ export default class QuanticSort extends LightningElement {
 
   get hasCustomSortOptions() {
     return this.customSortOptions.length > 0;
+  }
+
+  get hasError() {
+    return this.hasInitializationError || !!this.errorMessage;
   }
 
   /**

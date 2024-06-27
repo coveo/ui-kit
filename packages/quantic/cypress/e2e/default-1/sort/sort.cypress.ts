@@ -191,7 +191,7 @@ describe('quantic-sort', () => {
           });
 
         describe('when the custom option passed has an invalid property', () => {
-          it.skip('should display an error message instead of the quanticSort component', () => {
+          it('should display an error message instead of the quanticSort component', () => {
             visitSort({useCase: param.useCase}, true, {
               withInvalidCustomSortOptions: true,
             });
