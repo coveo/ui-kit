@@ -1,6 +1,6 @@
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -60,13 +60,9 @@ export interface Recommendations
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
    * it can be rendered as a nested product, and restored as the parent product through this method as needed.
    *
-   * @param childPermanentId The permanentid of the child product that will become the new parent.
-   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   * @param child The product that will become the new parent.
    */
-  promoteChildToParent(
-    childPermanentId: string,
-    parentPermanentId: string
-  ): void;
+  promoteChildToParent(child: ChildProduct): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Recommendations` controller.
@@ -154,10 +150,8 @@ export function buildRecommendations(
     ...controller,
     ...subControllers,
 
-    promoteChildToParent(childPermanentId, parentPermanentId) {
-      dispatch(
-        promoteChildToParent({childPermanentId, parentPermanentId, slotId})
-      );
+    promoteChildToParent(child: ChildProduct) {
+      dispatch(promoteChildToParent({child, slotId}));
     },
 
     get state() {

@@ -1,7 +1,7 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
 import {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {
@@ -78,13 +78,9 @@ export interface InstantProducts extends Controller {
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
    * it can be rendered as a nested product, and restored as the parent product through this method as needed.
    *
-   * @param childPermanentId The permanentid of the child product that will become the new parent.
-   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   * @param child The product that will become the new parent.
    */
-  promoteChildToParent(
-    childPermanentId: string,
-    parentPermanentId: string
-  ): void;
+  promoteChildToParent(child: ChildProduct): void;
 
   /**
    * Creates an `InteractiveProduct` sub-controller.
@@ -198,11 +194,10 @@ export function buildInstantProducts(
       );
     },
 
-    promoteChildToParent(childPermanentId, parentPermanentId) {
+    promoteChildToParent(child: ChildProduct) {
       dispatch(
         promoteChildToParent({
-          childPermanentId,
-          parentPermanentId,
+          child,
           id: searchBoxId,
           query: getQuery(),
         })
