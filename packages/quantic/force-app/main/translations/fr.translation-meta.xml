@@ -796,4 +796,20 @@
     <label>Voir moins</label>
     <name>quantic_GeneratedAnswerShowLess</name>
   </customLabels>
+  <customLabels>
+    <label>Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée.</label>
+    <name>quantic_SearchFieldWithSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} suggestion de recherche a été trouvée, pour naviguer utilisez les flèches haut et bas.</label>
+    <name>quantic_SuggestionFound</name>
+  </customLabels>
+    <customLabels>
+    <label>{{0}} suggestions de recherche ont été trouvées, pour naviguer utilisez les flèches haut et bas.</label>
+    <name>quantic_SuggestionFound_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Il n'y a pas de suggestions de recherche.</label>
+    <name>quantic_SuggestionNotFound</name>
+  </customLabels>
 </Translations>

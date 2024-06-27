@@ -33,6 +33,8 @@ const selectors = {
   searchBoxContainer: '.searchbox__container',
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
+  suggestionOption: '[data-cy="suggestions-option"]',
+  clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
 };
 
 function setupEventListeners(element) {
@@ -178,33 +180,85 @@ describe('c-quantic-search-box-input', () => {
       });
 
       describe('when the suggestions list is not empty', () => {
-        it('should display the suggestions in the suggestions list', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            suggestions: mockSuggestions,
-            textarea: textareaValue,
+        describe('when only query suggestions are displayed', () => {
+          it('should display the suggestions in the suggestions list', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+            });
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const suggestionsListItems =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOption
+              );
+            expect(suggestionsListItems).not.toBeNull();
+            expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
           });
-          await flushPromises();
+        });
 
-          const input = element.shadowRoot.querySelector(
-            textareaValue
-              ? selectors.searchBoxTextArea
-              : selectors.searchBoxInput
-          );
-          expect(input).not.toBeNull();
+        describe('when both query suggestions and recent queries are displayed', () => {
+          beforeEach(() => {
+            // @ts-ignore
+            global.CoveoHeadless = {
+              HighlightUtils: {
+                highlightString: () => {},
+              },
+            };
+          });
 
-          await input.focus();
+          it('should display the query suggestions and the recent queries in the suggestions list', async () => {
+            const exampleRecentQueries = ['foo', 'bar'];
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              recentQueries: exampleRecentQueries,
+              textarea: textareaValue,
+              value: '',
+            });
+            await flushPromises();
 
-          const suggestionsList = element.shadowRoot.querySelector(
-            selectors.searchBoxSuggestionsList
-          );
-          expect(suggestionsList).not.toBeNull();
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+            await input.focus();
 
-          const suggestionsListItems =
-            suggestionsList.shadowRoot.querySelectorAll('li');
-          expect(suggestionsListItems).not.toBeNull();
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
 
-          expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+            const suggestionsListItems =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOption
+              );
+            const clearRecentQueriesButton =
+              suggestionsList.shadowRoot.querySelector(
+                selectors.clearRecentQueryButton
+              );
+            expect(suggestionsListItems).not.toBeNull();
+            expect(clearRecentQueriesButton).not.toBeNull();
+            expect(suggestionsListItems.length).toEqual(
+              mockSuggestions.length + exampleRecentQueries.length
+            );
+          });
         });
       });
 

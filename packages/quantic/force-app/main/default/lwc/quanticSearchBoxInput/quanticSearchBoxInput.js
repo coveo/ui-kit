@@ -1,5 +1,6 @@
 import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
+import searchFieldWithSuggestions from '@salesforce/label/c.quantic_SearchFieldWithSuggestions';
 import {keys} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
@@ -35,6 +36,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   labels = {
     search,
     clear,
+    searchFieldWithSuggestions,
   };
   /**
    * Indicates whether or not to display a submit button.
@@ -64,6 +66,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @type {Suggestion[]}
    */
   @api suggestions = [];
+  /**
+   * The value of the input.
+   * @api
+   * @type {String}
+   */
   @api value;
   /**
    * The list containing the recent query suggestions.

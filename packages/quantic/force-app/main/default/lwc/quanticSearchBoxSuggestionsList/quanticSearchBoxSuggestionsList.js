@@ -1,6 +1,9 @@
 import clear from '@salesforce/label/c.quantic_Clear';
 import recentQueries from '@salesforce/label/c.quantic_RecentQueries';
-import {AriaLiveRegion} from 'c/quanticUtils';
+import suggestionFound from '@salesforce/label/c.quantic_SuggestionFound';
+import suggestionFound_plural from '@salesforce/label/c.quantic_SuggestionFound_Plural';
+import suggestionNotFound from '@salesforce/label/c.quantic_SuggestionNotFound';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 const optionCSSClass =
@@ -60,6 +63,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   labels = {
     clear,
     recentQueries,
+    suggestionFound,
+    suggestionFound_plural,
+    suggestionNotFound,
   };
 
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
@@ -140,12 +146,17 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
         ? this.allOptions.length - 1
         : this.allOptions.length;
 
+      const labelName = I18nUtils.getLabelNameWithCount(
+        'suggestionFound',
+        suggestionsCount
+      );
+
       this.suggestionsAriaLiveMessage.dispatchMessage(
-        `${suggestionsCount} suggestions found, to navigate use up and down arrows.`
+        I18nUtils.format(this.labels[labelName], suggestionsCount)
       );
     } else {
       this.suggestionsAriaLiveMessage.dispatchMessage(
-        'There are no search suggestions.'
+        this.labels.suggestionsNotFound
       );
     }
   }

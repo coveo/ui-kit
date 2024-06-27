@@ -255,13 +255,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   handleInputValueChange = (event) => {
     event.stopPropagation();
-    const updatedValue = event.detail.newInputValue;
-    const isSelectionReset = event.detail.resetSelection;
-    if (this.standaloneSearchBox?.state?.value !== updatedValue) {
-      if (isSelectionReset) {
-        this.quanticSearchBoxInput.resetSelection();
-      }
-      this.standaloneSearchBox.updateText(updatedValue);
+    const newValue = event.detail.value;
+    if (this.standaloneSearchBox?.state?.value !== newValue) {
+      this.standaloneSearchBox.updateText(newValue);
     }
   };
 
