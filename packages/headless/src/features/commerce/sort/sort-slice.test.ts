@@ -2,10 +2,10 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {SortBy, SortDirection} from '../../sort/sort';
 import {
+  SetContextActionCreatorPayload,
+  SetViewActionCreatorPayload,
   setContext,
-  SetContextPayload,
   setView,
-  SetViewPayload,
 } from '../context/context-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
@@ -122,7 +122,10 @@ describe('product-listing-sort-slice', () => {
     state.appliedSort = sort;
     state.availableSorts = [sort];
 
-    const finalState = sortReducer(state, setContext({} as SetContextPayload));
+    const finalState = sortReducer(
+      state,
+      setContext({} as SetContextActionCreatorPayload)
+    );
 
     expect(finalState).toStrictEqual(getCommerceSortInitialState());
   });
@@ -131,7 +134,10 @@ describe('product-listing-sort-slice', () => {
     state.appliedSort = sort;
     state.availableSorts = [sort];
 
-    const finalState = sortReducer(state, setView({} as SetViewPayload));
+    const finalState = sortReducer(
+      state,
+      setView({} as SetViewActionCreatorPayload)
+    );
 
     expect(finalState).toStrictEqual(getCommerceSortInitialState());
   });
