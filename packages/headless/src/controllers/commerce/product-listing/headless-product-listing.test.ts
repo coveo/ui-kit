@@ -98,7 +98,7 @@ describe('headless product-listing', () => {
     });
   });
 
-  it('refresh dispatches #fetchProductListing', () => {
+  it('#refresh dispatches #fetchProductListing', () => {
     const fetchProductListing = jest.spyOn(
       ProductListingActions,
       'fetchProductListing'
@@ -107,5 +107,16 @@ describe('headless product-listing', () => {
     productListing.refresh();
 
     expect(fetchProductListing).toHaveBeenCalled();
+  });
+
+  it('#executeFirstRequest dispatches #fetchProductListing', () => {
+    const executeRequest = jest.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+
+    productListing.executeFirstRequest();
+
+    expect(executeRequest).toHaveBeenCalled();
   });
 });

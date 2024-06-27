@@ -57,6 +57,11 @@ export interface ProductListing
   refresh(): void;
 
   /**
+   * Executes the first request if it has not been executed yet.
+   */
+  executeFirstRequest(): void;
+
+  /**
    * Finds the specified parent product and the specified child product of that parent, and makes that child the new
    * parent. The `children` and `totalNumberOfChildren` properties of the original parent are preserved in the new
    * parent.
@@ -124,10 +129,6 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     ...controller,
     ...subControllers,
 
-    promoteChildToParent(child: ChildProduct) {
-      dispatch(promoteChildToParent({child}));
-    },
-
     get state() {
       const {products, error, isLoading, responseId} =
         getState().productListing;
@@ -139,7 +140,21 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       };
     },
 
+    promoteChildToParent(child: ChildProduct) {
+      dispatch(promoteChildToParent({child}));
+    },
+
     refresh: () => dispatch(fetchProductListing()),
+
+    executeFirstRequest() {
+      const firstRequestExecuted = responseIdSelector(getState()) !== '';
+
+      if (firstRequestExecuted) {
+        return;
+      }
+
+      dispatch(fetchProductListing());
+    },
   };
 }
 
