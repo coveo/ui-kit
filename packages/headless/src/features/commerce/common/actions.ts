@@ -6,6 +6,7 @@ import {
   CommerceAPIRequest,
 } from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {
   CartSection,
   CommerceContextSection,
@@ -35,10 +36,11 @@ export interface QueryCommerceAPIThunkReturn {
 
 export const buildCommerceAPIRequest = (
   state: ListingAndSearchStateNeededByQueryCommerceAPI,
-  relay: Relay
+  relay: Relay,
+  navigatorContext: NavigatorContext
 ): CommerceAPIRequest => {
   return {
-    ...buildBaseCommerceAPIRequest(state, relay),
+    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -49,9 +51,10 @@ export const buildCommerceAPIRequest = (
 export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
   relay: Relay,
+  navigatorContext: NavigatorContext,
   slotId?: string
 ): BaseCommerceAPIRequest => {
-  const {view, user, ...restOfContext} = state.commerceContext;
+  const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
@@ -60,8 +63,19 @@ export const buildBaseCommerceAPIRequest = (
     ...restOfContext,
     clientId: relay.getMeta('').clientId,
     context: {
-      user,
-      view,
+      ...(navigatorContext.userAgent
+        ? {
+            user: {
+              userAgent: navigatorContext.userAgent,
+            },
+          }
+        : {}),
+      view: {
+        ...view,
+        ...(navigatorContext.referrer
+          ? {referrer: navigatorContext.referrer}
+          : {}),
+      },
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),
