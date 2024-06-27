@@ -81,6 +81,7 @@ export interface GeneratedAnswer extends Controller {
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
+  // TODO: Update feedback type, to change in TODO: SFINT-5585
   sendFeedback(
     feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
   ): void;

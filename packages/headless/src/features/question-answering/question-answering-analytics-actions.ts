@@ -66,7 +66,7 @@ export const logLikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeLikeSmartSnippet();
     },
-    analyticsType: 'Qna.SubmitFeedback',
+    analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
         action: 'like',
@@ -84,7 +84,7 @@ export const logDislikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeDislikeSmartSnippet();
     },
-    analyticsType: 'Qna.SubmitFeedback',
+    analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
         action: 'dislike',
@@ -182,7 +182,7 @@ export const logSmartSnippetFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason(feedback);
     },
-    analyticsType: 'Qna.SubmitFeedback',
+    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
       return {
         answer: {
@@ -204,7 +204,7 @@ export const logSmartSnippetDetailedFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason('other', details);
     },
-    analyticsType: 'Qna.SubmitFeedback',
+    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
     analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
       return {
         answer: {

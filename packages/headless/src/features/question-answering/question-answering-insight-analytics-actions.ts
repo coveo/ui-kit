@@ -89,7 +89,7 @@ export const logDislikeSmartSnippet = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
+    analyticsType: 'Qna.AnswerAction',
     analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
         action: 'dislike',

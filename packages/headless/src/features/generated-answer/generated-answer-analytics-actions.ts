@@ -212,10 +212,10 @@ export const logGeneratedAnswerFeedback = (
             helpful,
             readable,
             documented,
-            hallucinationFree,
-            correctTopic,
             details,
-            documentUrl,
+            hallucinationFree: hallucination_free,
+            correctTopic: correct_topic,
+            documentUrl: document_url,
           } = feedback;
           return {
             answer: {
@@ -226,9 +226,9 @@ export const logGeneratedAnswerFeedback = (
               readable,
               documented,
               details,
-              hallucination_free: hallucinationFree,
-              correct_topic: correctTopic,
-              document_url: documentUrl,
+              hallucination_free,
+              correct_topic,
+              document_url,
             },
           };
         }

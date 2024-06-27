@@ -28,7 +28,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 
 exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logDislikeSmartSnippet with the case payload 1`] = `
 [
-  "Qna.SubmitFeedback",
+  "Qna.AnswerAction",
   {
     "action": "dislike",
     "answer": {

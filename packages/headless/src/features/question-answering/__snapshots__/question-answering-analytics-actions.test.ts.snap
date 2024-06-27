@@ -28,7 +28,7 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
 
 exports[`question answering analytics actions when analyticsMode is \`next\` should log #logDislikeSmartSnippet with the case payload 1`] = `
 [
-  "Qna.SubmitFeedback",
+  "Qna.AnswerAction",
   {
     "action": "dislike",
     "answer": {
@@ -67,7 +67,7 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
 
 exports[`question answering analytics actions when analyticsMode is \`next\` should log #logLikeSmartSnippet with the case payload 1`] = `
 [
-  "Qna.SubmitFeedback",
+  "Qna.AnswerAction",
   {
     "action": "like",
     "answer": {
@@ -144,7 +144,7 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
 
 exports[`question answering analytics actions when analyticsMode is \`next\` should log #logSmartSnippetDetailedFeedback with the right payload 1`] = `
 [
-  "Qna.SubmitFeedback",
+  "Qna.SubmitSmartSnippetFeedback",
   {
     "answer": {
       "responseId": "456",
@@ -159,7 +159,7 @@ exports[`question answering analytics actions when analyticsMode is \`next\` sho
 
 exports[`question answering analytics actions when analyticsMode is \`next\` should log #logSmartSnippetFeedback with the right payload 1`] = `
 [
-  "Qna.SubmitFeedback",
+  "Qna.SubmitSmartSnippetFeedback",
   {
     "answer": {
       "responseId": "456",

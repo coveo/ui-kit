@@ -6,35 +6,17 @@ import {
 import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {
+  GeneratedAnswerFeedback,
+  GeneratedAnswerFeedbackV2,
+  isGeneratedAnswerFeedbackV2,
+} from './generated-answer-analytics-actions';
+import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
 import {GeneratedResponseFormat} from './generated-response-format';
 
-export type GeneratedAnswerFeedback =
-  | 'irrelevant'
-  | 'notAccurate'
-  | 'outOfDate'
-  | 'harmful';
-
-export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
-
-export type GeneratedAnswerFeedbackV2 = {
-  helpful: boolean;
-  documented: GeneratedAnswerFeedbackOption;
-  correctTopic: GeneratedAnswerFeedbackOption;
-  hallucinationFree: GeneratedAnswerFeedbackOption;
-  readable: GeneratedAnswerFeedbackOption;
-  details?: string;
-  documentUrl?: string;
-};
 const RGAType = 'RGA';
-
-export function isGeneratedAnswerFeedbackV2(
-  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
-): feedback is GeneratedAnswerFeedbackV2 {
-  return typeof feedback === 'object';
-}
 
 //TODO: SFINT-5435
 export const logRetryGeneratedAnswer = (): InsightAction =>
@@ -248,10 +230,10 @@ export const logGeneratedAnswerFeedback = (
             helpful,
             readable,
             documented,
-            hallucinationFree,
-            correctTopic,
             details,
-            documentUrl,
+            hallucinationFree: hallucination_free,
+            correctTopic: correct_topic,
+            documentUrl: document_url,
           } = feedback;
           return {
             answer: {
@@ -262,9 +244,9 @@ export const logGeneratedAnswerFeedback = (
               readable,
               documented,
               details,
-              hallucination_free: hallucinationFree,
-              correct_topic: correctTopic,
-              document_url: documentUrl,
+              hallucination_free,
+              correct_topic,
+              document_url,
             },
           };
         }
