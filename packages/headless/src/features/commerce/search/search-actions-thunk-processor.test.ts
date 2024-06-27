@@ -52,7 +52,11 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       response,
       duration: 123,
       queryExecuted: 'foo',
-      requestExecuted: buildCommerceAPIRequest(state, config.extra.relay),
+      requestExecuted: buildCommerceAPIRequest(
+        state,
+        config.extra.relay,
+        config.extra.navigatorContext
+      ),
     };
     return processor.process(fetched);
   }
