@@ -38,7 +38,7 @@ import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {setContext, setUser, setView} from '../../context/context-actions';
+import {setContext, setView} from '../../context/context-actions';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
@@ -2470,10 +2470,6 @@ describe('commerceFacetSetReducer', () => {
     {
       actionName: '#setView',
       action: setView,
-    },
-    {
-      actionName: '#setUser',
-      action: setUser,
     },
   ])('$actionName', ({action}: {action: ActionCreator}) => {
     it('clears all facets values', () => {

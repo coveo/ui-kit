@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, setUser, setView} from '../context/context-actions';
+import {setContext, setView} from '../context/context-actions';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
 import {
   clearAllCoreFacets,
@@ -118,8 +118,7 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectCategoryFacetValue, handlePaginationReset)
       .addCase(applySort, handlePaginationReset)
       .addCase(setContext, handlePaginationReset)
-      .addCase(setView, handlePaginationReset)
-      .addCase(setUser, handlePaginationReset);
+      .addCase(setView, handlePaginationReset);
   }
 );
 

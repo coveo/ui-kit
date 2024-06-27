@@ -1,7 +1,7 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {setContext, setUser, setView} from '../context/context-actions';
+import {setContext, setView} from '../context/context-actions';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
 import {
   clearAllCoreFacets,
@@ -300,10 +300,6 @@ describe('pagination slice', () => {
     {
       actionName: '#setView',
       action: setView,
-    },
-    {
-      actionName: '#setUser',
-      action: setUser,
     },
   ])('$actionName', ({action}) => {
     it('resets principal pagination', () => {
