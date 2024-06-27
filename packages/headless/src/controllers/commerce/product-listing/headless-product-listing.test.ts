@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {
@@ -88,14 +89,12 @@ describe('headless product-listing', () => {
       ProductListingActions,
       'promoteChildToParent'
     );
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
-    productListing.promoteChildToParent(childPermanentId, parentPermanentId);
+    productListing.promoteChildToParent(child);
 
     expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
+      child,
     });
   });
 
