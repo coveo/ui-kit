@@ -62,7 +62,7 @@ export interface Search extends Controller, SearchSubControllers {
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
    * it can be rendered as a nested product, and restored as the parent product through this method as needed.
    *
-   * @param child The product that will become the new parent.
+   * @param child The child product that will become the new parent.
    */
   promoteChildToParent(child: ChildProduct): void;
 
