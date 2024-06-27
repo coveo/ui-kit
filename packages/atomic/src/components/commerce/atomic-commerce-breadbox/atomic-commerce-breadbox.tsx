@@ -13,6 +13,7 @@ import {
   DateFacetValue,
   Breadcrumb,
   CategoryFacetValue,
+  BreadcrumbValue,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -32,6 +33,12 @@ import {
 } from '../../common/breadbox/breadbox';
 import {Hidden} from '../../common/hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+
+type AnyFacetValue =
+  | RegularFacetValue
+  | NumericFacetValue
+  | DateFacetValue
+  | CategoryFacetValue;
 
 /**
  * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -234,189 +241,113 @@ export class AtomicCommerceBreadbox
       })
     );
   }
-  private get facetBreadcrumbs(): IBreadcrumb[] {
-    return (
-      this.breadcrumbManagerState.facetBreadcrumbs.filter(
-        ({facetId, type}) =>
-          this.bindings.store.state.facets[facetId] && type === 'regular'
-      ) as Breadcrumb<RegularFacetValue>[]
-    )
-      .map(({facetId, field, values, type}) =>
-        values.map((value) => ({value, facetId, field, type}))
-      )
-      .flat()
-      .map(({value, facetId, field}) => ({
-        facetId,
-        label: this.bindings.store.state.facets[facetId]?.label(),
-        state: value.value.state,
-        deselect: value.deselect,
-        formattedValue: [
-          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
-        ],
-      }));
-  }
 
-  private get categoryFacetBreadcrumbs(): IBreadcrumb[] {
-    return (
-      this.breadcrumbManagerState.facetBreadcrumbs.filter(
-        ({facetId, type, values}) => {
-          return (
-            values.length > 0 &&
-            this.bindings.store.state.categoryFacets[facetId] &&
-            type === 'hierarchical'
-          );
-        }
-      ) as Breadcrumb<CategoryFacetValue>[]
-    ).map(({facetId, field, values}) => {
-      const deselectAll = () => {
-        values.forEach((value) => value.deselect());
-      };
+  private valueForFacetType = (
+    type: string,
+    field: string,
+    value: BreadcrumbValue<AnyFacetValue>
+  ): string => {
+    switch (type) {
+      case 'numericalRange':
+        return this.bindings.store.state.numericFacets[field].format(
+          value.value as NumericFacetValue
+        );
+      case 'dateRange':
+        return this.bindings.store.state.dateFacets[field].format(
+          value.value as DateFacetValue
+        );
+      case 'hierarchical':
+        return getFieldValueCaption(
+          field,
+          (value.value as CategoryFacetValue).value,
+          this.bindings.i18n
+        );
+      default:
+        return getFieldValueCaption(
+          field,
+          (value.value as RegularFacetValue).value,
+          this.bindings.i18n
+        );
+    }
+  };
+
+  private buildBreadcrumb(breadcrumb: Breadcrumb<AnyFacetValue>) {
+    let facetStateName:
+      | 'facets'
+      | 'categoryFacets'
+      | 'numericFacets'
+      | 'dateFacets';
+
+    switch (breadcrumb.type) {
+      case 'hierarchical':
+        facetStateName = 'categoryFacets';
+        break;
+      case 'numericalRange':
+        facetStateName = 'numericFacets';
+        break;
+      case 'dateRange':
+        facetStateName = 'dateFacets';
+        break;
+      default:
+        facetStateName = 'facets';
+    }
+
+    return breadcrumb.values.map((value) => {
       return {
-        facetId,
-        label: this.bindings.store.state.categoryFacets[facetId].label(),
-        deselect: deselectAll,
-        formattedValue: values.map((pathValue) =>
-          getFieldValueCaption(field, pathValue.value.value, this.bindings.i18n)
-        ),
-      };
-    });
-  }
-
-  private get numericFacetBreadcrumbs(): IBreadcrumb[] {
-    return (
-      this.breadcrumbManagerState.facetBreadcrumbs.filter(
-        ({facetId, type}) =>
-          this.bindings.store.state.numericFacets[facetId] &&
-          type === 'numericalRange'
-      ) as Breadcrumb<NumericFacetValue>[]
-    )
-      .map(({facetId, field, values, type}) =>
-        values.map((value) => ({value, facetId, field, type}))
-      )
-      .flat()
-      .map(({value, facetId}) => ({
-        facetId,
-        label: this.bindings.store.state.numericFacets[facetId].label(),
-        state: value.value.state,
+        facetId: breadcrumb.facetId,
+        label:
+          this.bindings.store.state[facetStateName][
+            breadcrumb.facetId
+          ]?.label(),
         deselect: value.deselect,
         formattedValue: [
-          this.bindings.store.state.numericFacets[facetId].format(value.value),
-        ],
-        content: this.bindings.store.state.numericFacets[facetId].content?.(
-          value.value
-        ),
-      }));
-  }
-
-  private get dateFacetBreadcrumbs(): IBreadcrumb[] {
-    return (
-      this.breadcrumbManagerState.facetBreadcrumbs.filter(
-        ({facetId, type}) =>
-          this.bindings.store.state.dateFacets[facetId] && type === 'dateRange'
-      ) as Breadcrumb<DateFacetValue>[]
-    )
-      .map(({facetId, field, values, type}) =>
-        values.map((value) => ({value, facetId, field, type}))
-      )
-      .flat()
-      .map(({value, facetId}) => ({
-        facetId,
-        label: this.bindings.store.state.dateFacets[facetId].label(),
-        state: value.value.state,
-        deselect: value.deselect,
-        formattedValue: [
-          this.bindings.store.state.dateFacets[facetId].format(
-            value.value as DateFacetValue
+          this.valueForFacetType(
+            breadcrumb.type,
+            breadcrumb.facetId,
+            value as BreadcrumbValue<AnyFacetValue>
           ),
         ],
-      }));
-  }
-
-  private get allBreadcrumbs(): IBreadcrumb[] {
-    return [
-      ...this.facetBreadcrumbs,
-      ...this.categoryFacetBreadcrumbs,
-      ...this.numericFacetBreadcrumbs,
-      ...this.dateFacetBreadcrumbs,
-    ];
-  }
-
-  private renderBreadcrumbs(allBreadcrumbs: IBreadcrumb[]) {
-    const sortedBreadcrumbs = allBreadcrumbs.sort((a, b) => {
-      const indexA = this.facetGenerator.state.indexOf(a.facetId);
-      const indexB = this.facetGenerator.state.indexOf(b.facetId);
-      return indexA - indexB;
+      };
     });
-    this.numberOfBreadcrumbs = sortedBreadcrumbs.length;
+  }
 
-    return [
-      sortedBreadcrumbs.map((breadcrumb, index) => {
-        const isLastBreadcrumb = this.allBreadcrumbs.length === 1;
-        return (
-          <BreadcrumbButton
-            pathLimit={this.pathLimit}
-            focusTargets={this.focusTargets}
-            lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
-            firstExpandedBreadcrumbIndex={this.firstExpandedBreadcrumbIndex}
-            breadcrumb={breadcrumb}
-            onSelectBreadcrumb={() => {
-              if (isLastBreadcrumb) {
-                this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-              } else if (this.numberOfBreadcrumbs > 1) {
-                this.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
-              }
+  private renderBreadcrumbs(breadcrumbs: IBreadcrumb[]) {
+    this.numberOfBreadcrumbs = breadcrumbs.length;
 
-              this.lastRemovedBreadcrumbIndex = index;
-              breadcrumb.deselect();
-            }}
-            index={index}
-            bindings={this.bindings}
-          ></BreadcrumbButton>
-        );
-      }),
-      <BreadcrumbShowMore
-        setRef={(el) => {
-          this.showMore = el;
-        }}
-        onShowMore={() => {
-          this.firstExpandedBreadcrumbIndex =
-            this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-          this.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
-          this.isCollapsed = false;
-        }}
-        isCollapsed={this.isCollapsed}
-        bindings={this.bindings}
-        numberOfCollapsedBreadcrumbs={this.numberOfCollapsedBreadcrumbs}
-      ></BreadcrumbShowMore>,
-      <BreadcrumbShowLess
-        setRef={(el) => {
-          this.showLess = el;
-        }}
-        onShowLess={() => {
-          this.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
-          this.isCollapsed = true;
-        }}
-        isCollapsed={this.isCollapsed}
-        bindings={this.bindings}
-      ></BreadcrumbShowLess>,
-      <BreadcrumbClearAll
-        onClick={async () => {
-          this.breadcrumbManager.deselectAll();
-          this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-        }}
-        numberOfBreadcrumbs={this.numberOfBreadcrumbs}
-        focusTargets={this.focusTargets}
-        isCollapsed={this.isCollapsed}
-        bindings={this.bindings}
-        lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
-      ></BreadcrumbClearAll>,
-    ];
+    return breadcrumbs.map((breadcrumb, index) => {
+      const isLastBreadcrumb = breadcrumbs.length === 1;
+      return (
+        <BreadcrumbButton
+          pathLimit={this.pathLimit}
+          focusTargets={this.focusTargets}
+          lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
+          firstExpandedBreadcrumbIndex={this.firstExpandedBreadcrumbIndex}
+          breadcrumb={breadcrumb}
+          onSelectBreadcrumb={() => {
+            if (isLastBreadcrumb) {
+              this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+            } else if (this.numberOfBreadcrumbs > 1) {
+              this.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
+            }
+
+            this.lastRemovedBreadcrumbIndex = index;
+            breadcrumb.deselect();
+          }}
+          index={index}
+          bindings={this.bindings}
+        ></BreadcrumbButton>
+      );
+    });
   }
 
   public render() {
-    const allBreadcrumbs = this.allBreadcrumbs;
+    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs
+      .map((breadcrumb) => {
+        return this.buildBreadcrumb(breadcrumb);
+      })
+      .flat();
 
-    if (!allBreadcrumbs.length) {
+    if (!breadcrumbs.length) {
       return <Hidden></Hidden>;
     }
     return (
@@ -424,7 +355,45 @@ export class AtomicCommerceBreadbox
         isCollapsed={this.isCollapsed}
         bindings={this.bindings}
       >
-        {this.renderBreadcrumbs(allBreadcrumbs)}
+        {this.renderBreadcrumbs(breadcrumbs)}
+        <BreadcrumbShowMore
+          setRef={(el) => {
+            this.showMore = el;
+          }}
+          onShowMore={() => {
+            this.firstExpandedBreadcrumbIndex =
+              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+            this.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.isCollapsed = false;
+          }}
+          isCollapsed={this.isCollapsed}
+          bindings={this.bindings}
+          numberOfCollapsedBreadcrumbs={this.numberOfCollapsedBreadcrumbs}
+        ></BreadcrumbShowMore>
+
+        <BreadcrumbShowLess
+          setRef={(el) => {
+            this.showLess = el;
+          }}
+          onShowLess={() => {
+            this.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
+            this.isCollapsed = true;
+          }}
+          isCollapsed={this.isCollapsed}
+          bindings={this.bindings}
+        ></BreadcrumbShowLess>
+
+        <BreadcrumbClearAll
+          onClick={async () => {
+            this.breadcrumbManager.deselectAll();
+            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+          }}
+          numberOfBreadcrumbs={this.numberOfBreadcrumbs}
+          focusTargets={this.focusTargets}
+          isCollapsed={this.isCollapsed}
+          bindings={this.bindings}
+          lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
+        ></BreadcrumbClearAll>
       </BreadcrumbContainer>
     );
   }
