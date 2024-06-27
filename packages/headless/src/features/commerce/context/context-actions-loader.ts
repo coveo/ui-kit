@@ -2,18 +2,13 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   SetContextActionCreatorPayload,
-  SetUserActionCreatorPayload,
   SetViewActionCreatorPayload,
   setContext,
   setView,
 } from './context-actions';
 import {contextReducer as commerceContext} from './context-slice';
 
-export type {
-  SetContextActionCreatorPayload,
-  SetUserActionCreatorPayload,
-  SetViewActionCreatorPayload,
-};
+export type {SetContextActionCreatorPayload, SetViewActionCreatorPayload};
 
 /**
  * The context action creators.
