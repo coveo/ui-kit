@@ -14,7 +14,7 @@ export interface BreadcrumbContentProps {
 export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
   props
 ) => {
-  const value = getFirstBreadcrumbValue(props.breadcrumb);
+  const value = getFirstBreadcrumbValue(props.breadcrumb, props.pathLimit);
   const isExclusion = props.breadcrumb.state === 'excluded';
   const activeColor = isExclusion ? 'error' : 'primary';
   return (

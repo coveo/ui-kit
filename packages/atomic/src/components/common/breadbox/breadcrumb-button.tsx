@@ -29,7 +29,7 @@ export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
   ];
 
   const fullValue = joinBreadcrumbValues(props.breadcrumb);
-  const value = getFirstBreadcrumbValue(props.breadcrumb);
+  const value = getFirstBreadcrumbValue(props.breadcrumb, props.pathLimit);
   const title = `${props.breadcrumb.label}: ${fullValue}`;
   const isExclusion = props.breadcrumb.state === 'excluded';
 
