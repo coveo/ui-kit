@@ -2,17 +2,22 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions';
 import {
-  UpdateIgnoreQueryTriggerActionCreator,
+  UpdateIgnoreQueryTriggerPayload,
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
 } from './triggers-actions';
 import {commerceTriggersReducer as triggers} from './triggers-slice';
 
 export type {
-  UpdateIgnoreQueryTriggerActionCreator,
+  UpdateIgnoreQueryTriggerPayload,
   ApplyQueryTriggerModificationPayload,
 };
 
+/**
+ * The triggers action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ */
 export interface TriggersActionCreators {
   /**
    * Updates the query to ignore the query trigger.
@@ -21,8 +26,8 @@ export interface TriggersActionCreators {
    * @returns A dispatchable action.
    * */
   updateIgnoreQueryTrigger(
-    payload: UpdateIgnoreQueryTriggerActionCreator
-  ): PayloadAction<UpdateIgnoreQueryTriggerActionCreator>;
+    payload: UpdateIgnoreQueryTriggerPayload
+  ): PayloadAction<UpdateIgnoreQueryTriggerPayload>;
 
   /**
    * Applies a query trigger modification.
@@ -36,7 +41,7 @@ export interface TriggersActionCreators {
 }
 
 /**
- * Loads the triggers reducer and returns the possible triggers actions.
+ * Loads the commerce triggers reducer and returns the available triggers action creators.
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the triggers actions.

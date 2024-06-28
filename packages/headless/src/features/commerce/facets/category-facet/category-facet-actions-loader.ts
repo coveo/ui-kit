@@ -1,46 +1,47 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  ToggleSelectCategoryFacetValueActionCreatorPayload,
-  UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
+  ToggleSelectCategoryFacetValuePayload,
+  UpdateCategoryFacetNumberOfValuesPayload,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from './category-facet-actions';
 
-export type {UpdateCategoryFacetNumberOfValuesActionCreatorPayload};
+export type {
+  ToggleSelectCategoryFacetValuePayload,
+  UpdateCategoryFacetNumberOfValuesPayload,
+};
 
 /**
- * The category facet set action creators.
+ * The category facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CategoryFacetSetActionCreators {
   /**
-   * Toggles the selection of a category facet value.
+   * Toggles the selection of a given category facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   toggleSelectCategoryFacetValue(
-    payload: ToggleSelectCategoryFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectCategoryFacetValueActionCreatorPayload>;
+    payload: ToggleSelectCategoryFacetValuePayload
+  ): PayloadAction<ToggleSelectCategoryFacetValuePayload>;
 
   /**
-   * Updates the number of values to display in a category facet.
+   * Updates the number of values to request for a given category facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   updateCategoryFacetNumberOfValues(
-    payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload
-  ): PayloadAction<UpdateCategoryFacetNumberOfValuesActionCreatorPayload>;
+    payload: UpdateCategoryFacetNumberOfValuesPayload
+  ): PayloadAction<UpdateCategoryFacetNumberOfValuesPayload>;
 }
 
 /**
- * Loads the commerce facet set reducer and returns the possible category facet actions.
+ * Loads the commerce facet set reducer and returns the available category facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

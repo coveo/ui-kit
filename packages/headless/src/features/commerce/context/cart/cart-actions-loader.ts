@@ -5,20 +5,16 @@ import {
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
 import {
-  PurchaseActionCreatorPayload,
-  SetItemsActionCreatorPayload,
-  UpdateItemQuantityActionCreatorPayload,
+  PurchasePayload,
+  SetItemsPayload,
+  UpdateItemQuantityPayload,
   purchase,
   setItems,
   updateItemQuantity,
 } from './cart-actions';
 import {cartReducer as cart} from './cart-slice';
 
-export type {
-  PurchaseActionCreatorPayload,
-  SetItemsActionCreatorPayload,
-  UpdateItemQuantityActionCreatorPayload,
-};
+export type {PurchasePayload, SetItemsPayload, UpdateItemQuantityPayload};
 
 /**
  * The cart action creators.
@@ -32,10 +28,10 @@ export interface CartActionCreators {
    * @param payload - The action creator payload.
    */
   purchase(
-    payload: PurchaseActionCreatorPayload
+    payload: PurchasePayload
   ): AsyncThunkAction<
     void,
-    PurchaseActionCreatorPayload,
+    PurchasePayload,
     AsyncThunkCommerceOptions<CommerceEngineState>
   >;
 
@@ -46,9 +42,7 @@ export interface CartActionCreators {
    *
    * @param payload - The action creator payload.
    */
-  setItems(
-    payload: SetItemsActionCreatorPayload
-  ): PayloadAction<SetItemsActionCreatorPayload>;
+  setItems(payload: SetItemsPayload): PayloadAction<SetItemsPayload>;
 
   /**
    * Updates the quantity of an item in the cart.
@@ -56,10 +50,18 @@ export interface CartActionCreators {
    * @param payload - The action creator payload.
    */
   updateItemQuantity(
-    payload: UpdateItemQuantityActionCreatorPayload
-  ): PayloadAction<UpdateItemQuantityActionCreatorPayload>;
+    payload: UpdateItemQuantityPayload
+  ): PayloadAction<UpdateItemQuantityPayload>;
 }
 
+/**
+ * Loads the commerce cart reducer and returns the available cart action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The commerce engine.
+ * @returns An object holding the cart action creators.
+ */
 export function loadCartActions(engine: CommerceEngine): CartActionCreators {
   engine.addReducers({cart});
   return {

@@ -11,24 +11,24 @@ import {
 } from '../../../facets/facet-set/facet-set-actions';
 import {UpdateFacetAutoSelectionActionCreatorPayload} from '../../../facets/generic/facet-actions';
 
-export type UpdateCoreFacetNumberOfValuesActionCreatorPayload =
+export type UpdateCoreFacetNumberOfValuesPayload =
   UpdateFacetNumberOfValuesActionCreatorPayload;
 
 export const updateCoreFacetNumberOfValues = createAction(
   'commerce/facets/core/updateNumberOfValues',
-  (payload: UpdateCoreFacetNumberOfValuesActionCreatorPayload) =>
+  (payload: UpdateCoreFacetNumberOfValuesPayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       numberOfValues: new NumberValue({required: true, min: 1}),
     })
 );
 
-export type UpdateCoreFacetIsFieldExpandedActionCreatorPayload =
+export type UpdateCoreFacetIsFieldExpandedPayload =
   UpdateFacetIsFieldExpandedActionCreatorPayload;
 
 export const updateCoreFacetIsFieldExpanded = createAction(
   'commerce/facets/core/updateIsFieldExpanded',
-  (payload: UpdateCoreFacetIsFieldExpandedActionCreatorPayload) =>
+  (payload: UpdateCoreFacetIsFieldExpandedPayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       isFieldExpanded: new BooleanValue({required: true}),
@@ -37,7 +37,7 @@ export const updateCoreFacetIsFieldExpanded = createAction(
 
 export const clearAllCoreFacets = createAction('commerce/facets/core/clearAll');
 
-export type DeselectAllValuesInCoreFacetActionCreatorPayload = {
+export type DeselectAllValuesInCoreFacetPayload = {
   /**
    * The unique identifier of the facet (e.g., `"1"`).
    */
@@ -46,30 +46,30 @@ export type DeselectAllValuesInCoreFacetActionCreatorPayload = {
 
 export const deselectAllValuesInCoreFacet = createAction(
   'commerce/facets/core/deselectAllValues',
-  (payload: DeselectAllValuesInCoreFacetActionCreatorPayload) =>
+  (payload: DeselectAllValuesInCoreFacetPayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
     })
 );
 
-export type UpdateCoreFacetFreezeCurrentValuesActionCreatorPayload =
+export type UpdateCoreFacetFreezeCurrentValuesPayload =
   UpdateFreezeCurrentValuesActionCreatorPayload;
 
 export const updateCoreFacetFreezeCurrentValues = createAction(
   'commerce/facets/core/updateFreezeCurrentValues',
-  (payload: UpdateCoreFacetFreezeCurrentValuesActionCreatorPayload) =>
+  (payload: UpdateCoreFacetFreezeCurrentValuesPayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       freezeCurrentValues: new BooleanValue({required: true}),
     })
 );
 
-export type UpdateAutoSelectionForAllCoreFacetsActionCreatorPayload =
+export type UpdateAutoSelectionForAllCoreFacetsPayload =
   UpdateFacetAutoSelectionActionCreatorPayload;
 
 export const updateAutoSelectionForAllCoreFacets = createAction(
   'commerce/facets/core/updateAutoSelectionForAll',
-  (payload: UpdateAutoSelectionForAllCoreFacetsActionCreatorPayload) =>
+  (payload: UpdateAutoSelectionForAllCoreFacetsPayload) =>
     validatePayload(payload, {
       allow: new BooleanValue({required: true}),
     })

@@ -1,9 +1,10 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {BooleanValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {validatePayload} from '../../../utils/validate-payload';
 import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
@@ -15,10 +16,7 @@ import {
 } from '../facets/core-facet/core-facet-actions';
 import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
-import {
-  UpdateQueryActionCreatorPayload,
-  updateQuery,
-} from '../query/query-actions';
+import {UpdateQueryPayload, updateQuery} from '../query/query-actions';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
@@ -46,7 +44,7 @@ export interface PrepareForSearchWithQueryOptions {
   clearFilters: boolean;
 }
 
-export interface FetchInstantProductsActionCreatorPayload {
+export interface FetchInstantProductsPayload {
   /**
    * The search box ID.
    */
@@ -119,12 +117,12 @@ export const fetchMoreProducts = createAsyncThunk<
   return processor.process(fetchedResponse);
 });
 
-export type PrepareForSearchWithQueryActionCreatorPayload =
-  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions;
+export type PrepareForSearchWithQueryPayload = UpdateQueryPayload &
+  PrepareForSearchWithQueryOptions;
 
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
-  PrepareForSearchWithQueryActionCreatorPayload,
+  PrepareForSearchWithQueryPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
@@ -149,7 +147,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 
 export const fetchInstantProducts = createAsyncThunk<
   FetchInstantProductsThunkReturn,
-  FetchInstantProductsActionCreatorPayload,
+  FetchInstantProductsPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/fetchInstantProducts',
@@ -179,13 +177,16 @@ export const fetchInstantProducts = createAsyncThunk<
 );
 
 export interface PromoteChildToParentActionCreatorPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
 };
 
 export const promoteChildToParent = createAction(

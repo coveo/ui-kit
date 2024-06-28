@@ -1,62 +1,60 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  ToggleSelectDateFacetValueActionCreatorPayload,
-  UpdateDateFacetValuesActionCreatorPayload,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
-  ToggleExcludeDateFacetValueActionCreatorPayload,
+  ToggleExcludeDateFacetValuePayload,
+  ToggleSelectDateFacetValuePayload,
+  UpdateDateFacetValuesPayload,
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from './date-facet-actions';
 
 /**
- * The date facet set action creators.
+ * The date facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export type {
-  ToggleSelectDateFacetValueActionCreatorPayload,
-  ToggleExcludeDateFacetValueActionCreatorPayload,
-  UpdateDateFacetValuesActionCreatorPayload,
+  ToggleSelectDateFacetValuePayload,
+  ToggleExcludeDateFacetValuePayload,
+  UpdateDateFacetValuesPayload,
 };
 
 export interface DateFacetActionCreators {
   /**
-   * Toggles the selection state of a date facet value.
+   * Toggles the selection state of a given date facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   toggleSelectDateFacetValue(
-    payload: ToggleSelectDateFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectDateFacetValueActionCreatorPayload>;
+    payload: ToggleSelectDateFacetValuePayload
+  ): PayloadAction<ToggleSelectDateFacetValuePayload>;
 
   /**
-   * Toggles the exclusion state of a date facet value.
+   * Toggles the exclusion state of a given date facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   toggleExcludeDateFacetValue(
-    payload: ToggleExcludeDateFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleExcludeDateFacetValueActionCreatorPayload>;
+    payload: ToggleExcludeDateFacetValuePayload
+  ): PayloadAction<ToggleExcludeDateFacetValuePayload>;
 
   /**
-   * Updates the date facet values.
+   * Updates all values in a given date facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   updateDateFacetValues(
-    payload: UpdateDateFacetValuesActionCreatorPayload
-  ): PayloadAction<UpdateDateFacetValuesActionCreatorPayload>;
+    payload: UpdateDateFacetValuesPayload
+  ): PayloadAction<UpdateDateFacetValuesPayload>;
 }
 
 /**
- * Loads the commerce facet set reducer and returns the possible date facet actions.
+ * Loads the commerce facet set reducer and returns the available date facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

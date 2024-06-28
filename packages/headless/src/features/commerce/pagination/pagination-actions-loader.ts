@@ -1,11 +1,11 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  RegisterRecommendationsSlotPaginationActionCreatorPayload,
-  NextPageActionCreatorPayload,
-  PreviousPageActionCreatorPayload,
-  SelectPageActionCreatorPayload,
-  SetPageSizeActionCreatorPayload,
+  RegisterRecommendationsSlotPaginationPayload,
+  NextPagePayload,
+  PreviousPagePayload,
+  SelectPagePayload,
+  SetPageSizePayload,
   previousPage,
   nextPage,
   selectPage,
@@ -15,11 +15,11 @@ import {
 import {paginationReducer as commercePagination} from './pagination-slice';
 
 export type {
-  RegisterRecommendationsSlotPaginationActionCreatorPayload,
-  SetPageSizeActionCreatorPayload,
-  SelectPageActionCreatorPayload,
-  NextPageActionCreatorPayload,
-  PreviousPageActionCreatorPayload,
+  RegisterRecommendationsSlotPaginationPayload,
+  SetPageSizePayload,
+  SelectPagePayload,
+  NextPagePayload,
+  PreviousPagePayload,
 };
 
 /**
@@ -35,8 +35,8 @@ export interface PaginationActionCreators {
    * @returns A dispatchable action.
    */
   registerRecommendationsSlotPagination(
-    payload: RegisterRecommendationsSlotPaginationActionCreatorPayload
-  ): PayloadAction<RegisterRecommendationsSlotPaginationActionCreatorPayload>;
+    payload: RegisterRecommendationsSlotPaginationPayload
+  ): PayloadAction<RegisterRecommendationsSlotPaginationPayload>;
 
   /**
    * Sets the page size.
@@ -44,9 +44,7 @@ export interface PaginationActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setPageSize(
-    payload: SetPageSizeActionCreatorPayload
-  ): PayloadAction<SetPageSizeActionCreatorPayload>;
+  setPageSize(payload: SetPageSizePayload): PayloadAction<SetPageSizePayload>;
 
   /**
    * Selects a page.
@@ -54,9 +52,7 @@ export interface PaginationActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  selectPage(
-    payload: SelectPageActionCreatorPayload
-  ): PayloadAction<SelectPageActionCreatorPayload>;
+  selectPage(payload: SelectPagePayload): PayloadAction<SelectPagePayload>;
 
   /**
    * Selects the next page.
@@ -65,8 +61,8 @@ export interface PaginationActionCreators {
    * @returns A dispatchable action.
    */
   nextPage(
-    payload?: NextPageActionCreatorPayload
-  ): PayloadAction<NextPageActionCreatorPayload | undefined>;
+    payload?: NextPagePayload
+  ): PayloadAction<NextPagePayload | undefined>;
 
   /**
    * Selects the previous page.
@@ -75,10 +71,18 @@ export interface PaginationActionCreators {
    * @returns A dispatchable action.
    */
   previousPage(
-    payload?: PreviousPageActionCreatorPayload
-  ): PayloadAction<PreviousPageActionCreatorPayload | undefined>;
+    payload?: PreviousPagePayload
+  ): PayloadAction<PreviousPagePayload | undefined>;
 }
 
+/**
+ * Loads the commerce pagination reducer and returns the available pagination action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The commerce engine.
+ * @returns An object holding the pagination action creators.
+ */
 export function loadPaginationActions(
   engine: CommerceEngine
 ): PaginationActionCreators {

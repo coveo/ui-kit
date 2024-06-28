@@ -1,9 +1,9 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {ApplySortActionCreatorPayload, applySort} from './sort-actions';
+import {ApplySortPayload, applySort} from './sort-actions';
 import {sortReducer as commerceSort} from './sort-slice';
 
-export type {ApplySortActionCreatorPayload};
+export type {ApplySortPayload};
 
 /**
  * The sort action creators.
@@ -17,13 +17,11 @@ export interface SortActionCreators {
    * @param payload - The payload of the action.
    * @returns A dispatchable action.
    */
-  applySort(
-    payload: ApplySortActionCreatorPayload
-  ): PayloadAction<ApplySortActionCreatorPayload>;
+  applySort(payload: ApplySortPayload): PayloadAction<ApplySortPayload>;
 }
 
 /**
- * Loads the commerce sort reducer and returns the possible sort action creators.
+ * Loads the commerce sort reducer and returns the available sort action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

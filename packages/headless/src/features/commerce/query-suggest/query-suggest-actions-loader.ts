@@ -5,7 +5,6 @@ import {
   FetchQuerySuggestionsThunkReturn,
   StateNeededByQuerySuggest,
 } from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {querySetReducer as querySet} from '../../query-set/query-set-slice';
 import {
   ClearQuerySuggestActionCreatorPayload,
   RegisterQuerySuggestActionCreatorPayload,
@@ -33,6 +32,8 @@ export type BaseQuerySuggestActionCreators = Omit<
   'fetchQuerySuggestions'
 >;
 
+// TODO KIT-3350 - All query suggest actions should be commerce-specific.
+
 /**
  * The query suggest action creators for commerce.
  *
@@ -56,7 +57,7 @@ export interface CommerceQuerySuggestActionCreators
 }
 
 /**
- * Loads the `querySuggest` reducer and returns possible action creators.
+ * Loads the query suggest reducer and returns the available query suggest action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
@@ -66,7 +67,7 @@ export interface CommerceQuerySuggestActionCreators
 export function loadQuerySuggestActions(
   engine: CommerceEngine
 ): CommerceQuerySuggestActionCreators {
-  engine.addReducers({querySuggest, querySet});
+  engine.addReducers({querySuggest});
 
   return {
     clearQuerySuggest,

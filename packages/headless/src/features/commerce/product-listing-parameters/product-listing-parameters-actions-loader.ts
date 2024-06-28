@@ -5,14 +5,16 @@ import {commerceFacetSetReducer as commerceFacetSet} from '../facets/facet-set/f
 import {paginationReducer as commercePagination} from '../pagination/pagination-slice';
 import {sortReducer as commerceSort} from '../sort/sort-slice';
 import {
-  RestoreProductListingParametersActionCreatorPayload,
+  RestoreProductListingParametersPayload,
   restoreProductListingParameters,
 } from './product-listing-parameters-actions';
 
-export type {RestoreProductListingParametersActionCreatorPayload};
+export type {RestoreProductListingParametersPayload};
 
 /**
  * The product listing parameters action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ProductListingParametersActionCreators {
   /**
@@ -22,25 +24,26 @@ export interface ProductListingParametersActionCreators {
    * @returns A dispatchable action.
    */
   restoreProductListingParameters(
-    payload: RestoreProductListingParametersActionCreatorPayload
-  ): PayloadAction<RestoreProductListingParametersActionCreatorPayload>;
+    payload: RestoreProductListingParametersPayload
+  ): PayloadAction<RestoreProductListingParametersPayload>;
 }
 
 /**
- * Loads the product listing parameters reducers and returns the possible action creators.
+ * Loads the commerce facet order, facet set, pagination, and sort reducers and returns the available product listing parameters action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.
- * @returns An object holding the action creators.
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ * @returns An object holding the product listing parameters action creators.
  */
 export function loadProductListingParametersActions(
   engine: CommerceEngine
 ): ProductListingParametersActionCreators {
   engine.addReducers({
-    commerceSort,
     facetOrder,
     commerceFacetSet,
     commercePagination,
+    commerceSort,
   });
 
   return {

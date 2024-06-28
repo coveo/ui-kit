@@ -1,5 +1,6 @@
-import {StringValue} from '@coveo/bueno';
+import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {
   validatePayload,
   requiredEmptyAllowedString,
@@ -56,13 +57,16 @@ export const clearExpiredProducts = createAction(
 
 export interface PromoteChildToParentActionCreatorPayload
   extends UpdateInstantProductQueryActionCreatorPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
   ...instantProductsQueryDefinition,
 };
 

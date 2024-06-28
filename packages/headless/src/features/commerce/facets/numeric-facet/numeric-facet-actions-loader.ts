@@ -1,62 +1,60 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  ToggleSelectNumericFacetValueActionCreatorPayload,
-  UpdateNumericFacetValuesActionCreatorPayload,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
-  ToggleExcludeNumericFacetValueActionCreatorPayload,
+  ToggleExcludeNumericFacetValuePayload,
+  ToggleSelectNumericFacetValuePayload,
+  UpdateNumericFacetValuesPayload,
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from './numeric-facet-actions';
 
 export type {
-  ToggleSelectNumericFacetValueActionCreatorPayload,
-  ToggleExcludeNumericFacetValueActionCreatorPayload,
-  UpdateNumericFacetValuesActionCreatorPayload,
+  ToggleSelectNumericFacetValuePayload,
+  ToggleExcludeNumericFacetValuePayload,
+  UpdateNumericFacetValuesPayload,
 };
 
 /**
- * The numeric facet set action creators.
+ * The numeric facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface NumericFacetActionCreators {
   /**
-   * Toggles the selection state of a numeric facet value.
+   * Toggles the selection state of a given numeric facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   toggleSelectNumericFacetValue(
-    payload: ToggleSelectNumericFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
+    payload: ToggleSelectNumericFacetValuePayload
+  ): PayloadAction<ToggleSelectNumericFacetValuePayload>;
 
   /**
-   * Toggles the exclusion state of a numeric facet value.
+   * Toggles the exclusion state of a given numeric facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   toggleExcludeNumericFacetValue(
-    payload: ToggleExcludeNumericFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleExcludeNumericFacetValueActionCreatorPayload>;
+    payload: ToggleExcludeNumericFacetValuePayload
+  ): PayloadAction<ToggleExcludeNumericFacetValuePayload>;
 
   /**
-   * Updates the numeric facet values.
+   * Updates all values in a given numeric facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   updateNumericFacetValues(
-    payload: UpdateNumericFacetValuesActionCreatorPayload
-  ): PayloadAction<UpdateNumericFacetValuesActionCreatorPayload>;
+    payload: UpdateNumericFacetValuesPayload
+  ): PayloadAction<UpdateNumericFacetValuesPayload>;
 }
 
 /**
- * Loads the commerce facet set reducer and returns the possible numeric facet actions.
+ * Loads the commerce facet set reducer and returns the available numeric facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

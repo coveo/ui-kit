@@ -2,10 +2,10 @@ import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  FetchMoreRecommendationsActionCreatorPayload,
-  FetchRecommendationsActionCreatorPayload,
+  FetchMoreRecommendationsPayload,
+  FetchRecommendationsPayload,
   QueryRecommendationsCommerceAPIThunkReturn,
-  RegisterRecommendationsSlotActionCreatorPayload,
+  RegisterRecommendationsSlotPayload,
   StateNeededByFetchRecommendations,
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -14,9 +14,9 @@ import {
 import {recommendationsReducer as recommendations} from './recommendations-slice';
 
 export type {
-  RegisterRecommendationsSlotActionCreatorPayload,
-  FetchRecommendationsActionCreatorPayload,
-  FetchMoreRecommendationsActionCreatorPayload,
+  RegisterRecommendationsSlotPayload,
+  FetchRecommendationsPayload,
+  FetchMoreRecommendationsPayload,
 };
 
 /**
@@ -27,38 +27,38 @@ export type {
 export interface RecommendationsActionCreator {
   /**
    * Registers a recommendations slot.
-   * @param payload - The action creator payload.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   registerRecommendationsSlot(
-    payload: RegisterRecommendationsSlotActionCreatorPayload
-  ): PayloadAction<RegisterRecommendationsSlotActionCreatorPayload>;
+    payload: RegisterRecommendationsSlotPayload
+  ): PayloadAction<RegisterRecommendationsSlotPayload>;
   /**
    * Fetches recommendations.
-   * @param payload - The action creator payload.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   fetchRecommendations(
-    payload: FetchRecommendationsActionCreatorPayload
+    payload: FetchRecommendationsPayload
   ): AsyncThunkAction<
     QueryRecommendationsCommerceAPIThunkReturn,
-    FetchRecommendationsActionCreatorPayload,
+    FetchRecommendationsPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
   >;
 
   /**
    * Fetches an additional page of recommendations and appends it to the current list.
-   * @param payload - The action creator payload.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   fetchMoreRecommendations(
-    payload: FetchMoreRecommendationsActionCreatorPayload
+    payload: FetchMoreRecommendationsPayload
   ): AsyncThunkAction<
     QueryRecommendationsCommerceAPIThunkReturn | null,
-    FetchMoreRecommendationsActionCreatorPayload,
+    FetchMoreRecommendationsPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
   >;
 
@@ -66,12 +66,12 @@ export interface RecommendationsActionCreator {
 }
 
 /**
- * Loads the recommendations reducer and returns the possible recommendations action creators.
+ * Loads the commerce recommendations reducer and returns the available recommendations action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the recommendations action creators.
  */
 export function loadRecommendationsActions(
   engine: CommerceEngine

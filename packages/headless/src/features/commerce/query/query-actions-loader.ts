@@ -1,9 +1,9 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {UpdateQueryActionCreatorPayload, updateQuery} from './query-actions';
+import {UpdateQueryPayload, updateQuery} from './query-actions';
 import {queryReducer as query} from './query-slice';
 
-export type {UpdateQueryActionCreatorPayload};
+export type {UpdateQueryPayload};
 
 /**
  * The query action creators.
@@ -13,21 +13,20 @@ export type {UpdateQueryActionCreatorPayload};
 export interface QueryActionCreators {
   /**
    * Updates the basic query expression.
+   *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  updateQuery(
-    payload: UpdateQueryActionCreatorPayload
-  ): PayloadAction<UpdateQueryActionCreatorPayload>;
+  updateQuery(payload: UpdateQueryPayload): PayloadAction<UpdateQueryPayload>;
 }
 
 /**
- * Loads the `query` reducer and returns possible action creators.
+ * Loads the commerce query reducer and returns possible query action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the query action creators.
  */
 export function loadQueryActions(engine: CommerceEngine): QueryActionCreators {
   engine.addReducers({query});

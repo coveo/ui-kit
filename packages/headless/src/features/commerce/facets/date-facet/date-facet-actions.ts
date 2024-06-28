@@ -13,29 +13,35 @@ import {
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload';
 
+export type ToggleSelectDateFacetValuePayload =
+  ToggleSelectDateFacetValueActionCreatorPayload;
+
 export const toggleSelectDateFacetValue = createAction(
   'commerce/facets/dateFacet/toggleSelectValue',
-  (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
+  (payload: ToggleSelectDateFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       selection: new RecordValue({values: dateFacetValueDefinition}),
     })
 );
 
-export type ToggleExcludeDateFacetValueActionCreatorPayload =
+export type ToggleExcludeDateFacetValuePayload =
   ToggleSelectDateFacetValueActionCreatorPayload;
 
 export const toggleExcludeDateFacetValue = createAction(
   'commerce/facets/dateFacet/toggleExcludeValue',
-  (payload: ToggleExcludeDateFacetValueActionCreatorPayload) =>
+  (payload: ToggleExcludeDateFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       selection: new RecordValue({values: dateFacetValueDefinition}),
     })
 );
 
+export type UpdateDateFacetValuesPayload =
+  UpdateDateFacetValuesActionCreatorPayload;
+
 export const updateDateFacetValues = createAction(
-  'commerce/facets/dateFacet/updateFacetValues',
+  'commerce/facets/dateFacet/updateValues',
   (payload: UpdateDateFacetValuesActionCreatorPayload) => {
     try {
       validatePayloadAndThrow(payload, {

@@ -5,11 +5,10 @@ import {parametersDefinition} from '../parameters/parameters-schema';
 
 export type ProductListingParameters = Parameters;
 
-export type RestoreProductListingParametersActionCreatorPayload =
-  ProductListingParameters;
+export type RestoreProductListingParametersPayload = ProductListingParameters;
 
 export const restoreProductListingParameters = createAction(
   'commerce/productListingParameters/restore',
-  (payload: RestoreProductListingParametersActionCreatorPayload) =>
+  (payload: RestoreProductListingParametersPayload) =>
     validatePayload(payload, parametersDefinition)
 );
