@@ -1,10 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {
-  CommerceEngine,
-  CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
-import {configurationReducer as configuration} from '../../configuration/configuration-slice';
+import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
 import {
   ProductClickActionCreatorPayload,
   ProductViewActionCreatorPayload,
@@ -50,17 +46,13 @@ export interface ProductActionCreators {
 }
 
 /**
- * Loads the configuration reducer and returns the possible product action creators.
+ * Returns the possible product action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
- * @param engine - The headless commerce engine.
  * @returns An object holding the action creators.
  */
-export function loadProductActions(
-  engine: CommerceEngine
-): ProductActionCreators {
-  engine.addReducers({configuration});
+export function loadProductActions(): ProductActionCreators {
   return {
     productClick,
     productView,
