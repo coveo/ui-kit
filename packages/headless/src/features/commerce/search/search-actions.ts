@@ -8,7 +8,6 @@ import {ChildProduct} from '../../../api/commerce/common/product';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {validatePayload} from '../../../utils/validate-payload';
 import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {logQueryError} from '../../search/search-analytics-actions';
 import {buildCommerceAPIRequest} from '../common/actions';
 import {
   clearAllCoreFacets,
@@ -151,7 +150,7 @@ export const fetchInstantProducts = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/fetchInstantProducts',
-  async (payload, {getState, dispatch, rejectWithValue, extra}) => {
+  async (payload, {getState, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient, relay, navigatorContext} = extra;
     const {q} = payload;
@@ -161,7 +160,6 @@ export const fetchInstantProducts = createAsyncThunk<
     });
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 

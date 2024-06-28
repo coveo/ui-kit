@@ -7,7 +7,6 @@ import {
 import {ChildProduct} from '../../../api/commerce/common/product';
 import {ProductListingSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
-import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
@@ -30,12 +29,7 @@ export const fetchProductListing = createAsyncThunk<
   'commerce/productListing/fetch',
   async (
     _action,
-    {
-      getState,
-      dispatch,
-      rejectWithValue,
-      extra: {apiClient, relay, navigatorContext},
-    }
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
   ) => {
     const state = getState();
     const fetched = await apiClient.getProductListing(
@@ -43,7 +37,6 @@ export const fetchProductListing = createAsyncThunk<
     );
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 
@@ -61,12 +54,7 @@ export const fetchMoreProducts = createAsyncThunk<
   'commerce/productListing/fetchMoreProducts',
   async (
     _action,
-    {
-      getState,
-      dispatch,
-      rejectWithValue,
-      extra: {apiClient, relay, navigatorContext},
-    }
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
   ) => {
     const state = getState();
     const moreProductsAvailable = moreProductsAvailableSelector(state);
@@ -83,7 +71,6 @@ export const fetchMoreProducts = createAsyncThunk<
     });
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 

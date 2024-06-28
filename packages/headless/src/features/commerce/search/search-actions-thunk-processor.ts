@@ -17,7 +17,6 @@ import {
   CommerceDidYouMeanSection,
   TriggerSection,
 } from '../../../state/state-sections';
-import {logQueryError} from '../../search/search-analytics-actions';
 import {
   ListingAndSearchStateNeededByQueryCommerceAPI,
   buildCommerceAPIRequest,
@@ -100,7 +99,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> | null {
     if (isErrorResponse(fetched.response)) {
-      this.dispatch(logQueryError(fetched.response.error));
       return this.rejectWithValue(fetched.response.error) as RejectionType;
     }
 
@@ -167,7 +165,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
-      this.dispatch(logQueryError(retried.response.error));
       return this.rejectWithValue(retried.response.error) as RejectionType;
     }
 
