@@ -147,6 +147,7 @@ export class AtomicInsightGeneratedAnswer
         isVisible: this.generatedAnswerCommon.data.isVisible,
         responseFormat: {
           answerStyle: this.answerStyle,
+          contentFormat: ['text/markdown', 'text/plain'],
         },
       },
     });
