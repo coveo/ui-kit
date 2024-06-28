@@ -2,6 +2,10 @@ import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions';
+import {
+  clearRecentQueries,
+  registerRecentQueries,
+} from '../../../features/commerce/recent-queries/recent-queries-actions';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
 import {
   PrepareForSearchWithQueryOptions,
@@ -9,10 +13,6 @@ import {
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
-import {
-  clearRecentQueries,
-  registerRecentQueries,
-} from '../../../features/recent-queries/recent-queries-actions';
 import {RecentQueriesSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {

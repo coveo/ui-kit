@@ -8,12 +8,15 @@ import {
 import {recentQueriesReducer as recentQueries} from './recent-queries-slice';
 
 /**
- * The RecentQueries action creators.
+ * The recent queries action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface RecentQueriesActionCreators {
   /**
-   * Initializes the `recentQueries` state.
-   * @param payload (RegisterRecentQueriesCreatorPayload) The initial state and options.
+   * Initializes the recent queries state.
+   *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   registerRecentQueries(
@@ -22,16 +25,19 @@ export interface RecentQueriesActionCreators {
 
   /**
    * Clears the recent queries list.
+   *
    * @returns A dispatchable action.
    */
   clearRecentQueries(): PayloadAction;
 }
 
 /**
- * Loads the `recentQueries` reducer and returns possible action creators.
+ * Loads the commerce recent queries reducer and returns available recent queries actions.
  *
- * @param engine - The headless engine.
- * @returns An object holding the action creators.
+ *  In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The headless commerce engine.
+ * @returns An object holding the recent queries action creators.
  */
 export function loadRecentQueriesActions(
   engine: CommerceEngine
