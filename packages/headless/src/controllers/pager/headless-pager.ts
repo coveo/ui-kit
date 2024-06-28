@@ -3,6 +3,7 @@ import {
   logPageNumber,
   logPageNext,
   logPagePrevious,
+  browseResults,
 } from '../../features/pagination/pagination-analytics-actions';
 import {fetchPage} from '../../features/search/search-actions';
 import {
@@ -39,17 +40,17 @@ export function buildPager(
 
     selectPage(page: number) {
       pager.selectPage(page);
-      dispatch(fetchPage({legacy: logPageNumber()}));
+      dispatch(fetchPage({legacy: logPageNumber(), next: browseResults()}));
     },
 
     nextPage() {
       pager.nextPage();
-      dispatch(fetchPage({legacy: logPageNext()}));
+      dispatch(fetchPage({legacy: logPageNext(), next: browseResults()}));
     },
 
     previousPage() {
       pager.previousPage();
-      dispatch(fetchPage({legacy: logPagePrevious()}));
+      dispatch(fetchPage({legacy: logPagePrevious(), next: browseResults()}));
     },
   };
 }

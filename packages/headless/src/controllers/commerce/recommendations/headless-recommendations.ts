@@ -1,11 +1,16 @@
 import {createSelector} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
+import {
+  pageRecommendationSelector,
+  perPageRecommendationSelector,
+  totalEntriesRecommendationSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
 import {
   fetchMoreRecommendations,
@@ -13,6 +18,10 @@ import {
   promoteChildToParent,
   registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions';
+import {
+  isLoadingSelector,
+  numberOfRecommendationsSelector,
+} from '../../../features/commerce/recommendations/recommendations-selectors';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {validateInitialState} from '../../../utils/validate-payload';
@@ -24,13 +33,15 @@ import {
   BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
+import {SummaryState} from '../core/summary/headless-core-summary';
+import {RecommendationsSummaryState} from './summary/headless-recommendations-summary';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  */
 export interface Recommendations
   extends Controller,
-    BaseSolutionTypeSubControllers {
+    BaseSolutionTypeSubControllers<SummaryState> {
   /**
    * Fetches the recommendations.
    */
@@ -49,13 +60,9 @@ export interface Recommendations
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
    * it can be rendered as a nested product, and restored as the parent product through this method as needed.
    *
-   * @param childPermanentId The permanentid of the child product that will become the new parent.
-   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   * @param child The child product that will become the new parent.
    */
-  promoteChildToParent(
-    childPermanentId: string,
-    parentPermanentId: string
-  ): void;
+  promoteChildToParent(child: ChildProduct): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Recommendations` controller.
@@ -121,21 +128,30 @@ export function buildRecommendations(
     (state: CommerceEngineState) => state.recommendations[slotId]!,
     (recommendations) => recommendations
   );
-  const subControllers = buildBaseSubControllers(engine, {
-    slotId,
-    responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
-    fetchProductsActionCreator: () => fetchRecommendations({slotId}),
-    fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
-  });
+  const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
+    engine,
+    {
+      slotId,
+      responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
+      fetchProductsActionCreator: () => fetchRecommendations({slotId}),
+      fetchMoreProductsActionCreator: () => fetchMoreRecommendations({slotId}),
+      isLoadingSelector: (state) => isLoadingSelector(state, slotId),
+      errorSelector: (state) => state.recommendations[slotId]!.error,
+      pageSelector: (state) => pageRecommendationSelector(state, slotId),
+      perPageSelector: (state) => perPageRecommendationSelector(state, slotId),
+      totalEntriesSelector: (state) =>
+        totalEntriesRecommendationSelector(state, slotId),
+      numberOfProductsSelector: (state) =>
+        numberOfRecommendationsSelector(state, slotId),
+    }
+  );
 
   return {
     ...controller,
     ...subControllers,
 
-    promoteChildToParent(childPermanentId, parentPermanentId) {
-      dispatch(
-        promoteChildToParent({childPermanentId, parentPermanentId, slotId})
-      );
+    promoteChildToParent(child: ChildProduct) {
+      dispatch(promoteChildToParent({child, slotId}));
     },
 
     get state() {

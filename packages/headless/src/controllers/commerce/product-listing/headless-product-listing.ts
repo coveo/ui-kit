@@ -1,9 +1,14 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
 import {
@@ -18,6 +23,9 @@ import {
   promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions';
 import {
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
@@ -35,17 +43,23 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
+import {ProductListingSummaryState} from './summary/headless-product-listing-summary';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
 export interface ProductListing
   extends Controller,
-    SearchAndListingSubControllers<Parameters> {
+    SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   /**
    * Fetches the product listing.
    */
   refresh(): void;
+
+  /**
+   * Executes the first request if it has not been executed yet.
+   */
+  executeFirstRequest(): void;
 
   /**
    * Finds the specified parent product and the specified child product of that parent, and makes that child the new
@@ -60,13 +74,9 @@ export interface ProductListing
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
    * it can be rendered as a nested product, and restored as the parent product through this method as needed.
    *
-   * @param childPermanentId The permanentid of the child product that will become the new parent.
-   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   * @param child The child product that will become the new parent.
    */
-  promoteChildToParent(
-    childPermanentId: string,
-    parentPermanentId: string
-  ): void;
+  promoteChildToParent(child: ChildProduct): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
@@ -107,15 +117,17 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
     enrichParameters: enrichedParametersSelector,
+    isLoadingSelector,
+    errorSelector,
+    pageSelector: pagePrincipalSelector,
+    perPageSelector: perPagePrincipalSelector,
+    totalEntriesSelector: totalEntriesPrincipalSelector,
+    numberOfProductsSelector,
   });
 
   return {
     ...controller,
     ...subControllers,
-
-    promoteChildToParent(childPermanentId, parentPermanentId) {
-      dispatch(promoteChildToParent({childPermanentId, parentPermanentId}));
-    },
 
     get state() {
       const {products, error, isLoading, responseId} =
@@ -128,7 +140,21 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       };
     },
 
+    promoteChildToParent(child: ChildProduct) {
+      dispatch(promoteChildToParent({child}));
+    },
+
     refresh: () => dispatch(fetchProductListing()),
+
+    executeFirstRequest() {
+      const firstRequestExecuted = responseIdSelector(getState()) !== '';
+
+      if (firstRequestExecuted) {
+        return;
+      }
+
+      dispatch(fetchProductListing());
+    },
   };
 }
 
