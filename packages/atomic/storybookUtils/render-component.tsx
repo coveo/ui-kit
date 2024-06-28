@@ -1,7 +1,7 @@
 import type {Args, StoryContext} from '@storybook/web-components';
 import {html, unsafeStatic} from 'lit/static-html.js';
 
-const unfurlArg = (arg: string) => arg.slice(arg.indexOf('-') + 1);
+export const unfurlArg = (arg: string) => arg.slice(arg.indexOf('-') + 1);
 
 export const parseSlots = (args: Args, slotsControls: string[]) =>
   `${slotsControls.map((slotName) => {
@@ -28,7 +28,9 @@ export const renderComponent = (args: Args, context: StoryContext) => {
         break;
     }
   }
-  return html`<div id="code-root"><style>
+  return html`
+  <div id="code-root">
+    <style>
         ${unsafeStatic(
           shadowPartArgs
             .map(
@@ -41,9 +43,9 @@ export const renderComponent = (args: Args, context: StoryContext) => {
             )
             .join('\n')
         )}
-      </style>
-      <${unsafeStatic(context.componentId)}	
-        ${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}
-      >${unsafeStatic(parseSlots(args, slotsControls))}
-      </${unsafeStatic(context.componentId)}></div>`;
+    </style>
+    <${unsafeStatic(context.componentId)}${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
+      ${unsafeStatic(parseSlots(args, slotsControls))}
+    </${unsafeStatic(context.componentId)}>
+  </div>`;
 };
