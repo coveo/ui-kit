@@ -2,14 +2,14 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions';
 import {
-  UpdateIgnoreQueryTriggerActionCreator,
+  UpdateIgnoreQueryTriggerPayload,
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
 } from './triggers-actions';
 import {commerceTriggersReducer as triggers} from './triggers-slice';
 
 export type {
-  UpdateIgnoreQueryTriggerActionCreator,
+  UpdateIgnoreQueryTriggerPayload,
   ApplyQueryTriggerModificationPayload,
 };
 
@@ -26,8 +26,8 @@ export interface TriggersActionCreators {
    * @returns A dispatchable action.
    * */
   updateIgnoreQueryTrigger(
-    payload: UpdateIgnoreQueryTriggerActionCreator
-  ): PayloadAction<UpdateIgnoreQueryTriggerActionCreator>;
+    payload: UpdateIgnoreQueryTriggerPayload
+  ): PayloadAction<UpdateIgnoreQueryTriggerPayload>;
 
   /**
    * Applies a query trigger modification.
