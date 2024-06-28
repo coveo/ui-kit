@@ -1,6 +1,6 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {LegacyGeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
 import {interfaceLoad} from '../../features/analytics/analytics-actions';
@@ -150,7 +150,7 @@ function createInsightAPIClient(
 }
 
 function createGeneratedAnswerAPIClient(logger: Logger) {
-  return new GeneratedAnswerAPIClient({
+  return new LegacyGeneratedAnswerAPIClient({
     logger,
   });
 }

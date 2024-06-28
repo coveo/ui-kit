@@ -18,7 +18,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>,
 > extends AsyncThunkOptions<
     T,
-    ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+    ClientThunkExtraArguments<LegacyGeneratedAnswerAPIClient>
   > {}
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
@@ -62,7 +62,7 @@ class TimeoutStateManager {
   }
 }
 
-export class GeneratedAnswerAPIClient {
+export class LegacyGeneratedAnswerAPIClient {
   private logger: Logger;
 
   constructor(options: GeneratedAnswerAPIClientOptions) {
