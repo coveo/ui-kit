@@ -79,6 +79,14 @@ export interface PaginationActionCreators {
   ): PayloadAction<PreviousPageActionCreatorPayload | undefined>;
 }
 
+/**
+ * Loads the commerce pagination reducer and returns the possible pagination actions.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The commerce engine.
+ * @returns An object holding the pagination action creators.
+ */
 export function loadPaginationActions(
   engine: CommerceEngine
 ): PaginationActionCreators {
