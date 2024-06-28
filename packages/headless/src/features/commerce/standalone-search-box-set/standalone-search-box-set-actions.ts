@@ -25,43 +25,7 @@ export type StateNeededForRedirect = ConfigurationSection &
   CommerceQuerySection &
   CartSection;
 
-export interface RegisterStandaloneSearchBoxActionCreatorPayload {
-  /**
-   * The standalone search box id.
-   */
-  id: string;
-
-  /**
-   * The default URL to which to redirect the user.
-   */
-  redirectionUrl: string;
-}
-
-export const registerStandaloneSearchBox = createAction(
-  'standaloneSearchBox/register',
-  (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      redirectionUrl: requiredNonEmptyString,
-    })
-);
-
-export interface ResetStandaloneSearchBoxActionCreatorPayload {
-  /**
-   * The standalone search box id.
-   */
-  id: string;
-}
-
-export const resetStandaloneSearchBox = createAction(
-  'standaloneSearchBox/reset',
-  (payload: ResetStandaloneSearchBoxActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-    })
-);
-
-export interface FetchRedirectUrlActionCreatorPayload {
+export interface FetchRedirectUrlPayload {
   /**
    * The standalone search box id.
    */
@@ -72,7 +36,7 @@ export interface FetchRedirectUrlActionCreatorPayload {
 // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
 export const fetchRedirectUrl = createAsyncThunk<
   string,
-  FetchRedirectUrlActionCreatorPayload,
+  FetchRedirectUrlPayload,
   AsyncThunkCommerceOptions<StateNeededForRedirect>
 >(
   'commerce/standaloneSearchBox/fetchRedirect',
@@ -93,6 +57,41 @@ export const fetchRedirectUrl = createAsyncThunk<
 
     return redirectTriggers.length ? redirectTriggers[0].content : '';
   }
+);
+export interface RegisterStandaloneSearchBoxPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+
+  /**
+   * The default URL to which to redirect the user.
+   */
+  redirectionUrl: string;
+}
+
+export const registerStandaloneSearchBox = createAction(
+  'commerce/standaloneSearchBox/register',
+  (payload: RegisterStandaloneSearchBoxPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      redirectionUrl: requiredNonEmptyString,
+    })
+);
+
+export interface ResetStandaloneSearchBoxPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+}
+
+export const resetStandaloneSearchBox = createAction(
+  'commerce/standaloneSearchBox/reset',
+  (payload: ResetStandaloneSearchBoxPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+    })
 );
 
 export const buildPlanRequest = (
