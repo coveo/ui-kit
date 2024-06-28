@@ -1,10 +1,11 @@
-import {StringValue} from '@coveo/bueno';
+import {RecordValue, StringValue} from '@coveo/bueno';
 import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {NavigatorContext} from '../../../app/navigatorContextProvider';
@@ -154,13 +155,16 @@ export const registerRecommendationsSlot = createAction(
 
 export interface PromoteChildToParentActionCreatorPayload
   extends SlotIdPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
   ...recommendationsSlotDefinition,
 };
 

@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {
   fetchRecommendations,
   promoteChildToParent,
@@ -33,14 +34,12 @@ describe('headless recommendations', () => {
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
-    recommendations.promoteChildToParent(childPermanentId, parentPermanentId);
+    recommendations.promoteChildToParent(child);
 
     expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
+      child,
       slotId: 'slot-id',
     });
   });
