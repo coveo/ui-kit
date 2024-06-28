@@ -23,14 +23,13 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  IBreadcrumb,
-  BreadcrumbContainer,
-  BreadcrumbButton,
-  BreadcrumbShowMore,
-  BreadcrumbShowLess,
-  BreadcrumbClearAll,
-} from '../../common/breadbox/breadbox';
+import {BreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
+import {BreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
+import {BreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';
+import {BreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
+import {BreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
+import {BreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
+import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
 import {Hidden} from '../../common/hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
@@ -311,17 +310,22 @@ export class AtomicCommerceBreadbox
     });
   }
 
-  private renderBreadcrumbs(breadcrumbs: IBreadcrumb[]) {
+  private renderBreadcrumbs(breadcrumbs: BreadboxBreadcrumb[]) {
     this.numberOfBreadcrumbs = breadcrumbs.length;
 
     return breadcrumbs.map((breadcrumb, index) => {
       const isLastBreadcrumb = breadcrumbs.length === 1;
       return (
         <BreadcrumbButton
+          setRef={(ref) => {
+            if (this.lastRemovedBreadcrumbIndex === index) {
+              this.focusTargets.breadcrumbRemovedFocus.setTarget(ref);
+            }
+            if (this.firstExpandedBreadcrumbIndex === index) {
+              this.focusTargets.breadcrumbShowMoreFocus.setTarget(ref);
+            }
+          }}
           pathLimit={this.pathLimit}
-          focusTargets={this.focusTargets}
-          lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
-          firstExpandedBreadcrumbIndex={this.firstExpandedBreadcrumbIndex}
           breadcrumb={breadcrumb}
           onSelectBreadcrumb={() => {
             if (isLastBreadcrumb) {
@@ -333,9 +337,15 @@ export class AtomicCommerceBreadbox
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           }}
-          index={index}
-          bindings={this.bindings}
-        ></BreadcrumbButton>
+          i18n={this.bindings.i18n}
+        >
+          <BreadcrumbContent
+            pathLimit={this.pathLimit}
+            isCollapsed={this.isCollapsed}
+            i18n={this.bindings.i18n}
+            breadcrumb={breadcrumb}
+          ></BreadcrumbContent>
+        </BreadcrumbButton>
       );
     });
   }
@@ -353,11 +363,12 @@ export class AtomicCommerceBreadbox
     return (
       <BreadcrumbContainer
         isCollapsed={this.isCollapsed}
-        bindings={this.bindings}
+        i18n={this.bindings.i18n}
       >
         {this.renderBreadcrumbs(breadcrumbs)}
         <BreadcrumbShowMore
-          setRef={(el) => {
+          setRef={(el: HTMLButtonElement) => {
+            this.focusTargets.breadcrumbShowLessFocus.setTarget(el!);
             this.showMore = el;
           }}
           onShowMore={() => {
@@ -367,12 +378,12 @@ export class AtomicCommerceBreadbox
             this.isCollapsed = false;
           }}
           isCollapsed={this.isCollapsed}
-          bindings={this.bindings}
+          i18n={this.bindings.i18n}
           numberOfCollapsedBreadcrumbs={this.numberOfCollapsedBreadcrumbs}
         ></BreadcrumbShowMore>
 
         <BreadcrumbShowLess
-          setRef={(el) => {
+          setRef={(el: HTMLButtonElement) => {
             this.showLess = el;
           }}
           onShowLess={() => {
@@ -380,19 +391,24 @@ export class AtomicCommerceBreadbox
             this.isCollapsed = true;
           }}
           isCollapsed={this.isCollapsed}
-          bindings={this.bindings}
+          i18n={this.bindings.i18n}
         ></BreadcrumbShowLess>
 
         <BreadcrumbClearAll
+          setRef={() => {
+            const isFocusTarget =
+              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
+
+            isFocusTarget
+              ? this.focusTargets.breadcrumbRemovedFocus.setTarget
+              : undefined;
+          }}
           onClick={async () => {
             this.breadcrumbManager.deselectAll();
             this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
           }}
-          numberOfBreadcrumbs={this.numberOfBreadcrumbs}
-          focusTargets={this.focusTargets}
           isCollapsed={this.isCollapsed}
-          bindings={this.bindings}
-          lastRemovedBreadcrumbIndex={this.lastRemovedBreadcrumbIndex}
+          i18n={this.bindings.i18n}
         ></BreadcrumbClearAll>
       </BreadcrumbContainer>
     );
