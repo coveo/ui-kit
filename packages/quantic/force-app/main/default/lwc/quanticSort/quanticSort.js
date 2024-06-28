@@ -36,6 +36,7 @@ import {LightningElement, track, api} from 'lwc';
       criterion={sortOptionCriterion}
     ></c-quantic-sort-option></c-quantic-sort>
  */
+
 export default class QuanticSort extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
@@ -67,6 +68,8 @@ export default class QuanticSort extends LightningElement {
   /** @type {string} */
   errorMessage;
 
+  schemas = {};
+
   labels = {
     sortBy,
     relevancy,
@@ -76,40 +79,6 @@ export default class QuanticSort extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    getBueno(this).then(() => {
-      this.customSortOptions.forEach((option) => {
-        const criterion = option.criterion;
-        if (!option.label || !Bueno.isString(option.label)) {
-          console.error(
-            `The ${this.template.host.localName} component requires a label to be specified.`
-          );
-          this.setSortOptionsConfigurationError();
-        }
-        if (!option.value || !Bueno.isString(option.value)) {
-          console.error(
-            `The ${this.template.host.localName} component requires a value to be specified.`
-          );
-          this.setSortOptionsConfigurationError();
-        }
-        /**
-         * Checks that the criterion of the custom sort option is an object which respects the following:
-         * By should be a string
-         * If sorting by field, field must be a string
-         * If sorting by field or date, order must be a string
-         */
-        if (
-          !Bueno.isString(criterion.by) ||
-          (criterion.by === 'field' && !Bueno.isString(criterion.field)) ||
-          ((criterion.by === 'field' || criterion.by === 'date') &&
-            !Bueno.isString(criterion.order))
-        ) {
-          console.error(
-            `The ${this.template.host.localName} component requires a criterion of type sortCriterion to be specified.`
-          );
-          this.setSortOptionsConfigurationError();
-        }
-      });
-    });
   }
 
   renderedCallback() {
@@ -128,6 +97,12 @@ export default class QuanticSort extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
+    getBueno(this).then(() => {
+      this.generateSchemas();
+      this.customSortOptions.forEach((option) => {
+        this.validateSortOption(option);
+      });
+    });
   };
 
   disconnectedCallback() {
@@ -184,6 +159,64 @@ export default class QuanticSort extends LightningElement {
    */
   setSortOptionsConfigurationError() {
     this.errorMessage = `Custom sort options configuration is invalid.`;
+  }
+
+  /**
+   * Generates the schemas for the validation of the sort options with Bueno.
+   */
+  generateSchemas() {
+    this.headless = getHeadlessBundle(this.engineId);
+    const requiredNonEmptyString = new Bueno.StringValue({
+      required: true,
+      emptyAllowed: false,
+    });
+
+    this.schemas.sortOptionSchema = new Bueno.Schema({
+      label: requiredNonEmptyString,
+      value: requiredNonEmptyString,
+      criterion: new Bueno.RecordValue({
+        options: {
+          required: true,
+        },
+        values: {
+          by: requiredNonEmptyString,
+        },
+      }),
+    });
+
+    this.schemas.sortByDateCriterionSchema = new Bueno.Schema({
+      by: requiredNonEmptyString,
+      order: requiredNonEmptyString,
+    });
+
+    this.schemas.sortByFieldCriterionSchema = new Bueno.Schema({
+      by: requiredNonEmptyString,
+      field: requiredNonEmptyString,
+      order: requiredNonEmptyString,
+    });
+  }
+
+  /**
+   * Validates that the label and values are non-empty strings and that the criterion of the custom sort option is an object which respects the following:
+   * By should be a string
+   * If sorting by field, field must be a string
+   * If sorting by field or date, order must be a string
+   */
+  validateSortOption(sortOption) {
+    try {
+      this.schemas.sortOptionSchema.validate(sortOption);
+      if (sortOption.criterion.by === 'date') {
+        this.schemas.sortByDateCriterionSchema.validate(sortOption.criterion);
+      }
+      if (sortOption.criterion.by === 'field') {
+        this.schemas.sortByFieldCriterionSchema.validate(sortOption.criterion);
+      }
+    } catch (error) {
+      console.error(
+        `The ${this.template.host.localName} component has an error with the ${sortOption.label} sort configuration, ${error.message}`
+      );
+      this.setSortOptionsConfigurationError();
+    }
   }
 
   get relevancy() {
