@@ -2,45 +2,40 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
+  ClearQuerySuggestPayload,
+  FetchQuerySuggestionsPayload,
   FetchQuerySuggestionsThunkReturn,
+  RegisterQuerySuggestPayload,
+  SelectQuerySuggestionPayload,
   StateNeededByQuerySuggest,
-} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {
-  ClearQuerySuggestActionCreatorPayload,
-  RegisterQuerySuggestActionCreatorPayload,
-  SelectQuerySuggestionActionCreatorPayload,
   clearQuerySuggest,
   registerQuerySuggest,
   selectQuerySuggestion,
-} from '../../query-suggest/query-suggest-actions';
-import {
-  FetchQuerySuggestionsActionCreatorPayload,
-  QuerySuggestActionCreators,
-} from '../../query-suggest/query-suggest-actions-loader';
+} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice';
 import {fetchQuerySuggestions} from './query-suggest-actions';
 
 export type {
-  FetchQuerySuggestionsActionCreatorPayload,
-  ClearQuerySuggestActionCreatorPayload,
-  RegisterQuerySuggestActionCreatorPayload,
-  SelectQuerySuggestionActionCreatorPayload,
+  ClearQuerySuggestPayload,
+  FetchQuerySuggestionsPayload,
+  RegisterQuerySuggestPayload,
+  SelectQuerySuggestionPayload,
 };
-
-export type BaseQuerySuggestActionCreators = Omit<
-  QuerySuggestActionCreators,
-  'fetchQuerySuggestions'
->;
-
-// TODO KIT-3350 - All query suggest actions should be commerce-specific.
 
 /**
  * The query suggest action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
-export interface CommerceQuerySuggestActionCreators
-  extends BaseQuerySuggestActionCreators {
+export interface QuerySuggestActionCreators {
+  /**
+   * Clears the query suggest entity.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  clearQuerySuggest(payload: ClearQuerySuggestPayload): void;
+
   /**
    * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
    *
@@ -48,25 +43,41 @@ export interface CommerceQuerySuggestActionCreators
    * @returns A dispatchable action.
    */
   fetchQuerySuggestions(
-    payload: FetchQuerySuggestionsActionCreatorPayload
+    payload: FetchQuerySuggestionsPayload
   ): AsyncThunkAction<
     FetchQuerySuggestionsThunkReturn,
-    FetchQuerySuggestionsActionCreatorPayload,
+    FetchQuerySuggestionsPayload,
     AsyncThunkCommerceOptions<StateNeededByQuerySuggest>
   >;
+
+  /**
+   * Registers a query suggest entity.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  registerQuerySuggest(payload: RegisterQuerySuggestPayload): void;
+
+  /**
+   * Selects a query suggestion.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  selectQuerySuggestion(payload: SelectQuerySuggestionPayload): void;
 }
 
 /**
- * Loads the query suggest reducer and returns the available query suggest action creators.
+ * Loads the commerce query suggest reducer and returns the available query suggest action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the query suggest action creators.
  */
 export function loadQuerySuggestActions(
   engine: CommerceEngine
-): CommerceQuerySuggestActionCreators {
+): QuerySuggestActionCreators {
   engine.addReducers({querySuggest});
 
   return {

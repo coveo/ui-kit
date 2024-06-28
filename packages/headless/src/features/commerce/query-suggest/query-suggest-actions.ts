@@ -1,5 +1,6 @@
+import {NumberValue} from '@coveo/bueno';
 import {Relay} from '@coveo/relay';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {
   AsyncThunkCommerceOptions,
@@ -17,10 +18,25 @@ import {
   VersionSection,
 } from '../../../state/state-sections';
 import {
+  requiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload';
+import {
+  ClearQuerySuggestActionCreatorPayload,
   FetchQuerySuggestionsActionCreatorPayload,
-  idDefinition,
+  RegisterQuerySuggestActionCreatorPayload,
+  SelectQuerySuggestionActionCreatorPayload,
 } from '../../query-suggest/query-suggest-actions';
 import {getProductsFromCartState} from '../context/cart/cart-state';
+
+export type ClearQuerySuggestPayload = ClearQuerySuggestActionCreatorPayload;
+
+export const clearQuerySuggest = createAction(
+  'commerce/querySuggest/clear',
+  (payload: ClearQuerySuggestPayload) =>
+    validatePayload(payload, {id: requiredNonEmptyString})
+);
 
 export type FetchQuerySuggestionsPayload =
   FetchQuerySuggestionsActionCreatorPayload;
@@ -42,7 +58,7 @@ export interface FetchQuerySuggestionsThunkReturn
 
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
-  FetchQuerySuggestionsActionCreatorPayload,
+  FetchQuerySuggestionsPayload,
   AsyncThunkCommerceOptions<StateNeededByQuerySuggest>
 >(
   'commerce/querySuggest/fetch',
@@ -54,7 +70,9 @@ export const fetchQuerySuggestions = createAsyncThunk<
       extra: {apiClient, validatePayload, relay, navigatorContext},
     }
   ) => {
-    validatePayload(payload, idDefinition);
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+    });
     const state = getState();
     const request = buildQuerySuggestRequest(
       payload.id,
@@ -74,6 +92,30 @@ export const fetchQuerySuggestions = createAsyncThunk<
       ...response.success,
     };
   }
+);
+
+export type RegisterQuerySuggestPayload =
+  RegisterQuerySuggestActionCreatorPayload;
+
+export const registerQuerySuggest = createAction(
+  'commerce/querySuggest/register',
+  (payload: RegisterQuerySuggestPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      count: new NumberValue({min: 0}),
+    })
+);
+
+export type SelectQuerySuggestionPayload =
+  SelectQuerySuggestionActionCreatorPayload;
+
+export const selectQuerySuggestion = createAction(
+  'commerce/querySuggest/selectSuggestion',
+  (payload: SelectQuerySuggestionPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      expression: requiredEmptyAllowedString,
+    })
 );
 
 export const buildQuerySuggestRequest = (
