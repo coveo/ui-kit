@@ -11,7 +11,7 @@ export type UpdateIgnoreQueryTriggerPayload = {
 };
 
 export const updateIgnoreQueryTrigger = createAction(
-  'commerce/triggers/query/ignore',
+  'commerce/triggers/query/updateIgnore',
   (payload: UpdateIgnoreQueryTriggerPayload) =>
     validatePayload(payload, {
       q: new StringValue({emptyAllowed: true, required: true}),
