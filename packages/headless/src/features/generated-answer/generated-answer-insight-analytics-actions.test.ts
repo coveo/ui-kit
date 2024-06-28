@@ -8,6 +8,7 @@ import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {GeneratedAnswerFeedbackV2} from './generated-answer-analytics-actions';
 import {
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
@@ -23,7 +24,6 @@ import {
   logCopyGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
-  GeneratedAnswerFeedbackV2,
 } from './generated-answer-insight-analytics-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
