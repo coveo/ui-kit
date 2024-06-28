@@ -1,21 +1,19 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  ToggleSelectNumericFacetValueActionCreatorPayload,
-  UpdateNumericFacetValuesActionCreatorPayload,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
-  ToggleExcludeNumericFacetValueActionCreatorPayload,
+  ToggleExcludeNumericFacetValuePayload,
+  ToggleSelectNumericFacetValuePayload,
+  UpdateNumericFacetValuesPayload,
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from './numeric-facet-actions';
 
 export type {
-  ToggleSelectNumericFacetValueActionCreatorPayload,
-  ToggleExcludeNumericFacetValueActionCreatorPayload,
-  UpdateNumericFacetValuesActionCreatorPayload,
+  ToggleSelectNumericFacetValuePayload,
+  ToggleExcludeNumericFacetValuePayload,
+  UpdateNumericFacetValuesPayload,
 };
 
 /**
@@ -31,8 +29,8 @@ export interface NumericFacetActionCreators {
    * @returns A dispatchable action.
    */
   toggleSelectNumericFacetValue(
-    payload: ToggleSelectNumericFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
+    payload: ToggleSelectNumericFacetValuePayload
+  ): PayloadAction<ToggleSelectNumericFacetValuePayload>;
 
   /**
    * Toggles the exclusion state of a given numeric facet value.
@@ -41,8 +39,8 @@ export interface NumericFacetActionCreators {
    * @returns A dispatchable action.
    */
   toggleExcludeNumericFacetValue(
-    payload: ToggleExcludeNumericFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleExcludeNumericFacetValueActionCreatorPayload>;
+    payload: ToggleExcludeNumericFacetValuePayload
+  ): PayloadAction<ToggleExcludeNumericFacetValuePayload>;
 
   /**
    * Updates all values in a given numeric facet.
@@ -51,8 +49,8 @@ export interface NumericFacetActionCreators {
    * @returns A dispatchable action.
    */
   updateNumericFacetValues(
-    payload: UpdateNumericFacetValuesActionCreatorPayload
-  ): PayloadAction<UpdateNumericFacetValuesActionCreatorPayload>;
+    payload: UpdateNumericFacetValuesPayload
+  ): PayloadAction<UpdateNumericFacetValuesPayload>;
 }
 
 /**

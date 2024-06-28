@@ -2,7 +2,7 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  PrepareForSearchWithQueryActionCreatorPayload,
+  PrepareForSearchWithQueryPayload,
   QuerySearchCommerceAPIThunkReturn,
   executeSearch,
   fetchMoreProducts,
@@ -11,7 +11,7 @@ import {
 import {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 import {commerceSearchReducer as commerceSearch} from './search-slice';
 
-export type {PrepareForSearchWithQueryActionCreatorPayload};
+export type {PrepareForSearchWithQueryPayload};
 
 /**
  * The search action creators.
@@ -26,10 +26,10 @@ export interface SearchActionCreators {
    * @returns A dispatchable action.
    */
   prepareForSearchWithQuery(
-    payload: PrepareForSearchWithQueryActionCreatorPayload
+    payload: PrepareForSearchWithQueryPayload
   ): AsyncThunkAction<
     void,
-    PrepareForSearchWithQueryActionCreatorPayload,
+    PrepareForSearchWithQueryPayload,
     AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
   >;
   /**

@@ -13,30 +13,36 @@ import {
   validateManualNumericRanges,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 
+export type ToggleSelectNumericFacetValuePayload =
+  ToggleSelectNumericFacetValueActionCreatorPayload;
+
 export const toggleSelectNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleSelectValue',
-  (payload: ToggleSelectNumericFacetValueActionCreatorPayload) =>
+  (payload: ToggleSelectNumericFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       selection: new RecordValue({values: numericFacetValueDefinition}),
     })
 );
 
-export type ToggleExcludeNumericFacetValueActionCreatorPayload =
+export type ToggleExcludeNumericFacetValuePayload =
   ToggleSelectNumericFacetValueActionCreatorPayload;
 
 export const toggleExcludeNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleExcludeValue',
-  (payload: ToggleExcludeNumericFacetValueActionCreatorPayload) =>
+  (payload: ToggleExcludeNumericFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       selection: new RecordValue({values: numericFacetValueDefinition}),
     })
 );
 
+export type UpdateNumericFacetValuesPayload =
+  UpdateNumericFacetValuesActionCreatorPayload;
+
 export const updateNumericFacetValues = createAction(
-  'commerce/facets/numericFacet/updateFacetValues',
-  (payload: UpdateNumericFacetValuesActionCreatorPayload) => {
+  'commerce/facets/numericFacet/updateValues',
+  (payload: UpdateNumericFacetValuesPayload) => {
     try {
       validatePayloadAndThrow(payload, {
         facetId: requiredNonEmptyString,

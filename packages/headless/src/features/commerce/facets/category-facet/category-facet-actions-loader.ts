@@ -1,16 +1,17 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  ToggleSelectCategoryFacetValueActionCreatorPayload,
-  UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
+  ToggleSelectCategoryFacetValuePayload,
+  UpdateCategoryFacetNumberOfValuesPayload,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from './category-facet-actions';
 
-export type {UpdateCategoryFacetNumberOfValuesActionCreatorPayload};
+export type {
+  ToggleSelectCategoryFacetValuePayload,
+  UpdateCategoryFacetNumberOfValuesPayload,
+};
 
 /**
  * The category facet action creators.
@@ -25,8 +26,8 @@ export interface CategoryFacetSetActionCreators {
    * @returns A dispatchable action.
    */
   toggleSelectCategoryFacetValue(
-    payload: ToggleSelectCategoryFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectCategoryFacetValueActionCreatorPayload>;
+    payload: ToggleSelectCategoryFacetValuePayload
+  ): PayloadAction<ToggleSelectCategoryFacetValuePayload>;
 
   /**
    * Updates the number of values to request for a given category facet.
@@ -35,8 +36,8 @@ export interface CategoryFacetSetActionCreators {
    * @returns A dispatchable action.
    */
   updateCategoryFacetNumberOfValues(
-    payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload
-  ): PayloadAction<UpdateCategoryFacetNumberOfValuesActionCreatorPayload>;
+    payload: UpdateCategoryFacetNumberOfValuesPayload
+  ): PayloadAction<UpdateCategoryFacetNumberOfValuesPayload>;
 }
 
 /**

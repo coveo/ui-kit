@@ -1,9 +1,9 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {UpdateQueryActionCreatorPayload, updateQuery} from './query-actions';
+import {UpdateQueryPayload, updateQuery} from './query-actions';
 import {queryReducer as query} from './query-slice';
 
-export type {UpdateQueryActionCreatorPayload};
+export type {UpdateQueryPayload};
 
 /**
  * The query action creators.
@@ -17,9 +17,7 @@ export interface QueryActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  updateQuery(
-    payload: UpdateQueryActionCreatorPayload
-  ): PayloadAction<UpdateQueryActionCreatorPayload>;
+  updateQuery(payload: UpdateQueryPayload): PayloadAction<UpdateQueryPayload>;
 }
 
 /**

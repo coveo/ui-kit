@@ -9,15 +9,15 @@ import {
   itemPayloadDefinition,
 } from './cart-validation';
 
-export type PurchaseActionCreatorPayload = Transaction;
+export type PurchasePayload = Transaction;
 
 export const purchase = createAsyncThunk<
   void,
-  PurchaseActionCreatorPayload,
+  PurchasePayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
 >(
   'commerce/cart/purchase',
-  async (payload: PurchaseActionCreatorPayload, {extra, getState}) => {
+  async (payload: PurchasePayload, {extra, getState}) => {
     const relayPayload = getECPurchasePayload(payload, getState());
     const {relay} = extra;
 
@@ -25,22 +25,19 @@ export const purchase = createAsyncThunk<
   }
 );
 
-export type SetItemsActionCreatorPayload = CartItemWithMetadata[];
+export type SetItemsPayload = CartItemWithMetadata[];
 
 export const setItems = createAction(
   'commerce/cart/setItems',
-  (payload: SetItemsActionCreatorPayload) =>
-    validatePayload<SetItemsActionCreatorPayload>(
-      payload,
-      setItemsPayloadDefinition
-    )
+  (payload: SetItemsPayload) =>
+    validatePayload<SetItemsPayload>(payload, setItemsPayloadDefinition)
 );
 
-export type UpdateItemQuantityActionCreatorPayload = CartItemWithMetadata;
+export type UpdateItemQuantityPayload = CartItemWithMetadata;
 
 export const updateItemQuantity = createAction(
   'commerce/cart/updateItemQuantity',
-  (payload: UpdateItemQuantityActionCreatorPayload) =>
+  (payload: UpdateItemQuantityPayload) =>
     validatePayload(payload, itemPayloadDefinition)
 );
 

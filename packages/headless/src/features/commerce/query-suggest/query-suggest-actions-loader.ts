@@ -32,6 +32,8 @@ export type BaseQuerySuggestActionCreators = Omit<
   'fetchQuerySuggestions'
 >;
 
+// TODO KIT-3350 - All query suggest actions should be commerce-specific.
+
 /**
  * The query suggest action creators for commerce.
  *

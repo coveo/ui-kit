@@ -12,18 +12,24 @@ import {
 } from '../../../facets/category-facet-set/category-facet-set-actions';
 import {validateCategoryFacetValue} from '../../../facets/category-facet-set/category-facet-validate-payload';
 
+export type UpdateCategoryFacetNumberOfValuesPayload =
+  UpdateCategoryFacetNumberOfValuesActionCreatorPayload;
+
 export const updateCategoryFacetNumberOfValues = createAction(
   'commerce/facets/categoryFacet/updateNumberOfValues',
-  (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) =>
+  (payload: UpdateCategoryFacetNumberOfValuesPayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       numberOfValues: new NumberValue({required: false, min: 1}),
     })
 );
 
+export type ToggleSelectCategoryFacetValuePayload =
+  ToggleSelectCategoryFacetValueActionCreatorPayload;
+
 export const toggleSelectCategoryFacetValue = createAction(
   'commerce/facets/categoryFacet/toggleSelectValue',
-  (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
+  (payload: ToggleSelectCategoryFacetValuePayload) => {
     try {
       validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
       validateCategoryFacetValue(payload.selection);

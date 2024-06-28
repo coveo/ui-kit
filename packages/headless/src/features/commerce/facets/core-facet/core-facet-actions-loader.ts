@@ -2,11 +2,11 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
-  DeselectAllValuesInCoreFacetActionCreatorPayload,
-  UpdateCoreFacetFreezeCurrentValuesActionCreatorPayload,
-  UpdateCoreFacetIsFieldExpandedActionCreatorPayload,
-  UpdateCoreFacetNumberOfValuesActionCreatorPayload,
-  UpdateAutoSelectionForAllCoreFacetsActionCreatorPayload,
+  DeselectAllValuesInCoreFacetPayload,
+  UpdateCoreFacetFreezeCurrentValuesPayload,
+  UpdateCoreFacetIsFieldExpandedPayload,
+  UpdateCoreFacetNumberOfValuesPayload,
+  UpdateAutoSelectionForAllCoreFacetsPayload,
   deselectAllValuesInCoreFacet,
   updateCoreFacetFreezeCurrentValues,
   updateCoreFacetIsFieldExpanded,
@@ -16,11 +16,11 @@ import {
 } from './core-facet-actions';
 
 export type {
-  DeselectAllValuesInCoreFacetActionCreatorPayload,
-  UpdateAutoSelectionForAllCoreFacetsActionCreatorPayload,
-  UpdateCoreFacetFreezeCurrentValuesActionCreatorPayload,
-  UpdateCoreFacetIsFieldExpandedActionCreatorPayload,
-  UpdateCoreFacetNumberOfValuesActionCreatorPayload,
+  DeselectAllValuesInCoreFacetPayload,
+  UpdateAutoSelectionForAllCoreFacetsPayload,
+  UpdateCoreFacetFreezeCurrentValuesPayload,
+  UpdateCoreFacetIsFieldExpandedPayload,
+  UpdateCoreFacetNumberOfValuesPayload,
 };
 
 /**
@@ -43,8 +43,8 @@ export interface CoreFacetActionsCreators {
    * @returns A dispatchable action.
    */
   deselectAllValuesInCoreFacet(
-    payload: DeselectAllValuesInCoreFacetActionCreatorPayload
-  ): PayloadAction<DeselectAllValuesInCoreFacetActionCreatorPayload>;
+    payload: DeselectAllValuesInCoreFacetPayload
+  ): PayloadAction<DeselectAllValuesInCoreFacetPayload>;
 
   /**
    * Updates the auto selection state of every facet.
@@ -53,8 +53,8 @@ export interface CoreFacetActionsCreators {
    * @returns A dispatchable action.
    */
   updateAutoSelectionForAllCoreFacets(
-    payload: UpdateAutoSelectionForAllCoreFacetsActionCreatorPayload
-  ): PayloadAction<UpdateAutoSelectionForAllCoreFacetsActionCreatorPayload>;
+    payload: UpdateAutoSelectionForAllCoreFacetsPayload
+  ): PayloadAction<UpdateAutoSelectionForAllCoreFacetsPayload>;
 
   /**
    * Update the freeze current values state of a given facet.
@@ -63,8 +63,8 @@ export interface CoreFacetActionsCreators {
    * @returns A dispatchable action.
    */
   updateCoreFacetFreezeCurrentValues(
-    payload: UpdateCoreFacetFreezeCurrentValuesActionCreatorPayload
-  ): PayloadAction<UpdateCoreFacetFreezeCurrentValuesActionCreatorPayload>;
+    payload: UpdateCoreFacetFreezeCurrentValuesPayload
+  ): PayloadAction<UpdateCoreFacetFreezeCurrentValuesPayload>;
 
   /**
    * Updates the expanded state of a given facet.
@@ -73,8 +73,8 @@ export interface CoreFacetActionsCreators {
    * @returns A dispatchable action.
    */
   updateCoreFacetIsFieldExpanded(
-    payload: UpdateCoreFacetIsFieldExpandedActionCreatorPayload
-  ): PayloadAction<UpdateCoreFacetIsFieldExpandedActionCreatorPayload>;
+    payload: UpdateCoreFacetIsFieldExpandedPayload
+  ): PayloadAction<UpdateCoreFacetIsFieldExpandedPayload>;
 
   /**
    * Updates the number of values to request for a given facet.
@@ -85,8 +85,8 @@ export interface CoreFacetActionsCreators {
    * @returns A dispatchable action.
    */
   updateCoreFacetNumberOfValues(
-    payload: UpdateCoreFacetNumberOfValuesActionCreatorPayload
-  ): PayloadAction<UpdateCoreFacetNumberOfValuesActionCreatorPayload>;
+    payload: UpdateCoreFacetNumberOfValuesPayload
+  ): PayloadAction<UpdateCoreFacetNumberOfValuesPayload>;
 }
 
 /**

@@ -2,10 +2,10 @@ import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  FetchMoreRecommendationsActionCreatorPayload,
-  FetchRecommendationsActionCreatorPayload,
+  FetchMoreRecommendationsPayload,
+  FetchRecommendationsPayload,
   QueryRecommendationsCommerceAPIThunkReturn,
-  RegisterRecommendationsSlotActionCreatorPayload,
+  RegisterRecommendationsSlotPayload,
   StateNeededByFetchRecommendations,
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -14,9 +14,9 @@ import {
 import {recommendationsReducer as recommendations} from './recommendations-slice';
 
 export type {
-  RegisterRecommendationsSlotActionCreatorPayload,
-  FetchRecommendationsActionCreatorPayload,
-  FetchMoreRecommendationsActionCreatorPayload,
+  RegisterRecommendationsSlotPayload,
+  FetchRecommendationsPayload,
+  FetchMoreRecommendationsPayload,
 };
 
 /**
@@ -32,8 +32,8 @@ export interface RecommendationsActionCreator {
    * @returns A dispatchable action.
    */
   registerRecommendationsSlot(
-    payload: RegisterRecommendationsSlotActionCreatorPayload
-  ): PayloadAction<RegisterRecommendationsSlotActionCreatorPayload>;
+    payload: RegisterRecommendationsSlotPayload
+  ): PayloadAction<RegisterRecommendationsSlotPayload>;
   /**
    * Fetches recommendations.
    *
@@ -41,10 +41,10 @@ export interface RecommendationsActionCreator {
    * @returns A dispatchable action.
    */
   fetchRecommendations(
-    payload: FetchRecommendationsActionCreatorPayload
+    payload: FetchRecommendationsPayload
   ): AsyncThunkAction<
     QueryRecommendationsCommerceAPIThunkReturn,
-    FetchRecommendationsActionCreatorPayload,
+    FetchRecommendationsPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
   >;
 
@@ -55,10 +55,10 @@ export interface RecommendationsActionCreator {
    * @returns A dispatchable action.
    */
   fetchMoreRecommendations(
-    payload: FetchMoreRecommendationsActionCreatorPayload
+    payload: FetchMoreRecommendationsPayload
   ): AsyncThunkAction<
     QueryRecommendationsCommerceAPIThunkReturn | null,
-    FetchMoreRecommendationsActionCreatorPayload,
+    FetchMoreRecommendationsPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
   >;
 

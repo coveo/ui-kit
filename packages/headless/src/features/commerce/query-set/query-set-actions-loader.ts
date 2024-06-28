@@ -1,16 +1,14 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {
-  RegisterQuerySetQueryActionCreatorPayload,
-  UpdateQuerySetQueryActionCreatorPayload,
-} from '../../query-set/query-set-actions';
 import {querySetReducer} from '../../query-set/query-set-slice';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
+import {
+  RegisterQuerySetQueryPayload,
+  UpdateQuerySetQueryPayload,
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from './query-set-actions';
 
-export type {
-  RegisterQuerySetQueryActionCreatorPayload,
-  UpdateQuerySetQueryActionCreatorPayload,
-};
+export type {RegisterQuerySetQueryPayload, UpdateQuerySetQueryPayload};
 
 /**
  * The query set action creators.
@@ -25,8 +23,8 @@ export interface QuerySetActionCreators {
    * @returns A dispatchable action.
    */
   registerQuerySetQuery(
-    payload: RegisterQuerySetQueryActionCreatorPayload
-  ): PayloadAction<RegisterQuerySetQueryActionCreatorPayload>;
+    payload: RegisterQuerySetQueryPayload
+  ): PayloadAction<RegisterQuerySetQueryPayload>;
 
   /**
    * Updates a query set query.
@@ -35,8 +33,8 @@ export interface QuerySetActionCreators {
    * @returns A dispatchable action.
    */
   updateQuerySetQuery(
-    payload: UpdateQuerySetQueryActionCreatorPayload
-  ): PayloadAction<UpdateQuerySetQueryActionCreatorPayload>;
+    payload: UpdateQuerySetQueryPayload
+  ): PayloadAction<UpdateQuerySetQueryPayload>;
 }
 
 /**

@@ -2,8 +2,8 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {SortBy, SortDirection} from '../../sort/sort';
 import {
-  SetContextActionCreatorPayload,
-  SetViewActionCreatorPayload,
+  SetContextPayload,
+  SetViewPayload,
   setContext,
   setView,
 } from '../context/context-actions';
@@ -122,10 +122,7 @@ describe('product-listing-sort-slice', () => {
     state.appliedSort = sort;
     state.availableSorts = [sort];
 
-    const finalState = sortReducer(
-      state,
-      setContext({} as SetContextActionCreatorPayload)
-    );
+    const finalState = sortReducer(state, setContext({} as SetContextPayload));
 
     expect(finalState).toStrictEqual(getCommerceSortInitialState());
   });
@@ -134,10 +131,7 @@ describe('product-listing-sort-slice', () => {
     state.appliedSort = sort;
     state.availableSorts = [sort];
 
-    const finalState = sortReducer(
-      state,
-      setView({} as SetViewActionCreatorPayload)
-    );
+    const finalState = sortReducer(state, setView({} as SetViewPayload));
 
     expect(finalState).toStrictEqual(getCommerceSortInitialState());
   });

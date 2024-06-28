@@ -1,12 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  ToggleSelectDateFacetValueActionCreatorPayload,
-  UpdateDateFacetValuesActionCreatorPayload,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
-  ToggleExcludeDateFacetValueActionCreatorPayload,
+  ToggleExcludeDateFacetValuePayload,
+  ToggleSelectDateFacetValuePayload,
+  UpdateDateFacetValuesPayload,
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
@@ -18,9 +16,9 @@ import {
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export type {
-  ToggleSelectDateFacetValueActionCreatorPayload,
-  ToggleExcludeDateFacetValueActionCreatorPayload,
-  UpdateDateFacetValuesActionCreatorPayload,
+  ToggleSelectDateFacetValuePayload,
+  ToggleExcludeDateFacetValuePayload,
+  UpdateDateFacetValuesPayload,
 };
 
 export interface DateFacetActionCreators {
@@ -31,8 +29,8 @@ export interface DateFacetActionCreators {
    * @returns A dispatchable action.
    */
   toggleSelectDateFacetValue(
-    payload: ToggleSelectDateFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectDateFacetValueActionCreatorPayload>;
+    payload: ToggleSelectDateFacetValuePayload
+  ): PayloadAction<ToggleSelectDateFacetValuePayload>;
 
   /**
    * Toggles the exclusion state of a given date facet value.
@@ -41,8 +39,8 @@ export interface DateFacetActionCreators {
    * @returns A dispatchable action.
    */
   toggleExcludeDateFacetValue(
-    payload: ToggleExcludeDateFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleExcludeDateFacetValueActionCreatorPayload>;
+    payload: ToggleExcludeDateFacetValuePayload
+  ): PayloadAction<ToggleExcludeDateFacetValuePayload>;
 
   /**
    * Updates all values in a given date facet.
@@ -51,8 +49,8 @@ export interface DateFacetActionCreators {
    * @returns A dispatchable action.
    */
   updateDateFacetValues(
-    payload: UpdateDateFacetValuesActionCreatorPayload
-  ): PayloadAction<UpdateDateFacetValuesActionCreatorPayload>;
+    payload: UpdateDateFacetValuesPayload
+  ): PayloadAction<UpdateDateFacetValuesPayload>;
 }
 
 /**

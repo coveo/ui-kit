@@ -4,23 +4,21 @@ import {ViewParams} from '../../../api/commerce/commerce-api-params';
 import {validatePayload} from '../../../utils/validate-payload';
 import {contextDefinition, viewDefinition} from './context-validation';
 
-export interface SetContextActionCreatorPayload {
+export interface SetContextPayload {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
-  view: SetViewActionCreatorPayload;
+  view: SetViewPayload;
 }
 
 export const setContext = createAction(
   'commerce/context/set',
-  (payload: SetContextActionCreatorPayload) =>
-    validatePayload(payload, contextDefinition)
+  (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
 );
 
-export type SetViewActionCreatorPayload = Pick<ViewParams, 'url'>;
+export type SetViewPayload = Pick<ViewParams, 'url'>;
 
 export const setView = createAction(
   'commerce/context/setView',
-  (payload: SetViewActionCreatorPayload) =>
-    validatePayload(payload, viewDefinition)
+  (payload: SetViewPayload) => validatePayload(payload, viewDefinition)
 );

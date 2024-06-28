@@ -16,10 +16,7 @@ import {
 } from '../facets/core-facet/core-facet-actions';
 import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
-import {
-  UpdateQueryActionCreatorPayload,
-  updateQuery,
-} from '../query/query-actions';
+import {UpdateQueryPayload, updateQuery} from '../query/query-actions';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
@@ -47,7 +44,7 @@ export interface PrepareForSearchWithQueryOptions {
   clearFilters: boolean;
 }
 
-export interface FetchInstantProductsActionCreatorPayload {
+export interface FetchInstantProductsPayload {
   /**
    * The search box ID.
    */
@@ -120,12 +117,12 @@ export const fetchMoreProducts = createAsyncThunk<
   return processor.process(fetchedResponse);
 });
 
-export type PrepareForSearchWithQueryActionCreatorPayload =
-  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions;
+export type PrepareForSearchWithQueryPayload = UpdateQueryPayload &
+  PrepareForSearchWithQueryOptions;
 
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
-  PrepareForSearchWithQueryActionCreatorPayload,
+  PrepareForSearchWithQueryPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
@@ -150,7 +147,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 
 export const fetchInstantProducts = createAsyncThunk<
   FetchInstantProductsThunkReturn,
-  FetchInstantProductsActionCreatorPayload,
+  FetchInstantProductsPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/fetchInstantProducts',

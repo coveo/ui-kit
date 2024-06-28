@@ -2,13 +2,13 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
 import {
-  ProductClickActionCreatorPayload,
-  ProductViewActionCreatorPayload,
+  ProductClickPayload,
+  ProductViewPayload,
   productClick,
   productView,
 } from './product-actions';
 
-export type {ProductClickActionCreatorPayload, ProductViewActionCreatorPayload};
+export type {ProductClickPayload, ProductViewPayload};
 
 /**
  * The product action creators.
@@ -23,10 +23,10 @@ export interface ProductActionCreators {
    * @returns A dispatchable action.
    */
   productClick(
-    payload: ProductClickActionCreatorPayload
+    payload: ProductClickPayload
   ): AsyncThunkAction<
     void,
-    ProductClickActionCreatorPayload,
+    ProductClickPayload,
     AsyncThunkCommerceOptions<CommerceEngineState>
   >;
 
@@ -37,10 +37,10 @@ export interface ProductActionCreators {
    * @returns A dispatchable action.
    */
   productView(
-    payload: ProductViewActionCreatorPayload
+    payload: ProductViewPayload
   ): AsyncThunkAction<
     void,
-    ProductViewActionCreatorPayload,
+    ProductViewPayload,
     AsyncThunkCommerceOptions<CommerceEngineState>
   >;
 }

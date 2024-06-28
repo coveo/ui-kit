@@ -7,21 +7,24 @@ import {
 import {ToggleSelectFacetValueActionCreatorPayload} from '../../../facets/facet-set/facet-set-actions';
 import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload';
 
-export type ToggleExcludeFacetValueActionCreatorPayload =
+export type ToggleExcludeFacetValuePayload =
   ToggleSelectFacetValueActionCreatorPayload;
 
 export const toggleExcludeFacetValue = createAction(
   'commerce/facets/regularFacet/toggleExcludeValue',
-  (payload: ToggleExcludeFacetValueActionCreatorPayload) =>
+  (payload: ToggleExcludeFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       selection: new RecordValue({values: facetValueDefinition}),
     })
 );
 
+export type ToggleSelectFacetValuePayload =
+  ToggleSelectFacetValueActionCreatorPayload;
+
 export const toggleSelectFacetValue = createAction(
   'commerce/facets/regularFacet/toggleSelectValue',
-  (payload: ToggleSelectFacetValueActionCreatorPayload) =>
+  (payload: ToggleSelectFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
       selection: new RecordValue({values: facetValueDefinition}),

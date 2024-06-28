@@ -1,17 +1,14 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {ToggleSelectFacetValueActionCreatorPayload} from '../../../../ssr.index';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
 import {
-  ToggleExcludeFacetValueActionCreatorPayload,
+  ToggleExcludeFacetValuePayload,
+  ToggleSelectFacetValuePayload,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from './regular-facet-actions';
 
-export type {
-  ToggleExcludeFacetValueActionCreatorPayload,
-  ToggleSelectFacetValueActionCreatorPayload,
-};
+export type {ToggleExcludeFacetValuePayload, ToggleSelectFacetValuePayload};
 
 /**
  * The regular facet action creators.
@@ -26,8 +23,8 @@ export interface RegularFacetActionCreators {
    * @returns A dispatchable action.
    */
   toggleExcludeFacetValue(
-    payload: ToggleExcludeFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleExcludeFacetValueActionCreatorPayload>;
+    payload: ToggleExcludeFacetValuePayload
+  ): PayloadAction<ToggleExcludeFacetValuePayload>;
 
   /**
    * Toggles the selection of a given regular facet value.
@@ -36,8 +33,8 @@ export interface RegularFacetActionCreators {
    * @returns A dispatchable action.
    */
   toggleSelectFacetValue(
-    payload: ToggleSelectFacetValueActionCreatorPayload
-  ): PayloadAction<ToggleSelectFacetValueActionCreatorPayload>;
+    payload: ToggleSelectFacetValuePayload
+  ): PayloadAction<ToggleSelectFacetValuePayload>;
 }
 
 /**

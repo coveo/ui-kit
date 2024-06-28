@@ -5,11 +5,11 @@ import {commerceFacetSetReducer as commerceFacetSet} from '../facets/facet-set/f
 import {paginationReducer as commercePagination} from '../pagination/pagination-slice';
 import {sortReducer as commerceSort} from '../sort/sort-slice';
 import {
-  RestoreProductListingParametersActionCreatorPayload,
+  RestoreProductListingParametersPayload,
   restoreProductListingParameters,
 } from './product-listing-parameters-actions';
 
-export type {RestoreProductListingParametersActionCreatorPayload};
+export type {RestoreProductListingParametersPayload};
 
 /**
  * The product listing parameters action creators.
@@ -24,8 +24,8 @@ export interface ProductListingParametersActionCreators {
    * @returns A dispatchable action.
    */
   restoreProductListingParameters(
-    payload: RestoreProductListingParametersActionCreatorPayload
-  ): PayloadAction<RestoreProductListingParametersActionCreatorPayload>;
+    payload: RestoreProductListingParametersPayload
+  ): PayloadAction<RestoreProductListingParametersPayload>;
 }
 
 /**

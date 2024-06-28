@@ -1,14 +1,14 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  SetContextActionCreatorPayload,
-  SetViewActionCreatorPayload,
+  SetContextPayload,
+  SetViewPayload,
   setContext,
   setView,
 } from './context-actions';
 import {contextReducer as commerceContext} from './context-slice';
 
-export type {SetContextActionCreatorPayload, SetViewActionCreatorPayload};
+export type {SetContextPayload, SetViewPayload};
 
 /**
  * The context action creators.
@@ -22,9 +22,7 @@ export interface ContextActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setContext(
-    payload: SetContextActionCreatorPayload
-  ): PayloadAction<SetContextActionCreatorPayload>;
+  setContext(payload: SetContextPayload): PayloadAction<SetContextPayload>;
 
   /**
    * Sets the view context property without modifying any other context properties.
@@ -32,9 +30,7 @@ export interface ContextActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setView(
-    payload: SetViewActionCreatorPayload
-  ): PayloadAction<SetViewActionCreatorPayload>;
+  setView(payload: SetViewPayload): PayloadAction<SetViewPayload>;
 }
 
 /**

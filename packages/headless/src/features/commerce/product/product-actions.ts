@@ -4,11 +4,11 @@ import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-clie
 import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
 import {getCurrency} from '../context/context-selector';
 
-export type ProductViewActionCreatorPayload = Product;
+export type ProductViewPayload = Product;
 
 export const productView = createAsyncThunk<
   void,
-  ProductViewActionCreatorPayload,
+  ProductViewPayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
 >('commerce/product/view', async (payload: Product, {extra, getState}) => {
   const {relay} = extra;
@@ -18,18 +18,15 @@ export const productView = createAsyncThunk<
   relay.emit('ec.productView', relayPayload);
 });
 
-export type ProductClickActionCreatorPayload = Omit<
-  Ec.ProductClick,
-  'currency'
->;
+export type ProductClickPayload = Omit<Ec.ProductClick, 'currency'>;
 
 export const productClick = createAsyncThunk<
   void,
-  ProductClickActionCreatorPayload,
+  ProductClickPayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
 >(
   'commerce/product/click',
-  async (payload: ProductClickActionCreatorPayload, {extra, getState}) => {
+  async (payload: ProductClickPayload, {extra, getState}) => {
     const {relay} = extra;
     const currency = getCurrency(getState().commerceContext);
     const relayPayload = {currency, ...payload};
