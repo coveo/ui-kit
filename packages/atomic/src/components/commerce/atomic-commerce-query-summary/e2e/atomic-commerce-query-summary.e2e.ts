@@ -12,7 +12,7 @@ test.describe('when search has not been executed', () => {
 
 test.describe('after searching for kayak', () => {
   test.beforeEach(async ({searchBox, querySummary}) => {
-    await querySummary.load({}, 'with-search-box');
+    await querySummary.load({story: 'with-search-box'});
     await searchBox.hydrated.waitFor();
     await searchBox.searchInput.fill('kayak');
     await searchBox.submitButton.click();
@@ -26,7 +26,7 @@ test.describe('after searching for kayak', () => {
 
 test.describe('when search yields no results', () => {
   test.beforeEach(async ({querySummary}) => {
-    await querySummary.load({}, 'no-results');
+    await querySummary.load({story: 'no-results'});
   });
 
   test('should not display anything', async ({querySummary}) => {
@@ -36,7 +36,7 @@ test.describe('when search yields no results', () => {
 
 test.describe('when search yields 27 results', () => {
   test.beforeEach(async ({querySummary}) => {
-    await querySummary.load({}, 'fixed-number-of-results');
+    await querySummary.load({story: 'fixed-number-of-results'});
   });
 
   test('screen readers should read out', async ({querySummary}) => {
@@ -47,7 +47,7 @@ test.describe('when search yields 27 results', () => {
 
 test.describe('when a query yield a single result', () => {
   test.beforeEach(async ({querySummary, searchBox}) => {
-    await querySummary.load({}, 'with-search-box');
+    await querySummary.load({story: 'with-search-box'});
     await searchBox.hydrated.waitFor();
     await searchBox.searchInput.fill('@ec_product_id=SP03730_00007');
     await searchBox.submitButton.click();
