@@ -12,13 +12,13 @@ export type UpdateQuerySetQueryPayload =
   UpdateQuerySetQueryActionCreatorPayload;
 
 export const registerQuerySetQuery = createAction(
-  'commerce/querySet/register',
+  'commerce/querySet/registerQuery',
   (payload: RegisterQuerySetQueryPayload) =>
     validatePayload(payload, querySetDefinition)
 );
 
 export const updateQuerySetQuery = createAction(
-  'commerce/querySet/update',
+  'commerce/querySet/updateQuery',
   (payload: UpdateQuerySetQueryPayload) =>
     validatePayload(payload, querySetDefinition)
 );
