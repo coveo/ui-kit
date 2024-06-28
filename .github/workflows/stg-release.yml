@@ -1,0 +1,43 @@
+name: Release beta
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: The environment in which to run the job
+      region:
+        description: The region in which to run the job
+      package:
+        description: The package name
+      job:
+        description: The name of the job (as defined in the deployment config)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Release:
+    runs-on: [coveo, linux, x64, ec2]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Npm Login
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm run npm:login:ci
+
+      - name: Setup pnpm
+        run: |
+          corepack enable
+          corepack prepare --activate
+
+      - name: Publish packages on NPM
+        shell: bash
+        run: |
+          npm run npm:tag:beta

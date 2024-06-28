@@ -36,35 +36,21 @@
           "acl": "public-read"
         }
       }
-    },
-    {
-      "id": "stg-release",
-      "team_jenkins": {
-        "disabled": true,
-        "job_name": "relay-stg-release",
-        "extra_parameters": {
-          "commitHash": "$[COMMIT_HASH]"
-        },
-        "stg": {
-          "disabled": false
-        }
-      }
-    },
-    {
-      "id": "prd-release",
-      "team_jenkins": {
-        "disabled": true,
-        "job_name": "relay-prd-release",
-        "extra_parameters": {
-          "commitHash": "$[COMMIT_HASH]"
-        },
-        "prd": {
-          "disabled": false
-        }
-      }
     }
   ],
   "certifiers": {},
+  "environment_post_hooks": {
+    "stg": {
+      "github": {
+        "workflow_file": "stg-release.yml"
+      }
+    },
+    "prd": {
+      "github": {
+        "workflow_file": "prd-release.yml"
+      }
+    }
+  },
   "observatory": {
     "no_endpoint": true
   },
