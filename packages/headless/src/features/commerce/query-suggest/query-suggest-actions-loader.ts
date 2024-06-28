@@ -35,7 +35,7 @@ export type BaseQuerySuggestActionCreators = Omit<
 // TODO KIT-3350 - All query suggest actions should be commerce-specific.
 
 /**
- * The query suggest action creators for commerce.
+ * The query suggest action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
