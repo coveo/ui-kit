@@ -20,7 +20,7 @@ export type {
  */
 export interface CategoryFacetSetActionCreators {
   /**
-   * Toggles the selection of a category facet value.
+   * Toggles the selection of a given category facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
