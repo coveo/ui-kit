@@ -60,6 +60,14 @@ export interface CartActionCreators {
   ): PayloadAction<UpdateItemQuantityActionCreatorPayload>;
 }
 
+/**
+ * Loads the commerce cart reducer and returns the available cart action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The commerce engine.
+ * @returns An object holding the cart action creators.
+ */
 export function loadCartActions(engine: CommerceEngine): CartActionCreators {
   engine.addReducers({cart});
   return {

@@ -23,7 +23,7 @@ export interface SortActionCreators {
 }
 
 /**
- * Loads the commerce sort reducer and returns the possible sort action creators.
+ * Loads the commerce sort reducer and returns the available sort action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

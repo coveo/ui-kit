@@ -13,16 +13,41 @@ export type {
   ToggleSelectFacetValueActionCreatorPayload,
 };
 
+/**
+ * The regular facet action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ */
 export interface RegularFacetActionCreators {
+  /**
+   * Toggles the exclusion of a given regular facet value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
   toggleExcludeFacetValue(
     payload: ToggleExcludeFacetValueActionCreatorPayload
   ): PayloadAction<ToggleExcludeFacetValueActionCreatorPayload>;
 
+  /**
+   * Toggles the selection of a given regular facet value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
   toggleSelectFacetValue(
     payload: ToggleSelectFacetValueActionCreatorPayload
   ): PayloadAction<ToggleSelectFacetValueActionCreatorPayload>;
 }
 
+/**
+ * Loads the commerce facet set reducer and returns the available regular facet action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ *
+ * @param engine - The commerce engine.
+ * @returns An object holding the regular facet action creators.
+ */
 export function loadRegularFacetActions(
   engine: CommerceEngine
 ): RegularFacetActionCreators {

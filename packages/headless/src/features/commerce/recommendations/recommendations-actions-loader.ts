@@ -27,8 +27,8 @@ export type {
 export interface RecommendationsActionCreator {
   /**
    * Registers a recommendations slot.
-   * @param payload - The action creator payload.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   registerRecommendationsSlot(
@@ -36,8 +36,8 @@ export interface RecommendationsActionCreator {
   ): PayloadAction<RegisterRecommendationsSlotActionCreatorPayload>;
   /**
    * Fetches recommendations.
-   * @param payload - The action creator payload.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   fetchRecommendations(
@@ -50,8 +50,8 @@ export interface RecommendationsActionCreator {
 
   /**
    * Fetches an additional page of recommendations and appends it to the current list.
-   * @param payload - The action creator payload.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   fetchMoreRecommendations(
@@ -66,12 +66,12 @@ export interface RecommendationsActionCreator {
 }
 
 /**
- * Loads the recommendations reducer and returns the possible recommendations action creators.
+ * Loads the commerce recommendations reducer and returns the available recommendations action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the recommendations action creators.
  */
 export function loadRecommendationsActions(
   engine: CommerceEngine

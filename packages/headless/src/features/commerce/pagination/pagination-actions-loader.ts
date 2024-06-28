@@ -80,7 +80,7 @@ export interface PaginationActionCreators {
 }
 
 /**
- * Loads the commerce pagination reducer and returns the possible pagination actions.
+ * Loads the commerce pagination reducer and returns the available pagination action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

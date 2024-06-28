@@ -13,7 +13,7 @@ import {
 } from './date-facet-actions';
 
 /**
- * The date facet set action creators.
+ * The date facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
@@ -25,7 +25,7 @@ export type {
 
 export interface DateFacetActionCreators {
   /**
-   * Toggles the selection state of a date facet value.
+   * Toggles the selection state of a given date facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -35,7 +35,7 @@ export interface DateFacetActionCreators {
   ): PayloadAction<ToggleSelectDateFacetValueActionCreatorPayload>;
 
   /**
-   * Toggles the exclusion state of a date facet value.
+   * Toggles the exclusion state of a given date facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -45,7 +45,7 @@ export interface DateFacetActionCreators {
   ): PayloadAction<ToggleExcludeDateFacetValueActionCreatorPayload>;
 
   /**
-   * Updates the date facet values.
+   * Updates all values in a given date facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -56,7 +56,7 @@ export interface DateFacetActionCreators {
 }
 
 /**
- * Loads the commerce facet set reducer and returns the possible date facet actions.
+ * Loads the commerce facet set reducer and returns the available date facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

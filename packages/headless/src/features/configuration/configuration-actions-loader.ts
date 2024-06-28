@@ -83,7 +83,7 @@ export interface ConfigurationActionCreators {
 }
 
 /**
- * Loads the `configuration` reducer and returns possible action creators.
+ * Loads the configuration reducer and returns the available configuration action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.

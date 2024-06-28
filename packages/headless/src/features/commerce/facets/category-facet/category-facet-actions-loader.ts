@@ -13,7 +13,7 @@ import {
 export type {UpdateCategoryFacetNumberOfValuesActionCreatorPayload};
 
 /**
- * The category facet set action creators.
+ * The category facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
@@ -29,7 +29,7 @@ export interface CategoryFacetSetActionCreators {
   ): PayloadAction<ToggleSelectCategoryFacetValueActionCreatorPayload>;
 
   /**
-   * Updates the number of values to display in a category facet.
+   * Updates the number of values to request for a given category facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -40,7 +40,7 @@ export interface CategoryFacetSetActionCreators {
 }
 
 /**
- * Loads the commerce facet set reducer and returns the possible category facet actions.
+ * Loads the commerce facet set reducer and returns the available category facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

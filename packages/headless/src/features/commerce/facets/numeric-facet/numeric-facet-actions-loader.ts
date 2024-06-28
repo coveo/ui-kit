@@ -19,13 +19,13 @@ export type {
 };
 
 /**
- * The numeric facet set action creators.
+ * The numeric facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface NumericFacetActionCreators {
   /**
-   * Toggles the selection state of a numeric facet value.
+   * Toggles the selection state of a given numeric facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -35,7 +35,7 @@ export interface NumericFacetActionCreators {
   ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
 
   /**
-   * Toggles the exclusion state of a numeric facet value.
+   * Toggles the exclusion state of a given numeric facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -45,7 +45,7 @@ export interface NumericFacetActionCreators {
   ): PayloadAction<ToggleExcludeNumericFacetValueActionCreatorPayload>;
 
   /**
-   * Updates the numeric facet values.
+   * Updates all values in a given numeric facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -56,7 +56,7 @@ export interface NumericFacetActionCreators {
 }
 
 /**
- * Loads the commerce facet set reducer and returns the possible numeric facet actions.
+ * Loads the commerce facet set reducer and returns the available numeric facet action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *

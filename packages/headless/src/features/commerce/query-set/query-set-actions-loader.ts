@@ -40,12 +40,12 @@ export interface QuerySetActionCreators {
 }
 
 /**
- * Loads the query set reducer and returns the possible commerce query set action creators.
+ * Loads the query set reducer and returns the available query set action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the query set action creators.
  */
 export function loadQuerySetActions(engine: CommerceEngine) {
   engine.addReducers({querySetReducer});

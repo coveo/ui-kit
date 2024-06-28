@@ -41,12 +41,12 @@ export interface ProductListingActionCreators {
 }
 
 /**
- * Loads the product listing reducer and returns the possible action creators.
+ * Loads the commerce product listing reducer and returns the available product listing action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the product listing action creators.
  */
 export function loadProductListingActions(
   engine: CommerceEngine

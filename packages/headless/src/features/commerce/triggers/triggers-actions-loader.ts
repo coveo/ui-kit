@@ -13,6 +13,11 @@ export type {
   ApplyQueryTriggerModificationPayload,
 };
 
+/**
+ * The triggers action creators.
+ *
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ */
 export interface TriggersActionCreators {
   /**
    * Updates the query to ignore the query trigger.
@@ -36,7 +41,7 @@ export interface TriggersActionCreators {
 }
 
 /**
- * Loads the triggers reducer and returns the possible triggers actions.
+ * Loads the commerce triggers reducer and returns the available triggers action creators.
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the triggers actions.

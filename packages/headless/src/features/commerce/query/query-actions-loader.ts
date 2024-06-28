@@ -13,6 +13,7 @@ export type {UpdateQueryActionCreatorPayload};
 export interface QueryActionCreators {
   /**
    * Updates the basic query expression.
+   *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
@@ -22,12 +23,12 @@ export interface QueryActionCreators {
 }
 
 /**
- * Loads the `query` reducer and returns possible action creators.
+ * Loads the commerce query reducer and returns possible query action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the query action creators.
  */
 export function loadQueryActions(engine: CommerceEngine): QueryActionCreators {
   engine.addReducers({query});

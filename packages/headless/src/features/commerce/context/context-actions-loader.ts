@@ -38,11 +38,12 @@ export interface ContextActionCreators {
 }
 
 /**
- * Loads the context reducer and returns the possible commerce context action creators.
+ * Loads the commerce context reducer and returns the available context action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
- * @returns An object holding the commerce context action creators.
+ * @param engine - The commerce engine.
+ * @returns An object holding the context action creators.
  */
 export function loadContextActions(
   engine: CommerceEngine
