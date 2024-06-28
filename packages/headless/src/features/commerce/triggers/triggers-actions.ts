@@ -19,7 +19,7 @@ export const updateIgnoreQueryTrigger = createAction(
 );
 
 export const applyQueryTriggerModification = createAction(
-  'commerce/triggers/query/apply',
+  'commerce/triggers/query/applyModification',
   (payload: ApplyQueryTriggerModificationPayload) =>
     validatePayload<ApplyQueryTriggerModificationPayload>(
       payload,
