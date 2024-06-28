@@ -7,26 +7,12 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
 
-export interface CoreInstantProductActionCreatorPayload {
+export interface CoreInstantProductPayload {
   /**
    * The search box ID.
    */
   id: string;
 }
-
-export interface RegisterInstantProductActionCreatorPayload
-  extends CoreInstantProductActionCreatorPayload {}
-
-export interface UpdateInstantProductQueryActionCreatorPayload
-  extends CoreInstantProductActionCreatorPayload {
-  /**
-   * The initial basic query expression for instant products.
-   */
-  query: string;
-}
-
-export interface ClearExpiredInstantProductsActionCreatorPayload
-  extends CoreInstantProductActionCreatorPayload {}
 
 const instantProductsIdDefinition = {
   id: requiredNonEmptyString,
@@ -37,30 +23,15 @@ const instantProductsQueryDefinition = {
   query: requiredEmptyAllowedString,
 };
 
-export const registerInstantProducts = createAction(
-  'commerce/instantProducts/register',
-  (payload: RegisterInstantProductActionCreatorPayload) =>
-    validatePayload(payload, instantProductsIdDefinition)
-);
-
-export const updateInstantProductsQuery = createAction(
-  'commerce/instantProducts/updateQuery',
-  (payload: UpdateInstantProductQueryActionCreatorPayload) =>
-    validatePayload(payload, instantProductsQueryDefinition)
-);
+export type ClearExpiredInstantProductsPayload = CoreInstantProductPayload;
 
 export const clearExpiredProducts = createAction(
   'commerce/instantProducts/clearExpired',
-  (payload: ClearExpiredInstantProductsActionCreatorPayload) =>
+  (payload: ClearExpiredInstantProductsPayload) =>
     validatePayload(payload, instantProductsIdDefinition)
 );
 
-export interface PromoteChildToParentActionCreatorPayload
-  extends UpdateInstantProductQueryActionCreatorPayload {
-  child: ChildProduct;
-}
-
-export const promoteChildToParentDefinition = {
+const promoteChildToParentDefinition = {
   child: new RecordValue({
     options: {required: true},
     values: {
@@ -70,8 +41,35 @@ export const promoteChildToParentDefinition = {
   ...instantProductsQueryDefinition,
 };
 
+export interface PromoteChildToParentPayload
+  extends UpdateInstantProductQueryPayload {
+  child: ChildProduct;
+}
+
 export const promoteChildToParent = createAction(
   'commerce/instantProducts/promoteChildToParent',
-  (payload: PromoteChildToParentActionCreatorPayload) =>
+  (payload: PromoteChildToParentPayload) =>
     validatePayload(payload, promoteChildToParentDefinition)
+);
+
+export interface UpdateInstantProductQueryPayload
+  extends CoreInstantProductPayload {
+  /**
+   * The initial basic query expression for instant products.
+   */
+  query: string;
+}
+
+export type RegisterInstantProductPayload = CoreInstantProductPayload;
+
+export const registerInstantProducts = createAction(
+  'commerce/instantProducts/register',
+  (payload: RegisterInstantProductPayload) =>
+    validatePayload(payload, instantProductsIdDefinition)
+);
+
+export const updateInstantProductsQuery = createAction(
+  'commerce/instantProducts/updateQuery',
+  (payload: UpdateInstantProductQueryPayload) =>
+    validatePayload(payload, instantProductsQueryDefinition)
 );

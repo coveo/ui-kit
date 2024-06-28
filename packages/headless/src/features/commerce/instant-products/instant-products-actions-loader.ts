@@ -1,10 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
-  ClearExpiredInstantProductsActionCreatorPayload,
-  PromoteChildToParentActionCreatorPayload,
-  RegisterInstantProductActionCreatorPayload,
-  UpdateInstantProductQueryActionCreatorPayload,
+  ClearExpiredInstantProductsPayload,
+  PromoteChildToParentPayload,
+  RegisterInstantProductPayload,
+  UpdateInstantProductQueryPayload,
   clearExpiredProducts,
   promoteChildToParent,
   registerInstantProducts,
@@ -13,10 +13,10 @@ import {
 import {instantProductsReducer as instantProducts} from './instant-products-slice';
 
 export type {
-  RegisterInstantProductActionCreatorPayload,
-  UpdateInstantProductQueryActionCreatorPayload,
-  ClearExpiredInstantProductsActionCreatorPayload,
-  PromoteChildToParentActionCreatorPayload,
+  ClearExpiredInstantProductsPayload,
+  PromoteChildToParentPayload,
+  RegisterInstantProductPayload,
+  UpdateInstantProductQueryPayload,
 };
 
 /**
@@ -26,34 +26,14 @@ export type {
  */
 export interface InstantProductsActionCreators {
   /**
-   * Registers instant products.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  registerInstantProducts(
-    payload: RegisterInstantProductActionCreatorPayload
-  ): PayloadAction<RegisterInstantProductActionCreatorPayload>;
-
-  /**
-   * Updates the query for instant products.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  updateInstantProductsQuery(
-    payload: UpdateInstantProductQueryActionCreatorPayload
-  ): PayloadAction<UpdateInstantProductQueryActionCreatorPayload>;
-
-  /**
    * Clears expired instant products.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   clearExpiredProducts(
-    payload: ClearExpiredInstantProductsActionCreatorPayload
-  ): PayloadAction<ClearExpiredInstantProductsActionCreatorPayload>;
+    payload: ClearExpiredInstantProductsPayload
+  ): PayloadAction<ClearExpiredInstantProductsPayload>;
 
   /**
    * Promotes a child product to a parent product.
@@ -62,12 +42,32 @@ export interface InstantProductsActionCreators {
    * @returns A dispatchable action.
    */
   promoteChildToParent(
-    payload: PromoteChildToParentActionCreatorPayload
-  ): PayloadAction<PromoteChildToParentActionCreatorPayload>;
+    payload: PromoteChildToParentPayload
+  ): PayloadAction<PromoteChildToParentPayload>;
+
+  /**
+   * Registers instant products.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  registerInstantProducts(
+    payload: RegisterInstantProductPayload
+  ): PayloadAction<RegisterInstantProductPayload>;
+
+  /**
+   * Updates the query for instant products.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateInstantProductsQuery(
+    payload: UpdateInstantProductQueryPayload
+  ): PayloadAction<UpdateInstantProductQueryPayload>;
 }
 
 /**
- * Loads the commerce instant products reducer and returns the possible instant products actions.
+ * Loads the commerce instant products reducer and returns the available instant products actions.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
@@ -79,9 +79,9 @@ export function loadInstantProductsActions(
 ): InstantProductsActionCreators {
   engine.addReducers({instantProducts});
   return {
-    registerInstantProducts,
-    updateInstantProductsQuery,
     clearExpiredProducts,
     promoteChildToParent,
+    registerInstantProducts,
+    updateInstantProductsQuery,
   };
 }
