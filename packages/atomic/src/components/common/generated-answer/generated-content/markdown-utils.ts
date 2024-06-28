@@ -51,6 +51,10 @@ const customRenderer = {
     return `<div part="answer-heading-${level}" aria-label="${text}">${text}</div>`;
   },
 
+  html(text: string) {
+    return escapeHtml(text);
+  },
+
   list(body: string, ordered: boolean, start: number | '') {
     const type = ordered ? 'ol' : 'ul';
     const part = ordered ? 'answer-ordered-list' : 'answer-unordered-list';
