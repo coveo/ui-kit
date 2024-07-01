@@ -1,5 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import {LegacyGeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
+import {LegacyGeneratedAnswerApiClient} from '../../../api/generated-answer/generated-answer-client';
 import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
@@ -42,7 +42,7 @@ interface SubscribeStateManager {
   subscribeToSearchRequests: (
     engine: CoreEngine<
       GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<LegacyGeneratedAnswerAPIClient>
+      ClientThunkExtraArguments<LegacyGeneratedAnswerApiClient>
     >
   ) => Unsubscribe;
 }
