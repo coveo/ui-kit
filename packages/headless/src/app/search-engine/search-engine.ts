@@ -1,6 +1,6 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {LegacyGeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {LegacyGeneratedAnswerApiClient} from '../../api/generated-answer/generated-answer-client';
 import {answerApi} from '../../api/knowledge/stream-answer-api';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
@@ -117,20 +117,18 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
-    // The legacy client is used when the answerConfigurationId is not provided
     ...(options.configuration.answerConfigurationId
       ? {}
-      : {streamingClient: createLegacyGeneratedAnswerAPIClient(logger)}),
+      : {streamingClient: createLegacyGeneratedAnswerApiClient(logger)}),
   };
 
   const augmentedOptions: EngineOptions<SearchEngineReducers> = {
     ...options,
     reducers: searchEngineReducers,
     crossReducer: jwtReducer(logger),
-    // The middleware for the answer API is only added when the knowledgeConfigurationId is provided
     ...(options.configuration.answerConfigurationId
       ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {middlewares: [answerApi.middleware as any]}
+        {middlewares: [answerApi.middleware as any]} // TODO: types
       : {}),
   };
 
@@ -215,8 +213,8 @@ function createSearchAPIClient(
   });
 }
 
-function createLegacyGeneratedAnswerAPIClient(logger: Logger) {
-  return new LegacyGeneratedAnswerAPIClient({
+function createLegacyGeneratedAnswerApiClient(logger: Logger) {
+  return new LegacyGeneratedAnswerApiClient({
     logger,
   });
 }

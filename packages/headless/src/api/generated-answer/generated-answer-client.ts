@@ -10,7 +10,7 @@ import {resetTimeout} from '../../utils/utils';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
-export interface GeneratedAnswerAPIClientOptions {
+export interface GeneratedAnswerApiClientOptions {
   logger: Logger;
 }
 
@@ -18,7 +18,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>,
 > extends AsyncThunkOptions<
     T,
-    ClientThunkExtraArguments<LegacyGeneratedAnswerAPIClient>
+    ClientThunkExtraArguments<LegacyGeneratedAnswerApiClient>
   > {}
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
@@ -62,10 +62,10 @@ class TimeoutStateManager {
   }
 }
 
-export class LegacyGeneratedAnswerAPIClient {
+export class LegacyGeneratedAnswerApiClient {
   private logger: Logger;
 
-  constructor(options: GeneratedAnswerAPIClientOptions) {
+  constructor(options: GeneratedAnswerApiClientOptions) {
     this.logger = options.logger;
   }
 

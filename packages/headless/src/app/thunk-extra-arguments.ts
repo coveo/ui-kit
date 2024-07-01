@@ -1,7 +1,7 @@
 import {Relay} from '@coveo/relay';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {Logger} from 'pino';
-import {LegacyGeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client';
+import {LegacyGeneratedAnswerApiClient} from '../api/generated-answer/generated-answer-client';
 import {PreprocessRequest} from '../api/preprocess-request';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
@@ -10,7 +10,7 @@ import {NavigatorContext} from './navigatorContextProvider';
 
 export interface ClientThunkExtraArguments<
   T,
-  K = LegacyGeneratedAnswerAPIClient,
+  K = LegacyGeneratedAnswerApiClient,
 > extends ThunkExtraArguments {
   apiClient: T;
   streamingClient?: K;
