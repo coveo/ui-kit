@@ -17,6 +17,7 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
+  updateAnswerConfiguration,
 } from './configuration-actions';
 import {
   getConfigurationInitialState,
@@ -134,6 +135,12 @@ export const configurationReducer = createReducer(
         }
         if (!isNullOrUndefined(action.payload.documentLocation)) {
           state.analytics.documentLocation = action.payload.documentLocation;
+        }
+      })
+      .addCase(updateAnswerConfiguration, (state, action) => {
+        if (!isNullOrUndefined(action.payload.answerConfigurationId)) {
+          state.knowledge.answerConfigurationId =
+            action.payload.answerConfigurationId;
         }
       })
       .addCase(disableAnalytics, (state) => {
