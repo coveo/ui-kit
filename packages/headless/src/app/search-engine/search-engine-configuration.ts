@@ -29,6 +29,11 @@ export interface SearchEngineConfiguration
    * The global headless engine configuration options specific to the SearchAPI.
    */
   search?: SearchConfigurationOptions;
+  /**
+   * Specifies the unique identifier for a  answer configuration.
+   * When this identifier is utilized, the `answerApi` is engaged to deliver responses, thereby activating Coveo's answer management capabilities.
+   */
+  answerConfigurationId?: string;
 }
 
 export interface SearchConfigurationOptions {

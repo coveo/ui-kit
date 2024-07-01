@@ -1,6 +1,7 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {LegacyGeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {answerApi} from '../../api/knowledge/stream-answer-api';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -18,6 +19,7 @@ import {
 } from '../../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {
+  updateAnswerConfiguration,
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
 } from '../../features/configuration/configuration-actions';
@@ -111,20 +113,29 @@ export interface SearchEngineOptions
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
-
   const searchAPIClient = createSearchAPIClient(options.configuration, logger);
-  const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
-    streamingClient: generatedAnswerClient,
+    ...(options.configuration.answerConfigurationId
+      ? {}
+      : {streamingClient: createLegacyGeneratedAnswerAPIClient(logger)}),
   };
 
-  const augmentedOptions: EngineOptions<SearchEngineReducers> = {
+  type EngineOptionsWithAnswerMiddlewares = Omit<
+    EngineOptions<SearchEngineReducers>,
+    'middlewares'
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > & {middlewares?: any};
+
+  const augmentedOptions: EngineOptionsWithAnswerMiddlewares = {
     ...options,
     reducers: searchEngineReducers,
     crossReducer: jwtReducer(logger),
+    ...(options.configuration.answerConfigurationId
+      ? {middlewares: [answerApi.middleware]}
+      : {}),
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
@@ -133,6 +144,14 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
+  }
+
+  if (options.configuration.answerConfigurationId) {
+    engine.dispatch(
+      updateAnswerConfiguration({
+        answerConfigurationId: options.configuration.answerConfigurationId,
+      })
+    );
   }
 
   return {
@@ -208,8 +227,8 @@ function createSearchAPIClient(
   });
 }
 
-function createGeneratedAnswerAPIClient(logger: Logger) {
-  return new GeneratedAnswerAPIClient({
+function createLegacyGeneratedAnswerAPIClient(logger: Logger) {
+  return new LegacyGeneratedAnswerAPIClient({
     logger,
   });
 }
