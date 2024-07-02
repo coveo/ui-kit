@@ -1,5 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Product, BaseProduct} from '../../../api/commerce/common/product';
+import {
+  Product,
+  BaseProduct,
+  ChildProduct,
+} from '../../../api/commerce/common/product';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -69,28 +73,23 @@ export const instantProductsReducer = createReducer(
         }
         const products = cache.products;
 
-        const currentParentIndex = products.findIndex(
-          (product) => product.permanentid === action.payload.parentPermanentId
-        );
+        let childToPromote;
+        const currentParentIndex = products.findIndex((product) => {
+          childToPromote = product.children.find(
+            (child) => child.permanentid === action.payload.child.permanentid
+          );
+          return !!childToPromote;
+        });
 
-        if (currentParentIndex === -1) {
+        if (currentParentIndex === -1 || childToPromote === undefined) {
           return;
         }
 
         const position = products[currentParentIndex].position;
-
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
-        const childToPromote = children.find(
-          (child) => child.permanentid === action.payload.childPermanentId
-        );
-
-        if (childToPromote === undefined) {
-          return;
-        }
-
         const newParent: Product = {
-          ...childToPromote,
+          ...(childToPromote as ChildProduct),
           children,
           totalNumberOfChildren,
           position,

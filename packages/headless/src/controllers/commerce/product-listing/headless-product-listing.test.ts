@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
 import {
@@ -88,18 +89,16 @@ describe('headless product-listing', () => {
       ProductListingActions,
       'promoteChildToParent'
     );
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
-    productListing.promoteChildToParent(childPermanentId, parentPermanentId);
+    productListing.promoteChildToParent(child);
 
     expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
+      child,
     });
   });
 
-  it('refresh dispatches #fetchProductListing', () => {
+  it('#refresh dispatches #fetchProductListing', () => {
     const fetchProductListing = jest.spyOn(
       ProductListingActions,
       'fetchProductListing'
@@ -108,5 +107,16 @@ describe('headless product-listing', () => {
     productListing.refresh();
 
     expect(fetchProductListing).toHaveBeenCalled();
+  });
+
+  it('#executeFirstRequest dispatches #fetchProductListing', () => {
+    const executeRequest = jest.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+
+    productListing.executeFirstRequest();
+
+    expect(executeRequest).toHaveBeenCalled();
   });
 });

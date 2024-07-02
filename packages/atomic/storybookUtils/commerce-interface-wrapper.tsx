@@ -7,7 +7,7 @@ import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import type * as _ from '../src/components.d.ts';
 
-export const getSampleCommerceEngineConfiguration =
+const getSampleCommerceEngineConfiguration =
   (): CommerceEngineConfiguration => ({
     accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
     organizationId: 'barcasportsmcy01fvu',

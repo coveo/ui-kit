@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {stateKey} from '../../../app/state-key';
 import {
   registerInstantProducts,
@@ -46,8 +47,9 @@ describe('instant products', () => {
   // TODO KIT-3210 test #updateQuery, #clearExpired, and #state
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {
+      permanentid: 'childPermanentId',
+    } as ChildProduct;
 
     const query = 'query';
     engine[stateKey].instantProducts![searchBoxId] = {
@@ -56,11 +58,10 @@ describe('instant products', () => {
     };
     instantProducts = buildInstantProducts(engine, {options: {searchBoxId}});
 
-    instantProducts.promoteChildToParent(childPermanentId, parentPermanentId);
+    instantProducts.promoteChildToParent(child);
 
     expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
+      child,
       id: searchBoxId,
       query,
     });

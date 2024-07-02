@@ -15,6 +15,16 @@ test.describe('when no first search has yet been executed', async () => {
   }) => {
     await expect(productList.placeholders.nth(23)).toBeVisible();
   });
+
+  test('should open product in the same tab by default', async ({
+    page,
+    productList,
+  }) => {
+    const expectedUrl = /sports\.barca\.group\/pdp\/.*$/;
+    await productList.products.first().click();
+    await page.waitForURL(expectedUrl);
+    expect(page.url()).toMatch(expectedUrl);
+  });
 });
 
 test.describe('when executing an initial search', () => {
@@ -38,7 +48,24 @@ test.describe('when interface load yields no products', () => {
 
   test('should not display placeholders', async ({productList}) => {
     await expect(productList.placeholders.first()).not.toBeVisible();
-    // await expect(productList.placeholders.nth(23)).not.toBeVisible();
+    await expect(productList.placeholders.nth(23)).not.toBeVisible();
+  });
+});
+
+test.describe('when gridCellLinkTarget is set to _blank', async () => {
+  test.beforeEach(async ({productList}) => {
+    await productList.load({}, 'open-in-new-tab');
+    await productList.hydrated.waitFor();
+  });
+
+  test('should open product in new tab', async ({context, productList}) => {
+    const [newTab] = await Promise.all([
+      context.waitForEvent('page'),
+      productList.products.first().click(),
+    ]);
+    await newTab.waitForLoadState();
+
+    expect(newTab.url()).toMatch(/sports\.barca\.group\/pdp\/.*$/);
   });
 });
 
