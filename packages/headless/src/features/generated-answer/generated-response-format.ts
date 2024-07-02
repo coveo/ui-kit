@@ -23,6 +23,8 @@ export interface GeneratedResponseFormat {
   answerStyle: GeneratedAnswerStyle;
   /**
    * The content formats that are supported for rendering the answer. If no values are provided, `text/plain` is used.
+   * The answer is generated using the first format supported by the front-end component, from left to right.
+   * The request fails when no matching format is found. It is recommended to include `text/plain` as the last value in the array to act as a fallback format.
    * Formats:
    *   - `text/plain`: The answer can be streamed as plain text.
    *   - `text/markdown`: The answer can be streamed as a Markdown document.
