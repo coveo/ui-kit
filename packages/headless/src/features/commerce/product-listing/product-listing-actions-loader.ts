@@ -11,8 +11,6 @@ import {
 
 /**
  * The product listing action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ProductListingActionCreators {
   /**
@@ -42,7 +40,6 @@ export interface ProductListingActionCreators {
 
 /**
  * Loads the commerce product listing reducer and returns the available product listing action creators.
- *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.

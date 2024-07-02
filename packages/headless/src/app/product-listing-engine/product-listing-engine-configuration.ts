@@ -13,6 +13,9 @@ import {
 
 /**
  * The product listing engine configuration.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface ProductListingEngineConfiguration
   extends EngineConfiguration {}
@@ -60,6 +63,9 @@ export const productListingEngineConfigurationSchema =
 
 /**
  * Creates a sample product listing engine configuration.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @returns The sample product listing engine configuration.
  */

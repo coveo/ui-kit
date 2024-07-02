@@ -21,8 +21,6 @@ export type {
 
 /**
  * The recommendations action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface RecommendationsActionCreator {
   /**
@@ -67,8 +65,6 @@ export interface RecommendationsActionCreator {
 
 /**
  * Loads the commerce recommendations reducer and returns the available recommendations action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the recommendations action creators.

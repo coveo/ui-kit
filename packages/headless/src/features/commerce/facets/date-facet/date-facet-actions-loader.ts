@@ -12,8 +12,6 @@ import {
 
 /**
  * The date facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export type {
   ToggleSelectDateFacetValuePayload,
@@ -55,8 +53,6 @@ export interface DateFacetActionCreators {
 
 /**
  * Loads the commerce facet set reducer and returns the available date facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the date facet action creators.
