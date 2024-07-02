@@ -26,7 +26,6 @@ const optionsSchema = new Schema({
 });
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -43,7 +42,6 @@ export interface ProductListingOptions {
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -85,7 +83,6 @@ export interface ProductListing extends Controller {
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -99,7 +96,6 @@ export interface ProductListingState {
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */

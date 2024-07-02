@@ -40,7 +40,6 @@ export {
 };
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -52,7 +51,6 @@ export interface ProductListingSortProps {
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -79,7 +77,6 @@ function validateSortInitialState(
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -106,7 +103,6 @@ export interface ProductListingSort extends Controller {
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */

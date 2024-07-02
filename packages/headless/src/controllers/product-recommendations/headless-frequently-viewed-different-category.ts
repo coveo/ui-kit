@@ -14,7 +14,6 @@ const optionsSchema = new Schema({
 });
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -38,7 +37,6 @@ export interface FrequentlyViewedDifferentCategoryListOptions {
 }
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -73,7 +71,6 @@ export interface FrequentlyViewedDifferentCategoryList extends Controller {
 }
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */

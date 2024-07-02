@@ -68,7 +68,6 @@ export const setProductRecommendationsRecommenderId = createAction(
 );
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -92,7 +91,6 @@ export const setProductRecommendationsSkus = createAction(
 );
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -112,7 +110,6 @@ export const setProductRecommendationsBrandFilter = createAction(
 );
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -132,7 +129,6 @@ export const setProductRecommendationsCategoryFilter = createAction(
 );
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -155,7 +151,6 @@ export const setProductRecommendationsAdditionalFields = createAction(
 );
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */

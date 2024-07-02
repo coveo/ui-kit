@@ -16,7 +16,6 @@ const optionsSchema = new Schema({
 });
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -40,7 +39,6 @@ export interface CartRecommendationsListOptions {
 }
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -74,7 +72,6 @@ export interface CartRecommendationsList extends Controller {
 }
 
 /**
- *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */

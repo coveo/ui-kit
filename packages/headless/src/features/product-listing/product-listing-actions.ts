@@ -30,7 +30,6 @@ import {OldProductListingState} from './old-product-listing-state';
 import {logProductListing} from './product-listing-analytics';
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */

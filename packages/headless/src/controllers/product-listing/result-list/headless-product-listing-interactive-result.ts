@@ -15,7 +15,6 @@ export type {
 };
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
@@ -27,7 +26,6 @@ export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
 }
 
 /**
- *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  * @internal
  */
