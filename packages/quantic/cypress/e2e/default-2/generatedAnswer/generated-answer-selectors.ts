@@ -14,6 +14,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   retryButton: () => CypressSelector;
   toggleGeneratedAnswerButton: () => CypressSelector;
   generatedAnswerContent: () => CypressSelector;
+  generatedAnswerContentContainer: () => CypressSelector;
   feedbackModal: () => CypressSelector;
   feedbackOption: (index: number) => CypressSelector;
   feedbackSubmitButton: () => CypressSelector;
@@ -76,6 +77,10 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   generatedAnswerContent: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__content"]'
+    ),
+  generatedAnswerContentContainer: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__content-container"]'
     ),
   feedbackModal: () => cy.get('lightning-modal'),
   feedbackOption: (index: number) =>

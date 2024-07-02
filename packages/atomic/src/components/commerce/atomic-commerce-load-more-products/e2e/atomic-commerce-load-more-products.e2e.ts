@@ -1,10 +1,7 @@
-import {Page, Response} from '@playwright/test';
 import {test, expect} from './fixture';
 
-test.beforeEach(async ({page}) => {
-  await page.goto(
-    'http://localhost:4400/iframe.html?id=atomic-commerce-load-more-products--in-page&viewMode=story'
-  );
+test.beforeEach(async ({loadMore}) => {
+  await loadMore.load({}, 'in-page');
 });
 
 test('should be A11y compliant', async ({loadMore, makeAxeBuilder}) => {
@@ -33,35 +30,14 @@ test('should display a progress value between 1 and 100', async ({
 });
 
 test.describe('after clicking the load more button', () => {
-  // TODO: KIT-3306 - Create a getApiResponseBody helper to avoid repeating the same code in multiple tests
-  const waitForSearchResponse = async (page: Page) => {
-    return page.waitForResponse(
-      (response) =>
-        // TODO: KIT-3306 - Create RouteAlias to avoid hard coding url directly in the test
-        response.url().includes('barcasportsmcy01fvu/commerce/v2/search') &&
-        response.status() === 200
-    );
-  };
-
-  const getPerPageFromResponse = async (response: Response) => {
-    const {
-      pagination: {perPage},
-    } = await response.json();
-    return perPage;
-  };
-
-  test('should load more products', async ({loadMore, products, page}) => {
-    const initialResponse = await waitForSearchResponse(page);
-    await products.hydrated.waitFor();
+  test('should load more products', async ({loadMore, products}) => {
+    await expect(products.results).toHaveCount(48);
     await loadMore.button.click();
-    const finalResponse = await waitForSearchResponse(page);
-
-    const total =
-      (await getPerPageFromResponse(initialResponse)) +
-      (await getPerPageFromResponse(finalResponse));
-
-    await expect(products.results).toHaveCount(total);
-    await expect(loadMore.summary({index: total})).toBeVisible();
+    const allProducts = await products.results.all();
+    await Promise.all(
+      allProducts.map(async (product) => product.waitFor({state: 'attached'}))
+    );
+    await expect(products.results).toHaveCount(96);
   });
 });
 

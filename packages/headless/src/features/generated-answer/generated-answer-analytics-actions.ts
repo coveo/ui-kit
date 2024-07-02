@@ -17,7 +17,25 @@ export type GeneratedAnswerFeedback =
   | 'notAccurate'
   | 'outOfDate'
   | 'harmful';
+
+export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
+
+export type GeneratedAnswerFeedbackV2 = {
+  helpful: boolean;
+  documented: GeneratedAnswerFeedbackOption;
+  correctTopic: GeneratedAnswerFeedbackOption;
+  hallucinationFree: GeneratedAnswerFeedbackOption;
+  readable: GeneratedAnswerFeedbackOption;
+  details?: string;
+  documentUrl?: string;
+};
 const RGAType = 'RGA';
+
+export function isGeneratedAnswerFeedbackV2(
+  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
+): feedback is GeneratedAnswerFeedbackV2 {
+  return typeof feedback === 'object';
+}
 
 //TODO: KIT-2859
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
@@ -124,15 +142,13 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
         generativeQuestionAnsweringId,
       });
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'like',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: RGAType,
-        },
-        feedback: {
-          liked: true,
         },
       };
     },
@@ -151,22 +167,20 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
         generativeQuestionAnsweringId,
       });
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'dislike',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: RGAType,
-        },
-        feedback: {
-          liked: false,
         },
       };
     },
   });
 
 export const logGeneratedAnswerFeedback = (
-  feedback: GeneratedAnswerFeedback
+  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/sendFeedback',
@@ -176,26 +190,52 @@ export const logGeneratedAnswerFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.makeGeneratedAnswerFeedbackSubmit({
-        generativeQuestionAnsweringId,
-        reason: feedback,
-      });
+      return isGeneratedAnswerFeedbackV2(feedback)
+        ? client.makeGeneratedAnswerFeedbackSubmitV2({
+            generativeQuestionAnsweringId,
+            ...feedback,
+          })
+        : client.makeGeneratedAnswerFeedbackSubmit({
+            generativeQuestionAnsweringId,
+            reason: feedback,
+          });
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        feedback: {
-          liked: false,
-          reason: feedback,
-        },
-      };
-    },
+    analyticsType: isGeneratedAnswerFeedbackV2(feedback)
+      ? 'Qna.SubmitRgaFeedback'
+      : undefined,
+    analyticsPayloadBuilder: isGeneratedAnswerFeedbackV2(feedback)
+      ? (state): Qna.SubmitRgaFeedback => {
+          const {search} = state;
+          const {response} = search || {};
+          const responseId = response?.searchUid || '';
+          const {
+            helpful,
+            readable,
+            documented,
+            details,
+            hallucinationFree: hallucination_free,
+            correctTopic: correct_topic,
+            documentUrl: document_url,
+          } = feedback;
+          return {
+            answer: {
+              responseId,
+            },
+            feedback: {
+              helpful,
+              readable,
+              documented,
+              details,
+              hallucination_free,
+              correct_topic,
+              document_url,
+            },
+          };
+        }
+      : undefined,
   });
 
+//Method deprecated after v3, it will no longer be used, TODO: SFINT-5585
 export const logGeneratedAnswerDetailedFeedback = (
   details: string
 ): CustomAction =>
@@ -212,20 +252,6 @@ export const logGeneratedAnswerDetailedFeedback = (
         reason: 'other',
         details,
       });
-    },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        feedback: {
-          liked: false,
-          reason: 'other',
-          details,
-        },
-      };
     },
   });
 

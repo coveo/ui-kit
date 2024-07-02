@@ -6,6 +6,7 @@ import {
   buildProductListing,
 } from '@coveo/headless/commerce';
 import {Component, State, h} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -16,6 +17,7 @@ import {NoItemsGuard} from '../../common/no-items/guard';
 import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
 import {NoItems} from '../../common/no-items/no-items';
 import {SearchTips} from '../../common/no-items/tips';
+import {getSummary} from '../../common/no-items/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -44,6 +46,8 @@ export class AtomicCommerceNoProducts
   @State()
   private summaryState!: SearchSummaryState | ProductListingSummaryState;
   @State() public error!: Error;
+  @AriaLiveRegion('no-products')
+  protected ariaMessage!: string;
 
   public initialize() {
     const controller =
@@ -56,6 +60,13 @@ export class AtomicCommerceNoProducts
     const {
       bindings: {i18n},
     } = this;
+
+    this.ariaMessage = getSummary(
+      i18n,
+      'query' in this.summaryState ? this.summaryState.query : '',
+      this.summary.state.hasProducts
+    );
+
     return (
       <NoItemsGuard
         isLoading={this.summaryState.isLoading}

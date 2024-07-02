@@ -139,6 +139,27 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceFacet extends Components.AtomicCommerceFacet {}
+
+
+@ProxyCmp({
   inputs: ['collapseFacetsAfter']
 })
 @Component({
@@ -182,29 +203,24 @@ export declare interface AtomicCommerceLoadMoreProducts extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
 })
 @Component({
-  selector: 'atomic-commerce-pager',
+  selector: 'atomic-commerce-query-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
+  inputs: [],
 })
-export class AtomicCommercePager {
+export class AtomicCommerceQuerySummary {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
   }
 }
 
 
-export declare interface AtomicCommercePager extends Components.AtomicCommercePager {
-
-  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
-}
+export declare interface AtomicCommerceQuerySummary extends Components.AtomicCommerceQuerySummary {}
 
 
 @ProxyCmp({
@@ -1252,14 +1268,14 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 
 @ProxyCmp({
-  inputs: ['fallback', 'field']
+  inputs: ['fallback', 'field', 'imageAltField']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fallback', 'field'],
+  inputs: ['fallback', 'field', 'imageAltField'],
 })
 export class AtomicResultImage {
   protected el: HTMLElement;

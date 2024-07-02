@@ -6,16 +6,16 @@ import {
 import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {
+  GeneratedAnswerFeedback,
+  GeneratedAnswerFeedbackV2,
+  isGeneratedAnswerFeedbackV2,
+} from './generated-answer-analytics-actions';
+import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
 import {GeneratedResponseFormat} from './generated-response-format';
 
-export type GeneratedAnswerFeedback =
-  | 'irrelevant'
-  | 'notAccurate'
-  | 'outOfDate'
-  | 'harmful';
 const RGAType = 'RGA';
 
 //TODO: SFINT-5435
@@ -149,15 +149,13 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'like',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: RGAType,
-        },
-        feedback: {
-          liked: true,
         },
       };
     },
@@ -179,22 +177,20 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'dislike',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: RGAType,
-        },
-        feedback: {
-          liked: false,
         },
       };
     },
   });
 
 export const logGeneratedAnswerFeedback = (
-  feedback: GeneratedAnswerFeedback
+  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
 ): InsightAction =>
   makeInsightAnalyticsActionFactory(
     SearchPageEvents.generatedAnswerFeedbackSubmit
@@ -206,29 +202,58 @@ export const logGeneratedAnswerFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.logGeneratedAnswerFeedbackSubmit(
-        {
-          generativeQuestionAnsweringId,
-          reason: feedback,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
+      return isGeneratedAnswerFeedbackV2(feedback)
+        ? client.logGeneratedAnswerFeedbackSubmitV2(
+            {
+              generativeQuestionAnsweringId,
+              ...feedback,
+            },
+            getCaseContextAnalyticsMetadata(state.insightCaseContext)
+          )
+        : client.logGeneratedAnswerFeedbackSubmit(
+            {
+              generativeQuestionAnsweringId,
+              reason: feedback,
+            },
+            getCaseContextAnalyticsMetadata(state.insightCaseContext)
+          );
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        feedback: {
-          liked: false,
-          reason: feedback,
-        },
-      };
-    },
+    analyticsType: isGeneratedAnswerFeedbackV2(feedback)
+      ? 'Qna.SubmitRgaFeedback'
+      : undefined,
+    analyticsPayloadBuilder: isGeneratedAnswerFeedbackV2(feedback)
+      ? (state): Qna.SubmitRgaFeedback => {
+          const {search} = state;
+          const {response} = search || {};
+          const responseId = response?.searchUid || '';
+          const {
+            helpful,
+            readable,
+            documented,
+            details,
+            hallucinationFree: hallucination_free,
+            correctTopic: correct_topic,
+            documentUrl: document_url,
+          } = feedback;
+          return {
+            answer: {
+              responseId,
+            },
+            feedback: {
+              helpful,
+              readable,
+              documented,
+              details,
+              hallucination_free,
+              correct_topic,
+              document_url,
+            },
+          };
+        }
+      : undefined,
   });
 
+//Method deprecated after v3, EP event no longer available, TODO: SFINT-5585
 export const logGeneratedAnswerDetailedFeedback = (
   details: string
 ): InsightAction =>
@@ -250,20 +275,6 @@ export const logGeneratedAnswerDetailedFeedback = (
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
-    },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        feedback: {
-          liked: false,
-          reason: 'other',
-          details,
-        },
-      };
     },
   });
 
