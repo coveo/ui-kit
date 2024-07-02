@@ -3,7 +3,7 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+} from '../../../../../features/commerce/facets/date-facet/date-facet-actions';
 import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range';
 import {
   CoreCommerceFacet,

@@ -3,14 +3,23 @@ import {createAction} from '@reduxjs/toolkit';
 import {nonEmptyString, validatePayload} from '../../../utils/validate-payload';
 import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions';
 
+export type UpdateIgnoreQueryTriggerPayload = {
+  /**
+   * The query to ignore.
+   */
+  q: string;
+};
+
 export const updateIgnoreQueryTrigger = createAction(
-  'commerce/trigger/query/ignore',
-  (q: string) =>
-    validatePayload(q, new StringValue({emptyAllowed: true, required: true}))
+  'commerce/triggers/query/updateIgnore',
+  (payload: UpdateIgnoreQueryTriggerPayload) =>
+    validatePayload(payload, {
+      q: new StringValue({emptyAllowed: true, required: true}),
+    })
 );
 
 export const applyQueryTriggerModification = createAction(
-  'commerce/trigger/query/modification',
+  'commerce/triggers/query/applyModification',
   (payload: ApplyQueryTriggerModificationPayload) =>
     validatePayload<ApplyQueryTriggerModificationPayload>(
       payload,

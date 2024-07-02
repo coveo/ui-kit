@@ -158,7 +158,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const ignored = this.getState().triggers?.queryModification.queryToIgnore;
 
     if (ignored === correctedQuery) {
-      this.dispatch(updateIgnoreQueryTrigger(''));
+      this.dispatch(updateIgnoreQueryTrigger({q: ''}));
       return null;
     }
 

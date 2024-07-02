@@ -1,8 +1,8 @@
-import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
+} from '../../../../../features/commerce/facets/category-facet/category-facet-actions';
+import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
@@ -21,7 +21,7 @@ import {
 } from './headless-commerce-category-facet';
 
 jest.mock(
-  '../../../../../features/facets/category-facet-set/category-facet-set-actions'
+  '../../../../../features/commerce/facets/category-facet/category-facet-actions'
 );
 
 describe('CategoryFacet', () => {

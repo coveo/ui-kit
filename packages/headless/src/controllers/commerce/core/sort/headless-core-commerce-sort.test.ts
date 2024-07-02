@@ -1,7 +1,6 @@
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -55,10 +54,6 @@ describe('commerce core sort', () => {
 
     it('dispatches #applySort', () => {
       expect(applySort).toHaveBeenCalled();
-    });
-
-    it('dispatches #updatePage', () => {
-      expect(updatePage).toHaveBeenCalled();
     });
 
     it('dispatches #fetchProductsActionCreator', () => {

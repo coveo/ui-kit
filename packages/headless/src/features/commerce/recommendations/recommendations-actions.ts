@@ -55,7 +55,7 @@ const buildRecommendationCommerceAPIRequest = (
   };
 };
 
-export interface FetchRecommendationsActionCreatorPayload {
+export interface FetchRecommendationsPayload {
   /**
    * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
@@ -65,7 +65,7 @@ export interface FetchRecommendationsActionCreatorPayload {
 
 export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn,
-  FetchRecommendationsActionCreatorPayload,
+  FetchRecommendationsPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetch',
@@ -93,9 +93,11 @@ export const fetchRecommendations = createAsyncThunk<
   }
 );
 
+export type FetchMoreRecommendationsPayload = FetchRecommendationsPayload;
+
 export const fetchMoreRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn | null,
-  FetchRecommendationsActionCreatorPayload,
+  FetchMoreRecommendationsPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
@@ -142,9 +144,11 @@ export interface SlotIdPayload {
   slotId: string;
 }
 
+export type RegisterRecommendationsSlotPayload = SlotIdPayload;
+
 export const registerRecommendationsSlot = createAction(
   'commerce/recommendations/registerSlot',
-  (payload: SlotIdPayload) =>
+  (payload: RegisterRecommendationsSlotPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)
 );
 

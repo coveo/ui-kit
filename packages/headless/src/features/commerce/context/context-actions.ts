@@ -12,13 +12,13 @@ export interface SetContextPayload {
 }
 
 export const setContext = createAction(
-  'commerce/setContext',
+  'commerce/context/set',
   (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
 );
 
 export type SetViewPayload = Pick<ViewParams, 'url'>;
 
 export const setView = createAction(
-  'commerce/setView',
+  'commerce/context/setView',
   (payload: SetViewPayload) => validatePayload(payload, viewDefinition)
 );

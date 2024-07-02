@@ -11,6 +11,9 @@ export const slotIdDefinition = {
 };
 
 interface SlotIdPayload {
+  /**
+   * The unique identifier of the target recommendations slot.
+   */
   slotId?: string;
 }
 
@@ -19,7 +22,10 @@ const setPageSizeDefinition = {
   pageSize: new NumberValue({required: true, min: 0}),
 };
 
-type SetPageSizePayload = SlotIdPayload & {
+export type SetPageSizePayload = SlotIdPayload & {
+  /**
+   * The number of items to display per page.
+   */
   pageSize: number;
 };
 
@@ -34,7 +40,10 @@ const selectPageDefinition = {
   page: new NumberValue({required: true, min: 0}),
 };
 
-type SelectPagePayload = SlotIdPayload & {
+export type SelectPagePayload = SlotIdPayload & {
+  /**
+   * The 1-based page number to select.
+   */
   page: number;
 };
 
@@ -43,19 +52,26 @@ export const selectPage = createAction(
   (payload: SelectPagePayload) => validatePayload(payload, selectPageDefinition)
 );
 
+export type NextPagePayload = SlotIdPayload;
+
 export const nextPage = createAction(
   'commerce/pagination/nextPage',
-  (payload?: SlotIdPayload) => validatePayload(payload, slotIdDefinition)
+  (payload?: NextPagePayload) => validatePayload(payload, slotIdDefinition)
 );
+
+export type PreviousPagePayload = SlotIdPayload;
 
 export const previousPage = createAction(
   'commerce/pagination/previousPage',
-  (payload?: SlotIdPayload) => validatePayload(payload, slotIdDefinition)
+  (payload?: PreviousPagePayload) => validatePayload(payload, slotIdDefinition)
 );
+
+export type RegisterRecommendationsSlotPaginationPayload =
+  Required<SlotIdPayload>;
 
 export const registerRecommendationsSlotPagination = createAction(
   'commerce/pagination/registerRecommendationsSlot',
-  (payload: Required<SlotIdPayload>) =>
+  (payload: RegisterRecommendationsSlotPaginationPayload) =>
     validatePayload(payload, {
       slotId: requiredNonEmptyString,
     })

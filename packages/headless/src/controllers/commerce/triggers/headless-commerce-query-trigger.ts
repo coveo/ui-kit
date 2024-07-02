@@ -42,7 +42,7 @@ export function buildQueryTrigger(engine: CommerceEngine): QueryTrigger {
     },
 
     undo() {
-      dispatch(updateIgnoreQueryTrigger(modification()));
+      dispatch(updateIgnoreQueryTrigger({q: modification()}));
       dispatch(updateQuery({query: originalQuery()}));
       dispatch(executeSearch());
     },

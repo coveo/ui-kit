@@ -80,10 +80,10 @@ describe('commerce triggers slice', () => {
   });
 
   it('on #updateIgnoreQueryTrigger, updates state using #handleUpdateIgnoreQueryTrigger', () => {
-    const action = updateIgnoreQueryTrigger('query to ignore');
+    const action = updateIgnoreQueryTrigger({q: 'query to ignore'});
     expectedState = handleUpdateIgnoreQueryTrigger(
       initialStateCopy,
-      action.payload
+      action.payload.q
     );
     finalState = commerceTriggersReducer(initialState, action);
 

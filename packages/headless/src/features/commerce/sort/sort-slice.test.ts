@@ -2,10 +2,10 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {SortBy, SortDirection} from '../../sort/sort';
 import {
-  setContext,
   SetContextPayload,
-  setView,
   SetViewPayload,
+  setContext,
+  setView,
 } from '../context/context-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
