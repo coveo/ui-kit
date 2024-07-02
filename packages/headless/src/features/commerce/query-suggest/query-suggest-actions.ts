@@ -22,13 +22,15 @@ import {
 } from '../../query-suggest/query-suggest-actions';
 import {getProductsFromCartState} from '../context/cart/cart-state';
 
+export type FetchQuerySuggestionsPayload =
+  FetchQuerySuggestionsActionCreatorPayload;
+
 export type StateNeededByQuerySuggest = ConfigurationSection &
   CommerceContextSection &
   CartSection &
   QuerySetSection &
   CommerceQuerySection &
   Partial<VersionSection>;
-
 export interface FetchQuerySuggestionsThunkReturn
   extends FetchQuerySuggestionsActionCreatorPayload,
     QuerySuggestSuccessResponse {
