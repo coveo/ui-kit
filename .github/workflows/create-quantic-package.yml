@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: Create cache file
         run: |
           mkdir check-SHA
