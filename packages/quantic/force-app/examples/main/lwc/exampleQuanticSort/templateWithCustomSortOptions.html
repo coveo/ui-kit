@@ -33,6 +33,7 @@
         <template for:each={customSortOptions} for:item="option">
           <c-quantic-sort-option
             key={option.value}
+            slot="sortOption"
             label={option.label}
             value={option.value}
             criterion={option.criterion}

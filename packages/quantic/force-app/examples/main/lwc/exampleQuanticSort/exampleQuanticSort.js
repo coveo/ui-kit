@@ -26,13 +26,7 @@ export default class ExampleQuanticSort extends LightningElement {
   }
 
   handleAddCustomSortOptions = (event) => {
-    const withInvalidSortOptions = event.detail.withInvalidOptions;
-    if (withInvalidSortOptions) {
-      this.withCustomSortOptions = false;
-      this.withInvalidCustomSortOptions = true;
-      return;
-    }
-    this.withInvalidCustomSortOptions = false;
+    this.withInvalidCustomSortOptions = event.detail.hasInvalidOptions;
     this.withCustomSortOptions = true;
   };
 
@@ -108,10 +102,9 @@ export default class ExampleQuanticSort extends LightningElement {
   }
 
   get customSortOptions() {
-    if (this.withInvalidCustomSortOptions) {
-      return this.invalidCustomSortOptions;
-    }
-    return this.validCustomSortOptions;
+    return this.withInvalidCustomSortOptions
+      ? this.invalidCustomSortOptions
+      : this.validCustomSortOptions;
   }
 
   handleTryItNow(evt) {
