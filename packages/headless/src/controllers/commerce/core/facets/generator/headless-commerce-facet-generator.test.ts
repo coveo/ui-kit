@@ -1,3 +1,4 @@
+import {deselectAllBreadcrumbs} from '../../../../../features/breadcrumb/breadcrumb-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
@@ -16,6 +17,8 @@ import {
   FacetGeneratorOptions,
 } from './headless-commerce-facet-generator';
 
+jest.mock('../../../../../features/breadcrumb/breadcrumb-actions');
+
 describe('FacetGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
@@ -25,6 +28,7 @@ describe('FacetGenerator', () => {
   const mockBuildRegularFacet = jest.fn();
   const mockBuildDateFacet = jest.fn();
   const mockBuildCategoryFacet = jest.fn();
+  const mockFetchProductsActionCreator = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -57,6 +61,7 @@ describe('FacetGenerator', () => {
       buildRegularFacet: mockBuildRegularFacet,
       buildDateFacet: mockBuildDateFacet,
       buildCategoryFacet: mockBuildCategoryFacet,
+      fetchProductsActionCreator: mockFetchProductsActionCreator,
     };
 
     state = buildMockCommerceState();
@@ -164,5 +169,17 @@ describe('FacetGenerator', () => {
     initCommerceFacetGenerator();
 
     expect(facetGenerator.state).toEqual(state.facetOrder);
+  });
+
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllBreadcrumbs', () => {
+      facetGenerator.deselectAll();
+      expect(deselectAllBreadcrumbs).toHaveBeenCalledTimes(1);
+    });
+
+    it('dispatches #fetchProductsActionCreator', () => {
+      facetGenerator.deselectAll();
+      expect(mockFetchProductsActionCreator).toHaveBeenCalled();
+    });
   });
 });
