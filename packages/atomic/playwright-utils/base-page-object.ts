@@ -19,10 +19,7 @@ export class BasePageObject<
     return 'http://localhost:4400/iframe.html';
   }
 
-  async load({
-    args,
-    story = 'default',
-  }: {args?: Component; story?: string} = {}) {
+  async load(args?: Component, story: string = 'default') {
     if (args) {
       await this.page.goto(
         `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`

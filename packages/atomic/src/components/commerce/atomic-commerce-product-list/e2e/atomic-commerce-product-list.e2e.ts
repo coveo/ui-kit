@@ -19,7 +19,7 @@ test.describe('when no first search has yet been executed', async () => {
 
 test.describe('when executing an initial search', () => {
   test.beforeEach(async ({productList, searchBox}) => {
-    await productList.load({story: 'in-page'});
+    await productList.load({}, 'in-page');
     await searchBox.searchInput.fill('pants');
     await searchBox.submitButton.click();
     await productList.hydrated.waitFor();
@@ -32,7 +32,7 @@ test.describe('when executing an initial search', () => {
 
 test.describe('when interface load yields no products', () => {
   test.beforeEach(async ({productList}) => {
-    await productList.load({story: 'no-results'});
+    await productList.load({}, 'no-results');
     await productList.hydrated.waitFor();
   });
 
