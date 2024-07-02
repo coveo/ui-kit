@@ -1,4 +1,5 @@
 import {Action} from '@reduxjs/toolkit';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {
   buildMockChildProduct,
   buildMockProduct,
@@ -306,15 +307,14 @@ describe('recommendation-slice', () => {
   });
 
   describe('on #promoteChildToParent', () => {
-    const childPermanentId = 'child-id';
+    const permanentid = 'child-id';
     const parentPermanentId = 'parent-id';
     let action: ReturnType<typeof promoteChildToParent>;
 
     beforeEach(() => {
       state[slotId] = buildMockRecommendationsSlice({isLoading: false});
       action = promoteChildToParent({
-        childPermanentId,
-        parentPermanentId,
+        child: {permanentid} as ChildProduct,
         slotId,
       });
     });
@@ -338,7 +338,7 @@ describe('recommendation-slice', () => {
 
     it('when both parent and child exist in slot, promotes the child to parent', () => {
       const childProduct = buildMockChildProduct({
-        permanentid: childPermanentId,
+        permanentid,
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
         ec_brand: 'child brand',
