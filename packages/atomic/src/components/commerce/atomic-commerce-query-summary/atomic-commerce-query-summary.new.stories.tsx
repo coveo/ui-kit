@@ -9,7 +9,7 @@ const {decorator, play} = wrapInCommerceInterface({
   skipFirstSearch: true,
 });
 
-const noResultsEngineConfig: Partial<CommerceEngineConfiguration> = {
+const noProductsEngineConfig: Partial<CommerceEngineConfiguration> = {
   preprocessRequest: (r) => {
     const parsed = JSON.parse(r.body as string);
     // eslint-disable-next-line @cspell/spellchecker
@@ -19,7 +19,7 @@ const noResultsEngineConfig: Partial<CommerceEngineConfiguration> = {
   },
 };
 
-const fixedNumberOfResults = (
+const fixedNumberOfProducts = (
   perPage: number
 ): Partial<CommerceEngineConfiguration> => ({
   preprocessRequest: (r) => {
@@ -30,14 +30,14 @@ const fixedNumberOfResults = (
   },
 });
 
-const {play: playNoresults} = wrapInCommerceInterface({
+const {play: playNoProducts} = wrapInCommerceInterface({
   skipFirstSearch: false,
-  engineConfig: noResultsEngineConfig,
+  engineConfig: noProductsEngineConfig,
 });
 
-const {play: playFixedNumberOfResults} = wrapInCommerceInterface({
+const {play: playFixedNumberOfProducts} = wrapInCommerceInterface({
   skipFirstSearch: false,
-  engineConfig: fixedNumberOfResults(27),
+  engineConfig: fixedNumberOfProducts(27),
 });
 
 const meta: Meta = {
@@ -56,21 +56,21 @@ export const Default: Story = {
   name: 'atomic-query-summary',
 };
 
-export const NoResults: Story = {
-  name: 'No Results',
+export const NoProducts: Story = {
+  name: 'No Products',
   tags: ['test'],
   decorators: [(story) => story()],
   play: async (context) => {
-    await playNoresults(context);
+    await playNoProducts(context);
   },
 };
 
-export const FixedNumberOfResults: Story = {
-  name: 'Fixed Number of Results',
+export const FixedNumberOfProducts: Story = {
+  name: 'Fixed Number of Products',
   tags: ['test'],
   decorators: [(story) => story()],
   play: async (context) => {
-    await playFixedNumberOfResults(context);
+    await playFixedNumberOfProducts(context);
   },
 };
 
