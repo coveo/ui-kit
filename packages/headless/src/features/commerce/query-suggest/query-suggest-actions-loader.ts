@@ -5,8 +5,10 @@ import {
   FetchQuerySuggestionsThunkReturn,
   StateNeededByQuerySuggest,
 } from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {querySetReducer as querySet} from '../../query-set/query-set-slice';
 import {
+  ClearQuerySuggestActionCreatorPayload,
+  RegisterQuerySuggestActionCreatorPayload,
+  SelectQuerySuggestionActionCreatorPayload,
   clearQuerySuggest,
   registerQuerySuggest,
   selectQuerySuggestion,
@@ -18,10 +20,19 @@ import {
 import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice';
 import {fetchQuerySuggestions} from './query-suggest-actions';
 
+export type {
+  FetchQuerySuggestionsActionCreatorPayload,
+  ClearQuerySuggestActionCreatorPayload,
+  RegisterQuerySuggestActionCreatorPayload,
+  SelectQuerySuggestionActionCreatorPayload,
+};
+
 export type BaseQuerySuggestActionCreators = Omit<
   QuerySuggestActionCreators,
   'fetchQuerySuggestions'
 >;
+
+// TODO KIT-3350 - All query suggest actions should be commerce-specific.
 
 /**
  * The query suggest action creators for commerce.
@@ -44,7 +55,7 @@ export interface CommerceQuerySuggestActionCreators
 }
 
 /**
- * Loads the `querySuggest` reducer and returns possible action creators.
+ * Loads the query suggest reducer and returns the available query suggest action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
@@ -52,7 +63,7 @@ export interface CommerceQuerySuggestActionCreators
 export function loadQuerySuggestActions(
   engine: CommerceEngine
 ): CommerceQuerySuggestActionCreators {
-  engine.addReducers({querySuggest, querySet});
+  engine.addReducers({querySuggest});
 
   return {
     clearQuerySuggest,

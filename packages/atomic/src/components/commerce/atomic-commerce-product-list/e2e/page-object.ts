@@ -11,6 +11,6 @@ export class ProductListObject extends BasePageObject<'atomic-commerce-product-l
   }
 
   get products() {
-    return this.page.locator('atomic-result');
+    return this.page.locator('atomic-product');
   }
 }

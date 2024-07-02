@@ -6,7 +6,7 @@ import {
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions';
 import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {UpdateQueryActionCreatorPayload} from '../../../features/commerce/query/query-actions';
+import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
 import {
@@ -110,11 +110,11 @@ export function buildSearchBox(
   const getValue = () => getState().querySet[options.id];
 
   const performSearch = async () => {
-    const queryOptions: UpdateQueryActionCreatorPayload &
-      PrepareForSearchWithQueryOptions = {
-      query: getValue(),
-      clearFilters: options.clearFilters,
-    };
+    const queryOptions: UpdateQueryPayload & PrepareForSearchWithQueryOptions =
+      {
+        query: getValue(),
+        clearFilters: options.clearFilters,
+      };
 
     dispatch(prepareForSearchWithQuery(queryOptions));
     dispatch(executeSearch());

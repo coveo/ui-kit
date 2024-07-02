@@ -1,6 +1,6 @@
 import {NumberValue} from '@coveo/bueno';
 import {stateKey} from '../../../app/state-key';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
+import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
 import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
@@ -19,8 +19,8 @@ import {
   RecentQueriesList,
 } from './headless-recent-queries-list';
 
+jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock('../../../features/recent-queries/recent-queries-actions');
-jest.mock('../../../features/breadcrumb/breadcrumb-actions');
 jest.mock('../../../features/commerce/search/search-actions');
 jest.mock(
   '../../../features/commerce/recent-queries/recent-queries-analytics-actions'
@@ -123,7 +123,7 @@ describe('recent queries list', () => {
         options: {clearFilters: false, maxLength: 10},
       });
       recentQueriesList.executeRecentQuery(0);
-      expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
+      expect(clearAllCoreFacets).not.toHaveBeenCalled();
     });
   });
 });
