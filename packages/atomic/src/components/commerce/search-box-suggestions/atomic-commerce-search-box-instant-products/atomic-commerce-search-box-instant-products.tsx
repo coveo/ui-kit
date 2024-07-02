@@ -3,8 +3,6 @@ import {
   buildInstantProducts,
   Product,
   InstantProducts,
-  InteractiveProduct,
-  CommerceEngine,
 } from '@coveo/headless/commerce';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
@@ -33,14 +31,6 @@ export type AriaLabelGenerator = (
   bindings: Bindings,
   product: Product
 ) => string | undefined;
-
-// TODO: KIT-3165 Uncomment once the `buildInteractiveInstantProduct` function is implemented in headless.
-function buildInteractiveInstantProduct(
-  _engine: CommerceEngine<{}>,
-  _arg: {options: {product: Product}}
-): InteractiveProduct {
-  return {} as InteractiveProduct;
-}
 
 /**
  * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -141,6 +131,9 @@ export class AtomicCommerceSearchBoxInstantProducts
 
     const elements: SearchBoxSuggestionElement[] = products.map(
       (product: Product) => {
+        const interactiveProduct = this.instantProducts.interactiveProduct({
+          options: {product},
+        });
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
           this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
@@ -153,12 +146,7 @@ export class AtomicCommerceSearchBoxInstantProducts
               key={`instant-product-${encodeForDomAttribute(product.permanentid)}`}
               part="outline"
               product={product}
-              interactiveProduct={buildInteractiveInstantProduct(
-                this.bindings.engine,
-                {
-                  options: {product},
-                }
-              )}
+              interactiveProduct={interactiveProduct}
               display={this.display}
               density={this.density}
               imageSize={this.imageSize}
@@ -203,10 +191,11 @@ export class AtomicCommerceSearchBoxInstantProducts
     });
 
     this.bindings.store.onChange('activeProductChild', () => {
-      this.instantProducts.promoteChildToParent(
-        this.bindings.store.state.activeProductChild.childPermanentId,
-        this.bindings.store.state.activeProductChild.parentPermanentId
-      );
+      if (this.bindings.store.state.activeProductChild) {
+        this.instantProducts.promoteChildToParent(
+          this.bindings.store.state.activeProductChild
+        );
+      }
     });
 
     this.itemTemplateProvider = new ProductTemplateProvider({

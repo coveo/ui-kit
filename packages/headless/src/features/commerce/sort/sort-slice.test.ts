@@ -1,7 +1,12 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {SortBy, SortDirection} from '../../sort/sort';
-import {setContext, setUser, setView} from '../context/context-actions';
+import {
+  SetContextPayload,
+  SetViewPayload,
+  setContext,
+  setView,
+} from '../context/context-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
@@ -56,7 +61,7 @@ describe('product-listing-sort-slice', () => {
     };
 
     it('on #fetchProductListing.fulfilled', () => {
-      const response = buildFetchProductListingV2Response(sortResponse);
+      const response = buildFetchProductListingResponse(sortResponse);
 
       expect(
         sortReducer(state, fetchProductListing.fulfilled(response, ''))
@@ -113,28 +118,21 @@ describe('product-listing-sort-slice', () => {
     });
   });
 
-  describe.each([
-    {
-      actionName: '#setContext',
-      action: setContext,
-    },
-    {
-      actionName: '#setView',
-      action: setView,
-    },
-    {
-      actionName: '#setUser',
-      action: setUser,
-    },
-  ])('$actionName', ({action}) => {
-    it('resets sort', () => {
-      state.appliedSort = sort;
-      state.availableSorts = [sort];
+  it('setContext resets sort', () => {
+    state.appliedSort = sort;
+    state.availableSorts = [sort];
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const finalState = sortReducer(state, action({} as any));
+    const finalState = sortReducer(state, setContext({} as SetContextPayload));
 
-      expect(finalState).toStrictEqual(getCommerceSortInitialState());
-    });
+    expect(finalState).toStrictEqual(getCommerceSortInitialState());
+  });
+
+  it('setView resets sort', () => {
+    state.appliedSort = sort;
+    state.availableSorts = [sort];
+
+    const finalState = sortReducer(state, setView({} as SetViewPayload));
+
+    expect(finalState).toStrictEqual(getCommerceSortInitialState());
   });
 });

@@ -17,7 +17,7 @@ import {
   FacetSection,
   NumericFacetSection,
   PaginationSection,
-  ProductListingSection,
+  OldProductListingSection,
   StructuredSortSection,
 } from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
@@ -26,8 +26,8 @@ import {PreparableAnalyticsAction} from '../analytics/analytics-utils';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
+import {OldProductListingState} from './old-product-listing-state';
 import {logProductListing} from './product-listing-analytics';
-import {ProductListingState} from './product-listing-state';
 
 export interface SetProductListingUrlPayload {
   /**
@@ -69,7 +69,7 @@ export const setAdditionalFields = createAction(
 );
 
 export type StateNeededByFetchProductListing = ConfigurationSection &
-  ProductListingSection &
+  OldProductListingSection &
   Partial<
     PaginationSection &
       StructuredSortSection &
@@ -163,7 +163,7 @@ export const buildProductListingRequest = async (
 };
 
 function hasOneAdvancedParameterActive(
-  advanced: ProductListingState['advancedParameters']
+  advanced: OldProductListingState['advancedParameters']
 ): boolean {
   return advanced.debug;
 }

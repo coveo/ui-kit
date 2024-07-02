@@ -81,6 +81,7 @@ jobs:
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic
       - name: Generate a token
+        if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
         uses: actions/create-github-app-token@v1
         with:
@@ -304,7 +305,6 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
-      - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
@@ -339,7 +339,6 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
-      - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'

@@ -1,3 +1,18 @@
+# 2.51.0 (2024-06-26)
+
+### Features
+
+- **quantic:** rich text formatting for quantic RGA ([#4015](https://github.com/coveo/ui-kit/issues/4015)) ([bb4f76a](https://github.com/coveo/ui-kit/commits/bb4f76aa2ee627e0315b7930e89a2f399d35e914))
+
+## 2.50.9 (2024-06-12)
+
+### Bug Fixes
+
+- **quantic:** fix unexpected back browser button behaviour with standalone search box ([#4077](https://github.com/coveo/ui-kit/issues/4077)) ([afa8303](https://github.com/coveo/ui-kit/commits/afa8303543ceeb4ee525c872449c5b2cbb6ab1ce))
+- **quantic:** issue occurring with result title and quick view in salesforce service console addressed ([#4078](https://github.com/coveo/ui-kit/issues/4078)) ([71bc15b](https://github.com/coveo/ui-kit/commits/71bc15b9efebcfb5e56f53a27fb250513b28bade))
+
+## 2.50.7 (2024-06-06)
+
 ## 2.50.6 (2024-05-29)
 
 ## 2.50.5 (2024-05-22)

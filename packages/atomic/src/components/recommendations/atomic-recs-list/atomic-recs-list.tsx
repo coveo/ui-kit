@@ -356,6 +356,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     return (
       <DisplayGrid
         item={recommendation}
+        gridTarget={this.gridCellLinkTarget}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)

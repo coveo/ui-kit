@@ -8,24 +8,24 @@ import {
   buildProductListing,
   buildSearch,
   FacetGenerator,
-  buildListingSummary,
-  buildSearchSummary,
-  ListingSummary,
-  SearchSummary,
+  Summary,
+  SearchSummaryState,
+  ProductListingSummaryState,
 } from '@coveo/headless/commerce';
-import {Component, h, Element, Host, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
  * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-facets',
@@ -35,6 +35,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   public facetGenerator!: FacetGenerator;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   @Element() host!: HTMLElement;
 
   /**
@@ -48,28 +49,24 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
 
   @BindStateToController('facetGenerator')
   @State()
-  public facetGeneratorState!: FacetGeneratorState[];
-  public summary!: ListingSummary | SearchSummary;
+  public facetGeneratorState!: FacetGeneratorState;
 
   @State() public error!: Error;
 
   public initialize() {
     this.validateProps();
     const {engine} = this.bindings;
-    this.facetGenerator = this.facetGeneratorBuilder(engine).facetGenerator();
-    this.summary = this.summaryBuilder(engine);
+    const controller = this.controllerBuilder(engine);
+    this.facetGenerator = controller.facetGenerator();
+    this.summary = controller.summary();
   }
 
   private isProductListing() {
     return this.bindings.interfaceElement.type === 'product-listing';
   }
 
-  private get facetGeneratorBuilder() {
+  private get controllerBuilder() {
     return this.isProductListing() ? buildProductListing : buildSearch;
-  }
-
-  private get summaryBuilder() {
-    return this.isProductListing() ? buildListingSummary : buildSearchSummary;
   }
 
   private validateProps() {
@@ -90,8 +87,13 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   }
 
   public render() {
+    if (!this.bindings.store.isAppLoaded()) {
+      return [...Array.from({length: this.collapseFacetsAfter})].map(() => (
+        <FacetPlaceholder isCollapsed={false} numberOfValues={8} />
+      ));
+    }
     return (
-      <Host>
+      <Fragment>
         {this.facetGenerator.facets.map((facet, index) => {
           if (facet.state.values.length === 0) {
             return;
@@ -101,6 +103,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             isCollapsed: this.shouldCollapseFacet(index),
             summary: this.summary,
             facet: facet as T,
+            field: facet.state.field,
           });
 
           switch (facet.state.type) {
@@ -136,7 +139,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             }
           }
         })}
-      </Host>
+      </Fragment>
     );
   }
 }
