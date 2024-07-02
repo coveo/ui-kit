@@ -6,7 +6,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 
 const {decorator, play} = wrapInCommerceInterface({
-  skipFirstSearch: true,
+  skipFirstSearch: false,
 });
 
 const noProductsEngineConfig: Partial<CommerceEngineConfiguration> = {
@@ -28,6 +28,10 @@ const fixedNumberOfProducts = (
     r.body = JSON.stringify(parsed);
     return r;
   },
+});
+
+const {play: playNoInitialSearch} = wrapInCommerceInterface({
+  skipFirstSearch: true,
 });
 
 const {play: playNoProducts} = wrapInCommerceInterface({
@@ -54,6 +58,15 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-query-summary',
+};
+
+export const NoInitialSearch: Story = {
+  name: 'No Initial Search',
+  tags: ['test'],
+  decorators: [(story) => story()],
+  play: async (context) => {
+    await playNoInitialSearch(context);
+  },
 };
 
 export const NoProducts: Story = {
@@ -92,6 +105,6 @@ export const WithSearchBox: Story = {
       </atomic-commerce-layout>`,
   ],
   play: async (context) => {
-    await play(context);
+    await playNoInitialSearch(context);
   },
 };
