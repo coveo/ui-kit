@@ -1,9 +1,10 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {BooleanValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
@@ -73,9 +74,9 @@ export const executeSearch = createAsyncThunk<
 >('commerce/search/executeSearch', async (_action, config) => {
   const {getState} = config;
   const state = getState();
-  const {relay} = config.extra;
+  const {relay, navigatorContext} = config.extra;
 
-  const request = buildCommerceAPIRequest(state, relay);
+  const request = buildCommerceAPIRequest(state, relay, navigatorContext);
   const query = querySelector(state);
 
   const processor = new AsyncSearchThunkProcessor<
@@ -93,7 +94,7 @@ export const fetchMoreProducts = createAsyncThunk<
 >('commerce/search/fetchMoreProducts', async (_action, config) => {
   const {getState} = config;
   const state = getState();
-  const {relay} = config.extra;
+  const {relay, navigatorContext} = config.extra;
 
   const moreProductsAvailable = moreProductsAvailableSelector(state);
   if (!moreProductsAvailable) {
@@ -105,7 +106,7 @@ export const fetchMoreProducts = createAsyncThunk<
   const nextPageToRequest = numberOfProducts / perPage;
   const query = querySelector(state);
 
-  const request = buildCommerceAPIRequest(state, relay);
+  const request = buildCommerceAPIRequest(state, relay, navigatorContext);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -152,10 +153,10 @@ export const fetchInstantProducts = createAsyncThunk<
   'commerce/search/fetchInstantProducts',
   async (payload, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
-    const {apiClient, relay} = extra;
+    const {apiClient, relay, navigatorContext} = extra;
     const {q} = payload;
     const fetched = await apiClient.productSuggestions({
-      ...buildCommerceAPIRequest(state, relay),
+      ...buildCommerceAPIRequest(state, relay, navigatorContext),
       query: q,
     });
 
@@ -176,13 +177,16 @@ export const fetchInstantProducts = createAsyncThunk<
 );
 
 export interface PromoteChildToParentActionCreatorPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
 };
 
 export const promoteChildToParent = createAction(

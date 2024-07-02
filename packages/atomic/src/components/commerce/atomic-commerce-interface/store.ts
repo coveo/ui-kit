@@ -4,6 +4,7 @@ import {
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
+  ChildProduct,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -32,7 +33,7 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   currentQuickviewPosition: number;
-  activeProductChild: {parentPermanentId: string; childPermanentId: string};
+  activeProductChild: ChildProduct | undefined;
 }
 
 export interface AtomicCommerceStore
@@ -63,7 +64,7 @@ export function createAtomicCommerceStore(
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
     currentQuickviewPosition: -1,
-    activeProductChild: {parentPermanentId: '', childPermanentId: ''},
+    activeProductChild: undefined,
   });
 
   return {

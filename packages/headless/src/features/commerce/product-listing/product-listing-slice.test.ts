@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
 import {
   buildMockChildProduct,
@@ -245,14 +246,13 @@ describe('product-listing-slice', () => {
   });
 
   describe('on #promoteChildToParent', () => {
-    const childPermanentId = 'child-id';
+    const permanentid = 'child-id';
     const parentPermanentId = 'parent-id';
     let action: ReturnType<typeof promoteChildToParent>;
 
     beforeEach(() => {
       action = promoteChildToParent({
-        childPermanentId,
-        parentPermanentId,
+        child: {permanentid} as ChildProduct,
       });
     });
 
@@ -274,7 +274,7 @@ describe('product-listing-slice', () => {
 
     it('when both parent and child exist, promotes the child to parent', () => {
       const childProduct = buildMockChildProduct({
-        permanentid: childPermanentId,
+        permanentid,
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
         ec_brand: 'child brand',

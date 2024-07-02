@@ -201,12 +201,8 @@ export class AtomicCommerceRecommendationList
   @Listen('atomic/selectChildProduct')
   public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
     event.stopPropagation();
-    const {parentPermanentId, childPermanentId} = event.detail;
 
-    this.recommendations.promoteChildToParent(
-      childPermanentId,
-      parentPermanentId
-    );
+    this.recommendations.promoteChildToParent(event.detail.child);
   }
 
   public get focusTarget() {
@@ -352,6 +348,7 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
+        gridTarget={this.gridCellLinkTarget}
         select={() => {
           this.logWarningIfNeeded(interactiveProduct.warningMessage);
           interactiveProduct.select();

@@ -38,7 +38,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
   > =>
   async (
     facetId: string,
-    {getState, extra: {validatePayload, relay, apiClient}}
+    {getState, extra: {validatePayload, relay, navigatorContext, apiClient}}
   ) => {
     const state = getState();
     validatePayload(facetId, requiredNonEmptyString);
@@ -49,13 +49,15 @@ const getExecuteFacetSearchThunkPayloadCreator =
             facetId,
             state,
             isFieldSuggestionsRequest,
-            relay
+            relay,
+            navigatorContext
           )
         : buildCategoryFacetSearchRequest(
             facetId,
             state,
             isFieldSuggestionsRequest,
-            relay
+            relay,
+            navigatorContext
           );
 
     const response = await apiClient.facetSearch(await req);
