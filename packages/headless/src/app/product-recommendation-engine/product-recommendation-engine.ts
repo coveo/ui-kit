@@ -39,6 +39,7 @@ type ProductRecommendationEngineState =
 
 /**
  * The engine for powering production recommendation experiences.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductRecommendationEngine<State extends object = {}>
   extends CoreEngine<
@@ -48,6 +49,7 @@ export interface ProductRecommendationEngine<State extends object = {}>
 
 /**
  * The product recommendation engine options.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductRecommendationEngineOptions
   extends ExternalEngineOptions<ProductRecommendationEngineState> {
@@ -59,6 +61,7 @@ export interface ProductRecommendationEngineOptions
 
 /**
  * Creates a product recommendation engine instance.
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param options - The product recommendation engine options.
  * @returns A product recommendation engine instance.

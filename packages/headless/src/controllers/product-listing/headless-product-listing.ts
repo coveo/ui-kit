@@ -25,6 +25,9 @@ const optionsSchema = new Schema({
   }),
 });
 
+/**
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface ProductListingOptions {
   /**
    * The initial URL used to retrieve the product listing.
@@ -37,6 +40,9 @@ export interface ProductListingOptions {
   additionalFields?: string[];
 }
 
+/**
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface ProductListingProps {
   /**
    * The initial options that should be applied to this `ProductListing` controller.
@@ -46,6 +52,7 @@ export interface ProductListingProps {
 
 /**
  * The `ProductListing` controller allows the end user to configure and retrieve product listing data.
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ProductListing extends Controller {
   /**
@@ -71,6 +78,9 @@ export interface ProductListing extends Controller {
   state: ProductListingState;
 }
 
+/**
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface ProductListingState {
   products: ProductRecommendation[];
   error: ProductListingAPIErrorStatusResponse | null;
@@ -80,10 +90,14 @@ export interface ProductListingState {
   url: string;
 }
 
+/**
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export type ProductListingControllerState = ProductListing['state'];
 
 /**
  * Creates a `ProductListingController` controller instance.
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ProductListingController` properties.

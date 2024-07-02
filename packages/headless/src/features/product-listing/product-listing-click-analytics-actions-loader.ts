@@ -5,10 +5,12 @@ import {logProductRecommendationOpen} from './product-listing-analytics';
 
 /**
  * The click analytics action creators.
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface ClickAnalyticsActionCreators {
   /**
    * The event to log when a recommendation is selected.
+   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
    *
    * @param productRecommendation - The selected recommendation.
    * @returns A dispatchable action.
@@ -20,6 +22,7 @@ export interface ClickAnalyticsActionCreators {
 
 /**
  * Returns possible click analytics action creators.
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.

@@ -59,6 +59,9 @@ export type {
   CoreFacetState,
 };
 
+/**
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface FacetProps {
   /**
    * The options for the `Facet` controller.
@@ -68,6 +71,7 @@ export interface FacetProps {
 
 /**
  * Creates a `Facet` controller instance for the product listing.
+ * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.

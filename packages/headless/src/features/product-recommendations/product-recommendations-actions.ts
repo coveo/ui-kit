@@ -49,6 +49,9 @@ export interface GetProductRecommendationsThunkReturn {
   duration: number;
 }
 
+/**
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsRecommenderIdActionCreatorPayload {
   /**
    * The recommender id, used to determine the machine-learning model that should fulfill the request.
@@ -64,6 +67,9 @@ export const setProductRecommendationsRecommenderId = createAction(
     })
 );
 
+/**
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsSkusActionCreatorPayload {
   /**
    * The skus to retrieve recommendations for.
@@ -83,6 +89,9 @@ export const setProductRecommendationsSkus = createAction(
     })
 );
 
+/**
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsBrandFilterActionCreatorPayload {
   /**
    * The brand to filter recommendations by.
@@ -98,6 +107,9 @@ export const setProductRecommendationsBrandFilter = createAction(
     })
 );
 
+/**
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsCategoryFilterActionCreatorPayload {
   /**
    * The category to filter recommendations by.
@@ -113,6 +125,9 @@ export const setProductRecommendationsCategoryFilter = createAction(
     })
 );
 
+/**
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsAdditionalFieldsActionCreatorPayload {
   /**
    * The additional result fields to request.
@@ -131,6 +146,9 @@ export const setProductRecommendationsAdditionalFields = createAction(
     })
 );
 
+/**
+ * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload {
   /**
    * The maximum number of recommendations to return.
