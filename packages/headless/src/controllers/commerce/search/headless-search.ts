@@ -1,9 +1,14 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
@@ -16,6 +21,10 @@ import {
 import {
   activeParametersSelector,
   enrichedParametersSelector,
+  enrichedSummarySelector,
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors';
@@ -53,13 +62,9 @@ export interface Search extends Controller, SearchSubControllers {
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
    * it can be rendered as a nested product, and restored as the parent product through this method as needed.
    *
-   * @param childPermanentId The permanentid of the child product that will become the new parent.
-   * @param parentPermanentId The permanentid of the current parent product of the child product to promote.
+   * @param child The child product that will become the new parent.
    */
-  promoteChildToParent(
-    childPermanentId: string,
-    parentPermanentId: string
-  ): void;
+  promoteChildToParent(child: ChildProduct): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Search` controller.
@@ -99,6 +104,13 @@ export function buildSearch(engine: CommerceEngine): Search {
     restoreActionCreator: restoreSearchParameters,
     activeParametersSelector,
     enrichParameters: enrichedParametersSelector,
+    isLoadingSelector,
+    errorSelector,
+    pageSelector: pagePrincipalSelector,
+    perPageSelector: perPagePrincipalSelector,
+    totalEntriesSelector: totalEntriesPrincipalSelector,
+    numberOfProductsSelector,
+    enrichSummary: enrichedSummarySelector,
   });
 
   return {
@@ -109,8 +121,8 @@ export function buildSearch(engine: CommerceEngine): Search {
       return getState().commerceSearch;
     },
 
-    promoteChildToParent(childPermanentId: string, parentPermanentId: string) {
-      dispatch(promoteChildToParent({childPermanentId, parentPermanentId}));
+    promoteChildToParent(child: ChildProduct) {
+      dispatch(promoteChildToParent({child}));
     },
 
     executeFirstSearch() {

@@ -1,10 +1,12 @@
-import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
+import {Relay} from '@coveo/relay';
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
   BaseCommerceAPIRequest,
   CommerceAPIRequest,
 } from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {
   CartSection,
   CommerceContextSection,
@@ -32,11 +34,13 @@ export interface QueryCommerceAPIThunkReturn {
   response: CommerceSuccessResponse;
 }
 
-export const buildCommerceAPIRequest = async (
-  state: ListingAndSearchStateNeededByQueryCommerceAPI
-): Promise<CommerceAPIRequest> => {
+export const buildCommerceAPIRequest = (
+  state: ListingAndSearchStateNeededByQueryCommerceAPI,
+  relay: Relay,
+  navigatorContext: NavigatorContext
+): CommerceAPIRequest => {
   return {
-    ...(await buildBaseCommerceAPIRequest(state)),
+    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
     facets: getFacets(state),
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
@@ -44,23 +48,37 @@ export const buildCommerceAPIRequest = async (
   };
 };
 
-export const buildBaseCommerceAPIRequest = async (
+export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
+  relay: Relay,
+  navigatorContext: NavigatorContext,
   slotId?: string
-): Promise<BaseCommerceAPIRequest> => {
-  const {view, user, ...restOfContext} = state.commerceContext;
+): BaseCommerceAPIRequest => {
+  const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
+    clientId: relay.getMeta('').clientId,
     context: {
-      user,
-      view,
+      ...(navigatorContext.userAgent
+        ? {
+            user: {
+              userAgent: navigatorContext.userAgent,
+            },
+          }
+        : {}),
+      view: {
+        ...view,
+        ...(navigatorContext.referrer
+          ? {referrer: navigatorContext.referrer}
+          : {}),
+      },
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
+      source: getAnalyticsSource(state.configuration.analytics),
     },
     ...effectivePagination(state, slotId),
   };

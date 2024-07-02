@@ -1,10 +1,8 @@
 import {test, expect} from './fixture';
 
 test.describe('default', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({suggestionTimeout: 5000});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -50,10 +48,38 @@ test.describe('default', () => {
 });
 
 test.describe('with instant results & query suggestions', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--rich-search-box&viewMode=story&args=suggestion-timeout:5000'
-    );
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
+  });
+
+  test.describe('with recent queries', () => {
+    test.beforeEach(async ({searchBox}) => {
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('kayak');
+      await searchBox.searchInput.press('Enter');
+      await searchBox.clearButton.waitFor({state: 'visible'});
+      await searchBox.searchInput.fill('');
+    });
+
+    test('should display recent queries', async ({searchBox}) => {
+      await expect(searchBox.recentQueries().first()).toBeVisible();
+    });
+
+    test('should clear recent queries when clicking the clear button', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.click();
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
+
+    test('should clear recent queries when pressing enter while the clear button is focused', async ({
+      searchBox,
+    }) => {
+      await searchBox.clearRecentQueriesButton.hover();
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+    });
   });
 
   test.describe('after clicking the searchbox input', () => {
@@ -78,14 +104,43 @@ test.describe('with instant results & query suggestions', () => {
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
     });
+
+    test('should display in the search box what has been submitted', async ({
+      searchBox,
+    }) => {
+      await searchBox.searchInput.fill('Rec');
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.searchInput).toHaveValue('Rec');
+    });
+
+    test.describe('after focusing on suggestion with the mouse', () => {
+      test('should submit what is in the search box regardless of the mouse position', async ({
+        searchBox,
+      }) => {
+        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
+        await searchBox.searchInput.press('Enter');
+        await expect(searchBox.searchInput).toHaveValue('Rec');
+      });
+    });
   });
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=disable-search:!true;minimum-query-length:1;suggestion-timeout:5000'
-    );
+  let querySuggestionRequestPerformed = false;
+
+  test.beforeEach(async ({page, searchBox}) => {
+    querySuggestionRequestPerformed = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/querySuggest')) {
+        querySuggestionRequestPerformed = true;
+      }
+    });
+    await searchBox.load({
+      disableSearch: true,
+      minimumQueryLength: 1,
+      suggestionTimeout: 5000,
+    });
   });
 
   const testCases = () => {
@@ -101,6 +156,10 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
+    });
+
+    test('should not perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(false);
     });
   };
 
@@ -123,11 +182,16 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
   });
 });
 
-test.describe('with minimum-query-length=3', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--default&viewMode=story&args=minimum-query-length:4;suggestion-timeout:5000'
-    );
+test.describe('with minimum-query-length=4', () => {
+  let querySuggestionRequestPerformed = false;
+  test.beforeEach(async ({page, searchBox}) => {
+    querySuggestionRequestPerformed = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/querySuggest')) {
+        querySuggestionRequestPerformed = true;
+      }
+    });
+    await searchBox.load({minimumQueryLength: 4, suggestionTimeout: 5000});
   });
 
   const testCases = () => {
@@ -169,20 +233,25 @@ test.describe('with minimum-query-length=3', () => {
       await page.getByPlaceholder('Search').fill('kayak');
     });
 
-    test('the submit button is disabled', async ({searchBox}) => {
+    test('the submit button is enabled', async ({searchBox}) => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
-    test('there are no search suggestions', async ({searchBox}) => {
+    test('there are search suggestions', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
+    });
+
+    test('should perform requests against the query suggest endpoint', () => {
+      expect(querySuggestionRequestPerformed).toBe(true);
     });
   });
 });
 
 test.describe('with a facet & clear-filters set to true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!true;suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load(
+      {clearFilters: true, suggestionTimeout: 5000},
+      'in-page'
     );
   });
 
@@ -198,9 +267,10 @@ test.describe('with a facet & clear-filters set to true', () => {
 });
 
 test.describe('with a facet & clear-filters set to false', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&args=clear-filters:!false;suggestion-timeout:5000'
+  test.beforeEach(async ({searchBox}) => {
+    await searchBox.load(
+      {clearFilters: false, suggestionTimeout: 5000},
+      'in-page'
     );
   });
 
@@ -215,20 +285,4 @@ test.describe('with a facet & clear-filters set to false', () => {
   });
 });
 
-test.describe('with enable-query-syntax=true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000'
-    );
-  });
-
-  test('should use query syntax', async ({loadMore, searchBox, page}) => {
-    await loadMore.loadMoreButton.waitFor({state: 'visible'});
-    await searchBox.searchInput
-      // eslint-disable-next-line @cspell/spellchecker
-      .fill('@urihash=bzo5fpM1vf8Xñds1');
-    await searchBox.submitButton.click();
-    await expect(loadMore.summary({total: 1})).toBeVisible();
-    await expect(page.getByText('WiLife Life Jacket WiLife')).toBeVisible();
-  });
-});
+test.describe('with a facet & clear-filters set to true', () => {});

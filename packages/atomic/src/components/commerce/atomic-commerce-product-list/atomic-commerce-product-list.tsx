@@ -6,6 +6,9 @@ import {
   SearchState,
   Search,
   Product,
+  Summary,
+  ProductListingSummaryState,
+  SearchSummaryState,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -31,11 +34,11 @@ import {
   DisplayTableRow,
 } from '../../common/item-list/display-table';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
-import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {
   ItemListCommon,
   ItemRenderingFunction,
 } from '../../common/item-list/item-list-common';
+import {ItemListGuard} from '../../common/item-list/item-list-guard';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -76,9 +79,18 @@ export class AtomicCommerceProductList
   @BindStateToController('search')
   @State()
   private searchState!: SearchState;
+  public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
+  @BindStateToController('summary')
+  @State()
+  private summaryState!: SearchSummaryState | ProductListingSummaryState;
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
+
+  /**
+   * The desired number of placeholders to display while the product list is loading.
+   */
+  @Prop({reflect: true}) numberOfPlaceholders = 24;
 
   /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
@@ -127,8 +139,10 @@ export class AtomicCommerceProductList
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
       this.productListing.refresh();
+      this.summary = this.productListing.summary();
     } else {
       this.search = buildSearch(this.bindings.engine);
+      this.summary = this.search.summary();
     }
 
     this.productTemplateProvider = new ProductTemplateProvider({
@@ -160,15 +174,12 @@ export class AtomicCommerceProductList
   @Listen('atomic/selectChildProduct')
   public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
     event.stopPropagation();
-    const {parentPermanentId, childPermanentId} = event.detail;
+    const child = event.detail.child;
 
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.productListing.promoteChildToParent(
-        childPermanentId,
-        parentPermanentId
-      );
+      this.productListing.promoteChildToParent(child);
     } else if (this.bindings.interfaceElement.type === 'search') {
-      this.search.promoteChildToParent(childPermanentId, parentPermanentId);
+      this.search.promoteChildToParent(child);
     }
   }
 
@@ -181,26 +192,30 @@ export class AtomicCommerceProductList
   public render() {
     const listClasses = this.computeListDisplayClasses();
 
+    const {firstRequestExecuted, hasError, hasProducts} = this.summaryState;
     return (
-      <DisplayWrapper display={this.display} listClasses={listClasses}>
-        <ResultsPlaceholdersGuard
-          density={this.density}
-          display={this.display}
-          imageSize={this.imageSize}
-          displayPlaceholders={!this.bindings.store.isAppLoaded()}
-          numberOfPlaceholders={this.productState.products.length}
-        ></ResultsPlaceholdersGuard>
-        <ItemDisplayGuard
-          firstRequestExecuted={!!this.productState.responseId}
-          hasItems={this.productState.products.length > 0}
-        >
+      <ItemListGuard
+        hasError={hasError}
+        hasTemplate={this.resultTemplateRegistered}
+        templateHasError={this.productTemplateProvider.hasError}
+        firstRequestExecuted={firstRequestExecuted}
+        hasItems={hasProducts}
+      >
+        <DisplayWrapper display={this.display} listClasses={listClasses}>
+          <ResultsPlaceholdersGuard
+            density={this.density}
+            display={this.display}
+            imageSize={this.imageSize}
+            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            numberOfPlaceholders={this.numberOfPlaceholders}
+          ></ResultsPlaceholdersGuard>
           {this.display === 'table'
             ? this.renderAsTable()
             : this.display === 'grid'
               ? this.renderAsGrid()
               : this.renderAsList()}
-        </ItemDisplayGuard>
-      </DisplayWrapper>
+        </DisplayWrapper>
+      </ItemListGuard>
     );
   }
 
@@ -264,6 +279,7 @@ export class AtomicCommerceProductList
             title: product.ec_name ?? 'temp',
           }}
           {...propsForAtomicProduct.interactiveProduct}
+          gridTarget={this.gridCellLinkTarget}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }

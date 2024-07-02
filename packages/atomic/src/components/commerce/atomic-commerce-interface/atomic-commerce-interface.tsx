@@ -4,7 +4,7 @@ import {
   Unsubscribe,
   UrlManager,
   buildSearch,
-  updateQuery,
+  loadQueryActions,
   CommerceEngine,
   CommerceEngineConfiguration,
   buildCommerceEngine,
@@ -12,10 +12,9 @@ import {
   ProductListing,
   Context,
   buildContext,
-  buildSearchSummary,
-  buildListingSummary,
-  SearchSummary,
-  ListingSummary,
+  Summary,
+  SearchSummaryState,
+  ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -48,7 +47,7 @@ import {
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicCommerceStore, createAtomicCommerceStore} from './store';
 
-const FirstSearchExecutedFlag = 'firstSearchExecuted';
+const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
@@ -61,8 +60,8 @@ export type CommerceBindings = CommonBindings<
 /**
  * @internal
  * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
- * (with the exception of `atomic-commerce-recommendation-list`, which must be have
- * `atomic-commerce-recommendation-interface` as a parent). It handles the headless search engine and localization
+ * (except for `atomic-commerce-recommendation-list`, which must have
+ * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
  * configurations.
  */
 @Component({
@@ -76,10 +75,9 @@ export class AtomicCommerceInterface
 {
   private urlManager!: UrlManager;
   private searchOrListing!: Search | ProductListing;
-  private summary!: SearchSummary | ListingSummary;
+  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   private context!: Context;
   private unsubscribeUrlManager: Unsubscribe = () => {};
-  private unsubscribeSearchStatus: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: AtomicCommerceStore;
@@ -115,8 +113,10 @@ export class AtomicCommerceInterface
 
   /**
    * the commerce interface language.
+   *
+   * Will default to the value set in the Headless engine context if not provided.
    */
-  @Prop({reflect: true}) public language = 'en';
+  @Prop({reflect: true, mutable: true}) public language?: string;
 
   /**
    * The commerce interface headless engine.
@@ -181,6 +181,7 @@ export class AtomicCommerceInterface
   }
 
   public connectedCallback() {
+    this.store.setLoadingFlag(FirstRequestExecutedFlag);
     this.i18nClone = this.i18n.cloneInstance();
     this.i18n.addResourceBundle = (
       lng: string,
@@ -208,6 +209,9 @@ export class AtomicCommerceInterface
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
+    if (!this.language) {
+      return;
+    }
 
     this.context.setLanguage(this.language);
     this.commonInterfaceHelper.onLanguageChange();
@@ -220,7 +224,6 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
     this.unsubscribeSummary();
     window.removeEventListener('hashchange', this.onHashChange);
   }
@@ -244,15 +247,15 @@ export class AtomicCommerceInterface
   }
 
   /**
-   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+   * Initializes the connection with the headless commerce engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
   @Method() public initialize(options: CommerceInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which will internally create a new commerce engine instance.
+   * This bypasses the properties set on the component, such as analytics and language.
    */
   @Method() public initializeWithEngine(engine: CommerceEngine) {
     return this.internalInitialization(() => (this.engine = engine));
@@ -260,38 +263,45 @@ export class AtomicCommerceInterface
 
   /**
    *
-   * Executes the first search after initializing connection to the headless search engine.
+   * Executes the first request after initializing connection to the headless commerce engine.
    */
-  @Method() public async executeFirstSearch() {
+  @Method() public async executeFirstRequest() {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
 
     if (!this.initialized) {
       console.error(
-        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        'You have to wait until the "initialize" promise is fulfilled before executing a request.',
         this.host
       );
       return;
     }
 
-    const safeStorage = new SafeStorage();
+    if (this.type === 'search') {
+      const safeStorage = new SafeStorage();
 
-    const standaloneSearchBoxData =
-      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA,
-        null
+      const standaloneSearchBoxData =
+        safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
+          StorageItems.STANDALONE_SEARCH_BOX_DATA,
+          null
+        );
+
+      if (!standaloneSearchBoxData) {
+        (this.searchOrListing as Search).executeFirstSearch();
+        return;
+      }
+
+      safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
+      const {value} = standaloneSearchBoxData;
+
+      this.engine.dispatch(
+        loadQueryActions(this.engine).updateQuery({query: value})
       );
-
-    if (!standaloneSearchBoxData) {
-      this.engine.executeFirstSearch();
-      return;
+      (this.searchOrListing as Search).executeFirstSearch();
+    } else {
+      (this.searchOrListing as ProductListing).executeFirstRequest();
     }
-
-    safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
-    const {value} = standaloneSearchBoxData;
-    this.engine!.dispatch(updateQuery({query: value}));
-    this.engine.executeFirstSearch();
   }
 
   public get bindings(): CommerceBindings {
@@ -362,49 +372,47 @@ export class AtomicCommerceInterface
     window.addEventListener('hashchange', this.onHashChange);
   }
 
-  private initSearchStatus() {
+  private initRequestStatus() {
     this.searchOrListing =
       this.type === 'product-listing'
         ? buildProductListing(this.engine!)
         : buildSearch(this.engine!);
-
-    this.unsubscribeSearchStatus = this.searchOrListing.subscribe(() => {
-      if (
-        !this.searchOrListing.state.isLoading &&
-        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
-      ) {
-        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
-      }
-    });
   }
 
   private initSummary() {
-    this.summary =
-      this.type === 'product-listing'
-        ? buildListingSummary(this.engine!)
-        : buildSearchSummary(this.engine!);
+    this.summary = this.searchOrListing.summary();
 
     this.unsubscribeSummary = this.summary.subscribe(() => {
-      const {firstSearchExecuted, hasProducts, hasError} = this.summary.state;
-      const hasNoProductsAfterInitialSearch =
-        firstSearchExecuted && !hasError && !hasProducts;
+      const {firstRequestExecuted, hasProducts, hasError} = this.summary.state;
+      const hasNoProductsAfterInitialQuery =
+        firstRequestExecuted && !hasError && !hasProducts;
 
       this.host.classList.toggle(
         noProductsSelector,
-        hasNoProductsAfterInitialSearch
+        hasNoProductsAfterInitialQuery
       );
 
       this.host.classList.toggle(errorSelector, hasError);
 
       this.host.classList.toggle(
         firstSearchExecutedSelector,
-        firstSearchExecuted
+        firstRequestExecuted
       );
+
+      if (firstRequestExecuted) {
+        this.store.unsetLoadingFlag(FirstRequestExecutedFlag);
+      }
     });
   }
 
   private initContext() {
     this.context = buildContext(this.engine!);
+  }
+
+  private initLanguage() {
+    if (!this.language) {
+      this.language = this.context.state.language;
+    }
   }
 
   private updateHash() {
@@ -428,10 +436,11 @@ export class AtomicCommerceInterface
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
 
-    this.initSearchStatus();
+    this.initRequestStatus();
     this.initSummary();
     this.initUrlManager();
     this.initContext();
+    this.initLanguage();
     this.initialized = true;
   }
 

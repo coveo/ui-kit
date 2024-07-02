@@ -2,11 +2,12 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
+import {QueryCommerceAPIThunkReturn} from '../common/actions';
 import {
-  QueryCommerceAPIThunkReturn,
-  StateNeededByQueryCommerceAPI,
-} from '../common/actions';
-import {fetchProductListing} from './product-listing-actions';
+  StateNeededByFetchProductListing,
+  fetchMoreProducts,
+  fetchProductListing,
+} from './product-listing-actions';
 
 /**
  * The product listing action creators.
@@ -20,15 +21,29 @@ export interface ProductListingActionCreators {
   fetchProductListing(): AsyncThunkAction<
     QueryCommerceAPIThunkReturn,
     void,
-    AsyncThunkCommerceOptions<StateNeededByQueryCommerceAPI>
+    AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
   >;
+
+  /**
+   * Fetches and additional page of products and appends it to the current list.
+   *
+   * @returns A dispatchable action.
+   */
+  fetchMoreProducts(): AsyncThunkAction<
+    QueryCommerceAPIThunkReturn | null,
+    void,
+    AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+  >;
+
+  // TODO KIT-3221 - Expose promoteChildToParent action and action payload creator.
 }
 
 /**
- * Loads the product listing reducer and returns the possible action creators.
+ * Loads the commerce product listing reducer and returns the available product listing action creators.
+ * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
- * @param engine - The headless engine.
- * @returns An object holding the action creators.
+ * @param engine - The headless commerce engine.
+ * @returns An object holding the product listing action creators.
  */
 export function loadProductListingActions(
   engine: CommerceEngine
@@ -37,5 +52,6 @@ export function loadProductListingActions(
 
   return {
     fetchProductListing,
+    fetchMoreProducts,
   };
 }

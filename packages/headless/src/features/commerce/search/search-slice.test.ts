@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {
@@ -249,14 +250,13 @@ describe('search-slice', () => {
   });
 
   describe('on #promoteChildToParent', () => {
-    const childPermanentId = 'child-id';
+    const permanentid = 'child-id';
     const parentPermanentId = 'parent-id';
     let action: ReturnType<typeof promoteChildToParent>;
 
     beforeEach(() => {
       action = promoteChildToParent({
-        childPermanentId,
-        parentPermanentId,
+        child: {permanentid} as ChildProduct,
       });
     });
 
@@ -278,11 +278,11 @@ describe('search-slice', () => {
 
     it('when both parent and child exist, promotes the child to parent', () => {
       const childProduct = buildMockChildProduct({
-        permanentid: childPermanentId,
+        permanentid,
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
         ec_brand: 'child brand',
-        ec_category: 'child category',
+        ec_category: ['child category'],
         ec_description: 'child description',
         ec_gender: 'child gender',
         ec_images: ['child image'],

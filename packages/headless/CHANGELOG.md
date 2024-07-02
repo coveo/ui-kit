@@ -1,3 +1,34 @@
+# 2.69.0 (2024-06-26)
+
+### Bug Fixes
+
+- **atomic:** fix atomic-commerce-search-box needlessly requesting suggestions when input is disabled ([#4096](https://github.com/coveo/ui-kit/issues/4096)) ([49e9415](https://github.com/coveo/ui-kit/commits/49e9415a601924996d87f1062ea87fed231dcb36))
+- **headless:** update product interface to reflect how the commerce api behaves ([#4104](https://github.com/coveo/ui-kit/issues/4104)) ([5e514c5](https://github.com/coveo/ui-kit/commits/5e514c5bf642e709c6bd897f693ec42174026c24))
+
+### Features
+
+- **commerce:** make summary a sub-controller ([#4082](https://github.com/coveo/ui-kit/issues/4082)) ([cfcc9d9](https://github.com/coveo/ui-kit/commits/cfcc9d9b2557345a0a96e271a0dba9cb549812b4))
+- **headless commerce:** retrieve clientId from Relay instead of coveoua when building commerce API requests ([#4111](https://github.com/coveo/ui-kit/issues/4111)) ([6c6b8e4](https://github.com/coveo/ui-kit/commits/6c6b8e49ccc3f6f2a91d18a42655588f5349e32e))
+- **headless:** handle 401 like 419 ([#4103](https://github.com/coveo/ui-kit/issues/4103)) ([6623e03](https://github.com/coveo/ui-kit/commits/6623e031e92406df2b10b8455724161fa62cd00c))
+
+# 2.68.0 (2024-06-19)
+
+### Features
+
+- **headless/commerce:** add basic plp, search and recs use case examples ([#4079](https://github.com/coveo/ui-kit/issues/4079)) ([7dcb7ac](https://github.com/coveo/ui-kit/commits/7dcb7ac80523c64c125a208b1b99465a2bc33296))
+- update search action cause to browseResults in insight-search and pagination ([#4068](https://github.com/coveo/ui-kit/issues/4068)) ([a5ee23a](https://github.com/coveo/ui-kit/commits/a5ee23a90cbecc2cde33a1482fbaed70285f3e53))
+
+# 2.67.0 (2024-06-13)
+
+### Bug Fixes
+
+- **commerce:** forward analytics source on `context.source` ([#4086](https://github.com/coveo/ui-kit/issues/4086)) ([c9822ed](https://github.com/coveo/ui-kit/commits/c9822ed0710644c0973546e8e2c2cdb3609554b9))
+
+### Features
+
+- **atomic:** add excerpt and product name highlights ([#4046](https://github.com/coveo/ui-kit/issues/4046)) ([fe412e0](https://github.com/coveo/ui-kit/commits/fe412e0077084e4ed4b5da8f7c7210e1f0dc8de8))
+- **commerce:** mark v2 listings as non-v2 and non-v2 listings as old ([#4087](https://github.com/coveo/ui-kit/issues/4087)) ([19c6363](https://github.com/coveo/ui-kit/commits/19c6363614cfac3ba7b6880ec8e9c4ea40186606))
+
 # 2.66.0 (2024-06-12)
 
 ### Bug Fixes

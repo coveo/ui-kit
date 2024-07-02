@@ -13,7 +13,6 @@ import {paginationReducer} from '../../features/commerce/pagination/pagination-s
 import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
-import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
@@ -67,17 +66,7 @@ export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
     State & CommerceEngineState,
     CommerceThunkExtraArguments
-  > {
-  /**
-   * Executes the first search.
-   */
-  executeFirstSearch(): void;
-
-  /**
-   * Executes the first search after a redirection from a standalone search box.
-   */
-  executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
-}
+  > {}
 
 /**
  * The commerce engine options.
@@ -144,16 +133,6 @@ export function buildCommerceEngine(
 
     get configuration() {
       return internalEngine.state.configuration;
-    },
-
-    executeFirstSearch() {
-      const action = executeSearch();
-      internalEngine.dispatch(action);
-    },
-
-    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
-      const action = executeSearch();
-      internalEngine.dispatch(action);
     },
   });
 }

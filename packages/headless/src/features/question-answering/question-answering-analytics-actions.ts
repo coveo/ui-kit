@@ -1,4 +1,4 @@
-import {Qna, Feedback} from '@coveo/relay-event-types';
+import {Qna} from '@coveo/relay-event-types';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   ClickAction,
@@ -66,15 +66,13 @@ export const logLikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeLikeSmartSnippet();
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'like',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: 'SmartSnippet',
-        },
-        feedback: {
-          liked: true,
         },
       };
     },
@@ -86,15 +84,13 @@ export const logDislikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeDislikeSmartSnippet();
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.AnswerAction',
+    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
       return {
+        action: 'dislike',
         answer: {
           responseId: state.search?.response.searchUid || '',
           type: 'SmartSnippet',
-        },
-        feedback: {
-          liked: false,
         },
       };
     },
@@ -186,16 +182,15 @@ export const logSmartSnippetFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason(feedback);
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
       return {
         answer: {
           responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
         },
         feedback: {
-          liked: false,
-          reason: feedback as Feedback['reason'],
+          reason:
+            feedback as Qna.SubmitSmartSnippetFeedback['feedback']['reason'],
         },
       };
     },
@@ -209,15 +204,13 @@ export const logSmartSnippetDetailedFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason('other', details);
     },
-    analyticsType: 'Qna.SubmitFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitFeedback => {
+    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
       return {
         answer: {
           responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
         },
         feedback: {
-          liked: false,
           reason: 'other',
           details: details,
         },

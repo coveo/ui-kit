@@ -6,7 +6,7 @@ import {
   SortBy,
   SortCriterion,
 } from '../../sort/sort';
-import {setContext, setUser, setView} from '../context/context-actions';
+import {setContext, setView} from '../context/context-actions';
 import {Parameters} from '../parameters/parameters-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
@@ -28,8 +28,7 @@ export const sortReducer = createReducer(
       .addCase(restoreSearchParameters, handleRestoreParameters)
       .addCase(restoreProductListingParameters, handleRestoreParameters)
       .addCase(setContext, getCommerceSortInitialState)
-      .addCase(setView, getCommerceSortInitialState)
-      .addCase(setUser, getCommerceSortInitialState);
+      .addCase(setView, getCommerceSortInitialState);
   }
 );
 
