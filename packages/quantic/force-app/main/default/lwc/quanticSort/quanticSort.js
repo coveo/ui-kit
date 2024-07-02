@@ -6,6 +6,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, track, api} from 'lwc';
 
@@ -19,6 +20,7 @@ import {LightningElement, track, api} from 'lwc';
  * @property {string} label
  * @property {string} value
  * @property {SortCriterion} criterion
+ * @example {label: 'Youtube views ascending', value: '@ytviewcount ascending', criterion: {by: 'field', field: '@ytviewcount', order: 'ascending'}
  */
 
 /**
@@ -26,8 +28,15 @@ import {LightningElement, track, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-sort engine-id={engineId}></c-quantic-sort>
+ * <c-quantic-sort engine-id={engineId}>
+ *  <c-quantic-sort-option
+      slot="sortOption"
+      label={sortOptionLabel}
+      value={sortOptionValue}
+      criterion={sortOptionCriterion}
+    ></c-quantic-sort-option></c-quantic-sort>
  */
+
 export default class QuanticSort extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
@@ -56,6 +65,11 @@ export default class QuanticSort extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
 
+  /** @type {string} */
+  errorMessage;
+
+  schemas = {};
+
   labels = {
     sortBy,
     relevancy,
@@ -83,6 +97,12 @@ export default class QuanticSort extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
+    getBueno(this).then(() => {
+      this.generateSchemas();
+      this.customSortOptions.forEach((option) => {
+        this.validateSortOption(option);
+      });
+    });
   };
 
   disconnectedCallback() {
@@ -96,6 +116,9 @@ export default class QuanticSort extends LightningElement {
   }
 
   buildOptions() {
+    if (this.hasCustomSortOptions) {
+      return this.customSortOptions;
+    }
     return [
       {
         label: this.labels.relevancy,
@@ -131,6 +154,71 @@ export default class QuanticSort extends LightningElement {
     this.hasInitializationError = true;
   }
 
+  /**
+   * Sets the error when custom sort options have an invalid configuration.
+   */
+  setSortOptionsConfigurationError() {
+    this.errorMessage = `Custom sort options configuration is invalid.`;
+  }
+
+  /**
+   * Generates the schemas for the validation of the sort options with Bueno.
+   */
+  generateSchemas() {
+    this.headless = getHeadlessBundle(this.engineId);
+    const requiredNonEmptyString = new Bueno.StringValue({
+      required: true,
+      emptyAllowed: false,
+    });
+
+    this.schemas.sortOptionSchema = new Bueno.Schema({
+      label: requiredNonEmptyString,
+      value: requiredNonEmptyString,
+      criterion: new Bueno.RecordValue({
+        options: {
+          required: true,
+        },
+        values: {
+          by: requiredNonEmptyString,
+        },
+      }),
+    });
+
+    this.schemas.sortByDateCriterionSchema = new Bueno.Schema({
+      by: requiredNonEmptyString,
+      order: requiredNonEmptyString,
+    });
+
+    this.schemas.sortByFieldCriterionSchema = new Bueno.Schema({
+      by: requiredNonEmptyString,
+      field: requiredNonEmptyString,
+      order: requiredNonEmptyString,
+    });
+  }
+
+  /**
+   * Validates that the label and values are non-empty strings and that the criterion of the custom sort option is an object which respects the following:
+   * By should be a string
+   * If sorting by field, field must be a string
+   * If sorting by field or date, order must be a string
+   */
+  validateSortOption(sortOption) {
+    try {
+      this.schemas.sortOptionSchema.validate(sortOption);
+      if (sortOption.criterion.by === 'date') {
+        this.schemas.sortByDateCriterionSchema.validate(sortOption.criterion);
+      }
+      if (sortOption.criterion.by === 'field') {
+        this.schemas.sortByFieldCriterionSchema.validate(sortOption.criterion);
+      }
+    } catch (error) {
+      console.error(
+        `The ${this.template.host.localName} component has an error with the ${sortOption.label} sort configuration, ${error.message}`
+      );
+      this.setSortOptionsConfigurationError();
+    }
+  }
+
   get relevancy() {
     return this.headless.buildRelevanceSortCriterion();
   }
@@ -148,6 +236,37 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    return this.state?.sortCriteria;
+    return this.hasCustomSortOptions
+      ? this.customSortOptions[0].value
+      : this.state?.sortCriteria;
+  }
+
+  get hasCustomSortOptions() {
+    return this.customSortOptions.length > 0;
+  }
+
+  get hasError() {
+    return this.hasInitializationError || !!this.errorMessage;
+  }
+
+  /**
+   * Returns an array of custom sort options passed via slots.
+   * @returns {SortOption[]} The specified custom sort options.
+   */
+  get customSortOptions() {
+    /** @type {SortOption[]} */
+    // @ts-ignore
+    const elements = Array.from(this.querySelectorAll('c-quantic-sort-option'));
+    if (elements.length === 0) {
+      return [];
+    }
+
+    return elements.map((option) => {
+      return {
+        label: option.label,
+        value: option.value,
+        criterion: option.criterion,
+      };
+    });
   }
 }

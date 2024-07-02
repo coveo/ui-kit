@@ -1,3 +1,7 @@
+import {
+  addCustomSortOptions,
+  addInvalidCustomSortOptions,
+} from '../../../page-objects/actions/action-add-custom-sort-options';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
@@ -33,14 +37,60 @@ describe('quantic-sort', () => {
   ];
   const sortOptionValues = sortOptions.map((option) => option.value);
 
+  const customSortOptions = [
+    {
+      label: 'Date ascending',
+      value: 'date ascending',
+      criterion: {
+        by: 'date',
+        order: 'ascending',
+      },
+    },
+    {
+      label: 'Views Descending',
+      value: '@ytviewcount descending',
+      criterion: {
+        by: 'field',
+        field: 'ytviewcount',
+        order: 'descending',
+      },
+    },
+    {
+      label: 'No Sort',
+      value: 'nosort',
+    },
+  ];
+
+  const defaultCustomOptionValue = 'date ascending';
+
+  const customSortOptionsValues = customSortOptions.map(
+    (option) => option.value
+  );
   interface SortOptions {
     useCase: string;
+    withCustomSortOptions?: boolean;
+    withInvalidCustomSortOptions?: boolean;
   }
 
-  function visitSort(options: Partial<SortOptions>, waitForSearch = true) {
+  interface SortActionsOptions {
+    withCustomSortOptions?: boolean;
+    withInvalidCustomSortOptions?: boolean;
+  }
+
+  function visitSort(
+    options: Partial<SortOptions>,
+    waitForSearch = true,
+    actionsOptions: Partial<SortActionsOptions>
+  ) {
     interceptSearch();
     cy.visit(sortUrl);
     configure(options);
+    if (actionsOptions.withCustomSortOptions) {
+      addCustomSortOptions();
+    }
+    if (actionsOptions.withInvalidCustomSortOptions) {
+      addInvalidCustomSortOptions();
+    }
     if (options.useCase === useCaseEnum.insight) {
       InsightInterfaceExpect.isInitialized();
       performSearch();
@@ -72,7 +122,7 @@ describe('quantic-sort', () => {
 
       describe('when loading default sort', () => {
         it('should work as expected', () => {
-          visitSort({useCase: param.useCase});
+          visitSort({useCase: param.useCase}, true, {});
 
           Expect.displaySortDropdown(true);
           Expect.labelContains('Sort by');
@@ -90,7 +140,7 @@ describe('quantic-sort', () => {
           .filter((value) => value !== defaultOptionValue)
           .forEach((value) => {
             it(`should update the shown selected option to ${value}`, () => {
-              visitSort({useCase: param.useCase});
+              visitSort({useCase: param.useCase}, true, {});
               Actions.selectOption(value);
 
               Expect.selectedOption(value);
@@ -102,6 +152,53 @@ describe('quantic-sort', () => {
               Expect.logSortResults(value);
             });
           });
+      });
+
+      describe('when passing custom options as slots to the component', () => {
+        it('should display the custom options properly', () => {
+          visitSort({useCase: param.useCase}, true, {
+            withCustomSortOptions: true,
+          });
+
+          Expect.displaySortDropdown(true);
+          Expect.labelContains('Sort by');
+
+          Actions.openDropdown();
+
+          Expect.containsOptions(customSortOptionsValues);
+          Expect.optionsEqual(customSortOptions);
+        });
+
+        customSortOptionsValues
+          .filter((value) => value !== defaultCustomOptionValue)
+          .forEach((value) => {
+            describe('when selecting a custom option', () => {
+              it(`should update the shown selected option to ${value}`, () => {
+                visitSort({useCase: param.useCase}, true, {
+                  withCustomSortOptions: true,
+                });
+                Actions.selectOption(value);
+
+                Expect.selectedOption(value);
+                Expect.completeSearchRequest(
+                  'resultsSort',
+                  param.useCase,
+                  (body) => Expect.sortCriteriaInSearchRequest(body, value)
+                );
+                Expect.logSortResults(value);
+              });
+            });
+          });
+
+        describe('when the custom option passed has an invalid property', () => {
+          it('should display an error message instead of the quanticSort component', () => {
+            visitSort({useCase: param.useCase}, true, {
+              withInvalidCustomSortOptions: true,
+            });
+
+            Expect.displayComponentError(true);
+          });
+        });
       });
 
       if (param.useCase === useCaseEnum.search) {
