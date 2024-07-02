@@ -279,6 +279,7 @@ export class AtomicCommerceProductList
             title: product.ec_name ?? 'temp',
           }}
           {...propsForAtomicProduct.interactiveProduct}
+          gridTarget={this.gridCellLinkTarget}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }
