@@ -1,5 +1,11 @@
 import {platformUrl} from '../../api/platform-client';
 import {allValidPlatformCombination} from '../../test/platform-url';
+import {
+  updateBasicConfiguration as updateCommerceBasicConfiguration,
+  updateAnalyticsConfiguration as updateCommerceAnalyticsConfiguration,
+  disableAnalytics as disableCommerceAnalytics,
+  enableAnalytics as enableCommerceAnalytics,
+} from '../commerce/configuration/configuration-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -54,7 +60,11 @@ describe('configuration slice', () => {
     );
   });
 
-  describe('updateBasicConfiguration', () => {
+  const describeUpdateBasic = (
+    updateBasic:
+      | typeof updateBasicConfiguration
+      | typeof updateCommerceBasicConfiguration
+  ) => {
     it('works on initial state', () => {
       const expectedState: ConfigurationState = {
         ...getConfigurationInitialState(),
@@ -64,7 +74,7 @@ describe('configuration slice', () => {
       expect(
         configurationReducer(
           undefined,
-          updateBasicConfiguration({
+          updateBasic({
             organizationId: 'myorg',
             accessToken: 'mytoken123',
           })
@@ -82,7 +92,7 @@ describe('configuration slice', () => {
       expect(
         configurationReducer(
           existingState,
-          updateBasicConfiguration({
+          updateBasic({
             accessToken: 'mynewtoken',
             organizationId: 'myotherorg',
           })
@@ -92,7 +102,7 @@ describe('configuration slice', () => {
 
     it('setting platformUrl to a relative url does not return an error', () => {
       const platformUrl = '/rest/search/v2';
-      const action = updateBasicConfiguration({platformUrl});
+      const action = updateBasic({platformUrl});
       expect('error' in action).toBe(false);
     });
 
@@ -100,7 +110,7 @@ describe('configuration slice', () => {
       allValidPlatformCombination().forEach((expectation) => {
         const newState = configurationReducer(
           existingState,
-          updateBasicConfiguration({
+          updateBasic({
             platformUrl: expectation.platform,
           })
         );
@@ -113,7 +123,7 @@ describe('configuration slice', () => {
     it('setting platformUrl to a relative URL keep search and analytics url in sync', () => {
       const newState = configurationReducer(
         existingState,
-        updateBasicConfiguration({
+        updateBasic({
           platformUrl: '/foo',
         })
       );
@@ -125,7 +135,7 @@ describe('configuration slice', () => {
     it('setting platformUrl to a non relative URL pointing to a non Coveo platform keep search and analytics url in sync', () => {
       const newState = configurationReducer(
         existingState,
-        updateBasicConfiguration({
+        updateBasic({
           platformUrl: 'https://my.domain.com',
         })
       );
@@ -135,6 +145,14 @@ describe('configuration slice', () => {
       );
       expect(newState.analytics.apiBaseUrl).toBe('https://my.domain.com');
     });
+  };
+
+  describe('updateBasicConfiguration', () => {
+    describeUpdateBasic(updateBasicConfiguration);
+  });
+
+  describe('updateCommerceBasicConfiguration', () => {
+    describeUpdateBasic(updateCommerceBasicConfiguration);
   });
 
   describe('updateAnalyticsConfiguration', () => {
@@ -226,6 +244,55 @@ describe('configuration slice', () => {
     });
   });
 
+  describe('updateCommerceAnalyticsConfiguration', () => {
+    it('works on initial state', () => {
+      const initialState = getConfigurationInitialState();
+      const expectedState: ConfigurationState = {
+        ...initialState,
+        analytics: {
+          ...initialState.analytics,
+          enabled: false,
+          trackingId: 'someTrackingId',
+          source: {'@coveo/atomic': '3.0.0'},
+        },
+      };
+      expect(
+        configurationReducer(
+          undefined,
+          updateCommerceAnalyticsConfiguration({
+            enabled: false,
+            trackingId: 'someTrackingId',
+            source: {'@coveo/atomic': '3.0.0'},
+          })
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('works on an existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        analytics: {
+          ...existingState.analytics,
+          enabled: false,
+          trackingId: 'someTrackingId',
+          analyticsMode: 'legacy',
+          source: {'@coveo/atomic': '3.0.0'},
+        },
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          updateAnalyticsConfiguration({
+            enabled: false,
+            trackingId: 'someTrackingId',
+            source: {'@coveo/atomic': '3.0.0'},
+          })
+        )
+      ).toEqual(expectedState);
+    });
+  });
+
   describe('updateSearchConfiguration', () => {
     it('works on initial state', () => {
       const expectedState: ConfigurationState = {
@@ -291,11 +358,28 @@ describe('configuration slice', () => {
     ).toBe(false);
   });
 
+  it('should handle disable commerce analytics', () => {
+    const state = getConfigurationInitialState();
+    state.analytics.enabled = true;
+
+    expect(
+      configurationReducer(state, disableCommerceAnalytics()).analytics.enabled
+    ).toBe(false);
+  });
+
   it('should handle enable analytics', () => {
     const state = getConfigurationInitialState();
     state.analytics.enabled = false;
     expect(
       configurationReducer(state, enableAnalytics()).analytics.enabled
+    ).toBe(true);
+  });
+
+  it('should handle enable commerce analytics', () => {
+    const state = getConfigurationInitialState();
+    state.analytics.enabled = false;
+    expect(
+      configurationReducer(state, enableCommerceAnalytics()).analytics.enabled
     ).toBe(true);
   });
 

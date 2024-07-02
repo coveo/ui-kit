@@ -52,7 +52,7 @@ export * from './features/commerce/facets/date-facet/date-facet-actions-loader';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader';
 export * from './features/commerce/query-set/query-set-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
-export * from './features/configuration/configuration-actions-loader';
+export * from './features/commerce/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
