@@ -18,7 +18,9 @@ test.describe('default', async () => {
 
   test('should collapse facets when set to 1', async ({facets}) => {
     await facets.load({
-      collapseFacetsAfter: 1,
+      args: {
+        collapseFacetsAfter: 1,
+      },
     });
     await expect(facets.expandedFacets).toHaveCount(1);
     await expect(facets.collapsedFacets).toHaveCount(7);
@@ -26,7 +28,9 @@ test.describe('default', async () => {
 
   test('should disable collapse facets when set to -1', async ({facets}) => {
     await facets.load({
-      collapseFacetsAfter: -1,
+      args: {
+        collapseFacetsAfter: -1,
+      },
     });
     await expect(facets.collapsedFacets).toHaveCount(0);
     await expect(facets.expandedFacets).toHaveCount(8);
@@ -37,7 +41,7 @@ test.describe('loading state', async () => {
   test('should display placeholder equal to the collapse facet after property', async ({
     facets,
   }) => {
-    await facets.load({collapseFacetsAfter: 5}, 'loading-state');
+    await facets.load({args: {collapseFacetsAfter: 5}, story: 'loading-state'});
     await expect(facets.placeholders).toHaveCount(5);
   });
 });
