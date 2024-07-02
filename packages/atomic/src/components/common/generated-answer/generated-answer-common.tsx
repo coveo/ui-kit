@@ -220,13 +220,8 @@ export class GeneratedAnswerCommon {
   }
 
   private renderFeedbackAndCopyButtons() {
-    const {
-      getGeneratedAnswerState,
-      getBindings,
-      getGeneratedAnswer,
-      getCopied,
-      getCopyError,
-    } = this.props;
+    const {getGeneratedAnswerState, getBindings, getCopied, getCopyError} =
+      this.props;
     const {i18n} = getBindings();
     const {liked, disliked, answer, isStreaming} =
       getGeneratedAnswerState() ?? {};
@@ -252,7 +247,7 @@ export class GeneratedAnswerCommon {
           title={i18n.t('this-answer-was-helpful')}
           variant="like"
           active={!!liked}
-          onClick={() => getGeneratedAnswer()?.like()}
+          onClick={() => this.clickLike()}
         />
         <FeedbackButton
           title={i18n.t('this-answer-was-not-helpful')}
@@ -276,14 +271,23 @@ export class GeneratedAnswerCommon {
     );
   }
 
-  private clickDislike() {
+  private openFeedbackModal() {
     if (
       this.modalRef &&
       !this.props.getGeneratedAnswerState()?.feedbackSubmitted
     ) {
       this.modalRef.isOpen = true;
     }
+  }
+
+  private clickDislike() {
     this.props.getGeneratedAnswer()?.dislike();
+    this.openFeedbackModal();
+  }
+
+  private clickLike() {
+    this.props.getGeneratedAnswer()?.like();
+    this.openFeedbackModal();
   }
 
   private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
