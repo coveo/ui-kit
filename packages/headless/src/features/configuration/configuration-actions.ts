@@ -37,6 +37,13 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
   platformUrl?: string;
 }
 
+interface UpdateAnswerConfigurationActionCreatorPayload {
+  /**
+   * The Answer Configuration ID to use.
+   */
+  answerConfigurationId: string;
+}
+
 export const updateBasicConfiguration = createAction(
   'configuration/updateBasicConfiguration',
   (payload: UpdateBasicConfigurationActionCreatorPayload) =>
@@ -44,6 +51,14 @@ export const updateBasicConfiguration = createAction(
       accessToken: nonEmptyString,
       organizationId: nonEmptyString,
       platformUrl: nonEmptyString,
+    })
+);
+
+export const updateAnswerConfiguration = createAction(
+  'configuration/updateKnowledgeConfiguration',
+  (payload: UpdateAnswerConfigurationActionCreatorPayload) =>
+    validatePayload(payload, {
+      answerConfigurationId: nonEmptyString,
     })
 );
 
