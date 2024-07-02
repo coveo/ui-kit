@@ -1,12 +1,14 @@
-import {StringValue} from '@coveo/bueno';
+import {RecordValue, StringValue} from '@coveo/bueno';
 import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {RecommendationsSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
@@ -33,9 +35,15 @@ const buildRecommendationCommerceAPIRequest = (
   slotId: string,
   state: StateNeededByFetchRecommendations,
   relay: Relay,
+  navigatorContext: NavigatorContext,
   productId?: string
 ): CommerceRecommendationsRequest => {
-  const commerceAPIRequest = buildBaseCommerceAPIRequest(state, relay, slotId);
+  const commerceAPIRequest = buildBaseCommerceAPIRequest(
+    state,
+    relay,
+    navigatorContext,
+    slotId
+  );
   return {
     ...commerceAPIRequest,
     context: {
@@ -61,12 +69,16 @@ export const fetchRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetch',
-  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+  ) => {
     const {slotId, productId} = payload;
     const request = buildRecommendationCommerceAPIRequest(
       slotId,
       getState(),
       relay,
+      navigatorContext,
       productId
     );
     const fetched = await apiClient.getRecommendations(request);
@@ -87,7 +99,10 @@ export const fetchMoreRecommendations = createAsyncThunk<
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
-  async (payload, {getState, rejectWithValue, extra: {apiClient, relay}}) => {
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+  ) => {
     const slotId = payload.slotId;
     const state = getState();
     const moreRecommendationsAvailable = moreRecommendationsAvailableSelector(
@@ -103,7 +118,12 @@ export const fetchMoreRecommendations = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const request = {
-      ...buildRecommendationCommerceAPIRequest(slotId, state, relay),
+      ...buildRecommendationCommerceAPIRequest(
+        slotId,
+        state,
+        relay,
+        navigatorContext
+      ),
       page: nextPageToRequest,
     };
     const fetched = await apiClient.getRecommendations(request);
@@ -130,13 +150,16 @@ export const registerRecommendationsSlot = createAction(
 
 export interface PromoteChildToParentActionCreatorPayload
   extends SlotIdPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
   ...recommendationsSlotDefinition,
 };
 

@@ -267,11 +267,7 @@ export class AtomicCommerceSearchBox
   @Listen('atomic/selectChildProduct')
   public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
     event.stopPropagation();
-    const {parentPermanentId, childPermanentId} = event.detail;
-    this.bindings.store.state.activeProductChild = {
-      parentPermanentId,
-      childPermanentId,
-    };
+    this.bindings.store.state.activeProductChild = event.detail.child;
     this.suggestionManager.forceUpdate();
   }
 

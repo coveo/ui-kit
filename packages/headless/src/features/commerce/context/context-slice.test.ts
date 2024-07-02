@@ -1,4 +1,4 @@
-import {setContext, setUser, setView} from './context-actions';
+import {setContext, setView} from './context-actions';
 import {contextReducer} from './context-slice';
 import {CommerceContextState, getContextInitialState} from './context-state';
 
@@ -34,15 +34,6 @@ describe('context-slice', () => {
       view: {
         url: 'https://example.org',
       },
-    });
-  });
-
-  describe('#setUser', () => {
-    it('should allow to set the user', () => {
-      const user = {
-        userAgent: 'some-user-agent',
-      };
-      expect(contextReducer(state, setUser(user)).user).toEqual(user);
     });
   });
 

@@ -41,7 +41,6 @@ export const CommerceSearchPage = () => {
             currency: 'USD',
             view: {
               url: 'https://sports-dev.barca.group/commerce-search',
-              referrer: document.referrer,
             },
           },
           cart: {

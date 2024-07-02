@@ -191,10 +191,11 @@ export class AtomicCommerceSearchBoxInstantProducts
     });
 
     this.bindings.store.onChange('activeProductChild', () => {
-      this.instantProducts.promoteChildToParent(
-        this.bindings.store.state.activeProductChild.childPermanentId,
-        this.bindings.store.state.activeProductChild.parentPermanentId
-      );
+      if (this.bindings.store.state.activeProductChild) {
+        this.instantProducts.promoteChildToParent(
+          this.bindings.store.state.activeProductChild
+        );
+      }
     });
 
     this.itemTemplateProvider = new ProductTemplateProvider({
