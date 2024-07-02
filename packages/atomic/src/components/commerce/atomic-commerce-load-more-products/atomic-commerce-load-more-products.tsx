@@ -87,6 +87,7 @@ export class AtomicLoadMoreProducts {
           />
           <LoadMoreButton
             i18n={i18n}
+            label={'load-more-products'}
             moreAvailable={this.lastProduct < this.paginationState.totalEntries}
             onClick={() => this.onClick()}
           />
