@@ -1,5 +1,5 @@
 import {configuration} from '../../../../app/common-reducers';
-import {productClick} from '../../../../features/commerce/context/product/product-actions';
+import {productClick} from '../../../../features/commerce/product/product-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -11,7 +11,7 @@ import {
   InteractiveProduct,
 } from './headless-core-interactive-product';
 
-jest.mock('../../../../features/commerce/context/product/product-actions');
+jest.mock('../../../../features/commerce/product/product-actions');
 
 describe('core interactive result', () => {
   let engine: MockedCommerceEngine;

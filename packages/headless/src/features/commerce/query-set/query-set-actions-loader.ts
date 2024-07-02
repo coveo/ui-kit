@@ -1,16 +1,14 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {
-  RegisterQuerySetQueryActionCreatorPayload,
-  UpdateQuerySetQueryActionCreatorPayload,
-} from '../../query-set/query-set-actions';
 import {querySetReducer} from '../../query-set/query-set-slice';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
+import {
+  RegisterQuerySetQueryPayload,
+  UpdateQuerySetQueryPayload,
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from './query-set-actions';
 
-export type {
-  RegisterQuerySetQueryActionCreatorPayload,
-  UpdateQuerySetQueryActionCreatorPayload,
-};
+export type {RegisterQuerySetQueryPayload, UpdateQuerySetQueryPayload};
 
 /**
  * The query set action creators.
@@ -25,8 +23,8 @@ export interface QuerySetActionCreators {
    * @returns A dispatchable action.
    */
   registerQuerySetQuery(
-    payload: RegisterQuerySetQueryActionCreatorPayload
-  ): PayloadAction<RegisterQuerySetQueryActionCreatorPayload>;
+    payload: RegisterQuerySetQueryPayload
+  ): PayloadAction<RegisterQuerySetQueryPayload>;
 
   /**
    * Updates a query set query.
@@ -35,17 +33,17 @@ export interface QuerySetActionCreators {
    * @returns A dispatchable action.
    */
   updateQuerySetQuery(
-    payload: UpdateQuerySetQueryActionCreatorPayload
-  ): PayloadAction<UpdateQuerySetQueryActionCreatorPayload>;
+    payload: UpdateQuerySetQueryPayload
+  ): PayloadAction<UpdateQuerySetQueryPayload>;
 }
 
 /**
- * Loads the query set reducer and returns the possible commerce query set action creators.
+ * Loads the query set reducer and returns the available query set action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
- * @returns An object holding the action creators.
+ * @returns An object holding the query set action creators.
  */
 export function loadQuerySetActions(engine: CommerceEngine) {
   engine.addReducers({querySetReducer});
