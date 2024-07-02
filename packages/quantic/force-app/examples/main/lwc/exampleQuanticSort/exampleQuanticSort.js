@@ -1,7 +1,6 @@
 // @ts-nocheck
 import {api, LightningElement, track} from 'lwc';
 import templateWithCustomSortOptions from './templateWithCustomSortOptions.html';
-import templateWithInvalidCustomSortOptions from './templateWithInvalidCustomSortOptions.html';
 import templateWithoutCustomSortOptions from './templateWithoutCustomSortOptions.html';
 
 export default class ExampleQuanticSort extends LightningElement {
@@ -17,10 +16,6 @@ export default class ExampleQuanticSort extends LightningElement {
       'addCustomSortOptions',
       this.handleAddCustomSortOptions
     );
-    this.addEventListener(
-      'addInvalidCustomSortOptions',
-      this.handleAddInvalidCustomSortOptions
-    );
   }
 
   disconnectedCallback() {
@@ -28,20 +23,17 @@ export default class ExampleQuanticSort extends LightningElement {
       'addCustomSortOptions',
       this.handleAddCustomSortOptions
     );
-    this.removeEventListener(
-      'addInvalidCustomSortOptions',
-      this.handleAddInvalidCustomSortOptions
-    );
   }
 
-  handleAddCustomSortOptions = () => {
+  handleAddCustomSortOptions = (event) => {
+    const withInvalidSortOptions = event.detail.withInvalidOptions;
+    if (withInvalidSortOptions) {
+      this.withCustomSortOptions = false;
+      this.withInvalidCustomSortOptions = true;
+      return;
+    }
     this.withInvalidCustomSortOptions = false;
     this.withCustomSortOptions = true;
-  };
-
-  handleAddInvalidCustomSortOptions = () => {
-    this.withCustomSortOptions = false;
-    this.withInvalidCustomSortOptions = true;
   };
 
   pageTitle = 'Quantic Sort';
@@ -57,7 +49,7 @@ export default class ExampleQuanticSort extends LightningElement {
     },
   ];
 
-  customSortOptions = [
+  validCustomSortOptions = [
     {
       label: 'Date ascending',
       value: 'date ascending',
@@ -115,8 +107,11 @@ export default class ExampleQuanticSort extends LightningElement {
     return !this.isConfigured;
   }
 
-  get customSortOptionsEnabled() {
-    return this.config.customSortOptionsEnabled;
+  get customSortOptions() {
+    if (this.withInvalidCustomSortOptions) {
+      return this.invalidCustomSortOptions;
+    }
+    return this.validCustomSortOptions;
   }
 
   handleTryItNow(evt) {
@@ -125,9 +120,6 @@ export default class ExampleQuanticSort extends LightningElement {
   }
 
   render() {
-    if (this.withInvalidCustomSortOptions) {
-      return templateWithInvalidCustomSortOptions;
-    }
     if (this.withCustomSortOptions) {
       return templateWithCustomSortOptions;
     }
