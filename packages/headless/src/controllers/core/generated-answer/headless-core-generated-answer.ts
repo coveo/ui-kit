@@ -22,7 +22,10 @@ import {
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
+import {
+  GeneratedAnswerFeedback,
+  GeneratedAnswerFeedbackV2,
+} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
@@ -78,7 +81,10 @@ export interface GeneratedAnswer extends Controller {
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
-  sendFeedback(feedback: GeneratedAnswerFeedback): void;
+  // TODO: Update feedback type, to change in TODO: SFINT-5585
+  sendFeedback(
+    feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
+  ): void;
   /**
    * Sends detailed feedback about why the generated answer was not relevant.
    * @param details - Details on why the generated answer was not relevant.
@@ -216,7 +222,7 @@ export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
   logDislikeGeneratedAnswer: () => CustomAction;
   logGeneratedAnswerFeedback: (
-    feedback: GeneratedAnswerFeedback
+    feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
   ) => CustomAction;
   logGeneratedAnswerDetailedFeedback: (details: string) => CustomAction;
   logOpenGeneratedAnswerSource: (citationId: string) => CustomAction;

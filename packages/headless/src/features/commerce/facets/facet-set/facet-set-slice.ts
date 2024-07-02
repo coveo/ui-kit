@@ -40,7 +40,7 @@ import {
   updateNumericFacetValues,
 } from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {setContext, setUser, setView} from '../../context/context-actions';
+import {setContext, setView} from '../../context/context-actions';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
@@ -411,7 +411,6 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
       .addCase(setContext, clearAllFacetValues)
       .addCase(setView, clearAllFacetValues)
-      .addCase(setUser, clearAllFacetValues)
       .addCase(restoreSearchParameters, restoreFromParameters)
       .addCase(restoreProductListingParameters, restoreFromParameters);
   }
