@@ -18,8 +18,6 @@ export type {
 
 /**
  * The numeric facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface NumericFacetActionCreators {
   /**
@@ -55,8 +53,6 @@ export interface NumericFacetActionCreators {
 
 /**
  * Loads the commerce facet set reducer and returns the available numeric facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the numeric facet action creators.

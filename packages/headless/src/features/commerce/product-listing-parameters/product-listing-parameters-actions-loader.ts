@@ -13,8 +13,6 @@ export type {RestoreProductListingParametersPayload};
 
 /**
  * The product listing parameters action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ProductListingParametersActionCreators {
   /**
@@ -30,8 +28,6 @@ export interface ProductListingParametersActionCreators {
 
 /**
  * Loads the commerce facet order, facet set, pagination, and sort reducers and returns the available product listing parameters action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless commerce engine.
 <<<<<<< HEAD

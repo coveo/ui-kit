@@ -12,8 +12,6 @@ export type {ToggleExcludeFacetValuePayload, ToggleSelectFacetValuePayload};
 
 /**
  * The regular facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface RegularFacetActionCreators {
   /**
@@ -39,8 +37,6 @@ export interface RegularFacetActionCreators {
 
 /**
  * Loads the commerce facet set reducer and returns the available regular facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the regular facet action creators.
