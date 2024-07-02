@@ -44,8 +44,8 @@ export const renderComponent = (args: Args, context: StoryContext) => {
             .join('\n')
         )}
     </style>
-    <${unsafeStatic(context.componentId)}${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
-      ${unsafeStatic(parseSlots(args, slotsControls))}
-    </${unsafeStatic(context.componentId)}>
+      <${unsafeStatic(context.componentId)}	${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
+        ${unsafeStatic(parseSlots(args, slotsControls))}
+      </${unsafeStatic(context.componentId)}>
   </div>`;
 };
