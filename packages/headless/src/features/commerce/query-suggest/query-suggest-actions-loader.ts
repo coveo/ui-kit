@@ -22,6 +22,8 @@ export type {
   SelectQuerySuggestionPayload,
 };
 
+// TODO KIT-3350 - All query suggest actions should be commerce-specific.
+
 /**
  * The query suggest action creators.
  *
@@ -68,7 +70,7 @@ export interface QuerySuggestActionCreators {
 }
 
 /**
- * Loads the commerce query suggest reducer and returns the available query suggest action creators.
+ * Loads the query suggest reducer and returns the available query suggest action creators.
  *
  * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
