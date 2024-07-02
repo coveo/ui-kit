@@ -31,14 +31,14 @@ import {logProductListing} from './product-listing-analytics';
 
 /**
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
    *
    * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
-   * @internal
+   * @deprecated
    */
   url: string;
 }

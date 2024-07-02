@@ -15,7 +15,7 @@ const optionsSchema = new Schema({
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedDifferentCategoryListOptions {
   /**
@@ -38,7 +38,7 @@ export interface FrequentlyViewedDifferentCategoryListOptions {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedDifferentCategoryListProps {
   options?: FrequentlyViewedDifferentCategoryListOptions;
@@ -49,7 +49,7 @@ export interface FrequentlyViewedDifferentCategoryListProps {
  * The recommendations are filtered to show products that have a different category than the ones the user is currently viewing.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedDifferentCategoryList extends Controller {
   /**
@@ -72,7 +72,7 @@ export interface FrequentlyViewedDifferentCategoryList extends Controller {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedDifferentCategoryListState {
   /**
@@ -105,7 +105,7 @@ export interface FrequentlyViewedDifferentCategoryListState {
  * Creates a `FrequentlyViewedDifferentCategoryList` controller instance.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedDifferentCategoryListProps` properties.

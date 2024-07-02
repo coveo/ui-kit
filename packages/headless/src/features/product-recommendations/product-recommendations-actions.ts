@@ -69,7 +69,7 @@ export const setProductRecommendationsRecommenderId = createAction(
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface SetProductRecommendationsSkusActionCreatorPayload {
   /**
@@ -92,7 +92,7 @@ export const setProductRecommendationsSkus = createAction(
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface SetProductRecommendationsBrandFilterActionCreatorPayload {
   /**
@@ -111,7 +111,7 @@ export const setProductRecommendationsBrandFilter = createAction(
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface SetProductRecommendationsCategoryFilterActionCreatorPayload {
   /**
@@ -130,7 +130,7 @@ export const setProductRecommendationsCategoryFilter = createAction(
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface SetProductRecommendationsAdditionalFieldsActionCreatorPayload {
   /**
@@ -152,7 +152,7 @@ export const setProductRecommendationsAdditionalFields = createAction(
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload {
   /**

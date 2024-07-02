@@ -15,7 +15,7 @@ export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
  * Creates a `Pager` controller instance for the product listing.
  *
  * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Pager` properties.

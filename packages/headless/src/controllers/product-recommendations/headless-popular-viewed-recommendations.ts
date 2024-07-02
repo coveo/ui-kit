@@ -17,7 +17,7 @@ const optionsSchema = new Schema({
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface PopularViewedRecommendationsListOptions {
   /**
@@ -35,7 +35,7 @@ export interface PopularViewedRecommendationsListOptions {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface PopularViewedRecommendationsListProps {
   options?: PopularViewedRecommendationsListOptions;
@@ -45,7 +45,7 @@ export interface PopularViewedRecommendationsListProps {
  * The `PopularViewedRecommendationsList` controller recommends the most viewed products.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface PopularViewedRecommendationsList extends Controller {
   /**
@@ -61,7 +61,7 @@ export interface PopularViewedRecommendationsList extends Controller {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface PopularViewedRecommendationsListState {
   /**
@@ -89,7 +89,7 @@ export interface PopularViewedRecommendationsListState {
  * Creates a `PopularViewedRecommendationsList` controller instance.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularViewedRecommendationsList` properties.

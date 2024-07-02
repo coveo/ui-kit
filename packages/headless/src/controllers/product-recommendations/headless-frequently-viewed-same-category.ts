@@ -15,7 +15,7 @@ const optionsSchema = new Schema({
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedSameCategoryListOptions {
   /**
@@ -38,7 +38,7 @@ export interface FrequentlyViewedSameCategoryListOptions {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedSameCategoryListProps {
   options?: FrequentlyViewedSameCategoryListOptions;
@@ -49,7 +49,7 @@ export interface FrequentlyViewedSameCategoryListProps {
  * The recommendations are filtered to show products that have the same category as the ones the user is currently viewing.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedSameCategoryList extends Controller {
   /**
@@ -72,7 +72,7 @@ export interface FrequentlyViewedSameCategoryList extends Controller {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyViewedSameCategoryListState {
   /**
@@ -105,7 +105,7 @@ export interface FrequentlyViewedSameCategoryListState {
  * Creates a `FrequentlyViewedSameCategoryList` controller instance.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedSameCategoryList` properties.

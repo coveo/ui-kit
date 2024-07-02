@@ -17,7 +17,7 @@ const optionsSchema = new Schema({
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface UserInterestRecommendationsListOptions {
   /**
@@ -35,7 +35,7 @@ export interface UserInterestRecommendationsListOptions {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface UserInterestRecommendationsListProps {
   options?: UserInterestRecommendationsListOptions;
@@ -47,7 +47,7 @@ export interface UserInterestRecommendationsListProps {
  * The model then suggests products that have been previously browsed by customers who share similar interests with the current user.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface UserInterestRecommendationsList extends Controller {
   /**
@@ -63,7 +63,7 @@ export interface UserInterestRecommendationsList extends Controller {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface UserInterestRecommendationsListState {
   /**
@@ -91,7 +91,7 @@ export interface UserInterestRecommendationsListState {
  * Creates a `UserInterestRecommendationsList` controller instance.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `UserInterestRecommendationsList` properties.

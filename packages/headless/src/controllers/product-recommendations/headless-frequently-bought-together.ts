@@ -18,7 +18,7 @@ const optionsSchema = new Schema({
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyBoughtTogetherListOptions {
   /**
@@ -41,7 +41,7 @@ export interface FrequentlyBoughtTogetherListOptions {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyBoughtTogetherListProps {
   options: FrequentlyBoughtTogetherListOptions;
@@ -51,7 +51,7 @@ export interface FrequentlyBoughtTogetherListProps {
  * The `FrequentlyBoughtTogetherList` controller recommends items frequently bought with the current product, based on purchases made by other users.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyBoughtTogetherList extends Controller {
   /**
@@ -74,7 +74,7 @@ export interface FrequentlyBoughtTogetherList extends Controller {
 
 /**
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  */
 export interface FrequentlyBoughtTogetherListState {
   /**
@@ -107,7 +107,7 @@ export interface FrequentlyBoughtTogetherListState {
  * Creates a `FrequentlyBoughtTogetherList` controller instance.
  *
  * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
- * @internal
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyBoughtTogetherList` properties.
