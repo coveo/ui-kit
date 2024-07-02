@@ -174,15 +174,12 @@ export class AtomicCommerceProductList
   @Listen('atomic/selectChildProduct')
   public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
     event.stopPropagation();
-    const {parentPermanentId, childPermanentId} = event.detail;
+    const child = event.detail.child;
 
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.productListing.promoteChildToParent(
-        childPermanentId,
-        parentPermanentId
-      );
+      this.productListing.promoteChildToParent(child);
     } else if (this.bindings.interfaceElement.type === 'search') {
-      this.search.promoteChildToParent(childPermanentId, parentPermanentId);
+      this.search.promoteChildToParent(child);
     }
   }
 
@@ -282,6 +279,7 @@ export class AtomicCommerceProductList
             title: product.ec_name ?? 'temp',
           }}
           {...propsForAtomicProduct.interactiveProduct}
+          gridTarget={this.gridCellLinkTarget}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }

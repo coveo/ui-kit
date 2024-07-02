@@ -1,9 +1,10 @@
-import {StringValue} from '@coveo/bueno';
+import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {NavigatorContext} from '../../../app/navigatorContextProvider';
@@ -51,7 +52,7 @@ const buildRecommendationCommerceAPIRequest = (
   };
 };
 
-export interface FetchRecommendationsActionCreatorPayload {
+export interface FetchRecommendationsPayload {
   /**
    * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
@@ -61,7 +62,7 @@ export interface FetchRecommendationsActionCreatorPayload {
 
 export const fetchRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn,
-  FetchRecommendationsActionCreatorPayload,
+  FetchRecommendationsPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetch',
@@ -88,9 +89,11 @@ export const fetchRecommendations = createAsyncThunk<
   }
 );
 
+export type FetchMoreRecommendationsPayload = FetchRecommendationsPayload;
+
 export const fetchMoreRecommendations = createAsyncThunk<
   QueryRecommendationsCommerceAPIThunkReturn | null,
-  FetchRecommendationsActionCreatorPayload,
+  FetchMoreRecommendationsPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
 >(
   'commerce/recommendations/fetchMore',
@@ -132,21 +135,26 @@ export interface SlotIdPayload {
   slotId: string;
 }
 
+export type RegisterRecommendationsSlotPayload = SlotIdPayload;
+
 export const registerRecommendationsSlot = createAction(
   'commerce/recommendations/registerSlot',
-  (payload: SlotIdPayload) =>
+  (payload: RegisterRecommendationsSlotPayload) =>
     validatePayload(payload, recommendationsSlotDefinition)
 );
 
 export interface PromoteChildToParentActionCreatorPayload
   extends SlotIdPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
   ...recommendationsSlotDefinition,
 };
 
