@@ -1,5 +1,6 @@
 import {createRelay} from '@coveo/relay';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
@@ -37,6 +38,19 @@ jest.mocked(createRelay).mockReturnValue({
   clearStorage: jest.fn(),
   version: 'foo',
 });
+
+const exampleSubject = 'example subject';
+const exampleDescription = 'example description';
+const exampleCaseId = '1234';
+const exampleCaseNumber = '5678';
+const caseContextState = {
+  caseContext: {
+    Case_Subject: exampleSubject,
+    Case_Description: exampleDescription,
+  },
+  caseId: exampleCaseId,
+  caseNumber: exampleCaseNumber,
+};
 
 const expectedDocumentInfo = {
   queryPipeline: '',
@@ -107,7 +121,11 @@ describe('#logDocumentQuickview', () => {
     });
 
     it('should call coveo.analytics.logDocumentQuickview properly', async () => {
-      engine.dispatch(logDocumentQuickview(testResult));
+      await logDocumentQuickview(testResult)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
       await clearMicrotaskQueue();
 
       expect(mockLogDocumentQuickview).toHaveBeenCalledTimes(1);
@@ -117,7 +135,6 @@ describe('#logDocumentQuickview', () => {
       expect(mockLogDocumentQuickview.mock.calls[0][1]).toStrictEqual(
         expectedDocumentIdentifier
       );
-      // expect(makeDocumentQuickview.mock.calls[0]).toMatchSnapshot();
     });
   });
 
@@ -133,12 +150,17 @@ describe('#logDocumentQuickview', () => {
               analyticsMode: 'next',
             },
           },
+          insightCaseContext: caseContextState,
         })
       );
     });
 
     it('should call relay.emit properly', async () => {
-      engine.dispatch(logDocumentQuickview(testResult));
+      await logDocumentQuickview(testResult)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
       await clearMicrotaskQueue();
 
       expect(emit).toHaveBeenCalledTimes(1);
