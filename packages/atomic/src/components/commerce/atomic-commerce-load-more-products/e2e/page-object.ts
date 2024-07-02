@@ -8,7 +8,7 @@ export class LoadMoreProductsPageObject extends BasePageObject<'atomic-commerce-
 
   summary({index, total}: {index?: number; total?: number} = {}) {
     return this.page.getByText(
-      new RegExp(`Showing ${index ?? '\\d+'} of ${total ?? '\\d+'} results`)
+      new RegExp(`Showing ${index ?? '\\d+'} of ${total ?? '\\d+'} products`)
     );
   }
 
@@ -19,7 +19,7 @@ export class LoadMoreProductsPageObject extends BasePageObject<'atomic-commerce-
   }
 
   get button() {
-    return this.page.getByText('Load more results');
+    return this.page.getByText('Load more products');
   }
 
   get progressBar() {

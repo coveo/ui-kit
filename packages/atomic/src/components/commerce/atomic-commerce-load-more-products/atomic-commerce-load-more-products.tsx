@@ -80,6 +80,7 @@ export class AtomicLoadMoreProducts {
             from={this.lastProduct}
             to={this.paginationState.totalEntries}
             i18n={i18n}
+            label="showing-products-of-load-more"
           />
           <LoadMoreProgressBar
             from={this.lastProduct}
