@@ -1,5 +1,5 @@
 import {configuration} from '../../../../app/common-reducers';
-import {productClick} from '../../../../features/commerce/context/product/product-actions';
+import {productClick} from '../../../../features/commerce/product/product-actions';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -11,7 +11,7 @@ import {
   InteractiveProduct,
 } from './headless-core-interactive-product';
 
-jest.mock('../../../../features/commerce/context/product/product-actions');
+jest.mock('../../../../features/commerce/product/product-actions');
 
 describe('core interactive result', () => {
   let engine: MockedCommerceEngine;
@@ -65,12 +65,12 @@ describe('core interactive result', () => {
       });
     });
 
-    it('when ec_name is not defined on the product, falls back to the permanentid field to set the product name', () => {
+    it('when ec_name is null on the product, falls back to the permanentid field to set the product name', () => {
       const controller = buildCoreInteractiveProduct(engine, {
         options: {
           product: {
             ...product,
-            ec_name: undefined,
+            ec_name: null,
           },
         },
         responseIdSelector: () => 'responseId',
@@ -89,12 +89,12 @@ describe('core interactive result', () => {
       });
     });
 
-    it('when ec_product_id is not defined on the product, falls back to the permanentid field to set the product id', () => {
+    it('when ec_product_id is null on the product, falls back to the permanentid field to set the product id', () => {
       const controller = buildCoreInteractiveProduct(engine, {
         options: {
           product: {
             ...product,
-            ec_product_id: undefined,
+            ec_product_id: null,
           },
         },
         responseIdSelector: () => 'responseId',
@@ -113,13 +113,13 @@ describe('core interactive result', () => {
       });
     });
 
-    it('when ec_promo_price and ec_price are not defined on the product, falls back to NaN to set the product price', () => {
+    it('when ec_promo_price and ec_price are null on the product, falls back to NaN to set the product price', () => {
       const controller = buildCoreInteractiveProduct(engine, {
         options: {
           product: {
             ...product,
-            ec_promo_price: undefined,
-            ec_price: undefined,
+            ec_promo_price: null,
+            ec_price: null,
           },
         },
         responseIdSelector: () => 'responseId',
@@ -150,12 +150,12 @@ describe('core interactive result', () => {
     expect((controller as InteractiveProduct).warningMessage).toBeUndefined();
   });
 
-  it('when ec_name is not defined on the product, warningMessage is defined', () => {
+  it('when ec_name is null on the product, warningMessage is defined', () => {
     const controller = buildCoreInteractiveProduct(engine, {
       options: {
         product: {
           ...product,
-          ec_name: undefined,
+          ec_name: null,
         },
       },
       responseIdSelector: () => 'responseId',
@@ -164,12 +164,12 @@ describe('core interactive result', () => {
     expect((controller as InteractiveProduct).warningMessage).toBeDefined();
   });
 
-  it('when ec_product_id is not defined on the product, warningMessage is defined', () => {
+  it('when ec_product_id is null on the product, warningMessage is defined', () => {
     const controller = buildCoreInteractiveProduct(engine, {
       options: {
         product: {
           ...product,
-          ec_product_id: undefined,
+          ec_product_id: null,
         },
       },
       responseIdSelector: () => 'responseId',
@@ -178,13 +178,13 @@ describe('core interactive result', () => {
     expect((controller as InteractiveProduct).warningMessage).toBeDefined();
   });
 
-  it('when ec_promo_price and ec_price are not defined on the product, warningMessage is defined', () => {
+  it('when ec_promo_price and ec_price are null on the product, warningMessage is defined', () => {
     const controller = buildCoreInteractiveProduct(engine, {
       options: {
         product: {
           ...product,
-          ec_promo_price: undefined,
-          ec_price: undefined,
+          ec_promo_price: null,
+          ec_price: null,
         },
       },
       responseIdSelector: () => 'responseId',
