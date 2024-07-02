@@ -108,6 +108,23 @@ describe('core breadcrumb manager', () => {
     expect(breadcrumbManager.subscribe).toBeTruthy();
   });
 
+  it('#hasBreadcrumbs is false when there are no facet values', () => {
+    setFacetsState(
+      buildMockCommerceRegularFacetResponse({
+        facetId,
+        values: [],
+      })
+    );
+    setFacetsState(
+      buildMockCommerceNumericFacetResponse({
+        facetId,
+        values: [],
+      })
+    );
+
+    expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+  });
+
   describe('#deselectAll', () => {
     it('deselects all breadcrumbs', () => {
       breadcrumbManager.deselectAll();
