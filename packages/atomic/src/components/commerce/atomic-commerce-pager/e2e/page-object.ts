@@ -1,13 +1,9 @@
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class AtomicCommercePagerLocators {
-  private page: Page;
+export class AtomicCommercePagerLocators extends BasePageObject<'atomic-commerce-pager'> {
   constructor(page: Page) {
-    this.page = page;
-  }
-
-  get hydrated() {
-    return this.page.locator('atomic-commerce-pager[class*="hydrated"]');
+    super(page, 'atomic-commerce-pager');
   }
 
   get errorComponent() {

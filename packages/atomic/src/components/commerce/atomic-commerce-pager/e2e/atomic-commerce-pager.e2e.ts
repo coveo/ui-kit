@@ -1,10 +1,8 @@
 import {test, expect} from './fixture';
 
 test.describe('Default', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story'
-    );
+  test.beforeEach(async ({pager}) => {
+    await pager.load();
   });
 
   test('nextButton should be enabled', async ({pager}) => {
@@ -177,8 +175,8 @@ test.describe('with an invalid page in the hash', () => {
     );
   });
 
-  test('pager button 9 should be selected', async ({pager}) => {
-    await expect(pager.numericButton(9)).toHaveAttribute(
+  test('pager button 1 should be selected', async ({pager}) => {
+    await expect(pager.numericButton(1)).toHaveAttribute(
       'part',
       expect.stringContaining('active-page-button')
     );
@@ -192,10 +190,8 @@ test.describe('with an invalid page in the hash', () => {
 });
 
 test.describe('with number-of-pages=3', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=attributes-number-of-pages:3'
-    );
+  test.beforeEach(async ({pager}) => {
+    await pager.load({numberOfPages: 3});
   });
 
   test('should display 3 pages', async ({pager}) => {
@@ -204,10 +200,8 @@ test.describe('with number-of-pages=3', () => {
 });
 
 test.describe('with numberOfPages=-5', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story&args=attributes-number-of-pages:-5'
-    );
+  test.beforeEach(async ({pager}) => {
+    await pager.load({numberOfPages: -5});
   });
 
   test('should display an error component', async ({pager}) => {
@@ -219,10 +213,8 @@ test.describe('should allow custom icons', () => {
   const customIcon =
     'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
 
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--custom-icon&viewMode=story'
-    );
+  test.beforeEach(async ({pager}) => {
+    await pager.load({}, 'custom-icon');
   });
 
   test('previous button', async ({pager, page}) => {
