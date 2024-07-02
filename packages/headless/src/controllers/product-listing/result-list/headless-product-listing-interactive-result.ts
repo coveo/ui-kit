@@ -15,7 +15,9 @@ export type {
 };
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
@@ -25,7 +27,9 @@ export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface InteractiveResultProps extends InteractiveResultCoreProps {
   /**
@@ -36,13 +40,17 @@ export interface InteractiveResultProps extends InteractiveResultCoreProps {
 
 /**
  * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface InteractiveResult extends InteractiveResultCore {}
 
 /**
  * Creates an `InteractiveResult` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `InteractiveResult` properties.

@@ -17,7 +17,9 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyBoughtTogetherListOptions {
   /**
@@ -39,7 +41,9 @@ export interface FrequentlyBoughtTogetherListOptions {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyBoughtTogetherListProps {
   options: FrequentlyBoughtTogetherListOptions;
@@ -47,7 +51,9 @@ export interface FrequentlyBoughtTogetherListProps {
 
 /**
  * The `FrequentlyBoughtTogetherList` controller recommends items frequently bought with the current product, based on purchases made by other users.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyBoughtTogetherList extends Controller {
   /**
@@ -69,7 +75,9 @@ export interface FrequentlyBoughtTogetherList extends Controller {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyBoughtTogetherListState {
   /**
@@ -100,7 +108,9 @@ export interface FrequentlyBoughtTogetherListState {
 
 /**
  * Creates a `FrequentlyBoughtTogetherList` controller instance.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyBoughtTogetherList` properties.

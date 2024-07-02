@@ -14,7 +14,9 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedTogetherListOptions {
   /**
@@ -36,7 +38,9 @@ export interface FrequentlyViewedTogetherListOptions {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedTogetherListProps {
   options?: FrequentlyViewedTogetherListOptions;
@@ -44,7 +48,9 @@ export interface FrequentlyViewedTogetherListProps {
 
 /**
  * The `FrequentlyViewedTogetherList` controller recommends products that are often viewed in the same shopping session.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedTogetherList extends Controller {
   /**
@@ -66,7 +72,9 @@ export interface FrequentlyViewedTogetherList extends Controller {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedTogetherListState {
   /**
@@ -97,7 +105,9 @@ export interface FrequentlyViewedTogetherListState {
 
 /**
  * Creates a `FrequentlyViewedTogetherList` controller instance.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedTogetherList` properties.

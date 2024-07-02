@@ -1,5 +1,7 @@
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductRecommendation {
   /**

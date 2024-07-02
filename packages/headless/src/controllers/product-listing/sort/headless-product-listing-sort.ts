@@ -40,7 +40,9 @@ export {
 };
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingSortProps {
   /**
@@ -50,7 +52,9 @@ export interface ProductListingSortProps {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingSortInitialState {
   /**
@@ -75,7 +79,9 @@ function validateSortInitialState(
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingSort extends Controller {
   /**
@@ -100,7 +106,9 @@ export interface ProductListingSort extends Controller {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingSortState {
   /**
@@ -111,7 +119,9 @@ export interface ProductListingSortState {
 
 /**
  * Creates a `Sort` controller instance for the product listing.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.

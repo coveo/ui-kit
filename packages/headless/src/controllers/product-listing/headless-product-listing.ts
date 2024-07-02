@@ -26,7 +26,9 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingOptions {
   /**
@@ -41,7 +43,9 @@ export interface ProductListingOptions {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingProps {
   /**
@@ -52,7 +56,9 @@ export interface ProductListingProps {
 
 /**
  * The `ProductListing` controller allows the end user to configure and retrieve product listing data.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListing extends Controller {
   /**
@@ -79,7 +85,9 @@ export interface ProductListing extends Controller {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingState {
   products: ProductRecommendation[];
@@ -91,13 +99,17 @@ export interface ProductListingState {
 }
 
 /**
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export type ProductListingControllerState = ProductListing['state'];
 
 /**
  * Creates a `ProductListingController` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ProductListingController` properties.

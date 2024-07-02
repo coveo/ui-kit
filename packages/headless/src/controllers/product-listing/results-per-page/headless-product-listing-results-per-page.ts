@@ -25,7 +25,9 @@ export type {
 
 /**
  * Creates a `ResultsPerPage` controller instance for the product listing.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ResultsPerPage` properties.

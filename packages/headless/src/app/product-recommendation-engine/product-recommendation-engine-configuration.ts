@@ -16,7 +16,9 @@ import {
 
 /**
  * The product recommendation engine configuration.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductRecommendationEngineConfiguration
   extends EngineConfiguration {
@@ -93,7 +95,9 @@ export const productRecommendationEngineConfigurationSchema =
 
 /**
  * Creates a sample product recommendation engine configuration.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @returns The sample product recommendation engine configuration.
  */

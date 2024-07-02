@@ -61,7 +61,9 @@ export type {
 
 /**
  * Creates a `CategoryFacet` controller instance.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CategoryFacet` properties.

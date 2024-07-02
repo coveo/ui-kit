@@ -16,7 +16,9 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface CartRecommendationsListOptions {
   /**
@@ -38,7 +40,9 @@ export interface CartRecommendationsListOptions {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface CartRecommendationsListProps {
   options?: CartRecommendationsListOptions;
@@ -46,7 +50,9 @@ export interface CartRecommendationsListProps {
 
 /**
  * The `CartRecommendationsList` controller recommends other products that were frequently purchased together in previous similar carts.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface CartRecommendationsList extends Controller {
   /**
@@ -68,7 +74,9 @@ export interface CartRecommendationsList extends Controller {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface CartRecommendationsListState {
   /**
@@ -99,7 +107,9 @@ export interface CartRecommendationsListState {
 
 /**
  * Creates a `CartRecommendationsList` controller instance.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CartRecommendationsList` properties.

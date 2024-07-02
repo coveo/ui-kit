@@ -14,7 +14,9 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedSameCategoryListOptions {
   /**
@@ -36,7 +38,9 @@ export interface FrequentlyViewedSameCategoryListOptions {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedSameCategoryListProps {
   options?: FrequentlyViewedSameCategoryListOptions;
@@ -45,7 +49,9 @@ export interface FrequentlyViewedSameCategoryListProps {
 /**
  * The `FrequentlyViewedSameCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
  * The recommendations are filtered to show products that have the same category as the ones the user is currently viewing.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedSameCategoryList extends Controller {
   /**
@@ -67,7 +73,9 @@ export interface FrequentlyViewedSameCategoryList extends Controller {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface FrequentlyViewedSameCategoryListState {
   /**
@@ -98,7 +106,9 @@ export interface FrequentlyViewedSameCategoryListState {
 
 /**
  * Creates a `FrequentlyViewedSameCategoryList` controller instance.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedSameCategoryList` properties.

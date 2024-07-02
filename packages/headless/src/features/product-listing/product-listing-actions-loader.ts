@@ -26,12 +26,16 @@ export type {SetProductListingUrlPayload};
 
 /**
  * The product listings action creators.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingActionCreators {
   /**
    * Updates the product listing url field.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -42,7 +46,9 @@ export interface ProductListingActionCreators {
 
   /**
    * Refreshes the product listing.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @returns A dispatchable action.
    */
@@ -55,7 +61,9 @@ export interface ProductListingActionCreators {
 
 /**
  * Loads the `productListing` reducer and returns possible action creators.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
@@ -73,12 +81,16 @@ export function loadProductListingActions(
 
 /**
  * The product listing analytics action creators.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface ProductListingAnalyticsActionCreators {
   /**
    * The event to log when all selected values in a facet are deselected.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param facetId - The facet id.
    * @returns A dispatchable action.
@@ -87,7 +99,9 @@ export interface ProductListingAnalyticsActionCreators {
 
   /**
    * The event to log when a selected facet value is deselected.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -98,7 +112,9 @@ export interface ProductListingAnalyticsActionCreators {
 
   /**
    * The event to log when an idle facet value is selected.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -109,7 +125,9 @@ export interface ProductListingAnalyticsActionCreators {
 
   /**
    * The event to log when shrinking a facet to show fewer values.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param facetId - The facet id.
    * @returns A dispatchable action.
@@ -118,7 +136,9 @@ export interface ProductListingAnalyticsActionCreators {
 
   /**
    * The event to log when expanding a facet to show more values.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param facetId - The facet id.
    * @returns A dispatchable action.
@@ -127,7 +147,9 @@ export interface ProductListingAnalyticsActionCreators {
 
   /**
    * The event to log when the facet sort criterion is changed.
-   * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   *
+   * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @internal
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -139,7 +161,9 @@ export interface ProductListingAnalyticsActionCreators {
 
 /**
  * Returns possible product listing analytics action creators.
- * @deprecated The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.

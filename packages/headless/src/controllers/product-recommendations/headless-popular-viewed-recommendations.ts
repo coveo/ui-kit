@@ -16,7 +16,9 @@ const optionsSchema = new Schema({
 });
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface PopularViewedRecommendationsListOptions {
   /**
@@ -33,7 +35,9 @@ export interface PopularViewedRecommendationsListOptions {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface PopularViewedRecommendationsListProps {
   options?: PopularViewedRecommendationsListOptions;
@@ -41,7 +45,9 @@ export interface PopularViewedRecommendationsListProps {
 
 /**
  * The `PopularViewedRecommendationsList` controller recommends the most viewed products.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface PopularViewedRecommendationsList extends Controller {
   /**
@@ -56,7 +62,9 @@ export interface PopularViewedRecommendationsList extends Controller {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface PopularViewedRecommendationsListState {
   /**
@@ -82,7 +90,9 @@ export interface PopularViewedRecommendationsListState {
 
 /**
  * Creates a `PopularViewedRecommendationsList` controller instance.
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularViewedRecommendationsList` properties.

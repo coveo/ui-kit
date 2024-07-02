@@ -50,7 +50,7 @@ export interface GetProductRecommendationsThunkReturn {
 }
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
  */
 export interface SetProductRecommendationsRecommenderIdActionCreatorPayload {
   /**
@@ -68,7 +68,9 @@ export const setProductRecommendationsRecommenderId = createAction(
 );
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface SetProductRecommendationsSkusActionCreatorPayload {
   /**
@@ -90,7 +92,9 @@ export const setProductRecommendationsSkus = createAction(
 );
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface SetProductRecommendationsBrandFilterActionCreatorPayload {
   /**
@@ -108,7 +112,9 @@ export const setProductRecommendationsBrandFilter = createAction(
 );
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface SetProductRecommendationsCategoryFilterActionCreatorPayload {
   /**
@@ -126,7 +132,9 @@ export const setProductRecommendationsCategoryFilter = createAction(
 );
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface SetProductRecommendationsAdditionalFieldsActionCreatorPayload {
   /**
@@ -147,7 +155,9 @@ export const setProductRecommendationsAdditionalFields = createAction(
 );
 
 /**
- * @deprecated The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @internal
  */
 export interface SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload {
   /**
