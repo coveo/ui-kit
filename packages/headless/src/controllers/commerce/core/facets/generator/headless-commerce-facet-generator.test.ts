@@ -172,7 +172,7 @@ describe('FacetGenerator', () => {
   });
 
   describe('#deselectAll', () => {
-    it('dispatches #deselectAllBreadcrumbs', () => {
+    it('dispatches #clearAllCoreFacets', () => {
       facetGenerator.deselectAll();
       expect(clearAllCoreFacets).toHaveBeenCalledTimes(1);
     });
