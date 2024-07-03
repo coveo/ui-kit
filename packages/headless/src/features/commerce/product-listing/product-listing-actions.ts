@@ -80,7 +80,7 @@ export const fetchMoreProducts = createAsyncThunk<
   }
 );
 
-export interface PromoteChildToParentActionCreatorPayload {
+export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
@@ -95,6 +95,6 @@ export const promoteChildToParentDefinition = {
 
 export const promoteChildToParent = createAction(
   'commerce/productListing/promoteChildToParent',
-  (payload: PromoteChildToParentActionCreatorPayload) =>
+  (payload: PromoteChildToParentPayload) =>
     validatePayload(payload, promoteChildToParentDefinition)
 );

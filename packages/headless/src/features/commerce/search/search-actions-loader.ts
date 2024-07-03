@@ -1,12 +1,14 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   PrepareForSearchWithQueryPayload,
+  PromoteChildToParentPayload,
   QuerySearchCommerceAPIThunkReturn,
   executeSearch,
   fetchMoreProducts,
   prepareForSearchWithQuery,
+  promoteChildToParent,
 } from './search-actions';
 import {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 import {commerceSearchReducer as commerceSearch} from './search-slice';
@@ -17,19 +19,6 @@ export type {PrepareForSearchWithQueryPayload};
  * The search action creators.
  */
 export interface SearchActionCreators {
-  /**
-   * Updates the query, resets the pagination, and optionally clears all facets in preparation for a new search query.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  prepareForSearchWithQuery(
-    payload: PrepareForSearchWithQueryPayload
-  ): AsyncThunkAction<
-    void,
-    PrepareForSearchWithQueryPayload,
-    AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
-  >;
   /**
    * Executes a search query.
    *
@@ -52,7 +41,29 @@ export interface SearchActionCreators {
     AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
   >;
 
-  // TODO KIT-3221 - Expose promoteChildToParent action and action payload creator.
+  /**
+   * Updates the query, resets the pagination, and optionally clears all facets in preparation for a new search query.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  prepareForSearchWithQuery(
+    payload: PrepareForSearchWithQueryPayload
+  ): AsyncThunkAction<
+    void,
+    PrepareForSearchWithQueryPayload,
+    AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
+  >;
+
+  /**
+   * Promotes a child product to a parent product.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  promoteChildToParent(
+    payload: PromoteChildToParentPayload
+  ): PayloadAction<PromoteChildToParentPayload>;
 }
 
 /**
@@ -67,8 +78,9 @@ export function loadSearchActions(
   engine.addReducers({commerceSearch});
 
   return {
-    prepareForSearchWithQuery,
     executeSearch,
     fetchMoreProducts,
+    prepareForSearchWithQuery,
+    promoteChildToParent,
   };
 }
