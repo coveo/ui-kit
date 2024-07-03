@@ -4,6 +4,7 @@ import {
   registerQuerySetQuery as registerCommerceQuerySetQuery,
   updateQuerySetQuery as updateCommerceQuerySetQuery,
 } from '../commerce/query-set/query-set-actions';
+import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions';
 import {
   CommerceSearchParameters,
   restoreSearchParameters as commerceRestoreSearchParameters,
@@ -42,6 +43,10 @@ export const querySetReducer = createReducer(
         updateQuery(state, id, query);
       })
       .addCase(selectQuerySuggestion, (state, action) => {
+        const {id, expression} = action.payload;
+        updateQuery(state, id, expression);
+      })
+      .addCase(selectCommerceQuerySuggestion, (state, action) => {
         const {id, expression} = action.payload;
         updateQuery(state, id, expression);
       })

@@ -84,7 +84,7 @@ export type CoreBreadcrumbManagerOptions = Pick<
 /**
  * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` sub-controller.
  */
-interface BreadcrumbManagerState {
+export interface BreadcrumbManagerState {
   /**
    * The list of facet breadcrumbs.
    */
