@@ -245,28 +245,33 @@ export class AtomicCommerceBreadbox
     type: string,
     field: string,
     value: BreadcrumbValue<AnyFacetValue>
-  ): string => {
+  ): string[] => {
     switch (type) {
       case 'numericalRange':
-        return this.bindings.store.state.numericFacets[field].format(
-          value.value as NumericFacetValue
-        );
+        return [
+          this.bindings.store.state.numericFacets[field].format(
+            value.value as NumericFacetValue
+          ),
+        ];
       case 'dateRange':
-        return this.bindings.store.state.dateFacets[field].format(
-          value.value as DateFacetValue
-        );
+        return [
+          this.bindings.store.state.dateFacets[field].format(
+            value.value as DateFacetValue
+          ),
+        ];
       case 'hierarchical':
-        return getFieldValueCaption(
-          field,
-          (value.value as CategoryFacetValue).value,
-          this.bindings.i18n
+        return (value.value as CategoryFacetValue).path.map(
+          (pathValue: string) =>
+            getFieldValueCaption(field, pathValue, this.bindings.i18n)
         );
       default:
-        return getFieldValueCaption(
-          field,
-          (value.value as RegularFacetValue).value,
-          this.bindings.i18n
-        );
+        return [
+          getFieldValueCaption(
+            field,
+            (value.value as RegularFacetValue).value,
+            this.bindings.i18n
+          ),
+        ];
     }
   };
 
@@ -291,7 +296,7 @@ export class AtomicCommerceBreadbox
         facetStateName = 'facets';
     }
 
-    return breadcrumb.values.map((value) => {
+    return breadcrumb.values.map((value: BreadcrumbValue<AnyFacetValue>) => {
       return {
         facetId: breadcrumb.facetId,
         label:
@@ -299,13 +304,11 @@ export class AtomicCommerceBreadbox
             breadcrumb.facetId
           ]?.label(),
         deselect: value.deselect,
-        formattedValue: [
-          this.valueForFacetType(
-            breadcrumb.type,
-            breadcrumb.facetId,
-            value as BreadcrumbValue<AnyFacetValue>
-          ),
-        ],
+        formattedValue: this.valueForFacetType(
+          breadcrumb.type,
+          breadcrumb.facetId,
+          value
+        ),
       };
     });
   }
