@@ -89,7 +89,7 @@ export const wrapInCommerceInterface = ({
       return;
     }
     await step('Execute the first search', async () => {
-      await searchInterface!.executeFirstSearch();
+      await searchInterface!.executeFirstRequest();
     });
   },
 });
@@ -104,7 +104,7 @@ export const playExecuteFirstSearch: (
       'root-interface'
     );
   await step('Execute the first search', async () => {
-    await searchInterface!.executeFirstSearch();
+    await searchInterface!.executeFirstRequest();
   });
 };
 

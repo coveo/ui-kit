@@ -24,8 +24,6 @@ export type {
 
 /**
  * The pagination action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface PaginationActionCreators {
   /**
@@ -77,8 +75,6 @@ export interface PaginationActionCreators {
 
 /**
  * Loads the commerce pagination reducer and returns the available pagination action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the pagination action creators.

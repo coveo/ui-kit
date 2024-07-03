@@ -15,8 +15,6 @@ export type {
 
 /**
  * The category facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CategoryFacetSetActionCreators {
   /**
@@ -42,8 +40,6 @@ export interface CategoryFacetSetActionCreators {
 
 /**
  * Loads the commerce facet set reducer and returns the available category facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the category facet action creators.

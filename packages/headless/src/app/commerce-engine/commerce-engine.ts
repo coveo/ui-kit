@@ -61,8 +61,6 @@ export type CommerceEngineState =
 
 /**
  * The engine for powering commerce experiences.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
@@ -72,8 +70,6 @@ export interface CommerceEngine<State extends object = {}>
 
 /**
  * The commerce engine options.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -85,8 +81,6 @@ export interface CommerceEngineOptions
 
 /**
  * Creates a commerce engine instance.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.

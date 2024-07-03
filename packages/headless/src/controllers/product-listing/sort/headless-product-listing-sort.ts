@@ -39,6 +39,10 @@ export {
   buildFieldsSortCriterion,
 };
 
+/**
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface ProductListingSortProps {
   /**
    * The initial state that should be applied to this `Sort` controller.
@@ -46,6 +50,10 @@ export interface ProductListingSortProps {
   initialState?: ProductListingSortInitialState;
 }
 
+/**
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface ProductListingSortInitialState {
   /**
    * The initial sort criterion to register in state.
@@ -68,6 +76,10 @@ function validateSortInitialState(
   validateInitialState(engine, schema, state, 'buildSort');
 }
 
+/**
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface ProductListingSort extends Controller {
   /**
    * Updates the sort criterion and executes a new query.
@@ -90,6 +102,10 @@ export interface ProductListingSort extends Controller {
   state: ProductListingSortState;
 }
 
+/**
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface ProductListingSortState {
   /**
    * The current sort criterion.
@@ -99,6 +115,9 @@ export interface ProductListingSortState {
 
 /**
  * Creates a `Sort` controller instance for the product listing.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.

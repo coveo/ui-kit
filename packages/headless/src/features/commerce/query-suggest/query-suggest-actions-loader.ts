@@ -25,9 +25,7 @@ export type {
 // TODO KIT-3350 - All query suggest actions should be commerce-specific.
 
 /**
- * The query suggest action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ * The query suggest action creators for commerce.
  */
 export interface QuerySuggestActionCreators {
   /**
@@ -71,8 +69,6 @@ export interface QuerySuggestActionCreators {
 
 /**
  * Loads the query suggest reducer and returns the available query suggest action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The headless engine.
  * @returns An object holding the query suggest action creators.
