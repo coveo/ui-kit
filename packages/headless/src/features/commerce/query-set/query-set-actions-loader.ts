@@ -12,8 +12,6 @@ export type {RegisterQuerySetQueryPayload, UpdateQuerySetQueryPayload};
 
 /**
  * The query set action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface QuerySetActionCreators {
   /**
@@ -39,8 +37,6 @@ export interface QuerySetActionCreators {
 
 /**
  * Loads the query set reducer and returns the available query set action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the query set action creators.

@@ -30,16 +30,11 @@ export const fetchProductListing = createAsyncThunk<
   'commerce/productListing/fetch',
   async (
     _action,
-    {
-      getState,
-      dispatch,
-      rejectWithValue,
-      extra: {apiClient, relay, navigatorContext},
-    }
+    {getState, dispatch, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const fetched = await apiClient.getProductListing(
-      buildCommerceAPIRequest(state, relay, navigatorContext)
+      buildCommerceAPIRequest(state, navigatorContext)
     );
 
     if (isErrorResponse(fetched)) {
@@ -61,12 +56,7 @@ export const fetchMoreProducts = createAsyncThunk<
   'commerce/productListing/fetchMoreProducts',
   async (
     _action,
-    {
-      getState,
-      dispatch,
-      rejectWithValue,
-      extra: {apiClient, relay, navigatorContext},
-    }
+    {getState, dispatch, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const moreProductsAvailable = moreProductsAvailableSelector(state);
@@ -78,7 +68,7 @@ export const fetchMoreProducts = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({
-      ...buildCommerceAPIRequest(state, relay, navigatorContext),
+      ...buildCommerceAPIRequest(state, navigatorContext),
       page: nextPageToRequest,
     });
 

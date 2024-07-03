@@ -12,8 +12,6 @@ export type {ProductClickPayload, ProductViewPayload};
 
 /**
  * The product action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ProductActionCreators {
   /**
@@ -47,8 +45,6 @@ export interface ProductActionCreators {
 
 /**
  * Returns the possible product action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @returns An object holding the action creators.
  */

@@ -291,10 +291,12 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
+          * @
          */
         "facet": RegularFacet;
         /**
@@ -427,6 +429,7 @@ export namespace Components {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface AtomicCommercePager {
         /**
@@ -3495,6 +3498,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
     }
@@ -3575,6 +3579,7 @@ declare global {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface HTMLAtomicCommercePagerElement extends Components.AtomicCommercePager, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5726,10 +5731,12 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
+          * @
          */
         "facet": RegularFacet;
         /**
@@ -5851,6 +5858,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface AtomicCommercePager {
         /**
@@ -8830,6 +8838,7 @@ declare module "@stencil/core" {
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+             * @alpha 
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
@@ -8856,6 +8865,7 @@ declare module "@stencil/core" {
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+             * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;

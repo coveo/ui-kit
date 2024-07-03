@@ -15,8 +15,6 @@ export type {RestoreSearchParametersPayload};
 
 /**
  * The search parameters action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface SearchParametersActionCreators {
   /**
@@ -33,11 +31,8 @@ export interface SearchParametersActionCreators {
 /**
  * Loads the commerce facet order, facet set, pagination, query, query set, and sort reducers and returns the available search parameters action creators.
  *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
- *
  * @param engine - The headless commerce engine.
  * @returns An object holding the search parameters action creators.
-
  */
 export function loadSearchParametersActions(
   engine: CommerceEngine

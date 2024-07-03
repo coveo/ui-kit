@@ -1,5 +1,4 @@
 import {StringValue} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
@@ -114,11 +113,11 @@ export const fetchRedirectUrl = createAsyncThunk<
       dispatch,
       getState,
       rejectWithValue,
-      extra: {apiClient, validatePayload, relay, navigatorContext},
+      extra: {apiClient, validatePayload, navigatorContext},
     }
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
-    const request = await buildPlanRequest(getState(), navigatorContext, relay);
+    const request = await buildPlanRequest(getState(), navigatorContext);
     const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -141,8 +140,7 @@ const logRedirect = (url: string): CustomAction =>
 
 export const buildPlanRequest = async (
   state: StateNeededForRedirect,
-  navigatorContext: NavigatorContext,
-  relay: Relay
+  navigatorContext: NavigatorContext
 ): Promise<PlanRequest> => {
   return {
     accessToken: state.configuration.accessToken,
@@ -164,8 +162,7 @@ export const buildPlanRequest = async (
         )
       : fromAnalyticsStateToAnalyticsParams(
           state.configuration.analytics,
-          navigatorContext,
-          relay
+          navigatorContext
         )),
     ...(state.configuration.search.authenticationProviders.length && {
       authentication:
