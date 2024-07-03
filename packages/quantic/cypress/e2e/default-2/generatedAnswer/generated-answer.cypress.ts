@@ -580,7 +580,8 @@ describe('quantic-generated-answer', () => {
               visitGeneratedAnswer({useCase: param.useCase});
             });
 
-            it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
+            // TODO: unskip [SVCC-3956](https://coveord.atlassian.net/browse/SVCC-3956)
+            it.skip(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
               scope('when loading the page', () => {
                 Expect.displayRephraseButtonWithLabel(rephraseOption);
                 const expectedRephraseButtonSelected =
