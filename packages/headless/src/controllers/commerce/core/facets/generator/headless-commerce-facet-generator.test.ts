@@ -1,4 +1,4 @@
-import {deselectAllBreadcrumbs} from '../../../../../features/breadcrumb/breadcrumb-actions';
+import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
@@ -174,7 +174,7 @@ describe('FacetGenerator', () => {
   describe('#deselectAll', () => {
     it('dispatches #deselectAllBreadcrumbs', () => {
       facetGenerator.deselectAll();
-      expect(deselectAllBreadcrumbs).toHaveBeenCalledTimes(1);
+      expect(clearAllCoreFacets).toHaveBeenCalledTimes(1);
     });
 
     it('dispatches #fetchProductsActionCreator', () => {

@@ -4,7 +4,7 @@ import {
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
-import {deselectAllBreadcrumbs} from '../../../../../features/breadcrumb/breadcrumb-actions';
+import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
@@ -166,7 +166,7 @@ export function buildFacetGenerator(
     ...controller,
 
     deselectAll: () => {
-      dispatch(deselectAllBreadcrumbs());
+      dispatch(clearAllCoreFacets());
       dispatch(options.fetchProductsActionCreator());
     },
 
