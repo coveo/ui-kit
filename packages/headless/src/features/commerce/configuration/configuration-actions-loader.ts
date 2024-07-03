@@ -17,8 +17,6 @@ export type {
 
 /**
  * The configuration action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ConfigurationActionCreators {
   /**
@@ -58,8 +56,6 @@ export interface ConfigurationActionCreators {
 
 /**
  * Loads the configuration reducer and returns the available commerce configuration action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the commerce configuration action creators.

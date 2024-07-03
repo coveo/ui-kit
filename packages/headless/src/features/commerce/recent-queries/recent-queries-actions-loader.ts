@@ -8,9 +8,7 @@ import {
 import {recentQueriesReducer as recentQueries} from './recent-queries-slice';
 
 /**
- * The recent queries action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ * The commerce recent queries action creators.
  */
 export interface RecentQueriesActionCreators {
   /**
@@ -32,12 +30,10 @@ export interface RecentQueriesActionCreators {
 }
 
 /**
- * Loads the commerce recent queries reducer and returns available recent queries actions.
- *
- *  In Open Beta. Reach out to your Coveo team for support in adopting this.
+ * Loads the recent queries reducer and returns available commerce recent queries actions.
  *
  * @param engine - The headless commerce engine.
- * @returns An object holding the recent queries action creators.
+ * @returns An object holding the commerce recent queries action creators.
  */
 export function loadRecentQueriesActions(
   engine: CommerceEngine

@@ -19,9 +19,7 @@ export type {
 };
 
 /**
- * The standalone search box set action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
+ * The commerce standalone search box set action creators.
  */
 export interface StandaloneSearchBoxSetActionCreators {
   /**
@@ -60,10 +58,10 @@ export interface StandaloneSearchBoxSetActionCreators {
 }
 
 /**
- * Loads the commerce standalone search box set reducer and returns the available standalone search box set action creators.
+ * Loads the standalone search box set reducer and returns the available commerce standalone search box set action creators.
  *
  * @param engine - The headless commerce engine.
- * @returns An object holding the standalone search box set action creators.
+ * @returns An object holding the commerce standalone search box set action creators.
  */
 export function loadStandaloneSearchBoxSetActions(
   engine: CommerceEngine

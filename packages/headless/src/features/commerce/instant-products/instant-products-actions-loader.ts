@@ -21,8 +21,6 @@ export type {
 
 /**
  * The instant products action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface InstantProductsActionCreators {
   /**
@@ -68,8 +66,6 @@ export interface InstantProductsActionCreators {
 
 /**
  * Loads the commerce instant products reducer and returns the available instant products actions.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the instant products action creators.
