@@ -15,8 +15,6 @@ export type {
 
 /**
  * The triggers action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface TriggersActionCreators {
   /**

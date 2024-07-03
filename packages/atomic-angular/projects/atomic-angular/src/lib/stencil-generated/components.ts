@@ -139,6 +139,27 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceFacet extends Components.AtomicCommerceFacet {}
+
+
+@ProxyCmp({
   inputs: ['collapseFacetsAfter']
 })
 @Component({
@@ -179,6 +200,32 @@ export class AtomicCommerceLoadMoreProducts {
 
 
 export declare interface AtomicCommerceLoadMoreProducts extends Components.AtomicCommerceLoadMoreProducts {}
+
+
+@ProxyCmp({
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
+})
+@Component({
+  selector: 'atomic-commerce-pager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
+})
+export class AtomicCommercePager {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicCommercePager extends Components.AtomicCommercePager {
+
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
 
 
 @ProxyCmp({

@@ -25,8 +25,6 @@ export type {
 
 /**
  * The core facet action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CoreFacetActionsCreators {
   /**
