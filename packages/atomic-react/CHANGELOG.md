@@ -1,3 +1,9 @@
+# 2.11.0 (2024-07-03)
+
+### Features
+
+- **commerce:** add atomic-commerce-breadbox ([#4121](https://github.com/coveo/ui-kit/issues/4121)) ([d96287a](https://github.com/coveo/ui-kit/commits/d96287a7efb853f575700fe982b898ab6c1e7744))
+
 ## 2.10.7 (2024-07-03)
 
 ### Bug Fixes

@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "2.70.1",
-    "@coveo/atomic-react": "2.10.7",
-    "@coveo/headless": "2.70.1",
+    "@coveo/atomic": "2.71.0",
+    "@coveo/atomic-react": "2.11.0",
+    "@coveo/headless": "2.71.0",
     "next": "14.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"

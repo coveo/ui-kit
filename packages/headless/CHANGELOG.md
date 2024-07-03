@@ -1,3 +1,10 @@
+# 2.71.0 (2024-07-03)
+
+### Features
+
+- **commerce:** add atomic-commerce-breadbox ([#4121](https://github.com/coveo/ui-kit/issues/4121)) ([d96287a](https://github.com/coveo/ui-kit/commits/d96287a7efb853f575700fe982b898ab6c1e7744))
+- **headless commerce:** expose additional actions ([#4140](https://github.com/coveo/ui-kit/issues/4140)) ([1fec656](https://github.com/coveo/ui-kit/commits/1fec656409fd2dee85717670d14ecd389d202f17))
+
 ## 2.70.1 (2024-07-03)
 
 ### Bug Fixes
