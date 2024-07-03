@@ -2,6 +2,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   ClearExpiredInstantProductsPayload,
+  CoreInstantProductPayload,
   PromoteChildToParentPayload,
   RegisterInstantProductPayload,
   UpdateInstantProductQueryPayload,
@@ -14,6 +15,7 @@ import {instantProductsReducer as instantProducts} from './instant-products-slic
 
 export type {
   ClearExpiredInstantProductsPayload,
+  CoreInstantProductPayload,
   PromoteChildToParentPayload,
   RegisterInstantProductPayload,
   UpdateInstantProductQueryPayload,
