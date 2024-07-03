@@ -17,8 +17,8 @@ import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
 import {
   getClonedFacetElements,
-  RefineModalCommon,
-} from '../../common/refine-modal/refine-modal-common';
+  RefineModal,
+} from '../../common/refine-modal/modal';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -146,8 +146,8 @@ export class AtomicInsightRefineModal
             }`}
           </style>
         )}
-        <RefineModalCommon
-          bindings={this.bindings}
+        <RefineModal
+          i18n={this.bindings.i18n}
           host={this.host}
           isOpen={this.isOpen}
           onClose={() => (this.isOpen = false)}
@@ -157,7 +157,7 @@ export class AtomicInsightRefineModal
           scope={this.bindings.interfaceElement}
         >
           {this.renderBody()}
-        </RefineModalCommon>
+        </RefineModal>
       </Host>
     );
   }

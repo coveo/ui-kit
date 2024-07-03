@@ -14,16 +14,7 @@ import {
   FacetManager,
   buildFacetManager,
 } from '@coveo/headless';
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  Watch,
-  Fragment,
-} from '@stencil/core';
-import SortIcon from '../../../images/sort.svg';
+import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -31,18 +22,23 @@ import {
 } from '../../../utils/initialization-utils';
 import {sortByDocumentPosition} from '../../../utils/utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
-import {Button} from '../../common/button';
 import {
   BaseFacetElement,
   sortFacetVisibility,
   triageFacetsByParents,
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
+import {popoverClass} from '../../common/facets/popover/popover-type';
 import {isRefineModalFacet} from '../../common/interface/store';
-import {RefineModalCommon} from '../../common/refine-modal/refine-modal-common';
+import {RefineModalBody} from '../../common/refine-modal/body';
+import {
+  RefineModalFiltersClearButton,
+  RefineModalFiltersSection,
+} from '../../common/refine-modal/filters';
+import {RefineModal} from '../../common/refine-modal/modal';
+import {RefineModalSortSection} from '../../common/refine-modal/sort';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';
-import {popoverClass} from '../facets/atomic-popover/popover-type';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -247,34 +243,12 @@ export class AtomicRefineModal implements InitializableComponent {
     }
 
     return (
-      <Fragment>
-        <h1
-          part="section-title section-sort-title"
-          class="text-2xl font-bold truncate mb-3"
-        >
-          {this.bindings.i18n.t('sort')}
-        </h1>
-        <div part="select-wrapper" class="relative">
-          <select
-            class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
-            part="select"
-            aria-label={this.bindings.i18n.t('sort-by')}
-            onChange={(option) => this.select(option)}
-          >
-            {this.options.map((option) => this.buildOption(option))}
-          </select>
-          <div
-            part="select-icon-wrapper"
-            class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
-          >
-            <atomic-icon
-              part="select-icon"
-              icon={SortIcon}
-              class="w-6 h-6"
-            ></atomic-icon>
-          </div>
-        </div>
-      </Fragment>
+      <RefineModalSortSection
+        i18n={this.bindings.i18n}
+        onSelect={(option) => this.select(option)}
+      >
+        {this.options.map((option) => this.buildOption(option))}
+      </RefineModalSortSection>
     );
   }
 
@@ -287,51 +261,24 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
 
-    return (
-      <Fragment>
-        <div
-          part="filter-section"
-          class="w-full flex justify-between mt-8 mb-3"
-        >
-          <h1
-            part="section-title section-filters-title"
-            class="text-2xl font-bold truncate"
-          >
-            {this.bindings.i18n.t('filters')}
-          </h1>
-          {this.breadcrumbManagerState.hasBreadcrumbs && (
-            <Button
-              onClick={() => this.breadcrumbManager.deselectAll()}
-              style="text-primary"
-              text={this.bindings.i18n.t('clear')}
-              class="px-2 py-1"
-              part="filter-clear-all"
-            ></Button>
-          )}
-        </div>
-        <slot name="facets"></slot>
-        <slot name="automatic-facets"></slot>
-      </Fragment>
-    );
-  }
+    const {i18n} = this.bindings;
 
-  private renderBody() {
     return (
-      <aside
-        part="content"
-        slot="body"
-        class="flex flex-col w-full adjust-for-scroll-bar"
-      >
-        {this.renderSort()}
-        {this.renderFilters()}
-      </aside>
+      <RefineModalFiltersSection i18n={i18n}>
+        {this.breadcrumbManagerState.hasBreadcrumbs && (
+          <RefineModalFiltersClearButton
+            i18n={i18n}
+            onClick={() => this.breadcrumbManager.deselectAll()}
+          />
+        )}
+      </RefineModalFiltersSection>
     );
   }
 
   public render() {
     return (
-      <RefineModalCommon
-        bindings={this.bindings}
+      <RefineModal
+        i18n={this.bindings.i18n}
         host={this.host}
         isOpen={this.isOpen}
         onClose={() => (this.isOpen = false)}
@@ -339,8 +286,11 @@ export class AtomicRefineModal implements InitializableComponent {
         querySummaryState={this.querySummaryState}
         openButton={this.openButton}
       >
-        {this.renderBody()}
-      </RefineModalCommon>
+        <RefineModalBody>
+          {this.renderSort()}
+          {this.renderFilters()}
+        </RefineModalBody>
+      </RefineModal>
     );
   }
 
