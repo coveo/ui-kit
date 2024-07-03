@@ -5,7 +5,12 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions';
-import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
+import {
+  clearQuerySuggest,
+  fetchQuerySuggestions,
+  registerQuerySuggest,
+  selectQuerySuggestion,
+} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
@@ -15,11 +20,6 @@ import {
 } from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
-import {
-  clearQuerySuggest,
-  registerQuerySuggest,
-  selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {
   CommerceQuerySection,
