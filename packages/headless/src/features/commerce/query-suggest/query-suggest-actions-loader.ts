@@ -22,10 +22,8 @@ export type {
   SelectQuerySuggestionPayload,
 };
 
-// TODO KIT-3350 - All query suggest actions should be commerce-specific.
-
 /**
- * The query suggest action creators for commerce.
+ * The query suggest action creators.
  */
 export interface QuerySuggestActionCreators {
   /**
