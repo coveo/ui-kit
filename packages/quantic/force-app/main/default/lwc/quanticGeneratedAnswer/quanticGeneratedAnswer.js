@@ -331,7 +331,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerRephrase = (event) => {
     event.stopPropagation();
-    this.generatedAnswer.rephrase({answerStyle: event?.detail});
+    this.generatedAnswer.rephrase({
+      ...this.state?.responseFormat,
+      answerStyle: event?.detail,
+    });
   };
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
