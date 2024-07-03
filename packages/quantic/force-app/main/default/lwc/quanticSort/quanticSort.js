@@ -165,7 +165,6 @@ export default class QuanticSort extends LightningElement {
    * Generates the schemas for the validation of the sort options with Bueno.
    */
   generateSchemas() {
-    this.headless = getHeadlessBundle(this.engineId);
     const requiredNonEmptyString = new Bueno.StringValue({
       required: true,
       emptyAllowed: false,
@@ -197,10 +196,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   /**
-   * Validates that the label and values are non-empty strings and that the criterion of the custom sort option is an object which respects the following:
-   * By should be a string
-   * If sorting by field, field must be a string
-   * If sorting by field or date, order must be a string
+   * Validates that a sort option respects the required schema of a SortOption.
    */
   validateSortOption(sortOption) {
     try {
@@ -256,17 +252,8 @@ export default class QuanticSort extends LightningElement {
   get customSortOptions() {
     /** @type {SortOption[]} */
     // @ts-ignore
-    const elements = Array.from(this.querySelectorAll('c-quantic-sort-option'));
-    if (elements.length === 0) {
-      return [];
-    }
-
-    return elements.map((option) => {
-      return {
-        label: option.label,
-        value: option.value,
-        criterion: option.criterion,
-      };
-    });
+    return Array.from(this.querySelectorAll('c-quantic-sort-option')).map(
+      ({label, value, criterion}) => ({label, value, criterion})
+    );
   }
 }

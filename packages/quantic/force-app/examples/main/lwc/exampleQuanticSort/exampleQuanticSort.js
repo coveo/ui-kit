@@ -1,7 +1,7 @@
 // @ts-nocheck
 import {api, LightningElement, track} from 'lwc';
-import templateWithCustomSortOptions from './templateWithCustomSortOptions.html';
-import templateWithoutCustomSortOptions from './templateWithoutCustomSortOptions.html';
+import templateDefaultSortOptions from './templates/templateDefaultSortOptions.html';
+import templateWithCustomSortOptions from './templates/templateWithCustomSortOptions.html';
 
 export default class ExampleQuanticSort extends LightningElement {
   @api engineId = 'quantic-sort-engine';
@@ -116,6 +116,6 @@ export default class ExampleQuanticSort extends LightningElement {
     if (this.withCustomSortOptions) {
       return templateWithCustomSortOptions;
     }
-    return templateWithoutCustomSortOptions;
+    return templateDefaultSortOptions;
   }
 }

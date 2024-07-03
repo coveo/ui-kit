@@ -41,14 +41,6 @@ describe('quantic-sort', () => {
 
   const customSortOptions = [
     {
-      label: 'Date ascending',
-      value: 'date ascending',
-      criterion: {
-        by: 'date',
-        order: 'ascending',
-      },
-    },
-    {
       label: 'Views Descending',
       value: '@ytviewcount descending',
       criterion: {
@@ -63,7 +55,15 @@ describe('quantic-sort', () => {
     },
   ];
 
-  const customSortOptionsValues = customSortOptions.map(
+  const defaultCustomSort = {
+    label: 'Date ascending',
+    value: 'date ascending',
+    criterion: {
+      by: 'date',
+      order: 'ascending',
+    },
+  };
+  const customSortOptionsValues = [defaultCustomSort, ...customSortOptions].map(
     (option) => option.value
   );
   interface SortOptions {
