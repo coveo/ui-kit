@@ -2,11 +2,15 @@ import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
 import {historyStore} from '../../api/analytics/coveo-analytics-utils';
+import {fetchAnswer} from '../../api/knowledge/stream-answer-api';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {NavigatorContext} from '../../app/navigatorContextProvider';
-import {InstantResultSection} from '../../state/state-sections';
+import {
+  GeneratedAnswerSection,
+  InstantResultSection,
+} from '../../state/state-sections';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -110,6 +114,14 @@ export const executeSearch = createAsyncThunk<
   'search/executeSearch',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
+
+    if (
+      (state as StateNeededByExecuteSearch & GeneratedAnswerSection)
+        .generatedAnswer.answerConfigurationId
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      config.dispatch(fetchAnswer(state as any));
+    }
     if (
       state.configuration.analytics.analyticsMode === 'legacy' ||
       !searchAction.next

@@ -8,6 +8,10 @@ import {
   GeneratedAnswerProps,
 } from '../core/generated-answer/headless-core-generated-answer';
 import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer';
+import {
+  buildKnowledgeGeneratedAnswer,
+  KnowledgeEngine,
+} from '../knowledge/generatedAnswer/headless-knowledge-generated-answer';
 
 export type {
   GeneratedAnswerCitation,
@@ -28,11 +32,17 @@ export function buildGeneratedAnswer(
   engine: SearchEngine,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
-  const controller = buildSearchAPIGeneratedAnswer(
-    engine,
-    generatedAnswerAnalyticsClient,
-    props
-  );
+  const controller = props.answerConfigurationId
+    ? buildKnowledgeGeneratedAnswer(
+        engine as unknown as KnowledgeEngine,
+        generatedAnswerAnalyticsClient,
+        props
+      )
+    : buildSearchAPIGeneratedAnswer(
+        engine,
+        generatedAnswerAnalyticsClient,
+        props
+      );
 
   return {
     ...controller,

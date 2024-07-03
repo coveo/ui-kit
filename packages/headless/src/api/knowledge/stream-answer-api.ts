@@ -27,7 +27,7 @@ import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-even
 import {SearchRequest} from '../search/search/search-request';
 import {answerSlice} from './answer-slice';
 
-type StateNeededByAnswerAPI = ConfigurationSection &
+type StateNeededByAnswerApi = ConfigurationSection &
   GeneratedAnswerSection &
   SearchSection &
   DebugSection & {answer: ReturnType<typeof answerApi.reducer>};
@@ -73,7 +73,7 @@ const messageSchema = new Schema({
 });
 
 const citationsSchema = new Schema({
-  citation: new ArrayValue(
+  citations: new ArrayValue(
     new RecordValue({
       values: {
         clickUri: new StringValue(),
@@ -96,7 +96,7 @@ const validateMessage = (message: {textDelta: string}) => {
 };
 
 const validateCitationsMessage = (citations: {
-  citation: GeneratedAnswerCitation[];
+  citations: GeneratedAnswerCitation[];
 }) => {
   citationsSchema.validate(citations);
 };
@@ -133,10 +133,10 @@ const handleMessage = (
 
 const handleCitations = (
   draft: GeneratedAnswerStream,
-  payload: {citation: GeneratedAnswerCitation[]}
+  payload: {citations: GeneratedAnswerCitation[]}
 ) => {
   validateCitationsMessage(payload);
-  draft.citations = payload.citation;
+  draft.citations = payload.citations;
 };
 
 const handleEndOfStream = (
@@ -193,12 +193,6 @@ const onOpenStream = async (response: Response) => {
   }
 };
 
-const onError = (err: Error) => {
-  if (err instanceof FatalError) {
-    throw err;
-  }
-};
-
 export const answerApi = answerSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
@@ -224,11 +218,11 @@ export const answerApi = answerSlice.injectEndpoints({
          * It cannot use the inferred state used by Redux, thus the casting.
          * https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-dispatch-and-getstate
          */
-        const {configuration} = getState() as unknown as StateNeededByAnswerAPI;
-        const {platformUrl, organizationId, accessToken, knowledge} =
-          configuration;
+        const {configuration, generatedAnswer} =
+          getState() as unknown as StateNeededByAnswerApi;
+        const {platformUrl, organizationId, accessToken} = configuration;
         await fetchEventSource(
-          `${platformUrl}/rest/organizations/${organizationId}/answer/v1/configs/${knowledge.answerConfigurationId}/generate`,
+          `${platformUrl}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
           {
             method: 'POST',
             body: JSON.stringify(args),
@@ -241,11 +235,17 @@ export const answerApi = answerSlice.injectEndpoints({
             fetch,
             onopen: onOpenStream,
             onmessage: (event) => {
-              updateCachedData((draft) => {
-                updateCacheWithEvent(event, draft);
-              });
+              if (JSON.parse(event.data).errorMessage) {
+                throw new Error(JSON.parse(event.data).errorMessage);
+              } else {
+                updateCachedData((draft) => {
+                  updateCacheWithEvent(event, draft);
+                });
+              }
             },
-            onerror: onError,
+            onerror: (error) => {
+              throw error;
+            },
           }
         );
       },
@@ -254,8 +254,8 @@ export const answerApi = answerSlice.injectEndpoints({
 });
 
 export const fetchAnswer = (
-  state: StateNeededByAnswerAPI & {
-    knowledge: ReturnType<typeof answerApi.reducer>;
+  state: StateNeededByAnswerApi & {
+    answer: ReturnType<typeof answerApi.reducer>;
     query?: QueryState;
     searchHub?: string;
     pipeline?: string;
@@ -267,14 +267,22 @@ export const fetchAnswer = (
 
   return answerApi.endpoints.getAnswer.initiate({
     q: query,
+    pipelineRuleParameters: {
+      mlGenerativeQuestionAnswering: {
+        responseFormat: {
+          answerStyle: state.generatedAnswer.responseFormat.answerStyle,
+        },
+        citationsFieldToInclude: [],
+      },
+    },
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
   });
 };
 
 export const selectAnswer = (
-  state: StateNeededByAnswerAPI & {
-    knowledge: ReturnType<typeof answerApi.reducer>;
+  state: StateNeededByAnswerApi & {
+    answer: ReturnType<typeof answerApi.reducer>;
     query?: QueryState;
     searchHub?: string;
     pipeline?: string;
@@ -282,6 +290,14 @@ export const selectAnswer = (
 ) =>
   answerApi.endpoints.getAnswer.select({
     q: selectQuery(state)?.q,
+    pipelineRuleParameters: {
+      mlGenerativeQuestionAnswering: {
+        responseFormat: {
+          answerStyle: state.generatedAnswer.responseFormat.answerStyle,
+        },
+        citationsFieldToInclude: [],
+      },
+    },
     ...(selectSearchHub(state)?.length && {searchHub: selectSearchHub(state)}),
     ...(selectPipeline(state)?.length && {pipeline: selectPipeline(state)}),
   })(state);

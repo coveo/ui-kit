@@ -155,6 +155,10 @@ export interface GeneratedAnswerProps {
     expanded?: boolean;
   };
   /**
+   * The answer configuration ID used to leverage coveo answer management capabilities.
+   */
+  answerConfigurationId?: string;
+  /**
    * A list of indexed fields to include in the citations returned with the generated answer.
    */
   fieldsToIncludeInCitations?: string[];

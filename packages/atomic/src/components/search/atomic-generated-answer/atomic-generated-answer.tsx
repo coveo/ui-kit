@@ -147,6 +147,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },
+      answerConfigurationId: 'c36fd994-3eb7-4aaf-bfce-2dad4b15a622',
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();

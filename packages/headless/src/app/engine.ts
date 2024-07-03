@@ -13,6 +13,7 @@ import {
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
+import {answerApi} from '../api/knowledge/stream-answer-api';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -398,7 +399,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(options.middlewares || []);
+  ].concat(answerApi.middleware, options.middlewares || []);
 }
 
 function shouldWarnAboutOrganizationEndpoints(
