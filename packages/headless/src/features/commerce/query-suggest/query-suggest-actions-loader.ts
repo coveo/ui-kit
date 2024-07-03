@@ -1,4 +1,4 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
@@ -32,7 +32,9 @@ export interface QuerySuggestActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  clearQuerySuggest(payload: ClearQuerySuggestPayload): void;
+  clearQuerySuggest(
+    payload: ClearQuerySuggestPayload
+  ): PayloadAction<ClearQuerySuggestPayload>;
 
   /**
    * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
@@ -54,7 +56,9 @@ export interface QuerySuggestActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  registerQuerySuggest(payload: RegisterQuerySuggestPayload): void;
+  registerQuerySuggest(
+    payload: RegisterQuerySuggestPayload
+  ): PayloadAction<RegisterQuerySuggestPayload>;
 
   /**
    * Selects a query suggestion.
@@ -62,7 +66,9 @@ export interface QuerySuggestActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  selectQuerySuggestion(payload: SelectQuerySuggestionPayload): void;
+  selectQuerySuggestion(
+    payload: SelectQuerySuggestionPayload
+  ): PayloadAction<SelectQuerySuggestionPayload>;
 }
 
 /**
