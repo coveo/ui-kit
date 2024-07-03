@@ -1,5 +1,4 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -34,13 +33,11 @@ export type StateNeededByFetchRecommendations = StateNeededByQueryCommerceAPI &
 const buildRecommendationCommerceAPIRequest = (
   slotId: string,
   state: StateNeededByFetchRecommendations,
-  relay: Relay,
   navigatorContext: NavigatorContext,
   productId?: string
 ): CommerceRecommendationsRequest => {
   const commerceAPIRequest = buildBaseCommerceAPIRequest(
     state,
-    relay,
     navigatorContext,
     slotId
   );
@@ -71,13 +68,12 @@ export const fetchRecommendations = createAsyncThunk<
   'commerce/recommendations/fetch',
   async (
     payload,
-    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const {slotId, productId} = payload;
     const request = buildRecommendationCommerceAPIRequest(
       slotId,
       getState(),
-      relay,
       navigatorContext,
       productId
     );
@@ -103,7 +99,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
   'commerce/recommendations/fetchMore',
   async (
     payload,
-    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const slotId = payload.slotId;
     const state = getState();
@@ -120,12 +116,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const request = {
-      ...buildRecommendationCommerceAPIRequest(
-        slotId,
-        state,
-        relay,
-        navigatorContext
-      ),
+      ...buildRecommendationCommerceAPIRequest(slotId, state, navigatorContext),
       page: nextPageToRequest,
     };
     const fetched = await apiClient.getRecommendations(request);

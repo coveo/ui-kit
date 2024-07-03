@@ -1,3 +1,20 @@
+## 2.70.1 (2024-07-03)
+
+### Bug Fixes
+
+- **commerce:** expose child product directly on `promoteChildToParent` ([#4128](https://github.com/coveo/ui-kit/issues/4128)) ([d333812](https://github.com/coveo/ui-kit/commits/d3338121f6e49477424faec1d520c9ac53e11af3))
+- **commerce:** only expose breadcrumbs with values ([#4132](https://github.com/coveo/ui-kit/issues/4132)) ([d3d57e8](https://github.com/coveo/ui-kit/commits/d3d57e837f237eb1a915cb9d9555ec710818a138))
+- **commerce:** populate `context.user.userAgent` with `navigatorContext` ([#4113](https://github.com/coveo/ui-kit/issues/4113)) ([0dc9434](https://github.com/coveo/ui-kit/commits/0dc9434ee910da0e37f9bac30edb145b42d51408))
+- **commerce:** remove `executeFirstSearch` & friend from commerce engine ([#4095](https://github.com/coveo/ui-kit/issues/4095)) ([64cda10](https://github.com/coveo/ui-kit/commits/64cda1085a8be29e92e8965222962c0c90762d89))
+
+### Features
+
+- **commerce:** make commerce sub-package generally available ([#4088](https://github.com/coveo/ui-kit/issues/4088)) ([927c921](https://github.com/coveo/ui-kit/commits/927c9214d5068ed2114b50bd77f85f2e2fab74f1))
+- **headless commerce:** create use & export commerce-specific actions & loaders ([#4124](https://github.com/coveo/ui-kit/issues/4124)) ([ce6fb7e](https://github.com/coveo/ui-kit/commits/ce6fb7ee5e23f10840b4cc654544e7dde05d80d2))
+- **headless:** retrieve client ID from navigator context provider ([#4126](https://github.com/coveo/ui-kit/issues/4126)) ([60a384d](https://github.com/coveo/ui-kit/commits/60a384d0b90aa72b069386bd9f45a06f869f58c4))
+- **headless:** update rga and smart snippets feedback events ([#4105](https://github.com/coveo/ui-kit/issues/4105)) ([5b8eab2](https://github.com/coveo/ui-kit/commits/5b8eab22499d695a89c5633a365569e7f039b3d9))
+- **knowledgeAPI:** api slice ([#4014](https://github.com/coveo/ui-kit/issues/4014)) ([052fac3](https://github.com/coveo/ui-kit/commits/052fac339c621895c1c137b949ef4a0445300010))
+
 # 2.69.0 (2024-06-26)
 
 ### Bug Fixes

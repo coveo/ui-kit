@@ -1,3 +1,9 @@
+## 2.10.7 (2024-07-03)
+
+### Bug Fixes
+
+- **commerce:** remove `executeFirstSearch` & friend from commerce engine ([#4095](https://github.com/coveo/ui-kit/issues/4095)) ([64cda10](https://github.com/coveo/ui-kit/commits/64cda1085a8be29e92e8965222962c0c90762d89))
+
 ## 2.10.5 (2024-06-26)
 
 ### Bug Fixes

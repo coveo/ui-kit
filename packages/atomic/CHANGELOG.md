@@ -1,3 +1,16 @@
+## 2.70.1 (2024-07-03)
+
+### Bug Fixes
+
+- **atomic:** add RGA rich formatting to the insight interface ([#4106](https://github.com/coveo/ui-kit/issues/4106)) ([5817e37](https://github.com/coveo/ui-kit/commits/5817e37d497f9f5ea8e3ce1b7a3378b3be15abfa))
+- **atomic:** support `gridCellLinkTarget` prop on `DisplayGrid` component ([#4122](https://github.com/coveo/ui-kit/issues/4122)) ([e3c7528](https://github.com/coveo/ui-kit/commits/e3c75288da2589669fd420dd02dc5b228a03faf5))
+- **commerce:** expose child product directly on `promoteChildToParent` ([#4128](https://github.com/coveo/ui-kit/issues/4128)) ([d333812](https://github.com/coveo/ui-kit/commits/d3338121f6e49477424faec1d520c9ac53e11af3))
+- **commerce:** remove `executeFirstSearch` & friend from commerce engine ([#4095](https://github.com/coveo/ui-kit/issues/4095)) ([64cda10](https://github.com/coveo/ui-kit/commits/64cda1085a8be29e92e8965222962c0c90762d89))
+
+### Features
+
+- **headless commerce:** create use & export commerce-specific actions & loaders ([#4124](https://github.com/coveo/ui-kit/issues/4124)) ([ce6fb7e](https://github.com/coveo/ui-kit/commits/ce6fb7ee5e23f10840b4cc654544e7dde05d80d2))
+
 # 2.69.0 (2024-06-26)
 
 ### Bug Fixes
