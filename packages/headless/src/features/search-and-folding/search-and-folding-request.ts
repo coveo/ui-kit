@@ -1,5 +1,4 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {EventDescription} from 'coveo.analytics';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {NavigatorContext} from '../../app/navigatorContextProvider';
@@ -13,7 +12,6 @@ type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
 export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding,
   navigatorContext: NavigatorContext,
-  relay: Relay,
   eventDescription?: EventDescription
 ): SearchRequest => {
   return {
@@ -26,7 +24,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     referrer: navigatorContext.referrer,
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
-      visitorId: relay.getMeta('').clientId,
+      visitorId: navigatorContext.clientId,
     }),
     ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
@@ -67,7 +65,6 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
       fromAnalyticsStateToAnalyticsParams(
         state.configuration.analytics,
         navigatorContext,
-        relay,
         eventDescription
       )),
     ...(state.excerptLength &&
