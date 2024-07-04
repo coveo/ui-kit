@@ -47,7 +47,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @api
    * @type {String[]}
    */
-  @api recentQueries;
+  @api recentQueries = [];
   /**
    * The current search query value.
    * @api
@@ -106,11 +106,12 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   @api
   getCurrentSelectedValue() {
     if (this.allOptions?.[this.selectionIndex]) {
+      const {rawValue, isClearRecentQueryButton, isRecentQuery} =
+        this.allOptions[this.selectionIndex];
       return {
-        value: this.allOptions[this.selectionIndex].rawValue,
-        isClearRecentQueryButton:
-          this.allOptions[this.selectionIndex].isClearRecentQueryButton,
-        isRecentQuery: this.allOptions[this.selectionIndex].isRecentQuery,
+        value: rawValue,
+        isClearRecentQueryButton,
+        isRecentQuery,
       };
     }
     return null;
@@ -133,14 +134,14 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       this.sendSuggestionListIdToInput();
       this.initialRender = false;
     }
-    this.announceNewSuggestionsToScreenReader();
+    this.announceNewSuggestionsWithAriaLive();
     if (this.previousQuery !== this.query) {
       this.previousQuery = this.query;
       this.selectionIndex = -1;
     }
   }
 
-  announceNewSuggestionsToScreenReader() {
+  announceNewSuggestionsWithAriaLive() {
     if (this.allOptions?.length) {
       const suggestionsCount = this.shouldDisplayRecentQueries
         ? this.allOptions.length - 1
@@ -172,7 +173,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
 
   /**
-   * Returns all the options to be displayed inside the suggestion list.
+   * Returns all the options to be displayed inside the suggestion list, recent queries and query suggestions.
    * @returns {Array<Object>}
    */
   get allOptions() {
@@ -181,7 +182,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       ...this.recentQueriesThatStartWithCurrentQuery,
       ...this.querySuggestionsNotInRecentQueries,
     ]
-      ?.map(this.buildOption)
+      ?.map(this.buildSuggestionListOption)
       .slice(0, this.maxNumberOfSuggestions);
 
     if (this.shouldDisplayRecentQueries) {
@@ -206,7 +207,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Augments a suggestion with the necessary information needed to display the suggestion as an option in the suggestion list
    */
-  buildOption = (suggestion, index) => {
+  buildSuggestionListOption = (suggestion, index) => {
     const optionIndex = this.shouldDisplayRecentQueries ? index + 1 : index;
     const optionIsSelected = this.selectionIndex === optionIndex;
 
@@ -244,10 +245,12 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   handleSelection = (event, index) => {
     event.preventDefault();
+    const {rawValue, isClearRecentQueryButton, isRecentQuery} =
+      this.allOptions[index];
     const selection = {
-      value: this.allOptions[index].rawValue,
-      isClearRecentQueryButton: this.allOptions[index].isClearRecentQueryButton,
-      isRecentQuery: this.allOptions[index].isRecentQuery,
+      value: rawValue,
+      isClearRecentQueryButton: isClearRecentQueryButton,
+      isRecentQuery: isRecentQuery,
     };
     const suggestionSelectedEvent = new CustomEvent('selection', {
       detail: {selection},

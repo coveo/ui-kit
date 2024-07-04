@@ -813,11 +813,11 @@
     <name>quantic_SuggestionNotFound</name>
   </customLabels>
   <customLabels>
-    <label>Requête récente,</label>
+    <label>Recherche récente,</label>
     <name>quantic_RecentQueryAriaLabel</name>
   </customLabels>
-    <customLabels>
-    <label>Requête suggérée,</label>
+  <customLabels>
+    <label>Suggestion de recherche,</label>
     <name>quantic_QuerySuggestionAriaLabel</name>
   </customLabels>
 </Translations>

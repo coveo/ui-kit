@@ -211,6 +211,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {KeyboardEvent} event
    */
   onKeyDown(event) {
+    // eslint-disable-next-line default-case
     switch (event.key) {
       case keys.ESC:
         this.input.removeAttribute('aria-activedescendant');
@@ -246,7 +247,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
           this.ariaActiveDescendant
         );
         break;
-      default:
     }
     this.ignoreNextEnterKeyPress = false;
   }

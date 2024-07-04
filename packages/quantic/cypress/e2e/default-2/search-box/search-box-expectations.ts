@@ -16,7 +16,7 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
     querySuggestionsEquals: (querySuggestions: String[]) => {
       querySuggestions.forEach((querySuggestion, index) => {
         selector
-          .querySuggestion(index)
+          .querySuggestionByIndex(index)
           .invoke('attr', 'data-rawvalue')
           .should('equal', querySuggestion)
           .logDetail(
@@ -42,7 +42,7 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
           `should make a search request with the query ${expectedQuery}`
         );
     },
-    displayInputSearchBox: (display: boolean, textarea = false) => {
+    displaySearchBoxInput: (display: boolean, textarea = false) => {
       selector
         .input(textarea)
         .should(display ? 'exist' : 'not.exist')
@@ -66,7 +66,7 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
         .should('have.length', value)
         .logDetail(`should display ${value} query suggestions`);
     },
-    searchInputHasCorretAriaOwnsValue: (textarea = false) => {
+    searchInputHasAriaOwnsValue: (textarea = false) => {
       selector
         .input(textarea)
         .then((inputElement) => {
@@ -77,34 +77,36 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
           return;
         })
         .logDetail(
-          'The search input should have the id of the suggestion list as its value for the ariaOwns attribute'
+          'The search input should have the id of the suggestion list as its value for the aria-owns attribute'
         );
     },
-    searchInputHasCorretAriaActivedescendantValue: (
+    searchInputHasAriaActiveDescendantValue: (
       textarea = false,
       index: number
     ) => {
       selector
         .input(textarea)
         .then((inputElement) => {
-          selector.querySuggestion(index).then((suggestionOptionElement) => {
-            const actualValue = inputElement[0].getAttribute(
-              'aria-activedescendant'
-            );
-            expect(actualValue).to.equal(suggestionOptionElement[0].id);
-          });
+          selector
+            .querySuggestionByIndex(index)
+            .then((suggestionOptionElement) => {
+              const actualValue = inputElement[0].getAttribute(
+                'aria-activedescendant'
+              );
+              expect(actualValue).to.equal(suggestionOptionElement[0].id);
+            });
           return;
         })
         .logDetail(
-          `the search input should have the id of the suggestion at index ${index} as its value for the ariaActivedescendant attribute`
+          `the aria-activedescendant attribute of the searchbox input should have the id of the ${index}-th suggestion as its value`
         );
     },
-    searchInputHasNotAriaActivedescendantValue: (textarea = false) => {
+    searchInputHasNoAriaActiveDescendantValue: (textarea = false) => {
       selector
         .input(textarea)
         .should('not.have.attr', 'aria-activedescendant')
         .logDetail(
-          'The search input should not have the ariaActivedescendant attribute'
+          'The search input should not have the aria-activedescendant attribute'
         );
     },
     logClearRecentQueries: () => {
@@ -115,19 +117,21 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
         })
         .logDetail("should log the 'clearRecentQueries' UA event");
     },
-    logClickRecentQueries: (value: string) => {
+    logClickRecentQueries: (queryText: string) => {
       cy.wait(InterceptAliases.UA.RecentQueries.ClickRecentQueries)
         .then((interception) => {
           const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property('queryText', value);
+          expect(analyticsBody).to.have.property('queryText', queryText);
         })
-        .logDetail("should log the 'recentQueriesClick' UA event");
+        .logDetail(
+          `should log the 'recentQueriesClick' UA event with the correct value: ${queryText}`
+        );
     },
-    logClickSuggestion: (value: string) => {
+    logClickSuggestion: (queryText: string) => {
       cy.wait(InterceptAliases.UA.OmniboxAnalytics)
         .then((interception) => {
           const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property('queryText', value);
+          expect(analyticsBody).to.have.property('queryText', queryText);
         })
         .logDetail("should log the 'omniboxAnalytics' UA event");
     },

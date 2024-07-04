@@ -65,7 +65,7 @@ export default class QuanticSearchBox extends LightningElement {
    * @type {boolean}
    * @defaultValue false
    */
-  @api disableRecentQuerySuggestions = false;
+  @api disableRecentQueries = false;
 
   /** @type {SearchBoxState} */
   @track state;
@@ -82,7 +82,7 @@ export default class QuanticSearchBox extends LightningElement {
   hasInitializationError = false;
   /** @type {RecentQueriesList} */
   recentQueriesList;
-  /** @type {Array} */
+  /** @type {String[]} */
   recentQueries;
 
   /**
@@ -102,10 +102,7 @@ export default class QuanticSearchBox extends LightningElement {
       },
     });
 
-    if (
-      !this.disableRecentQuerySuggestions &&
-      this.headless.buildRecentQueriesList
-    ) {
+    if (!this.disableRecentQueries && this.headless.buildRecentQueriesList) {
       this.localStorageKey = `${this.engineId}_quantic-recent-queries`;
       this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
         initialState: {
@@ -209,9 +206,8 @@ export default class QuanticSearchBox extends LightningElement {
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const {
-      selectedSuggestion: {value, isRecentQuery, isClearRecentQueryButton},
-    } = event.detail;
+    const {value, isRecentQuery, isClearRecentQueryButton} =
+      event.detail.selectedSuggestion;
     if (isClearRecentQueryButton) {
       this.recentQueriesList.clear();
     } else if (isRecentQuery) {

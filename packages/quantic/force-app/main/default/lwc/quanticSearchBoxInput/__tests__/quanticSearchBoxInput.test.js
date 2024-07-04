@@ -221,7 +221,7 @@ describe('c-quantic-search-box-input', () => {
           });
         });
 
-        describe('when both query suggestions and recent queries are displayed', () => {
+        describe('with both query suggestions and recent queries available', () => {
           it('should display the query suggestions and the recent queries in the suggestions list', async () => {
             const element = createTestComponent({
               ...defaultOptions,
@@ -326,10 +326,9 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionsList).not.toBeNull();
 
             const querySuggestionIndex = 0;
-            const firstSuggestion =
-              suggestionsList.shadowRoot.querySelectorAll('li')[
-                querySuggestionIndex
-              ];
+            const firstSuggestion = suggestionsList.shadowRoot.querySelectorAll(
+              selectors.suggestionOption
+            )[querySuggestionIndex];
             expect(firstSuggestion).not.toBeNull();
 
             firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
@@ -337,6 +336,7 @@ describe('c-quantic-search-box-input', () => {
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
+            /** @type{object} */
             const eventData =
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
             const expectedFirstSuggestionSelected = {
@@ -345,7 +345,6 @@ describe('c-quantic-search-box-input', () => {
               value: mockSuggestions[querySuggestionIndex].rawValue,
             };
 
-            // @ts-ignore
             expect(eventData.detail.selectedSuggestion).toEqual(
               expectedFirstSuggestionSelected
             );
@@ -378,8 +377,9 @@ describe('c-quantic-search-box-input', () => {
             );
             expect(suggestionsList).not.toBeNull();
 
-            const firstSuggestion =
-              suggestionsList.shadowRoot.querySelectorAll('li')[0];
+            const firstSuggestion = suggestionsList.shadowRoot.querySelectorAll(
+              selectors.suggestionOption
+            )[0];
             expect(firstSuggestion).not.toBeNull();
 
             firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
@@ -387,6 +387,7 @@ describe('c-quantic-search-box-input', () => {
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
+            /** @type{object} */
             const eventData =
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
             const expectedFirstSuggestionSelected = {
@@ -395,7 +396,6 @@ describe('c-quantic-search-box-input', () => {
               value: undefined,
             };
 
-            // @ts-ignore
             expect(eventData.detail.selectedSuggestion).toEqual(
               expectedFirstSuggestionSelected
             );
@@ -403,7 +403,7 @@ describe('c-quantic-search-box-input', () => {
         });
 
         describe('when selecting a recent query from the suggestions list', () => {
-          it('should dispatch a #quantic__selectsuggestion event with the selected suggestion as payload', async () => {
+          it('should dispatch a #quantic__selectsuggestion event with the selected recent query as payload', async () => {
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -429,17 +429,18 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionsList).not.toBeNull();
 
             const recentQueryIndex = 0;
-            const firstSuggestion =
-              suggestionsList.shadowRoot.querySelectorAll('li')[
-                recentQueryIndex + 1
-              ];
-            expect(firstSuggestion).not.toBeNull();
+            const firstRecentQuery =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOption
+              )[recentQueryIndex + 1];
+            expect(firstRecentQuery).not.toBeNull();
 
-            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
+            firstRecentQuery.dispatchEvent(new CustomEvent('mousedown'));
             expect(
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
+            /** @type{object} */
             const eventData =
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
             const expectedFirstSuggestionSelected = {
@@ -448,7 +449,6 @@ describe('c-quantic-search-box-input', () => {
               value: exampleRecentQueries[recentQueryIndex],
             };
 
-            // @ts-ignore
             expect(eventData.detail.selectedSuggestion).toEqual(
               expectedFirstSuggestionSelected
             );
@@ -478,10 +478,9 @@ describe('c-quantic-search-box-input', () => {
             functionsMocks.exampleHandleInputValueChange
           ).toHaveBeenCalledTimes(1);
 
-          // @ts-ignore
+          /** @type{object} */
           const eventData =
             functionsMocks.exampleHandleInputValueChange.mock.calls[0][0];
-          // @ts-ignore
           expect(eventData.detail.value).toEqual(mockInputValue);
         });
 

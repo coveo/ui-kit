@@ -9,7 +9,7 @@ export interface SearchBoxSelector extends ComponentSelector {
   searchButton: () => CypressSelector;
   clearRecentQueriesButton: () => CypressSelector;
   querySuggestions: () => CypressSelector;
-  querySuggestion: (index: number) => CypressSelector;
+  querySuggestionByIndex: (index: number) => CypressSelector;
 }
 
 export const SearchBoxSelectors: SearchBoxSelector = {
@@ -18,13 +18,11 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     SearchBoxSelectors.get().find('[data-cy="quantic-search-box-input"]'),
   input: (textarea = false) =>
     SearchBoxSelectors.get().find(
-      textarea
-        ? 'c-quantic-search-box-input [data-cy="search-box-textarea"]'
-        : 'c-quantic-search-box-input [data-cy="search-box-input"]'
+      `c-quantic-search-box-input [data-cy="${textarea ? 'search-box-textarea' : 'search-box-input'}"]`
     ),
   suggestionList: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input c-quantic-search-box-suggestions-list [data-cy="suggestion-list"]'
+      'c-quantic-search-box-suggestions-list [data-cy="suggestion-list"]'
     ),
   searchButton: () =>
     SearchBoxSelectors.get().find(
@@ -38,6 +36,6 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     SearchBoxSelectors.get().find(
       'c-quantic-search-box-input [data-cy="suggestions-option"]'
     ),
-  querySuggestion: (index: number) =>
+  querySuggestionByIndex: (index: number) =>
     SearchBoxSelectors.querySuggestions().eq(index),
 };

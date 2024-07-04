@@ -17,7 +17,7 @@ interface StandaloneSearchBoxOptions {
   withoutSubmitButton: boolean;
   numberOfSuggestions: number;
   textarea: boolean;
-  disableRecentQuerySuggestions: boolean;
+  disableRecentQueries: boolean;
 }
 
 const expectedAriaLiveMessage = (suggestionsCount: number) => {
@@ -66,7 +66,7 @@ describe('quantic-search-box', () => {
 
           it('should display the suggestions in the right order and should not display recent query suggestions', () => {
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -113,7 +113,7 @@ describe('quantic-search-box', () => {
               ...exampleQuerySuggestions,
             ];
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -156,7 +156,7 @@ describe('quantic-search-box', () => {
 
           it('should display the recent query suggestions', () => {
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -184,7 +184,7 @@ describe('quantic-search-box', () => {
 
           it('should not display the same suggestion twice', () => {
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -223,12 +223,12 @@ describe('quantic-search-box', () => {
 
           it('should only display the recent query suggestions that starts with the value written in the search box input', () => {
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
             scope('when writing in the search box input', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
 
               Actions.typeInSearchBox(exampleQuery, textarea);
@@ -263,7 +263,7 @@ describe('quantic-search-box', () => {
               ...exampleQuerySuggestions,
             ];
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -313,13 +313,13 @@ describe('quantic-search-box', () => {
             mockQuerySuggestions(exampleQuerySuggestions);
           });
 
-          it('should properly navigate and select the right suggestion', () => {
+          it('should properly navigate and select the right recent query', () => {
             const expectedQuerySuggestions = [
               ...exampleRecentQueries,
               ...exampleQuerySuggestions,
             ];
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -369,7 +369,7 @@ describe('quantic-search-box', () => {
               ...exampleQuerySuggestions,
             ];
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -430,7 +430,7 @@ describe('quantic-search-box', () => {
               ...exampleQuerySuggestions,
             ].slice(0, customNumberOfSuggestions);
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -446,7 +446,7 @@ describe('quantic-search-box', () => {
           });
         });
 
-        describe('when a the property #disableRecentQuerySuggestions is set to true', () => {
+        describe('when a the property #disableRecentQueries is set to true', () => {
           const exampleRecentQueries = ['foo', 'bar'];
 
           describe('when the local storage contains recent query suggestions', () => {
@@ -455,7 +455,7 @@ describe('quantic-search-box', () => {
               visitSearchBox({
                 ...defaultOptions,
                 textarea,
-                disableRecentQuerySuggestions: true,
+                disableRecentQueries: true,
               });
               mockQuerySuggestions(exampleQuerySuggestions);
             });
@@ -464,7 +464,7 @@ describe('quantic-search-box', () => {
               const expectedQuerySuggestions = exampleQuerySuggestions;
 
               scope('when loading standalone search box', () => {
-                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchBoxInput(true, textarea);
                 Expect.displaySearchButton(true);
               });
 
@@ -488,7 +488,7 @@ describe('quantic-search-box', () => {
               visitSearchBox({
                 ...defaultOptions,
                 textarea,
-                disableRecentQuerySuggestions: true,
+                disableRecentQueries: true,
               });
               mockQuerySuggestions(exampleQuerySuggestions);
             });
@@ -497,7 +497,7 @@ describe('quantic-search-box', () => {
               const expectedQuerySuggestions = exampleQuerySuggestions;
 
               scope('when loading standalone search box', () => {
-                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchBoxInput(true, textarea);
                 Expect.displaySearchButton(true);
               });
 
@@ -542,7 +542,7 @@ describe('quantic-search-box', () => {
 
           it('the search input should have the id of the suggestion list as its value for the ariaOwns attribute', () => {
             scope('when loading standalone search box', () => {
-              Expect.displayInputSearchBox(true, textarea);
+              Expect.displaySearchBoxInput(true, textarea);
               Expect.displaySearchButton(true);
             });
 
@@ -551,7 +551,7 @@ describe('quantic-search-box', () => {
               cy.wait(InterceptAliases.QuerySuggestions);
 
               Expect.displaySuggestionList(true);
-              Expect.searchInputHasCorretAriaOwnsValue(textarea);
+              Expect.searchInputHasAriaOwnsValue(textarea);
             });
           });
         });
@@ -564,9 +564,9 @@ describe('quantic-search-box', () => {
               mockQuerySuggestions(exampleQuerySuggestions);
             });
 
-            it('the search input should have the id of the heighlighted suggestion as its value for the ariaActivedescendant attribute', () => {
+            it('the search input should have the id of the highlighted suggestion as its value for the ariaActivedescendant attribute', () => {
               scope('when loading standalone search box', () => {
-                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchBoxInput(true, textarea);
                 Expect.displaySearchButton(true);
               });
 
@@ -579,23 +579,17 @@ describe('quantic-search-box', () => {
 
               scope('when highlighting the first suggestion', () => {
                 Actions.pressDownArrowOnSearchBox(textarea);
-                Expect.searchInputHasCorretAriaActivedescendantValue(
-                  textarea,
-                  0
-                );
+                Expect.searchInputHasAriaActiveDescendantValue(textarea, 0);
               });
 
               scope('when highlighting the second suggestion', () => {
                 Actions.pressDownArrowOnSearchBox(textarea);
-                Expect.searchInputHasCorretAriaActivedescendantValue(
-                  textarea,
-                  1
-                );
+                Expect.searchInputHasAriaActiveDescendantValue(textarea, 1);
               });
 
               scope('when the suggestions list is closed', () => {
                 Actions.blurSearchBox(textarea);
-                Expect.searchInputHasNotAriaActivedescendantValue(textarea);
+                Expect.searchInputHasNoAriaActiveDescendantValue(textarea);
               });
             });
           });
@@ -609,9 +603,9 @@ describe('quantic-search-box', () => {
               mockQuerySuggestions(exampleQuerySuggestions);
             });
 
-            it('the search input should have the id of the heighlighted suggestion as its value for the ariaActivedescendant attribute', () => {
+            it('the search input should have the id of the highlighted suggestion as its value for the ariaActivedescendant attribute', () => {
               scope('when loading standalone search box', () => {
-                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchBoxInput(true, textarea);
                 Expect.displaySearchButton(true);
               });
 
@@ -627,23 +621,17 @@ describe('quantic-search-box', () => {
                 Actions.pressDownArrowOnSearchBox(textarea);
                 // Second down arrow click in order to highlight the first recent query option.
                 Actions.pressDownArrowOnSearchBox(textarea);
-                Expect.searchInputHasCorretAriaActivedescendantValue(
-                  textarea,
-                  0
-                );
+                Expect.searchInputHasAriaActiveDescendantValue(textarea, 0);
               });
 
               scope('when highlighting the first query suggestion', () => {
                 Actions.pressDownArrowOnSearchBox(textarea);
-                Expect.searchInputHasCorretAriaActivedescendantValue(
-                  textarea,
-                  1
-                );
+                Expect.searchInputHasAriaActiveDescendantValue(textarea, 1);
               });
 
               scope('when the suggestions list is closed', () => {
                 Actions.blurSearchBox(textarea);
-                Expect.searchInputHasNotAriaActivedescendantValue(textarea);
+                Expect.searchInputHasNoAriaActiveDescendantValue(textarea);
               });
             });
           });
@@ -659,7 +647,7 @@ describe('quantic-search-box', () => {
 
             it('should have the aria live message the properly the number of query suggestions available', () => {
               scope('when loading standalone search box', () => {
-                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchBoxInput(true, textarea);
                 Expect.displaySearchButton(true);
               });
 
@@ -714,7 +702,7 @@ describe('quantic-search-box', () => {
 
             it('should have the aria live message the properly the number of query suggestions available', () => {
               scope('when loading standalone search box', () => {
-                Expect.displayInputSearchBox(true, textarea);
+                Expect.displaySearchBoxInput(true, textarea);
                 Expect.displaySearchButton(true);
               });
 

@@ -45,7 +45,7 @@ export default class ExampleQuanticSearchBox extends LightningElement {
       defaultValue: 7,
     },
     {
-      attribute: 'disableRecentQuerySuggestions',
+      attribute: 'disableRecentQueries',
       label: 'Disable recent query suggestions',
       description:
         'Whether to disable rendering the recent queries as suggestions.',
