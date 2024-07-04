@@ -1,10 +1,15 @@
 import {configuration} from '../../../app/common-reducers';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
+import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions';
-import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
+import {
+  clearQuerySuggest,
+  fetchQuerySuggestions,
+  registerQuerySuggest,
+  selectQuerySuggestion,
+} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
   executeSearch,
@@ -12,11 +17,6 @@ import {
 } from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
-import {
-  registerQuerySuggest,
-  clearQuerySuggest,
-  selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
@@ -32,12 +32,10 @@ import {
   buildSearchBox,
 } from './headless-search-box';
 
-jest.mock('../../../features/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/search/search-actions');
 jest.mock('../../../features/commerce/query-set/query-set-actions');
-jest.mock('../../../features/facets/generic/facet-actions');
-jest.mock('../../../features/breadcrumb/breadcrumb-actions');
+jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock('../../../features/commerce/pagination/pagination-actions');
 jest.mock('../../../features/commerce/query/query-actions');
 
@@ -234,7 +232,7 @@ describe('headless search box', () => {
       expect(prepareForSearchWithQuery).toHaveBeenCalled();
     });
 
-    it('when clearFilters option is false, does not dispatch #deselectAllBreadcrumbs', () => {
+    it('when clearFilters option is false, does not dispatch #clearAllCoreFacets', () => {
       jest.resetAllMocks();
       engine = buildMockCommerceEngine(state);
       searchBox = buildSearchBox(engine, {
@@ -242,7 +240,7 @@ describe('headless search box', () => {
         options: {clearFilters: false},
       });
       searchBox.submit();
-      expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
+      expect(clearAllCoreFacets).not.toHaveBeenCalled();
     });
 
     it('dispatches #executeSearch', () => {

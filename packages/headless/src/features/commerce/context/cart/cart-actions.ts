@@ -9,28 +9,36 @@ import {
   itemPayloadDefinition,
 } from './cart-validation';
 
+export type PurchasePayload = Transaction;
+
 export const purchase = createAsyncThunk<
   void,
-  Transaction,
+  PurchasePayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
 >(
   'commerce/cart/purchase',
-  async (transaction: Transaction, {extra, getState}) => {
-    const payload = getECPurchasePayload(transaction, getState());
+  async (payload: PurchasePayload, {extra, getState}) => {
+    const relayPayload = getECPurchasePayload(payload, getState());
     const {relay} = extra;
 
-    relay.emit('ec.purchase', payload);
+    relay.emit('ec.purchase', relayPayload);
   }
 );
 
+export type SetItemsPayload = CartItemWithMetadata[];
+
 export const setItems = createAction(
   'commerce/cart/setItems',
-  (payload: CartItemWithMetadata[]) =>
-    validatePayload<CartItemWithMetadata[]>(payload, setItemsPayloadDefinition)
+  (payload: SetItemsPayload) =>
+    validatePayload<SetItemsPayload>(payload, setItemsPayloadDefinition)
 );
+
+export type UpdateItemQuantityPayload = CartItemWithMetadata;
 
 export const updateItemQuantity = createAction(
   'commerce/cart/updateItemQuantity',
-  (payload: CartItemWithMetadata) =>
+  (payload: UpdateItemQuantityPayload) =>
     validatePayload(payload, itemPayloadDefinition)
 );
+
+// TODO KIT-3346: Add/expose action to emit ec_cartAction analytics events

@@ -1,6 +1,14 @@
 import {Action} from '@reduxjs/toolkit';
 import {stateKey} from '../../../../app/state-key';
-import {deselectAllBreadcrumbs} from '../../../../features/breadcrumb/breadcrumb-actions';
+import {
+  clearAllCoreFacets,
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../../features/commerce/facets/date-facet/date-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {
   AnyFacetResponse,
@@ -10,22 +18,16 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
-import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-  updateFreezeCurrentValues,
-} from '../../../../features/facets/facet-set/facet-set-actions';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCategoryFacetResponse,
@@ -44,17 +46,15 @@ import {
   CoreBreadcrumbManagerOptions,
 } from './headless-core-breadcrumb-manager';
 
-jest.mock('../../../../features/facets/facet-set/facet-set-actions');
+jest.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock(
-  '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+  '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
+jest.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
+
 jest.mock(
-  '../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
+  '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
 );
-jest.mock(
-  '../../../../features/facets/category-facet-set/category-facet-set-actions'
-);
-jest.mock('../../../../features/breadcrumb/breadcrumb-actions');
 
 describe('core breadcrumb manager', () => {
   let engine: MockedCommerceEngine;
@@ -108,10 +108,27 @@ describe('core breadcrumb manager', () => {
     expect(breadcrumbManager.subscribe).toBeTruthy();
   });
 
+  it('#hasBreadcrumbs is false when there are no facet values', () => {
+    setFacetsState(
+      buildMockCommerceRegularFacetResponse({
+        facetId,
+        values: [],
+      })
+    );
+    setFacetsState(
+      buildMockCommerceNumericFacetResponse({
+        facetId,
+        values: [],
+      })
+    );
+
+    expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+  });
+
   describe('#deselectAll', () => {
     it('deselects all breadcrumbs', () => {
       breadcrumbManager.deselectAll();
-      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+      expect(clearAllCoreFacets).toHaveBeenCalled();
     });
 
     it('dispatches #fetchProductsActionCreator', () => {
@@ -244,7 +261,7 @@ describe('core breadcrumb manager', () => {
 
     it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-      expect(deselectAllFacetValues).toHaveBeenCalledWith(facetId);
+      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith(facetId);
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
@@ -281,7 +298,7 @@ describe('core breadcrumb manager', () => {
       });
 
       it('dispatches #updateFreezeCurrentValues', () => {
-        expect(updateFreezeCurrentValues).toHaveBeenCalledWith({
+        expect(updateCoreFacetFreezeCurrentValues).toHaveBeenCalledWith({
           facetId,
           freezeCurrentValues: false,
         });

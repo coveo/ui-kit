@@ -6,14 +6,19 @@ import {
   querySetDefinition,
 } from '../../query-set/query-set-actions';
 
+export type RegisterQuerySetQueryPayload =
+  RegisterQuerySetQueryActionCreatorPayload;
+export type UpdateQuerySetQueryPayload =
+  UpdateQuerySetQueryActionCreatorPayload;
+
 export const registerQuerySetQuery = createAction(
   'commerce/querySet/register',
-  (payload: RegisterQuerySetQueryActionCreatorPayload) =>
+  (payload: RegisterQuerySetQueryPayload) =>
     validatePayload(payload, querySetDefinition)
 );
 
 export const updateQuerySetQuery = createAction(
   'commerce/querySet/update',
-  (payload: UpdateQuerySetQueryActionCreatorPayload) =>
+  (payload: UpdateQuerySetQueryPayload) =>
     validatePayload(payload, querySetDefinition)
 );
