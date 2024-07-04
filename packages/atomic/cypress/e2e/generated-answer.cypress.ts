@@ -395,8 +395,7 @@ describe('Generated Answer Test Suites', () => {
           });
         });
 
-        // TODO: un-skip [SVCC-3956](https://coveord.atlassian.net/browse/SVCC-3956)
-        describe.skip('when a rephrase option is selected', () => {
+        describe('when a rephrase option is selected', () => {
           rephraseOptions
             .filter((option) => option.value !== 'default')
             .forEach((option) => {
