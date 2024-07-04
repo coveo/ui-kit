@@ -1,3 +1,9 @@
+## 1.7.16 (2024-07-04)
+
+### Bug Fixes
+
+- bump @coveo/explorer-messenger; move license file so it gets included in the relay package (#94) ([62e6115](/commits/62e611517851e988a4d3c3d5394dd77e3a33527c)), closes [#94](/issues/94)
+
 ## 1.7.15 (2024-06-12)
 
 ### Bug Fixes
