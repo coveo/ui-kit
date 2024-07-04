@@ -283,9 +283,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const {
-      selectedSuggestion: {value},
-    } = event.detail;
+    const {value} = event.detail.selectedSuggestion;
     this.standaloneSearchBox?.selectSuggestion(value);
   };
 
