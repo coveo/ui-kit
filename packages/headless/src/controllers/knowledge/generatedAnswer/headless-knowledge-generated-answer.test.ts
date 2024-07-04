@@ -76,7 +76,10 @@ describe('knowledge-generated-answer', () => {
     createGeneratedAnswer();
     expect(engine.addReducers).toHaveBeenCalledWith({
       [answerApi.reducerPath]: answerApi.reducer,
+<<<<<<< HEAD
       query: queryReducer,
+=======
+>>>>>>> 97b76949d (feat(answer): knowledge answer controller)
     });
   });
 
