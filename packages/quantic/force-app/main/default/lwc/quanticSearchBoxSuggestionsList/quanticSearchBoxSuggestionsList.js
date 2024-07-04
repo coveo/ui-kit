@@ -16,13 +16,6 @@ const optionCSSClass =
  * @property {number} key
  * @property {string} value
  * @property {string} rawValue
- * @property {false} isRecentQuery
- */
-
-/**
- * @typedef RecentQuery
- * @property {number} key
- * @property {string} value
  */
 
 /**
@@ -177,7 +170,6 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @returns {Array<Object>}
    */
   get allOptions() {
-    /** @type {Array} */
     const options = [
       ...this.recentQueriesThatStartWithCurrentQuery,
       ...this.querySuggestionsNotInRecentQueries,
