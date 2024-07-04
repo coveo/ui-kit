@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   Release:
-    runs-on: [coveo, linux, x64, ec2]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -26,18 +26,8 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Npm Login
+      - name: Promote npm packages to beta
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm run npm:login:ci
-
-      - name: Setup pnpm
-        run: |
-          corepack enable
-          corepack prepare --activate
-
-      - name: Publish packages on NPM
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
-        run: |
-          npm run npm:tag:beta
+        run: npm run npm:tag:beta

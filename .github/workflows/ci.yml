@@ -12,11 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup
         uses: ./.github/actions/setup
+      - name: Install
+        uses: ./.github/actions/install-dependencies
       - name: Lint
         uses: ./.github/actions/lint
       - name: Build
@@ -32,7 +34,7 @@ jobs:
       tag: ${{ steps.tag.outputs.tag }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - id: tag
@@ -44,12 +46,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.COMMIT_TOKEN }}
       - name: Setup
         uses: ./.github/actions/setup
+      - name: Install
+        uses: ./.github/actions/install-dependencies
       - name: Git Setup
         uses: ./.github/actions/git-setup
       - name: Version Bump
@@ -61,11 +65,13 @@ jobs:
     runs-on: [coveo, linux, x64, ec2]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup
         uses: ./.github/actions/setup
+      - name: Install
+        uses: ./.github/actions/install-dependencies
       - name: Build
         uses: ./.github/actions/build-packages
       - name: Publish

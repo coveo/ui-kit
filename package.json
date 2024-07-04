@@ -11,7 +11,6 @@
     "npm:publish:alpha": "pnpm -r publish --tag alpha",
     "npm:tag:beta": "pnpm -r run npm:tag beta",
     "npm:tag:latest": "pnpm -r run npm:tag latest",
-    "npm:login:ci": "node ./scripts/npm-login.mjs",
     "docs:notify": "node ./packages/relay/scripts/notify-docs.mjs"
   },
   "engines": {
