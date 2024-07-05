@@ -9,7 +9,8 @@ export async function build(options) {
   const output = await esBuildContext.rebuild();
   if (watch) {
     await esBuildContext.watch();
+  } else {
+    await esBuildContext.dispose();
   }
-  await esBuildContext.dispose();
   return output;
 }
