@@ -271,6 +271,12 @@ export class GeneratedAnswerCommon {
     );
   }
 
+  private setIsAnswerHelpful(isAnswerHelpful: boolean) {
+    if (this.modalRef) {
+      this.modalRef.helpful = isAnswerHelpful;
+    }
+  }
+
   private openFeedbackModal() {
     if (
       this.modalRef &&
@@ -281,11 +287,13 @@ export class GeneratedAnswerCommon {
   }
 
   private clickDislike() {
+    this.setIsAnswerHelpful(false);
     this.props.getGeneratedAnswer()?.dislike();
     this.openFeedbackModal();
   }
 
   private clickLike() {
+    this.setIsAnswerHelpful(true);
     this.props.getGeneratedAnswer()?.like();
     this.openFeedbackModal();
   }

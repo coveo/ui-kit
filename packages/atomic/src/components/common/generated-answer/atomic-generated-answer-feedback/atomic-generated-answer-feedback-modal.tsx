@@ -1,4 +1,8 @@
-import {GeneratedAnswer} from '@coveo/headless';
+import {
+  GeneratedAnswer,
+  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedbackOption,
+} from '@coveo/headless';
 import {
   Component,
   State,
@@ -20,15 +24,6 @@ import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../button';
 import {IconButton} from '../../iconButton';
-
-type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
-
-type GeneratedAnswerFeedback = {
-  documented?: GeneratedAnswerFeedbackOption;
-  correctTopic?: GeneratedAnswerFeedbackOption;
-  hallucinationFree?: GeneratedAnswerFeedbackOption;
-  readable?: GeneratedAnswerFeedbackOption;
-};
 
 /**
  * @internal
@@ -52,9 +47,13 @@ export class AtomicGeneratedAnswerFeedbackModal
    * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
    */
   @Prop({reflect: true, mutable: true}) generatedAnswer!: GeneratedAnswer;
+  /**
+   * Indicates whether the answer was helpful or not.
+   */
+  @Prop({reflect: true, mutable: true}) helpful = false;
 
   @State() public error!: Error;
-  @State() private currentAnswer: GeneratedAnswerFeedback =
+  @State() private currentAnswer: Partial<GeneratedAnswerFeedbackV2> =
     this.getInitialAnswerState();
   @State() feedbackSubmitted: boolean = false;
   @State() answerEvaluationRequired: boolean = false;
@@ -63,6 +62,8 @@ export class AtomicGeneratedAnswerFeedbackModal
     'atomic-generated-answer-feedback-modal-form-'
   );
   private detailsInputRef?: HTMLTextAreaElement;
+
+  private linkInputRef?: HTMLInputElement;
 
   @Event() feedbackSent!: EventEmitter;
 
@@ -75,7 +76,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private static options: {
     localeKey: string;
-    correspondingAnswer: keyof GeneratedAnswerFeedback;
+    correspondingAnswer: keyof GeneratedAnswerFeedbackV2;
   }[] = [
     {
       localeKey: 'feedback-correct-topic',
@@ -95,7 +96,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     },
   ];
 
-  private getInitialAnswerState(): GeneratedAnswerFeedback {
+  private getInitialAnswerState(): Partial<GeneratedAnswerFeedbackV2> {
     return {
       documented: undefined,
       correctTopic: undefined,
@@ -111,14 +112,21 @@ export class AtomicGeneratedAnswerFeedbackModal
     this.setIsOpen(false);
   }
 
+  private clearInputRefs() {
+    if (this.detailsInputRef) {
+      this.detailsInputRef.value = '';
+    }
+    if (this.linkInputRef) {
+      this.linkInputRef.value = '';
+    }
+  }
+
   private setIsOpen(isOpen: boolean) {
     this.isOpen = isOpen;
   }
 
   private close() {
-    if (this.detailsInputRef) {
-      this.detailsInputRef.value = '';
-    }
+    this.clearInputRefs();
     this.resetState();
     this.generatedAnswer.closeFeedbackModal();
   }
@@ -126,8 +134,8 @@ export class AtomicGeneratedAnswerFeedbackModal
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private setCurrentAnswer(
-    key: keyof GeneratedAnswerFeedback,
-    value: GeneratedAnswerFeedbackOption
+    key: keyof GeneratedAnswerFeedbackV2,
+    value: GeneratedAnswerFeedbackOption | string
   ) {
     this.currentAnswer = {
       ...this.currentAnswer,
@@ -136,13 +144,11 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   public sendFeedback() {
-    // if (this.currentAnswer === 'other') {
-    //   this.generatedAnswer.sendDetailedFeedback(this.detailsInputRef!.value);
-    // } else {
-    //   this.generatedAnswer.sendFeedback(
-    //     this.currentAnswer as GeneratedAnswerFeedback
-    //   );
-    // }
+    const feedback: GeneratedAnswerFeedbackV2 = {
+      ...(this.currentAnswer as GeneratedAnswerFeedbackV2),
+      helpful: this.helpful,
+    };
+    this.generatedAnswer.sendFeedback(feedback);
     this.feedbackSent.emit();
   }
 
@@ -190,7 +196,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderFeedbackOption(
     option: GeneratedAnswerFeedbackOption,
-    correspondingAnswer: keyof GeneratedAnswerFeedback
+    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
   ) {
     const buttonClasses = [
       'min-w-20',
@@ -222,7 +228,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderAnswerEvaluation(
     label: string,
-    correspondingAnswer: keyof GeneratedAnswerFeedback
+    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
   ) {
     const labelClasses = ['text-error-red', 'text-sm', 'hidden'];
     const isRequired =
@@ -253,8 +259,8 @@ export class AtomicGeneratedAnswerFeedbackModal
         {AtomicGeneratedAnswerFeedbackModal.options.map(
           ({localeKey, correspondingAnswer}) => (
             <div
-              class={`answer-evaluation flex items-center justify-between mt-3 ${correspondingAnswer}`}
-              key={correspondingAnswer}
+              class={`answer-evaluation flex items-center justify-between mt-3 ${String(correspondingAnswer)}`}
+              key={String(correspondingAnswer)}
             >
               {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
               <div class="options flex text-base">
@@ -277,8 +283,15 @@ export class AtomicGeneratedAnswerFeedbackModal
         </h5>
         <input
           type="text"
+          ref={(linkInputRef) => (this.linkInputRef = linkInputRef)}
           placeholder="https://URL"
           class="input-primary mt-4 w-full h-9 rounded-md px-4 placeholder-neutral-dark"
+          onChange={(e) =>
+            this.setCurrentAnswer(
+              'documentUrl',
+              (e.currentTarget as HTMLInputElement).value
+            )
+          }
         />
 
         <h5 class="mt-8 font-bold">
@@ -290,6 +303,12 @@ export class AtomicGeneratedAnswerFeedbackModal
           class="mt-4 px-4 py-2 w-full placeholder-neutral-dark leading-5 border border-neutral resize-none rounded-md hover:border-primary-light focus-visible:border-primary focus:outline-none focus-visible:ring-2 "
           rows={4}
           placeholder={this.bindings.i18n.t('add-notes')}
+          onChange={(e) =>
+            this.setCurrentAnswer(
+              'details',
+              (e.currentTarget as HTMLTextAreaElement).value
+            )
+          }
         ></textarea>
       </fieldset>
     );

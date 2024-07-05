@@ -1002,6 +1002,10 @@ export namespace Components {
          */
         "generatedAnswer": GeneratedAnswer;
         /**
+          * Indicates whether the answer was helpful or not.
+         */
+        "helpful": boolean;
+        /**
           * Indicates whether the modal is open.
          */
         "isOpen": boolean;
@@ -6424,6 +6428,10 @@ declare namespace LocalJSX {
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
          */
         "generatedAnswer": GeneratedAnswer;
+        /**
+          * Indicates whether the answer was helpful or not.
+         */
+        "helpful"?: boolean;
         /**
           * Indicates whether the modal is open.
          */
