@@ -41,7 +41,7 @@ test.describe('after clicking the load more button', () => {
   });
 });
 
-test.describe('when theres no products', () => {
+test.describe('when there are no products', () => {
   test('should be hidden', async ({searchBox, loadMore}) => {
     await loadMore.button.waitFor({state: 'visible'});
     await searchBox.searchInput

@@ -24,7 +24,7 @@ test.describe('after searching for kayak', () => {
   });
 });
 
-test.describe('when search yields no produts', () => {
+test.describe('when search yields no products', () => {
   test.beforeEach(async ({querySummary}) => {
     await querySummary.load({}, 'no-products');
   });
@@ -34,7 +34,7 @@ test.describe('when search yields no produts', () => {
   });
 });
 
-test.describe('when search yields 27 products', () => {
+test.describe('when search yields multiple products', () => {
   test.beforeEach(async ({querySummary}) => {
     await querySummary.load({}, 'fixed-number-of-products');
   });
