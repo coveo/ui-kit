@@ -1,3 +1,15 @@
+# 2.11.0 (2024-07-03)
+
+### Features
+
+- **commerce:** add atomic-commerce-breadbox ([#4121](https://github.com/coveo/ui-kit/issues/4121)) ([d96287a](https://github.com/coveo/ui-kit/commits/d96287a7efb853f575700fe982b898ab6c1e7744))
+
+## 2.10.7 (2024-07-03)
+
+### Bug Fixes
+
+- **commerce:** remove `executeFirstSearch` & friend from commerce engine ([#4095](https://github.com/coveo/ui-kit/issues/4095)) ([64cda10](https://github.com/coveo/ui-kit/commits/64cda1085a8be29e92e8965222962c0c90762d89))
+
 ## 2.10.5 (2024-06-26)
 
 ### Bug Fixes
