@@ -2,7 +2,7 @@ import {test, expect} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({suggestionTimeout: 5000});
+    await searchBox.load({args: {suggestionTimeout: 5000}});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -49,7 +49,10 @@ test.describe('default', () => {
 
 test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
+    await searchBox.load({
+      args: {suggestionTimeout: 5000},
+      story: 'rich-search-box',
+    });
   });
 
   test.describe('with recent queries', () => {
@@ -129,9 +132,11 @@ test.describe('with instant results & query suggestions', () => {
 test.describe('with disable-search=true and minimum-query-length=1', () => {
   test.beforeEach(async ({searchBox}) => {
     await searchBox.load({
-      suggestionTimeout: 5000,
-      disableSearch: true,
-      minimumQueryLength: 1,
+      args: {
+        suggestionTimeout: 5000,
+        disableSearch: true,
+        minimumQueryLength: 1,
+      },
     });
   });
 
@@ -172,7 +177,9 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 
 test.describe('with minimum-query-length=4', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({minimumQueryLength: 4, suggestionTimeout: 5000});
+    await searchBox.load({
+      args: {minimumQueryLength: 4, suggestionTimeout: 5000},
+    });
   });
 
   const testCases = () => {
