@@ -17,6 +17,19 @@ function matchesFound(
   i18n: i18n
 ) {
   return i18n.t(key, {
+    query: `<span class="font-bold italic text-on-background" part="matches-query">${escape(
+      query
+    )}</span>`,
+    interpolation: {escapeValue: false},
+  });
+}
+
+function matchesFoundClickableShowMoreMatches(
+  key: 'more-matches-for' | 'no-matches-found-for',
+  query: string,
+  i18n: i18n
+) {
+  return i18n.t(key, {
     query: `<span class="font-bold italic" part="matches-query">${escape(
       query
     )}</span>`,
@@ -55,7 +68,7 @@ export const FacetSearchMatches: FunctionalComponent<
             <div
               part="more-matches"
               class="truncate text-sm"
-              innerHTML={matchesFound(
+              innerHTML={matchesFoundClickableShowMoreMatches(
                 'more-matches-for',
                 props.query,
                 props.i18n
