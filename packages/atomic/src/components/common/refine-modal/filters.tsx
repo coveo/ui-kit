@@ -4,10 +4,12 @@ import {Button} from '../button';
 
 interface RefineModalFiltersSectionProps {
   i18n: i18n;
+  withFacets: boolean;
+  withAutomaticFacets: boolean;
 }
 export const RefineModalFiltersSection: FunctionalComponent<
   RefineModalFiltersSectionProps
-> = ({i18n}, children) => {
+> = ({i18n, withAutomaticFacets, withFacets}, children) => {
   return (
     <Fragment>
       <div part="filter-section" class="w-full flex justify-between mt-8 mb-3">
@@ -19,8 +21,8 @@ export const RefineModalFiltersSection: FunctionalComponent<
         </h1>
         {children}
       </div>
-      <slot name="facets"></slot>
-      <slot name="automatic-facets"></slot>
+      {withFacets && <slot name="facets"></slot>}
+      {withAutomaticFacets && <slot name="automatic-facets"></slot>}
     </Fragment>
   );
 };

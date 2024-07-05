@@ -264,7 +264,11 @@ export class AtomicRefineModal implements InitializableComponent {
     const {i18n} = this.bindings;
 
     return (
-      <RefineModalFiltersSection i18n={i18n}>
+      <RefineModalFiltersSection
+        i18n={i18n}
+        withFacets={hasFacetElements}
+        withAutomaticFacets={hasAutomaticFacets}
+      >
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <RefineModalFiltersClearButton
             i18n={i18n}
@@ -283,7 +287,7 @@ export class AtomicRefineModal implements InitializableComponent {
         isOpen={this.isOpen}
         onClose={() => (this.isOpen = false)}
         title={this.bindings.i18n.t('sort-and-filter')}
-        querySummaryState={this.querySummaryState}
+        numberOfItems={this.querySummaryState.total}
         openButton={this.openButton}
       >
         <RefineModalBody>

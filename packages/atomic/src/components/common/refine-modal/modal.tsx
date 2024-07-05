@@ -11,9 +11,7 @@ interface RefineModalProps {
   i18n: i18n;
   onClose(): void;
   title: string;
-  querySummaryState: {
-    total: number;
-  };
+  numberOfItems: number;
   isOpen: boolean;
   openButton?: HTMLElement;
   boundary?: 'page' | 'element';
@@ -68,9 +66,7 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
           </span>
           <span part="footer-button-count">
             {props.i18n.t('between-parentheses', {
-              text: props.querySummaryState.total.toLocaleString(
-                props.i18n.language
-              ),
+              text: props.numberOfItems.toLocaleString(props.i18n.language),
             })}
           </span>
         </Button>

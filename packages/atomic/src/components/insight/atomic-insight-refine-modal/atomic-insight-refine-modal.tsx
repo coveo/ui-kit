@@ -151,7 +151,7 @@ export class AtomicInsightRefineModal
           host={this.host}
           isOpen={this.isOpen}
           onClose={() => (this.isOpen = false)}
-          querySummaryState={this.querySummaryState}
+          numberOfItems={this.querySummaryState.total}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
           scope={this.bindings.interfaceElement}

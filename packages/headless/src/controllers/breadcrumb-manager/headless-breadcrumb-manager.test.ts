@@ -564,8 +564,76 @@ describe('headless breadcrumb manager', () => {
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });
 
+  it('hasBreadcrumbs returns true when an automatic facet value is selected', () => {
+    state.automaticFacetSet = {
+      desiredCount: 1,
+      numberOfValues: 8,
+      set: {
+        [facetId]: buildMockAutomaticFacetSlice({
+          response: buildMockAutomaticFacetResponse({
+            field: facetId,
+            values: [buildMockFacetValue({state: 'selected'})],
+          }),
+        }),
+      },
+    };
+
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
+  });
+
+  it('hasBreadcrumbs returns true when an automatic facet value is excluded', () => {
+    state.automaticFacetSet = {
+      desiredCount: 1,
+      numberOfValues: 8,
+      set: {
+        [facetId]: buildMockAutomaticFacetSlice({
+          response: buildMockAutomaticFacetResponse({
+            field: facetId,
+            values: [buildMockFacetValue({state: 'excluded'})],
+          }),
+        }),
+      },
+    };
+
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
+  });
+
   it('hasBreadcrumbs returns false when no facet value is selected or excluded', () => {
     state.search.response.facets = [];
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
+  });
+
+  it('hasBreadcrumbs returns false when an automatic facet has no value', () => {
+    state.automaticFacetSet = {
+      desiredCount: 1,
+      numberOfValues: 8,
+      set: {
+        [facetId]: buildMockAutomaticFacetSlice({
+          response: buildMockAutomaticFacetResponse({
+            field: facetId,
+            values: [],
+          }),
+        }),
+      },
+    };
+
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
+  });
+
+  it('hasBreadcrumbs returns false when an automatic facet has idle value', () => {
+    state.automaticFacetSet = {
+      desiredCount: 1,
+      numberOfValues: 8,
+      set: {
+        [facetId]: buildMockAutomaticFacetSlice({
+          response: buildMockAutomaticFacetResponse({
+            field: facetId,
+            values: [buildMockFacetValue({state: 'idle'})],
+          }),
+        }),
+      },
+    };
+
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });
 

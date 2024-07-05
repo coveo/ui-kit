@@ -250,6 +250,7 @@ export type {
   Breadcrumb,
   BreadcrumbValue,
   DeselectableValue,
+  BreadcrumbManagerState,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 
 export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary';
