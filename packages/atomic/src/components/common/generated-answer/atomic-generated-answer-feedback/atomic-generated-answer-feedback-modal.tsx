@@ -353,7 +353,7 @@ export class AtomicGeneratedAnswerFeedbackModal
       'flex items-center justify-center text-sm leading-4 p-2 rounded-md';
 
     return (
-      <div slot="footer">
+      <div slot="footer" part="modal-footer">
         <div class="flex items-center justify-between">
           <div class="text-base required-label">
             <span class="text-error mr-0.5">*</span>

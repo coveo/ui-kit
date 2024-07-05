@@ -151,42 +151,68 @@ describe('Generated Answer Test Suites', () => {
         setupGeneratedAnswer(streamId);
         cy.wait(getStreamInterceptAlias(streamId));
         GeneratedAnswerSelectors.answer();
-        GeneratedAnswerSelectors.dislikeButton().click({force: true});
       });
 
       it('should open when an answer is disliked', () => {
+        GeneratedAnswerSelectors.dislikeButton().click({force: true});
+
+        feedbackModalSelectors.modalBody().should('exist');
+        feedbackModalSelectors.modalHeader().should('exist');
+        feedbackModalSelectors.modalFooter().should('exist');
+      });
+
+      it('should open when an answer is liked', () => {
+        GeneratedAnswerSelectors.likeButton().click({force: true});
+
         feedbackModalSelectors.modalBody().should('exist');
         feedbackModalSelectors.modalHeader().should('exist');
         feedbackModalSelectors.modalFooter().should('exist');
       });
 
       describe('select button', () => {
-        it('should submit proper reason', () => {
-          const notAccurateReason = feedbackModalSelectors.reason().eq(1);
-          notAccurateReason.should('have.id', 'notAccurate');
-          notAccurateReason.click({force: true});
+        it('should submit proper feedback', () => {
+          GeneratedAnswerSelectors.likeButton().click({force: true});
+
+          feedbackModalSelectors
+            .feedbackOption('correctTopic', 'Yes')
+            .click({force: true});
+          feedbackModalSelectors
+            .feedbackOption('hallucinationFree', 'Not sure')
+            .click({force: true});
+
+          feedbackModalSelectors.submitButton().click();
+          feedbackModalSelectors.submitButton().should('exist');
+
+          feedbackModalSelectors
+            .feedbackOption('readable', 'Yes')
+            .click({force: true});
+          feedbackModalSelectors
+            .feedbackOption('documented', 'Yes')
+            .click({force: true});
 
           feedbackModalSelectors.submitButton().click();
           feedbackModalSelectors.submitButton().should('not.exist');
           feedbackModalSelectors.cancelButton().should('exist');
 
           cy.get(`${RouteAlias.UA}.3`)
-            .its('request.body.customData.reason')
-            .should('equal', 'notAccurate');
-        });
-      });
+            .its('request.body.customData.helpful')
+            .should('equal', true);
 
-      describe('add details text area', () => {
-        it('should be visible when other is selected', () => {
-          feedbackModalSelectors.detailsTextArea().should('not.exist');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.correctTopic')
+            .should('equal', 'yes');
 
-          const reasons = feedbackModalSelectors.reason();
-          reasons.last().should('have.id', 'other');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.hallucinationFree')
+            .should('equal', 'unknown');
 
-          reasons.last().click({force: true});
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.readable')
+            .should('equal', 'yes');
 
-          feedbackModalSelectors.detailsInput().should('exist');
-          feedbackModalSelectors.submitButton().should('be.enabled');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.documented')
+            .should('equal', 'yes');
         });
       });
     });
