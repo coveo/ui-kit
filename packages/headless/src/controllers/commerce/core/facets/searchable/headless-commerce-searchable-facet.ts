@@ -1,8 +1,9 @@
+import {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request';
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 
 export type SearchableFacetOptions = {
-  facetSearch?: {facetQuery: string};
+  facetSearch: {facetQuery?: string; type: FacetSearchType};
 };
 
 export type CoreFacetSearchState<

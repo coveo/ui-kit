@@ -72,6 +72,7 @@ describe('CategoryFacet', () => {
       fetchProductsActionCreator: mockFetchProductsActionCreator,
       facetResponseSelector: mockFacetResponseSelector,
       isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
+      facetSearch: {type: 'SEARCH'},
     };
 
     state = buildMockCommerceState();
