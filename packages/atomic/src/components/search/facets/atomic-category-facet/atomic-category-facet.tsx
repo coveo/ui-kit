@@ -520,6 +520,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
         query={this.facetState.facetSearch.query}
         numberOfMatches={this.facetState.facetSearch.values.length}
         hasMoreMatches={this.facetState.facetSearch.moreValuesAvailable}
+        showMoreMatches={() => this.facet.facetSearch.showMoreResults()}
       ></FacetSearchMatches>
     );
   }
