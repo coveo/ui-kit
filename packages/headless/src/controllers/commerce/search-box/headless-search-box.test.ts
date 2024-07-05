@@ -4,7 +4,12 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions';
-import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
+import {
+  clearQuerySuggest,
+  fetchQuerySuggestions,
+  registerQuerySuggest,
+  selectQuerySuggestion,
+} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
   executeSearch,
@@ -12,11 +17,6 @@ import {
 } from '../../../features/commerce/search/search-actions';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
-import {
-  registerQuerySuggest,
-  clearQuerySuggest,
-  selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
@@ -32,7 +32,6 @@ import {
   buildSearchBox,
 } from './headless-search-box';
 
-jest.mock('../../../features/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/search/search-actions');
 jest.mock('../../../features/commerce/query-set/query-set-actions');

@@ -7,8 +7,6 @@ export type {ApplySortPayload};
 
 /**
  * The sort action creators.
- *
- *  In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface SortActionCreators {
   /**

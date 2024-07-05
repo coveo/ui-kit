@@ -143,8 +143,7 @@ export const registerRecommendationsSlot = createAction(
     validatePayload(payload, recommendationsSlotDefinition)
 );
 
-export interface PromoteChildToParentActionCreatorPayload
-  extends SlotIdPayload {
+export interface PromoteChildToParentPayload extends SlotIdPayload {
   child: ChildProduct;
 }
 
@@ -160,6 +159,6 @@ export const promoteChildToParentDefinition = {
 
 export const promoteChildToParent = createAction(
   'commerce/recommendations/promoteChildToParent',
-  (payload: PromoteChildToParentActionCreatorPayload) =>
+  (payload: PromoteChildToParentPayload) =>
     validatePayload(payload, promoteChildToParentDefinition)
 );

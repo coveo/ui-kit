@@ -4,11 +4,13 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {
   FetchMoreRecommendationsPayload,
   FetchRecommendationsPayload,
+  PromoteChildToParentPayload,
   QueryRecommendationsCommerceAPIThunkReturn,
   RegisterRecommendationsSlotPayload,
   StateNeededByFetchRecommendations,
   fetchMoreRecommendations,
   fetchRecommendations,
+  promoteChildToParent,
   registerRecommendationsSlot,
 } from './recommendations-actions';
 import {recommendationsReducer as recommendations} from './recommendations-slice';
@@ -23,15 +25,6 @@ export type {
  * The recommendations action creators.
  */
 export interface RecommendationsActionCreator {
-  /**
-   * Registers a recommendations slot.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  registerRecommendationsSlot(
-    payload: RegisterRecommendationsSlotPayload
-  ): PayloadAction<RegisterRecommendationsSlotPayload>;
   /**
    * Fetches recommendations.
    *
@@ -60,7 +53,25 @@ export interface RecommendationsActionCreator {
     AsyncThunkCommerceOptions<StateNeededByFetchRecommendations>
   >;
 
-  // TODO KIT-3221 - Expose promoteChildToParent action and action payload creator.
+  /**
+   * Promotes a child product to a parent product.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  promoteChildToParent(
+    payload: PromoteChildToParentPayload
+  ): PayloadAction<PromoteChildToParentPayload>;
+
+  /**
+   * Registers a recommendations slot.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  registerRecommendationsSlot(
+    payload: RegisterRecommendationsSlotPayload
+  ): PayloadAction<RegisterRecommendationsSlotPayload>;
 }
 
 /**
@@ -74,8 +85,9 @@ export function loadRecommendationsActions(
 ): RecommendationsActionCreator {
   engine.addReducers({recommendations});
   return {
-    registerRecommendationsSlot,
     fetchRecommendations,
     fetchMoreRecommendations,
+    promoteChildToParent,
+    registerRecommendationsSlot,
   };
 }
