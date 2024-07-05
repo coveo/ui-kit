@@ -28,7 +28,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 import {CommerceSortOption, getSortByLabel} from '../sort/option';
 
 /**
- * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
+ * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
  *
  * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
  *
