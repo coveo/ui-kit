@@ -251,8 +251,8 @@ export default class QuanticSort extends LightningElement {
    */
   get customSortOptions() {
     /** @type {SortOption[]} */
-    // @ts-ignore
     return Array.from(this.querySelectorAll('c-quantic-sort-option')).map(
+      // @ts-ignore
       ({label, value, criterion}) => ({label, value, criterion})
     );
   }

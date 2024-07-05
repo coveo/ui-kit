@@ -1,6 +1,7 @@
-// @ts-nocheck
 import {api, LightningElement, track} from 'lwc';
+// @ts-ignore
 import templateDefaultSortOptions from './templates/templateDefaultSortOptions.html';
+// @ts-ignore
 import templateWithCustomSortOptions from './templates/templateWithCustomSortOptions.html';
 
 export default class ExampleQuanticSort extends LightningElement {
