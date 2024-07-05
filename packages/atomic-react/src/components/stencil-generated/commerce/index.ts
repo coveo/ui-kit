@@ -8,7 +8,6 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
-export const AtomicAnswerapiGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicAnswerapiGeneratedAnswer, HTMLAtomicAnswerapiGeneratedAnswerElement>('atomic-answerapi-generated-answer');
 export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
 export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');

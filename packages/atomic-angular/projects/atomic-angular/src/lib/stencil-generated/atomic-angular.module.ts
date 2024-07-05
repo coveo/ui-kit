@@ -5,7 +5,6 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicAnswerapiGeneratedAnswer,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -113,7 +112,6 @@ defineCustomElements(window);
 
         
 const DECLARATIONS = [
-AtomicAnswerapiGeneratedAnswer,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,

@@ -8,28 +8,6 @@ import { Components } from '@coveo/atomic';
 
 
 @ProxyCmp({
-  inputs: ['answerConfigurationId', 'answerStyle', 'collapsible', 'withToggle']
-})
-@Component({
-  selector: 'atomic-answerapi-generated-answer',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerConfigurationId', 'answerStyle', 'collapsible', 'withToggle'],
-})
-export class AtomicAnswerapiGeneratedAnswer {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicAnswerapiGeneratedAnswer extends Components.AtomicAnswerapiGeneratedAnswer {}
-
-
-@ProxyCmp({
 })
 @Component({
   selector: 'atomic-aria-live',
