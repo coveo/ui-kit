@@ -588,7 +588,7 @@ export namespace Components {
         "slotId": string;
     }
     /**
-     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
+     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
      * @alpha 
      */
@@ -602,7 +602,8 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
+     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
+     * @alpha 
      */
     interface AtomicCommerceRefineToggle {
     }
@@ -3676,7 +3677,7 @@ declare global {
         new (): HTMLAtomicCommerceRecommendationListElement;
     };
     /**
-     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
+     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
      * @alpha 
      */
@@ -3688,7 +3689,8 @@ declare global {
     };
     /**
      * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
+     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
+     * @alpha 
      */
     interface HTMLAtomicCommerceRefineToggleElement extends Components.AtomicCommerceRefineToggle, HTMLStencilElement {
     }
@@ -6054,7 +6056,7 @@ declare namespace LocalJSX {
         "slotId"?: string;
     }
     /**
-     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
+     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
      * @alpha 
      */
@@ -6068,7 +6070,8 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
+     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
+     * @alpha 
      */
     interface AtomicCommerceRefineToggle {
     }
@@ -8986,14 +8989,15 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
-             * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
+             * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
              * @alpha 
              */
             "atomic-commerce-refine-modal": LocalJSX.AtomicCommerceRefineModal & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineModalElement>;
             /**
              * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
+             * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
+             * @alpha 
              */
             "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
             /**
