@@ -139,35 +139,3 @@ export const playKeepOnlyFirstFacetOfType = (
     attributes: true,
   });
 };
-
-export const playKeepOnlyFirstFacetOfType = (
-  facetType: string,
-  context: StoryContext
-) => {
-  const observer = new MutationObserver(() => {
-    const childNodes = Array.from(
-      context.canvasElement.querySelector('atomic-commerce-facets')
-        ?.childNodes || []
-    );
-
-    const allFacetsMatching = childNodes.filter((node) => {
-      return node.nodeName.toLowerCase() === facetType;
-    });
-
-    const allAtomicElementNotOfType = childNodes.filter((node) => {
-      return (
-        node.nodeName.toLowerCase().indexOf('atomic') !== -1 &&
-        node.nodeName.toLowerCase() !== facetType
-      );
-    });
-
-    allAtomicElementNotOfType.forEach((node) => node.remove());
-    allFacetsMatching.slice(1).forEach((node) => node.remove());
-  });
-
-  observer.observe(context.canvasElement, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-  });
-};
