@@ -1,3 +1,15 @@
+## 2.52.1 (2024-07-03)
+
+### Features
+
+- **headless:** update rga and smart snippets feedback events ([#4105](https://github.com/coveo/ui-kit/issues/4105)) ([5b8eab2](https://github.com/coveo/ui-kit/commits/5b8eab22499d695a89c5633a365569e7f039b3d9))
+
+# 2.51.0 (2024-06-26)
+
+### Features
+
+- **quantic:** rich text formatting for quantic RGA ([#4015](https://github.com/coveo/ui-kit/issues/4015)) ([bb4f76a](https://github.com/coveo/ui-kit/commits/bb4f76aa2ee627e0315b7930e89a2f399d35e914))
+
 ## 2.50.9 (2024-06-12)
 
 ### Bug Fixes

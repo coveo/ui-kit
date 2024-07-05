@@ -28,6 +28,13 @@ export class AtomicResultImage implements InitializableComponent {
   @Prop({reflect: true}) field!: string;
 
   /**
+   * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object
+   *
+   * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
+   */
+  @Prop({reflect: true}) imageAltField?: string;
+
+  /**
    * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
    */
   @Prop({reflect: true}) fallback?: string;
@@ -40,6 +47,27 @@ export class AtomicResultImage implements InitializableComponent {
       this.field
     );
     return Array.isArray(value) ? value[0] : value;
+  }
+
+  private get altText(): string {
+    if (this.imageAltField) {
+      const value = ResultTemplatesHelpers.getResultProperty(
+        this.result,
+        this.field
+      );
+
+      if (Array.isArray(value) && typeof value[0] === 'string') {
+        return value[0];
+      }
+
+      if (typeof value === 'string') {
+        return value;
+      }
+    }
+
+    return this.bindings.i18n.t('image-alt-fallback', {
+      itemName: this.result.title,
+    });
   }
 
   private logWarning(message: string) {
@@ -87,7 +115,7 @@ export class AtomicResultImage implements InitializableComponent {
 
     return (
       <img
-        alt={`${this.field} image`}
+        alt={this.altText}
         src={filterProtocol(url)}
         onError={() => this.handleImageError()}
         loading="lazy"

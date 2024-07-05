@@ -304,7 +304,6 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
-      - 'playwright-atomic'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
       - 'e2e-quantic'

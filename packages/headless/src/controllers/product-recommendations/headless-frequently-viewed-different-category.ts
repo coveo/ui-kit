@@ -13,6 +13,10 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedDifferentCategoryListOptions {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -32,6 +36,10 @@ export interface FrequentlyViewedDifferentCategoryListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedDifferentCategoryListProps {
   options?: FrequentlyViewedDifferentCategoryListOptions;
 }
@@ -39,6 +47,9 @@ export interface FrequentlyViewedDifferentCategoryListProps {
 /**
  * The `FrequentlyViewedDifferentCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
  * The recommendations are filtered to show products that have a different category than the ones the user is currently viewing.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface FrequentlyViewedDifferentCategoryList extends Controller {
   /**
@@ -59,6 +70,10 @@ export interface FrequentlyViewedDifferentCategoryList extends Controller {
   state: FrequentlyViewedDifferentCategoryListState;
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedDifferentCategoryListState {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -88,6 +103,9 @@ export interface FrequentlyViewedDifferentCategoryListState {
 
 /**
  * Creates a `FrequentlyViewedDifferentCategoryList` controller instance.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedDifferentCategoryListProps` properties.

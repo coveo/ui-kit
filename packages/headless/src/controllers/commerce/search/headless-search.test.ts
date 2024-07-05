@@ -1,5 +1,11 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
@@ -8,6 +14,10 @@ import * as SearchActions from '../../../features/commerce/search/search-actions
 import {
   activeParametersSelector,
   enrichedParametersSelector,
+  enrichedSummarySelector,
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors';
@@ -66,6 +76,13 @@ describe('headless search', () => {
       restoreActionCreator: restoreSearchParameters,
       activeParametersSelector,
       enrichParameters: enrichedParametersSelector,
+      isLoadingSelector,
+      errorSelector,
+      pageSelector: pagePrincipalSelector,
+      perPageSelector: perPagePrincipalSelector,
+      totalEntriesSelector: totalEntriesPrincipalSelector,
+      numberOfProductsSelector,
+      enrichSummary: enrichedSummarySelector,
     });
   });
 
@@ -74,15 +91,11 @@ describe('headless search', () => {
       SearchActions,
       'promoteChildToParent'
     );
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
-    search.promoteChildToParent(childPermanentId, parentPermanentId);
+    search.promoteChildToParent(child);
 
-    expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
-    });
+    expect(promoteChildToParent).toHaveBeenCalledWith({child});
   });
 
   it('executeFirstSearch dispatches #executeSearch', () => {

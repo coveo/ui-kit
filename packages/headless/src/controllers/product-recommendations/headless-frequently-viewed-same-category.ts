@@ -13,6 +13,10 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedSameCategoryListOptions {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -32,6 +36,10 @@ export interface FrequentlyViewedSameCategoryListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedSameCategoryListProps {
   options?: FrequentlyViewedSameCategoryListOptions;
 }
@@ -39,6 +47,9 @@ export interface FrequentlyViewedSameCategoryListProps {
 /**
  * The `FrequentlyViewedSameCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
  * The recommendations are filtered to show products that have the same category as the ones the user is currently viewing.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface FrequentlyViewedSameCategoryList extends Controller {
   /**
@@ -59,6 +70,10 @@ export interface FrequentlyViewedSameCategoryList extends Controller {
   state: FrequentlyViewedSameCategoryListState;
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedSameCategoryListState {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -88,6 +103,9 @@ export interface FrequentlyViewedSameCategoryListState {
 
 /**
  * Creates a `FrequentlyViewedSameCategoryList` controller instance.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedSameCategoryList` properties.

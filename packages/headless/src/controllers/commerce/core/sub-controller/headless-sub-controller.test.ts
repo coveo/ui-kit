@@ -8,11 +8,12 @@ import {
 } from '../../../../test/mock-engine-v2';
 import {buildMockProduct} from '../../../../test/mock-product';
 import * as DidYouMean from '../../search/did-you-mean/headless-did-you-mean';
+import {SearchSummaryState} from '../../search/summary/headless-search-summary';
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator';
+import * as CoreInteractiveProduct from '../interactive-product/headless-core-interactive-product';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
 import * as CoreParameterManager from '../parameter-manager/headless-core-parameter-manager';
-import * as CoreInteractiveProduct from '../product-list/headless-core-interactive-product';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
 import * as CoreUrlManager from '../url-manager/headless-core-url-manager';
 import {
@@ -27,6 +28,13 @@ import {
 describe('sub-controllers', () => {
   let engine: MockedCommerceEngine;
   const mockResponseIdSelector = jest.fn();
+  const mockIsLoadingSelector = jest.fn();
+  const mockNumberOfProductsSelector = jest.fn();
+  const mockErrorSelector = jest.fn();
+  const mockPageSelector = jest.fn();
+  const mockPerPageSelector = jest.fn();
+  const mockTotalEntriesSelector = jest.fn();
+  const mockAugmentSummary = jest.fn();
   const mockFetchProductsActionCreator = jest.fn();
   const mockFetchMoreProductsActionCreator = jest.fn();
   const mockFacetResponseSelector = jest.fn();
@@ -55,6 +63,13 @@ describe('sub-controllers', () => {
     beforeEach(() => {
       subControllers = buildSearchSubControllers(engine, {
         responseIdSelector: mockResponseIdSelector,
+        isLoadingSelector: mockIsLoadingSelector,
+        numberOfProductsSelector: mockNumberOfProductsSelector,
+        errorSelector: mockErrorSelector,
+        pageSelector: mockPageSelector,
+        perPageSelector: mockPerPageSelector,
+        totalEntriesSelector: mockTotalEntriesSelector,
+        enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
@@ -94,11 +109,21 @@ describe('sub-controllers', () => {
   });
 
   describe('#buildSearchAndListingsSubControllers', () => {
-    let subControllers: SearchAndListingSubControllers<Parameters>;
+    let subControllers: SearchAndListingSubControllers<
+      Parameters,
+      SearchSummaryState
+    >;
 
     beforeEach(() => {
       subControllers = buildSearchAndListingsSubControllers(engine, {
         responseIdSelector: mockResponseIdSelector,
+        isLoadingSelector: mockIsLoadingSelector,
+        numberOfProductsSelector: mockNumberOfProductsSelector,
+        errorSelector: mockErrorSelector,
+        pageSelector: mockPageSelector,
+        perPageSelector: mockPerPageSelector,
+        totalEntriesSelector: mockTotalEntriesSelector,
+        enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
         facetResponseSelector: mockFacetResponseSelector,
@@ -204,12 +229,19 @@ describe('sub-controllers', () => {
 
   describe('#buildBaseSubControllers', () => {
     const slotId = 'recommendations-slot-id';
-    let subControllers: BaseSolutionTypeSubControllers;
+    let subControllers: BaseSolutionTypeSubControllers<SearchSummaryState>;
 
     beforeEach(() => {
       subControllers = buildBaseSubControllers(engine, {
         slotId,
         responseIdSelector: mockResponseIdSelector,
+        isLoadingSelector: mockIsLoadingSelector,
+        numberOfProductsSelector: mockNumberOfProductsSelector,
+        errorSelector: mockErrorSelector,
+        pageSelector: mockPageSelector,
+        perPageSelector: mockPerPageSelector,
+        totalEntriesSelector: mockTotalEntriesSelector,
+        enrichSummary: mockAugmentSummary,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
         fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
       });
