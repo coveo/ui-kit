@@ -8,6 +8,7 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
+export const AtomicAnswerapiGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicAnswerapiGeneratedAnswer, HTMLAtomicAnswerapiGeneratedAnswerElement>('atomic-answerapi-generated-answer');
 export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
 export const AtomicAutomaticFacet = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacet, HTMLAtomicAutomaticFacetElement>('atomic-automatic-facet');
 export const AtomicAutomaticFacetGenerator = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacetGenerator, HTMLAtomicAutomaticFacetGeneratorElement>('atomic-automatic-facet-generator');

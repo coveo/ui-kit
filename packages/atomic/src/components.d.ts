@@ -1000,6 +1000,7 @@ export namespace Components {
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
@@ -6490,6 +6491,7 @@ declare namespace LocalJSX {
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
