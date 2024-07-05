@@ -15,6 +15,10 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface CartRecommendationsListOptions {
   /**
    * The SKUs of the products in the cart.
@@ -34,12 +38,19 @@ export interface CartRecommendationsListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface CartRecommendationsListProps {
   options?: CartRecommendationsListOptions;
 }
 
 /**
  * The `CartRecommendationsList` controller recommends other products that were frequently purchased together in previous similar carts.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface CartRecommendationsList extends Controller {
   /**
@@ -60,6 +71,10 @@ export interface CartRecommendationsList extends Controller {
   state: CartRecommendationsListState;
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface CartRecommendationsListState {
   /**
    * The SKUs of the products in the cart.
@@ -89,6 +104,9 @@ export interface CartRecommendationsListState {
 
 /**
  * Creates a `CartRecommendationsList` controller instance.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CartRecommendationsList` properties.

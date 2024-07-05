@@ -7,19 +7,15 @@ import {
 import {ChildProduct} from '../../../api/commerce/common/product';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {validatePayload} from '../../../utils/validate-payload';
-import {
-  deselectAllBreadcrumbs,
-  deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
-import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
-import {logQueryError} from '../../search/search-analytics-actions';
+import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {buildCommerceAPIRequest} from '../common/actions';
+import {
+  clearAllCoreFacets,
+  updateAutoSelectionForAllCoreFacets,
+} from '../facets/core-facet/core-facet-actions';
 import {selectPage} from '../pagination/pagination-actions';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
-import {
-  UpdateQueryActionCreatorPayload,
-  updateQuery,
-} from '../query/query-actions';
+import {UpdateQueryPayload, updateQuery} from '../query/query-actions';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
@@ -47,7 +43,7 @@ export interface PrepareForSearchWithQueryOptions {
   clearFilters: boolean;
 }
 
-export interface FetchInstantProductsActionCreatorPayload {
+export interface FetchInstantProductsPayload {
   /**
    * The search box ID.
    */
@@ -74,9 +70,9 @@ export const executeSearch = createAsyncThunk<
 >('commerce/search/executeSearch', async (_action, config) => {
   const {getState} = config;
   const state = getState();
-  const {relay, navigatorContext} = config.extra;
+  const {navigatorContext} = config.extra;
 
-  const request = buildCommerceAPIRequest(state, relay, navigatorContext);
+  const request = buildCommerceAPIRequest(state, navigatorContext);
   const query = querySelector(state);
 
   const processor = new AsyncSearchThunkProcessor<
@@ -94,7 +90,7 @@ export const fetchMoreProducts = createAsyncThunk<
 >('commerce/search/fetchMoreProducts', async (_action, config) => {
   const {getState} = config;
   const state = getState();
-  const {relay, navigatorContext} = config.extra;
+  const {navigatorContext} = config.extra;
 
   const moreProductsAvailable = moreProductsAvailableSelector(state);
   if (!moreProductsAvailable) {
@@ -106,7 +102,7 @@ export const fetchMoreProducts = createAsyncThunk<
   const nextPageToRequest = numberOfProducts / perPage;
   const query = querySelector(state);
 
-  const request = buildCommerceAPIRequest(state, relay, navigatorContext);
+  const request = buildCommerceAPIRequest(state, navigatorContext);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -120,9 +116,12 @@ export const fetchMoreProducts = createAsyncThunk<
   return processor.process(fetchedResponse);
 });
 
+export type PrepareForSearchWithQueryPayload = UpdateQueryPayload &
+  PrepareForSearchWithQueryOptions;
+
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
-  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
+  PrepareForSearchWithQueryPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >('commerce/search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
@@ -132,11 +131,11 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   });
 
   if (payload.clearFilters) {
-    dispatch(deselectAllBreadcrumbs());
+    dispatch(clearAllCoreFacets());
     dispatch(deselectAllNonBreadcrumbs());
   }
 
-  dispatch(updateFacetAutoSelection({allow: true}));
+  dispatch(updateAutoSelectionForAllCoreFacets({allow: true}));
   dispatch(
     updateQuery({
       query: payload.query,
@@ -147,21 +146,20 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 
 export const fetchInstantProducts = createAsyncThunk<
   FetchInstantProductsThunkReturn,
-  FetchInstantProductsActionCreatorPayload,
+  FetchInstantProductsPayload,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
 >(
   'commerce/search/fetchInstantProducts',
-  async (payload, {getState, dispatch, rejectWithValue, extra}) => {
+  async (payload, {getState, rejectWithValue, extra}) => {
     const state = getState();
-    const {apiClient, relay, navigatorContext} = extra;
+    const {apiClient, navigatorContext} = extra;
     const {q} = payload;
     const fetched = await apiClient.productSuggestions({
-      ...buildCommerceAPIRequest(state, relay, navigatorContext),
+      ...buildCommerceAPIRequest(state, navigatorContext),
       query: q,
     });
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 
@@ -176,7 +174,7 @@ export const fetchInstantProducts = createAsyncThunk<
   }
 );
 
-export interface PromoteChildToParentActionCreatorPayload {
+export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
@@ -191,6 +189,6 @@ export const promoteChildToParentDefinition = {
 
 export const promoteChildToParent = createAction(
   'commerce/search/promoteChildToParent',
-  (payload: PromoteChildToParentActionCreatorPayload) =>
+  (payload: PromoteChildToParentPayload) =>
     validatePayload(payload, promoteChildToParentDefinition)
 );

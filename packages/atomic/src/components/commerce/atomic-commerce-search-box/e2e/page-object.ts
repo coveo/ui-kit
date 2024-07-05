@@ -14,12 +14,22 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-
     return this.page.getByRole('combobox', {name: 'Search'});
   }
 
+  get clearButton() {
+    return this.page.getByLabel('Clear', {exact: true});
+  }
+
+  get ariaLive() {
+    return this.page.locator('atomic-aria-live');
+  }
+
   get clearRecentQueriesButton() {
     return this.page.getByLabel('Clear recent searches.');
   }
 
-  get clearButton() {
-    return this.page.getByLabel('Clear', {exact: true});
+  get numberOfQueries() {
+    return this.page
+      .locator('atomic-commerce-search-box')
+      .getAttribute('number-of-queries');
   }
 
   searchSuggestions({

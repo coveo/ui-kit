@@ -17,7 +17,7 @@
 
         await commerceInterface.initializeWithEngine(commerceEngine);
 
-        commerceInterface.executeFirstSearch();
+        commerceInterface.executeFirstRequest();
       })();
     </script>
   </head>
@@ -67,6 +67,7 @@
             ></atomic-layout-section>
             <atomic-layout-section section="main">
               <atomic-layout-section section="status">
+                <atomic-commerce-breadbox></atomic-commerce-breadbox>
                 <atomic-commerce-query-summary></atomic-commerce-query-summary>
                 <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
                 <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>

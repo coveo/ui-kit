@@ -266,6 +266,16 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
+     * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     */
+    interface AtomicCommerceBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit": number;
+    }
+    /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      * @alpha 
@@ -292,10 +302,12 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
+          * @
          */
         "facet": RegularFacet;
         /**
@@ -428,6 +440,7 @@ export namespace Components {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface AtomicCommercePager {
         /**
@@ -3479,6 +3492,15 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
+     * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     */
+    interface HTMLAtomicCommerceBreadboxElement extends Components.AtomicCommerceBreadbox, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceBreadboxElement: {
+        prototype: HTMLAtomicCommerceBreadboxElement;
+        new (): HTMLAtomicCommerceBreadboxElement;
+    };
+    /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      * @alpha 
@@ -3497,6 +3519,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
     }
@@ -3577,6 +3600,7 @@ declare global {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface HTMLAtomicCommercePagerElement extends Components.AtomicCommercePager, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5324,6 +5348,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-commerce-breadbox": HTMLAtomicCommerceBreadboxElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
@@ -5703,6 +5728,16 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     /**
+     * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     */
+    interface AtomicCommerceBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit"?: number;
+    }
+    /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      * @alpha 
@@ -5729,10 +5764,12 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+     * @alpha 
      */
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
+          * @
          */
         "facet": RegularFacet;
         /**
@@ -5854,6 +5891,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+     * @alpha 
      */
     interface AtomicCommercePager {
         /**
@@ -8603,6 +8641,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
+        "atomic-commerce-breadbox": AtomicCommerceBreadbox;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet": AtomicCommerceFacet;
@@ -8826,6 +8865,10 @@ declare module "@stencil/core" {
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
+             * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             */
+            "atomic-commerce-breadbox": LocalJSX.AtomicCommerceBreadbox & JSXBase.HTMLAttributes<HTMLAtomicCommerceBreadboxElement>;
+            /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
              * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              * @alpha 
@@ -8834,6 +8877,7 @@ declare module "@stencil/core" {
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
+             * @alpha 
              */
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
@@ -8860,6 +8904,7 @@ declare module "@stencil/core" {
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
              * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
+             * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;

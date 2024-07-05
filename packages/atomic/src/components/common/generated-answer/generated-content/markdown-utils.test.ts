@@ -88,6 +88,22 @@ describe('markdownUtils', () => {
       );
     });
 
+    it('should escape HTML in inline code', () => {
+      const text = '`<html>`';
+
+      const html = transformMarkdownToHtml(text);
+
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <code part="answer-inline-code">&lt;html&gt;</code>
+            </p>
+          `)
+        )
+      );
+    });
+
     it('should transform unordered lists', () => {
       const text = '* item A\n* item B';
 
@@ -188,33 +204,90 @@ describe('markdownUtils', () => {
       );
     });
 
-    it('should transform tables', () => {
-      const text = '| Col A | Col B |\n| --- | --- |\n| A | B |';
+    describe('tables', () => {
+      it('should transform tables', () => {
+        const text = '| Col A | Col B |\n| --- | --- |\n| A | B |';
 
-      const html = transformMarkdownToHtml(text);
+        const html = transformMarkdownToHtml(text);
 
-      expect(removeLineBreaks(html)).toBe(
-        removeLineBreaks(
-          unindentHtml(`
-            <div part="answer-table-container" class="scrollable-table">
-              <table part="answer-table">
-                <thead>
-                  <tr>
-                    <th part="answer-table-header">Col A</th>
-                    <th part="answer-table-header">Col B</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td part="answer-table-content">A</td>
-                    <td part="answer-table-content">B</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          `)
-        )
-      );
+        expect(removeLineBreaks(html)).toBe(
+          removeLineBreaks(
+            unindentHtml(`
+              <div part="answer-table-container" class="scrollable-table">
+                <table part="answer-table">
+                  <thead>
+                    <tr>
+                      <th part="answer-table-header">Col A</th>
+                      <th part="answer-table-header">Col B</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td part="answer-table-content">A</td>
+                      <td part="answer-table-content">B</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `)
+          )
+        );
+      });
+
+      it('should escape HTML in table cell', () => {
+        const text = '| Example |\n| --- |\n| <html> |';
+
+        const html = transformMarkdownToHtml(text);
+
+        expect(removeLineBreaks(html)).toBe(
+          removeLineBreaks(
+            unindentHtml(`
+              <div part="answer-table-container" class="scrollable-table">
+                <table part="answer-table">
+                  <thead>
+                    <tr>
+                      <th part="answer-table-header">Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td part="answer-table-content">&lt;html&gt;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>`)
+          )
+        );
+      });
+
+      it('should keep HTML from Markdown formatting', () => {
+        const text = '| Example |\n| --- |\n| **bold text** |';
+
+        const html = transformMarkdownToHtml(text);
+
+        expect(removeLineBreaks(html)).toBe(
+          removeLineBreaks(
+            unindentHtml(`
+              <div part="answer-table-container" class="scrollable-table">
+                <table part="answer-table">
+                  <thead>
+                    <tr>
+                      <th part="answer-table-header">Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td part="answer-table-content">
+                        <strong part="answer-strong">bold text</strong>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `)
+          )
+        );
+      });
     });
 
     describe('headings', () => {
