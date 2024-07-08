@@ -1,5 +1,5 @@
-import {Relay} from '@coveo/relay';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {NumberValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {
   AsyncThunkCommerceOptions,
@@ -17,10 +17,25 @@ import {
   VersionSection,
 } from '../../../state/state-sections';
 import {
+  requiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload';
+import {
+  ClearQuerySuggestActionCreatorPayload,
   FetchQuerySuggestionsActionCreatorPayload,
-  idDefinition,
+  RegisterQuerySuggestActionCreatorPayload,
+  SelectQuerySuggestionActionCreatorPayload,
 } from '../../query-suggest/query-suggest-actions';
 import {getProductsFromCartState} from '../context/cart/cart-state';
+
+export type ClearQuerySuggestPayload = ClearQuerySuggestActionCreatorPayload;
+
+export const clearQuerySuggest = createAction(
+  'commerce/querySuggest/clear',
+  (payload: ClearQuerySuggestPayload) =>
+    validatePayload(payload, {id: requiredNonEmptyString})
+);
 
 export type FetchQuerySuggestionsPayload =
   FetchQuerySuggestionsActionCreatorPayload;
@@ -42,7 +57,7 @@ export interface FetchQuerySuggestionsThunkReturn
 
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
-  FetchQuerySuggestionsActionCreatorPayload,
+  FetchQuerySuggestionsPayload,
   AsyncThunkCommerceOptions<StateNeededByQuerySuggest>
 >(
   'commerce/querySuggest/fetch',
@@ -51,15 +66,16 @@ export const fetchQuerySuggestions = createAsyncThunk<
     {
       getState,
       rejectWithValue,
-      extra: {apiClient, validatePayload, relay, navigatorContext},
+      extra: {apiClient, validatePayload, navigatorContext},
     }
   ) => {
-    validatePayload(payload, idDefinition);
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+    });
     const state = getState();
     const request = buildQuerySuggestRequest(
       payload.id,
       state,
-      relay,
       navigatorContext
     );
     const response = await apiClient.querySuggest(request);
@@ -76,10 +92,33 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
+export type RegisterQuerySuggestPayload =
+  RegisterQuerySuggestActionCreatorPayload;
+
+export const registerQuerySuggest = createAction(
+  'commerce/querySuggest/register',
+  (payload: RegisterQuerySuggestPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      count: new NumberValue({min: 0}),
+    })
+);
+
+export type SelectQuerySuggestionPayload =
+  SelectQuerySuggestionActionCreatorPayload;
+
+export const selectQuerySuggestion = createAction(
+  'commerce/querySuggest/selectSuggestion',
+  (payload: SelectQuerySuggestionPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      expression: requiredEmptyAllowedString,
+    })
+);
+
 export const buildQuerySuggestRequest = (
   id: string,
   state: StateNeededByQuerySuggest,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): QuerySuggestRequest => {
   const {view, ...restOfContext} = state.commerceContext;
@@ -90,7 +129,7 @@ export const buildQuerySuggestRequest = (
     trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: relay.getMeta('').clientId,
+    clientId: navigatorContext.clientId,
     context: {
       ...(navigatorContext.userAgent
         ? {

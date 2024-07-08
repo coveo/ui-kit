@@ -13,7 +13,7 @@ export interface RegisterRecentQueriesCreatorPayload {
   maxLength: number;
 }
 
-const registerRecentQueriesPayloadDefinition = {
+export const registerRecentQueriesPayloadDefinition = {
   queries: new ArrayValue({
     required: true,
     each: new StringValue({emptyAllowed: false}),

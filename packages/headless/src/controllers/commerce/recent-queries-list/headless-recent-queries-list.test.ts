@@ -1,13 +1,13 @@
 import {NumberValue} from '@coveo/bueno';
 import {stateKey} from '../../../app/state-key';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions';
-import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
-import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions';
-import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../../features/recent-queries/recent-queries-actions';
+} from '../../../features/commerce/recent-queries/recent-queries-actions';
+import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
+import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -20,11 +20,8 @@ import {
 } from './headless-recent-queries-list';
 
 jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
-jest.mock('../../../features/recent-queries/recent-queries-actions');
 jest.mock('../../../features/commerce/search/search-actions');
-jest.mock(
-  '../../../features/commerce/recent-queries/recent-queries-analytics-actions'
-);
+jest.mock('../../../features/commerce/recent-queries/recent-queries-actions');
 
 describe('recent queries list', () => {
   let engine: MockedCommerceEngine;
@@ -45,7 +42,7 @@ describe('recent queries list', () => {
       recentQueriesList = buildRecentQueriesList(engine);
     });
 
-    it('should register with default props on init', () => {
+    it('dispatches #registerRecentQueries with default props upon initialization', () => {
       expect(registerRecentQueries).toHaveBeenCalledWith({
         queries: [],
         maxLength: 10,
@@ -85,14 +82,14 @@ describe('recent queries list', () => {
       mockedPrepareForSearchWithQuery.mockClear();
     });
 
-    it('should register with props on init', () => {
+    it('dispatches #registerRecentQueries with props upon initialization', () => {
       expect(registerRecentQueries).toHaveBeenCalledWith({
         queries: testProps.initialState.queries,
         maxLength: testProps.options.maxLength,
       });
     });
 
-    it('#clear should log analytics and dispatch clear action', () => {
+    it('#clear dispatches #clearRecentQueries', () => {
       recentQueriesList.clear();
       expect(clearRecentQueries).toHaveBeenCalled();
 
@@ -107,7 +104,7 @@ describe('recent queries list', () => {
       expect(validationSpy).toHaveBeenCalled();
     });
 
-    it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper parameters', () => {
+    it('#executeRecentQuery should dispatch #prepareForSearchWithQuery with the proper parameters', () => {
       engine[stateKey].query = buildMockQueryState();
       engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
       recentQueriesList.executeRecentQuery(0);

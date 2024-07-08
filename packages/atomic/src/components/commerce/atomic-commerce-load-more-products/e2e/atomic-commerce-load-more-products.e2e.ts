@@ -1,7 +1,7 @@
 import {test, expect} from './fixture';
 
 test.beforeEach(async ({loadMore}) => {
-  await loadMore.load({}, 'in-page');
+  await loadMore.load({story: 'in-page'});
 });
 
 test('should be A11y compliant', async ({loadMore, makeAxeBuilder}) => {

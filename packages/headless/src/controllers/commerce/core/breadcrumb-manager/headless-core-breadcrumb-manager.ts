@@ -84,7 +84,7 @@ export type CoreBreadcrumbManagerOptions = Pick<
 /**
  * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` sub-controller.
  */
-interface BreadcrumbManagerState {
+export interface BreadcrumbManagerState {
   /**
    * The list of facet breadcrumbs.
    */
@@ -238,7 +238,10 @@ export function buildCoreBreadcrumbManager(
           .map((facetId) =>
             options.facetResponseSelector(engine[stateKey], facetId)
           )
-          .filter((facet): facet is AnyFacetResponse => facet !== undefined)
+          .filter(
+            (facet): facet is AnyFacetResponse =>
+              facet !== undefined && facet.values.length > 0
+          )
           .map(createBreadcrumb) ?? [];
       return {
         facetBreadcrumbs: breadcrumbs,

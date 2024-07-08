@@ -29,4 +29,7 @@ export class LoadMoreProductsPageObject extends BasePageObject<'atomic-commerce-
   get progressValue() {
     return this.page.locator('[part="progress-bar"] > div');
   }
+  get loadMoreButton() {
+    return this.page.getByRole('button', {name: 'Load more results'});
+  }
 }
