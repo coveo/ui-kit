@@ -191,7 +191,7 @@ test.describe('with an invalid page in the hash', () => {
 
 test.describe('with number-of-pages=3', () => {
   test.beforeEach(async ({pager}) => {
-    await pager.load({numberOfPages: 3});
+    await pager.load({args: {numberOfPages: 3}});
   });
 
   test('should display 3 pages', async ({pager}) => {
@@ -201,7 +201,7 @@ test.describe('with number-of-pages=3', () => {
 
 test.describe('with numberOfPages=-5', () => {
   test.beforeEach(async ({pager}) => {
-    await pager.load({numberOfPages: -5});
+    await pager.load({args: {numberOfPages: -5}});
   });
 
   test('should display an error component', async ({pager}) => {
@@ -214,7 +214,7 @@ test.describe('should allow custom icons', () => {
     'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
 
   test.beforeEach(async ({pager}) => {
-    await pager.load({}, 'custom-icon');
+    await pager.load({story: 'custom-icon'});
   });
 
   test('previous button', async ({pager, page}) => {
