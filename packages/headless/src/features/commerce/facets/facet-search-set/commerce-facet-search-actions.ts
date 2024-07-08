@@ -41,7 +41,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
     ExecuteCommerceFacetSearchThunkApiConfig
   > =>
   async (
-  {facetId, facetSearchType},
+    {facetId, facetSearchType},
     {getState, extra: {validatePayload, navigatorContext, apiClient}}
   ) => {
     const state = getState();
