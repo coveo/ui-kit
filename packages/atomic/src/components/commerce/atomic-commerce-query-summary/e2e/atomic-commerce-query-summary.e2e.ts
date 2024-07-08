@@ -19,12 +19,12 @@ test.describe('after searching for kayak', () => {
   });
 
   test('should not display duration by default', async ({querySummary}) => {
-    const textRegex = /^Results 1-[\d,]+ of [\d,]+ for kayak$/;
+    const textRegex = /^Products 1-[\d,]+ of [\d,]+ for kayak$/;
     await expect(querySummary.text(textRegex)).toBeVisible();
   });
 });
 
-test.describe('when search yields no results', () => {
+test.describe('when search yields no products', () => {
   test.beforeEach(async ({querySummary}) => {
     await querySummary.load({story: 'no-results'});
   });
@@ -34,18 +34,18 @@ test.describe('when search yields no results', () => {
   });
 });
 
-test.describe('when search yields 27 results', () => {
+test.describe('when search yields multiple products', () => {
   test.beforeEach(async ({querySummary}) => {
     await querySummary.load({story: 'fixed-number-of-results'});
   });
 
   test('screen readers should read out', async ({querySummary}) => {
-    const textRegex = /Results 1-27 of [\d,]+/;
+    const textRegex = /Products 1-27 of [\d,]+/;
     await expect(querySummary.ariaLive(textRegex)).toBeVisible();
   });
 });
 
-test.describe('when a query yield a single result', () => {
+test.describe('when a query yield a single product', () => {
   test.beforeEach(async ({querySummary, searchBox}) => {
     await querySummary.load({story: 'with-search-box'});
     await searchBox.hydrated.waitFor();
@@ -54,12 +54,12 @@ test.describe('when a query yield a single result', () => {
   });
 
   test('should display message', async ({querySummary}) => {
-    const textRegex = /^Result 1 of 1 for @ec_product_id=SP03730_00007$/;
+    const textRegex = /^Product 1 of 1 for @ec_product_id=SP03730_00007$/;
     await expect(querySummary.text(textRegex)).toBeVisible();
   });
 
   test('screen readers should read out', async ({querySummary}) => {
-    const textRegex = /^Result 1 of 1 for @ec_product_id=SP03730_00007$/;
+    const textRegex = /^Product 1 of 1 for @ec_product_id=SP03730_00007$/;
     await expect(querySummary.ariaLive(textRegex)).toBeVisible();
   });
 });

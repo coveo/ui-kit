@@ -16,7 +16,7 @@ import {
 import {LocalizedString} from '../../../utils/jsx-utils';
 import {QuerySummaryContainer} from '../../common/query-summary/container';
 import {QuerySummaryGuard} from '../../common/query-summary/guard';
-import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
+import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -74,7 +74,7 @@ export class AtomicQuerySummary
     } = this.listingOrSearchSummaryState;
 
     const {i18nKey, highlights, ariaLiveMessage} =
-      getQuerySummaryI18nParameters({
+      getProductQuerySummaryI18nParameters({
         first: firstProduct,
         last: lastProduct,
         query: this.isSearch(this.listingOrSearchSummaryState)
