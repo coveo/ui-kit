@@ -232,9 +232,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    return this.hasCustomSortOptions
-      ? this.customSortOptions[0].value
-      : this.state?.sortCriteria;
+    return this.state?.sortCriteria;
   }
 
   get hasCustomSortOptions() {
