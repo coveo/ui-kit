@@ -363,7 +363,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           );
           if (expectedContentFormat) {
             expect(contentFormat).to.exist;
-            expect(contentFormat).to.eq(expectedContentFormat);
+            expect(contentFormat).to.deep.equal(expectedContentFormat);
           }
         })
         .log(
