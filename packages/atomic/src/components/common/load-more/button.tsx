@@ -6,12 +6,14 @@ interface LoadMoreButtonProps {
   i18n: i18n;
   onClick: () => void;
   moreAvailable: boolean;
+  label?: 'load-more-results' | 'load-more-products';
 }
 
 export const LoadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
   i18n,
   onClick,
   moreAvailable,
+  label,
 }) => {
   if (!moreAvailable) {
     return;
@@ -19,7 +21,7 @@ export const LoadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
   return (
     <Button
       style="primary"
-      text={i18n.t('load-more-results')}
+      text={i18n.t(label || 'load-more-results')}
       part="load-more-results-button"
       class="font-bold my-2 p-3"
       onClick={() => onClick()}
