@@ -2,11 +2,11 @@ import {test, expect} from './fixture';
 
 test.describe('when search has not been executed', () => {
   test.beforeEach(async ({querySummary}) => {
-    await querySummary.load();
+    await querySummary.load({story: 'no-initial-search'});
   });
 
   test('should display a placeholder', async ({querySummary}) => {
-    await expect(querySummary.placeholder).not.toBeVisible();
+    await expect(querySummary.placeholder).toBeVisible();
   });
 });
 
@@ -26,7 +26,7 @@ test.describe('after searching for kayak', () => {
 
 test.describe('when search yields no products', () => {
   test.beforeEach(async ({querySummary}) => {
-    await querySummary.load({story: 'no-results'});
+    await querySummary.load({story: 'no-products'});
   });
 
   test('should not display anything', async ({querySummary}) => {
@@ -36,7 +36,7 @@ test.describe('when search yields no products', () => {
 
 test.describe('when search yields multiple products', () => {
   test.beforeEach(async ({querySummary}) => {
-    await querySummary.load({story: 'fixed-number-of-results'});
+    await querySummary.load({story: 'fixed-number-of-products'});
   });
 
   test('screen readers should read out', async ({querySummary}) => {
