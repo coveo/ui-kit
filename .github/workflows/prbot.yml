@@ -13,7 +13,7 @@ jobs:
     env:
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@31c86eb3b33c9b601a1f60f98dcbfd1d70f379b4 # v1
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -36,11 +36,11 @@ jobs:
     steps:
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@31c86eb3b33c9b601a1f60f98dcbfd1d70f379b4 # v1
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/build
@@ -50,7 +50,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   unit-test:
@@ -58,7 +58,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm test
   e2e-atomic-csp-test:
@@ -66,7 +66,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
   playwright-atomic:
@@ -75,7 +75,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm run build
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
@@ -83,7 +83,7 @@ jobs:
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@31c86eb3b33c9b601a1f60f98dcbfd1d70f379b4 # v1
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -165,7 +165,7 @@ jobs:
             60,
           ]
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
         with:
@@ -177,7 +177,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-screenshots
   e2e-atomic-react-test:
@@ -185,7 +185,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-react
   e2e-atomic-react-nextjs-test:
@@ -193,7 +193,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-next
   e2e-iife-test:
@@ -201,7 +201,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-iife
   e2e-atomic-angular-test:
@@ -209,7 +209,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-angular
   e2e-atomic-vuejs-test:
@@ -217,7 +217,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-vuejs
   e2e-atomic-stencil-test:
@@ -225,7 +225,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
   e2e-atomic-hosted-page-test:
@@ -233,7 +233,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-hosted-page
   e2e-atomic-insight-panel-test:
@@ -241,7 +241,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
   e2e-headless-ssr-test-app-dev:
@@ -249,7 +249,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-app-dev
   e2e-headless-ssr-test-app-prod:
@@ -257,7 +257,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-app-prod
   e2e-headless-ssr-test-pages-dev:
@@ -265,7 +265,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-pages-dev
   e2e-headless-ssr-test-pages-prod:
@@ -273,7 +273,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-pages-prod
   should-e2e-quantic:
@@ -283,7 +283,7 @@ jobs:
     outputs:
       shouldRunQuantic: ${{ steps.shouldRunQuantic.outputs.shouldRunQuantic }}
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
