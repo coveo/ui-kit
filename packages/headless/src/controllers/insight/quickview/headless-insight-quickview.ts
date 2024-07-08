@@ -6,7 +6,7 @@ import {
   buildInsightResultPreviewRequest,
   StateNeededByInsightHtmlEndpoint,
 } from '../../../features/insight-search/insight-result-preview-request-builder';
-import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
+import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {Controller} from '../../controller/headless-controller';

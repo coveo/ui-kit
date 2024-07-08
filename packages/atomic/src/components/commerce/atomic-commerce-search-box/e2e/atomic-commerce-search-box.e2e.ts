@@ -2,7 +2,7 @@ import {test, expect, setSuggestions, setRecentQueries} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({suggestionTimeout: 5000});
+    await searchBox.load({args: {suggestionTimeout: 5000}});
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -196,7 +196,10 @@ test.describe('default', () => {
 
 test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({suggestionTimeout: 5000}, 'rich-search-box');
+    await searchBox.load({
+      args: {suggestionTimeout: 5000},
+      story: 'rich-search-box',
+    });
   });
 
   test.describe('with recent queries', () => {
@@ -284,9 +287,11 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
       }
     });
     await searchBox.load({
-      disableSearch: true,
-      minimumQueryLength: 1,
-      suggestionTimeout: 5000,
+      args: {
+        disableSearch: true,
+        minimumQueryLength: 1,
+        suggestionTimeout: 5000,
+      },
     });
   });
 
@@ -338,7 +343,9 @@ test.describe('with minimum-query-length=4', () => {
         querySuggestionRequestPerformed = true;
       }
     });
-    await searchBox.load({minimumQueryLength: 4, suggestionTimeout: 5000});
+    await searchBox.load({
+      args: {minimumQueryLength: 4, suggestionTimeout: 5000},
+    });
   });
 
   const testCases = () => {
@@ -396,10 +403,10 @@ test.describe('with minimum-query-length=4', () => {
 
 test.describe('with a facet & clear-filters set to true', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load(
-      {clearFilters: true, suggestionTimeout: 5000},
-      'in-page'
-    );
+    await searchBox.load({
+      args: {clearFilters: true, suggestionTimeout: 5000},
+      story: 'in-page',
+    });
   });
 
   test('clicking the submit button should clear the facet value', async ({
@@ -415,10 +422,10 @@ test.describe('with a facet & clear-filters set to true', () => {
 
 test.describe('with a facet & clear-filters set to false', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load(
-      {clearFilters: false, suggestionTimeout: 5000},
-      'in-page'
-    );
+    await searchBox.load({
+      args: {clearFilters: false, suggestionTimeout: 5000},
+      story: 'in-page',
+    });
   });
 
   test('clicking the submit button should not clear the facet value', async ({
