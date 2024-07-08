@@ -10,7 +10,7 @@ export class ProductsPageObject {
     return this.page.locator('atomic-commerce-product-list[class*="hydrated"]');
   }
 
-  get results() {
+  get products() {
     return this.page.locator('[part="result-list"] atomic-product');
   }
 }
