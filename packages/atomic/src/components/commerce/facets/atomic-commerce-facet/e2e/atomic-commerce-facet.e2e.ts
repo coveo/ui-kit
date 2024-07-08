@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {test, expect} from './fixture';
 
 test.describe('default', () => {
@@ -14,8 +15,8 @@ test.describe('default', () => {
   test('should allow to filter by selecting and deselecting a value', async ({
     facet,
   }) => {
-    const facetValueLabel = facet.getFacetValue('Aqua Sports');
-    const facetValueBtn = facet.getFacetValueButton('Aqua Sports');
+    const facetValueLabel = facet.getFacetValue('Ecco');
+    const facetValueBtn = facet.getFacetValueButton('Ecco');
 
     await expect(facetValueBtn).not.toBeChecked();
     await facetValueLabel.click();
@@ -30,8 +31,8 @@ test.describe('default', () => {
     facet,
     page,
   }) => {
-    const firstValueBtn = facet.getFacetValueButton('Aqua Sports');
-    const secondValueBtn = facet.getFacetValueButton('HO Sports');
+    const firstValueBtn = facet.getFacetValueButton('Ecco');
+    const secondValueBtn = facet.getFacetValueButton('Nike');
 
     await expect(firstValueBtn).not.toBeChecked();
     await expect(secondValueBtn).not.toBeChecked();
@@ -46,7 +47,7 @@ test.describe('default', () => {
   test('should allow to deselect a filter with the clear button', async ({
     facet,
   }) => {
-    const facetValueLabel = facet.getFacetValue('Aqua Sports');
+    const facetValueLabel = facet.getFacetValue('Ecco');
 
     await expect(facet.clearFilter).toHaveCount(0);
 
@@ -81,15 +82,15 @@ test.describe('default', () => {
 
     expect(await page.getByRole('listitem').count()).toBeGreaterThanOrEqual(8);
     await expect(page.getByText('More matches for n')).toBeVisible();
-    await facet.searchInput.fill('Aqua Sports');
+    await facet.searchInput.fill('Ecco');
 
-    await facet.getFacetValue('Aqua Sports').click();
+    await facet.getFacetValue('Ecco').click();
 
-    await expect(facet.getFacetValueButton('Aqua Sports')).toBeChecked();
+    await expect(facet.getFacetValueButton('Ecco')).toBeChecked();
   });
 
   test('allow to clear the search input', async ({facet}) => {
-    await facet.searchInput.fill('Aqua Sports');
+    await facet.searchInput.fill('Ecco');
     await expect(facet.clearSearchInput).toBeVisible();
 
     await facet.clearSearchInput.click();
