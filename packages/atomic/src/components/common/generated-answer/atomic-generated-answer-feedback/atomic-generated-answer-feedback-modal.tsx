@@ -109,7 +109,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     this.feedbackSubmitted = false;
     this.currentAnswer = this.getInitialAnswerState();
     this.answerEvaluationRequired = false;
-    this.setIsOpen(false);
+    this.isOpen = false;
   }
 
   private clearInputRefs() {
@@ -119,10 +119,6 @@ export class AtomicGeneratedAnswerFeedbackModal
     if (this.linkInputRef) {
       this.linkInputRef.value = '';
     }
-  }
-
-  private setIsOpen(isOpen: boolean) {
-    this.isOpen = isOpen;
   }
 
   private close() {
