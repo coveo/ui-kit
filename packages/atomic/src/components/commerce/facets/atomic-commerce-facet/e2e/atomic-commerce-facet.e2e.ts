@@ -14,8 +14,8 @@ test.describe('default', () => {
   test('should allow to filter by selecting and deselecting a value', async ({
     facet,
   }) => {
-    const facetValueLabel = facet.getFacetValue('Nike');
-    const facetValueBtn = facet.getFacetValueButton('Nike');
+    const facetValueLabel = facet.getFacetValue('Aqua Sports');
+    const facetValueBtn = facet.getFacetValueButton('Aqua Sports');
 
     await expect(facetValueBtn).not.toBeChecked();
     await facetValueLabel.click();
@@ -30,8 +30,8 @@ test.describe('default', () => {
     facet,
     page,
   }) => {
-    const firstValueBtn = facet.getFacetValueButton('Nike');
-    const secondValueBtn = facet.getFacetValueButton('Adidas');
+    const firstValueBtn = facet.getFacetValueButton('Aqua Sports');
+    const secondValueBtn = facet.getFacetValueButton('HO Sports');
 
     await expect(firstValueBtn).not.toBeChecked();
     await expect(secondValueBtn).not.toBeChecked();
@@ -46,7 +46,7 @@ test.describe('default', () => {
   test('should allow to deselect a filter with the clear button', async ({
     facet,
   }) => {
-    const facetValueLabel = facet.getFacetValue('Nike');
+    const facetValueLabel = facet.getFacetValue('Aqua Sports');
 
     await expect(facet.clearFilter).toHaveCount(0);
 
@@ -81,15 +81,15 @@ test.describe('default', () => {
 
     expect(await page.getByRole('listitem').count()).toBeGreaterThanOrEqual(8);
     await expect(page.getByText('More matches for n')).toBeVisible();
-    await facet.searchInput.fill('nike');
+    await facet.searchInput.fill('Aqua Sports');
 
-    await facet.getFacetValue('Nike').click();
+    await facet.getFacetValue('Aqua Sports').click();
 
-    await expect(facet.getFacetValueButton('Nike')).toBeChecked();
+    await expect(facet.getFacetValueButton('Aqua Sports')).toBeChecked();
   });
 
   test('allow to clear the search input', async ({facet}) => {
-    await facet.searchInput.fill('nike');
+    await facet.searchInput.fill('Aqua Sports');
     await expect(facet.clearSearchInput).toBeVisible();
 
     await facet.clearSearchInput.click();
