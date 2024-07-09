@@ -54,8 +54,8 @@ import {
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

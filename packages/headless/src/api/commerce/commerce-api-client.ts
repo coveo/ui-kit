@@ -11,7 +11,10 @@ import {
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
-import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
+import {
+  CommerceFacetSearchRequest,
+  FacetSearchType,
+} from './facet-search/facet-search-request';
 import {
   CommerceRecommendationsRequest,
   buildRecommendationsRequest,
@@ -27,7 +30,8 @@ import {SearchCommerceSuccessResponse} from './search/response';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(
-    req: CommerceFacetSearchRequest
+    req: CommerceFacetSearchRequest,
+    facetSearchOrigin: string
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
 }
 
@@ -122,11 +126,13 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   }
 
   async facetSearch(
-    req: CommerceFacetSearchRequest
+    req: CommerceFacetSearchRequest,
+    type: FacetSearchType
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
     const requestOptions = buildRequest(req, 'facet');
     return this.query<SpecificFacetSearchResponse>({
       ...requestOptions,
+      url: `${requestOptions.url}?type=${type}`,
       requestParams: {
         ...requestOptions.requestParams,
         facetId: req?.facetId,

@@ -39,11 +39,11 @@ import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-plac
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../common/facets/numeric-facet/values-container';
+import {initializePopover} from '../../common/facets/popover/popover-type';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../common/formats/format-common';
-import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**

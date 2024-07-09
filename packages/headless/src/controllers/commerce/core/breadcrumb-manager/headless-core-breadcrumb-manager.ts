@@ -240,9 +240,12 @@ export function buildCoreBreadcrumbManager(
           )
           .filter(
             (facet): facet is AnyFacetResponse =>
-              facet !== undefined && facet.values.length > 0
+              facet !== undefined &&
+              facet.values.length > 0 &&
+              facet.values.some((value) => value.state !== 'idle')
           )
           .map(createBreadcrumb) ?? [];
+
       return {
         facetBreadcrumbs: breadcrumbs,
         hasBreadcrumbs: breadcrumbs.length > 0,

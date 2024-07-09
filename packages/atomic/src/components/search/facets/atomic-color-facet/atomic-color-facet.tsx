@@ -45,9 +45,9 @@ import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/fac
 import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {initializePopover} from '../atomic-popover/popover-type';
 import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 
 /**

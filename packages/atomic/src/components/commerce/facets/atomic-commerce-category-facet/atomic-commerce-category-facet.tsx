@@ -39,7 +39,7 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -94,32 +94,29 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   /**
    * The summary controller instance.
-   *
-   * @internal
    */
   @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The category facet controller instance.
-   *
-   * @internal
    */
   @Prop() public facet!: CategoryFacet;
   /**
    * Specifies whether the facet is collapsed.
-   *
-   * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The field identifier for this facet.
-   *
-   * @internal
    */
   @Prop({reflect: true}) field?: string;
 
   @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
+
+  @BindStateToController('summary')
+  @State()
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
+
   @State() public error!: Error;
 
   private resultIndexToFocusOnShowMore = 0;
@@ -132,6 +129,9 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (!this.facetState) {
+      return;
+    }
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.displayName,
@@ -140,14 +140,14 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
     );
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facet.state.facetId,
+      facetId: this.facetState.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('categoryFacets', facetInfo);
     initializePopover(this.host, {
       ...facetInfo,
-      hasValues: () => !!this.facet.state.values.length,
+      hasValues: () => !!this.facetState.values.length,
       numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
   }
@@ -186,9 +186,9 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   private get isHidden() {
     return (
-      this.summary.state.hasError ||
-      (!this.facet.state.values.length &&
-        !this.facet.state.selectedValueAncestry?.length)
+      this.summaryState.hasError ||
+      (!this.facetState.values.length &&
+        !this.facetState.selectedValueAncestry?.length)
     );
   }
 
@@ -443,7 +443,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
       facetState: {facetSearch, selectedValueAncestry, values},
     } = this;
 
-    const {hasError, firstRequestExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summaryState;
 
     return (
       <FacetGuard

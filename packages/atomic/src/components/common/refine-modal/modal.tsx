@@ -1,26 +1,24 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {i18n} from 'i18next';
 import CloseIcon from '../../../images/close.svg';
-import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
-import {AnyBindings} from '../interface/bindings';
+import {popoverClass} from '../facets/popover/popover-type';
 import {isRefineModalFacet} from '../interface/store';
 
-interface RefineModalCommonProps {
+interface RefineModalProps {
   host: HTMLElement;
-  bindings: AnyBindings;
+  i18n: i18n;
   onClose(): void;
   title: string;
-  querySummaryState: {
-    total: number;
-  };
+  numberOfItems: number;
   isOpen: boolean;
   openButton?: HTMLElement;
   boundary?: 'page' | 'element';
   scope?: HTMLElement;
 }
 
-export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
+export const RefineModal: FunctionalComponent<RefineModalProps> = (
   props,
   children
 ) => {
@@ -42,7 +40,7 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
           class="grid place-items-center"
           part="close-button"
           onClick={props.onClose}
-          ariaLabel={props.bindings.i18n.t('close')}
+          ariaLabel={props.i18n.t('close')}
         >
           <atomic-icon
             part="close-icon"
@@ -64,13 +62,11 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
           onClick={props.onClose}
         >
           <span part="footer-button-text" class="truncate mr-1">
-            {props.bindings.i18n.t('view-results')}
+            {props.i18n.t('view-results')}
           </span>
           <span part="footer-button-count">
-            {props.bindings.i18n.t('between-parentheses', {
-              text: props.querySummaryState.total.toLocaleString(
-                props.bindings.i18n.language
-              ),
+            {props.i18n.t('between-parentheses', {
+              text: props.numberOfItems.toLocaleString(props.i18n.language),
             })}
           </span>
         </Button>

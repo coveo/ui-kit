@@ -9,7 +9,8 @@ import {
   InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+import {RefineToggleButton} from '../../common/refine-modal/button';
+import {RefineToggleGuard} from '../../common/refine-modal/guard';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -63,39 +64,24 @@ export class AtomicRefineToggle implements InitializableComponent {
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
-      return;
-    }
-
-    if (!this.searchStatusState.firstSearchExecuted) {
-      return (
-        <div
-          part="placeholder"
-          aria-hidden
-          class="rounded w-28 h-8 my-2 bg-neutral animate-pulse"
-        ></div>
-      );
-    }
-
-    if (!this.searchStatusState.hasResults) {
-      return;
-    }
-
     return (
-      <Button
-        style="outline-primary"
-        class="p-3 w-full"
-        onClick={() => this.enableModal()}
-        text={this.bindings.i18n.t('sort-and-filter')}
-        ref={(button) => {
-          if (!button) {
-            return;
-          }
-          this.buttonRef = button;
-          this.loadModal();
-        }}
-        part="button"
-      ></Button>
+      <RefineToggleGuard
+        firstRequestExecuted={this.searchStatusState.firstSearchExecuted}
+        hasError={this.searchStatusState.hasError}
+        hasItems={this.searchStatusState.hasResults}
+      >
+        <RefineToggleButton
+          i18n={this.bindings.i18n}
+          onClick={() => this.enableModal()}
+          setRef={(button) => {
+            if (!button) {
+              return;
+            }
+            this.buttonRef = button;
+            this.loadModal();
+          }}
+        />
+      </RefineToggleGuard>
     );
   }
 }

@@ -2,7 +2,7 @@ import {HtmlRequestOptions} from '../../../api/search/html/html-request';
 import {configuration} from '../../../app/common-reducers';
 import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
 import {buildInsightResultPreviewRequest} from '../../../features/insight-search/insight-result-preview-request-builder';
-import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
+import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {
@@ -19,7 +19,9 @@ import {
 } from './headless-insight-quickview';
 
 jest.mock('../../core/quickview/headless-core-quickview');
-jest.mock('../../../features/result-preview/result-preview-analytics-actions');
+jest.mock(
+  '../../../features/result-preview/result-preview-insight-analytics-actions'
+);
 jest.mock(
   '../../../features/insight-search/insight-result-preview-request-builder'
 );
