@@ -91,18 +91,24 @@ export default class QuanticSort extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.options = this.buildOptions();
-    this.sort = this.headless.buildSort(engine);
+    this.sort = this.headless.buildSort(engine, {
+      initialState: {
+        criterion: this.hasCustomSortOptions
+          ? this.customSortOptions[0].criterion
+          : this.defaultSortOptions[0].criterion,
+      },
+    });
     this.searchStatus = this.headless.buildSearchStatus(engine);
-    this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateState()
-    );
     getBueno(this).then(() => {
       this.generateSchemas();
       this.customSortOptions.forEach((option) => {
         this.validateSortOption(option);
       });
     });
+    this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
   };
 
   disconnectedCallback() {
@@ -116,26 +122,9 @@ export default class QuanticSort extends LightningElement {
   }
 
   buildOptions() {
-    if (this.hasCustomSortOptions) {
-      return this.customSortOptions;
-    }
-    return [
-      {
-        label: this.labels.relevancy,
-        value: this.headless.buildCriterionExpression(this.relevancy),
-        criterion: this.relevancy,
-      },
-      {
-        label: this.labels.newest,
-        value: this.headless.buildCriterionExpression(this.dateDescending),
-        criterion: this.dateDescending,
-      },
-      {
-        label: this.labels.oldest,
-        value: this.headless.buildCriterionExpression(this.dateAscending),
-        criterion: this.dateAscending,
-      },
-    ];
+    return this.hasCustomSortOptions
+      ? this.customSortOptions
+      : this.defaultSortOptions;
   }
 
   /**
@@ -241,6 +230,26 @@ export default class QuanticSort extends LightningElement {
 
   get hasError() {
     return this.hasInitializationError || !!this.errorMessage;
+  }
+
+  get defaultSortOptions() {
+    return [
+      {
+        label: this.labels.relevancy,
+        value: this.headless.buildCriterionExpression(this.relevancy),
+        criterion: this.relevancy,
+      },
+      {
+        label: this.labels.newest,
+        value: this.headless.buildCriterionExpression(this.dateDescending),
+        criterion: this.dateDescending,
+      },
+      {
+        label: this.labels.oldest,
+        value: this.headless.buildCriterionExpression(this.dateAscending),
+        criterion: this.dateAscending,
+      },
+    ];
   }
 
   /**
