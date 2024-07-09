@@ -19,6 +19,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
  *
  * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
+
  * @part button - The refine toggle button.
  *
  * @alpha

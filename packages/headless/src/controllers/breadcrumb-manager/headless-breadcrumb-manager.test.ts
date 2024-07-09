@@ -620,7 +620,7 @@ describe('headless breadcrumb manager', () => {
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });
 
-  it('hasBreadcrumbs returns false when an automatic facet has idle value', () => {
+  it('hasBreadcrumbs returns false when an automatic facet only has idle values', () => {
     state.automaticFacetSet = {
       desiredCount: 1,
       numberOfValues: 8,

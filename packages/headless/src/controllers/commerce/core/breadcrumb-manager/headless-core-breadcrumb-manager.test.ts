@@ -132,7 +132,7 @@ describe('core breadcrumb manager', () => {
       expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
     });
 
-    it('#hasBreadcrumbs is true when there is at least one selected facet value', () => {
+    it('#hasBreadcrumbs is true when there is a selected facet value', () => {
       setFacetsState(
         buildMockCommerceRegularFacetResponse({
           facetId,
@@ -143,7 +143,7 @@ describe('core breadcrumb manager', () => {
       expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
     });
 
-    it('#hasBreadcrumbs is true when there is at least one excluded facet value', () => {
+    it('#hasBreadcrumbs is true when there is an excluded facet value', () => {
       setFacetsState(
         buildMockCommerceRegularFacetResponse({
           facetId,
