@@ -89,7 +89,7 @@ test.describe('when a query is performed automatically', () => {
 
       await expect(commerceInterface.interface()).toContainText('Produits');
     });
-    test('should revert to english when changing the language to an invalid value after initialization', async ({
+    test('should revert to english after changing the language to an invalid value', async ({
       page,
       commerceInterface,
     }) => {
@@ -111,39 +111,37 @@ test.describe('when a query is performed automatically', () => {
   });
 
   test.describe('when selecting a facet value', () => {
-    test('should update the url when reflectStateInUrl is enabled', async ({
-      page,
-      commerceInterface,
-    }) => {
-      const facetValueLabel = commerceInterface.getFacetValue('Nike');
+    test.describe('when reflectStateInUrl is enabled', () => {
+      test('should update the url', async ({page, commerceInterface}) => {
+        const facetValueLabel = commerceInterface.getFacetValue('Nike');
 
-      await facetValueLabel.click();
+        await facetValueLabel.click();
 
-      await page.waitForURL(
-        '**/iframe.html?id=atomic-commerce-interface--with-product-list*'
-      );
+        await page.waitForURL(
+          '**/iframe.html?id=atomic-commerce-interface--with-product-list*'
+        );
 
-      const currentUrl = page.url();
+        const currentUrl = page.url();
 
-      expect(currentUrl).toContain('Nike');
+        expect(currentUrl).toContain('Nike');
+      });
     });
-    test('should not update the url when reflectStateInUrl is disabled', async ({
-      page,
-      commerceInterface,
-    }) => {
-      await page.goto(
-        'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-reflect-state-in-url:false'
-      );
+    test.describe('when reflectStateInUrl is not', () => {
+      test('should not update the url', async ({page, commerceInterface}) => {
+        await page.goto(
+          'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-reflect-state-in-url:false'
+        );
 
-      const facetValueLabel = commerceInterface.getFacetValue('Nike');
+        const facetValueLabel = commerceInterface.getFacetValue('Nike');
 
-      await facetValueLabel.click();
+        await facetValueLabel.click();
 
-      await page.waitForTimeout(1000);
+        await page.waitForTimeout(1000);
 
-      const currentUrl = page.url();
+        const currentUrl = page.url();
 
-      expect(currentUrl).not.toContain('Nike');
+        expect(currentUrl).not.toContain('Nike');
+      });
     });
   });
 });
