@@ -11,6 +11,7 @@ interface FacetSearchMatchesProps {
   showMoreMatches?: () => void;
 }
 
+//TODO: change to noMatchesFound & remove the key in https://coveord.atlassian.net/browse/KIT-3368
 function matchesFound(
   key: 'more-matches-for' | 'no-matches-found-for',
   query: string,
@@ -24,12 +25,8 @@ function matchesFound(
   });
 }
 
-function matchesFoundClickableShowMoreMatches(
-  key: 'more-matches-for' | 'no-matches-found-for',
-  query: string,
-  i18n: i18n
-) {
-  return i18n.t(key, {
+function clickableMoreMatchesFound(query: string, i18n: i18n) {
+  return i18n.t('more-matches-for', {
     query: `<span class="font-bold italic" part="matches-query">${escape(
       query
     )}</span>`,
@@ -68,11 +65,7 @@ export const FacetSearchMatches: FunctionalComponent<
             <div
               part="more-matches"
               class="truncate text-sm"
-              innerHTML={matchesFoundClickableShowMoreMatches(
-                'more-matches-for',
-                props.query,
-                props.i18n
-              )}
+              innerHTML={clickableMoreMatchesFound(props.query, props.i18n)}
             ></div>
           </Button>
         </div>
