@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.45.9",
-    "@coveo/relay": "0.7.7",
+    "@coveo/relay": "0.7.9",
     "@coveo/relay-event-types": "9.2.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.6",
