@@ -58,7 +58,7 @@
     "focus-visible": "5.2.0",
     "i18next": "23.11.4",
     "i18next-http-backend": "2.5.1",
-    "marked": "12.0.2",
+    "marked": "13.0.2",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
   },
@@ -115,7 +115,7 @@
     "jest-cli": "29.7.0",
     "jest-environment-node": "29.7.0",
     "jest-localstorage-mock": "2.4.26",
-    "lit": "3.1.3",
+    "lit": "3.1.4",
     "lit-html": "3.1.3",
     "lodash": "4.17.21",
     "ncp": "2.0.0",
