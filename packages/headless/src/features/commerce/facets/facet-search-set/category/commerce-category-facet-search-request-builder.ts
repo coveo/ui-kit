@@ -49,7 +49,8 @@ export const buildCategoryFacetSearchRequest = (
     currency,
     clientId,
     context,
-    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query}),
+    query,
+    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query: ''}),
   };
 };
 

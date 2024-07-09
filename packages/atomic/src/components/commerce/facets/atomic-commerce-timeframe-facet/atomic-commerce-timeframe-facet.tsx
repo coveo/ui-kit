@@ -64,19 +64,20 @@ export class AtomicCommerceTimeframeFacet
 
   @BindStateToController('facet')
   @State()
-  public facetState?: DateFacetState;
+  public facetState!: DateFacetState;
+
+  @BindStateToController('summary')
+  @State()
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
+
   @State() public error!: Error;
 
   @State() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
 
-  private get state() {
-    return this.facetState;
-  }
-
   private get displayName() {
-    return this.state?.displayName || 'no-label';
+    return this.facetState.displayName || 'no-label';
   }
 
   private get focusTarget(): FocusTargetController {
@@ -87,6 +88,9 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public initialize() {
+    if (!this.facetState) {
+      return;
+    }
     this.registerFacetToStore();
   }
 
@@ -97,7 +101,7 @@ export class AtomicCommerceTimeframeFacet
 
   private get valuesToRender() {
     return (
-      this.facetState?.values.filter(
+      this.facetState.values.filter(
         (value) => value.numberOfResults || value.state !== 'idle'
       ) || []
     );
@@ -117,7 +121,7 @@ export class AtomicCommerceTimeframeFacet
       hasError,
       isLoading,
       hasProducts: hasResults,
-    } = this.summary.state;
+    } = this.summaryState;
     return shouldDisplayInputForFacetRange({
       hasInputRange: this.hasInputRange,
       searchStatusState: {
@@ -126,13 +130,13 @@ export class AtomicCommerceTimeframeFacet
         hasResults,
         isLoading,
       },
-      facetValues: this.facet?.state?.values || [],
+      facetValues: this.facetState.values || [],
       hasInput: true,
     });
   }
 
   private get hasValues() {
-    if (this.facet?.state.values.length) {
+    if (this.facetState.values.length) {
       return true;
     }
 
@@ -145,8 +149,8 @@ export class AtomicCommerceTimeframeFacet
     }
 
     return (
-      this.facetState?.values?.filter(({state}) => state === 'selected')
-        .length || 0
+      this.facetState.values.filter(({state}) => state === 'selected').length ||
+      0
     );
   }
 
@@ -172,7 +176,7 @@ export class AtomicCommerceTimeframeFacet
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facet.state?.facetId,
+      facetId: this.facetState.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
@@ -275,7 +279,7 @@ export class AtomicCommerceTimeframeFacet
         bindings={this.bindings}
         label={this.displayName}
         rangeGetter={() => this.inputRange}
-        facetId={this.facet.state.facetId}
+        facetId={this.facetState.facetId}
         rangeSetter={({start, end, endInclusive}: DateRangeRequest) => {
           this.facet.setRanges([
             {
@@ -291,7 +295,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public render() {
-    const {hasError, firstRequestExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summaryState;
 
     return (
       <FacetGuard

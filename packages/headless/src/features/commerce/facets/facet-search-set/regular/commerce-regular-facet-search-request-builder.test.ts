@@ -91,6 +91,7 @@ describe('#buildFacetSearchRequest', () => {
     expect(request).toEqual({
       ...expectedBaseRequest,
       facetId,
+      query: '',
       facetQuery: `*${query}*`,
     });
   });

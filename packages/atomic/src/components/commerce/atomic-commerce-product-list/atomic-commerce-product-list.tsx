@@ -138,7 +138,6 @@ export class AtomicCommerceProductList
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
-      this.productListing.refresh();
       this.summary = this.productListing.summary();
     } else {
       this.search = buildSearch(this.bindings.engine);

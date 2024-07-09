@@ -10,10 +10,10 @@ import {
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {FacetSearchProps} from '../../../../core/facets/facet-search/specific/headless-facet-search';
 import {
   RegularFacetSearch,
   buildRegularFacetSearch,
+  RegularFacetSearchProps,
 } from './headless-commerce-regular-facet-search';
 
 jest.mock(
@@ -23,7 +23,7 @@ jest.mock(
 describe('RegularFacetSearch', () => {
   const facetId: string = 'regular_facet_id';
   let engine: MockedCommerceEngine;
-  let props: FacetSearchProps;
+  let props: RegularFacetSearchProps;
   let facetSearch: RegularFacetSearch;
 
   function initEngine(preloadedState = buildMockCommerceState()) {
@@ -44,11 +44,10 @@ describe('RegularFacetSearch', () => {
     props = {
       exclude: jest.fn(),
       select: jest.fn(),
-      executeFacetSearchActionCreator: jest.fn(),
-      executeFieldSuggestActionCreator: jest.fn(),
       isForFieldSuggestions: false,
       options: {
         facetId,
+        type: 'SEARCH',
       },
     };
 
