@@ -203,13 +203,14 @@ test.describe('with instant results & query suggestions', () => {
   });
 
   test.describe('with recent queries', () => {
-    test.beforeEach(async ({searchBox}) => {
+    test.beforeEach(async ({searchBox, page}) => {
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
       await searchBox.searchInput.fill('kayak');
       await searchBox.searchInput.press('Enter');
       await searchBox.clearButton.waitFor({state: 'visible'});
       await searchBox.searchInput.fill('');
+      await page.waitForLoadState('networkidle');
     });
 
     test('should display recent queries', async ({searchBox}) => {
