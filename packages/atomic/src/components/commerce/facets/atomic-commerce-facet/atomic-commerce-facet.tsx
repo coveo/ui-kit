@@ -96,26 +96,18 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   /**
    * The Summary controller instance.
-   *
-   * @internal
    */
   @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
-   *
-   * @@internal
    */
   @Prop() public facet!: RegularFacet;
   /**
    * Specifies whether the facet is collapsed.
-   *
-   * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The field identifier for this facet.
-   *
-   * @internal
    */
   @Prop({reflect: true}) field?: string;
 
