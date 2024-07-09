@@ -118,3 +118,12 @@ export const Default: Story = {
   },
   decorators: [facetDecorator],
 };
+
+export const LowFacetValues: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'objecttype',
+    'attributes-number-of-values': 2,
+  },
+  decorators: [facetDecorator],
+};

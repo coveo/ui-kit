@@ -458,6 +458,7 @@ export class AtomicFacet implements InitializableComponent {
         query={this.facet.state.facetSearch.query}
         numberOfMatches={this.facet.state.facetSearch.values.length}
         hasMoreMatches={this.facet.state.facetSearch.moreValuesAvailable}
+        showMoreMatches={() => this.facet.facetSearch.showMoreResults()}
       ></FacetSearchMatches>
     );
   }
