@@ -1,3 +1,9 @@
+## 2.52.3 (2024-07-09)
+
+### Bug Fixes
+
+- **SFINT-5598:** Always send contentFormat even with rephrase RGA ([#4134](https://github.com/coveo/ui-kit/issues/4134)) ([3890010](https://github.com/coveo/ui-kit/commits/389001005a577b9787bcdd46369909c77a13ec5f))
+
 ## 2.52.1 (2024-07-03)
 
 ### Features
