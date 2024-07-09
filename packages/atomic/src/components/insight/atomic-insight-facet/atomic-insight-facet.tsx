@@ -42,7 +42,7 @@ import {
   FacetValue,
 } from '../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../common/facets/popover/popover-type';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**

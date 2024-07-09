@@ -21,11 +21,11 @@ import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 

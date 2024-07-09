@@ -271,6 +271,49 @@ export declare interface AtomicCommerceQuerySummary extends Components.AtomicCom
 
 
 @ProxyCmp({
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
+})
+@Component({
+  selector: 'atomic-commerce-refine-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton'],
+})
+export class AtomicCommerceRefineModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceRefineModal extends Components.AtomicCommerceRefineModal {}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-refine-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceRefineToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceRefineToggle extends Components.AtomicCommerceRefineToggle {}
+
+
+@ProxyCmp({
   inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
 })
 @Component({
