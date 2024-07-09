@@ -7,7 +7,7 @@
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.4.31",
     "@npmcli/arborist": "7.5.1",
-    "@octokit/auth-app": "6.1.1",
+    "@octokit/auth-app": "7.1.0",
     "async-retry": "1.3.3",
     "conventional-changelog-angular": "8.0.0",
     "dependency-graph": "1.0.0",
