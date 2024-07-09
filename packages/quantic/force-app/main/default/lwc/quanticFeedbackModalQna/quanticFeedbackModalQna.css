@@ -1,0 +1,7 @@
+:host {
+    --slds-c-textarea-sizing-min-height: 100px;
+}
+
+.feedback-modal-qna__radio-group {
+    min-width: 186px;
+}

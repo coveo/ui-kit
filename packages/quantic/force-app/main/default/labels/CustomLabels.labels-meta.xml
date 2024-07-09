@@ -1023,6 +1023,20 @@
     <shortDescription>Send feedback</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_requiredFeedbackQuestion</fullName>
+    <value>This field is required.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback question required</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Skip</fullName>
+    <value>Skip</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Skip</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_Done</fullName>
     <value>Done</value>
     <language>en_US</language>
@@ -1035,6 +1049,13 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Your feedback helps</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackHelpUsImprove</fullName>
+    <value>Help us improve! Provide additional feedback</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Provide additional feedback</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_ThankYouForYourFeedback</fullName>

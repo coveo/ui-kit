@@ -545,12 +545,24 @@
     <name>quantic_SendFeedback</name>
   </customLabels>
   <customLabels>
+    <label>Requis avant de soumettre.</label>
+    <name>quantic_requiredFeedbackQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Ignorer</label>
+    <name>quantic_Skip</name>
+  </customLabels>
+  <customLabels>
     <label>Terminé</label>
     <name>quantic_Done</name>
   </customLabels>
   <customLabels>
     <label>Vos commentaires permettent d'améliorer l'expérience de recherche.</label>
     <name>quantic_YourFeedbackHelps</name>
+  </customLabels>
+  <customLabels>
+    <label>"Aidez-nous à nous améliorer! Envoyez-nous un commentaire supplémentaire"</label>
+    <name>quantic_FeedbackHelpUsImprove</name>
   </customLabels>
   <customLabels>
     <label>Merci pour vos commentaires!</label>
