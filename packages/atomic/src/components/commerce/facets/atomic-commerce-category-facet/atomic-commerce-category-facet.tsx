@@ -94,26 +94,18 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   /**
    * The summary controller instance.
-   *
-   * @internal
    */
   @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The category facet controller instance.
-   *
-   * @internal
    */
   @Prop() public facet!: CategoryFacet;
   /**
    * Specifies whether the facet is collapsed.
-   *
-   * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The field identifier for this facet.
-   *
-   * @internal
    */
   @Prop({reflect: true}) field?: string;
 

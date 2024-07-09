@@ -307,7 +307,6 @@ export namespace Components {
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
-          * @
          */
         "facet": RegularFacet;
         /**
@@ -5813,7 +5812,6 @@ declare namespace LocalJSX {
     interface AtomicCommerceFacet {
         /**
           * The facet controller instance.
-          * @
          */
         "facet": RegularFacet;
         /**
