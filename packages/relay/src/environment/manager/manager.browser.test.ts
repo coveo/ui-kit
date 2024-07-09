@@ -25,5 +25,17 @@ describe("createEnvironmentManager - browser", () => {
 
       expect(environmentManager.get().runtime).toBe("null");
     });
+
+    it("gets a null environment if localStorage is not available", () => {
+      const configManager = createMockConfigManager();
+      const environmentManager = createEnvironmentManager(configManager);
+
+      Object.defineProperty(window, "localStorage", {
+        value: undefined,
+        writable: true,
+      });
+
+      expect(environmentManager.get().runtime).toBe("null");
+    });
   });
 });

@@ -1,5 +1,6 @@
 import { ConfigManager } from "../../config/config";
 import { buildBrowserEnvironment } from "../browser/browser";
+import { localStorageAvailable } from "../browser/storage/availability";
 import { Environment } from "../environment";
 import { buildNullEnvironment } from "../null/null";
 
@@ -10,7 +11,7 @@ export interface EnvironmentManager {
 function buildEnvironment(configManager: ConfigManager) {
   const active = configManager.get().mode !== "disabled";
 
-  if (active && isBrowser()) {
+  if (active && isBrowser() && localStorageAvailable()) {
     return buildBrowserEnvironment();
   }
 
