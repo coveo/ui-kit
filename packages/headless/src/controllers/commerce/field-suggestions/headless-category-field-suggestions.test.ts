@@ -49,6 +49,7 @@ describe('categoryFieldSuggestions', () => {
       fetchProductsActionCreator: jest.fn(),
       facetResponseSelector: jest.fn(),
       isFacetLoadingResponseSelector: jest.fn(),
+      facetSearch: {type: 'SEARCH'},
     };
 
     state = buildMockCommerceState();

@@ -3,6 +3,7 @@ import {
   CommerceAPIResponse,
   CommerceFacetSearchAPIClient,
 } from '../../../../api/commerce/commerce-api-client';
+import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request';
 import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
@@ -21,7 +22,10 @@ type ExecuteCommerceFacetSearchThunkReturn = {
   >;
 };
 
-type ExecuteCommerceFacetSearchThunkArg = string;
+interface ExecuteCommerceFacetSearchThunkArg {
+  facetId: string;
+  facetSearchType: FacetSearchType;
+}
 
 type ExecuteCommerceFacetSearchThunkApiConfig = AsyncThunkOptions<
   StateNeededForAnyFacetSearch,
@@ -37,7 +41,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
     ExecuteCommerceFacetSearchThunkApiConfig
   > =>
   async (
-    facetId: string,
+    {facetId, facetSearchType},
     {getState, extra: {validatePayload, navigatorContext, apiClient}}
   ) => {
     const state = getState();
@@ -58,14 +62,14 @@ const getExecuteFacetSearchThunkPayloadCreator =
             navigatorContext
           );
 
-    const response = await apiClient.facetSearch(await req);
+    const response = await apiClient.facetSearch(req, facetSearchType);
 
     return {facetId, response};
   };
 
 export const executeCommerceFacetSearch = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
-  string,
+  ExecuteCommerceFacetSearchThunkArg,
   AsyncThunkOptions<
     StateNeededForAnyFacetSearch,
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
@@ -77,16 +81,14 @@ export const executeCommerceFacetSearch = createAsyncThunk<
 
 export const executeCommerceFieldSuggest = createAsyncThunk<
   ExecuteCommerceFacetSearchThunkReturn,
-  string,
+  ExecuteCommerceFacetSearchThunkArg,
   AsyncThunkOptions<
     StateNeededForAnyFacetSearch,
     ClientThunkExtraArguments<CommerceFacetSearchAPIClient>
   >
 >(
   'commerce/facetSearch/facetFieldSuggest',
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO: CAPI-911 Handle field suggestions without having to pass in the search context.
-  getExecuteFacetSearchThunkPayloadCreator(false)
+  getExecuteFacetSearchThunkPayloadCreator(true)
 );
 
 export const isRegularFacetSearchState = (

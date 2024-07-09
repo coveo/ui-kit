@@ -176,6 +176,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
+      query: '',
     });
   });
 });
