@@ -1,3 +1,9 @@
+## 0.7.10 (2024-07-09)
+
+### Bug Fixes
+
+- add defensive code around storage access (#96) ([0b8a616](/commits/0b8a616bef12899d159983a3889829f4851f1fb8)), closes [#96](/issues/96)
+
 ## 0.7.9 (2024-07-04)
 
 ### Bug Fixes
