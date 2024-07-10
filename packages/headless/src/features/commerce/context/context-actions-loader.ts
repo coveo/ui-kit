@@ -12,8 +12,6 @@ export type {SetContextPayload, SetViewPayload};
 
 /**
  * The context action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface ContextActionCreators {
   /**
@@ -35,8 +33,6 @@ export interface ContextActionCreators {
 
 /**
  * Loads the commerce context reducer and returns the available context action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the context action creators.

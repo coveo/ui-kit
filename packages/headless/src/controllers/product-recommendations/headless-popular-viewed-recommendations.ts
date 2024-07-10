@@ -15,6 +15,10 @@ const optionsSchema = new Schema({
   additionalFields: baseProductRecommendationsOptionsSchema.additionalFields,
 });
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface PopularViewedRecommendationsListOptions {
   /**
    * The maximum number of recommendations, from 1 to 50.
@@ -29,12 +33,19 @@ export interface PopularViewedRecommendationsListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface PopularViewedRecommendationsListProps {
   options?: PopularViewedRecommendationsListOptions;
 }
 
 /**
  * The `PopularViewedRecommendationsList` controller recommends the most viewed products.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface PopularViewedRecommendationsList extends Controller {
   /**
@@ -48,6 +59,10 @@ export interface PopularViewedRecommendationsList extends Controller {
   state: PopularViewedRecommendationsListState;
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface PopularViewedRecommendationsListState {
   /**
    * The maximum number of recommendations.
@@ -72,6 +87,9 @@ export interface PopularViewedRecommendationsListState {
 
 /**
  * Creates a `PopularViewedRecommendationsList` controller instance.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularViewedRecommendationsList` properties.

@@ -12,7 +12,9 @@ export function buildSearchLayoutCommon(
   layoutWebComponentTagName: string,
   containerWebComponentTagName: string,
   noItemsSelector: string,
-  errorSelector: string
+  errorSelector: string,
+  refineToggleSelector: string,
+  sortDropdownSelector: string
 ) {
   const id = element.id;
   const layoutSelector = `${layoutWebComponentTagName}#${id}`;
@@ -62,28 +64,28 @@ export function buildSearchLayoutCommon(
     }`;
   };
 
-  const refine = () => {
+  const refine = (): string => {
     const statusSection = findSection(element, 'status');
     if (!statusSection) {
       return '';
     }
 
-    const refineToggle = statusSection.querySelector('atomic-refine-toggle');
+    const refineToggle = statusSection.querySelector(refineToggleSelector);
     if (!refineToggle) {
       return '';
     }
 
     const statusSelector = `${layoutSelector} ${sectionSelector('status')}`;
-    return `${statusSelector} atomic-sort-dropdown {
+    return `${statusSelector} ${sortDropdownSelector} {
       display: none;
     }
 
     ${mediaQuerySelector} {
-     ${statusSelector} atomic-sort-dropdown {
+     ${statusSelector} ${sortDropdownSelector} {
        display: block;
       }
 
-      ${statusSelector} atomic-refine-toggle {
+      ${statusSelector} ${refineToggleSelector} {
         display: none;
        }
     }`;

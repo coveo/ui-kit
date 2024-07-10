@@ -28,7 +28,6 @@ describe('#logDocumentOpen', () => {
       on: jest.fn(),
       off: jest.fn(),
       updateConfig: jest.fn(),
-      clearStorage: jest.fn(),
       version: 'foo',
     });
   });

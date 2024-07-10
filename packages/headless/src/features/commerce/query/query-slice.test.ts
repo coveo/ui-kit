@@ -49,4 +49,10 @@ describe('query slice', () => {
       expect(queryReducer(state, restoreSearchParameters({})).query).toBe('');
     });
   });
+
+  it('#selectQuerySuggestion sets the query to the payload', () => {
+    expect(queryReducer(state, updateQuery({query: 'some query'}))).toEqual({
+      query: 'some query',
+    });
+  });
 });

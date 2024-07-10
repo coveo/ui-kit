@@ -1,4 +1,3 @@
-import {Relay} from '@coveo/relay';
 import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import {buildCommerceAPIRequest} from '../../../common/actions';
@@ -12,7 +11,6 @@ export const buildCategoryFacetSearchRequest = (
   facetId: string,
   state: StateNeededForCategoryFacetSearch,
   isFieldSuggestionsRequest: boolean,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): CategoryFacetSearchRequest => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
@@ -36,7 +34,7 @@ export const buildCategoryFacetSearchRequest = (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = buildCommerceAPIRequest(state, relay, navigatorContext);
+  } = buildCommerceAPIRequest(state, navigatorContext);
 
   return {
     url,
@@ -51,7 +49,8 @@ export const buildCategoryFacetSearchRequest = (
     currency,
     clientId,
     context,
-    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query}),
+    query,
+    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query: ''}),
   };
 };
 

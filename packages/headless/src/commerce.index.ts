@@ -52,11 +52,14 @@ export * from './features/commerce/facets/date-facet/date-facet-actions-loader';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader';
 export * from './features/commerce/query-set/query-set-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
-export * from './features/configuration/configuration-actions-loader';
+export * from './features/commerce/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
 export * from './features/commerce/triggers/triggers-actions-loader';
+export * from './features/commerce/instant-products/instant-products-actions-loader';
+export * from './features/commerce/recent-queries/recent-queries-actions-loader';
+export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader';
 // TODO: KIT-3350: Create/use/export remaining commerce actions/loaders
 
 // Selectors
@@ -250,6 +253,7 @@ export type {
   Breadcrumb,
   BreadcrumbValue,
   DeselectableValue,
+  BreadcrumbManagerState,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 
 export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary';

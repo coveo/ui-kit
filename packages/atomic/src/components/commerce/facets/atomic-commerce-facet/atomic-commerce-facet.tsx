@@ -42,7 +42,7 @@ import {
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -96,32 +96,28 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   /**
    * The Summary controller instance.
-   *
-   * @internal
    */
   @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
-   *
-   * @@internal
    */
   @Prop() public facet!: RegularFacet;
   /**
    * Specifies whether the facet is collapsed.
-   *
-   * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The field identifier for this facet.
-   *
-   * @internal
    */
   @Prop({reflect: true}) field?: string;
 
   @BindStateToController('facet')
   @State()
   public facetState!: RegularFacetState;
+
+  @BindStateToController('summary')
+  @State()
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
   @State() public error!: Error;
 
@@ -133,7 +129,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    if (!this.facet) {
+    if (!this.facetState) {
       return;
     }
     this.initAriaLive();
@@ -162,7 +158,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     if (!this.facet) {
       return;
     }
-    const {hasError, firstRequestExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summaryState;
     return (
       <FacetGuard
         enabled={true}
@@ -241,7 +237,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private renderSearchResults() {
     return this.renderValuesContainer(
-      this.facet.state.facetSearch.values.map((value) => (
+      this.facetState.facetSearch.values.map((value) => (
         <FacetSearchValue
           {...this.facetValueProps}
           facetCount={value.count}
@@ -255,7 +251,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private renderValues() {
     return this.renderValuesContainer(
-      this.facet.state.values.map((value, i) => {
+      this.facetState.values.map((value, i) => {
         const shouldFocusOnShowLessAfterInteraction = i === 0;
         const shouldFocusOnShowMoreAfterInteraction = i === 0;
 
@@ -294,8 +290,8 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
           this.focusTargets.showLess.focusAfterSearch();
           this.facet.showLessValues();
         }}
-        canShowMoreValues={this.facet.state.canShowMoreValues}
-        canShowLessValues={this.facet.state.canShowLessValues}
+        canShowMoreValues={this.facetState.canShowMoreValues}
+        canShowLessValues={this.facetState.canShowLessValues}
       ></FacetShowMoreLess>
     );
   }
@@ -304,19 +300,19 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     return (
       <FacetSearchMatches
         i18n={this.bindings.i18n}
-        query={this.facet.state.facetSearch.query}
-        numberOfMatches={this.facet.state.facetSearch.values.length}
-        hasMoreMatches={this.facet.state.facetSearch.moreValuesAvailable}
+        query={this.facetState.facetSearch.query}
+        numberOfMatches={this.facetState.facetSearch.values.length}
+        hasMoreMatches={this.facetState.facetSearch.moreValuesAvailable}
       ></FacetSearchMatches>
     );
   }
 
   private get activeValues() {
-    return this.facet.state.values.filter(({state}) => state !== 'idle');
+    return this.facetState.values.filter(({state}) => state !== 'idle');
   }
 
   private get displayName() {
-    return this.facet.state.displayName || 'no-label';
+    return this.facetState.displayName || 'no-label';
   }
 
   private get facetValueProps(): Pick<
@@ -347,7 +343,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private initPopover() {
     initializePopover(this.host, {
       ...this.facetInfo,
-      hasValues: () => !!this.facet.state.values.length,
+      hasValues: () => !!this.facetState.values.length,
       numberOfActiveValues: () => this.activeValues.length,
     });
   }
@@ -364,7 +360,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private get facetInfo(): FacetInfo {
     return {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facet.state.facetId,
+      facetId: this.facetState.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };

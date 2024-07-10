@@ -72,6 +72,10 @@ export interface GeneratedAnswerState {
    * Whether the answer is expanded.
    */
   expanded: boolean;
+  /**
+   * The answer configuration unique identifier.
+   */
+  answerConfigurationId?: string;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {

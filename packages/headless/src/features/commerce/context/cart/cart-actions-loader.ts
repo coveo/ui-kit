@@ -18,8 +18,6 @@ export type {PurchasePayload, SetItemsPayload, UpdateItemQuantityPayload};
 
 /**
  * The cart action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CartActionCreators {
   /**
@@ -56,8 +54,6 @@ export interface CartActionCreators {
 
 /**
  * Loads the commerce cart reducer and returns the available cart action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the cart action creators.

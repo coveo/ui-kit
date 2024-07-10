@@ -19,6 +19,8 @@ export function buildSearchLayout(
     layoutWebComponentTagName,
     containerWebComponentTagName,
     noResultsSelector,
-    errorSelector
+    errorSelector,
+    'atomic-refine-toggle',
+    'atomic-sort-dropdown'
   );
 }

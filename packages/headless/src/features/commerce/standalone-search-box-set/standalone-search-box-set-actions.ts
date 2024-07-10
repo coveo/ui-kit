@@ -1,5 +1,4 @@
 import {StringValue} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -25,7 +24,40 @@ export type StateNeededForRedirect = ConfigurationSection &
   CommerceQuerySection &
   CartSection;
 
-export interface RegisterStandaloneSearchBoxActionCreatorPayload {
+export interface FetchRedirectUrlPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+}
+
+// eslint-disable-next-line @cspell/spellchecker
+// TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+export const fetchRedirectUrl = createAsyncThunk<
+  string,
+  FetchRedirectUrlPayload,
+  AsyncThunkCommerceOptions<StateNeededForRedirect>
+>(
+  'commerce/standaloneSearchBox/fetchRedirect',
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+  ) => {
+    validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
+    const state = getState();
+    const request = buildPlanRequest(state, navigatorContext);
+    const response = await apiClient.plan(request);
+    if (isErrorResponse(response)) {
+      return rejectWithValue(response.error);
+    }
+
+    const redirectTriggers =
+      response.success.triggers.filter(isRedirectTrigger);
+
+    return redirectTriggers.length ? redirectTriggers[0].content : '';
+  }
+);
+export interface RegisterStandaloneSearchBoxPayload {
   /**
    * The standalone search box id.
    */
@@ -38,15 +70,15 @@ export interface RegisterStandaloneSearchBoxActionCreatorPayload {
 }
 
 export const registerStandaloneSearchBox = createAction(
-  'standaloneSearchBox/register',
-  (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
+  'commerce/standaloneSearchBox/register',
+  (payload: RegisterStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
       redirectionUrl: requiredNonEmptyString,
     })
 );
 
-export interface ResetStandaloneSearchBoxActionCreatorPayload {
+export interface ResetStandaloneSearchBoxPayload {
   /**
    * The standalone search box id.
    */
@@ -54,54 +86,19 @@ export interface ResetStandaloneSearchBoxActionCreatorPayload {
 }
 
 export const resetStandaloneSearchBox = createAction(
-  'standaloneSearchBox/reset',
-  (payload: ResetStandaloneSearchBoxActionCreatorPayload) =>
+  'commerce/standaloneSearchBox/reset',
+  (payload: ResetStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
     })
 );
 
-export interface FetchRedirectUrlActionCreatorPayload {
-  /**
-   * The standalone search box id.
-   */
-  id: string;
-}
-
-// eslint-disable-next-line @cspell/spellchecker
-// TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
-export const fetchRedirectUrl = createAsyncThunk<
-  string,
-  FetchRedirectUrlActionCreatorPayload,
-  AsyncThunkCommerceOptions<StateNeededForRedirect>
->(
-  'commerce/standaloneSearchBox/fetchRedirect',
-  async (
-    payload,
-    {getState, rejectWithValue, extra: {apiClient, relay, navigatorContext}}
-  ) => {
-    validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
-    const state = getState();
-    const request = buildPlanRequest(state, relay, navigatorContext);
-    const response = await apiClient.plan(request);
-    if (isErrorResponse(response)) {
-      return rejectWithValue(response.error);
-    }
-
-    const redirectTriggers =
-      response.success.triggers.filter(isRedirectTrigger);
-
-    return redirectTriggers.length ? redirectTriggers[0].content : '';
-  }
-);
-
 export const buildPlanRequest = (
   state: StateNeededForRedirect,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): CommerceSearchRequest => {
   return {
     query: state.commerceQuery.query,
-    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
   };
 };

@@ -1,4 +1,3 @@
-import {Relay, createRelay} from '@coveo/relay';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import * as Actions from '../../../../../features/commerce/common/actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
@@ -14,7 +13,6 @@ import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-
 
 describe('#buildCategoryFacetSearchRequest', () => {
   let state: CommerceAppState;
-  let relay: Relay;
   let navigatorContext: NavigatorContext;
   let facetId: string;
   let query: string;
@@ -39,7 +37,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
       'buildCommerceAPIRequest'
     );
 
-    relay = createRelay({token: 'token', url: 'url', trackingId: 'trackingId'});
     navigatorContext = buildMockNavigatorContextProvider()();
   });
 
@@ -48,7 +45,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay,
       navigatorContext
     );
 
@@ -60,7 +56,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay,
       navigatorContext
     );
 
@@ -75,7 +70,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
         facetId,
         state,
         false,
-        relay,
         navigatorContext
       );
 
@@ -89,7 +83,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
         facetId,
         state,
         false,
-        relay,
         navigatorContext
       );
 
@@ -123,7 +116,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
         facetId,
         state,
         false,
-        relay,
         navigatorContext
       );
 
@@ -156,7 +148,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay,
       navigatorContext
     );
 
@@ -174,7 +165,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       state,
       true,
-      relay,
       navigatorContext
     );
 
@@ -186,6 +176,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
+      query: '',
     });
   });
 });

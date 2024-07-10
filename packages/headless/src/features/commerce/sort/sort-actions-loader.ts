@@ -7,8 +7,6 @@ export type {ApplySortPayload};
 
 /**
  * The sort action creators.
- *
- *  In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface SortActionCreators {
   /**
@@ -22,8 +20,6 @@ export interface SortActionCreators {
 
 /**
  * Loads the commerce sort reducer and returns the available sort action creators.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param engine - The commerce engine.
  * @returns An object holding the sort action creators.

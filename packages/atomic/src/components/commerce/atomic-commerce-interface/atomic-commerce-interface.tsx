@@ -438,9 +438,9 @@ export class AtomicCommerceInterface
 
     this.initRequestStatus();
     this.initSummary();
-    this.initUrlManager();
     this.initContext();
     this.initLanguage();
+    this.initUrlManager();
     this.initialized = true;
   }
 
