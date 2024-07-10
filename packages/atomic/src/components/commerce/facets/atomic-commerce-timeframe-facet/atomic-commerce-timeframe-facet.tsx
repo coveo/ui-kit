@@ -62,7 +62,6 @@ export class AtomicCommerceTimeframeFacet
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: DateFacetState;
 
@@ -87,10 +86,17 @@ export class AtomicCommerceTimeframeFacet
     return this.headerFocus;
   }
 
+  private unsubscribeFacetController?: () => void;
+
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
+
     this.registerFacetToStore();
   }
 
@@ -162,6 +168,7 @@ export class AtomicCommerceTimeframeFacet
     if (this.host.isConnected) {
       return;
     }
+    this.unsubscribeFacetController?.();
   }
 
   private get isHidden() {
