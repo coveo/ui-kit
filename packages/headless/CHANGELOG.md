@@ -1,3 +1,18 @@
+# 2.72.0 (2024-07-09)
+
+### Bug Fixes
+
+- **atomic/commerce:** fix url manager ([#4151](https://github.com/coveo/ui-kit/issues/4151)) ([d5991f5](https://github.com/coveo/ui-kit/commits/d5991f57581712eec670df3b23483cc3f1fc5382))
+- **deps:** update dependency @reduxjs/toolkit to v2.2.6 j:kit-282 ([#3969](https://github.com/coveo/ui-kit/issues/3969)) ([ccb34a7](https://github.com/coveo/ui-kit/commits/ccb34a7124aa1f13814a78afdae8e77102f58554))
+- **headless:** defensive code against clientID access from relay ([#4165](https://github.com/coveo/ui-kit/issues/4165)) ([26bf619](https://github.com/coveo/ui-kit/commits/26bf619777c4d9cb61c2288c7681b9decc2586c9))
+
+### Features
+
+- **atomic:** add middleware preprocessor for the recommendation engine ([#4164](https://github.com/coveo/ui-kit/issues/4164)) ([4e0803d](https://github.com/coveo/ui-kit/commits/4e0803d747077001c5ca836f570409c505375ada))
+- **atomic:** add new atomic-commerce-refine-toggle component ([#4155](https://github.com/coveo/ui-kit/issues/4155)) ([71d81ba](https://github.com/coveo/ui-kit/commits/71d81ba6a60c8ab83a2d744cb56097d85f691383))
+- **commerce:** distinguish facet search solution type ([#4156](https://github.com/coveo/ui-kit/issues/4156)) ([a1aba3e](https://github.com/coveo/ui-kit/commits/a1aba3e05763a123e7fdadf99318601887df9a0d))
+- **headless:** quick view event for insight use case made an InsightPanel.ItemAction ([#4136](https://github.com/coveo/ui-kit/issues/4136)) ([eaef9fa](https://github.com/coveo/ui-kit/commits/eaef9fa3878e28ace749b78772491bc70fe3676d))
+
 # 2.71.0 (2024-07-03)
 
 ### Features

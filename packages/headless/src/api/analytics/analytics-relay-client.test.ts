@@ -11,7 +11,6 @@ describe('#getRelayInstanceFromState', () => {
     emit: jest.fn(),
     on: jest.fn(),
     off: jest.fn(),
-    clearStorage: jest.fn(),
     getMeta: jest.fn(),
     updateConfig: jest.fn(),
     version: 'test',

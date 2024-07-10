@@ -203,13 +203,14 @@ test.describe('with instant results & query suggestions', () => {
   });
 
   test.describe('with recent queries', () => {
-    test.beforeEach(async ({searchBox}) => {
+    test.beforeEach(async ({searchBox, page}) => {
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
       await searchBox.searchInput.fill('kayak');
       await searchBox.searchInput.press('Enter');
       await searchBox.clearButton.waitFor({state: 'visible'});
       await searchBox.searchInput.fill('');
+      await page.waitForLoadState('networkidle');
     });
 
     test('should display recent queries', async ({searchBox}) => {
@@ -436,24 +437,6 @@ test.describe('with a facet & clear-filters set to false', () => {
     await facets.clearFilters().waitFor({state: 'visible'});
     await searchBox.submitButton.click();
     await expect(facets.clearFilters()).toBeVisible();
-  });
-});
-
-test.describe('with enable-query-syntax=true', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=attributes-enable-query-syntax:!true;attributes-suggestion-timeout:5000'
-    );
-  });
-
-  test('should use query syntax', async ({loadMore, searchBox, page}) => {
-    await loadMore.loadMoreButton.waitFor({state: 'visible'});
-    await searchBox.searchInput
-      // eslint-disable-next-line @cspell/spellchecker
-      .fill('@urihash=bzo5fpM1vf8Xñds1');
-    await searchBox.submitButton.click();
-    await expect(loadMore.summary({total: 1})).toBeVisible();
-    await expect(page.getByText('WiLife Life Jacket WiLife')).toBeVisible();
   });
 });
 

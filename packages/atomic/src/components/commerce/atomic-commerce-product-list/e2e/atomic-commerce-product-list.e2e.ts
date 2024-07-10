@@ -43,7 +43,6 @@ test.describe('when executing an initial search', () => {
 test.describe('when interface load yields no products', () => {
   test.beforeEach(async ({productList}) => {
     await productList.load({story: 'no-results'});
-    await productList.hydrated.waitFor();
   });
 
   test('should not display placeholders', async ({productList}) => {
