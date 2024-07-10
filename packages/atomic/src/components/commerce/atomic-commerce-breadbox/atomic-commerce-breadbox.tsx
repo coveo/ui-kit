@@ -276,33 +276,10 @@ export class AtomicCommerceBreadbox
   };
 
   private buildBreadcrumb(breadcrumb: Breadcrumb<AnyFacetValue>) {
-    let facetStateName:
-      | 'facets'
-      | 'categoryFacets'
-      | 'numericFacets'
-      | 'dateFacets';
-
-    switch (breadcrumb.type) {
-      case 'hierarchical':
-        facetStateName = 'categoryFacets';
-        break;
-      case 'numericalRange':
-        facetStateName = 'numericFacets';
-        break;
-      case 'dateRange':
-        facetStateName = 'dateFacets';
-        break;
-      default:
-        facetStateName = 'facets';
-    }
-
     return breadcrumb.values.map((value: BreadcrumbValue<AnyFacetValue>) => {
       return {
         facetId: breadcrumb.facetId,
-        label:
-          this.bindings.store.state[facetStateName][
-            breadcrumb.facetId
-          ]?.label(),
+        label: breadcrumb.facetDisplayName,
         deselect: value.deselect,
         formattedValue: this.valueForFacetType(
           breadcrumb.type,
