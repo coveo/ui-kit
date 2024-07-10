@@ -9,4 +9,11 @@ export class ProductTemplateObject extends BasePageObject<'atomic-product-templa
    * What to tests ?
    *
    */
+  get product() {
+    return this.page.locator('atomic-product').first();
+  }
+
+  get error() {
+    return this.page.locator('atomic-component-error').first();
+  }
 }
