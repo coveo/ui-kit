@@ -7,7 +7,7 @@ import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,

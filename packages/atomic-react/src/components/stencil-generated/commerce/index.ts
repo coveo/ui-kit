@@ -8,6 +8,8 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
+export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
+export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
 export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');
 export const AtomicCommerceFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacet, HTMLAtomicCommerceFacetElement>('atomic-commerce-facet');
 export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
@@ -21,6 +23,8 @@ export const AtomicCommerceProductList = /*@__PURE__*/createReactComponent<JSX.A
 export const AtomicCommerceQuerySummary = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceQuerySummary, HTMLAtomicCommerceQuerySummaryElement>('atomic-commerce-query-summary');
 export const AtomicCommerceRecommendationInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationInterface, HTMLAtomicCommerceRecommendationInterfaceElement>('atomic-commerce-recommendation-interface');
 export const AtomicCommerceRecommendationList = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationList, HTMLAtomicCommerceRecommendationListElement>('atomic-commerce-recommendation-list');
+export const AtomicCommerceRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineModal, HTMLAtomicCommerceRefineModalElement>('atomic-commerce-refine-modal');
+export const AtomicCommerceRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineToggle, HTMLAtomicCommerceRefineToggleElement>('atomic-commerce-refine-toggle');
 export const AtomicCommerceSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBox, HTMLAtomicCommerceSearchBoxElement>('atomic-commerce-search-box');
 export const AtomicCommerceSearchBoxInstantProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBoxInstantProducts, HTMLAtomicCommerceSearchBoxInstantProductsElement>('atomic-commerce-search-box-instant-products');
 export const AtomicCommerceSearchBoxQuerySuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBoxQuerySuggestions, HTMLAtomicCommerceSearchBoxQuerySuggestionsElement>('atomic-commerce-search-box-query-suggestions');

@@ -138,7 +138,6 @@ export class AtomicCommerceProductList
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.productListing = buildProductListing(this.bindings.engine);
-      this.productListing.refresh();
       this.summary = this.productListing.summary();
     } else {
       this.search = buildSearch(this.bindings.engine);
@@ -279,6 +278,7 @@ export class AtomicCommerceProductList
             title: product.ec_name ?? 'temp',
           }}
           {...propsForAtomicProduct.interactiveProduct}
+          gridTarget={this.gridCellLinkTarget}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }

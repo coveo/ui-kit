@@ -1,3 +1,4 @@
+import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
 import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
@@ -24,6 +25,7 @@ describe('fieldSuggestionsGenerator', () => {
     fetchProductsActionCreator: jest.fn(),
     facetResponseSelector: jest.fn(),
     isFacetLoadingResponseSelector: jest.fn(),
+    facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
   function initEngine(preloadedState = buildMockCommerceState()) {

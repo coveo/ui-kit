@@ -19,6 +19,8 @@ export function buildCommerceLayout(
     layoutWebComponentTagName,
     containerWebComponentTagName,
     noProductsSelector,
-    errorSelector
+    errorSelector,
+    'atomic-commerce-refine-toggle',
+    'atomic-commerce-sort-dropdown'
   );
 }
