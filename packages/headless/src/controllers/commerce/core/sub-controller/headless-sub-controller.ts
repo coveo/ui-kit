@@ -277,6 +277,7 @@ export function buildSearchAndListingsSubControllers<
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+        fetchProductsActionCreator,
       });
     },
     breadcrumbManager() {
