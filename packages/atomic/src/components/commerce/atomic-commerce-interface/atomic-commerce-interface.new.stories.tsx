@@ -75,6 +75,5 @@ export const WithProductList: Story = {
         </atomic-layout-section>
       </atomic-commerce-layout>
     `,
-    'attributes-language': 'en',
   },
 };
