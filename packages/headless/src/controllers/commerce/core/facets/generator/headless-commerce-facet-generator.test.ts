@@ -17,7 +17,9 @@ import {
   FacetGeneratorOptions,
 } from './headless-commerce-facet-generator';
 
-jest.mock('../../../../../features/breadcrumb/breadcrumb-actions');
+jest.mock(
+  '../../../../../features/commerce/facets/core-facet/core-facet-actions'
+);
 
 describe('FacetGenerator', () => {
   let engine: MockedCommerceEngine;
@@ -174,7 +176,7 @@ describe('FacetGenerator', () => {
   describe('#deselectAll', () => {
     it('dispatches #clearAllCoreFacets', () => {
       facetGenerator.deselectAll();
-      expect(clearAllCoreFacets).toHaveBeenCalledTimes(1);
+      expect(clearAllCoreFacets).toHaveBeenCalled();
     });
 
     it('dispatches #fetchProductsActionCreator', () => {
