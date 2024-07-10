@@ -111,7 +111,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: RegularFacetState;
 
@@ -124,17 +123,25 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
+  private unsubscribeFacetController?: () => void;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
     this.initAriaLive();
     this.initPopover();
     this.registerFacet();
+  }
+
+  public disconnectedCallback(): void {
+    this.unsubscribeFacetController?.();
   }
 
   public componentShouldUpdate(

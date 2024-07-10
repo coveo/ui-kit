@@ -109,7 +109,6 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
 
@@ -124,14 +123,19 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
+  private unsubscribeFacetController?: () => void;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.displayName,
@@ -179,6 +183,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   }
 
   public disconnectedCallback() {
+    this.unsubscribeFacetController?.();
     if (this.host.isConnected) {
       return;
     }
