@@ -25,7 +25,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-field-condition',
   args: {
-    default: `
+    'slots-default': `
       <div>
         The visibility of this text can be controlled by the field conditions component
       </div>

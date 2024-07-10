@@ -1,6 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product, BaseProduct} from '../../../api/commerce/common/product';
+import {
+  Product,
+  BaseProduct,
+  ChildProduct,
+} from '../../../api/commerce/common/product';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
 import {QueryCommerceAPIThunkReturn} from '../common/actions';
 import {
@@ -9,12 +13,12 @@ import {
   promoteChildToParent,
 } from './product-listing-actions';
 import {
-  ProductListingV2State,
-  getProductListingV2InitialState,
+  ProductListingState,
+  getProductListingInitialState,
 } from './product-listing-state';
 
-export const productListingV2Reducer = createReducer(
-  getProductListingV2InitialState(),
+export const productListingReducer = createReducer(
+  getProductListingInitialState(),
 
   (builder) => {
     builder
@@ -52,28 +56,23 @@ export const productListingV2Reducer = createReducer(
       })
       .addCase(promoteChildToParent, (state, action) => {
         const {products} = state;
-        const currentParentIndex = products.findIndex(
-          (product) => product.permanentid === action.payload.parentPermanentId
-        );
+        let childToPromote;
+        const currentParentIndex = products.findIndex((product) => {
+          childToPromote = product.children.find(
+            (child) => child.permanentid === action.payload.child.permanentid
+          );
+          return !!childToPromote;
+        });
 
-        if (currentParentIndex === -1) {
+        if (currentParentIndex === -1 || childToPromote === undefined) {
           return;
         }
 
         const position = products[currentParentIndex].position;
-
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
-        const childToPromote = children.find(
-          (child) => child.permanentid === action.payload.childPermanentId
-        );
-
-        if (childToPromote === undefined) {
-          return;
-        }
-
         const newParent: Product = {
-          ...childToPromote,
+          ...(childToPromote as ChildProduct),
           children,
           totalNumberOfChildren,
           position,
@@ -85,7 +84,7 @@ export const productListingV2Reducer = createReducer(
 );
 
 function handleError(
-  state: ProductListingV2State,
+  state: ProductListingState,
   error?: CommerceAPIErrorStatusResponse
 ) {
   state.error = error || null;
@@ -93,7 +92,7 @@ function handleError(
 }
 
 function handleFullfilled(
-  state: ProductListingV2State,
+  state: ProductListingState,
   response: CommerceSuccessResponse
 ) {
   state.error = null;
@@ -102,7 +101,7 @@ function handleFullfilled(
   state.isLoading = false;
 }
 
-function handlePending(state: ProductListingV2State, requestId: string) {
+function handlePending(state: ProductListingState, requestId: string) {
   state.isLoading = true;
   state.requestId = requestId;
 }

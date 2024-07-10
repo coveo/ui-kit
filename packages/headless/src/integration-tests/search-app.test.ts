@@ -27,9 +27,7 @@ import {
   buildRelevanceSortCriterion,
   SortOrder,
 } from '../features/sort-criteria/criteria';
-
-const sleep = (seconds: number) =>
-  new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+import {waitForNextStateChange} from '../test/functional-test-utils';
 
 let configuration: SearchEngineConfiguration;
 let engine: SearchEngine;
@@ -65,8 +63,10 @@ describe('search app', () => {
     initEngine();
     initControllers();
 
-    engine.executeFirstSearch();
-    await sleep(2);
+    await waitForNextStateChange(engine, {
+      action: () => engine.executeFirstSearch(),
+      expectedSubscriberCalls: 2,
+    });
   });
 
   it('displays 10 results in the result list', () => {
@@ -90,16 +90,20 @@ describe('search app', () => {
       initialFacetValues = facet.state.values;
 
       searchBox.updateText('TED');
-      searchBox.submit();
 
-      await sleep(2);
+      await waitForNextStateChange(searchBox, {
+        action: () => searchBox.submit(),
+        expectedSubscriberCalls: 3,
+      });
     });
 
     afterAll(async () => {
       searchBox.updateText('');
-      searchBox.submit();
 
-      await sleep(2);
+      await waitForNextStateChange(searchBox, {
+        action: () => searchBox.submit(),
+        expectedSubscriberCalls: 2,
+      });
     });
 
     it('updates the result list', () => {
@@ -116,14 +120,18 @@ describe('search app', () => {
 
     beforeAll(async () => {
       initialResults = resultList.state.results;
-      sort.sortBy(buildDateSortCriterion(SortOrder.Descending));
 
-      await sleep(2);
+      await waitForNextStateChange(resultList, {
+        action: () => sort.sortBy(buildDateSortCriterion(SortOrder.Descending)),
+        expectedSubscriberCalls: 2,
+      });
     });
 
     afterAll(async () => {
-      sort.sortBy(buildRelevanceSortCriterion());
-      await sleep(2);
+      await waitForNextStateChange(resultList, {
+        action: () => sort.sortBy(buildRelevanceSortCriterion()),
+        expectedSubscriberCalls: 2,
+      });
     });
 
     it('updates the results', () => {
@@ -140,14 +148,18 @@ describe('search app', () => {
       initialResults = resultList.state.results;
 
       const [firstFacetValue] = categoryFacet.state.values;
-      categoryFacet.toggleSelect(firstFacetValue);
 
-      await sleep(2);
+      await waitForNextStateChange(facet, {
+        action: () => categoryFacet.toggleSelect(firstFacetValue),
+        expectedSubscriberCalls: 2,
+      });
     });
 
     afterAll(async () => {
-      facet.deselectAll();
-      await sleep(2);
+      await waitForNextStateChange(facet, {
+        action: () => facet.deselectAll(),
+        expectedSubscriberCalls: 2,
+      });
     });
 
     it('updates the facet values', () => {
@@ -173,8 +185,10 @@ describe('search app with expired token and #renewAccessToken configured to retu
     initEngine();
     initControllers();
 
-    engine.executeFirstSearch();
-    await sleep(2);
+    await waitForNextStateChange(engine, {
+      action: () => engine.executeFirstSearch(),
+      expectedSubscriberCalls: 5,
+    });
   });
 
   it('sets the valid token in state', () => {

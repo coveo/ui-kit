@@ -2,8 +2,9 @@ import {
   NumericFacet,
   NumericFacetState,
   NumericRangeRequest,
-  ListingSummary,
-  SearchSummary,
+  ProductListingSummaryState,
+  SearchSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -20,11 +21,11 @@ import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
@@ -50,6 +51,10 @@ export class AtomicCommerceNumericFacet
   @State()
   public facetState!: NumericFacetState;
 
+  @BindStateToController('summary')
+  @State()
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
+
   @State() public error!: Error;
 
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
@@ -58,7 +63,7 @@ export class AtomicCommerceNumericFacet
   /**
    * The Summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The numeric facet controller instance.
    */
@@ -67,6 +72,10 @@ export class AtomicCommerceNumericFacet
    * Specifies whether the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The field identifier for this facet.
+   */
+  @Prop({reflect: true}) field?: string;
 
   private headerFocus?: FocusTargetController;
 
@@ -78,14 +87,17 @@ export class AtomicCommerceNumericFacet
   }
 
   public initialize() {
+    if (!this.facetState) {
+      return;
+    }
     this.registerFacetToStore();
   }
 
   private registerFacetToStore() {
-    const {facetId, field} = this.state;
+    const {facetId, field} = this.facetState;
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: facetId!,
+      facetId: facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
@@ -126,11 +138,11 @@ export class AtomicCommerceNumericFacet
     const {
       bindings: {i18n},
     } = this;
-    const {firstSearchExecuted, hasError} = this.summary.state;
+    const {firstRequestExecuted, hasError} = this.summaryState;
     return (
       <FacetGuard
         enabled={true}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasError={hasError}
         hasResults={this.shouldRenderFacet}
       >
@@ -185,23 +197,19 @@ export class AtomicCommerceNumericFacet
             formatter={formatter}
             displayValuesAs={'checkbox'}
             facetValue={value}
-            field={this.state.field}
+            field={this.facetState.field}
             i18n={i18n}
             logger={logger}
             manualRanges={manualRanges}
-            onClick={() => this.facet!.toggleSelect(value)}
+            onClick={() => this.facet.toggleSelect(value)}
           />
         ))}
       </NumericFacetValuesContainer>
     );
   }
 
-  private get state() {
-    return this.facet.state;
-  }
-
   private get displayName() {
-    return this.state.displayName || 'no-label';
+    return this.facetState.displayName || 'no-label';
   }
 
   private get numberOfSelectedValues() {
@@ -210,8 +218,8 @@ export class AtomicCommerceNumericFacet
     }
 
     return (
-      this.facet?.state.values.filter(({state}) => state === 'selected')
-        .length || 0
+      this.facetState.values.filter(({state}) => state === 'selected').length ||
+      0
     );
   }
 
@@ -225,7 +233,7 @@ export class AtomicCommerceNumericFacet
 
   private get valuesToRender() {
     return (
-      this.facet?.state.values.filter(
+      this.facetState.values.filter(
         (value) => value.numberOfResults || value.state !== 'idle'
       ) || []
     );
@@ -233,11 +241,11 @@ export class AtomicCommerceNumericFacet
 
   private get shouldRenderInput() {
     const {
-      firstSearchExecuted,
+      firstRequestExecuted: firstSearchExecuted,
       hasError,
       isLoading,
       hasProducts: hasResults,
-    } = this.summary.state;
+    } = this.summaryState;
     return shouldDisplayInputForFacetRange({
       hasInputRange: this.hasInputRange,
       searchStatusState: {
@@ -246,7 +254,7 @@ export class AtomicCommerceNumericFacet
         hasResults,
         isLoading,
       },
-      facetValues: this.state.values,
+      facetValues: this.facetState.values,
       hasInput: true,
     });
   }
@@ -260,7 +268,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasValues() {
-    if (this.state.values.length) {
+    if (this.facetState.values.length) {
       return true;
     }
 

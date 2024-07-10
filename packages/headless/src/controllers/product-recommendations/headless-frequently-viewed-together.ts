@@ -13,6 +13,10 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedTogetherListOptions {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -32,12 +36,19 @@ export interface FrequentlyViewedTogetherListOptions {
   additionalFields?: string[];
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedTogetherListProps {
   options?: FrequentlyViewedTogetherListOptions;
 }
 
 /**
  * The `FrequentlyViewedTogetherList` controller recommends products that are often viewed in the same shopping session.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface FrequentlyViewedTogetherList extends Controller {
   /**
@@ -58,6 +69,10 @@ export interface FrequentlyViewedTogetherList extends Controller {
   state: FrequentlyViewedTogetherListState;
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface FrequentlyViewedTogetherListState {
   /**
    * The SKUs of the products to fetch recommendations for.
@@ -87,6 +102,9 @@ export interface FrequentlyViewedTogetherListState {
 
 /**
  * Creates a `FrequentlyViewedTogetherList` controller instance.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FrequentlyViewedTogetherList` properties.

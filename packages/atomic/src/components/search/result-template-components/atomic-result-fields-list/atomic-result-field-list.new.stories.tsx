@@ -23,7 +23,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-result-fields-list',
   args: {
-    default: `
+    'slots-default': `
       <style>
         .field {
           display: inline-flex;

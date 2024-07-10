@@ -29,7 +29,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of products available.
  * @part load-more-results-button - The "Load more products" button.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-load-more-products',
@@ -80,6 +80,7 @@ export class AtomicLoadMoreProducts {
             from={this.lastProduct}
             to={this.paginationState.totalEntries}
             i18n={i18n}
+            label="showing-products-of-load-more"
           />
           <LoadMoreProgressBar
             from={this.lastProduct}
@@ -87,6 +88,7 @@ export class AtomicLoadMoreProducts {
           />
           <LoadMoreButton
             i18n={i18n}
+            label={'load-more-products'}
             moreAvailable={this.lastProduct < this.paginationState.totalEntries}
             onClick={() => this.onClick()}
           />

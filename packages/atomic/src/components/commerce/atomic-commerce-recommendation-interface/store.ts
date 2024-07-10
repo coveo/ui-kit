@@ -1,3 +1,4 @@
+import {ChildProduct} from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   AtomicCommonStore,
@@ -9,7 +10,7 @@ import {makeDesktopQuery} from '../atomic-commerce-layout/commerce-layout';
 export interface AtomicStoreData extends AtomicCommonStoreData {
   mobileBreakpoint: string;
   currentQuickviewPosition: number;
-  activeProductChild: {parentPermanentId: string; childPermanentId: string};
+  activeProductChild: ChildProduct | undefined;
 }
 
 export interface AtomicCommerceRecommendationStore
@@ -29,7 +30,7 @@ export function createAtomicCommerceRecommendationStore(): AtomicCommerceRecomme
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
     currentQuickviewPosition: -1,
-    activeProductChild: {parentPermanentId: '', childPermanentId: ''},
+    activeProductChild: undefined,
   });
 
   return {

@@ -1,6 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {BaseProduct, Product} from '../../../api/commerce/common/product';
+import {
+  BaseProduct,
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {
   fetchRecommendations,
@@ -88,28 +92,23 @@ export const recommendationsReducer = createReducer(
         }
 
         const {products} = recommendations;
-        const currentParentIndex = products.findIndex(
-          (product) => product.permanentid === action.payload.parentPermanentId
-        );
+        let childToPromote;
+        const currentParentIndex = products.findIndex((product) => {
+          childToPromote = product.children.find(
+            (child) => child.permanentid === action.payload.child.permanentid
+          );
+          return !!childToPromote;
+        });
 
-        if (currentParentIndex === -1) {
+        if (currentParentIndex === -1 || childToPromote === undefined) {
           return;
         }
 
         const position = products[currentParentIndex].position;
-
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
-        const childToPromote = children.find(
-          (child) => child.permanentid === action.payload.childPermanentId
-        );
-
-        if (childToPromote === undefined) {
-          return;
-        }
-
         const newParent: Product = {
-          ...childToPromote,
+          ...(childToPromote as ChildProduct),
           children,
           totalNumberOfChildren,
           position,

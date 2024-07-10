@@ -49,6 +49,9 @@ export interface GetProductRecommendationsThunkReturn {
   duration: number;
 }
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ */
 export interface SetProductRecommendationsRecommenderIdActionCreatorPayload {
   /**
    * The recommender id, used to determine the machine-learning model that should fulfill the request.
@@ -64,6 +67,10 @@ export const setProductRecommendationsRecommenderId = createAction(
     })
 );
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface SetProductRecommendationsSkusActionCreatorPayload {
   /**
    * The skus to retrieve recommendations for.
@@ -83,6 +90,10 @@ export const setProductRecommendationsSkus = createAction(
     })
 );
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface SetProductRecommendationsBrandFilterActionCreatorPayload {
   /**
    * The brand to filter recommendations by.
@@ -98,6 +109,10 @@ export const setProductRecommendationsBrandFilter = createAction(
     })
 );
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface SetProductRecommendationsCategoryFilterActionCreatorPayload {
   /**
    * The category to filter recommendations by.
@@ -113,6 +128,10 @@ export const setProductRecommendationsCategoryFilter = createAction(
     })
 );
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface SetProductRecommendationsAdditionalFieldsActionCreatorPayload {
   /**
    * The additional result fields to request.
@@ -131,6 +150,10 @@ export const setProductRecommendationsAdditionalFields = createAction(
     })
 );
 
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload {
   /**
    * The maximum number of recommendations to return.

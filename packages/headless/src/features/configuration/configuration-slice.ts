@@ -7,6 +7,12 @@ import {
   matchCoveoOrganizationEndpointUrl,
   isCoveoPlatformURL,
 } from '../../utils/url-utils';
+import {
+  updateBasicConfiguration as updateCommerceBasicConfiguration,
+  updateAnalyticsConfiguration as updateCommerceAnalyticsConfiguration,
+  disableAnalytics as disableCommerceAnalytics,
+  enableAnalytics as enableCommerceAnalytics,
+} from '../commerce/configuration/configuration-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -17,11 +23,13 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
+  UpdateBasicConfigurationActionCreatorPayload,
 } from './configuration-actions';
 import {
   getConfigurationInitialState,
   searchAPIEndpoint,
   analyticsAPIEndpoint,
+  ConfigurationState,
 } from './configuration-state';
 
 function legacyAnalyticsUrlFromPlatformUrl(
@@ -56,20 +64,10 @@ export const configurationReducer = createReducer(
   (builder) =>
     builder
       .addCase(updateBasicConfiguration, (state, action) => {
-        if (action.payload.accessToken) {
-          state.accessToken = action.payload.accessToken;
-        }
-        if (action.payload.organizationId) {
-          state.organizationId = action.payload.organizationId;
-        }
-        if (action.payload.platformUrl) {
-          state.platformUrl = action.payload.platformUrl;
-          state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = legacyAnalyticsUrlFromPlatformUrl(
-            action.payload.platformUrl,
-            state.organizationId
-          );
-        }
+        handleUpdateBasicConfiguration(state, action.payload);
+      })
+      .addCase(updateCommerceBasicConfiguration, (state, action) => {
+        handleUpdateBasicConfiguration(state, action.payload);
       })
       .addCase(updateSearchConfiguration, (state, action) => {
         if (action.payload.apiBaseUrl) {
@@ -136,10 +134,27 @@ export const configurationReducer = createReducer(
           state.analytics.documentLocation = action.payload.documentLocation;
         }
       })
+      .addCase(updateCommerceAnalyticsConfiguration, (state, action) => {
+        if (!isNullOrUndefined(action.payload.enabled)) {
+          state.analytics.enabled = action.payload.enabled;
+        }
+        if (!isNullOrUndefined(action.payload.trackingId)) {
+          state.analytics.trackingId = action.payload.trackingId;
+        }
+        if (!isNullOrUndefined(action.payload.source)) {
+          state.analytics.source = action.payload.source;
+        }
+      })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
       })
+      .addCase(disableCommerceAnalytics, (state) => {
+        state.analytics.enabled = false;
+      })
       .addCase(enableAnalytics, (state) => {
+        state.analytics.enabled = true;
+      })
+      .addCase(enableCommerceAnalytics, (state) => {
         state.analytics.enabled = true;
       })
       .addCase(setOriginLevel2, (state, action) => {
@@ -156,3 +171,23 @@ export const configurationReducer = createReducer(
           action.payload.tab || state.analytics.originLevel2;
       })
 );
+
+function handleUpdateBasicConfiguration(
+  state: ConfigurationState,
+  payload: UpdateBasicConfigurationActionCreatorPayload
+) {
+  if (payload.accessToken) {
+    state.accessToken = payload.accessToken;
+  }
+  if (payload.organizationId) {
+    state.organizationId = payload.organizationId;
+  }
+  if (payload.platformUrl) {
+    state.platformUrl = payload.platformUrl;
+    state.search.apiBaseUrl = `${payload.platformUrl}${searchAPIEndpoint}`;
+    state.analytics.apiBaseUrl = legacyAnalyticsUrlFromPlatformUrl(
+      payload.platformUrl,
+      state.organizationId
+    );
+  }
+}

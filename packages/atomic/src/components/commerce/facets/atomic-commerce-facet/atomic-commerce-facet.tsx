@@ -1,8 +1,9 @@
 import {
+  ProductListingSummaryState,
   RegularFacet,
   RegularFacetState,
-  SearchSummary,
-  ListingSummary,
+  SearchSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -41,13 +42,48 @@ import {
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
  *
- * @internal
+ * @part facet - The wrapper for the entire facet.
+ * @part placeholder - The placeholder shown before the first search is executed.
+ *
+ * @part label-button - The button that displays the label and allows to expand/collapse the facet.
+ * @part label-button-icon - The label button icon.
+ * @part clear-button - The button that resets the actively selected facet values.
+ * @part clear-button-icon - The clear button icon.
+ *
+ * @part search-wrapper - The search box wrapper.
+ * @part search-input - The search box input.
+ * @part search-icon - The search box submit button.
+ * @part search-clear-button - The button to clear the search box of input.
+ * @part more-matches - The label indicating there are more matches for the current facet search query.
+ * @part no-matches - The label indicating there are no matches for the current facet search query.
+ * @part matches-query - The highlighted query inside the matches labels.
+ * @part search-highlight - The highlighted query inside the facet values.
+ *
+ * @part values - The facet values container.
+ * @part value-label - The facet value label, common for all displays.
+ * @part value-count - The facet value count, common for all displays.
+ *
+ * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-checkbox-icon - The facet value checkbox icon, available when display is 'checkbox'.
+ * @part value-link - The facet value when display is 'link'.
+ * @part value-link-selected - The selected facet value when display is 'link'.
+ * @part value-box - The facet value when display is 'box'.
+ * @part value-box-selected - The selected facet value when display is 'box'.
+ * @part value-exclude-button - The button to exclude a facet value, available when display is 'checkbox'.
+ *
+ * @part show-more - The show more results button.
+ * @part show-less - The show less results button.
+ * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-facet',
@@ -61,7 +97,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   /**
    * The Summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
    */
@@ -70,10 +106,18 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
    * Specifies whether the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The field identifier for this facet.
+   */
+  @Prop({reflect: true}) field?: string;
 
   @BindStateToController('facet')
   @State()
   public facetState!: RegularFacetState;
+
+  @BindStateToController('summary')
+  @State()
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
   @State() public error!: Error;
 
@@ -85,6 +129,9 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (!this.facetState) {
+      return;
+    }
     this.initAriaLive();
     this.initPopover();
     this.registerFacet();
@@ -108,12 +155,15 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   }
 
   public render() {
-    const {hasError, firstSearchExecuted} = this.summary.state;
+    if (!this.facet) {
+      return;
+    }
+    const {hasError, firstRequestExecuted} = this.summaryState;
     return (
       <FacetGuard
         enabled={true}
         hasError={hasError}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasResults={this.facetState.values.length > 0}
       >
         {
@@ -187,7 +237,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private renderSearchResults() {
     return this.renderValuesContainer(
-      this.facet.state.facetSearch.values.map((value) => (
+      this.facetState.facetSearch.values.map((value) => (
         <FacetSearchValue
           {...this.facetValueProps}
           facetCount={value.count}
@@ -201,7 +251,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private renderValues() {
     return this.renderValuesContainer(
-      this.facet.state.values.map((value, i) => {
+      this.facetState.values.map((value, i) => {
         const shouldFocusOnShowLessAfterInteraction = i === 0;
         const shouldFocusOnShowMoreAfterInteraction = i === 0;
 
@@ -240,8 +290,8 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
           this.focusTargets.showLess.focusAfterSearch();
           this.facet.showLessValues();
         }}
-        canShowMoreValues={this.facet.state.canShowMoreValues}
-        canShowLessValues={this.facet.state.canShowLessValues}
+        canShowMoreValues={this.facetState.canShowMoreValues}
+        canShowLessValues={this.facetState.canShowLessValues}
       ></FacetShowMoreLess>
     );
   }
@@ -250,19 +300,19 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     return (
       <FacetSearchMatches
         i18n={this.bindings.i18n}
-        query={this.facet.state.facetSearch.query}
-        numberOfMatches={this.facet.state.facetSearch.values.length}
-        hasMoreMatches={this.facet.state.facetSearch.moreValuesAvailable}
+        query={this.facetState.facetSearch.query}
+        numberOfMatches={this.facetState.facetSearch.values.length}
+        hasMoreMatches={this.facetState.facetSearch.moreValuesAvailable}
       ></FacetSearchMatches>
     );
   }
 
   private get activeValues() {
-    return this.facet.state.values.filter(({state}) => state !== 'idle');
+    return this.facetState.values.filter(({state}) => state !== 'idle');
   }
 
   private get displayName() {
-    return this.facet.state.displayName || 'no-label';
+    return this.facetState.displayName || 'no-label';
   }
 
   private get facetValueProps(): Pick<
@@ -293,7 +343,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private initPopover() {
     initializePopover(this.host, {
       ...this.facetInfo,
-      hasValues: () => !!this.facet.state.values.length,
+      hasValues: () => !!this.facetState.values.length,
       numberOfActiveValues: () => this.activeValues.length,
     });
   }
@@ -310,7 +360,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private get facetInfo(): FacetInfo {
     return {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facet.state.facetId,
+      facetId: this.facetState.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };

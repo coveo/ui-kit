@@ -132,6 +132,7 @@ function createSearchAPIClient(
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:
+      configuration.preprocessSearchResponseMiddleware ||
       NoopPostprocessSearchResponseMiddleware,
     postprocessFacetSearchResponseMiddleware:
       NoopPostprocessFacetSearchResponseMiddleware,

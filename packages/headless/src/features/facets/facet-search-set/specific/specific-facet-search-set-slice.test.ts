@@ -1,6 +1,6 @@
 import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
-import {buildFetchProductListingV2Response} from '../../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
 import {setView} from '../../../commerce/context/context-actions';
 import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
@@ -58,7 +58,10 @@ describe('FacetSearch slice', () => {
 
   it('on #executeCommerceFacetSearch.pending, calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
-    const pendingAction = executeCommerceFacetSearch.pending(facetId, '');
+    const pendingAction = executeCommerceFacetSearch.pending(facetId, {
+      facetId,
+      facetSearchType: 'SEARCH',
+    });
     facetSearchSetReducer(state, pendingAction);
 
     expect(
@@ -81,7 +84,7 @@ describe('FacetSearch slice', () => {
     const rejectedAction = executeCommerceFacetSearch.rejected(
       {name: 'test', message: 'test'},
       facetId,
-      facetId
+      {facetId, facetSearchType: 'SEARCH'}
     );
     facetSearchSetReducer(state, rejectedAction);
 
@@ -116,7 +119,7 @@ describe('FacetSearch slice', () => {
         },
       },
       '',
-      ''
+      {facetId: '', facetSearchType: 'SEARCH'}
     );
 
     facetSearchSetReducer(state, action);
@@ -159,7 +162,7 @@ describe('FacetSearch slice', () => {
 
   it('on #fetchProductListing.fulfilled, calls #handleFacetSearchSetClear', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
-    const response = buildFetchProductListingV2Response();
+    const response = buildFetchProductListingResponse();
     facetSearchSetReducer(state, fetchProductListing.fulfilled(response, ''));
 
     expect(

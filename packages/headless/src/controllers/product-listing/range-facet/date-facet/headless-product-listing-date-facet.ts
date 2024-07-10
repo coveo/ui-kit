@@ -34,6 +34,9 @@ export {buildDateRange};
 /**
  * Creates a `DateFacet` controller instance for the product listing.
  *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ *
  * @param engine - The headless engine.
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.

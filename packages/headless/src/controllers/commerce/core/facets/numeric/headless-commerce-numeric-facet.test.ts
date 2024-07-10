@@ -4,7 +4,7 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-commerce-facet-response';
@@ -23,7 +23,7 @@ import {
 } from './headless-commerce-numeric-facet';
 
 jest.mock(
-  '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+  '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
 
 jest.mock(
