@@ -117,7 +117,7 @@ export class AtomicCommerceInterface
    *
    * Will default to the value set in the Headless engine context if not provided.
    */
-  @Prop({reflect: true, mutable: true}) language: string = '';
+  @Prop({reflect: true, mutable: true}) public language: string = '';
 
   /**
    * The commerce interface headless engine.
