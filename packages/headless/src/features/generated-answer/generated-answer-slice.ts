@@ -20,6 +20,7 @@ import {
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  updateAnswerConfigurationId,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -110,5 +111,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(collapseGeneratedAnswer, (state) => {
         state.expanded = false;
+      })
+      .addCase(updateAnswerConfigurationId, (state, {payload}) => {
+        state.answerConfigurationId = payload;
       })
 );

@@ -28,3 +28,12 @@ export const Default: Story = {
     'attributes-sort-criteria': 'occurrences',
   },
 };
+
+export const LowFacetValues: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'geographicalhierarchy',
+    'attributes-number-of-values': 2,
+    'attributes-with-search': true,
+  },
+};
