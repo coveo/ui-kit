@@ -5,10 +5,7 @@ export class ProductTemplateObject extends BasePageObject<'atomic-product-templa
   constructor(page: Page) {
     super(page, 'atomic-product-template');
   }
-  /**
-   * What to tests ?
-   *
-   */
+
   get product() {
     return this.page.locator('atomic-product').first();
   }
