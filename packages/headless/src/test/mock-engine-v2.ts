@@ -40,7 +40,6 @@ type MockedRelay = Relay & Pick<Relay, 'emit'>;
 
 export function mockRelay(): MockedRelay {
   return {
-    clearStorage: jest.fn(),
     emit: jest.fn(),
     getMeta: jest.fn().mockReturnValue({clientId: 'test'}),
     off: jest.fn(),
