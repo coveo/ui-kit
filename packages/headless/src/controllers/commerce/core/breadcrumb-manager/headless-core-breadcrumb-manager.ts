@@ -238,11 +238,13 @@ export function buildCoreBreadcrumbManager(
           .map((facetId) =>
             options.facetResponseSelector(engine[stateKey], facetId)
           )
-          .filter(
-            (facet): facet is AnyFacetResponse =>
-              facet !== undefined &&
-              facet.values.length > 0 &&
-              facet.values.some((value) => value.state !== 'idle')
+          .filter((facet): facet is AnyFacetResponse =>
+            facet !== undefined &&
+            facet.values.length > 0 &&
+            facet.type !== 'hierarchical'
+              ? facet.values.some((value) => value.state !== 'idle')
+              : findActiveValueAncestry((facet as CategoryFacetResponse).values)
+                  .length > 0
           )
           .map(createBreadcrumb) ?? [];
 
