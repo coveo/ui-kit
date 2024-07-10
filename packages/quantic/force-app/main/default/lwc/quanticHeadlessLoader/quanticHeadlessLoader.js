@@ -11,6 +11,8 @@ import LightningAlert from 'lightning/alert';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 
+/** @typedef {import("coveo").SortCriterion} SortCriterion */
+
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
 let dependencyPromises = [];
@@ -365,6 +367,20 @@ function registerToStore(engineId, facetType, data) {
 }
 
 /**
+ * Register the sort options in the store.
+ * @param {string} engineId The engine ID.
+ * @param {Array<{label: string; value: string; criterion: SortCriterion;}>} data
+ */
+function registerSortOptionsToStore(engineId, data) {
+  const store = getQuanticStore(engineId);
+  try {
+    Store.registerSortOptionDataToStore(store, data);
+  } catch (error) {
+    console.error('Fatal error: unable to register in store', error);
+  }
+}
+
+/**
  * Get facet data from store.
  * @param {string} engineId The engine ID.
  * @param {string} facetType
@@ -391,6 +407,20 @@ function getAllFacetsFromStore(engineId) {
     }),
     {}
   );
+}
+
+/**
+ * Gets all sort options data from store.
+ * @param {string} engineId The engine ID.
+ */
+function getAllSortOptionsFromStore(engineId) {
+  const store = getQuanticStore(engineId);
+  try {
+    return Store.getSortOptionsFromStore(store);
+  } catch (error) {
+    console.error('Fatal error: unable to get data from store', error);
+    return undefined;
+  }
 }
 
 /**
@@ -432,6 +462,8 @@ export {
   destroyEngine,
   registerToStore,
   getFromStore,
+  registerSortOptionsToStore,
+  getAllSortOptionsFromStore,
   HeadlessBundleNames,
   getAllFacetsFromStore,
   getHeadlessBundle,

@@ -5,6 +5,7 @@ import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticFacet from 'c/quanticFacet';
 import {
   getAllFacetsFromStore,
+  getAllSortOptionsFromStore,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {
@@ -19,6 +20,7 @@ import disabledDynamicNavigationTemplate from './templates/disabledDynamicNaviga
 // @ts-ignore
 import enabledDynamicNavigationTemplate from './templates/dynamicNavigation.html';
 
+/** @typedef {import("coveo").SortCriterion} SortCriterion */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -28,6 +30,13 @@ import enabledDynamicNavigationTemplate from './templates/dynamicNavigation.html
  * @property {HTMLElement} element - The HTML element of the facet.
  * @property {function} [format] - The formatting function of the facet.
  * @property {object} [metadata] - Metadata of the facet.
+ */
+
+/**
+ * @typedef {Object} SortOptionObject
+ * @property {string} label
+ * @property {string} value
+ * @property {SortCriterion} criterion
  */
 
 /**
@@ -66,8 +75,12 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   /** @type {object} */
   data;
+  /** @type {object} */
+  sortData;
   /** @type {boolean} */
   hasActiveFilters = false;
+  /** @type {boolean} */
+  shouldDisplaySort = false;
   /** @type {AnyHeadless} */
   headless;
   /** @type {object} */
@@ -99,6 +112,8 @@ export default class QuanticRefineModalContent extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
+    this.gatherSortOptions();
+
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.gatherFacets()
     );
@@ -115,6 +130,15 @@ export default class QuanticRefineModalContent extends LightningElement {
     if (!this.hasFacets) {
       this.data = getAllFacetsFromStore(this.engineId);
     }
+  }
+
+  /**
+   * Gather all sort options registered in the Quantic store.
+   * @returns {void}
+   */
+  gatherSortOptions() {
+    this.sortData = getAllSortOptionsFromStore(this.engineId);
+    this.shouldDisplaySort = true;
   }
 
   /**
@@ -238,6 +262,14 @@ export default class QuanticRefineModalContent extends LightningElement {
     });
 
     return facetData;
+  }
+
+  /**
+   * Returns sort option data.
+   * @returns {Array<SortOptionObject>}
+   */
+  get sortOptions() {
+    return this.sortData || [];
   }
 
   get shouldDisplayFiltersTitle() {

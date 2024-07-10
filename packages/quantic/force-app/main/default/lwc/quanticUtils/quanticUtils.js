@@ -30,6 +30,7 @@ import pastYear from '@salesforce/label/c.quantic_PastYear';
 import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 /** @typedef {import("coveo").Result} Result */
+/** @typedef {import("coveo").SortCriterion} SortCriterion */
 
 export class Debouncer {
   _timeout;
@@ -486,6 +487,7 @@ export class Store {
         numericFacets: {},
         dateFacets: {},
         categoryFacets: {},
+        sort: {},
       },
     };
   }
@@ -502,11 +504,26 @@ export class Store {
   }
 
   /**
+   * @param {Record<String, any>} store
+   * @param {Array<{label: string; value: string; criterion: SortCriterion;}>} data
+   */
+  static registerSortOptionDataToStore(store, data) {
+    store.state.sort = data;
+  }
+
+  /**
    * @param {Record<String, unknown>} store
    * @param {string} facetType
    */
   static getFromStore(store, facetType) {
     return store.state[facetType];
+  }
+
+  /**
+   * @param {Record<String, Object>} store
+   */
+  static getSortOptionsFromStore(store) {
+    return store.state.sort;
   }
 }
 

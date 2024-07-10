@@ -6,6 +6,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
+  registerSortOptionsToStore,
   getBueno,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, track, api} from 'lwc';
@@ -109,6 +110,7 @@ export default class QuanticSort extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
+    registerSortOptionsToStore(this.engineId, this.options);
   };
 
   disconnectedCallback() {
