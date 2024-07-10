@@ -44,8 +44,8 @@ export class AtomicHostedUI implements ComponentInterface {
   /**
    * The type of hosted search page to load.
    */
-  @Prop({reflect: true}) public hostedType: 'trial' | 'next-gen' | 'cli' =
-    'cli';
+  @Prop({reflect: true}) public hostedType: 'trial' | 'builder' | 'code' =
+    'code';
 
   @Method() public async initialize(
     options: AtomicHostedUIInitializationOptions
@@ -63,19 +63,19 @@ export class AtomicHostedUI implements ComponentInterface {
     const platformUrl = extractPlatformUrl(options);
 
     const paths = {
-      page: {
+      builder: {
         pagePathPrefix: 'searchpage/v1/interfaces',
         pagePath: '/json',
       },
-      legacy: {
+      trial: {
         pagePathPrefix: 'searchinterfaces',
         pagePath: '/hostedpage/v1',
       },
-      custom: {
+      code: {
         pagePathPrefix: 'hostedpages',
         pagePath: '',
       },
-    };
+    } as const;
 
     const {pagePathPrefix, pagePath} = paths[this.hostedType];
 
