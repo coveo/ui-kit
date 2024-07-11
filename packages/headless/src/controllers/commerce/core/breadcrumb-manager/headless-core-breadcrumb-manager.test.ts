@@ -291,7 +291,7 @@ describe('core breadcrumb manager', () => {
 
     it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith(facetId);
+      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith({facetId});
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });
