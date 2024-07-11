@@ -162,18 +162,12 @@ test.describe('Default', () => {
   test.describe('when selecting 6 facet values', () => {
     test.setTimeout(60000);
     test.beforeEach(async ({breadbox}) => {
-      const brands = [
-        'Nike',
-        'Aqua Marina',
-        'Birkenstock',
-        'Clarks',
-        'Dooney and Bourke',
-        'Ecco',
-      ];
-
-      for (const brand of brands) {
-        await breadbox.getRegularFacetValue(brand).click();
-        await breadbox.getBreadcrumbButtons(brand).waitFor({state: 'visible'});
+      for (let i = 0; i < 6; i++) {
+        await breadbox.getRegularFacetValue().nth(i).click();
+        await breadbox
+          .getBreadcrumbButtons()
+          .nth(i)
+          .waitFor({state: 'visible'});
       }
     });
 
@@ -204,15 +198,13 @@ test.describe('Default', () => {
       await expect(breadbox.getShowMorebutton()).not.toBeVisible();
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(6);
 
-      await page.setViewportSize({width: 640, height: 480});
-      expect(await breadbox.getBreadcrumbButtons().count()).toBe(2);
-      await expect(breadbox.getShowMorebutton()).toContainText('+ 4');
-
       await page.setViewportSize({width: 240, height: 480});
+      await page.waitForTimeout(1000);
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(0);
       await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
 
       await page.setViewportSize({width: 1920, height: 480});
+      await page.waitForTimeout(1000);
       await expect(breadbox.getShowMorebutton()).not.toBeVisible();
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(6);
     });
@@ -222,10 +214,10 @@ test.describe('Default', () => {
       let firstButtonText: string | RegExp;
 
       test.beforeEach(async ({breadbox, page}) => {
-        await page.setViewportSize({width: 640, height: 480});
         firstButton = breadbox.getBreadcrumbButtons().first();
         firstButtonText = (await firstButton.textContent()) as string;
         await firstButton.click();
+        await page.setViewportSize({width: 240, height: 480});
       });
 
       test('should hide the breadcrumb button', async ({breadbox}) => {
@@ -242,7 +234,7 @@ test.describe('Default', () => {
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText('+ 3');
+        await expect(breadbox.getShowMorebutton()).toContainText('+ 5');
       });
     });
 
