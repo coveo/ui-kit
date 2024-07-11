@@ -1,0 +1,52 @@
+diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
+index 9fb2fba..92f2ee7 100644
+--- a/node_modules/@stencil/core/compiler/stencil.js
++++ b/node_modules/@stencil/core/compiler/stencil.js
+@@ -257144,7 +257144,7 @@ var visitClassDeclaration = (config, diagnostics, typeChecker, program, classNod
+       importAliasMap.get("AttachInternals")
+     );
+   }
+-  const updatedClassFields = handleClassFields(classNode, filteredMethodsAndFields, typeChecker, importAliasMap);
++  const updatedClassFields = handleClassFields(classNode, filteredMethodsAndFields, typeChecker, importAliasMap, filteredMethodsAndFields);
+   validateMethods(diagnostics, classMembers);
+   const currentDecorators = retrieveTsDecorators(classNode);
+   return typescript_5_4_5_bundle_cache_min_default.factory.updateClassDeclaration(
+@@ -257184,9 +257184,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
+           member2.body
+         );
+       } else if (typescript_5_4_5_bundle_cache_min_default.isPropertyDeclaration(member2)) {
+-        if (shouldInitializeInConstructor(member2, importAliasMap)) {
+-          return member2;
+-        } else {
+           const modifiers = retrieveTsModifiers(member2);
+           return typescript_5_4_5_bundle_cache_min_default.factory.updatePropertyDeclaration(
+             member2,
+@@ -257196,7 +257193,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
+             member2.type,
+             member2.initializer
+           );
+-        }
+       } else {
+         const err2 = buildError(diagnostics);
+         err2.messageText = "Unknown class member encountered!";
+@@ -257220,10 +257216,9 @@ var filterDecorators = (decorators, excludeList) => {
+   }
+   return decorators;
+ };
+-function handleClassFields(classNode, classMembers, typeChecker, importAliasMap) {
++function handleClassFields(classNode, classMembers, typeChecker, importAliasMap, updatedClassMembers) {
+   var _a;
+   const statements = [];
+-  const updatedClassMembers = [];
+   for (const member2 of classMembers) {
+     if (shouldInitializeInConstructor(member2, importAliasMap) && typescript_5_4_5_bundle_cache_min_default.isPropertyDeclaration(member2)) {
+       const memberName = tsPropDeclNameAsString(member2, typeChecker);
+@@ -257238,8 +257233,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
+           )
+         )
+       );
+-    } else {
+-      updatedClassMembers.push(member2);
+     }
+   }
+   if (statements.length === 0) {
