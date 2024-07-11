@@ -23,6 +23,7 @@ import {
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../button';
+import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
 import {RadioButton} from '../../radio-button';
 
@@ -260,20 +261,22 @@ export class AtomicGeneratedAnswerFeedbackModal
         </legend>
         {AtomicGeneratedAnswerFeedbackModal.options.map(
           ({localeKey, correspondingAnswer}) => (
-            <div
-              class={`answer-evaluation flex items-center justify-between mt-3 ${String(correspondingAnswer)}`}
-              key={String(correspondingAnswer)}
-            >
-              {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
+            <FieldsetGroup label={this.bindings.i18n.t(localeKey)}>
               <div
-                class="options flex text-base"
-                aria-label={this.bindings.i18n.t(localeKey)}
+                class={`answer-evaluation flex items-center justify-between mt-3 ${String(correspondingAnswer)}`}
+                key={String(correspondingAnswer)}
               >
-                {this.renderFeedbackOption('yes', correspondingAnswer)}
-                {this.renderFeedbackOption('unknown', correspondingAnswer)}
-                {this.renderFeedbackOption('no', correspondingAnswer)}
+                {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
+                <div
+                  class="options flex text-base"
+                  aria-label={this.bindings.i18n.t(localeKey)}
+                >
+                  {this.renderFeedbackOption('yes', correspondingAnswer)}
+                  {this.renderFeedbackOption('unknown', correspondingAnswer)}
+                  {this.renderFeedbackOption('no', correspondingAnswer)}
+                </div>
               </div>
-            </div>
+            </FieldsetGroup>
           )
         )}
       </fieldset>
