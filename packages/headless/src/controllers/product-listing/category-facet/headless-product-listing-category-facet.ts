@@ -24,7 +24,7 @@ import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
-  ProductListingSection,
+  OldProductListingSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -61,6 +61,9 @@ export type {
 
 /**
  * Creates a `CategoryFacet` controller instance.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @param props - The configurable `CategoryFacet` properties.
@@ -145,7 +148,7 @@ function loadCategoryFacetReducers(
   CategoryFacetSection &
     CategoryFacetSearchSection &
     ConfigurationSection &
-    ProductListingSection
+    OldProductListingSection
 > {
   engine.addReducers({
     categoryFacetSet,

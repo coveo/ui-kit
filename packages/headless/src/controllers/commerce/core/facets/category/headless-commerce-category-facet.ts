@@ -4,12 +4,12 @@ import {
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
-import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {
-  defaultNumberOfValuesIncrement,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
+} from '../../../../../features/commerce/facets/category-facet/category-facet-actions';
+import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
 import {
   CategoryFacetValue,

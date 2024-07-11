@@ -1,9 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
+  fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
-} from '../../standalone-search-box-set/standalone-search-box-set-actions';
-import {fetchRedirectUrl} from './standalone-search-box-set-actions';
+} from './standalone-search-box-set-actions';
 import {
   getCommerceStandaloneSearchBoxSetInitialState,
   StandaloneSearchBoxEntry,

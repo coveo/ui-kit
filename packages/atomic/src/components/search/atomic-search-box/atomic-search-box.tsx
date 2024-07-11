@@ -406,14 +406,18 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private onSubmit() {
-    if (this.suggestionManager.isRightPanelInFocus()) {
-      this.suggestionManager.clickOnActiveElement();
+    this.isExpanded = false;
+    if (
+      this.suggestionManager.isRightPanelInFocus() ||
+      this.suggestionManager.activeDescendantElement?.part.contains(
+        'recent-query-title-item'
+      )
+    ) {
+      this.suggestionManager.onSubmit();
       return;
     }
 
-    this.isExpanded = false;
     this.searchBox.submit();
-    this.suggestionManager.onSubmit();
   }
 
   private onKeyDown(e: KeyboardEvent) {

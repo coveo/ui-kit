@@ -40,11 +40,11 @@ export const categoryFacetSearchSetReducer = createReducer(
         handleFacetSearchUpdate(state, action.payload);
       })
       .addCase(executeCommerceFacetSearch.pending, (state, action) => {
-        const facetId = action.meta.arg;
+        const {facetId} = action.meta.arg;
         handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
       .addCase(executeCommerceFieldSuggest.pending, (state, action) => {
-        const facetId = action.meta.arg;
+        const {facetId} = action.meta.arg;
         handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
       .addCase(executeFacetSearch.pending, (state, action) => {
@@ -52,11 +52,11 @@ export const categoryFacetSearchSetReducer = createReducer(
         handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
       .addCase(executeCommerceFacetSearch.rejected, (state, action) => {
-        const facetId = action.meta.arg;
+        const {facetId} = action.meta.arg;
         handleFacetSearchRejected(state, facetId);
       })
       .addCase(executeCommerceFieldSuggest.rejected, (state, action) => {
-        const facetId = action.meta.arg;
+        const {facetId} = action.meta.arg;
         handleFacetSearchRejected(state, facetId);
       })
       .addCase(executeFacetSearch.rejected, (state, action) => {

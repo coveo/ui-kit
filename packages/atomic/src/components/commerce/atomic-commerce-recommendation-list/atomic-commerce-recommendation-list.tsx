@@ -201,12 +201,8 @@ export class AtomicCommerceRecommendationList
   @Listen('atomic/selectChildProduct')
   public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
     event.stopPropagation();
-    const {parentPermanentId, childPermanentId} = event.detail;
 
-    this.recommendations.promoteChildToParent(
-      childPermanentId,
-      parentPermanentId
-    );
+    this.recommendations.promoteChildToParent(event.detail.child);
   }
 
   public get focusTarget() {
@@ -302,48 +298,32 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private getAtomicProductProps(recommendation: Product) {
+  private logWarningIfNeeded(message?: string) {
+    if (message) {
+      this.bindings.engine.logger.warn(message);
+    }
+  }
+
+  private getAtomicProductProps(product: Product) {
     return {
       interactiveProduct: this.recommendations.interactiveProduct({
-        options: {
-          product: {
-            ...recommendation,
-            name: recommendation.ec_name ?? '',
-            price: this.getPrice(recommendation),
-            productId: recommendation.permanentid,
-          },
-          position: this.currentIndex,
-        },
+        options: {product},
       }),
-      product: recommendation,
+      product: product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
       key: this.itemListCommon.getResultId(
-        recommendation.permanentid,
+        product.permanentid,
         this.recommendationsState.responseId,
         this.density,
         this.imageSize
       ),
-      content: this.productTemplateProvider.getTemplateContent(recommendation),
+      content: this.productTemplateProvider.getTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       display: this.display,
       imageSize: this.imageSize,
     };
-  }
-
-  private getPrice(recommendation: Product) {
-    if (recommendation.ec_price === undefined) {
-      return 0;
-    }
-
-    if (recommendation.ec_promo_price === undefined) {
-      return recommendation.ec_price;
-    }
-
-    return recommendation.ec_promo_price > recommendation.ec_price
-      ? recommendation.ec_promo_price
-      : recommendation.ec_price;
   }
 
   private computeListDisplayClasses() {
@@ -359,7 +339,8 @@ export class AtomicCommerceRecommendationList
   }
 
   private renderAsGrid(product: Product, i: number) {
-    const atomicProductProps = this.getAtomicProductProps(product);
+    const propsForAtomicProduct = this.getAtomicProductProps(product);
+    const {interactiveProduct} = propsForAtomicProduct;
     return (
       <DisplayGrid
         item={{
@@ -367,12 +348,24 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
-        {...atomicProductProps.interactiveProduct}
+        gridTarget={this.gridCellLinkTarget}
+        select={() => {
+          this.logWarningIfNeeded(interactiveProduct.warningMessage);
+          interactiveProduct.select();
+        }}
+        beginDelayedSelect={() => {
+          this.logWarningIfNeeded(interactiveProduct.warningMessage);
+          interactiveProduct.beginDelayedSelect();
+        }}
+        cancelPendingSelect={() => {
+          this.logWarningIfNeeded(interactiveProduct.warningMessage);
+          interactiveProduct.cancelPendingSelect();
+        }}
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)
         }
       >
-        <atomic-product {...atomicProductProps}></atomic-product>
+        <atomic-product {...propsForAtomicProduct}></atomic-product>
       </DisplayGrid>
     );
   }

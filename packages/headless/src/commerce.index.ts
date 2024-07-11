@@ -1,5 +1,8 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as Selectors from './selectors/commerce-selectors.index';
+import * as HighlightUtils from './utils/highlight';
+
+export type {HighlightKeyword} from './utils/highlight';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -11,6 +14,7 @@ export type {
   CommerceEngineOptions,
 } from './app/commerce-engine/commerce-engine';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine';
+export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration';
 
 export type {
   CoreEngine,
@@ -25,16 +29,38 @@ export type {
 export type {LogLevel, LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 
-export type {Product, ChildProduct} from './api/commerce/common/product';
+export type {
+  BaseProduct,
+  Product,
+  ChildProduct,
+} from './api/commerce/common/product';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 // Actions
+export * from './features/commerce/context/context-actions-loader';
+export * from './features/commerce/search/search-actions-loader';
 export * from './features/commerce/product-listing/product-listing-actions-loader';
+export * from './features/commerce/recommendations/recommendations-actions-loader';
+export * from './features/commerce/pagination/pagination-actions-loader';
+export * from './features/commerce/product/product-actions-loaders';
+export * from './features/commerce/context/cart/cart-actions-loader';
+export * from './features/commerce/sort/sort-actions-loader';
+export * from './features/commerce/facets/core-facet/core-facet-actions-loader';
+export * from './features/commerce/facets/category-facet/category-facet-actions-loader';
+export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader';
+export * from './features/commerce/facets/date-facet/date-facet-actions-loader';
+export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader';
+export * from './features/commerce/query-set/query-set-actions-loader';
 export * from './features/commerce/query-suggest/query-suggest-actions-loader';
-export * from './features/configuration/configuration-actions-loader';
+export * from './features/commerce/configuration/configuration-actions-loader';
 export * from './features/commerce/query/query-actions-loader';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader';
+export * from './features/commerce/triggers/triggers-actions-loader';
+export * from './features/commerce/instant-products/instant-products-actions-loader';
+export * from './features/commerce/recent-queries/recent-queries-actions-loader';
+export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader';
+// TODO: KIT-3350: Create/use/export remaining commerce actions/loaders
 
 // Selectors
 export {Selectors};
@@ -48,13 +74,18 @@ export {buildController} from './controllers/controller/headless-controller';
 
 export type {
   ContextOptions,
-  User,
   View,
   ContextProps,
   Context,
   ContextState,
 } from './controllers/commerce/context/headless-context';
 export {buildContext} from './controllers/commerce/context/headless-context';
+
+export type {
+  Search,
+  SearchState,
+} from './controllers/commerce/search/headless-search';
+export {buildSearch} from './controllers/commerce/search/headless-search';
 
 export type {
   ProductListing,
@@ -81,7 +112,7 @@ export type {
   InteractiveProduct,
   InteractiveProductOptions,
   InteractiveProductProps,
-} from './controllers/commerce/core/product-list/headless-core-interactive-product';
+} from './controllers/commerce/core/interactive-product/headless-core-interactive-product';
 
 export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result';
 
@@ -167,15 +198,6 @@ export type {
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
 
-export type {
-  Search,
-  SearchState,
-} from './controllers/commerce/search/headless-search';
-export {buildSearch} from './controllers/commerce/search/headless-search';
-
-export {updateQuery} from './features/commerce/query/query-actions';
-export type {UpdateQueryActionCreatorPayload} from './features/commerce/query/query-actions';
-
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {
   SearchBox,
@@ -187,17 +209,29 @@ export type {
 
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
+export type {
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesListInitialState,
+  RecentQueriesState,
+} from './controllers/recent-queries-list/headless-recent-queries-list.ts';
 
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
   InstantProducts,
   InstantProductsState,
+  InstantProductsOptions,
+  InstantProductsProps,
 } from './controllers/commerce/instant-products/headless-instant-products';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
 export type {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box';
+export type {
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxOptions,
+} from './controllers/standalone-search-box/headless-standalone-search-box.ts';
 
 export type {
   UrlManagerProps,
@@ -206,6 +240,7 @@ export type {
   UrlManager,
 } from './controllers/commerce/core/url-manager/headless-core-url-manager';
 
+export type {Template} from './features/templates/templates-manager.ts';
 export type {
   ProductTemplate,
   ProductTemplateCondition,
@@ -218,19 +253,13 @@ export type {
   Breadcrumb,
   BreadcrumbValue,
   DeselectableValue,
+  BreadcrumbManagerState,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 
-export {buildSearchSummary} from './controllers/commerce/search/summary/headless-search-summary';
-export type {
-  SearchSummary,
-  SearchSummaryState,
-} from './controllers/commerce/search/summary/headless-search-summary';
-
-export {buildListingSummary} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
-export type {
-  ListingSummary,
-  ListingSummaryState,
-} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary';
+export type {ProductListingSummaryState} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
+export type {RecommendationsSummaryState} from './controllers/commerce/recommendations/summary/headless-recommendations-summary';
+export type {Summary} from './controllers/commerce/core/summary/headless-core-summary';
 
 export {getOrganizationEndpoints} from './api/platform-client';
 
@@ -270,9 +299,8 @@ export type {
   CategoryFieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
 export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
-
-export type {FetchQuerySuggestionsActionCreatorPayload} from './features/query-suggest/query-suggest-actions';
 
 export type {
   ParameterManager,
@@ -284,6 +312,7 @@ export type {Parameters} from './features/commerce/parameters/parameters-actions
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions';
 
 // Types & Helpers
+export {HighlightUtils};
 export {
   deserializeRelativeDate,
   validateRelativeDate,

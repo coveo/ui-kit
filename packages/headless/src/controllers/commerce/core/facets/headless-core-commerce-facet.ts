@@ -1,5 +1,10 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
+import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetIsFieldExpanded,
+  updateCoreFacetNumberOfValues,
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
@@ -14,11 +19,6 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {
-  deselectAllFacetValues,
-  updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues,
-} from '../../../../features/facets/facet-set/facet-set-actions';
 import {FacetValueRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
@@ -207,7 +207,7 @@ export function buildCoreCommerceFacet<
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleSelect: function (selection: ValueRequest) {
       if (selection.state === 'idle') {
-        dispatch(deselectAllFacetValues(facetId));
+        dispatch(deselectAllValuesInCoreFacet({facetId}));
       }
 
       this.toggleSelect(selection);
@@ -225,7 +225,7 @@ export function buildCoreCommerceFacet<
       }
 
       if (selection.state === 'idle') {
-        dispatch(deselectAllFacetValues(facetId));
+        dispatch(deselectAllValuesInCoreFacet({facetId}));
       }
 
       this.toggleExclude(selection);
@@ -240,7 +240,7 @@ export function buildCoreCommerceFacet<
     },
 
     deselectAll() {
-      dispatch(deselectAllFacetValues(facetId));
+      dispatch(deselectAllValuesInCoreFacet({facetId}));
       dispatch(props.options.fetchProductsActionCreator());
     },
 
@@ -251,8 +251,10 @@ export function buildCoreCommerceFacet<
         initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
 
-      dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
+      dispatch(updateCoreFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(
+        updateCoreFacetIsFieldExpanded({facetId, isFieldExpanded: true})
+      );
       dispatch(props.options.fetchProductsActionCreator());
     },
 
@@ -264,9 +266,14 @@ export function buildCoreCommerceFacet<
       );
 
       dispatch(
-        updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
+        updateCoreFacetNumberOfValues({
+          facetId,
+          numberOfValues: newNumberOfValues,
+        })
       );
-      dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
+      dispatch(
+        updateCoreFacetIsFieldExpanded({facetId, isFieldExpanded: false})
+      );
       dispatch(props.options.fetchProductsActionCreator());
     },
 

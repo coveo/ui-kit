@@ -7,6 +7,7 @@ import {
   AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client';
+import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {
   ConfigurationSection,
   ContextSection,
@@ -20,6 +21,7 @@ import {
 } from '../../utils/validate-payload';
 import {CustomAction, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
@@ -107,10 +109,15 @@ export const fetchRedirectUrl = createAsyncThunk<
   'standaloneSearchBox/fetchRedirect',
   async (
     payload,
-    {dispatch, getState, rejectWithValue, extra: {apiClient, validatePayload}}
+    {
+      dispatch,
+      getState,
+      rejectWithValue,
+      extra: {apiClient, validatePayload, navigatorContext},
+    }
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
-    const request = await buildPlanRequest(getState());
+    const request = await buildPlanRequest(getState(), navigatorContext);
     const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -132,7 +139,8 @@ const logRedirect = (url: string): CustomAction =>
   );
 
 export const buildPlanRequest = async (
-  state: StateNeededForRedirect
+  state: StateNeededForRedirect,
+  navigatorContext: NavigatorContext
 ): Promise<PlanRequest> => {
   return {
     accessToken: state.configuration.accessToken,
@@ -148,9 +156,14 @@ export const buildPlanRequest = async (
       visitorId: await getVisitorID(state.configuration.analytics),
     }),
     ...(state.configuration.analytics.enabled &&
-      (await fromAnalyticsStateToAnalyticsParams(
-        state.configuration.analytics
-      ))),
+    state.configuration.analytics.analyticsMode === 'legacy'
+      ? await legacyFromAnalyticsStateToAnalyticsParams(
+          state.configuration.analytics
+        )
+      : fromAnalyticsStateToAnalyticsParams(
+          state.configuration.analytics,
+          navigatorContext
+        )),
     ...(state.configuration.search.authenticationProviders.length && {
       authentication:
         state.configuration.search.authenticationProviders.join(','),

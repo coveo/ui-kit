@@ -1,4 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
+import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -35,9 +36,17 @@ export interface FieldSuggestionsGenerator extends Controller {
    */
   fieldSuggestions: GeneratedFieldSuggestionsControllers;
 
+  /**
+   * The state of the field suggestions generator.
+   */
   state: FieldSuggestionsFacet[];
 }
 
+/**
+ * Builds a field suggestions generator controller for a given commerce engine.
+ * @param engine The commerce engine.
+ * @returns The field suggestions generator controller.
+ */
 export function buildFieldSuggestionsGenerator(
   engine: CommerceEngine
 ): FieldSuggestionsGenerator {
@@ -49,6 +58,7 @@ export function buildFieldSuggestionsGenerator(
     fetchProductsActionCreator: executeSearch,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
   const controller = buildController(engine);

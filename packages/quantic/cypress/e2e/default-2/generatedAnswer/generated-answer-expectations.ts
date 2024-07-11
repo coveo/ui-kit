@@ -155,12 +155,30 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the generated answer should contain "${answer}"`);
     },
 
+    generatedAnswerContentContainsHTML: (findSelector: string) => {
+      selector
+        .generatedAnswerContentContainer()
+        .find(findSelector)
+        .log(
+          `the generated answer content should contain an element matching "${findSelector}"`
+        );
+    },
+
+    generatedAnswerContentContainsText: (text: string) => {
+      selector
+        .generatedAnswerContentContainer()
+        .contains(text)
+        .log(
+          `the generated answer content should contain text matching "${text}"`
+        );
+    },
+
     generatedAnswerIsStreaming: (isStreaming: boolean) => {
       selector
-        .generatedAnswer()
+        .generatedAnswerContentContainer()
         .should(
           isStreaming ? 'have.class' : 'not.have.class',
-          'generated-answer__answer--streaming'
+          'generated-answer-content__answer--streaming'
         )
         .log(`the generated answer ${should(isStreaming)} be streaming`);
     },
@@ -323,7 +341,8 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
 
     searchQueryContainsCorrectRephraseOption: (
       expectedAnswerStyle: string,
-      expectedActionCause: string
+      expectedActionCause: string,
+      expectedContentFormat?: string[]
     ) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
@@ -331,6 +350,9 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           const answerStyle =
             body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
               ?.responseFormat?.answerStyle;
+          const contentFormat =
+            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+              ?.responseFormat?.contentFormat;
           const analyticsSection = body.analytics;
 
           expect(answerStyle).to.eq(expectedAnswerStyle);
@@ -339,6 +361,10 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'actionCause',
             expectedActionCause
           );
+          if (expectedContentFormat) {
+            expect(contentFormat).to.exist;
+            expect(contentFormat).to.deep.equal(expectedContentFormat);
+          }
         })
         .log(
           `the search query should contain the correct ${expectedAnswerStyle} parameter`

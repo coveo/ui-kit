@@ -1,5 +1,6 @@
 import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response';
 import {buildMockSearch} from '../../test/mock-search';
+import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions';
 import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions';
 import {
   QuerySearchCommerceAPIThunkReturn,
@@ -8,9 +9,11 @@ import {
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
+import {
+  ExecuteSearchThunkReturn,
+  executeSearch,
+} from '../search/search-actions';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {querySetReducer} from './query-set-slice';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
@@ -73,40 +76,59 @@ describe('querySet slice', () => {
     expect(finalState[id]).toBe(query);
   });
 
-  it(`when a query suggestion is selected,
-  it updates the query if the id exists`, () => {
-    const id = '1';
-    const query = 'query';
+  const describeSelectSuggestion = (
+    selectSuggestion:
+      | typeof selectQuerySuggestion
+      | typeof selectCommerceQuerySuggestion
+  ) => {
+    it('updates the query if the id exists', () => {
+      const id = '1';
+      const query = 'query';
 
-    registerQueryWithId(id);
-    const action = selectQuerySuggestion({id, expression: query});
-    const finalState = querySetReducer(state, action);
+      registerQueryWithId(id);
+      const action = selectSuggestion({id, expression: query});
+      const finalState = querySetReducer(state, action);
 
-    expect(finalState[id]).toBe(query);
+      expect(finalState[id]).toBe(query);
+    });
+
+    it('does not update the query if the id does not exist', () => {
+      const id = '1';
+
+      const action = selectSuggestion({id, expression: 'query'});
+      const finalState = querySetReducer(state, action);
+
+      expect(finalState[id]).toBe(undefined);
+    });
+  };
+
+  describe('#selectQuerySuggestion', () => {
+    describeSelectSuggestion(selectQuerySuggestion);
   });
 
-  it(`when a query suggestion is selected,
-  it does not update the query if the id does not exist`, () => {
-    const id = '1';
-
-    const action = selectQuerySuggestion({id, expression: 'query'});
-    const finalState = querySetReducer(state, action);
-
-    expect(finalState[id]).toBe(undefined);
+  describe('#selectCommerceQuerySuggestion', () => {
+    describeSelectSuggestion(selectCommerceQuerySuggestion);
   });
 
-  it('sets all queries to queryExecuted on executeSearch.fulfilled', () => {
-    registerQueryWithId('foo');
-    registerQueryWithId('bar');
+  it.each([{action: executeSearch}, {action: commerceExecuteSearch}])(
+    'sets all queries to queryExecuted on executeSearch.fulfilled',
+    ({action}) => {
+      registerQueryWithId('foo');
+      registerQueryWithId('bar');
 
-    const expectedQuerySet = {foo: 'world', bar: 'world'};
-    const searchState = buildMockSearch({queryExecuted: 'world'});
-    const nextState = querySetReducer(
-      state,
-      executeSearch.fulfilled(searchState, '', {legacy: logSearchboxSubmit()})
-    );
-    expect(nextState).toEqual(expectedQuerySet);
-  });
+      const expectedQuerySet = {foo: 'world', bar: 'world'};
+      const searchState = buildMockSearch({queryExecuted: 'world'});
+      const nextState = querySetReducer(
+        state,
+        action.fulfilled(
+          searchState as unknown as ExecuteSearchThunkReturn &
+            QuerySearchCommerceAPIThunkReturn,
+          ''
+        )
+      );
+      expect(nextState).toEqual(expectedQuerySet);
+    }
+  );
 
   it('sets all queries to queryExecuted on commerce executeSearch.fulfilled', () => {
     registerQueryWithId('foo');

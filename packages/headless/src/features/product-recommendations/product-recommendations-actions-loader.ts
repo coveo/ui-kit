@@ -31,10 +31,16 @@ export type {
 
 /**
  * The product recommendations action creators.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  */
 export interface ProductRecommendationsActionCreators {
   /**
    * Refreshes the product recommendations.
+   *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
    *
    * @returns A dispatchable action.
    */
@@ -47,6 +53,9 @@ export interface ProductRecommendationsActionCreators {
   /**
    * Updates the additional requested result fields.
    *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
+   *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
@@ -56,6 +65,9 @@ export interface ProductRecommendationsActionCreators {
 
   /**
    * Updates the brand used to filter recommendations.
+   *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -67,6 +79,9 @@ export interface ProductRecommendationsActionCreators {
   /**
    * Updates the category used to filter recommendations.
    *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
+   *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
@@ -76,6 +91,9 @@ export interface ProductRecommendationsActionCreators {
 
   /**
    * Updates the maximum number of recommendations to return.
+   *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -87,6 +105,9 @@ export interface ProductRecommendationsActionCreators {
   /**
    * Updates the recommender id, used to determine the machine-learning model that should fulfill the request.
    *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
+   *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
@@ -96,6 +117,9 @@ export interface ProductRecommendationsActionCreators {
 
   /**
    * Updates the skus for which to retrieve recommendations.
+   *
+   * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+   * @deprecated
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -107,6 +131,9 @@ export interface ProductRecommendationsActionCreators {
 
 /**
  * Loads the `productRecommendations` reducer and returns possible action creators.
+ *
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.

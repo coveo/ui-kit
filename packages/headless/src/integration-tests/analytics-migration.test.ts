@@ -126,15 +126,34 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
-export function assertNextEqualsLegacy(call: jest.SpyInstance) {
-  expect(extractAndExcludeProperties(call, 0)).toEqual(
-    extractAndExcludeProperties(call, 1)
+export function assertNextEqualsLegacy(
+  call: jest.SpyInstance,
+  excludedProperties: string[] = excludedBaseProperties
+) {
+  expect(extractAndExcludeProperties(call, 0, excludedProperties)).toEqual(
+    extractAndExcludeProperties(call, 1, excludedProperties)
+  );
+}
+
+export function assertActionCause(
+  call: jest.SpyInstance,
+  callIndex: number,
+  expectedActionCause: string
+) {
+  expect(call).toHaveBeenNthCalledWith(
+    callIndex,
+    expect.objectContaining({
+      requestParams: expect.objectContaining({
+        analytics: expect.objectContaining({actionCause: expectedActionCause}),
+      }),
+    })
   );
 }
 
 export function extractAndExcludeProperties(
   call: jest.SpyInstance,
-  callIndex: number
+  callIndex: number,
+  excludedProperties: string[]
 ): Record<string, unknown> {
   const {
     requestParams: {analytics = {} as Record<string, unknown>},
@@ -142,7 +161,7 @@ export function extractAndExcludeProperties(
     requestParams: {analytics?: Record<string, unknown>};
   };
   let result = analytics;
-  result = excludeProperties(result, excludedBaseProperties);
+  result = excludeProperties(result, excludedProperties);
   return result;
 }
 
@@ -155,7 +174,7 @@ function excludeProperties(
   return result;
 }
 
-const excludedBaseProperties = [
+export const excludedBaseProperties = [
   'clientId',
   'capture',
   'clientTimestamp',
@@ -163,6 +182,7 @@ const excludedBaseProperties = [
   'source',
   'customData',
   'documentReferrer',
+  'documentLocation',
 ];
 
 const ANY_FACET_VALUE = 'any facet value';

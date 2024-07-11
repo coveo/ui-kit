@@ -61,7 +61,10 @@ describe('CategoryFacetSearchSet slice', () => {
 
   it('#executeCommerceFacetSearch.pending calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
-    const pendingAction = executeCommerceFacetSearch.pending(facetId, '');
+    const pendingAction = executeCommerceFacetSearch.pending(facetId, {
+      facetId: '',
+      facetSearchType: 'SEARCH',
+    });
     facetSearchSetReducer(state, pendingAction);
 
     expect(
@@ -71,7 +74,10 @@ describe('CategoryFacetSearchSet slice', () => {
 
   it('#executeCommerceFieldSuggest.pending calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
-    const pendingAction = executeCommerceFieldSuggest.pending(facetId, '');
+    const pendingAction = executeCommerceFieldSuggest.pending(facetId, {
+      facetId,
+      facetSearchType: 'SEARCH',
+    });
     facetSearchSetReducer(state, pendingAction);
 
     expect(
@@ -94,7 +100,7 @@ describe('CategoryFacetSearchSet slice', () => {
     const rejectedAction = executeCommerceFacetSearch.rejected(
       {name: 'test', message: 'test'},
       facetId,
-      facetId
+      {facetId, facetSearchType: 'SEARCH'}
     );
     facetSearchSetReducer(state, rejectedAction);
 
@@ -108,7 +114,7 @@ describe('CategoryFacetSearchSet slice', () => {
     const rejectedAction = executeCommerceFieldSuggest.rejected(
       {name: 'test', message: 'test'},
       facetId,
-      facetId
+      {facetId, facetSearchType: 'SEARCH'}
     );
     facetSearchSetReducer(state, rejectedAction);
 
@@ -137,7 +143,7 @@ describe('CategoryFacetSearchSet slice', () => {
     const action = executeCommerceFacetSearch.fulfilled(
       {facetId, response: {success: response}},
       '',
-      ''
+      {facetId: '', facetSearchType: 'SEARCH'}
     );
 
     facetSearchSetReducer(state, action);
@@ -155,7 +161,7 @@ describe('CategoryFacetSearchSet slice', () => {
     const action = executeCommerceFieldSuggest.fulfilled(
       {facetId, response: {success: response}},
       '',
-      ''
+      {facetId: '', facetSearchType: 'SEARCH'}
     );
 
     facetSearchSetReducer(state, action);

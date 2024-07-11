@@ -52,8 +52,8 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -520,6 +520,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
         query={this.facetState.facetSearch.query}
         numberOfMatches={this.facetState.facetSearch.values.length}
         hasMoreMatches={this.facetState.facetSearch.moreValuesAvailable}
+        showMoreMatches={() => this.facet.facetSearch.showMoreResults()}
       ></FacetSearchMatches>
     );
   }

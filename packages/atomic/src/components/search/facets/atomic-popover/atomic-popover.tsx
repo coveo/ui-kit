@@ -17,9 +17,12 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
+import {
+  PopoverChildFacet,
+  popoverClass,
+} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {PopoverChildFacet, popoverClass} from './popover-type';
 
 /**
  * The `atomic-popover` component displays any facet as a popover menu.
