@@ -185,7 +185,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           onClick={() => this.close()}
           icon={CloseIcon}
           partPrefix={'close'}
-          ariaLabel={this.bindings.i18n.t('modal-done')}
+          ariaLabel={this.bindings.i18n.t('close')}
         />
       </div>
     );

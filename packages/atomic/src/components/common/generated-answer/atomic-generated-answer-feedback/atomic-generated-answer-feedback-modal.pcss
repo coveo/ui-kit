@@ -2,7 +2,7 @@
 
 @define-mixin mobile-feedback-modal {
   &::part(container) {
-    @apply w-[20rem];
+    @apply w-auto min-w-full;
   }
 
   &::part(header),
@@ -33,17 +33,13 @@
 
 [part='generated-answer-feedback-modal'] {
   &::part(container) {
-    @apply w-[42.5rem];
+    @apply min-w-[42.5rem];
   }
 
   &::part(header),
   &::part(body),
   &::part(footer) {
     @apply max-w-[42.5rem];
-  }
-
-  &::part(backdrop) {
-    place-items: center;
   }
 
   @screen mobile-only {
