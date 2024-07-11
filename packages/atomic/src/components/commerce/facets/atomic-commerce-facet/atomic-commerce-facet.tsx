@@ -42,7 +42,7 @@ import {
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -96,26 +96,18 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   /**
    * The Summary controller instance.
-   *
-   * @internal
    */
   @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
-   *
-   * @@internal
    */
   @Prop() public facet!: RegularFacet;
   /**
    * Specifies whether the facet is collapsed.
-   *
-   * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The field identifier for this facet.
-   *
-   * @internal
    */
   @Prop({reflect: true}) field?: string;
 

@@ -222,7 +222,9 @@ export function buildCoreBreadcrumbManager(
         value: activeValue,
         deselect: () => {
           dispatch(
-            actions['hierarchical'].toggleSelectActionCreator(facet.facetId)
+            actions['hierarchical'].toggleSelectActionCreator({
+              facetId: facet.facetId,
+            })
           );
           dispatch(options.fetchProductsActionCreator());
         },
@@ -230,19 +232,33 @@ export function buildCoreBreadcrumbManager(
     ];
   };
 
+  const hasActiveValue = (
+    facet: AnyFacetResponse | undefined
+  ): facet is AnyFacetResponse => {
+    if (!facet) {
+      return false;
+    }
+    if (facet.values.length === 0) {
+      return false;
+    }
+    if (facet.type === 'hierarchical') {
+      return findActiveValueAncestry(facet.values).length > 0;
+    }
+
+    return facet.values.some((value) => value.state !== 'idle');
+  };
+
   const commerceFacetSelector = createSelector(
     (state: CommerceEngineState) => state.facetOrder,
     (facetOrder): BreadcrumbManagerState => {
-      const breadcrumbs =
-        facetOrder
-          .map((facetId) =>
-            options.facetResponseSelector(engine[stateKey], facetId)
-          )
-          .filter(
-            (facet): facet is AnyFacetResponse =>
-              facet !== undefined && facet.values.length > 0
-          )
-          .map(createBreadcrumb) ?? [];
+      const breadcrumbs = facetOrder.flatMap((facetId) => {
+        const facet = options.facetResponseSelector(engine[stateKey], facetId);
+        if (hasActiveValue(facet)) {
+          return [createBreadcrumb(facet)];
+        }
+        return [];
+      });
+
       return {
         facetBreadcrumbs: breadcrumbs,
         hasBreadcrumbs: breadcrumbs.length > 0,

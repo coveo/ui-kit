@@ -251,11 +251,11 @@ export type {
 export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager';
 
 export type {
-  BreadcrumbManagerState,
   BreadcrumbManager,
   Breadcrumb,
   BreadcrumbValue,
   DeselectableValue,
+  BreadcrumbManagerState,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager';
 
 export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary';
