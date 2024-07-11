@@ -1,6 +1,7 @@
 import {Schema} from '@coveo/bueno';
 import {SuggestionHighlightingOptions} from '../../core/search-box/headless-core-search-box';
 import {searchBoxOptionDefinitions as coreSearchBoxOptionDefinitions} from '../../core/search-box/headless-core-search-box-options';
+import {SearchBoxOptions as CoreSearchBoxOptions} from '../../core/search-box/headless-core-search-box-options';
 
 export interface SearchBoxOptions {
   /**
@@ -23,11 +24,9 @@ export interface SearchBoxOptions {
   clearFilters?: boolean;
 }
 
-type DefaultSearchBoxOptions = Pick<SearchBoxOptions, 'clearFilters'>;
-
-export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
+export const defaultSearchBoxOptions = {
   clearFilters: true,
-};
+} satisfies Required<Pick<CoreSearchBoxOptions, 'clearFilters'>>;
 
 const {id, highlightOptions, clearFilters} = coreSearchBoxOptionDefinitions;
 export const searchBoxOptionDefinitions = {id, highlightOptions, clearFilters};
