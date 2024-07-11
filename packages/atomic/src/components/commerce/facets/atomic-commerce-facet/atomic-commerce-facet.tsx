@@ -137,7 +137,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     );
     this.initAriaLive();
     this.initPopover();
-    this.registerFacet();
   }
 
   public disconnectedCallback(): void {
@@ -341,10 +340,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private get isHidden() {
     return !this.facetState.values.length;
-  }
-
-  private registerFacet() {
-    this.bindings.store.registerFacet('facets', this.facetInfo);
   }
 
   private initPopover() {

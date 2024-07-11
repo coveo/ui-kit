@@ -188,11 +188,6 @@ export class AtomicCommerceTimeframeFacet
       isHidden: () => this.isHidden,
     };
 
-    this.bindings.store.registerFacet('dateFacets', {
-      ...facetInfo,
-      format: (value) => this.formatFacetValue(value),
-    });
-
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => this.hasValues,
