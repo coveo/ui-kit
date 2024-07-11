@@ -24,6 +24,7 @@ import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../button';
 import {IconButton} from '../../iconButton';
+import {RadioButton} from '../../radio-button';
 
 /**
  * @internal
@@ -204,21 +205,24 @@ export class AtomicGeneratedAnswerFeedbackModal
       'mr-1',
       'text-neutral-dark',
     ];
-    const isActive = this.currentAnswer[correspondingAnswer] === option;
+    const isSelected = this.currentAnswer[correspondingAnswer] === option;
 
-    if (isActive) {
+    if (isSelected) {
       buttonClasses.push('active');
     }
     return (
-      <Button
-        style="outline-primary"
+      <RadioButton
+        key={String(correspondingAnswer)}
+        groupName={this.bindings.i18n.t(correspondingAnswer)}
+        style="outline-neutral"
+        checked={isSelected}
+        aria-checked={isSelected}
+        onChecked={() => {
+          this.setCurrentAnswer(correspondingAnswer, option);
+        }}
         class={buttonClasses.join(' ')}
-        type="button"
-        onClick={() => this.setCurrentAnswer(correspondingAnswer, option)}
-        ariaPressed={String(isActive)}
-      >
-        {this.bindings.i18n.t(option)}
-      </Button>
+        text={this.bindings.i18n.t(option)}
+      ></RadioButton>
     );
   }
 
@@ -251,7 +255,9 @@ export class AtomicGeneratedAnswerFeedbackModal
   private renderOptions() {
     return (
       <fieldset>
-        <h5 class="font-bold">{this.bindings.i18n.t('answer-evaluation')}</h5>
+        <legend class="font-bold">
+          {this.bindings.i18n.t('answer-evaluation')}
+        </legend>
         {AtomicGeneratedAnswerFeedbackModal.options.map(
           ({localeKey, correspondingAnswer}) => (
             <div
@@ -259,7 +265,10 @@ export class AtomicGeneratedAnswerFeedbackModal
               key={String(correspondingAnswer)}
             >
               {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
-              <div class="options flex text-base">
+              <div
+                class="options flex text-base"
+                aria-label={this.bindings.i18n.t(localeKey)}
+              >
                 {this.renderFeedbackOption('yes', correspondingAnswer)}
                 {this.renderFeedbackOption('unknown', correspondingAnswer)}
                 {this.renderFeedbackOption('no', correspondingAnswer)}
@@ -271,12 +280,12 @@ export class AtomicGeneratedAnswerFeedbackModal
     );
   }
 
-  private renderAdditionalInformation() {
+  private renderLinkToCorrectAnswerField() {
     return (
       <fieldset>
-        <h5 class="font-bold">
+        <legend class="font-bold">
           {this.bindings.i18n.t('generated-answer-feedback-link')}
-        </h5>
+        </legend>
         <input
           type="text"
           ref={(linkInputRef) => (this.linkInputRef = linkInputRef)}
@@ -289,10 +298,16 @@ export class AtomicGeneratedAnswerFeedbackModal
             )
           }
         />
+      </fieldset>
+    );
+  }
 
-        <h5 class="mt-8 font-bold">
+  private renderAddNotesField() {
+    return (
+      <fieldset>
+        <legend class="mt-8 font-bold">
           {this.bindings.i18n.t('generated-answer-additional-notes')}
-        </h5>
+        </legend>
         <textarea
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
@@ -320,7 +335,8 @@ export class AtomicGeneratedAnswerFeedbackModal
         class="flex flex-col gap-8 leading-4"
       >
         {this.renderOptions()}
-        {this.renderAdditionalInformation()}
+        {this.renderLinkToCorrectAnswerField()}
+        {this.renderAddNotesField()}
       </form>
     );
   }

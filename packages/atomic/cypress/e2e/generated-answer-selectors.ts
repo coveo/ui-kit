@@ -66,7 +66,7 @@ export const feedbackModalSelectors = {
       .atomicModal()
       .find('[part="form"]')
       .find(`.${feedback}`)
-      .contains('button', optionText),
+      .find(`input[value=${optionText}]`),
   submitButton: () =>
     feedbackModalSelectors.atomicModal().find('[part="submit-button"]'),
   cancelButton: () =>

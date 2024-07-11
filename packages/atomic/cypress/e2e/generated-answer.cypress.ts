@@ -177,7 +177,7 @@ describe('Generated Answer Test Suites', () => {
             .feedbackOption('correctTopic', 'Yes')
             .click({force: true});
           feedbackModalSelectors
-            .feedbackOption('hallucinationFree', 'Not sure')
+            .feedbackOption('hallucinationFree', 'No')
             .click({force: true});
 
           feedbackModalSelectors.submitButton().click();
@@ -204,7 +204,7 @@ describe('Generated Answer Test Suites', () => {
 
           cy.get(`${RouteAlias.UA}.3`)
             .its('request.body.customData.hallucinationFree')
-            .should('equal', 'unknown');
+            .should('equal', 'no');
 
           cy.get(`${RouteAlias.UA}.3`)
             .its('request.body.customData.readable')
