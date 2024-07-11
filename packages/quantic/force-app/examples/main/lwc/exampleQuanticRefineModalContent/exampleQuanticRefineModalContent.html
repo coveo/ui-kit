@@ -11,6 +11,19 @@
     ></c-configurator>
 
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <div class="sort-container">
+        <c-quantic-sort engine-id={engineId}>
+          <template for:each={sortOptions} for:item="sortOption">
+            <c-quantic-sort-option
+              key={sortOption.value}
+              value={sortOption.value}
+              criterion={sortOption.criterion}
+              label={sortOption.label}
+              slot="sortOption"
+            ></c-quantic-sort-option>
+          </template>
+        </c-quantic-sort>
+      </div>
       <div class="facets-container">
         <c-quantic-facet-manager engine-id={engineId}>
           <c-quantic-facet

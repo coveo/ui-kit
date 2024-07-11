@@ -2,6 +2,8 @@ import {should} from '../../common-selectors';
 import {
   RefineContentSelector,
   RefineContentSelectors,
+  SortSelector,
+  SortSelectors,
 } from './refine-modal-content-selectors';
 
 const COMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
@@ -186,9 +188,9 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should display the duplicated date facet');
     },
 
-    displaySort: (display: boolean) => {
+    displayRefineModalSort: (display: boolean) => {
       selector
-        .sort()
+        .refineSort()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the Quantic Sort component`);
     },
@@ -263,9 +265,49 @@ function refineContentExpectations(selector: RefineContentSelector) {
         })
         .logDetail('should order the facets correctly');
     },
+
+    refineContainsOptions: (values: string[]) => {
+      values.forEach((value) => {
+        selector.refineSortOption(value).should('exist');
+      });
+    },
+
+    refineOptionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector.refineSortOption(option.value).should('contain', option.label);
+      });
+    },
+  };
+}
+
+function sortExpectations(selector: SortSelector) {
+  return {
+    displaySort: (display: boolean) => {
+      selector
+        .sort()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the Quantic Sort component`);
+    },
+
+    displaySortDropdown: (display: boolean) => {
+      selector.listbox().should(display ? 'exist' : 'not.exist');
+    },
+
+    containsOptions: (values: string[]) => {
+      values.forEach((value) => {
+        selector.sortOption(value).should('exist');
+      });
+    },
+
+    optionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector.sortOption(option.value).should('contain', option.label);
+      });
+    },
   };
 }
 
 export const RefineContentExpectations = {
   ...refineContentExpectations(RefineContentSelectors),
+  ...sortExpectations(SortSelectors),
 };

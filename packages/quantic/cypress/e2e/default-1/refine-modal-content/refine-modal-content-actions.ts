@@ -1,9 +1,11 @@
 import {
   RefineContentSelector,
   RefineContentSelectors,
+  SortSelector,
+  SortSelectors,
 } from './refine-modal-content-selectors';
 
-function defineContentActions(selector: RefineContentSelector) {
+function refineContentActions(selector: RefineContentSelector) {
   return {
     clickClearAllFilters: () => {
       selector
@@ -43,9 +45,21 @@ function defineContentActions(selector: RefineContentSelector) {
           'when clicking the first option of the duplicated timeframe facet'
         );
     },
+    openRefineModalSortDropdown: () => {
+      selector.refineCombobox().click();
+    },
+  };
+}
+
+function sortActions(selector: SortSelector) {
+  return {
+    openSortDropdown: () => {
+      selector.combobox().click();
+    },
   };
 }
 
 export const RefineContentActions = {
-  ...defineContentActions(RefineContentSelectors),
+  ...refineContentActions(RefineContentSelectors),
+  ...sortActions(SortSelectors),
 };

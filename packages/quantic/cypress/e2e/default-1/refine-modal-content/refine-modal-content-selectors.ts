@@ -5,7 +5,9 @@ const refineContentContainer = '.facets-container';
 
 export interface RefineContentSelector extends FacetSelector {
   container: FacetSelector;
-  sort: () => CypressSelector;
+  refineSort: () => CypressSelector;
+  refineSortOption: (value: string) => CypressSelector;
+  refineCombobox: () => CypressSelector;
   clearAllFiltersButton: () => CypressSelector;
   filtersTitle: () => CypressSelector;
 }
@@ -63,9 +65,29 @@ const getCommonFacetSelectors = (
 export const RefineContentSelectors: RefineContentSelector = {
   container: getCommonFacetSelectors(() => cy.get(refineContentContainer)),
   ...getCommonFacetSelectors(() => cy.get(refineContentComponent)),
-  sort: () => RefineContentSelectors.get().find('c-quantic-sort'),
+  refineSort: () => RefineContentSelectors.get().find('c-quantic-sort'),
+  refineSortOption: (value: string) =>
+    SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
+  refineCombobox: () => RefineContentSelectors.get().find('.slds-combobox'),
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
     RefineContentSelectors.get().find('[data-cy="filters-title"]'),
+};
+
+export interface SortSelector extends ComponentSelector {
+  get: () => CypressSelector;
+  sort: () => CypressSelector;
+  sortOption: (value: string) => CypressSelector;
+  combobox: () => CypressSelector;
+  listbox: () => CypressSelector;
+}
+
+export const SortSelectors: SortSelector = {
+  get: () => cy.get('c-quantic-sort'),
+  sort: () => SortSelectors.get(),
+  sortOption: (value: string) =>
+    SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
+  combobox: () => SortSelectors.get().find('.slds-combobox').first(),
+  listbox: () => SortSelectors.get().find('.slds-listbox'),
 };
