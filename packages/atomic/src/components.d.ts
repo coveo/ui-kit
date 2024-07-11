@@ -385,7 +385,7 @@ export namespace Components {
         /**
           * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
          */
-        "language": string;
+        "language"?: string;
         /**
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */

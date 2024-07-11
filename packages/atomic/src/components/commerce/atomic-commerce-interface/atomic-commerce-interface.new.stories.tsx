@@ -26,6 +26,12 @@ const meta: Meta = {
     );
     await searchInterface!.executeFirstRequest();
   },
+  argTypes: {
+    'attributes-language': {
+      name: 'language',
+      type: 'string',
+    },
+  },
 };
 
 export default meta;
@@ -46,9 +52,6 @@ export const SearchBeforeInit: Story = {
 
 export const WithProductList: Story = {
   tags: ['commerce', 'test'],
-  argTypes: {
-    'attributes-language': {control: 'text', table: {category: 'attributes'}},
-  },
   args: {
     'slots-default': `
       <atomic-commerce-layout>
