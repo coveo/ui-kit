@@ -84,7 +84,7 @@ export class AtomicCommerceNumericFacet
     return this.headerFocus;
   }
 
-  private unsubscribeFacetController?: () => void;
+  private unsubscribeFacetController!: () => void;
 
   public initialize() {
     if (!this.facet) {
@@ -99,7 +99,7 @@ export class AtomicCommerceNumericFacet
   }
 
   public disconnectedCallback() {
-    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController();
   }
 
   private registerFacetToStore() {

@@ -123,7 +123,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
-  private unsubscribeFacetController?: () => void;
+  private unsubscribeFacetController!: () => void;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -185,10 +185,10 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   }
 
   public disconnectedCallback() {
-    this.unsubscribeFacetController?.();
     if (this.host.isConnected) {
       return;
     }
+    this.unsubscribeFacetController();
   }
 
   private get isHidden() {

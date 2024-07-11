@@ -123,7 +123,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
-  private unsubscribeFacetController?: () => void;
+  private unsubscribeFacetController!: () => void;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -140,7 +140,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   }
 
   public disconnectedCallback(): void {
-    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController();
   }
 
   public componentShouldUpdate(
