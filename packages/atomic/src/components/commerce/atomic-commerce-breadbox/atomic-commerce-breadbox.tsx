@@ -2,8 +2,6 @@ import {NumberValue, Schema} from '@coveo/bueno';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
-  FacetGenerator,
-  FacetGeneratorState,
   ProductListing,
   Search,
   buildProductListing,
@@ -76,7 +74,6 @@ export class AtomicCommerceBreadbox
   private numberOfBreadcrumbs = 0;
   private numberOfCollapsedBreadcrumbs = 0;
   private firstExpandedBreadcrumbIndex?: number;
-  facetGenerator!: FacetGenerator;
   breadcrumbManager!: BreadcrumbManager;
 
   @Element() private host!: HTMLElement;
@@ -86,9 +83,6 @@ export class AtomicCommerceBreadbox
   @BindStateToController('breadcrumbManager')
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
-  @BindStateToController('facetGenerator')
-  @State()
-  public facetGeneratorState!: FacetGeneratorState[];
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
@@ -124,7 +118,6 @@ export class AtomicCommerceBreadbox
     }
 
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
-    this.facetGenerator = this.searchOrListing.facetGenerator();
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
