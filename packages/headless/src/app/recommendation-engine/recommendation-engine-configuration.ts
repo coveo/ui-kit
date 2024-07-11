@@ -1,4 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
+import {PostprocessSearchResponseMiddleware} from '../../api/search/search-api-client-middleware';
 import {nonEmptyString} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
@@ -40,6 +41,10 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
    * America/Montreal
    */
   timezone?: string;
+  /**
+   * Allows for augmenting a search response before the state is updated.
+   */
+  preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
 }
 
 export const recommendationEngineConfigurationSchema =

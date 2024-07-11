@@ -1,6 +1,7 @@
 import {SchemaDefinition} from '@coveo/bueno';
 import {UnknownAction} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response';
+import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -169,6 +170,7 @@ export interface SearchAndListingSubControllerProps<
     state: CommerceEngine[typeof stateKey],
     activeParams: P
   ) => Required<P>;
+  facetSearchType: FacetSearchType;
 }
 
 /**
@@ -180,13 +182,19 @@ export interface SearchAndListingSubControllerProps<
  */
 export function buildSearchSubControllers(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps<
-    CommerceSearchParameters,
-    SearchSummaryState
+  subControllerProps: Omit<
+    SearchAndListingSubControllerProps<
+      CommerceSearchParameters,
+      SearchSummaryState
+    >,
+    'facetSearchType'
   >
 ): SearchSubControllers {
   return {
-    ...buildSearchAndListingsSubControllers(engine, subControllerProps),
+    ...buildSearchAndListingsSubControllers(engine, {
+      ...subControllerProps,
+      facetSearchType: 'SEARCH',
+    }),
     didYouMean() {
       return buildDidYouMean(engine);
     },
@@ -202,15 +210,21 @@ export function buildSearchSubControllers(
  */
 export function buildProductListingSubControllers(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps<
-    ProductListingParameters,
-    ProductListingSummaryState
+  subControllerProps: Omit<
+    SearchAndListingSubControllerProps<
+      ProductListingParameters,
+      ProductListingSummaryState
+    >,
+    'facetSearchType'
   >
 ): SearchAndListingSubControllers<
   ProductListingParameters,
   ProductListingSummaryState
 > {
-  return buildSearchAndListingsSubControllers(engine, subControllerProps);
+  return buildSearchAndListingsSubControllers(engine, {
+    ...subControllerProps,
+    facetSearchType: 'LISTING',
+  });
 }
 
 /**
@@ -237,6 +251,7 @@ export function buildSearchAndListingsSubControllers<
     activeParametersSelector,
     restoreActionCreator,
     enrichParameters,
+    facetSearchType,
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
@@ -251,6 +266,7 @@ export function buildSearchAndListingsSubControllers<
         fetchProductsActionCreator,
         facetResponseSelector,
         isFacetLoadingResponseSelector,
+        facetSearch: {type: facetSearchType},
       };
       return buildFacetGenerator(engine, {
         buildRegularFacet: (_engine, options) =>
@@ -261,6 +277,7 @@ export function buildSearchAndListingsSubControllers<
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+        fetchProductsActionCreator,
       });
     },
     breadcrumbManager() {

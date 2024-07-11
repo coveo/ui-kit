@@ -58,7 +58,10 @@ describe('FacetSearch slice', () => {
 
   it('on #executeCommerceFacetSearch.pending, calls #handleFacetSearchPending', () => {
     jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
-    const pendingAction = executeCommerceFacetSearch.pending(facetId, '');
+    const pendingAction = executeCommerceFacetSearch.pending(facetId, {
+      facetId,
+      facetSearchType: 'SEARCH',
+    });
     facetSearchSetReducer(state, pendingAction);
 
     expect(
@@ -81,7 +84,7 @@ describe('FacetSearch slice', () => {
     const rejectedAction = executeCommerceFacetSearch.rejected(
       {name: 'test', message: 'test'},
       facetId,
-      facetId
+      {facetId, facetSearchType: 'SEARCH'}
     );
     facetSearchSetReducer(state, rejectedAction);
 
@@ -116,7 +119,7 @@ describe('FacetSearch slice', () => {
         },
       },
       '',
-      ''
+      {facetId: '', facetSearchType: 'SEARCH'}
     );
 
     facetSearchSetReducer(state, action);

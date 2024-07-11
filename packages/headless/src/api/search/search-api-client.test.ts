@@ -177,6 +177,29 @@ describe('search api client', () => {
       const res = await searchAPIClient.facetSearch(req);
       expect(res.moreValuesAvailable).toEqual(true);
     });
+
+    describe('when calling SearchAPIClient.recommendations', () => {
+      it('should preprocess the response', async () => {
+        const recommendationState = createMockRecommendationState();
+        const processedRecommendations = buildMockSearchResponse();
+
+        buildSearchAPIClient({
+          postprocessSearchResponseMiddleware: (response) => {
+            return {
+              ...response,
+              body: processedRecommendations,
+            };
+          },
+        });
+
+        const req = await buildRecommendationRequest(recommendationState);
+        const res = await searchAPIClient.recommendations(req);
+
+        if (!isErrorResponse(res)) {
+          expect(res.success).toEqual(processedRecommendations);
+        }
+      });
+    });
   });
 
   describe('noop middleware', () => {

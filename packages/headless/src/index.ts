@@ -483,6 +483,7 @@ export type {
   GeneratedAnswerProps,
   GeneratedAnswerCitation,
   GeneratedResponseFormat,
+  GeneratedAnswerPropsInitialState,
 } from './controllers/generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer';
 

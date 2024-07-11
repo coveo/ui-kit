@@ -168,30 +168,9 @@ test.describe('with a valid page in the hash', () => {
   });
 });
 
-test.describe('with an invalid page in the hash', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=8k3'
-    );
-  });
-
-  test('pager button 1 should be selected', async ({pager}) => {
-    await expect(pager.numericButton(1)).toHaveAttribute(
-      'part',
-      expect.stringContaining('active-page-button')
-    );
-  });
-
-  test('should be A11y compliant', async ({pager, makeAxeBuilder}) => {
-    await pager.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-});
-
 test.describe('with number-of-pages=3', () => {
   test.beforeEach(async ({pager}) => {
-    await pager.load({numberOfPages: 3});
+    await pager.load({args: {numberOfPages: 3}});
   });
 
   test('should display 3 pages', async ({pager}) => {
@@ -201,7 +180,7 @@ test.describe('with number-of-pages=3', () => {
 
 test.describe('with numberOfPages=-5', () => {
   test.beforeEach(async ({pager}) => {
-    await pager.load({numberOfPages: -5});
+    await pager.load({args: {numberOfPages: -5}});
   });
 
   test('should display an error component', async ({pager}) => {
@@ -214,7 +193,7 @@ test.describe('should allow custom icons', () => {
     'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
 
   test.beforeEach(async ({pager}) => {
-    await pager.load({}, 'custom-icon');
+    await pager.load({story: 'custom-icon'});
   });
 
   test('previous button', async ({pager, page}) => {

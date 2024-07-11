@@ -1,5 +1,4 @@
 import {Action} from '@reduxjs/toolkit';
-import {stateKey} from '../../../../app/state-key';
 import {
   clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
@@ -28,6 +27,7 @@ import {
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
+import {CommerceAppState} from '../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
 import {
   buildMockCategoryFacetResponse,
@@ -35,6 +35,10 @@ import {
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
+import {
+  buildMockCategoryFacetValue,
+  buildMockCommerceRegularFacetValue,
+} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -60,13 +64,14 @@ describe('core breadcrumb manager', () => {
   let engine: MockedCommerceEngine;
   let options: CoreBreadcrumbManagerOptions;
   let breadcrumbManager: BreadcrumbManager;
+  let state: CommerceAppState;
 
   const facetId = 'some_facet_id';
   const facetResponseSelector = jest.fn();
   const fetchProductsActionCreator = jest.fn();
 
-  function initEngine(preloadedState = buildMockCommerceState()) {
-    engine = buildMockCommerceEngine(preloadedState);
+  function initEngine() {
+    engine = buildMockCommerceEngine(state);
   }
 
   function initBreadcrumbManager() {
@@ -74,8 +79,8 @@ describe('core breadcrumb manager', () => {
   }
 
   function setFacetsState({facetId, ...restOfResponse}: AnyFacetResponse) {
-    engine[stateKey].facetOrder.push(facetId);
-    engine[stateKey].commerceFacetSet[facetId] = {
+    state.facetOrder.push(facetId);
+    state.commerceFacetSet[facetId] = {
       request: buildMockCommerceFacetRequest(),
     };
     facetResponseSelector.mockReturnValue({facetId, ...restOfResponse});
@@ -83,12 +88,11 @@ describe('core breadcrumb manager', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-
     options = {
       facetResponseSelector,
       fetchProductsActionCreator,
     };
-
+    state = buildMockCommerceState();
     initEngine();
     initBreadcrumbManager();
   });
@@ -108,21 +112,92 @@ describe('core breadcrumb manager', () => {
     expect(breadcrumbManager.subscribe).toBeTruthy();
   });
 
-  it('#hasBreadcrumbs is false when there are no facet values', () => {
-    setFacetsState(
-      buildMockCommerceRegularFacetResponse({
-        facetId,
-        values: [],
-      })
-    );
-    setFacetsState(
-      buildMockCommerceNumericFacetResponse({
-        facetId,
-        values: [],
-      })
-    );
+  describe('#hasBreadcrumbs', () => {
+    it('#hasBreadcrumbs is false when there are no facets', () => {
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+    });
 
-    expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+    it('#hasBreadcrumbs is false when there are no facet values', () => {
+      setFacetsState(
+        buildMockCommerceRegularFacetResponse({facetId, values: []})
+      );
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+    });
+
+    it('#hasBreadcrumbs is false when all values in a non-category facet are idle', () => {
+      setFacetsState(
+        buildMockCommerceRegularFacetResponse({
+          facetId,
+          values: [buildMockCommerceRegularFacetValue({state: 'idle'})],
+        })
+      );
+
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+    });
+
+    it('#hasBreadcrumb is false when all values in a category facet are idle', () => {
+      setFacetsState(
+        buildMockCategoryFacetResponse({
+          facetId: 'category_facet',
+          values: [buildMockCategoryFacetValue({state: 'idle'})],
+        })
+      );
+
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
+    });
+
+    it('#hasBreadcrumbs is true when there is a selected value in a non-category facet', () => {
+      setFacetsState(
+        buildMockCommerceRegularFacetResponse({
+          facetId,
+          values: [buildMockCommerceRegularFacetValue({state: 'selected'})],
+        })
+      );
+
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
+    });
+
+    it('#hasBreadcrumbs is true when the top parent value is selected in a category facet', () => {
+      setFacetsState(
+        buildMockCategoryFacetResponse({
+          facetId: 'category_facet',
+          values: [buildMockCategoryFacetValue({state: 'selected'})],
+        })
+      );
+
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
+    });
+
+    it('#hasBreadcrumbs is true when a child value is selected in a category facet', () => {
+      setFacetsState(
+        buildMockCategoryFacetResponse({
+          facetId: 'category_facet',
+          values: [
+            buildMockCategoryFacetValue({
+              state: 'idle',
+              children: [
+                buildMockCategoryFacetValue({
+                  state: 'selected',
+                }),
+              ],
+            }),
+          ],
+        })
+      );
+
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
+    });
+
+    it('#hasBreadcrumbs is true when there is an excluded facet value', () => {
+      setFacetsState(
+        buildMockCommerceRegularFacetResponse({
+          facetId,
+          values: [buildMockCommerceRegularFacetValue({state: 'excluded'})],
+        })
+      );
+
+      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
+    });
   });
 
   describe('#deselectAll', () => {
@@ -261,7 +336,7 @@ describe('core breadcrumb manager', () => {
 
     it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith(facetId);
+      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith({facetId});
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });

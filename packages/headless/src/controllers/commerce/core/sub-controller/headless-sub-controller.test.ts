@@ -136,6 +136,7 @@ describe('sub-controllers', () => {
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
         enrichParameters: mockEnrichParameters,
+        facetSearchType: 'LISTING',
       });
     });
 
