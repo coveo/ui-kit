@@ -59,10 +59,12 @@ function flushPromises() {
 
 function selectOption(element, selector, value) {
   const radioGroup = element.shadowRoot.querySelector(selector);
-
-  const event = new CustomEvent('change', {
-    detail: {value},
-  });
+  // All base components in Jest tests are stubs. So we have to set the value manually.
+  // Including to the checkValidity method.
+  radioGroup.value = value;
+  radioGroup.validity = true;
+  radioGroup.checkValidity = () => true;
+  const event = new CustomEvent('change');
   expect(radioGroup).not.toBeNull();
   radioGroup.dispatchEvent(event);
 }
@@ -124,9 +126,18 @@ describe('c-quantic-feedback-modal-qna', () => {
     expect(submitButton).not.toBeNull();
   });
 
-  it('correctly marks the feedback questions as required if you try to submit without answering them', async () => {
+  it("does not let you submit when you haven't answered all the required questions", async () => {
     const element = createTestComponent();
     await flushPromises();
+
+    // Mock the checkValidity method to return false since the questions are not answered.
+    const checkValidityMock = jest.fn(() => false);
+    const answerEvaluationQuestions = element.shadowRoot.querySelectorAll(
+      selectors.answerEvaluationQuestions
+    );
+    answerEvaluationQuestions.forEach((question) => {
+      question.checkValidity = checkValidityMock;
+    });
 
     const submitButton = element.shadowRoot.querySelector(
       selectors.submitButton
@@ -138,6 +149,7 @@ describe('c-quantic-feedback-modal-qna', () => {
       selectors.successMesage
     );
     expect(successMesage).toBeNull();
+    expect(checkValidityMock).toHaveBeenCalledTimes(4);
   });
 
   describe('when all the required questions are filled', () => {
@@ -165,9 +177,15 @@ describe('c-quantic-feedback-modal-qna', () => {
       );
       expect(successMesage).not.toBeNull();
 
-      expect(functionsMocks.handleSubmit).toHaveBeenCalledWith({
-        helpful: true,
-      });
+      expect(functionsMocks.handleSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          helpful: false,
+          correctTopicValue: 'yes',
+          hallucinationFree: 'yes',
+          documented: 'yes',
+          readable: 'yes',
+        })
+      );
     });
   });
 });
