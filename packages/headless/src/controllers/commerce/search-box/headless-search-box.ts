@@ -35,7 +35,10 @@ import {
 } from '../../../utils/highlight';
 import {randomID} from '../../../utils/utils';
 import {validateOptions} from '../../../utils/validate-payload';
-import {buildController} from '../../controller/headless-controller';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {
   getSuggestions,
   SearchBoxState,
@@ -67,7 +70,7 @@ export interface SearchBoxProps {
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI component
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
-export interface SearchBox {
+export interface SearchBox extends Controller {
   /**
    * Updates the search box text value and shows the suggestions for that value.
    *
