@@ -159,7 +159,7 @@ test.describe('Default', () => {
     });
   });
 
-  test.describe('when selecting 6 facet values', () => {
+  test.describe('when selecting multiple facet values', () => {
     test.beforeEach(async ({breadbox}) => {
       for (let i = 0; i < 6; i++) {
         await breadbox.getRegularFacetValue().nth(i).click();
