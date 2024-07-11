@@ -222,7 +222,9 @@ export function buildCoreBreadcrumbManager(
         value: activeValue,
         deselect: () => {
           dispatch(
-            actions['hierarchical'].toggleSelectActionCreator(facet.facetId)
+            actions['hierarchical'].toggleSelectActionCreator({
+              facetId: facet.facetId,
+            })
           );
           dispatch(options.fetchProductsActionCreator());
         },
