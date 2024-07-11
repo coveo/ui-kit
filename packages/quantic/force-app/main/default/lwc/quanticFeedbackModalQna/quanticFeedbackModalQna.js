@@ -1,9 +1,21 @@
 // @ts-nocheck
 import done from '@salesforce/label/c.quantic_Done';
-import feedbackHelpUsImprove from '@salesforce/label/c.quantic_FeedbackHelpUsImprove';
+import additionalNotes from '@salesforce/label/c.quantic_FeedbackAdditionalNotes';
+import additionalNotesExplanation from '@salesforce/label/c.quantic_FeedbackAdditionalNotesExplanation';
+import answerEvaluation from '@salesforce/label/c.quantic_FeedbackAnswerEvaluation';
+import documentUrl from '@salesforce/label/c.quantic_FeedbackDocumentUrl';
+import documentUrlExplanation from '@salesforce/label/c.quantic_FeedbackDocumentUrlExplanation';
+import helpUsImprove from '@salesforce/label/c.quantic_FeedbackHelpUsImprove';
+import answerNotSure from '@salesforce/label/c.quantic_FeedbackNotSure';
+import questionDocumented from '@salesforce/label/c.quantic_FeedbackQuestionDocumented';
+import questionHallucination from '@salesforce/label/c.quantic_FeedbackQuestionHallucination';
+import questionReadable from '@salesforce/label/c.quantic_FeedbackQuestionReadable';
+import questionTopic from '@salesforce/label/c.quantic_FeedbackQuestionTopic';
+import answerNo from '@salesforce/label/c.quantic_No';
 import sendFeedback from '@salesforce/label/c.quantic_SendFeedback';
 import skip from '@salesforce/label/c.quantic_Skip';
 import thankYouForYourFeedback from '@salesforce/label/c.quantic_ThankYouForYourFeedback';
+import answerYes from '@salesforce/label/c.quantic_Yes';
 import yourFeedbackHelps from '@salesforce/label/c.quantic_YourFeedbackHelps';
 import requiredFeedbackQuestion from '@salesforce/label/c.quantic_requiredFeedbackQuestion';
 import LightningModal from 'lightning/modal';
@@ -27,10 +39,22 @@ export default class QuanticFeedbackModalQna extends LightningModal {
     skip,
     done,
     sendFeedback,
-    feedbackHelpUsImprove,
+    helpUsImprove,
     requiredFeedbackQuestion,
     thankYouForYourFeedback,
+    answerEvaluation,
+    questionTopic,
+    questionHallucination,
+    questionDocumented,
+    questionReadable,
     yourFeedbackHelps,
+    answerYes,
+    answerNo,
+    answerNotSure,
+    documentUrl,
+    documentUrlExplanation,
+    additionalNotes,
+    additionalNotesExplanation,
   };
 
   /**
@@ -64,28 +88,28 @@ export default class QuanticFeedbackModalQna extends LightningModal {
 
   questions = [
     {
-      question: 'Is the answer about the right topic?',
+      question: this.labels.questionTopic,
       changeFn: (event) => {
         this.correctTopicValue = event.target.value;
       },
       id: 'correctTopic',
     },
     {
-      question: 'Is the answer free of hallucinated content?',
+      question: this.labels.questionHallucination,
       changeFn: (event) => {
         this.hallucinationFreeValue = event.target.value;
       },
       id: 'hallucinationFree',
     },
     {
-      question: 'Can the question be answered by the documentation?',
+      question: this.labels.questionDocumented,
       changeFn: (event) => {
         this.documentedValue = event.target.value;
       },
       id: 'documented',
     },
     {
-      question: 'Is the answer readable?',
+      question: this.labels.questionReadable,
       changeFn: (event) => {
         this.readableValue = event.target.value;
       },
@@ -94,9 +118,9 @@ export default class QuanticFeedbackModalQna extends LightningModal {
   ];
 
   answerOptions = [
-    {label: 'Yes', value: 'yes'},
-    {label: 'Not sure', value: 'unknown'},
-    {label: 'No', value: 'no'},
+    {label: this.labels.answerYes, value: 'yes'},
+    {label: this.labels.answerNotSure, value: 'unknown'},
+    {label: this.labels.answerNo, value: 'no'},
   ];
 
   /** @type {string} */
@@ -154,10 +178,6 @@ export default class QuanticFeedbackModalQna extends LightningModal {
       helpful: this.liked,
     });
     this.isFeedbackSubmitted = true;
-    // this.handleSubmit({
-    //   value: this.feedbackValue,
-    //   details: this.detailsValue,
-    // });
   }
 
   /**

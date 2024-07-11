@@ -808,4 +808,36 @@
     <label>Voir moins</label>
     <name>quantic_GeneratedAnswerShowLess</name>
   </customLabels>
+  <customLabels>
+    <label>La réponse concerne-t-elle le bon sujet?</label>
+    <name>quantic_FeedbackQuestionTopic</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse est-elle exempte de contenu halluciné?</label>
+    <name>quantic_FeedbackQuestionHallucination</name>
+  </customLabels>
+  <customLabels>
+    <label>La question peut-elle être répondue par la documentation?</label>
+    <name>quantic_FeedbackQuestionDocumented</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse est-elle lisible?</label>
+    <name>quantic_FeedbackQuestionReadable</name>
+  </customLabels>
+  <customLabels>
+    <label>Incertain</label>
+    <name>quantic_FeedbackNotSure</name>
+  </customLabels>
+  <customLabels>
+    <label>Évaluation de la réponse</label>
+    <name>quantic_FeedbackAnswerEvaluation</name>
+  </customLabels>
+  <customLabels>
+    <label>Lien vers la bonne réponse</label>
+    <name>quantic_FeedbackDocumentUrl</name>
+  </customLabels>
+  <customLabels>
+    <label>Veuillez fournir un lien vers la bonne réponse</label>
+    <name>quantic_FeedbackDocumentUrlExplanation</name>
+  </customLabels>
 </Translations>
