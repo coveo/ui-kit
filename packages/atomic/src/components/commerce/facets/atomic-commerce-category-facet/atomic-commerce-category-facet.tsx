@@ -136,19 +136,21 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
     this.unsubscribeFacetController = this.facet.subscribe(
       () => (this.facetState = this.facet.state)
     );
+
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.displayName,
       (msg) => (this.facetSearchAriaMessage = msg),
       this.bindings.i18n
     );
+
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
       facetId: this.facetState.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
-    this.bindings.store.registerFacet('categoryFacets', facetInfo);
+
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.facetState.values.length,
