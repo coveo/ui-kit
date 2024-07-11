@@ -41,6 +41,7 @@ import {
   SearchBoxState,
   Suggestion,
 } from '../../core/search-box/headless-core-search-box';
+import {SearchBox as CoreSearchBox} from '../../core/search-box/headless-core-search-box';
 import {
   defaultSearchBoxOptions,
   SearchBoxOptions,
@@ -95,6 +96,7 @@ export interface SearchBox {
    * The state of the `SearchBox` controller.
    */
   state: SearchBoxState;
+
   /**
    * Triggers a commerce search query.
    */
@@ -193,7 +195,7 @@ export function buildSearchBox(
         isLoadingSuggestions,
       };
     },
-  };
+  } satisfies Omit<CoreSearchBox, 'submit'> & {submit(): void};
 }
 
 function loadSearchBoxReducers(
