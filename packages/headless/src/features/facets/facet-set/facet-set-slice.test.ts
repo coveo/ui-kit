@@ -5,7 +5,7 @@ import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
+import {buildFetchProductListingResponse} from '../../../test/mock-old-product-listing';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {

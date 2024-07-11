@@ -1,24 +1,26 @@
-import {ProductListingSuccessResponse} from '../api/commerce/product-listings/product-listing-request';
-import {logInterfaceLoad} from '../features/analytics/analytics-actions';
-import {FetchProductListingThunkReturn} from '../features/product-listing/product-listing-actions';
+import {CommerceSuccessResponse} from '../api/commerce/common/response';
+import {QueryCommerceAPIThunkReturn} from '../features/commerce/common/actions';
+import {SortBy} from '../features/sort/sort';
 
 export function buildFetchProductListingResponse(
-  response: Partial<ProductListingSuccessResponse> = {}
-): FetchProductListingThunkReturn {
+  response: Partial<CommerceSuccessResponse> = {}
+): QueryCommerceAPIThunkReturn {
   return {
     response: {
-      pagination: {
-        totalCount: 0,
-        ...(response?.pagination || {}),
+      sort: response.sort ?? {
+        appliedSort: {sortCriteria: SortBy.Relevance},
+        availableSorts: [{sortCriteria: SortBy.Relevance}],
       },
-      facets: {
-        results: [],
-        ...(response?.facets || {}),
+      pagination: response.pagination ?? {
+        page: 0,
+        perPage: 0,
+        totalEntries: 0,
+        totalPages: 0,
       },
-      products: [],
-      responseId: '',
-      ...(response || {}),
+      facets: response.facets ?? [],
+      products: response.products ?? [],
+      responseId: response.responseId ?? '',
+      triggers: response.triggers ?? [],
     },
-    analyticsAction: logInterfaceLoad(),
   };
 }

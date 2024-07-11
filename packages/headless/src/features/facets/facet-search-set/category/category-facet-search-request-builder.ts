@@ -1,4 +1,5 @@
 import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
+import {NavigatorContext} from '../../../../app/navigatorContextProvider';
 import {buildSearchRequest} from '../../../search/search-request';
 import {CategoryFacetRequest} from '../../category-facet-set/interfaces/request';
 import {StateNeededForCategoryFacetSearch} from '../generic/generic-facet-search-state';
@@ -6,6 +7,7 @@ import {StateNeededForCategoryFacetSearch} from '../generic/generic-facet-search
 export const buildCategoryFacetSearchRequest = async (
   id: string,
   state: StateNeededForCategoryFacetSearch,
+  navigatorContext: NavigatorContext,
   isFieldSuggestionsRequest: boolean
 ): Promise<CategoryFacetSearchRequest> => {
   const options = state.categoryFacetSearchSet[id].options;
@@ -37,7 +39,10 @@ export const buildCategoryFacetSearchRequest = async (
     type: 'hierarchical',
     ...(isFieldSuggestionsRequest
       ? {}
-      : {searchContext: (await buildSearchRequest(state)).request}),
+      : {
+          searchContext: (await buildSearchRequest(state, navigatorContext))
+            .request,
+        }),
   };
 };
 

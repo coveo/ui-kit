@@ -211,7 +211,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const body = await response.json();
 
     if (isSuccessSearchResponse(body)) {
-      return {success: body};
+      const payload = {response, body};
+      payload.body = shimResponse(body);
+      const processedResponse =
+        await this.options.postprocessSearchResponseMiddleware(payload);
+      return {
+        success: processedResponse.body,
+      };
     }
 
     return {

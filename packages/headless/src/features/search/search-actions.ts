@@ -5,6 +5,7 @@ import {historyStore} from '../../api/analytics/coveo-analytics-utils';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {NavigatorContext} from '../../app/navigatorContextProvider';
 import {InstantResultSection} from '../../state/state-sections';
 import {
   requiredNonEmptyString,
@@ -118,7 +119,11 @@ export const executeSearch = createAsyncThunk<
     addEntryInActionsHistory(state);
     const analyticsAction = buildSearchReduxAction(searchAction.next);
 
-    const request = await buildSearchRequest(state, analyticsAction);
+    const request = await buildSearchRequest(
+      state,
+      config.extra.navigatorContext,
+      analyticsAction
+    );
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
@@ -154,7 +159,11 @@ export const fetchPage = createAsyncThunk<
     analyticsAction: searchAction.next,
   });
 
-  const request = await buildSearchRequest(state, searchAction.next);
+  const request = await buildSearchRequest(
+    state,
+    config.extra.navigatorContext,
+    searchAction.next
+  );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -171,7 +180,7 @@ export const fetchMoreResults = createAsyncThunk<
   }
 
   const analyticsAction = makeBasicNewSearchAnalyticsAction(
-    SearchPageEvents.pagerScrolling,
+    SearchPageEvents.browseResults,
     config.getState
   );
 
@@ -182,7 +191,11 @@ export const fetchMoreResults = createAsyncThunk<
     analyticsAction,
   });
 
-  const request = await buildFetchMoreRequest(state, analyticsAction);
+  const request = await buildFetchMoreRequest(
+    state,
+    config.extra.navigatorContext,
+    analyticsAction
+  );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -208,7 +221,11 @@ export const fetchFacetValues = createAsyncThunk<
       ReturnType<typeof config.rejectWithValue>
     >({...config, analyticsAction});
 
-    const request = await buildFetchFacetValuesRequest(state, analyticsAction);
+    const request = await buildFetchFacetValuesRequest(
+      state,
+      config.extra.navigatorContext,
+      analyticsAction
+    );
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'facetValues',
     });
@@ -243,6 +260,7 @@ export const fetchInstantResults = createAsyncThunk<
 
     const request = await buildInstantResultSearchRequest(
       state,
+      config.extra.navigatorContext,
       q,
       maxResultsPerQuery,
       analyticsAction
@@ -275,9 +293,14 @@ export const fetchInstantResults = createAsyncThunk<
 
 const buildFetchMoreRequest = async (
   state: StateNeededByExecuteSearch,
+  navigatorContext: NavigatorContext,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
-  const mappedRequest = await buildSearchRequest(state, eventDescription);
+  const mappedRequest = await buildSearchRequest(
+    state,
+    navigatorContext,
+    eventDescription
+  );
   mappedRequest.request = {
     ...mappedRequest.request,
     firstResult:
@@ -289,12 +312,16 @@ const buildFetchMoreRequest = async (
 
 export const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
+  navigatorContext: NavigatorContext,
   q: string,
   numberOfResults: number,
   eventDescription: EventDescription
 ) => {
-  const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
+  const sharedWithFoldingRequest = buildSearchAndFoldingLoadCollectionRequest(
+    state,
+    navigatorContext,
+    eventDescription
+  );
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
@@ -308,9 +335,14 @@ export const buildInstantResultSearchRequest = async (
 
 const buildFetchFacetValuesRequest = async (
   state: StateNeededByExecuteSearch,
+  navigatorContext: NavigatorContext,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
-  const mappedRequest = await buildSearchRequest(state, eventDescription);
+  const mappedRequest = await buildSearchRequest(
+    state,
+    navigatorContext,
+    eventDescription
+  );
   // Specifying a numberOfResults of 0 will not log the query as a full fledged query in the API
   // it will also alleviate the load on the index
   mappedRequest.request.numberOfResults = 0;

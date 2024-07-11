@@ -11,3 +11,5 @@ export type CommerceFacetSearchRequest = CommerceSearchRequest &
 
 export type CategoryFacetSearchRequest = CommerceFacetSearchRequest &
   IgnorePathsParam;
+
+export type FacetSearchType = 'SEARCH' | 'LISTING';

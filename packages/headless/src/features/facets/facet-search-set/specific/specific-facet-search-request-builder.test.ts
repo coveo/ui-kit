@@ -2,6 +2,7 @@ import {SearchAppState} from '../../../../state/search-app-state';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
+import {buildMockNavigatorContextProvider} from '../../../../test/mock-navigator-context-provider';
 import {createMockState} from '../../../../test/mock-state';
 import {buildSearchRequest} from '../../../search/search-request';
 import {buildSpecificFacetSearchRequest} from './specific-facet-search-request-builder';
@@ -17,7 +18,12 @@ describe('#buildSpecificFacetSearchRequest', () => {
   }
 
   function buildParams() {
-    return buildSpecificFacetSearchRequest(id, state, false);
+    return buildSpecificFacetSearchRequest(
+      id,
+      state,
+      buildMockNavigatorContextProvider()(),
+      false
+    );
   }
 
   beforeEach(() => setupState());
@@ -68,7 +74,9 @@ describe('#buildSpecificFacetSearchRequest', () => {
   });
 
   it('sets the #searchContext to the search request params', async () => {
-    const request = (await buildSearchRequest(state)).request;
+    const request = (
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
+    ).request;
 
     expect((await buildParams()).searchContext).toEqual({
       ...request,

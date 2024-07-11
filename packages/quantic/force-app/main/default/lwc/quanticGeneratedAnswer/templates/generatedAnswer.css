@@ -7,8 +7,6 @@
 
 .generated-answer__answer {
   white-space: pre-wrap;
-  line-height: 1.5rem;
-  font-size: 15px;
   overflow: hidden;
   position: relative;
 }
@@ -21,17 +19,6 @@
   width: 100%;
   /** Absolute maximum width for the rephrase buttons including labels. */
   max-width: 425px;
-}
-
-.generated-answer__answer--streaming > span::after {
-  content: '';
-  width: 0.5rem;
-  height: 0.9rem;
-  margin-left: 0.1rem;
-  background: var(--lwc-brandAccessible, #0176d3);
-  display: inline-block;
-  animation: cursor-blink 1.5s steps(2, start) infinite;
-  vertical-align: baseline;
 }
 
 .generated-answer__answer--collapsed {

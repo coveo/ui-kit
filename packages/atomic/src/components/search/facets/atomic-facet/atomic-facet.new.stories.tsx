@@ -22,7 +22,16 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-facet',
   args: {
-    field: 'objecttype',
+    'attributes-field': 'objecttype',
+  },
+  decorators: [facetDecorator],
+};
+
+export const LowFacetValues: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'objecttype',
+    'attributes-number-of-values': 2,
   },
   decorators: [facetDecorator],
 };

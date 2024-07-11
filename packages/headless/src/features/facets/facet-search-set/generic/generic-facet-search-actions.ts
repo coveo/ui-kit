@@ -40,7 +40,10 @@ const getExecuteFacetSearchThunkPayloadCreator =
     ExecuteFacetSearchThunkArg,
     ExecuteFacetSearchThunkApiConfig
   > =>
-  async (facetId: string, {getState, extra: {apiClient, validatePayload}}) => {
+  async (
+    facetId: string,
+    {getState, extra: {apiClient, validatePayload, navigatorContext}}
+  ) => {
     const state = getState();
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
     validatePayload(facetId, requiredNonEmptyString);
@@ -48,12 +51,14 @@ const getExecuteFacetSearchThunkPayloadCreator =
       req = await buildSpecificFacetSearchRequest(
         facetId,
         state,
+        navigatorContext,
         isFieldSuggestionsRequest
       );
     } else {
       req = await buildCategoryFacetSearchRequest(
         facetId,
         state as StateNeededForCategoryFacetSearch,
+        navigatorContext,
         isFieldSuggestionsRequest
       );
     }

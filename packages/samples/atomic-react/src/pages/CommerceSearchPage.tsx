@@ -41,7 +41,6 @@ export const CommerceSearchPage = () => {
             currency: 'USD',
             view: {
               url: 'https://sports-dev.barca.group/commerce-search',
-              referrer: document.referrer,
             },
           },
           cart: {
@@ -125,7 +124,7 @@ function MyTemplate() {
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>
       <AtomicProductSectionEmphasized>
-        <AtomicProductPrice currency="USD" />
+        <AtomicProductPrice />
       </AtomicProductSectionEmphasized>
       <AtomicProductSectionDescription>
         <AtomicProductDescription />

@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {stateKey} from '../../../app/state-key';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
@@ -9,7 +10,6 @@ import {
   resetStandaloneSearchBox,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
-import {selectQuerySuggestion} from '../../../features/query-suggest/query-suggest-actions';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {
   CommerceQuerySection,
@@ -60,8 +60,6 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns A `StandaloneSearchBox` controller instance.
- *
- * @internal
  */
 export function buildStandaloneSearchBox(
   engine: CommerceEngine,
