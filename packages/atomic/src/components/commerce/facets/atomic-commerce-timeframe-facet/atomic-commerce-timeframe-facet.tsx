@@ -86,7 +86,7 @@ export class AtomicCommerceTimeframeFacet
     return this.headerFocus;
   }
 
-  private unsubscribeFacetController?: () => void;
+  private unsubscribeFacetController!: () => void;
 
   public initialize() {
     if (!this.facet) {
@@ -168,7 +168,7 @@ export class AtomicCommerceTimeframeFacet
     if (this.host.isConnected) {
       return;
     }
-    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController();
   }
 
   private get isHidden() {
