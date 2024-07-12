@@ -1,3 +1,7 @@
+/**
+ * @group Core types and interfaces
+ * @category Facets
+ */
 export interface BaseFacetSearchResult {
   /**
    * The custom facet value display name, as specified in the `captions` argument of the facet request.

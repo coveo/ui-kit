@@ -1,5 +1,8 @@
 /**
  * Describe correction for a query, using the older index based system.
+ *
+ * @group Core types and interfaces
+ * @category Query correction
  */
 export interface QueryCorrection {
   /**
@@ -12,6 +15,10 @@ export interface QueryCorrection {
   wordCorrections?: WordCorrection[];
 }
 
+/**
+ * @group Core types and interfaces
+ * @category Query correction
+ */
 export interface WordCorrection {
   /**
    * Offset, from the beginning of the query

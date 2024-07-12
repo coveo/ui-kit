@@ -164,6 +164,7 @@ export type {
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 export type {
   NumericFacet,
+  NumericFacetDomain,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export {buildDateRange} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
@@ -183,9 +184,14 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet';
-export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+export type {
+  FacetGenerator,
+  FacetGeneratorState,
+  GeneratedFacetControllers,
+  MappedGeneratedFacetController,
+} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
 
-export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator';
+export type {FacetValueState} from './features/facets/facet-api/value';
 
 export type {
   RegularFacetSearch,
@@ -197,6 +203,8 @@ export type {
   CategoryFacetSearchState,
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response';
+
+export type {BaseFacetSearchResult} from './api/search/facet-search/base/base-facet-search-response';
 
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {

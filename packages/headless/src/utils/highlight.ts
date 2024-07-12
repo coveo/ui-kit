@@ -1,6 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {isEmptyString} from './utils';
 
+/**
+ * @group Core types and interfaces
+ * @category Highlight
+ */
 export interface HighlightKeyword {
   /**
    * The 0 based offset inside the string where the highlight should start.

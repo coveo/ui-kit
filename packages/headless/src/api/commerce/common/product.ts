@@ -1,11 +1,19 @@
 import {HighlightKeyword} from '../../../utils/highlight';
 
-export type ChildProduct = Omit<
-  BaseProduct,
-  'children' | 'totalNumberOfChildren'
->;
+/**
+ * @group Core types and interfaces
+ * @category Product
+ */
+export interface ChildProduct
+  extends Omit<BaseProduct, 'children' | 'totalNumberOfChildren'> {}
 
 // TODO: KIT-3164 update based on https://coveord.atlassian.net/browse/DOC-14667
+/**
+ * @group Core types and interfaces
+ * @category Product
+ * @internal
+ * @hidden
+ */
 export interface BaseProduct {
   /**
    * The SKU of the product.
@@ -135,6 +143,10 @@ export interface BaseProduct {
   excerptsHighlights?: HighlightKeyword[];
 }
 
+/**
+ * @group Core types and interfaces
+ * @category Product
+ */
 export interface Product extends BaseProduct {
   /**
    * The 1-based product's position across the non-paginated result set.

@@ -26,12 +26,19 @@ import {
   totalQuantitySelector,
 } from './headless-cart-selectors';
 
+/**
+ * @group Buildable controllers
+ * @category Cart
+ */
 export interface CartInitialState {
   items?: CartItemWithMetadata[];
 }
 
 /**
  * The shape of a cart item.
+ *
+ * @group Buildable controllers
+ * @category Cart
  */
 export interface CartItem {
   /**
@@ -55,6 +62,10 @@ export interface CartItem {
   quantity: number;
 }
 
+/**
+ * @group Buildable controllers
+ * @category Cart
+ */
 export interface CartProps {
   /**
    * The initial state to apply to this `Cart` controller.
@@ -64,6 +75,9 @@ export interface CartProps {
 
 /**
  * The `Cart` controller exposes methods for managing the cart in a commerce interface.
+ *
+ * @group Buildable controllers
+ * @category Cart
  */
 export interface Cart extends Controller {
   /**
@@ -110,6 +124,9 @@ export interface Cart extends Controller {
 
 /**
  * The state of the `Cart` controller.
+ *
+ * @group Buildable controllers
+ * @category Cart
  */
 export interface CartState {
   /**
@@ -134,6 +151,9 @@ export interface CartState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Cart` properties.
  * @returns A `Cart` controller instance.
+ *
+ * @group Buildable controllers
+ * @category Cart
  */
 export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   if (!loadBaseCartReducers(engine)) {

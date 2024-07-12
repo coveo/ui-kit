@@ -112,14 +112,15 @@ export interface CoreEngine<
   navigatorContext: NavigatorContext;
 }
 
-export type CoreEngineNext<
+export interface CoreEngineNext<
   State extends object = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
-> = Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> & {
+> extends Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> {
   /**
    * The readonly internal state of the headless engine.
    *
    * @internal
+   * @hidden
    */
   readonly [stateKey]: State & CoreState;
 
@@ -127,7 +128,7 @@ export type CoreEngineNext<
    * The readonly global headless engine configuration
    */
   readonly configuration: EngineConfiguration;
-};
+}
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
   extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {

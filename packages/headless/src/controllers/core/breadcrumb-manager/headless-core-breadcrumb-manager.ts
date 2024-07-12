@@ -154,6 +154,9 @@ export interface Breadcrumb<T extends BaseFacetValue> {
 
 /**
  * Represents a generic breadcrumb value type.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface BreadcrumbValue<T> extends DeselectableValue {
   /**

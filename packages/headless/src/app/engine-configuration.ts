@@ -19,6 +19,8 @@ import {CoveoFramework} from '../utils/version';
  * For example: `https://orgid.org.coveo.com`
  *
  * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
+ *
+ * @group Engine
  */
 export interface CoreEngineOrganizationEndpoints {
   /**
@@ -37,6 +39,9 @@ export interface CoreEngineOrganizationEndpoints {
 
 /**
  * The global headless engine configuration options.
+ *
+ * @group Engine
+ * @category Generic
  */
 export interface EngineConfiguration<
   OrganizationEndpoints extends
@@ -92,6 +97,9 @@ export interface EngineConfiguration<
 
 /**
  * The analytics configuration options.
+ *
+ * @group Engine
+ * @category Generic
  */
 export interface AnalyticsConfiguration {
   /**

@@ -28,6 +28,10 @@ export type FacetSortCriterion =
 
 export type FacetSortOrder = 'ascending' | 'descending';
 
+/**
+ * @group Core types and interfaces
+ * @category Facets
+ */
 export interface FacetValueRequest extends BaseFacetValueRequest {
   value: string;
 }

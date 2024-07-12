@@ -43,6 +43,10 @@ import {
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
 
+/**
+ * @group Buildable controllers
+ * @category Search
+ */
 export interface Search extends Controller, SearchSubControllers {
   /**
    * Executes the first search.
@@ -72,6 +76,10 @@ export interface Search extends Controller, SearchSubControllers {
   state: SearchState;
 }
 
+/**
+ * @group Buildable controllers
+ * @category Search
+ */
 export interface SearchState {
   products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
@@ -81,8 +89,12 @@ export interface SearchState {
 
 /**
  * Builds a `Search` controller for the given commerce engine.
+ *
  * @param engine - The commerce engine.
  * @returns A `Search` controller.
+ *
+ * @group Buildable controllers
+ * @category Search
  */
 export function buildSearch(engine: CommerceEngine): Search {
   if (!loadBaseSearchReducers(engine)) {

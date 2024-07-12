@@ -52,6 +52,9 @@ export type {BreadcrumbValue, DeselectableValue};
 
 /**
  * Represents a generic breadcrumb type.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface Breadcrumb<Value extends BaseFacetValue> {
   /**
@@ -76,13 +79,17 @@ export interface Breadcrumb<Value extends BaseFacetValue> {
   values: BreadcrumbValue<Value>[];
 }
 
-export type CoreBreadcrumbManagerOptions = Pick<
-  CoreCommerceFacetOptions,
-  'facetResponseSelector' | 'fetchProductsActionCreator'
->;
+export interface CoreBreadcrumbManagerOptions
+  extends Pick<
+    CoreCommerceFacetOptions,
+    'facetResponseSelector' | 'fetchProductsActionCreator'
+  > {}
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface BreadcrumbManagerState {
   /**
@@ -98,16 +105,17 @@ export interface BreadcrumbManagerState {
 
 /**
  * The `BreadcrumbManager` sub-controller manages a summary of the currently active facet filters.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
-export type BreadcrumbManager = Omit<
-  CoreBreadcrumbManager,
-  'deselectBreadcrumb' | 'state'
-> & {
+export interface BreadcrumbManager
+  extends Omit<CoreBreadcrumbManager, 'deselectBreadcrumb' | 'state'> {
   /**
    * The state of the `BreadcrumbManager` sub-controller.
    */
   state: BreadcrumbManagerState;
-};
+}
 
 interface ActionCreators {
   toggleSelectActionCreator: ToggleActionCreator;

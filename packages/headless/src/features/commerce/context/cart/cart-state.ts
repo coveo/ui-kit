@@ -1,5 +1,9 @@
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 
+/**
+ * @group Core types and interfaces
+ * @category Cart
+ */
 export interface CartItemWithMetadata extends CartItemParam {
   /**
    * The name of the cart item.

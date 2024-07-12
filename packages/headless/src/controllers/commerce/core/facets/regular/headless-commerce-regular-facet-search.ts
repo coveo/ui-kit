@@ -15,15 +15,24 @@ import {
 } from '../../../../core/facets/facet-search/specific/headless-facet-search';
 import {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet';
 
-export type RegularFacetSearchState =
-  CoreFacetSearchState<SpecificFacetSearchResult>;
+/**
+ * @group Generated controllers
+ * @category RegularFacet
+ */
+export interface RegularFacetSearchState
+  extends CoreFacetSearchState<SpecificFacetSearchResult> {}
 
-export type RegularFacetSearch = Omit<
-  ReturnType<typeof buildFacetSearch>,
-  'showMoreResults' | 'updateCaptions' | 'state'
-> & {
+/**
+ * @group Generated controllers
+ * @category RegularFacet
+ */
+export interface RegularFacetSearch
+  extends Omit<
+    ReturnType<typeof buildFacetSearch>,
+    'showMoreResults' | 'updateCaptions' | 'state'
+  > {
   state: RegularFacetSearchState;
-};
+}
 
 export interface RegularFacetSearchProps
   extends Omit<

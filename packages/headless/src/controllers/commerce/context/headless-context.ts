@@ -14,6 +14,10 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 
+/**
+ * @group Buildable controllers
+ * @category Context
+ */
 export interface ContextOptions {
   language: string;
   country: string;
@@ -21,10 +25,18 @@ export interface ContextOptions {
   view: View;
 }
 
+/**
+ * @group Buildable controllers
+ * @category Context
+ */
 export interface View {
   url: string;
 }
 
+/**
+ * @group Buildable controllers
+ * @category Context
+ */
 export interface ContextProps {
   /**
    * The initial options that should be applied to this `Context` controller.
@@ -34,6 +46,9 @@ export interface ContextProps {
 
 /**
  * The `Context` controller exposes methods for managing the global context in a commerce interface.
+ *
+ * @group Buildable controllers
+ * @category Context
  */
 export interface Context extends Controller {
   /**
@@ -66,6 +81,10 @@ export interface Context extends Controller {
   state: ContextState;
 }
 
+/**
+ * @group Buildable controllers
+ * @category Context
+ */
 export interface ContextState {
   language: string;
   country: string;
@@ -79,6 +98,9 @@ export interface ContextState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Context` properties.
  * @returns A `Context` controller instance.
+ *
+ * @group Buildable controllers
+ * @category Context
  */
 export function buildContext(
   engine: CommerceEngine,

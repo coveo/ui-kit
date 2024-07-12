@@ -4,6 +4,9 @@ import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
 
 /**
  * The options defining a value to display in a `NumericFacet`.
+ *
+ * @group Core types and interfaces
+ * @category Facets
  */
 export interface NumericRangeRequest {
   /**

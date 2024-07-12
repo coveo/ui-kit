@@ -24,27 +24,35 @@ import {
   buildRegularFacetSearch,
 } from './headless-commerce-regular-facet-search';
 
-export type RegularFacetOptions = Omit<
-  CoreCommerceFacetOptions,
-  'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
-> &
-  SearchableFacetOptions;
+export interface RegularFacetOptions
+  extends Omit<
+      CoreCommerceFacetOptions,
+      'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
+    >,
+    SearchableFacetOptions {}
 
-export type RegularFacetState = CoreCommerceFacetState<RegularFacetValue> & {
+/**
+ * @group Generated controllers
+ * @category RegularFacet
+ */
+export interface RegularFacetState
+  extends CoreCommerceFacetState<RegularFacetValue> {
   facetSearch: RegularFacetSearchState;
-};
+}
 
 /**
  * The `RegularFacet` controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
+ *
+ * @group Generated controllers
+ * @category RegularFacet
  */
-export type RegularFacet = CoreCommerceFacet<
-  FacetValueRequest,
-  RegularFacetValue
-> & {
+export interface RegularFacet
+  extends CoreCommerceFacet<FacetValueRequest, RegularFacetValue>,
+    FacetControllerType<'regular'> {
   facetSearch: Omit<RegularFacetSearch, 'state'>;
   state: RegularFacetState;
-} & FacetControllerType<'regular'>;
+}
 
 /**
  * @internal

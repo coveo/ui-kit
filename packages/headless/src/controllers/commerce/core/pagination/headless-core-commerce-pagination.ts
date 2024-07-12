@@ -23,6 +23,9 @@ import {FetchProductsActionCreator} from '../common';
 
 /**
  * The `Pagination` controller is responsible for navigating between pages of results in a commerce interface.
+ *
+ * @group Sub-controllers
+ * @category Pagination
  */
 export interface Pagination extends Controller {
   /**
@@ -60,6 +63,11 @@ export interface Pagination extends Controller {
   state: PaginationState;
 }
 
+/**
+ * @group Sub-controllers
+ * @category Pagination
+ *
+ */
 export interface PaginationState {
   page: number;
   pageSize: number;
@@ -67,6 +75,10 @@ export interface PaginationState {
   totalPages: number;
 }
 
+/**
+ * @group Sub-controllers
+ * @category Pagination
+ */
 export interface CorePaginationOptions {
   slotId?: string;
   /**
@@ -81,8 +93,17 @@ export interface CorePaginationProps {
   options?: CorePaginationOptions;
 }
 
-export type PaginationOptions = Omit<CorePaginationOptions, 'slotId'>;
+/**
+ * @group Sub-controllers
+ * @category Pagination
+ */
+export interface PaginationOptions
+  extends Omit<CorePaginationOptions, 'slotId'> {}
 
+/**
+ * @group Sub-controllers
+ * @category Pagination
+ */
 export interface PaginationProps {
   options?: PaginationOptions;
 }
@@ -98,6 +119,9 @@ const optionsSchema = new Schema({
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Pagination` controller properties.
  * @returns A `Pagination` controller instance.
+ *
+ * @group Sub-controllers
+ * @category Pagination
  * */
 export function buildCorePagination(
   engine: CommerceEngine,

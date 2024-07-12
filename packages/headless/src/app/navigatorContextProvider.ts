@@ -1,3 +1,7 @@
+/**
+ * @group Engine
+ * @category Generic
+ */
 export interface NavigatorContext {
   referrer: string | null;
   userAgent: string | null;

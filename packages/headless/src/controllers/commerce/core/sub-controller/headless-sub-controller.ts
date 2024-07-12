@@ -67,6 +67,8 @@ export interface BaseSolutionTypeSubControllers<S extends SummaryState> {
    * Creates an `InteractiveProduct` sub-controller.
    * @param props - The properties for the `InteractiveProduct` sub-controller.
    * @returns An `InteractiveProduct` sub-controller.
+   *
+   * @group Sub-controllers
    */
   interactiveProduct(props: InteractiveProductProps): InteractiveProduct;
 
@@ -74,12 +76,16 @@ export interface BaseSolutionTypeSubControllers<S extends SummaryState> {
    * Creates a `Pagination` sub-controller.
    * @param props - The optional properties for the `Pagination` sub-controller.
    * @returns A `Pagination` sub-controller.
+   *
+   * @group Sub-controllers
    */
   pagination(props?: PaginationProps): Pagination;
 
   /**
    * Creates a `Summary` sub-controller.
    * @returns A `Summary` sub-controller.
+   *
+   * @group Sub-controllers
    */
   summary(): Summary<S>;
 }
@@ -92,18 +98,24 @@ export interface SearchAndListingSubControllers<
    * Creates a `Sort` sub-controller.
    * @param props - Optional properties for the `Sort` sub-controller.
    * @returns A `Sort` sub-controller.
+   *
+   * @group Sub-controllers
    */
   sort(props?: SortProps): Sort;
 
   /**
    * Creates a `FacetGenerator` sub-controller.
    * @returns A `FacetGenerator` sub-controller.
+   *
+   * @group Sub-controllers
    */
   facetGenerator(): FacetGenerator;
 
   /**
    * Creates a `BreadcrumbManager` sub-controller.
    * @returns A `BreadcrumbManager` sub-controller.
+   *
+   * @group Sub-controllers
    */
   breadcrumbManager(): BreadcrumbManager;
 
@@ -111,6 +123,8 @@ export interface SearchAndListingSubControllers<
    * Creates a `UrlManager` sub-controller with the specified properties.
    * @param props - Properties for the `UrlManager` sub-controller.
    * @returns A `UrlManager` sub-controller.
+   *
+   * @group Sub-controllers
    */
   urlManager(props: UrlManagerProps): UrlManager;
 
@@ -118,6 +132,8 @@ export interface SearchAndListingSubControllers<
    * Creates a `ParameterManager` sub-controller with the specified properties.
    * @param props - Properties for the `ParameterManager` sub-controller.
    * @returns A `ParameterManager` sub-controller.
+   *
+   * @group Sub-controllers
    */
   parameterManager(props: ParameterManagerProps<P>): ParameterManager<P>;
 }
@@ -130,6 +146,8 @@ export interface SearchSubControllers
   /**
    * Creates a `DidYouMean` sub-controller.
    * @returns A `DidYouMean` sub-controller.
+   *
+   * @group Sub-controllers
    */
   didYouMean(): DidYouMean;
 }

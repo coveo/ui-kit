@@ -20,14 +20,23 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
+/**
+ * @group Generated controllers
+ * @category NumericFacet
+ */
+export interface NumericFacetState
+  extends CoreCommerceFacetState<NumericFacetValue> {
   /**
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
-};
+}
 
-type NumericFacetDomain = {
+/**
+ * @group Generated controllers
+ * @category NumericFacet
+ */
+export interface NumericFacetDomain {
   /**
    * The minimum value that the continuous range can have.
    *
@@ -40,16 +49,18 @@ type NumericFacetDomain = {
    * No products will be returned if the `end` property of a selected range is set to a value higher than this.
    */
   max: number;
-};
+}
 
 /**
  * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
+ *
+ * @group Generated controllers
+ * @category NumericFacet
  */
-export type NumericFacet = CoreCommerceFacet<
-  NumericRangeRequest,
-  NumericFacetValue
-> & {
+export interface NumericFacet
+  extends CoreCommerceFacet<NumericRangeRequest, NumericFacetValue>,
+    FacetControllerType<'numericalRange'> {
   /**
    * Replaces the current range values with the specified ones.
    *
@@ -60,7 +71,7 @@ export type NumericFacet = CoreCommerceFacet<
    * The state of the `NumericFacet` controller.
    */
   state: NumericFacetState;
-} & FacetControllerType<'numericalRange'>;
+}
 
 /**
  * @internal

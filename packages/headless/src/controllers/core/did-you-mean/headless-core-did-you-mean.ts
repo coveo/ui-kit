@@ -61,6 +61,10 @@ export interface DidYouMean extends Controller {
   state: DidYouMeanState;
 }
 
+/**
+ * @group Core controllers
+ * @category DidYouMean
+ */
 export interface DidYouMeanState {
   /**
    * The correction that was applied to the query. If no correction was applied, will default to an empty string.

@@ -28,13 +28,21 @@ export type NumericFacetResponse = BaseFacetResponse<
 > &
   NumericFacetExtraProperties;
 
-export type NumericFacetValue = RangeFacetValue<number>;
+/**
+ * @group Core types and interfaces
+ * @category Facets
+ */
+export interface NumericFacetValue extends RangeFacetValue<number> {}
 
 export type RegularFacetResponse = BaseFacetResponse<
   RegularFacetValue,
   'regular'
 >;
 
+/**
+ * @group Core types and interfaces
+ * @category Facets
+ */
 export interface RegularFacetValue extends BaseFacetValue {
   value: string;
 }

@@ -12,6 +12,9 @@ import {
 
 /**
  * The commerce engine configuration options.
+ *
+ * @group Engine
+ * @category Commerce-specific
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;

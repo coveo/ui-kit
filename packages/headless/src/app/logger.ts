@@ -1,7 +1,15 @@
 import pino, {LevelWithSilent, LogEvent} from 'pino';
 
+/**
+ * @group Engine
+ * @category Generic
+ */
 export type LogLevel = LevelWithSilent;
 
+/**
+ * @group Engine
+ * @category Generic
+ */
 export interface LoggerOptions {
   /**
    * By default, is set to `warn`.

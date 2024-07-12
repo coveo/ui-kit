@@ -4,6 +4,10 @@ import {ViewParams} from '../../../api/commerce/commerce-api-params';
 import {validatePayload} from '../../../utils/validate-payload';
 import {contextDefinition, viewDefinition} from './context-validation';
 
+/**
+ * @group Actions
+ * @category Context
+ */
 export interface SetContextPayload {
   language: string;
   country: string;
@@ -16,6 +20,10 @@ export const setContext = createAction(
   (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
 );
 
+/**
+ * @group Actions
+ * @category Context
+ */
 export type SetViewPayload = Pick<ViewParams, 'url'>;
 
 export const setView = createAction(
