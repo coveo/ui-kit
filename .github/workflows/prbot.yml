@@ -70,16 +70,24 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
   playwright-atomic-chrome:
-    name: 'Run Playwright tests for Atomic'
+    name: 'Run Playwright tests for Atomic (Chrome)'
     environment: PR Artifacts
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - run: npm run build
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic-chrome
+        with:
+          shardIndex: ${{ matrix.shardIndex }}
+          shardTotal: ${{ matrix.shardTotal }}
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
@@ -95,7 +103,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           copy: true
   playwright-atomic-firefox:
-    name: 'Run Playwright tests for Atomic'
+    name: 'Run Playwright tests for Atomic (Firefox)'
     environment: PR Artifacts
     needs: build
     runs-on: ubuntu-latest
@@ -120,7 +128,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           copy: true
   playwright-atomic-webkit:
-    name: 'Run Playwright tests for Atomic'
+    name: 'Run Playwright tests for Atomic (Webkit)'
     environment: PR Artifacts
     needs: build
     runs-on: ubuntu-latest
