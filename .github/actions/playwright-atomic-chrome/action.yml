@@ -1,0 +1,18 @@
+name: 'Playwright Atomic (Chrome)'
+description: 'Run Playwright tests for Atomic (Chrome)'
+runs:
+  using: composite
+  steps:
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      shell: bash
+    - name: Run Playwright tests on Chrome
+      run: npx playwright test --project=chromium
+      working-directory: packages/atomic
+      shell: bash
+    - uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
+      if: always()
+      with:
+        name: atomic-playwright-report
+        path: packages/atomic/playwright-report/
+        retention-days: 5
