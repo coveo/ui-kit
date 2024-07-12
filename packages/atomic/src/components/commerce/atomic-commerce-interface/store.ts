@@ -38,7 +38,6 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
 
 export interface AtomicCommerceStore
   extends AtomicCommonStore<AtomicStoreData> {
-  getAllFacets(): FacetInfoMap;
   isMobile(): boolean;
 }
 
@@ -69,15 +68,6 @@ export function createAtomicCommerceStore(
 
   return {
     ...commonStore,
-
-    getAllFacets() {
-      return {
-        ...commonStore.state.facets,
-        ...commonStore.state.dateFacets,
-        ...commonStore.state.categoryFacets,
-        ...commonStore.state.numericFacets,
-      };
-    },
 
     isMobile() {
       return !window.matchMedia(
