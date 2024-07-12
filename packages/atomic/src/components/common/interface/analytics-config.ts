@@ -66,7 +66,7 @@ export function getNextAnalyticsConfig(
     analyticsConfiguration,
     augmentAnalyticsConfigWithAtomicVersion()
   );
-  Object.assign(configuration, searchEngineConfig.analytics);
+  Object.assign(configuration, analyticsConfiguration);
 
   return configuration;
 }
