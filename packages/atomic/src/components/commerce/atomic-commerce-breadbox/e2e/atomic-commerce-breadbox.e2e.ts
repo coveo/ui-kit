@@ -8,8 +8,8 @@ test.describe('Default', () => {
   });
 
   test('should be A11y compliant', async ({breadbox, makeAxeBuilder}) => {
-    await breadbox.getRegularFacetValue('Nike').click();
-    await breadbox.getBreadcrumbButtons('Nike').waitFor({state: 'visible'});
+    await breadbox.getRegularFacetValue('Black').click();
+    await breadbox.getBreadcrumbButtons('Black').waitFor({state: 'visible'});
 
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
@@ -17,14 +17,14 @@ test.describe('Default', () => {
 
   test.describe('when a regular facet value is selected', () => {
     test.beforeEach(async ({breadbox}) => {
-      await breadbox.getRegularFacetValue('Nike').click();
-      await breadbox.getBreadcrumbButtons('Nike').waitFor({state: 'visible'});
+      await breadbox.getRegularFacetValue('Black').click();
+      await breadbox.getBreadcrumbButtons('Black').waitFor({state: 'visible'});
     });
 
     test('should disappear when clicking on the breadcrumb button', async ({
       breadbox,
     }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Nike');
+      const breadcrumbButton = breadbox.getBreadcrumbButtons('Black');
       await breadcrumbButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
@@ -33,23 +33,23 @@ test.describe('Default', () => {
     test('should contain the selected value and the facet name in the breadcrumb button', async ({
       breadbox,
     }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Nike');
+      const breadcrumbButton = breadbox.getBreadcrumbButtons('Black');
 
-      await expect(breadcrumbButton).toHaveText('Brand:Nike');
+      await expect(breadcrumbButton).toHaveText('Color:Black');
     });
   });
   test.describe('when a category facet value is selected', () => {
     test.beforeEach(async ({breadbox}) => {
-      await breadbox.getCategoryFacetValue('Sandals & Shoes').click();
+      await breadbox.getCategoryFacetValue('Accessories').click();
       await breadbox
-        .getBreadcrumbButtons('Sandals & Shoes')
+        .getBreadcrumbButtons('Accessories')
         .waitFor({state: 'visible'});
     });
 
     test('should disappear when clicking on the breadcrumb button', async ({
       breadbox,
     }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Sandals & Shoes');
+      const breadcrumbButton = breadbox.getBreadcrumbButtons('Accessories');
       await breadcrumbButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
@@ -58,13 +58,13 @@ test.describe('Default', () => {
     test('should contain the selected value and the facet name in the breadcrumb button', async ({
       breadbox,
     }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Sandals & Shoes');
+      const breadcrumbButton = breadbox.getBreadcrumbButtons('Accessories');
 
-      await expect(breadcrumbButton).toHaveText('Category:Sandals & Shoes');
+      await expect(breadcrumbButton).toHaveText('Category:Accessories');
     });
     test.describe('when a nested category facet value is selected', () => {
       test.beforeEach(async ({breadbox}) => {
-        await breadbox.getCategoryFacetValue(/^Sandals$/).click();
+        await breadbox.getCategoryFacetValue(/^Surf Accessories$/).click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -86,7 +86,7 @@ test.describe('Default', () => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
         await expect(breadcrumbButton).toHaveText(
-          'Category:Sandals & Shoes / Sandals'
+          'Category:Accessories / Surf Accessories'
         );
       });
     });
@@ -126,11 +126,7 @@ test.describe('Default', () => {
   test.describe('when a date range facet value is selected', () => {
     let firstValueText: string | RegExp;
 
-    test.beforeEach(async ({breadbox, page}) => {
-      await page.goto(
-        'http://localhost:4400/iframe.html?id=atomic-commerce-breadbox--with-date-facet&viewMode=story'
-      );
-
+    test.beforeEach(async ({breadbox}) => {
       await breadbox.getDateRangeFacetValue().first().click();
       firstValueText = (await breadbox
         .getDateRangeFacetValue()

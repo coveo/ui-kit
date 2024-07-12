@@ -22,7 +22,7 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject<'atomic-com
 
   getNumericalFacetValue(value?: string | RegExp) {
     const baseLocator = this.page.locator(
-      'atomic-commerce-numeric-facet [part="value-label"]'
+      'atomic-commerce-numeric-facet [part="value-checkbox-label"]'
     );
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
