@@ -15,6 +15,51 @@ test.describe('Default', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
+  test.describe('when restoring the state from URL', () => {
+    [
+      {
+        facetType: 'regular',
+        filter: '&f-cat_color=Black',
+        breadcrumbLabel: 'Color:Black',
+      },
+      {
+        facetType: 'numerical range',
+        filter: '&nf-ec_price=15..20 ',
+        breadcrumbLabel: 'Price:15 to 20',
+      },
+      {
+        facetType: 'date range',
+        filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
+        breadcrumbLabel: 'Date:2024-05-27 to 2025-05-27',
+      },
+      {
+        facetType: 'category',
+        filter: '&cf-ec_category=Accessories',
+        breadcrumbLabel: 'Category:Accessories',
+      },
+      {
+        facetType: 'category (nested)',
+        filter: '&cf-ec_category=Accessories,Surf%20Accessories',
+        breadcrumbLabel: 'Category:Accessories / Surf Accessories',
+      },
+    ].forEach(({facetType, filter, breadcrumbLabel}) => {
+      const baseUrl =
+        'http://localhost:4400/iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance';
+
+      test(`should show the breadcrumb for ${facetType} facet value`, async ({
+        page,
+        breadbox,
+      }) => {
+        await page.goto(baseUrl + filter);
+        await page.waitForURL(baseUrl + filter);
+
+        const breadcrumbButton = breadbox.getBreadcrumbButtons(breadcrumbLabel);
+
+        await expect(breadcrumbButton).toHaveText(breadcrumbLabel);
+      });
+    });
+  });
+
   test.describe('when a regular facet value is selected', () => {
     test.beforeEach(async ({breadbox}) => {
       await breadbox.getRegularFacetValue('Black').click();
