@@ -336,11 +336,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   submitFeedback(feedbackPayload) {
     this.generatedAnswer.sendFeedback(feedbackPayload);
-    // if (feedbackPayload?.details) {
-    //   this.generatedAnswer.sendDetailedFeedback(feedbackPayload.details);
-    // } else if (feedbackPayload?.value) {
-    //   this.generatedAnswer.sendFeedback(feedbackPayload.value);
-    // }
     this.feedbackSubmitted = true;
   }
 
