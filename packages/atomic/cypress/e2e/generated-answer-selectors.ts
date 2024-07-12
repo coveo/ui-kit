@@ -1,3 +1,5 @@
+import {GeneratedAnswerFeedbackV2} from '@coveo/headless';
+
 export const generatedAnswerComponent = 'atomic-generated-answer';
 export const feedbackModal = 'atomic-generated-answer-feedback-modal';
 export const GeneratedAnswerSelectors = {
@@ -54,12 +56,17 @@ export const feedbackModalSelectors = {
   modalHeader: () =>
     feedbackModalSelectors.atomicModal().find('[part="modal-header"]'),
   modalFooter: () =>
-    feedbackModalSelectors.atomicModal().find('[part="modalFooter"]'),
-  detailsTextArea: () =>
-    feedbackModalSelectors.atomicModal().find('[part="details-input"]'),
+    feedbackModalSelectors.atomicModal().find('[part="modal-footer"]'),
   other: () => feedbackModalSelectors.atomicModal().find('.other'),
-  reason: () =>
-    feedbackModalSelectors.atomicModal().find('[part="reason-radio"]'),
+  feedbackOption: (
+    feedback: keyof GeneratedAnswerFeedbackV2,
+    optionText: 'No' | 'Yes' | 'Not sure'
+  ) =>
+    feedbackModalSelectors
+      .atomicModal()
+      .find('[part="form"]')
+      .find(`.${feedback}`)
+      .find(`input[value=${optionText}]`),
   submitButton: () =>
     feedbackModalSelectors.atomicModal().find('[part="submit-button"]'),
   cancelButton: () =>
