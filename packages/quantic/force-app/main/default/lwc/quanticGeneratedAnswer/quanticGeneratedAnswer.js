@@ -142,6 +142,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _maximumAnswerHeight = 250;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
+  /** @type {boolean} */
+  _liked = false;
+  /** @type {boolean} */
+  _disliked = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -290,15 +294,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleLike(event) {
     event.stopPropagation();
-    this.generatedAnswer.like?.();
-    // @ts-ignore
-    await FeedbackModalQna.open({
-      size: 'small',
-      liked: true,
-      label: this.labels.feedbackHelpUsImprove,
-      handleSubmit: this.submitFeedback.bind(this),
-    });
-    this.generatedAnswer.closeFeedbackModal();
+    if (!this._liked) {
+      this._liked = true;
+      this._disliked = false;
+      this.generatedAnswer.like?.();
+      // @ts-ignore
+      await FeedbackModalQna.open({
+        size: 'small',
+        liked: true,
+        label: this.labels.feedbackHelpUsImprove,
+        handleSubmit: this.submitFeedback.bind(this),
+      });
+      this.generatedAnswer.closeFeedbackModal();
+    }
   }
 
   /**
@@ -307,15 +315,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
-    this.generatedAnswer.dislike?.();
-    // @ts-ignore
-    await FeedbackModalQna.open({
-      size: 'small',
-      liked: false,
-      label: this.labels.feedbackHelpUsImprove,
-      handleSubmit: this.submitFeedback.bind(this),
-    });
-    this.generatedAnswer.closeFeedbackModal();
+    if (!this._disliked) {
+      this._disliked = true;
+      this._liked = false;
+      this.generatedAnswer.dislike?.();
+      // @ts-ignore
+      await FeedbackModalQna.open({
+        size: 'small',
+        liked: false,
+        label: this.labels.feedbackHelpUsImprove,
+        handleSubmit: this.submitFeedback.bind(this),
+      });
+      this.generatedAnswer.closeFeedbackModal();
+    }
   }
 
   /**
