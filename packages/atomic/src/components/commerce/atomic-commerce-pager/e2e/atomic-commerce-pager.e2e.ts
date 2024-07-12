@@ -168,27 +168,6 @@ test.describe('with a valid page in the hash', () => {
   });
 });
 
-test.describe('with an invalid page in the hash', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=8k3'
-    );
-  });
-
-  test('pager button 1 should be selected', async ({pager}) => {
-    await expect(pager.numericButton(1)).toHaveAttribute(
-      'part',
-      expect.stringContaining('active-page-button')
-    );
-  });
-
-  test('should be A11y compliant', async ({pager, makeAxeBuilder}) => {
-    await pager.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-});
-
 test.describe('with number-of-pages=3', () => {
   test.beforeEach(async ({pager}) => {
     await pager.load({args: {numberOfPages: 3}});

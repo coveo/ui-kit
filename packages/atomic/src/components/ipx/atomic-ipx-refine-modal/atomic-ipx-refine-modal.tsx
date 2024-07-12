@@ -16,8 +16,8 @@ import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
 import {
   getClonedFacetElements,
-  RefineModalCommon,
-} from '../../common/refine-modal/refine-modal-common';
+  RefineModal,
+} from '../../common/refine-modal/modal';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
@@ -112,19 +112,19 @@ export class AtomicIPXRefineModal implements InitializableComponent {
   public render() {
     return (
       <Host>
-        <RefineModalCommon
-          bindings={this.bindings}
+        <RefineModal
+          i18n={this.bindings.i18n}
           host={this.host}
           isOpen={this.isOpen}
           onClose={() => (this.isOpen = false)}
-          querySummaryState={this.querySummaryState}
+          numberOfItems={this.querySummaryState.total}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
           boundary="element"
           scope={this.bindings.interfaceElement}
         >
           {this.renderBody()}
-        </RefineModalCommon>
+        </RefineModal>
       </Host>
     );
   }

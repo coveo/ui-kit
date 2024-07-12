@@ -1,15 +1,10 @@
-import {Unsubscribe} from '@reduxjs/toolkit';
-import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
 import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
 import {CoreEngine} from '../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   CustomAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils';
 import {
-  streamAnswer,
-  resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
   updateResponseFormat,
@@ -18,7 +13,6 @@ import {
   setIsVisible,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
-  setId,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
@@ -35,7 +29,6 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
-import {randomID} from '../../../utils/utils';
 import {
   Controller,
   buildController,
@@ -123,101 +116,6 @@ export interface GeneratedAnswer extends Controller {
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
 }
 
-export interface GeneratedAnswerProps {
-  initialState?: {
-    /**
-     * Sets the component visibility state on load.
-     */
-    isVisible?: boolean;
-    /**
-     * The initial formatting options applied to generated answers when the controller first loads.
-     */
-    responseFormat?: GeneratedResponseFormat;
-    /**
-     * The initial expanded state of the generated answer.
-     */
-    expanded?: boolean;
-  };
-  /**
-   * A list of indexed fields to include in the citations returned with the generated answer.
-   */
-  fieldsToIncludeInCitations?: string[];
-}
-
-interface SubscribeStateManager {
-  engines: Record<
-    string,
-    {
-      abortController: AbortController | undefined;
-      lastRequestId: string;
-      lastStreamId: string;
-    }
-  >;
-  getIsStreamInProgress: (genQaEngineId: string) => boolean;
-  setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => void;
-  subscribeToSearchRequests: (
-    engine: CoreEngine<
-      GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
-    >
-  ) => Unsubscribe;
-}
-
-const subscribeStateManager: SubscribeStateManager = {
-  engines: {},
-
-  setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => {
-    subscribeStateManager.engines[genQaEngineId].abortController = ref;
-  },
-
-  getIsStreamInProgress: (genQaEngineId: string) => {
-    if (
-      !subscribeStateManager.engines[genQaEngineId].abortController ||
-      subscribeStateManager.engines[genQaEngineId].abortController?.signal
-        .aborted
-    ) {
-      subscribeStateManager.engines[genQaEngineId].abortController = undefined;
-      return false;
-    }
-    return true;
-  },
-
-  subscribeToSearchRequests: (engine) => {
-    const strictListener = () => {
-      const state = engine.state;
-      const requestId = state.search.requestId;
-      const streamId =
-        state.search.extendedResults.generativeQuestionAnsweringId;
-      const genQaEngineId = state.generatedAnswer.id;
-
-      if (
-        subscribeStateManager.engines[genQaEngineId].lastRequestId !== requestId
-      ) {
-        subscribeStateManager.engines[genQaEngineId].lastRequestId = requestId;
-        subscribeStateManager.engines[genQaEngineId].abortController?.abort();
-        engine.dispatch(resetAnswer());
-      }
-
-      const isStreamInProgress =
-        subscribeStateManager.getIsStreamInProgress(genQaEngineId);
-      if (
-        !isStreamInProgress &&
-        streamId &&
-        streamId !== subscribeStateManager.engines[genQaEngineId].lastStreamId
-      ) {
-        subscribeStateManager.engines[genQaEngineId].lastStreamId = streamId;
-        engine.dispatch(
-          streamAnswer({
-            setAbortControllerRef: (ref: AbortController) =>
-              subscribeStateManager.setAbortControllerRef(ref, genQaEngineId),
-          })
-        );
-      }
-    };
-    return engine.subscribe(strictListener);
-  },
-};
-
 export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
   logDislikeGeneratedAnswer: () => CustomAction;
@@ -241,8 +139,36 @@ export interface GeneratedAnswerAnalyticsClient {
   logGeneratedAnswerCollapse: () => CustomAction;
 }
 
+export interface GeneratedAnswerPropsInitialState {
+  initialState?: {
+    /**
+     * Sets the component visibility state on load.
+     */
+    isVisible?: boolean;
+    /**
+     * The initial formatting options applied to generated answers when the controller first loads.
+     */
+    responseFormat?: GeneratedResponseFormat;
+    /**
+     * The initial expanded state of the generated answer.
+     */
+    expanded?: boolean;
+  };
+}
+
+export interface GeneratedAnswerProps extends GeneratedAnswerPropsInitialState {
+  /**
+   * The answer configuration ID used to leverage coveo answer management capabilities.
+   */
+  answerConfigurationId?: string;
+  /**
+   * A list of indexed fields to include in the citations returned with the generated answer.
+   */
+  fieldsToIncludeInCitations?: string[];
+}
+
 /**
- * Creates a core `GeneratedAnswer` controller instance.
+ * Can be used as a basis for controllers aiming to return a `GeneratedAnswer` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `GeneratedAnswer` properties.
@@ -260,16 +186,6 @@ export function buildCoreGeneratedAnswer(
   const {dispatch} = engine;
   const controller = buildController(engine);
   const getState = () => engine.state;
-
-  if (!engine.state.generatedAnswer.id) {
-    const genQaEngineId = randomID('genQA-', 12);
-    dispatch(setId({id: genQaEngineId}));
-    subscribeStateManager.engines[genQaEngineId] = {
-      abortController: undefined,
-      lastRequestId: '',
-      lastStreamId: '',
-    };
-  }
 
   const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
@@ -289,8 +205,6 @@ export function buildCoreGeneratedAnswer(
   if (expanded) {
     dispatch(expandGeneratedAnswer());
   }
-
-  subscribeStateManager.subscribeToSearchRequests(engine);
 
   return {
     ...controller,

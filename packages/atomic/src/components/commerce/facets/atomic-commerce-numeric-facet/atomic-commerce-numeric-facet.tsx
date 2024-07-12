@@ -18,14 +18,13 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
@@ -47,7 +46,6 @@ export class AtomicCommerceNumericFacet
 
   @State() private range?: Range;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: NumericFacetState;
 
@@ -86,34 +84,32 @@ export class AtomicCommerceNumericFacet
     return this.headerFocus;
   }
 
+  private unsubscribeFacetController!: () => void;
+
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
+
     this.registerFacetToStore();
   }
 
+  public disconnectedCallback() {
+    this.unsubscribeFacetController();
+  }
+
   private registerFacetToStore() {
-    const {facetId, field} = this.facetState;
+    const {facetId} = this.facetState;
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
       facetId: facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
-
-    this.bindings.store.registerFacet('numericFacets', {
-      ...facetInfo,
-      format: (value) =>
-        formatHumanReadable({
-          facetValue: value,
-          logger: this.bindings.engine.logger,
-          i18n: this.bindings.i18n,
-          field: field,
-          manualRanges: this.manualRanges,
-          formatter: this.formatter,
-        }),
-    });
 
     initializePopover(this.host, {
       ...facetInfo,

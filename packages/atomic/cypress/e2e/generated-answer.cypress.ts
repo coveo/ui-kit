@@ -565,7 +565,6 @@ describe('Generated Answer Test Suites', () => {
             GeneratedAnswerSelectors.container().should('not.exist');
           });
         });
-
         describe('Retryable error', () => {
           [500, 429].forEach((errorCode) => {
             describe(`${errorCode} error`, () => {

@@ -11,8 +11,8 @@ import {executeSearch} from '../../../features/insight-search/insight-search-act
 import {
   GeneratedAnswer,
   GeneratedAnswerProps,
-  buildCoreGeneratedAnswer,
 } from '../../core/generated-answer/headless-core-generated-answer';
+import {buildSearchAPIGeneratedAnswer} from '../../core/generated-answer/headless-searchapi-generated-answer';
 
 export type {
   GeneratedAnswerCitation,
@@ -34,7 +34,7 @@ export function buildGeneratedAnswer(
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
   const {dispatch} = engine;
-  const controller = buildCoreGeneratedAnswer(
+  const controller = buildSearchAPIGeneratedAnswer(
     engine,
     generatedAnswerInsightAnalyticsClient,
     props

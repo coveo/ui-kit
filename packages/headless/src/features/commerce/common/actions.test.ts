@@ -66,7 +66,7 @@ describe('commerce common actions', () => {
               quantity: product.quantity,
             },
           ],
-          source: [`@coveo/headless@${VERSION}`, '@coveo/atomic@version'],
+          source: ['@coveo/atomic@version', `@coveo/headless@${VERSION}`],
         },
       };
 

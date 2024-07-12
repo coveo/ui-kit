@@ -42,7 +42,7 @@ import {
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -96,30 +96,21 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   /**
    * The Summary controller instance.
-   *
-   * @internal
    */
   @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The facet controller instance.
-   *
-   * @@internal
    */
   @Prop() public facet!: RegularFacet;
   /**
    * Specifies whether the facet is collapsed.
-   *
-   * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The field identifier for this facet.
-   *
-   * @internal
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: RegularFacetState;
 
@@ -132,17 +123,24 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
+  private unsubscribeFacetController!: () => void;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
     this.initAriaLive();
     this.initPopover();
-    this.registerFacet();
+  }
+
+  public disconnectedCallback(): void {
+    this.unsubscribeFacetController();
   }
 
   public componentShouldUpdate(
@@ -342,10 +340,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   private get isHidden() {
     return !this.facetState.values.length;
-  }
-
-  private registerFacet() {
-    this.bindings.store.registerFacet('facets', this.facetInfo);
   }
 
   private initPopover() {

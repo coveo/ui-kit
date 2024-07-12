@@ -25,7 +25,7 @@ import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -62,7 +62,6 @@ export class AtomicCommerceTimeframeFacet
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: DateFacetState;
 
@@ -87,10 +86,17 @@ export class AtomicCommerceTimeframeFacet
     return this.headerFocus;
   }
 
+  private unsubscribeFacetController!: () => void;
+
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
+
     this.registerFacetToStore();
   }
 
@@ -162,6 +168,7 @@ export class AtomicCommerceTimeframeFacet
     if (this.host.isConnected) {
       return;
     }
+    this.unsubscribeFacetController();
   }
 
   private get isHidden() {
@@ -180,11 +187,6 @@ export class AtomicCommerceTimeframeFacet
       element: this.host,
       isHidden: () => this.isHidden,
     };
-
-    this.bindings.store.registerFacet('dateFacets', {
-      ...facetInfo,
-      format: (value) => this.formatFacetValue(value),
-    });
 
     initializePopover(this.host, {
       ...facetInfo,

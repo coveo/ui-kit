@@ -1,3 +1,9 @@
+# 2.12.0 (2024-07-09)
+
+### Features
+
+- **atomic:** add new atomic-commerce-refine-toggle component ([#4155](https://github.com/coveo/ui-kit/issues/4155)) ([71d81ba](https://github.com/coveo/ui-kit/commits/71d81ba6a60c8ab83a2d744cb56097d85f691383))
+
 # 2.11.0 (2024-07-03)
 
 ### Features
