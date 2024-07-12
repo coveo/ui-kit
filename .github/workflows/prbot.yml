@@ -69,31 +69,6 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
-  playwright-atomic:
-    name: 'Run Playwright tests for Atomic'
-    environment: PR Artifacts
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-      - uses: ./.github/actions/setup
-      - run: npm run build
-      - run: cat packages/atomic/dist/atomic/atomic.esm.js
-      - uses: ./.github/actions/playwright-atomic
-      - name: Generate a token
-        if: ${{ always() && github.event_name == 'pull_request'}}
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: coveo
-          repo: ui-kit-prs
-      - uses: ./.github/actions/publish-pr-review-site
-        if: ${{ always() && github.event_name == 'pull_request'}}
-        with:
-          token: ${{ steps.generate-token.outputs.token }}
-          copy: true
   playwright-atomic-chrome:
     name: 'Run Playwright tests for Atomic'
     environment: PR Artifacts
