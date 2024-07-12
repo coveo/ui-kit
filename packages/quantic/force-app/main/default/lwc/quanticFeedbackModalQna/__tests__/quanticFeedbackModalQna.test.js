@@ -57,16 +57,16 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-function selectOption(element, selector, value) {
-  const radioGroup = element.shadowRoot.querySelector(selector);
+function lightningElementValueChange(element, selector, value) {
+  const lightningElement = element.shadowRoot.querySelector(selector);
   // All base components in Jest tests are stubs. So we have to set the value manually.
   // Including to the checkValidity method.
-  radioGroup.value = value;
-  radioGroup.validity = true;
-  radioGroup.checkValidity = () => true;
+  lightningElement.value = value;
+  lightningElement.validity = true;
+  lightningElement.checkValidity = () => true;
   const event = new CustomEvent('change');
-  expect(radioGroup).not.toBeNull();
-  radioGroup.dispatchEvent(event);
+  expect(lightningElement).not.toBeNull();
+  lightningElement.dispatchEvent(event);
 }
 
 describe('c-quantic-feedback-modal-qna', () => {
@@ -126,66 +126,174 @@ describe('c-quantic-feedback-modal-qna', () => {
     expect(submitButton).not.toBeNull();
   });
 
-  it("does not let you submit when you haven't answered all the required questions", async () => {
-    const element = createTestComponent();
-    await flushPromises();
+  describe('when submitting the feedback', () => {
+    describe('with missing required answers', () => {
+      it('should not submit the feedback and not show the success screen', async () => {
+        const element = createTestComponent();
+        await flushPromises();
 
-    // Mock the checkValidity method to return false since the questions are not answered.
-    const checkValidityMock = jest.fn(() => false);
-    const answerEvaluationQuestions = element.shadowRoot.querySelectorAll(
-      selectors.answerEvaluationQuestions
-    );
-    answerEvaluationQuestions.forEach((question) => {
-      question.checkValidity = checkValidityMock;
+        // Mock the checkValidity method to return false since the questions are not answered.
+        const checkValidityMock = jest.fn(() => false);
+        const answerEvaluationQuestions = element.shadowRoot.querySelectorAll(
+          selectors.answerEvaluationQuestions
+        );
+        answerEvaluationQuestions.forEach((question) => {
+          question.checkValidity = checkValidityMock;
+        });
+
+        const submitButton = element.shadowRoot.querySelector(
+          selectors.submitButton
+        );
+        submitButton.click();
+        await flushPromises();
+
+        const successMesage = element.shadowRoot.querySelector(
+          selectors.successMesage
+        );
+        expect(successMesage).toBeNull();
+        expect(checkValidityMock).toHaveBeenCalledTimes(4);
+      });
     });
 
-    const submitButton = element.shadowRoot.querySelector(
-      selectors.submitButton
-    );
-    submitButton.click();
-    await flushPromises();
+    describe('with all the required questions answered', () => {
+      it('should display the success message and execute the handleSubmit function', async () => {
+        const element = createTestComponent();
+        await flushPromises();
 
-    const successMesage = element.shadowRoot.querySelector(
-      selectors.successMesage
-    );
-    expect(successMesage).toBeNull();
-    expect(checkValidityMock).toHaveBeenCalledTimes(4);
+        lightningElementValueChange(
+          element,
+          selectors.questionTopicRadio,
+          'yes'
+        );
+        lightningElementValueChange(
+          element,
+          selectors.questionDocumentedRadio,
+          'yes'
+        );
+        lightningElementValueChange(
+          element,
+          selectors.questionHallucinationRadio,
+          'yes'
+        );
+        lightningElementValueChange(
+          element,
+          selectors.questionReadableRadio,
+          'yes'
+        );
+
+        const submitButton = element.shadowRoot.querySelector(
+          selectors.submitButton
+        );
+        submitButton.click();
+        await flushPromises();
+
+        const successMesage = element.shadowRoot.querySelector(
+          selectors.successMesage
+        );
+        expect(successMesage).not.toBeNull();
+
+        expect(functionsMocks.handleSubmit).toHaveBeenCalledWith(
+          expect.objectContaining({
+            helpful: false,
+            correctTopicValue: 'yes',
+            hallucinationFree: 'yes',
+            documented: 'yes',
+            readable: 'yes',
+          })
+        );
+      });
+
+      it('should also send the additional details and document url if filled', async () => {
+        const testUrl = 'https://www.example.com';
+        const testDetails = 'Some additional details';
+        const expectedDocumentUrl = testUrl;
+        const expectedDetails = testDetails;
+        const element = createTestComponent();
+        await flushPromises();
+
+        lightningElementValueChange(
+          element,
+          selectors.questionTopicRadio,
+          'yes'
+        );
+        lightningElementValueChange(
+          element,
+          selectors.questionDocumentedRadio,
+          'yes'
+        );
+        lightningElementValueChange(
+          element,
+          selectors.questionHallucinationRadio,
+          'yes'
+        );
+        lightningElementValueChange(
+          element,
+          selectors.questionReadableRadio,
+          'yes'
+        );
+
+        lightningElementValueChange(
+          element,
+          selectors.documentUrlInput,
+          testUrl
+        );
+        lightningElementValueChange(
+          element,
+          selectors.additionalDetailsTextarea,
+          testDetails
+        );
+
+        const submitButton = element.shadowRoot.querySelector(
+          selectors.submitButton
+        );
+        submitButton.click();
+        await flushPromises();
+
+        const successMesage = element.shadowRoot.querySelector(
+          selectors.successMesage
+        );
+        expect(successMesage).not.toBeNull();
+
+        expect(functionsMocks.handleSubmit).toHaveBeenCalledWith(
+          expect.objectContaining({
+            documentUrl: expectedDocumentUrl,
+            details: expectedDetails,
+          })
+        );
+      });
+    });
   });
-
-  describe('when all the required questions are filled', () => {
-    it('should display the success message and execute the handleSubmit function', async () => {
+  describe('when clicking the skip button', () => {
+    it('should not submit the feedback and not execute the handleSubmit function', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      selectOption(element, selectors.questionTopicRadio, 'yes');
-      await flushPromises();
-      selectOption(element, selectors.questionDocumentedRadio, 'yes');
-      await flushPromises();
-      selectOption(element, selectors.questionHallucinationRadio, 'yes');
-      await flushPromises();
-      selectOption(element, selectors.questionReadableRadio, 'yes');
-      await flushPromises();
-
-      const submitButton = element.shadowRoot.querySelector(
-        selectors.submitButton
+      lightningElementValueChange(element, selectors.questionTopicRadio, 'yes');
+      lightningElementValueChange(
+        element,
+        selectors.questionDocumentedRadio,
+        'yes'
       );
-      submitButton.click();
+      lightningElementValueChange(
+        element,
+        selectors.questionHallucinationRadio,
+        'yes'
+      );
+      lightningElementValueChange(
+        element,
+        selectors.questionReadableRadio,
+        'yes'
+      );
+
+      const skipButton = element.shadowRoot.querySelector(selectors.skipButton);
+      skipButton.click();
       await flushPromises();
 
       const successMesage = element.shadowRoot.querySelector(
         selectors.successMesage
       );
-      expect(successMesage).not.toBeNull();
-
-      expect(functionsMocks.handleSubmit).toHaveBeenCalledWith(
-        expect.objectContaining({
-          helpful: false,
-          correctTopicValue: 'yes',
-          hallucinationFree: 'yes',
-          documented: 'yes',
-          readable: 'yes',
-        })
-      );
+      expect(successMesage).toBeNull();
+      expect(functionsMocks.handleSubmit).not.toHaveBeenCalled();
     });
   });
 });
