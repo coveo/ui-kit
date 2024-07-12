@@ -90,6 +90,7 @@ jobs:
           shardTotal: ${{ matrix.shardTotal }}
   merge-playwright-reports:
     name: 'Merge Playwright reports'
+    environment: PR Artifacts
     if: ${{ !cancelled() }}
     needs:
       - 'playwright-atomic'
