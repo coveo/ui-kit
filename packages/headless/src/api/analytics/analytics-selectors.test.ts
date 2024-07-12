@@ -16,8 +16,8 @@ describe('#getAnalyticsSources', () => {
       '@coveo/atomic': '1.2.3',
     };
     expect(getAnalyticsSource(state.configuration.analytics)).toEqual([
-      `@coveo/headless@${VERSION}`,
       '@coveo/atomic@1.2.3',
+      `@coveo/headless@${VERSION}`,
     ]);
   });
 });

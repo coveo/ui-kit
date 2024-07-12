@@ -1,0 +1,18 @@
+name: 'Playwright Atomic Hosted Pages'
+description: 'Run Playwright tests for Atomic Hosted Pages'
+runs:
+  using: composite
+  steps:
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      shell: bash
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: packages/atomic-hosted-page
+      shell: bash
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: atomic-hosted-page-playwright-report
+        path: packages/atomic-hosted-page/playwright-report/
+        retention-days: 5
