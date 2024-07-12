@@ -106,14 +106,14 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
-  playwright-atomic-hosted-page-test:
+  e2e-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/playwright-atomic-hosted-pages
+      - uses: ./.github/actions/e2e-atomic-hosted-page
   e2e-atomic-react-test:
     name: 'Run e2e tests on Atomic React'
     needs: build

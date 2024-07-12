@@ -1,0 +1,25 @@
+name: 'Atomic Hosted Page E2E tests'
+description: 'Runs Cypress tests for Atomic Hosted Page'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - uses: cypress-io/github-action@v5
+      name: Run Cypress
+      with:
+        browser: chrome
+        command-prefix: 'npx -w @coveo/atomic-hosted-page cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        start: npx nx run atomic-hosted-page:dev
+        wait-on: 'http://localhost:3335'
+        wait-on-timeout: 600000
+        install: false
+        record: false
+    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+      if: failure()
+      with:
+        name: hsp-screenshots
+        path: packages/packages/atomic-hosted-page/cypress/screenshots

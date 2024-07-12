@@ -11,7 +11,6 @@ export namespace Components {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
      * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
-     * @deprecated Use `<atomic-hosted-ui type="code"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicHostedPage {
         /**
@@ -23,26 +22,8 @@ export namespace Components {
         "initialize": (options: AtomicHostedPageInitializationOptions) => Promise<void>;
     }
     /**
-     * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
-     * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-     */
-    interface AtomicHostedUi {
-        /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
-        /**
-          * The type of hosted search page to load.
-         */
-        "hostedType": 'trial' | 'builder' | 'code';
-        "initialize": (options: AtomicHostedUIInitializationOptions) => Promise<void>;
-    }
-    /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-     * @deprecated Use `<atomic-hosted-ui type="trial"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicSimpleBuilder {
         /**
@@ -58,7 +39,6 @@ declare global {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
      * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
-     * @deprecated Use `<atomic-hosted-ui type="code"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface HTMLAtomicHostedPageElement extends Components.AtomicHostedPage, HTMLStencilElement {
     }
@@ -67,19 +47,8 @@ declare global {
         new (): HTMLAtomicHostedPageElement;
     };
     /**
-     * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
-     * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-     */
-    interface HTMLAtomicHostedUiElement extends Components.AtomicHostedUi, HTMLStencilElement {
-    }
-    var HTMLAtomicHostedUiElement: {
-        prototype: HTMLAtomicHostedUiElement;
-        new (): HTMLAtomicHostedUiElement;
-    };
-    /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-     * @deprecated Use `<atomic-hosted-ui type="trial"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface HTMLAtomicSimpleBuilderElement extends Components.AtomicSimpleBuilder, HTMLStencilElement {
     }
@@ -89,7 +58,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-hosted-page": HTMLAtomicHostedPageElement;
-        "atomic-hosted-ui": HTMLAtomicHostedUiElement;
         "atomic-simple-builder": HTMLAtomicSimpleBuilderElement;
     }
 }
@@ -97,30 +65,17 @@ declare namespace LocalJSX {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
      * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
-     * @deprecated Use `<atomic-hosted-ui type="code"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicHostedPage {
     }
     /**
-     * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
-     * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-     */
-    interface AtomicHostedUi {
-        /**
-          * The type of hosted search page to load.
-         */
-        "hostedType"?: 'trial' | 'builder' | 'code';
-    }
-    /**
      * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-     * @deprecated Use `<atomic-hosted-ui type="trial"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicSimpleBuilder {
     }
     interface IntrinsicElements {
         "atomic-hosted-page": AtomicHostedPage;
-        "atomic-hosted-ui": AtomicHostedUi;
         "atomic-simple-builder": AtomicSimpleBuilder;
     }
 }
@@ -131,18 +86,11 @@ declare module "@stencil/core" {
             /**
              * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
              * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
-             * @deprecated Use `<atomic-hosted-ui type="code"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
              */
             "atomic-hosted-page": LocalJSX.AtomicHostedPage & JSXBase.HTMLAttributes<HTMLAtomicHostedPageElement>;
             /**
-             * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
-             * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-             */
-            "atomic-hosted-ui": LocalJSX.AtomicHostedUi & JSXBase.HTMLAttributes<HTMLAtomicHostedUiElement>;
-            /**
              * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
              * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
-             * @deprecated Use `<atomic-hosted-ui type="trial"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
              */
             "atomic-simple-builder": LocalJSX.AtomicSimpleBuilder & JSXBase.HTMLAttributes<HTMLAtomicSimpleBuilderElement>;
         }
