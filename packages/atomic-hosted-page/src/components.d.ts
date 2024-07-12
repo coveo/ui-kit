@@ -97,7 +97,7 @@ declare namespace LocalJSX {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
      * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
-     * @deprecated Use `<atomic-hosted-ui type="custom"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
+     * @deprecated Use `<atomic-hosted-ui type="code"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicHostedPage {
     }
