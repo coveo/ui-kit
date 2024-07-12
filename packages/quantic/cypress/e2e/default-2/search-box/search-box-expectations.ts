@@ -16,9 +16,10 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
     querySuggestionsEquals: (querySuggestions: String[]) => {
       querySuggestions.forEach((querySuggestion, index) => {
         selector
-          .querySuggestionByIndex(index)
-          .invoke('attr', 'data-rawvalue')
-          .should('equal', querySuggestion)
+          .querySuggestionContentByIndex(index)
+          .then(([suggestion]) => {
+            expect(suggestion.innerText).to.eq(querySuggestion);
+          })
           .logDetail(
             'should display the query suggestions properly and in the correct order'
           );
@@ -65,49 +66,6 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
         .querySuggestions()
         .should('have.length', value)
         .logDetail(`should display ${value} query suggestions`);
-    },
-    searchInputHasAriaOwnsValue: (textarea = false) => {
-      selector
-        .input(textarea)
-        .then((inputElement) => {
-          selector.suggestionList().then((suggestionListElement) => {
-            const actualValue = inputElement[0].getAttribute('aria-owns');
-            expect(actualValue).to.equal(suggestionListElement[0].id);
-          });
-          return;
-        })
-        .logDetail(
-          'The search input should have the id of the suggestion list as its value for the aria-owns attribute'
-        );
-    },
-    searchInputHasAriaActiveDescendantValue: (
-      textarea = false,
-      index: number
-    ) => {
-      selector
-        .input(textarea)
-        .then((inputElement) => {
-          selector
-            .querySuggestionByIndex(index)
-            .then((suggestionOptionElement) => {
-              const actualValue = inputElement[0].getAttribute(
-                'aria-activedescendant'
-              );
-              expect(actualValue).to.equal(suggestionOptionElement[0].id);
-            });
-          return;
-        })
-        .logDetail(
-          `the aria-activedescendant attribute of the searchbox input should have the id of the ${index}-th suggestion as its value`
-        );
-    },
-    searchInputHasNoAriaActiveDescendantValue: (textarea = false) => {
-      selector
-        .input(textarea)
-        .should('not.have.attr', 'aria-activedescendant')
-        .logDetail(
-          'The search input should not have the aria-activedescendant attribute'
-        );
     },
     logClearRecentQueries: () => {
       cy.wait(InterceptAliases.UA.RecentQueries.ClearRecentQueries)

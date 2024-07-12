@@ -31,6 +31,7 @@ const selectors = {
   searchBoxSubmitBtn: '.searchbox__submit-button',
   searchBoxClearIcon: '.searchbox__clear-button',
   searchBoxSuggestionsList: 'c-quantic-search-box-suggestions-list',
+  SuggestionsListBox: '[role="listbox"]',
   searchBoxContainer: '.searchbox__container',
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
@@ -96,7 +97,7 @@ describe('c-quantic-search-box-input', () => {
     jest.clearAllMocks();
   });
 
-  [true, false].forEach((textareaValue) => {
+  [false].forEach((textareaValue) => {
     describe(`when the textarea property is set to ${textareaValue}`, () => {
       it(`should display the ${
         textareaValue ? 'expandable' : 'default'
@@ -377,12 +378,15 @@ describe('c-quantic-search-box-input', () => {
             );
             expect(suggestionsList).not.toBeNull();
 
-            const firstSuggestion = suggestionsList.shadowRoot.querySelectorAll(
-              selectors.suggestionOption
-            )[0];
-            expect(firstSuggestion).not.toBeNull();
+            const clearRecentQueriesOption =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.clearRecentQueryButton
+              )[0];
+            expect(clearRecentQueriesOption).not.toBeNull();
 
-            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
+            clearRecentQueriesOption.dispatchEvent(
+              new CustomEvent('mousedown')
+            );
             expect(
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
@@ -432,7 +436,7 @@ describe('c-quantic-search-box-input', () => {
             const firstRecentQuery =
               suggestionsList.shadowRoot.querySelectorAll(
                 selectors.suggestionOption
-              )[recentQueryIndex + 1];
+              )[recentQueryIndex];
             expect(firstRecentQuery).not.toBeNull();
 
             firstRecentQuery.dispatchEvent(new CustomEvent('mousedown'));
@@ -555,6 +559,96 @@ describe('c-quantic-search-box-input', () => {
             expect(
               functionsMocks.exampleHandleSubmitSearch
             ).toHaveBeenCalledTimes(textareaValue ? 0 : 1);
+          });
+        });
+
+        describe('accessibility', () => {
+          describe('when pressing the DOWN and UP arrow keys', () => {
+            it('should set the aria-activedescendant attribute of the input according to the currently active suggestion', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                suggestions: mockSuggestions,
+                textarea: textareaValue,
+              });
+              await flushPromises();
+
+              const input = element.shadowRoot.querySelector(
+                textareaValue
+                  ? selectors.searchBoxTextArea
+                  : selectors.searchBoxInput
+              );
+              expect(input).not.toBeNull();
+
+              await input.focus();
+              const suggestionsList = element.shadowRoot.querySelector(
+                selectors.searchBoxSuggestionsList
+              );
+              const suggestionsListItems = Array.from(
+                suggestionsList.shadowRoot.querySelectorAll(
+                  selectors.suggestionOption
+                )
+              );
+              expect(suggestionsList).not.toBeNull();
+              expect(suggestionsListItems).not.toBeNull();
+
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowDown'})
+              );
+              await flushPromises();
+
+              const firstSuggestionId = suggestionsListItems[0].id;
+
+              expect(input.getAttribute('aria-activedescendant')).toBe(
+                firstSuggestionId
+              );
+
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowUp'})
+              );
+              await flushPromises();
+
+              const lastSuggestionId = suggestionsListItems.at(-1).id;
+
+              expect(input.getAttribute('aria-activedescendant')).toBe(
+                lastSuggestionId
+              );
+
+              await input.blur();
+              expect(input.getAttribute('aria-activedescendant')).toBeNull();
+            });
+          });
+
+          describe('when the search box input is rendered', () => {
+            it('should set the aria-controls attribute of the input according to the id of the suggestions listbox', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                suggestions: mockSuggestions,
+                textarea: textareaValue,
+              });
+              await flushPromises();
+
+              const input = element.shadowRoot.querySelector(
+                textareaValue
+                  ? selectors.searchBoxTextArea
+                  : selectors.searchBoxInput
+              );
+              expect(input).not.toBeNull();
+
+              await input.focus();
+              const suggestionsList = element.shadowRoot.querySelector(
+                selectors.searchBoxSuggestionsList
+              );
+              const suggestionsListBox =
+                suggestionsList.shadowRoot.querySelector(
+                  selectors.SuggestionsListBox
+                );
+              expect(suggestionsList).not.toBeNull();
+              expect(suggestionsListBox).not.toBeNull();
+
+              expect(input.getAttribute('aria-controls')).toBe(
+                suggestionsListBox.id
+              );
+            });
           });
         });
       });

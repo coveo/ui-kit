@@ -10,6 +10,7 @@ export interface SearchBoxSelector extends ComponentSelector {
   clearRecentQueriesButton: () => CypressSelector;
   querySuggestions: () => CypressSelector;
   querySuggestionByIndex: (index: number) => CypressSelector;
+  querySuggestionContentByIndex: (index: number) => CypressSelector;
 }
 
 export const SearchBoxSelectors: SearchBoxSelector = {
@@ -38,4 +39,10 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     ),
   querySuggestionByIndex: (index: number) =>
     SearchBoxSelectors.querySuggestions().eq(index),
+  querySuggestionContentByIndex: (index: number) =>
+    SearchBoxSelectors.get()
+      .find(
+        'c-quantic-search-box-input [data-cy="suggestions-option"] lightning-formatted-rich-text'
+      )
+      .eq(index),
 };

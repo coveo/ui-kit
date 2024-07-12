@@ -218,35 +218,37 @@ export default class QuanticSearchBoxInput extends LightningElement {
         this.input.blur();
         break;
 
-      case keys.ARROWRIGHT:
-        // eslint-disable-next-line no-case-declarations
-        const selectedOption =
-          this.suggestionListElement?.getCurrentSelectedValue?.();
-        this.sendInputValueChangeEvent(selectedOption.value);
-        this.input.setAttribute('aria-activedescendant', selectedOption.id);
-        break;
-
       case keys.ENTER:
         this.handleEnter(event);
         break;
 
-      case keys.ARROWUP:
+      case keys.ARROWUP: {
         event.preventDefault();
-        this.ariaActiveDescendant = this.suggestionListElement?.selectionUp();
+        const {id, value} = this.suggestionListElement.selectionUp();
+        if (value) {
+          this.input.value = value;
+        }
+        this.ariaActiveDescendant = id;
         this.input.setAttribute(
           'aria-activedescendant',
           this.ariaActiveDescendant
         );
         break;
+      }
 
-      case keys.ARROWDOWN:
+      case keys.ARROWDOWN: {
         event.preventDefault();
-        this.ariaActiveDescendant = this.suggestionListElement?.selectionDown();
+        const {id, value} = this.suggestionListElement.selectionDown();
+        if (value) {
+          this.input.value = value;
+        }
+        this.ariaActiveDescendant = id;
         this.input.setAttribute(
           'aria-activedescendant',
           this.ariaActiveDescendant
         );
         break;
+      }
     }
     this.ignoreNextEnterKeyPress = false;
   }
@@ -304,7 +306,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   handleSuggestionListEvent = (event) => {
     event.stopPropagation();
     const id = event.detail;
-    this.input.setAttribute('aria-owns', id);
+    this.input.setAttribute('aria-controls', id);
   };
 
   get searchBoxContainerClass() {
