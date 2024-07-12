@@ -4,8 +4,8 @@ const urls = [
   'http://localhost:3335/',
   'http://localhost:3335/simple-builder.html',
   'http://localhost:3335/hosted-ui.html',
-  'http://localhost:3335/hosted-ui-legacy.html',
-  'http://localhost:3335/hosted-ui-custom.html',
+  'http://localhost:3335/hosted-ui-trial.html',
+  'http://localhost:3335/hosted-ui-code.html',
 ];
 
 for (const url of urls) {
