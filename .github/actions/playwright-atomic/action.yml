@@ -1,5 +1,5 @@
-name: 'Playwright Atomic (Firefox)'
-description: 'Run Playwright tests for Atomic (Firefox)'
+name: 'Playwright Atomic'
+description: 'Run Playwright tests for Atomic'
 inputs:
   shardIndex:
     description: 'The shard index to run'
@@ -13,13 +13,13 @@ runs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
       shell: bash
-    - name: Run Playwright tests on Firefox
-      run: npx playwright test --project=firefox --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+    - name: Run Playwright tests
+      run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
       shell: bash
     - uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
       if: always()
       with:
-        name: atomic-playwright-report
+        name: atomic-playwright-report-blob-${{ matrix.shardIndex }}
         path: packages/atomic/playwright-report/
         retention-days: 5
