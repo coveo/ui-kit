@@ -22,7 +22,7 @@ interface AtomicSimpleBuilderInitializationOptions
 /**
  * A Web Component used to inject a [Coveo Search Interface made with the simple builder](https://docs.coveo.com/en/m7e92019/adobe/build-the-search-solution-using-a-coveo-ui-library-directly#search-interface-builder) in the DOM.
  * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
- * @deprecated Use `<atomic-hosted-ui type="legacy"></atomic-hosted-ui>` instead {@link AtomicHostedUI}.
+ * @deprecated Use `<atomic-hosted-ui type="trial"></atomic-hosted-ui>` instead {@link AtomicHostedUI}.
  */
 @Component({
   tag: 'atomic-simple-builder',
