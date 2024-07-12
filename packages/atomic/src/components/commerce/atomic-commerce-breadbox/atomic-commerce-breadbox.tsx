@@ -2,6 +2,8 @@ import {NumberValue, Schema} from '@coveo/bueno';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
+  FacetGenerator,
+  FacetGeneratorState,
   ProductListing,
   Search,
   buildProductListing,
@@ -15,7 +17,6 @@ import {
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
-import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
   InitializableComponent,
@@ -29,8 +30,6 @@ import {BreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
 import {BreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {BreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
 import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
-import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
-import {defaultNumberFormatter} from '../../common/formats/format-common';
 import {Hidden} from '../../common/hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
@@ -74,6 +73,7 @@ export class AtomicCommerceBreadbox
   private numberOfBreadcrumbs = 0;
   private numberOfCollapsedBreadcrumbs = 0;
   private firstExpandedBreadcrumbIndex?: number;
+  facetGenerator!: FacetGenerator;
   breadcrumbManager!: BreadcrumbManager;
 
   @Element() private host!: HTMLElement;
@@ -83,6 +83,9 @@ export class AtomicCommerceBreadbox
   @BindStateToController('breadcrumbManager')
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
+  @BindStateToController('facetGenerator')
+  @State()
+  public facetGeneratorState!: FacetGeneratorState[];
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
@@ -118,6 +121,7 @@ export class AtomicCommerceBreadbox
     }
 
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
+    this.facetGenerator = this.searchOrListing.facetGenerator();
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
@@ -245,25 +249,15 @@ export class AtomicCommerceBreadbox
     switch (type) {
       case 'numericalRange':
         return [
-          formatHumanReadable({
-            facetValue: value.value as NumericFacetValue,
-            logger: this.bindings.engine.logger,
-            i18n: this.bindings.i18n,
-            field: field,
-            manualRanges: [],
-            formatter: defaultNumberFormatter,
-          }),
+          this.bindings.store.state.numericFacets[field].format(
+            value.value as NumericFacetValue
+          ),
         ];
       case 'dateRange':
         return [
-          this.bindings.i18n.t('to', {
-            start: parseDate((value.value as DateFacetValue).start).format(
-              'YYYY-MM-DD'
-            ),
-            end: parseDate((value.value as DateFacetValue).end).format(
-              'YYYY-MM-DD'
-            ),
-          }),
+          this.bindings.store.state.dateFacets[field].format(
+            value.value as DateFacetValue
+          ),
         ];
       case 'hierarchical':
         return (value.value as CategoryFacetValue).path.map(
@@ -282,10 +276,33 @@ export class AtomicCommerceBreadbox
   };
 
   private buildBreadcrumb(breadcrumb: Breadcrumb<AnyFacetValue>) {
+    let facetStateName:
+      | 'facets'
+      | 'categoryFacets'
+      | 'numericFacets'
+      | 'dateFacets';
+
+    switch (breadcrumb.type) {
+      case 'hierarchical':
+        facetStateName = 'categoryFacets';
+        break;
+      case 'numericalRange':
+        facetStateName = 'numericFacets';
+        break;
+      case 'dateRange':
+        facetStateName = 'dateFacets';
+        break;
+      default:
+        facetStateName = 'facets';
+    }
+
     return breadcrumb.values.map((value: BreadcrumbValue<AnyFacetValue>) => {
       return {
         facetId: breadcrumb.facetId,
-        label: breadcrumb.facetDisplayName,
+        label:
+          this.bindings.store.state[facetStateName][
+            breadcrumb.facetId
+          ]?.label(),
         deselect: value.deselect,
         formattedValue: this.valueForFacetType(
           breadcrumb.type,

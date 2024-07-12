@@ -35,10 +35,7 @@ import {
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response';
-import {
-  buildMockCategoryFacetValue,
-  buildMockCommerceRegularFacetValue,
-} from '../../../../test/mock-commerce-facet-value';
+import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -124,7 +121,7 @@ describe('core breadcrumb manager', () => {
       expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
     });
 
-    it('#hasBreadcrumbs is false when all values in a non-category facet are idle', () => {
+    it('#hasBreadcrumbs is false when all facet values are idle', () => {
       setFacetsState(
         buildMockCommerceRegularFacetResponse({
           facetId,
@@ -135,53 +132,11 @@ describe('core breadcrumb manager', () => {
       expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
     });
 
-    it('#hasBreadcrumb is false when all values in a category facet are idle', () => {
-      setFacetsState(
-        buildMockCategoryFacetResponse({
-          facetId: 'category_facet',
-          values: [buildMockCategoryFacetValue({state: 'idle'})],
-        })
-      );
-
-      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(false);
-    });
-
-    it('#hasBreadcrumbs is true when there is a selected value in a non-category facet', () => {
+    it('#hasBreadcrumbs is true when there is a selected facet value', () => {
       setFacetsState(
         buildMockCommerceRegularFacetResponse({
           facetId,
           values: [buildMockCommerceRegularFacetValue({state: 'selected'})],
-        })
-      );
-
-      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
-    });
-
-    it('#hasBreadcrumbs is true when the top parent value is selected in a category facet', () => {
-      setFacetsState(
-        buildMockCategoryFacetResponse({
-          facetId: 'category_facet',
-          values: [buildMockCategoryFacetValue({state: 'selected'})],
-        })
-      );
-
-      expect(breadcrumbManager.state.hasBreadcrumbs).toEqual(true);
-    });
-
-    it('#hasBreadcrumbs is true when a child value is selected in a category facet', () => {
-      setFacetsState(
-        buildMockCategoryFacetResponse({
-          facetId: 'category_facet',
-          values: [
-            buildMockCategoryFacetValue({
-              state: 'idle',
-              children: [
-                buildMockCategoryFacetValue({
-                  state: 'selected',
-                }),
-              ],
-            }),
-          ],
         })
       );
 
@@ -336,7 +291,7 @@ describe('core breadcrumb manager', () => {
 
     it('when facet is selected, #deselect dispatches #toggleSelectActionCreator and #fetchProductsActionCreator', () => {
       deselectBreadcrumb();
-      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith({facetId});
+      expect(deselectAllValuesInCoreFacet).toHaveBeenCalledWith(facetId);
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
   });

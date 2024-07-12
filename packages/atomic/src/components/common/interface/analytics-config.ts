@@ -55,18 +55,17 @@ export function getNextAnalyticsConfig(
   searchEngineConfig: EngineConfiguration,
   enabled: boolean
 ): AnalyticsConfiguration {
-  const configuration: AnalyticsConfiguration = {
+  const defaultConfiguration: AnalyticsConfiguration = {
     enabled,
     documentLocation: document.location.href,
     ...(document.referrer && {originLevel3: document.referrer}),
   };
 
-  const analyticsConfiguration = searchEngineConfig.analytics ?? {};
-  Object.assign(
-    analyticsConfiguration,
-    augmentAnalyticsConfigWithAtomicVersion()
-  );
-  Object.assign(configuration, analyticsConfiguration);
-
-  return configuration;
+  if (searchEngineConfig.analytics) {
+    return {
+      ...defaultConfiguration,
+      ...searchEngineConfig.analytics,
+    };
+  }
+  return defaultConfiguration;
 }

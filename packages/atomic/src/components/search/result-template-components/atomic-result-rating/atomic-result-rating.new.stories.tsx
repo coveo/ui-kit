@@ -31,5 +31,5 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-result-rating',
-  args: {'attributes-field': 'snrating'},
+  args: {field: 'snrating'},
 };

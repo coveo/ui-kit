@@ -21,7 +21,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-segmented-facet',
   args: {
-    'attributes-field': 'objecttype',
-    'attributes-label': 'Object Type',
+    field: 'objecttype',
+    label: 'Object Type',
   },
 };

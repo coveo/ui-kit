@@ -5,6 +5,7 @@ import {
   loadIPXActionsHistoryActions,
 } from '@coveo/headless';
 import {Component, h, Prop, Element} from '@stencil/core';
+import {Bindings} from '../../../components';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   InitializableComponent,
@@ -15,7 +16,6 @@ import {getDefaultSlotFromHost} from '../../../utils/slot-utils';
 import {AnyUnfoldedItem} from '../../common/interface/item';
 import {getAttributesFromLinkSlot} from '../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../common/item-link/item-link';
-import {RecsBindings} from '../../recommendations/atomic-recs-interface/atomic-recs-interface';
 import {
   ResultContext,
   InteractiveResultContext,
@@ -32,10 +32,8 @@ import {
   styleUrl: 'atomic-ipx-result-link.pcss',
   shadow: false,
 })
-export class AtomicIPXResultLink
-  implements InitializableComponent<RecsBindings>
-{
-  @InitializeBindings() public bindings!: RecsBindings;
+export class AtomicIPXResultLink implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   public error!: Error;
 
   @ResultContext() private result!: AnyUnfoldedItem;
