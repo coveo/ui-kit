@@ -32,8 +32,8 @@ export class BasePageObject<
     }
   }
 
-  noProducts() {
-    this.page.route('**/commerce/v2/**', async (route) => {
+  async noProducts() {
+    await this.page.route('**/commerce/v2/search', async (route) => {
       const response = await route.fetch();
       const body = await response.json();
       body.products = [];
