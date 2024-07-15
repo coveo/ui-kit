@@ -2,7 +2,7 @@ import {SearchParameters} from '../features/search-parameters/search-parameter-a
 
 export function buildMockSearchParameters(
   config: SearchParameters = {}
-): Required<SearchParameters> {
+): Required<Omit<SearchParameters, 'mnf'>> {
   return {
     q: '',
     enableQuerySyntax: false,
@@ -20,7 +20,6 @@ export function buildMockSearchParameters(
     sf: {},
     tab: '',
     af: {},
-    mnf: {},
     ...config,
   };
 }
