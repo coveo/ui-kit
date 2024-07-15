@@ -10,12 +10,12 @@ runs:
         pattern: blob-report-*
         merge-multiple: true
     - name: Merge into JSON Report
-      run: npx playwright merge-reports --reporter json ./packages/atomic/all-blob-reports
+      run: npx playwright merge-reports html ./packages/atomic/all-blob-reports
       shell: bash
 
     - name: Upload HTML report
       uses: actions/upload-artifact@v4
       with:
         name: atomic-playwright-report
-        path: packages/atomic/playwright-report/
+        path: packages/atomic/playwright-report
         retention-days: 5
