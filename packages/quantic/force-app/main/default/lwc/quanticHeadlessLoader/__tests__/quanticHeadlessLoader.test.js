@@ -585,12 +585,14 @@ describe('c/quanticHeadlessLoader', () => {
     it('should register the sort options data in the store', () => {
       initQuanticStoreTest(testId, {state: {someSortOptions: []}});
       registerSortOptionsToStore(testId, [
-        {label: '', value: '', criterion: {by: 'relevancy'}},
+        {label: 'sortLabel', value: 'sortValue', criterion: {by: 'relevancy'}},
       ]);
 
-      expect(
-        window.coveoHeadless[testId].bindings.store.state.sort
-      ).toBeDefined();
+      const sortStore = window.coveoHeadless[testId].bindings.store.state.sort;
+      expect(sortStore).toBeDefined();
+      expect(sortStore[0].value).toBe('sortLabel');
+      expect(sortStore[0].label).toBe('sortValue');
+      expect(sortStore[0].criterion.by).toBe('relevancy');
       expect(mockedConsoleError.mock.calls.length).toBe(0);
     });
 

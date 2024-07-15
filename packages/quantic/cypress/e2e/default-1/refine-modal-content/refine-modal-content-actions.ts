@@ -46,7 +46,10 @@ function refineContentActions(selector: RefineContentSelector) {
         );
     },
     openRefineModalSortDropdown: () => {
-      selector.refineCombobox().click();
+      selector
+        .refineSortDropdown()
+        .click()
+        .logAction('when opening the sort dropdown in the refine modal');
     },
   };
 }
@@ -54,7 +57,10 @@ function refineContentActions(selector: RefineContentSelector) {
 function sortActions(selector: SortSelector) {
   return {
     openSortDropdown: () => {
-      selector.combobox().click();
+      selector
+        .sortDropdown()
+        .click()
+        .logAction('when opening the sort dropdown');
     },
   };
 }

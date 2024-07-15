@@ -266,15 +266,15 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should order the facets correctly');
     },
 
-    refineContainsOptions: (values: string[]) => {
-      values.forEach((value) => {
-        selector.refineSortOption(value).should('exist');
-      });
-    },
-
-    refineOptionsEqual: (options: {value: string; label: string}[]) => {
+    refineSortOptionsEqual: (options: {value: string; label: string}[]) => {
       options.forEach((option) => {
-        selector.refineSortOption(option.value).should('contain', option.label);
+        selector
+          .refineSortOption(option.value)
+          .should('exist')
+          .should('contain', option.label)
+          .logDetail(
+            'should contain the sort options in the refine modal sort component'
+          );
       });
     },
   };
@@ -289,19 +289,13 @@ function sortExpectations(selector: SortSelector) {
         .logDetail(`${should(display)} display the Quantic Sort component`);
     },
 
-    displaySortDropdown: (display: boolean) => {
-      selector.listbox().should(display ? 'exist' : 'not.exist');
-    },
-
-    containsOptions: (values: string[]) => {
-      values.forEach((value) => {
-        selector.sortOption(value).should('exist');
-      });
-    },
-
-    optionsEqual: (options: {value: string; label: string}[]) => {
+    sortOptionsEqual: (options: {value: string; label: string}[]) => {
       options.forEach((option) => {
-        selector.sortOption(option.value).should('contain', option.label);
+        selector
+          .sortOption(option.value)
+          .should('exist')
+          .should('contain', option.label)
+          .logDetail(`${option} label should be equal to ${option.label}`);
       });
     },
   };

@@ -8,6 +8,7 @@ import {
   getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
+  routeMatchers,
 } from '../../../page-objects/search';
 import {
   useCaseParamTest,
@@ -41,6 +42,14 @@ describe('quantic-sort', () => {
 
   const customSortOptions = [
     {
+      label: 'Date ascending',
+      value: 'date ascending',
+      criterion: {
+        by: 'date',
+        order: 'ascending',
+      },
+    },
+    {
       label: 'Views Descending',
       value: '@ytviewcount descending',
       criterion: {
@@ -55,15 +64,7 @@ describe('quantic-sort', () => {
     },
   ];
 
-  const defaultCustomSort = {
-    label: 'Date ascending',
-    value: 'date ascending',
-    criterion: {
-      by: 'date',
-      order: 'ascending',
-    },
-  };
-  const customSortOptionsValues = [defaultCustomSort, ...customSortOptions].map(
+  const customSortOptionsValues = [...customSortOptions].map(
     (option) => option.value
   );
   interface SortOptions {
@@ -127,7 +128,7 @@ describe('quantic-sort', () => {
 
           Actions.openDropdown();
 
-          Expect.containsOptions(sortOptionValues);
+          Expect.containsSortOptions(sortOptionValues);
           Expect.optionsEqual(sortOptions);
           Expect.selectedOption(defaultOptionValue);
         });
@@ -154,14 +155,25 @@ describe('quantic-sort', () => {
 
       describe('when passing custom options as slots to the component', () => {
         it('should display the custom options properly', () => {
+          const routeMatcherToUse =
+            param.useCase === useCaseEnum.insight
+              ? routeMatchers.insight
+              : routeMatchers.search;
+          cy.intercept('POST', routeMatcherToUse).as('searchRequest');
           visitSort({useCase: param.useCase}, {withCustomSortOptions: true});
 
+          cy.wait('@searchRequest').then((interception) => {
+            Expect.sortCriteriaInSearchRequest(
+              interception.request.body,
+              defaultCustomOptionValue
+            );
+          });
           Expect.displaySortDropdown(true);
           Expect.labelContains('Sort by');
 
           Actions.openDropdown();
 
-          Expect.containsOptions(customSortOptionsValues);
+          Expect.containsSortOptions(customSortOptionsValues);
           Expect.optionsEqual(customSortOptions);
         });
 

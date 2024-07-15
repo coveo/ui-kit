@@ -18,7 +18,7 @@ function sortExpectations(selector: SortSelector) {
       selector.listbox().should(display ? 'exist' : 'not.exist');
     },
 
-    containsOptions: (values: string[]) => {
+    containsSortOptions: (values: string[]) => {
       values.forEach((value) => {
         selector.option(value).should('exist');
       });

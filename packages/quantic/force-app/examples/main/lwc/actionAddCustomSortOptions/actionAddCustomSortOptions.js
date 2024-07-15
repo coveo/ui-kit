@@ -8,7 +8,7 @@ export default class ActionAddCustomSortOptions extends LightningElement {
   handleAddCustomSortOptions() {
     const addCustomSortOptionsEvent = new CustomEvent('addCustomSortOptions', {
       detail: {
-        hasInvalidOptions: this.withInvalidOptions,
+        withInvalidOptions: this.withInvalidOptions,
       },
       bubbles: true,
       composed: true,

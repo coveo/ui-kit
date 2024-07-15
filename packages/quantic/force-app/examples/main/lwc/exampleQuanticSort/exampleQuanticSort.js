@@ -27,7 +27,7 @@ export default class ExampleQuanticSort extends LightningElement {
   }
 
   handleAddCustomSortOptions = (event) => {
-    this.withInvalidCustomSortOptions = event.detail.hasInvalidOptions;
+    this.withInvalidCustomSortOptions = event.detail.withInvalidOptions;
     this.withCustomSortOptions = true;
   };
 

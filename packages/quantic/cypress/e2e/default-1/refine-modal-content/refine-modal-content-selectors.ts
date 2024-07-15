@@ -3,15 +3,6 @@ import {ComponentSelector, CypressSelector} from '../../common-selectors';
 const refineContentComponent = 'c-quantic-refine-modal-content';
 const refineContentContainer = '.facets-container';
 
-export interface RefineContentSelector extends FacetSelector {
-  container: FacetSelector;
-  refineSort: () => CypressSelector;
-  refineSortOption: (value: string) => CypressSelector;
-  refineCombobox: () => CypressSelector;
-  clearAllFiltersButton: () => CypressSelector;
-  filtersTitle: () => CypressSelector;
-}
-
 export interface FacetSelector extends ComponentSelector {
   get: () => CypressSelector;
   facetManager: () => CypressSelector;
@@ -62,13 +53,23 @@ const getCommonFacetSelectors = (
   };
 };
 
+export interface RefineContentSelector extends FacetSelector {
+  container: FacetSelector;
+  refineSort: () => CypressSelector;
+  refineSortOption: (value: string) => CypressSelector;
+  refineSortDropdown: () => CypressSelector;
+  clearAllFiltersButton: () => CypressSelector;
+  filtersTitle: () => CypressSelector;
+}
+
 export const RefineContentSelectors: RefineContentSelector = {
   container: getCommonFacetSelectors(() => cy.get(refineContentContainer)),
   ...getCommonFacetSelectors(() => cy.get(refineContentComponent)),
   refineSort: () => RefineContentSelectors.get().find('c-quantic-sort'),
   refineSortOption: (value: string) =>
     SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
-  refineCombobox: () => RefineContentSelectors.get().find('.slds-combobox'),
+  refineSortDropdown: () =>
+    RefineContentSelectors.get().find('[data-cy="sort-dropdown"]'),
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
@@ -79,15 +80,14 @@ export interface SortSelector extends ComponentSelector {
   get: () => CypressSelector;
   sort: () => CypressSelector;
   sortOption: (value: string) => CypressSelector;
-  combobox: () => CypressSelector;
-  listbox: () => CypressSelector;
+  sortDropdown: () => CypressSelector;
 }
 
 export const SortSelectors: SortSelector = {
-  get: () => cy.get('c-quantic-sort'),
+  get: () => cy.get('[data-cy="main-sort"]'),
   sort: () => SortSelectors.get(),
   sortOption: (value: string) =>
     SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
-  combobox: () => SortSelectors.get().find('.slds-combobox').first(),
-  listbox: () => SortSelectors.get().find('.slds-listbox'),
+  sortDropdown: () =>
+    SortSelectors.get().find('[data-cy="sort-dropdown"]').first(),
 };
