@@ -38,5 +38,6 @@ function handleRestoreParameters(
     ...Object.keys(action.payload.nf ?? {}),
     ...Object.keys(action.payload.df ?? {}),
     ...Object.keys(action.payload.cf ?? {}),
+    ...Object.keys(action.payload.mnf ?? {}),
   ];
 }

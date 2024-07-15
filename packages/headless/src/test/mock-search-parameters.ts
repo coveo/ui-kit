@@ -20,6 +20,7 @@ export function buildMockSearchParameters(
     sf: {},
     tab: '',
     af: {},
+    mnf: {},
     ...config,
   };
 }

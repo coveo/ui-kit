@@ -57,6 +57,7 @@ export interface SearchParameters {
    * A record of the numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
    */
   nf?: Record<string, NumericRangeRequest[]>;
+  mnf?: Record<string, NumericRangeRequest>;
 
   /**
    * The number of results to return.
