@@ -22,9 +22,9 @@ import requiredFields from '@salesforce/label/c.quantic_requiredFields';
 import LightningModal from 'lightning/modal';
 import {api} from 'lwc';
 // @ts-ignore
-import feedbackFormTemplate from './quanticFeedbackModalQna.html';
+import feedbackFormTemplate from './templates/quanticFeedbackModalQna.html';
 // @ts-ignore
-import successTemplate from './success.html';
+import successTemplate from './templates/success.html';
 
 /** @typedef {"yes"|"unknown"|"no"} GeneratedAnswerFeedbackOption */
 
