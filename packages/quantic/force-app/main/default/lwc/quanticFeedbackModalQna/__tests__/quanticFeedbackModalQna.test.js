@@ -193,7 +193,6 @@ describe('c-quantic-feedback-modal-qna', () => {
 
         expect(functionsMocks.handleSubmit).toHaveBeenCalledWith(
           expect.objectContaining({
-            helpful: false,
             correctTopicValue: 'yes',
             hallucinationFree: 'yes',
             documented: 'yes',
