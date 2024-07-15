@@ -124,6 +124,8 @@ jobs:
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
+      - run: npm run build
+      - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/merge-playwright-reports
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
