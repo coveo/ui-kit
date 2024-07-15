@@ -590,8 +590,8 @@ describe('c/quanticHeadlessLoader', () => {
 
       const sortStore = window.coveoHeadless[testId].bindings.store.state.sort;
       expect(sortStore).toBeDefined();
-      expect(sortStore[0].value).toBe('sortLabel');
-      expect(sortStore[0].label).toBe('sortValue');
+      expect(sortStore[0].value).toBe('sortValue');
+      expect(sortStore[0].label).toBe('sortLabel');
       expect(sortStore[0].criterion.by).toBe('relevancy');
       expect(mockedConsoleError.mock.calls.length).toBe(0);
     });
