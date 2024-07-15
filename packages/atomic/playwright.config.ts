@@ -13,7 +13,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
-    ? [['html'], ['list'], ['github']]
+    ? [['html'], ['list'], ['github'], ['blob']]
     : [['html'], ['list']],
   use: {
     trace: 'retain-on-failure',
