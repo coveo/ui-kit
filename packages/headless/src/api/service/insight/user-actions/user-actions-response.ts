@@ -1,23 +1,27 @@
+export enum UserActionType {
+  SEARCH = 'SEARCH',
+  CLICK = 'CLICK',
+  VIEW = 'VIEW',
+  CUSTOM = 'CUSTOM',
+  TICKET_CREATE = 'TICKET_CREATE',
+}
+
 export interface InsightUserActionsResponse {
-  timeline?: UserActionTimeline;
+  value: Array<UserAction>;
 }
 
-interface UserActionTimeline {
-  sessions: UserSession[];
-}
+// interface UserActionTimeline {
+//   sessions: UserSession[];
+// }
 
-interface UserSession {
-  start: Date;
-  end: Date;
-  actions: UserAction[];
-}
+// interface UserSession {
+//   start: Date;
+//   end: Date;
+//   actions: UserAction[];
+// }
 
-type UserActionType = 'SEARCH' | 'CLICK' | 'VIEW' | 'CUSTOM';
 interface UserAction {
-  actionType: UserActionType;
-  timestamp: Date;
-  raw: Record<string, string>;
-  searchHub?: string;
-  document?: string;
-  query?: string;
+  name: UserActionType;
+  time: string;
+  value: string;
 }

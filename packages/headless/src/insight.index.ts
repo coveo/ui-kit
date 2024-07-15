@@ -353,6 +353,14 @@ export type {
   RangeFacetRangeAlgorithm,
 } from './features/facets/range-facets/generic/interfaces/request';
 
+export type {
+  UserActions,
+  UserActionsProps,
+  UserActionsOptions,
+  UserActionsState,
+} from './controllers/insight/user-actions/headless-user-actions';
+export {buildUserActions} from './controllers/insight/user-actions/headless-user-actions';
+
 // Types & Helpers
 export type {Raw} from './api/search/search/raw';
 export type {InsightAPIErrorStatusResponse} from './api/service/insight/insight-api-client';

@@ -46,6 +46,7 @@ export function mockRelay(): MockedRelay {
     on: jest.fn(),
     updateConfig: jest.fn(),
     version: 'test',
+    clearStorage: jest.fn(),
   };
 }
 
