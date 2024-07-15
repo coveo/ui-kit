@@ -2,10 +2,10 @@
 import {test, expect} from './fixture';
 
 test.describe('when search has not been initialized', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-interface--search-before-init&viewMode=story'
-    );
+  test.beforeEach(async ({commerceInterface}) => {
+    await commerceInterface.load({
+      story: 'search-before-init',
+    });
   });
 
   test('should return error if request is executed', async ({
@@ -36,40 +36,41 @@ test.describe('when search has not been initialized', () => {
 });
 
 test.describe('when a query is performed automatically', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story'
-    );
+  test.beforeEach(async ({commerceInterface}) => {
+    await commerceInterface.load({
+      story: 'with-product-list',
+    });
   });
 
   test.describe('when a language is provided', () => {
     test('should set the language of the interface', async ({
-      page,
       commerceInterface,
     }) => {
-      await page.goto(
-        'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-language:fr'
-      );
+      await commerceInterface.load({
+        story: 'with-product-list',
+        args: {language: 'fr'},
+      });
       await expect(commerceInterface.interface()).toContainText('Produits');
     });
 
     test('should default to english when an invalid language is selected', async ({
-      page,
       commerceInterface,
     }) => {
-      await page.goto(
-        'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-language:foo'
-      );
+      await commerceInterface.load({
+        story: 'with-product-list',
+        args: {language: 'foo'},
+      });
       await expect(commerceInterface.interface()).toContainText('Products');
     });
 
     test('should default back to the non region locale (e.g., "es-ES" to "es")', async ({
-      page,
       commerceInterface,
     }) => {
-      await page.goto(
-        'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-language:es-ES'
-      );
+      await commerceInterface.load({
+        story: 'with-product-list',
+        args: {language: 'es-ES'},
+      });
+
       await expect(commerceInterface.interface()).toContainText('Productos');
     });
 
@@ -93,9 +94,11 @@ test.describe('when a query is performed automatically', () => {
       page,
       commerceInterface,
     }) => {
-      await page.goto(
-        'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-language:fr'
-      );
+      await commerceInterface.load({
+        story: 'with-product-list',
+        args: {language: 'fr'},
+      });
+
       await commerceInterface.hydrated.waitFor();
 
       await page.evaluate(() => {
@@ -128,9 +131,10 @@ test.describe('when a query is performed automatically', () => {
     });
     test.describe('when reflectStateInUrl is not', () => {
       test('should not update the url', async ({page, commerceInterface}) => {
-        await page.goto(
-          'http://localhost:4400/iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story&args=attributes-reflect-state-in-url:false'
-        );
+        await commerceInterface.load({
+          story: 'with-product-list',
+          args: {language: 'fr', reflectStateInUrl: false},
+        });
 
         const facetValueLabel = commerceInterface.getFacetValue('Nike');
 
