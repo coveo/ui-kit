@@ -3,6 +3,7 @@ import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateManualNumericFacetRange,
   updateNumericFacetValues,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
@@ -120,6 +121,23 @@ describe('NumericFacet', () => {
         facetId,
         values: values.map((value) => ({...value, numberOfResults: 0})),
       });
+    });
+
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#setManualRange', () => {
+    let range: NumericRangeRequest;
+    beforeEach(() => {
+      range = {start, end, endInclusive: true, state: 'selected'};
+      facet.setManualRange(range);
+    });
+    it('dispatches #updateManualNumericFacetRange with the correct payload', () => {
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        updateManualNumericFacetRange({facetId, ...range})
+      );
     });
 
     it('dispatches #fetchProductsActionCreator', () => {

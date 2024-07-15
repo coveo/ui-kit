@@ -74,9 +74,3 @@ export const updateManualNumericFacetRange = createAction(
     }
   }
 );
-
-export const clearManualNumericFacetRange = createAction(
-  'commerce/facets/numericFacet/clearManualRange',
-  (payload: {facetId: string}) =>
-    validatePayloadAndThrow(payload, {facetId: requiredNonEmptyString})
-);

@@ -3,7 +3,6 @@ import {stateKey} from '../../../../../app/state-key';
 import {selectManualRange} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {
-  clearManualNumericFacetRange,
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
@@ -64,7 +63,6 @@ export type NumericFacet = CoreCommerceFacet<
    */
   setRanges: (ranges: NumericRangeRequest[]) => void;
   setManualRange: (ranges: NumericRangeRequest) => void;
-  clearManualRange: () => void;
   /**
    * The state of the `NumericFacet` controller.
    */
@@ -111,11 +109,6 @@ export function buildCommerceNumericFacet(
 
     setManualRange(range: NumericRangeRequest) {
       dispatch(updateManualNumericFacetRange({facetId, ...range}));
-      dispatch(fetchProductsActionCreator());
-    },
-
-    clearManualRange() {
-      dispatch(clearManualNumericFacetRange({facetId}));
       dispatch(fetchProductsActionCreator());
     },
 

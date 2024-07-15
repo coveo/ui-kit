@@ -8,7 +8,6 @@ import {
   ManualNumericFacetSetState,
 } from './manual-numeric-facet-state';
 import {
-  clearManualNumericFacetRange,
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
@@ -21,9 +20,6 @@ export const manualNumericFacetReducer = createReducer(
       .addCase(updateManualNumericFacetRange, (state, action) => {
         const {facetId, ...manualRange} = action.payload;
         state[facetId] = {manualRange};
-      })
-      .addCase(clearManualNumericFacetRange, (state, action) => {
-        clearManualRange(state, action.payload.facetId);
       })
       .addCase(toggleExcludeNumericFacetValue, (state, action) => {
         clearManualRange(state, action.payload.facetId);
