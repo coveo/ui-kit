@@ -12,8 +12,6 @@ import {
 
 /**
  * The commerce engine configuration options.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
   context: ContextOptions;
@@ -57,7 +55,6 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
       currency: 'USD',
       view: {
         url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
-        referrer: document.referrer,
       },
     },
     cart: {

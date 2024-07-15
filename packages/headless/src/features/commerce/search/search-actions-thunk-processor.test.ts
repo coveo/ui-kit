@@ -48,7 +48,10 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       response,
       duration: 123,
       queryExecuted: 'foo',
-      requestExecuted: await buildCommerceAPIRequest(state),
+      requestExecuted: buildCommerceAPIRequest(
+        state,
+        config.extra.navigatorContext
+      ),
     };
     return processor.process(fetched);
   }

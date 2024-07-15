@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {
@@ -90,15 +91,11 @@ describe('headless search', () => {
       SearchActions,
       'promoteChildToParent'
     );
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
-    search.promoteChildToParent(childPermanentId, parentPermanentId);
+    search.promoteChildToParent(child);
 
-    expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
-    });
+    expect(promoteChildToParent).toHaveBeenCalledWith({child});
   });
 
   it('executeFirstSearch dispatches #executeSearch', () => {

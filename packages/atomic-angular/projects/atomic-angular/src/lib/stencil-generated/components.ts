@@ -139,6 +139,49 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-category-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['facet', 'field', 'isCollapsed', 'summary'],
+})
+export class AtomicCommerceCategoryFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceCategoryFacet extends Components.AtomicCommerceCategoryFacet {}
+
+
+@ProxyCmp({
+  inputs: ['facet', 'field', 'isCollapsed', 'summary']
+})
+@Component({
+  selector: 'atomic-commerce-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['facet', 'field', 'isCollapsed', 'summary'],
+})
+export class AtomicCommerceFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceFacet extends Components.AtomicCommerceFacet {}
+
+
+@ProxyCmp({
   inputs: ['collapseFacetsAfter']
 })
 @Component({
@@ -182,6 +225,32 @@ export declare interface AtomicCommerceLoadMoreProducts extends Components.Atomi
 
 
 @ProxyCmp({
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
+})
+@Component({
+  selector: 'atomic-commerce-pager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
+})
+export class AtomicCommercePager {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicCommercePager extends Components.AtomicCommercePager {
+
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
 })
 @Component({
@@ -205,6 +274,70 @@ export declare interface AtomicCommerceProductsPerPage extends Components.Atomic
 
   'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
 }
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-query-summary',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceQuerySummary {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceQuerySummary extends Components.AtomicCommerceQuerySummary {}
+
+
+@ProxyCmp({
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
+})
+@Component({
+  selector: 'atomic-commerce-refine-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton'],
+})
+export class AtomicCommerceRefineModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceRefineModal extends Components.AtomicCommerceRefineModal {}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-refine-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceRefineToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceRefineToggle extends Components.AtomicCommerceRefineToggle {}
 
 
 @ProxyCmp({
@@ -1252,14 +1385,14 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 
 @ProxyCmp({
-  inputs: ['fallback', 'field']
+  inputs: ['fallback', 'field', 'imageAltField']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fallback', 'field'],
+  inputs: ['fallback', 'field', 'imageAltField'],
 })
 export class AtomicResultImage {
   protected el: HTMLElement;

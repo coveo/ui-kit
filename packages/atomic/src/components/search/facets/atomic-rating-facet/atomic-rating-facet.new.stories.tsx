@@ -22,7 +22,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-rating-facet',
   args: {
-    field: 'snrating',
+    'attributes-field': 'snrating',
   },
   decorators: [facetDecorator],
 };

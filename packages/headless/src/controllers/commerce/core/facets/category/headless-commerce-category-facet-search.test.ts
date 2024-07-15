@@ -47,6 +47,7 @@ describe('CategoryFacetSearch', () => {
       isForFieldSuggestions: false,
       options: {
         facetId,
+        type: 'SEARCH',
       },
     };
 

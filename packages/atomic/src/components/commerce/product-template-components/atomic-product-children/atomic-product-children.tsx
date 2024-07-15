@@ -22,8 +22,7 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
 import {ProductContext} from '../product-template-decorators';
 
 export interface SelectChildProductEventArgs {
-  childPermanentId: string;
-  parentPermanentId: string;
+  child: ChildProduct;
 }
 
 /**
@@ -98,11 +97,10 @@ export class AtomicProductChildren
     });
   }
 
-  private onSelectChild(childPermanentId: string, parentPermanentId: string) {
-    this.activeChildId = childPermanentId;
+  private onSelectChild(child: ChildProduct) {
+    this.activeChildId = child.permanentid;
     this.selectChildProduct.emit({
-      childPermanentId,
-      parentPermanentId,
+      child,
     });
   }
 
@@ -129,22 +127,17 @@ export class AtomicProductChildren
     return (
       <button
         class={`product-child${child.permanentid === this.activeChildId ? this.activeChildClasses : ' '}`}
-        title={child.ec_name}
+        title={child.ec_name || undefined}
         onKeyPress={(event) =>
-          event.key === 'Enter' &&
-          this.onSelectChild(child.permanentid, this.product.permanentid)
+          event.key === 'Enter' && this.onSelectChild(child)
         }
-        onMouseEnter={() =>
-          this.onSelectChild(child.permanentid, this.product.permanentid)
-        }
-        onTouchStart={() =>
-          this.onSelectChild(child.permanentid, this.product.permanentid)
-        }
+        onMouseEnter={() => this.onSelectChild(child)}
+        onTouchStart={() => this.onSelectChild(child)}
       >
         <img
           class="aspect-square p-1"
           src={this.getImageUrl(child)}
-          alt={child.ec_name}
+          alt={child.ec_name || undefined}
           loading="lazy"
         />
       </button>

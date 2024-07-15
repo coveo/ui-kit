@@ -4,7 +4,7 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,

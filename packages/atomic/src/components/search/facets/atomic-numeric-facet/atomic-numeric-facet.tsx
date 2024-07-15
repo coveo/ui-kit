@@ -39,12 +39,12 @@ import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-p
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).

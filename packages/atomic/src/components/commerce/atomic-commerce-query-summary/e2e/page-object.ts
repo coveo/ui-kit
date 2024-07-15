@@ -5,15 +5,16 @@ export class QuerySummaryPageObject extends BasePageObject<'atomic-commerce-quer
   constructor(page: Page) {
     super(page, 'atomic-commerce-query-summary');
   }
-  querySummary({
-    indexOfFirstResult,
-    indexOfLastResults,
-    totalResults,
-  }: Record<string, number | undefined>) {
-    return this.page.getByText(
-      new RegExp(
-        `Results ${indexOfFirstResult ?? '[\\d,]?'}-${indexOfLastResults ?? '[\\d,]?'} of ${totalResults ?? '[\\d,]?'}`
-      )
-    );
+
+  get placeholder() {
+    return this.page.locator('[part="placeholder"]');
+  }
+
+  ariaLive(textRegex: RegExp) {
+    return this.page.getByRole('status').filter({hasText: textRegex});
+  }
+
+  text(summaryRegex: RegExp) {
+    return this.page.getByText(summaryRegex);
   }
 }

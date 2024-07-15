@@ -1,15 +1,15 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  registerRecentQueries,
-  clearRecentQueries,
-} from '../../recent-queries/recent-queries-actions';
-import {
   handleClearRecentQueries,
   handleExecuteSearchFulfilled,
   handleRegisterQueries,
 } from '../../recent-queries/recent-queries-slice';
 import {getRecentQueriesInitialState} from '../../recent-queries/recent-queries-state';
 import {executeSearch as commerceExecuteSearch} from '../search/search-actions';
+import {
+  clearRecentQueries,
+  registerRecentQueries,
+} from './recent-queries-actions';
 
 export const recentQueriesReducer = createReducer(
   getRecentQueriesInitialState(),
