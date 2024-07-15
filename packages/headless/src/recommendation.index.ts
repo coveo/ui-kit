@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module recommendation
+ */
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as HighlightUtils from './utils/highlight';
 

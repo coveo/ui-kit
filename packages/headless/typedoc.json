@@ -4,5 +4,13 @@
     "includeGroups": true,
     "includeFolders": true
   },
-  "categorizeByGroup": true
+  "categorizeByGroup": true,
+  "entryPoints": [
+    "./src/index.ts",
+    "./src/case-assist.index.ts",
+    "./src/commerce.index.ts",
+    "./src/insight.index.ts",
+    "./src/recommendation.index.ts",
+    "./src/ssr.index.ts"
+  ]
 }

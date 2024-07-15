@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module ssr
+ */
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 
 polyfillCryptoNode();

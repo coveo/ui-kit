@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module search
+ */
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import {buildMockSearchEngine} from './test/mock-engine-v2';
 import {buildMockRaw} from './test/mock-raw';

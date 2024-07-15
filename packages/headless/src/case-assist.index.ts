@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module case-assist
+ */
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 
 polyfillCryptoNode();
