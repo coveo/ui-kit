@@ -1,4 +1,3 @@
-// @ts-nocheck
 import done from '@salesforce/label/c.quantic_Done';
 import additionalNotes from '@salesforce/label/c.quantic_FeedbackAdditionalNotes';
 import additionalNotesExplanation from '@salesforce/label/c.quantic_FeedbackAdditionalNotesExplanation';
@@ -19,9 +18,12 @@ import answerYes from '@salesforce/label/c.quantic_Yes';
 import yourFeedbackHelps from '@salesforce/label/c.quantic_YourFeedbackHelps';
 import requiredFeedbackQuestion from '@salesforce/label/c.quantic_requiredFeedbackQuestion';
 import requiredFields from '@salesforce/label/c.quantic_requiredFields';
+// @ts-ignore
 import LightningModal from 'lightning/modal';
 import {api} from 'lwc';
+// @ts-ignore
 import feedbackFormTemplate from './quanticFeedbackModalQna.html';
+// @ts-ignore
 import successTemplate from './success.html';
 
 /** @typedef {"yes"|"unknown"|"no"} GeneratedAnswerFeedbackOption */
@@ -30,7 +32,7 @@ import successTemplate from './success.html';
  * The `QuanticFeedbackModalQna` component overlays a message modal on top of the current app window, the modal contains a form that allows the user to give feedback on a CRGA response.
  *
  * Under the hood, the component relies on a [`lightningModal`](https://developer.salesforce.com/docs/component-library/bundle/lightning-modal/documentation) component.
- * For an example of how to use the `QuanticFeedbackModal` component, see the [`quanticSmartSnippet`](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticSmartSnippet/quanticSmartSnippet.js) implementation.
+ * For an example of how to use the `QuanticFeedbackModalQna` component, see the [`quanticGeneratedAnswer`](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticGeneratedAnswer/quanticGeneratedAnswer.js) implementation.
  *
  * @category Search
  * @category Insight Panel
@@ -65,12 +67,6 @@ export default class QuanticFeedbackModalQna extends LightningModal {
    * @type {function}
    */
   @api handleSubmit;
-  /**
-   * @api
-   * If the feedback modal was opened on the thumbs up. (otherwise it was on a thumbs down).
-   * @type {boolean}
-   */
-  @api liked;
 
   /** @type {boolean} */
   isFeedbackSubmitted = false;
@@ -132,16 +128,18 @@ export default class QuanticFeedbackModalQna extends LightningModal {
    * @returns {void}
    */
   closeModal() {
+    // @ts-ignore
     this.close();
   }
 
-  get feedbackQuestionsRadios() {
+  findFeedbackQuestionsRadios() {
+    // @ts-ignore
     return this.template.querySelectorAll('lightning-radio-group');
   }
 
   get feedbackFormIsValid() {
     let valid = true;
-    const feedbackQuestions = this.feedbackQuestionsRadios;
+    const feedbackQuestions = this.findFeedbackQuestionsRadios();
     feedbackQuestions.forEach((question) => {
       if (question?.checkValidity() !== true) {
         valid = false;
@@ -151,11 +149,11 @@ export default class QuanticFeedbackModalQna extends LightningModal {
   }
 
   documentUrlChangeHandler(event) {
-    this.documentUrlValue = event?.target?.value;
+    this.documentUrlValue = event.target.value;
   }
 
   detailsChangeHandler(event) {
-    this.detailsValue = event?.target?.value;
+    this.detailsValue = event.target.value;
   }
 
   /**
@@ -164,7 +162,7 @@ export default class QuanticFeedbackModalQna extends LightningModal {
    */
   handleSubmitFeedback() {
     if (!this.feedbackFormIsValid) {
-      this.feedbackQuestionsRadios.forEach((question) => {
+      this.findFeedbackQuestionsRadios().forEach((question) => {
         question.reportValidity();
       });
       return;
@@ -176,7 +174,6 @@ export default class QuanticFeedbackModalQna extends LightningModal {
       readable: this.readableValue,
       documentUrl: this.documentUrlValue,
       details: this.detailsValue,
-      helpful: this.liked,
     });
     this.isFeedbackSubmitted = true;
   }

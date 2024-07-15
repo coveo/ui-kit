@@ -294,18 +294,21 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleLike(event) {
     event.stopPropagation();
-    if (!this.feedbackSubmitted && !this._liked) {
+    if (!this._liked) {
       this._liked = true;
       this._disliked = false;
       this.generatedAnswer.like?.();
-      // @ts-ignore
-      await FeedbackModalQna.open({
-        size: 'small',
-        liked: true,
-        label: this.labels.feedbackHelpUsImprove,
-        handleSubmit: this.submitFeedback.bind(this),
-      });
-      this.generatedAnswer.closeFeedbackModal();
+      if (!this.feedbackSubmitted) {
+        // @ts-ignore
+        await FeedbackModalQna.open({
+          size: 'small',
+          label: this.labels.feedbackHelpUsImprove,
+          handleSubmit: (feedbackPayload) => {
+            this.submitFeedback({...feedbackPayload, helpful: true});
+          },
+        });
+        this.generatedAnswer.closeFeedbackModal();
+      }
     }
   }
 
@@ -315,18 +318,21 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
-    if (!this.feedbackSubmitted && !this._disliked) {
+    if (!this._disliked) {
       this._disliked = true;
       this._liked = false;
       this.generatedAnswer.dislike?.();
-      // @ts-ignore
-      await FeedbackModalQna.open({
-        size: 'small',
-        liked: false,
-        label: this.labels.feedbackHelpUsImprove,
-        handleSubmit: this.submitFeedback.bind(this),
-      });
-      this.generatedAnswer.closeFeedbackModal();
+      if (!this.feedbackSubmitted) {
+        // @ts-ignore
+        await FeedbackModalQna.open({
+          size: 'small',
+          label: this.labels.feedbackHelpUsImprove,
+          handleSubmit: (feedbackPayload) => {
+            this.submitFeedback({...feedbackPayload, helpful: false});
+          },
+        });
+        this.generatedAnswer.closeFeedbackModal();
+      }
     }
   }
 
