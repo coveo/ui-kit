@@ -30,8 +30,7 @@ const selectors = {
   additionalDetailsTextarea: 'lightning-textarea[data-name="details"]',
   skipButton: 'lightning-button.skip',
   submitButton: 'lightning-button.submit-feedback',
-  requiredMessages: 'slds-form-element__help',
-  successMesage: '.feedback-modal-body__success-message',
+  successMessage: '.feedback-modal-body__success-message',
 };
 
 const defaultOptions = {
@@ -78,7 +77,7 @@ describe('c-quantic-feedback-modal-qna', () => {
     jest.clearAllMocks();
   });
 
-  it('loads correctly', async () => {
+  it('should properly render', async () => {
     const element = createTestComponent();
     await flushPromises();
 
@@ -148,7 +147,7 @@ describe('c-quantic-feedback-modal-qna', () => {
         await flushPromises();
 
         const successMesage = element.shadowRoot.querySelector(
-          selectors.successMesage
+          selectors.successMessage
         );
         expect(successMesage).toBeNull();
         expect(checkValidityMock).toHaveBeenCalledTimes(4);
@@ -188,7 +187,7 @@ describe('c-quantic-feedback-modal-qna', () => {
         await flushPromises();
 
         const successMesage = element.shadowRoot.querySelector(
-          selectors.successMesage
+          selectors.successMessage
         );
         expect(successMesage).not.toBeNull();
 
@@ -250,7 +249,7 @@ describe('c-quantic-feedback-modal-qna', () => {
         await flushPromises();
 
         const successMesage = element.shadowRoot.querySelector(
-          selectors.successMesage
+          selectors.successMessage
         );
         expect(successMesage).not.toBeNull();
 
@@ -263,6 +262,7 @@ describe('c-quantic-feedback-modal-qna', () => {
       });
     });
   });
+
   describe('when clicking the skip button', () => {
     it('should not submit the feedback and not execute the handleSubmit function', async () => {
       const element = createTestComponent();
@@ -290,7 +290,7 @@ describe('c-quantic-feedback-modal-qna', () => {
       await flushPromises();
 
       const successMesage = element.shadowRoot.querySelector(
-        selectors.successMesage
+        selectors.successMessage
       );
       expect(successMesage).toBeNull();
       expect(functionsMocks.handleSubmit).not.toHaveBeenCalled();

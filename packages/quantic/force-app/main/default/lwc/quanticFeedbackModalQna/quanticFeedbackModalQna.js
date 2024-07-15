@@ -63,7 +63,6 @@ export default class QuanticFeedbackModalQna extends LightningModal {
    * @type {function}
    */
   @api handleSubmit;
-
   /**
    * @api
    * If the feedback modal was opened on the thumbs up. (otherwise it was on a thumbs down).
@@ -180,9 +179,6 @@ export default class QuanticFeedbackModalQna extends LightningModal {
     this.isFeedbackSubmitted = true;
   }
 
-  /**
-   * Returns the right HTML template.
-   */
   render() {
     if (this.isFeedbackSubmitted) {
       return successTemplate;
