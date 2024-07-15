@@ -1,7 +1,7 @@
-import {SearchBox} from '@coveo/headless';
-
 export type SearchBoxSuggestionsEvent =
-  import('./components/common/suggestions/suggestions-common').SearchBoxSuggestionsEvent<SearchBox>;
+  import('./components/common/suggestions/suggestions-common').SearchBoxSuggestionsEvent<
+    import('@coveo/headless').SearchBox
+  >;
 
 export {initializeBindings} from './utils/initialization-utils';
 
