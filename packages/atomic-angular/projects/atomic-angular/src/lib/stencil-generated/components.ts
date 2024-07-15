@@ -139,6 +139,7 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
+  inputs: ['facet', 'field', 'isCollapsed', 'summary']
 })
 @Component({
   selector: 'atomic-commerce-category-facet',
