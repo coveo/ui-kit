@@ -1030,6 +1030,13 @@
     <shortDescription>Feedback question required</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_requiredFields</fullName>
+    <value>Required fields</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Required fields explanation</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_Skip</fullName>
     <value>Skip</value>
     <language>en_US</language>

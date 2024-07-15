@@ -549,6 +549,10 @@
     <name>quantic_requiredFeedbackQuestion</name>
   </customLabels>
   <customLabels>
+    <label>Champs requis</label>
+    <name>quantic_requiredFields</name>
+  </customLabels>
+  <customLabels>
     <label>Ignorer</label>
     <name>quantic_Skip</name>
   </customLabels>

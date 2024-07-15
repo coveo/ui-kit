@@ -18,6 +18,7 @@ import thankYouForYourFeedback from '@salesforce/label/c.quantic_ThankYouForYour
 import answerYes from '@salesforce/label/c.quantic_Yes';
 import yourFeedbackHelps from '@salesforce/label/c.quantic_YourFeedbackHelps';
 import requiredFeedbackQuestion from '@salesforce/label/c.quantic_requiredFeedbackQuestion';
+import requiredFields from '@salesforce/label/c.quantic_requiredFields';
 import LightningModal from 'lightning/modal';
 import {api} from 'lwc';
 import feedbackFormTemplate from './quanticFeedbackModalQna.html';
@@ -41,6 +42,7 @@ export default class QuanticFeedbackModalQna extends LightningModal {
     sendFeedback,
     helpUsImprove,
     requiredFeedbackQuestion,
+    requiredFields,
     thankYouForYourFeedback,
     answerEvaluation,
     questionTopic,
