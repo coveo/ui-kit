@@ -63,6 +63,7 @@ export const WithProductList: Story = {
         </atomic-layout-section>
         <atomic-layout-section section="main">
           <atomic-layout-section section="status">
+            <atomic-commerce-breadbox></atomic-commerce-breadbox>
             <atomic-commerce-query-summary></atomic-commerce-query-summary>
             <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
           </atomic-layout-section>

@@ -13,4 +13,9 @@ export class CommerceInterfacePageObject extends BasePageObject<'atomic-commerce
   interface() {
     return this.page.locator('atomic-commerce-interface');
   }
+
+  getBreadcrumbButtons(value?: string | RegExp) {
+    const baseLocator = this.page.locator('[part="breadcrumb-button"]:visible');
+    return value ? baseLocator.filter({hasText: value}) : baseLocator;
+  }
 }

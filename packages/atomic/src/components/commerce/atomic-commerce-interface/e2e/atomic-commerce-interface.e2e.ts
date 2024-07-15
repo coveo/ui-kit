@@ -136,7 +136,9 @@ test.describe('when a query is performed automatically', () => {
 
         await facetValueLabel.click();
 
-        await page.waitForTimeout(1000);
+        await commerceInterface
+          .getBreadcrumbButtons('Nike')
+          .waitFor({state: 'visible'});
 
         const currentUrl = page.url();
 
