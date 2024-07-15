@@ -294,7 +294,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleLike(event) {
     event.stopPropagation();
-    if (!this._liked) {
+    if (!this.feedbackSubmitted && !this._liked) {
       this._liked = true;
       this._disliked = false;
       this.generatedAnswer.like?.();
@@ -315,7 +315,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
-    if (!this._disliked) {
+    if (!this.feedbackSubmitted && !this._disliked) {
       this._disliked = true;
       this._liked = false;
       this.generatedAnswer.dislike?.();
