@@ -63,7 +63,8 @@ export function buildFieldSuggestionsGenerator(
 
   const createFieldSuggestionsControllers = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder!,
-    (facetOrder) =>
+    (state: CommerceEngineState) => state.commerceFacetSet,
+    (facetOrder, _) =>
       facetOrder.map(({type, facetId}) => {
         switch (type) {
           case 'hierarchical':

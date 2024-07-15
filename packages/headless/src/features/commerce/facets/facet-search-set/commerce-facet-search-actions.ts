@@ -60,7 +60,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
             navigatorContext
           );
 
-    const response = await apiClient.facetSearch(await req);
+    const response = await apiClient.facetSearch(req);
 
     return {facetId, response};
   };

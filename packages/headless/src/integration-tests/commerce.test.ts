@@ -4,6 +4,7 @@ import {
   CommerceEngineConfiguration,
 } from '../app/commerce-engine/commerce-engine';
 import {getSampleCommerceEngineConfiguration} from '../app/commerce-engine/commerce-engine-configuration';
+import {buildFieldSuggestionsGenerator} from '../controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
 import {buildProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
 import {buildRecommendations} from '../controllers/commerce/recommendations/headless-recommendations';
@@ -16,15 +17,15 @@ describe.skip('commerce', () => {
   let engine: CommerceEngine;
 
   beforeAll(async () => {
-    Object.defineProperty(global, 'document', {
-      value: {referrer: 'referrer'},
-      configurable: true,
-    });
-
     configuration = getSampleCommerceEngineConfiguration();
     engine = buildCommerceEngine({
-      configuration,
-      loggerOptions: {level: 'silent'},
+      configuration: {
+        ...configuration,
+        analytics: {
+          ...configuration.analytics,
+          enabled: false,
+        },
+      },
     });
   });
 
@@ -79,7 +80,7 @@ describe.skip('commerce', () => {
       const controllers = facetGenerator.facets;
       const facetController = controllers[0];
 
-      await waitForNextStateChange(productListing, {
+      await waitForNextStateChange(facetController, {
         action: () => {
           switch (facetController.type) {
             case 'numericalRange':
@@ -141,5 +142,31 @@ describe.skip('commerce', () => {
     });
 
     expect(recommendations.state.products).not.toEqual([]);
+  });
+
+  it('provides field suggestions', async () => {
+    const box = buildSearchBox(engine);
+
+    const generator = buildFieldSuggestionsGenerator(engine);
+
+    await waitForNextStateChange(box, {
+      action: () => box.updateText('ca'),
+      expectedSubscriberCalls: 3,
+    });
+
+    expect(generator.fieldSuggestions).toHaveLength(3);
+
+    for (const controller of generator.fieldSuggestions) {
+      await waitForNextStateChange(engine, {
+        action: () => controller.updateText('can'),
+        expectedSubscriberCalls: 3,
+      });
+    }
+
+    const controller = generator.fieldSuggestions.find(
+      (controller) => controller.state.facetId === 'ec_category'
+    )!;
+
+    expect(controller.state.values).not.toEqual([]);
   });
 });
