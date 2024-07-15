@@ -220,7 +220,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasInputRange() {
-    return !!this.facetState.manualRange;
+    return !!this.facetState.manualRange || this.summaryState.isLoading;
   }
 
   private get shouldRenderValues() {
