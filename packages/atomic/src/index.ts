@@ -1,3 +1,8 @@
+import {SearchBox} from '@coveo/headless';
+
+export type SearchBoxSuggestionsEvent =
+  import('./components/common/suggestions/suggestions-common').SearchBoxSuggestionsEvent<SearchBox>;
+
 export {initializeBindings} from './utils/initialization-utils';
 
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
@@ -18,8 +23,8 @@ export {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-  SearchBoxSuggestionsEvent,
 } from './components/common/suggestions/suggestions-common';
+
 export {RedirectionPayload} from './components/search/atomic-search-box/redirection-payload';
 
 export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';
