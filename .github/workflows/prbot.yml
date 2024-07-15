@@ -74,12 +74,59 @@ jobs:
     environment: PR Artifacts
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex:
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+          ]
+        shardTotal: [24]
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - run: npm run build
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic
+        with:
+          shardIndex: ${{ matrix.shardIndex }}
+          shardTotal: ${{ matrix.shardTotal }}
+  merge-playwright-reports:
+    name: 'Merge Playwright reports'
+    environment: PR Artifacts
+    if: ${{ !cancelled() }}
+    needs:
+      - 'playwright-atomic'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - run: cat packages/atomic/dist/atomic/atomic.esm.js
+      - uses: ./.github/actions/merge-playwright-reports
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
@@ -228,14 +275,15 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
-  e2e-atomic-hosted-page-test:
+  playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-hosted-page
+      - run: npm run build
+      - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
     needs: build
@@ -304,6 +352,7 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
       - 'e2e-quantic'
@@ -314,7 +363,6 @@ jobs:
       - 'e2e-atomic-angular-test'
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
-      - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
       - 'e2e-headless-ssr-test-app-dev'
       - 'e2e-headless-ssr-test-app-prod'
@@ -338,6 +386,7 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'
       - 'e2e-atomic-react-test'
@@ -346,7 +395,6 @@ jobs:
       - 'e2e-atomic-angular-test'
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
-      - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
       - 'e2e-headless-ssr-test-app-dev'
       - 'e2e-headless-ssr-test-app-prod'
