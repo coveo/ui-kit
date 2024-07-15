@@ -11,6 +11,7 @@ runs:
         merge-multiple: true
     - name: Merge into JSON Report
       run: npx playwright merge-reports html ./packages/atomic/all-blob-reports
+      working-directory: packages/atomic
       shell: bash
 
     - name: Upload HTML report
