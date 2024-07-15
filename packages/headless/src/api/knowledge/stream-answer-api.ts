@@ -2,6 +2,7 @@ import {
   EventSourceMessage,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
+import {createSelector} from '@reduxjs/toolkit';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors';
 import {
   GeneratedAnswerStyle,
@@ -209,6 +210,12 @@ export const answerApi = answerSlice.injectEndpoints({
     }),
   }),
 });
+
+export const selectAnswerTriggerParams = createSelector(
+  (state) => selectQuery(state)?.q,
+  (state) => state.search.requestId,
+  (q, requestId) => ({q, requestId})
+);
 
 const constructAnswerQueryParams = (state: StateNeededByAnswerAPI) => {
   const q = selectQuery(state)?.q;
