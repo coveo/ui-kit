@@ -71,7 +71,6 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-csp
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
-    environment: PR Artifacts
     needs: build
     runs-on: ubuntu-latest
     strategy:
