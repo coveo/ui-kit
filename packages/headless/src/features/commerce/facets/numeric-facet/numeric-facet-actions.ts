@@ -41,6 +41,10 @@ export const toggleExcludeNumericFacetValue = createAction(
 export type UpdateNumericFacetValuesPayload =
   UpdateNumericFacetValuesActionCreatorPayload;
 
+export type UpdateManualNumericFacetRangePayload = {
+  facetId: string;
+} & NumericRangeRequest;
+
 export const updateNumericFacetValues = createAction(
   'commerce/facets/numericFacet/updateValues',
   (payload: UpdateNumericFacetValuesPayload) => {
@@ -61,7 +65,7 @@ export const updateNumericFacetValues = createAction(
 
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',
-  (payload: NumericRangeRequest) => {
+  (payload: UpdateManualNumericFacetRangePayload) => {
     try {
       validateManualNumericRanges({currentValues: [payload]});
       return {payload, error: null};
@@ -69,4 +73,10 @@ export const updateManualNumericFacetRange = createAction(
       return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
+);
+
+export const clearManualNumericFacetRange = createAction(
+  'commerce/facets/numericFacet/clearManualRange',
+  (payload: {facetId: string}) =>
+    validatePayloadAndThrow(payload, {facetId: requiredNonEmptyString})
 );

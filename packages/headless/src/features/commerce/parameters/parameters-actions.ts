@@ -22,6 +22,10 @@ export interface Parameters {
    * A record of the numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
    */
   nf?: Record<string, NumericRangeRequest[]>;
+  /**
+   * A record of manual numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
+   */
+  mnf?: Record<string, NumericRangeRequest[]>;
 
   /**
    * The sort expression to order returned results by.

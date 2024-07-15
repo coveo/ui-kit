@@ -46,20 +46,6 @@ export class FacetNumberInput {
       start: this.start,
       end: this.end,
     });
-    this.facet.setManualRange({
-      start: this.start!,
-      end: this.end!,
-      endInclusive: true,
-      state: 'selected',
-    });
-    /*this.facet.setRanges([
-      {
-        start: this.start!,
-        end: this.end!,
-        endInclusive: true,
-        state: 'selected',
-      },
-    ]);*/
   }
 
   private get absoluteMinimum(): number {
