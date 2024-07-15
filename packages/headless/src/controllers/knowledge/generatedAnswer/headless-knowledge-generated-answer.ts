@@ -2,6 +2,8 @@ import {
   answerApi,
   fetchAnswer,
   selectAnswer,
+  selectAnswerTriggerParams,
+  StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
@@ -34,6 +36,25 @@ interface KnowledgeGeneratedAnswerProps extends GeneratedAnswerProps {}
 export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
 
+const subscribeToSearchRequest = (
+  engine: SearchEngine<StateNeededByAnswerAPI>
+) => {
+  let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
+  const strictListener = () => {
+    const state = engine.state;
+    const triggerParams = selectAnswerTriggerParams(state);
+    if (triggerParams.requestId === undefined) {
+      return;
+    }
+    if (JSON.stringify(triggerParams) === JSON.stringify(lastTriggerParams)) {
+      return;
+    }
+    lastTriggerParams = triggerParams;
+    engine.dispatch(fetchAnswer(state));
+  };
+  engine.subscribe(strictListener);
+};
+
 /**
  * Creates a `GeneratedAnswer` controller instance using the Answer API stream pattern.
  *
@@ -58,6 +79,8 @@ export function buildKnowledgeGeneratedAnswer(
   const getState = () => engine.state;
 
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
+
+  subscribeToSearchRequest(engine as SearchEngine<StateNeededByAnswerAPI>);
 
   return {
     ...controller,
