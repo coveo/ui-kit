@@ -9,27 +9,27 @@ import {
 } from '../../features/generated-answer/generated-response-format';
 import {selectPipeline} from '../../features/pipeline/select-pipeline';
 import {selectQuery} from '../../features/query/query-selectors';
-import {QueryState} from '../../features/query/query-state';
 import {selectSearchHub} from '../../features/search-hub/search-hub-selectors';
 import {
   ConfigurationSection,
   DebugSection,
   GeneratedAnswerSection,
+  QuerySection,
   SearchSection,
 } from '../../state/state-sections';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload';
 import {SearchRequest} from '../search/search/search-request';
 import {answerSlice} from './answer-slice';
 
-type StateNeededByAnswerAPI = ConfigurationSection &
-  GeneratedAnswerSection &
+export type StateNeededByAnswerAPI = {
+  searchHub: string;
+  pipeline: string;
+  answer: ReturnType<typeof answerApi.reducer>;
+} & ConfigurationSection &
+  QuerySection &
   SearchSection &
-  DebugSection & {
-    answer: ReturnType<typeof answerApi.reducer>;
-    query?: QueryState;
-    searchHub?: string;
-    pipeline?: string;
-  };
+  DebugSection &
+  GeneratedAnswerSection;
 
 interface GeneratedAnswerStream {
   answerStyle?: GeneratedAnswerStyle;
