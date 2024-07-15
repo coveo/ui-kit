@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../engine';
+import {CoreEngine, CoreEngineNext} from '../../engine';
 import {
   ControllersMap,
   ControllersPropsMap,
@@ -13,7 +13,7 @@ export interface BuildOptions<TEngineOptions> {
 }
 
 export interface Build<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TEngineOptions,
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
