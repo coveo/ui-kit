@@ -1,4 +1,10 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
+import {
+  ArrayValue,
+  RecordValue,
+  NumberValue,
+  StringValue,
+  BooleanValue,
+} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -65,12 +71,15 @@ export const updateNumericFacetValues = createAction(
 
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',
-  (payload: UpdateManualNumericFacetRangePayload) => {
-    try {
-      validateManualNumericRanges({currentValues: [payload]});
-      return {payload, error: null};
-    } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error as Error)};
-    }
-  }
+  (payload: UpdateManualNumericFacetRangePayload) =>
+    validatePayloadAndThrow(payload, {
+      facetId: requiredNonEmptyString,
+      start: new NumberValue({required: true, min: 0}),
+      end: new NumberValue({required: true, min: 0}),
+      endInclusive: new BooleanValue({required: true}),
+      state: new StringValue<'idle' | 'selected' | 'excluded'>({
+        required: true,
+        constrainTo: ['idle', 'selected', 'excluded'],
+      }),
+    })
 );

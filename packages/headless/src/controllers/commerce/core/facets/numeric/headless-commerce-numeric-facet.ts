@@ -8,7 +8,7 @@ import {
   updateManualNumericFacetRange,
   updateNumericFacetValues,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
-import {NumericFacetSection} from '../../../../../state/state-sections';
+import {ManualRangeSection} from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
 import {
   CoreCommerceFacet,
@@ -153,7 +153,7 @@ export function buildCommerceNumericFacet(
 
 function loadCommerceNumericFacetReducers(
   engine: CommerceEngine
-): engine is CommerceEngine<NumericFacetSection> {
+): engine is CommerceEngine<ManualRangeSection> {
   engine.addReducers({manualNumericFacetSet});
   return true;
 }

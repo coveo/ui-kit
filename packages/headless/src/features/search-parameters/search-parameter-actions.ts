@@ -58,7 +58,7 @@ export interface SearchParameters {
    */
   nf?: Record<string, NumericRangeRequest[]>;
   /**
-   * A record of the manual numeric facets, where the key is the facet id, and value is the selected numeric range.
+   * A record of the manual numeric facets, where the key is the facet id, and the value is the selected numeric range.
    */
   mnf?: Record<string, NumericRangeRequest>;
 

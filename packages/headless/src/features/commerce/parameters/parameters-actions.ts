@@ -23,7 +23,7 @@ export interface Parameters {
    */
   nf?: Record<string, NumericRangeRequest[]>;
   /**
-   * A record of manual numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
+   * A record of manual numeric facets, where the key is the facet id, and the value is an array containing the numeric ranges to request.
    */
   mnf?: Record<string, NumericRangeRequest[]>;
 

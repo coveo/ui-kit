@@ -18,6 +18,7 @@ import {
   VersionSection,
 } from '../../../state/state-sections';
 import {getProductsFromCartState} from '../context/cart/cart-state';
+import {AnyFacetRequest} from '../facets/facet-set/interfaces/request';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
@@ -117,7 +118,7 @@ function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
 
 function getManualNumericFacets(
   state: ListingAndSearchStateNeededByQueryCommerceAPI
-) {
+): AnyFacetRequest[] {
   if (!state.manualNumericFacetSet) {
     return [];
   }

@@ -1,7 +1,6 @@
 import {ChildProduct} from '../../../api/commerce/common/product';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
@@ -54,7 +53,6 @@ describe('headless search', () => {
       configuration,
       commerceSearch,
       commerceQuery,
-      manualNumericFacetSet,
     });
   });
 
