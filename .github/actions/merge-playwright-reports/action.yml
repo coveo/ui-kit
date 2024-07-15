@@ -6,11 +6,11 @@ runs:
     - name: Download blob reports from GitHub Actions Artifacts
       uses: actions/download-artifact@v4
       with:
-        path: packages/atomic/playwright-report/
-        pattern: atomic-playwright-report-blob-*
+        path: all-blob-reports
+        pattern: blob-report-*
         merge-multiple: true
     - name: Merge into JSON Report
-      run: npx playwright merge-reports --reporter json ./packages/atomic/playwright-report
+      run: npx playwright merge-reports --reporter json ./all-blob-reports
       shell: bash
 
     - name: Upload HTML report
