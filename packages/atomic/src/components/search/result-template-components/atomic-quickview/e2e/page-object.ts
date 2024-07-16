@@ -5,6 +5,7 @@ export class AtomicQuickviewLocators extends BasePageObject<'atomic-quickview'> 
   constructor(page: Page) {
     super(page, 'atomic-quickview');
   }
+  
   get resultButton() {
     return this.page.getByRole('button', {name: 'Quick View'});
   }
