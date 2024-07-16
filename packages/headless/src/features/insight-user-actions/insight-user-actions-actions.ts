@@ -5,7 +5,6 @@ import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-cl
 import {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response';
 import {
   ConfigurationSection,
-  InsightConfigurationSection,
   InsightUserActionSection,
 } from '../../state/state-sections';
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
@@ -43,7 +42,6 @@ export interface FetchUserActionsThunkReturn {
 }
 
 export type StateNeededByFetchUserActions = ConfigurationSection &
-  InsightConfigurationSection &
   InsightUserActionSection;
 
 export const fetchUserActions = createAsyncThunk<

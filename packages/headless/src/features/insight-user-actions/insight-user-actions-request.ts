@@ -1,13 +1,5 @@
 import {InsightUserActionsRequest} from '../../api/service/insight/user-actions/user-actions-request';
-import {
-  ConfigurationSection,
-  InsightConfigurationSection,
-  InsightUserActionSection,
-} from '../../state/state-sections';
-
-export type StateNeededByFetchUserActions = ConfigurationSection &
-  InsightConfigurationSection &
-  InsightUserActionSection;
+import {StateNeededByFetchUserActions} from './insight-user-actions-actions';
 
 export const buildFetchUserActionsRequest = async (
   state: StateNeededByFetchUserActions,

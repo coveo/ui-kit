@@ -8,6 +8,7 @@ import {getInsightUserActionsInitialState} from './insight-user-actions-state';
 describe('insight user actions slice', () => {
   const requestId = 'some-request-id';
   const exampleUserId = 'John Doe';
+  const exampleTicketCreationDate = '2024-07-16T20:05:13.741Z';
 
   const errorResponse = {
     message: 'something bad happened',
@@ -104,25 +105,23 @@ describe('insight user actions slice', () => {
   });
 
   describe('registerUserActions', () => {
-    const testCreationDate = '2023-01-04T20:05:13.741Z';
-
     it('should set the #ticketCreationDate', () => {
       const modifiedState = insightUserActionsReducer(
         getInsightUserActionsInitialState(),
         registerUserActions({
-          ticketCreationDate: testCreationDate,
+          ticketCreationDate: exampleTicketCreationDate,
           userId: exampleUserId,
         })
       );
 
-      expect(modifiedState.ticketCreationDate).toBe(testCreationDate);
+      expect(modifiedState.ticketCreationDate).toBe(exampleTicketCreationDate);
     });
 
     it('should set the #userId', () => {
       const modifiedState = insightUserActionsReducer(
         getInsightUserActionsInitialState(),
         registerUserActions({
-          ticketCreationDate: testCreationDate,
+          ticketCreationDate: exampleTicketCreationDate,
           userId: exampleUserId,
         })
       );
@@ -135,7 +134,7 @@ describe('insight user actions slice', () => {
       const modifiedState = insightUserActionsReducer(
         getInsightUserActionsInitialState(),
         registerUserActions({
-          ticketCreationDate: testCreationDate,
+          ticketCreationDate: exampleTicketCreationDate,
           userId: exampleUserId,
           excludedCustomActions: testExcludedCustomActions,
         })
