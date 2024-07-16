@@ -23,7 +23,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {MapProp} from '../../../../utils/props-utils';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
