@@ -14,8 +14,13 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
+import {Choices} from '../../common/items-per-page/choices';
+import {Label} from '../../common/items-per-page/label';
+import {
+  validateChoicesDisplayed,
+  validateInitialChoice,
+} from '../../common/items-per-page/validate';
 import {PagerGuard} from '../../common/pager/pager-guard';
-import {RadioButton} from '../../common/radio-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -61,74 +66,13 @@ export class AtomicResultsPerPage implements InitializableComponent {
   private scrollToTopEvent!: EventEmitter;
 
   public initialize() {
-    this.choices = this.validateChoicesDisplayed();
-    this.validateInitialChoice();
+    this.choices = validateChoicesDisplayed(this);
+    validateInitialChoice(this, this.choices);
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialChoice},
     });
-  }
-
-  private validateChoicesDisplayed() {
-    return this.choicesDisplayed.split(',').map((choice) => {
-      const parsedChoice = parseInt(choice);
-      if (isNaN(parsedChoice)) {
-        const errorMsg = `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`;
-        this.bindings.engine.logger.error(errorMsg, this);
-        throw new Error(errorMsg);
-      }
-
-      return parsedChoice;
-    });
-  }
-
-  private validateInitialChoice() {
-    if (!this.initialChoice) {
-      this.initialChoice = this.choices[0];
-      return;
-    }
-    if (!this.choices.includes(this.initialChoice)) {
-      const errorMsg = `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`;
-      this.bindings.engine.logger.error(errorMsg, this);
-      throw new Error(errorMsg);
-    }
-  }
-
-  private buildChoice(choice: number) {
-    const isSelected = this.resultPerPage.isSetTo(choice);
-    const parts = ['button'];
-    if (isSelected) {
-      parts.push('active-button');
-    }
-    const text = choice.toLocaleString(this.bindings.i18n.language);
-
-    return (
-      <RadioButton
-        key={choice}
-        groupName={this.radioGroupName}
-        style="outline-neutral"
-        checked={isSelected}
-        ariaLabel={text}
-        onChecked={() => {
-          this.focusOnProperResultDependingOnChoice(choice);
-          this.resultPerPage.set(choice);
-        }}
-        class="btn-page focus-visible:bg-neutral-light"
-        part={parts.join(' ')}
-        text={text}
-      ></RadioButton>
-    );
-  }
-
-  private focusOnProperResultDependingOnChoice(choice: number) {
-    if (choice < this.resultPerPageState.numberOfResults) {
-      this.bindings.store.state.resultList
-        ?.focusOnFirstResultAfterNextSearch()
-        .then(() => this.scrollToTopEvent.emit());
-    } else if (choice > this.resultPerPageState.numberOfResults) {
-      this.bindings.store.state.resultList?.focusOnNextNewResult();
-    }
   }
 
   private get label() {
@@ -143,22 +87,23 @@ export class AtomicResultsPerPage implements InitializableComponent {
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
         <div class="flex items-center">
-          <span
-            part="label"
-            class="self-start text-on-background text-lg mr-3 leading-10"
-            aria-hidden="true"
-          >
-            {this.label}
-          </span>
+          <Label>{this.label}</Label>
           <FieldsetGroup label={this.label}>
-            <div
-              part="buttons"
-              role="radiogroup"
-              aria-label={this.label}
-              class="flex flex-wrap gap-2"
-            >
-              {this.choices.map((choice) => this.buildChoice(choice))}
-            </div>
+            <Choices
+              label={this.label}
+              groupName={this.radioGroupName}
+              pageSize={this.resultPerPageState.numberOfResults}
+              choices={this.choices}
+              lang={this.bindings.i18n.language}
+              scrollToTopEvent={this.scrollToTopEvent.emit}
+              setItemSize={this.resultPerPage.set}
+              focusOnFirstResultAfterNextSearch={() =>
+                this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch()
+              }
+              focusOnNextNewResult={() =>
+                this.bindings.store.state.resultList?.focusOnNextNewResult()
+              }
+            ></Choices>
           </FieldsetGroup>
         </div>
       </PagerGuard>
