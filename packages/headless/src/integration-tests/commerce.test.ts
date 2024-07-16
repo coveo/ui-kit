@@ -4,11 +4,15 @@ import {
   CommerceEngineConfiguration,
 } from '../app/commerce-engine/commerce-engine';
 import {getSampleCommerceEngineConfiguration} from '../app/commerce-engine/commerce-engine-configuration';
+import {CategoryFieldSuggestions} from '../controllers/commerce/field-suggestions/headless-category-field-suggestions';
 import {buildFieldSuggestionsGenerator} from '../controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
 import {buildProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
 import {buildRecommendations} from '../controllers/commerce/recommendations/headless-recommendations';
-import {buildSearchBox} from '../controllers/commerce/search-box/headless-search-box';
+import {
+  buildSearchBox,
+  SearchBox,
+} from '../controllers/commerce/search-box/headless-search-box';
 import {buildSearch} from '../controllers/commerce/search/headless-search';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 
@@ -122,10 +126,7 @@ describe.skip('commerce', () => {
 
   it('provides suggestions', async () => {
     const box = buildSearchBox(engine);
-    await waitForNextStateChange(box, {
-      action: () => box.updateText('l'),
-      expectedSubscriberCalls: 3,
-    });
+    await search(box, 'l');
 
     expect(box.state.suggestions).not.toEqual([]);
   });
@@ -146,13 +147,9 @@ describe.skip('commerce', () => {
 
   it('provides field suggestions', async () => {
     const box = buildSearchBox(engine);
-
     const generator = buildFieldSuggestionsGenerator(engine);
 
-    await waitForNextStateChange(box, {
-      action: () => box.updateText('ca'),
-      expectedSubscriberCalls: 3,
-    });
+    await search(box, 'can');
 
     expect(generator.fieldSuggestions).toHaveLength(3);
 
@@ -163,10 +160,35 @@ describe.skip('commerce', () => {
       });
     }
 
-    const controller = generator.fieldSuggestions.find(
+    let controller = generator.fieldSuggestions.find(
       (controller) => controller.state.facetId === 'ec_category'
     )!;
 
     expect(controller.state.values).not.toEqual([]);
+
+    await search(box, 'acc');
+
+    for (const controller of generator.fieldSuggestions) {
+      await waitForNextStateChange(engine, {
+        action: () => controller.updateText('acc'),
+        expectedSubscriberCalls: 3,
+      });
+    }
+
+    controller = generator.fieldSuggestions.find(
+      (controller) => controller.state.facetId === 'ec_category'
+    )! as CategoryFieldSuggestions;
+
+    expect(controller.state.values).not.toEqual([]);
+    for (const value of controller.state.values) {
+      expect(value.displayValue).toContain('Acc');
+    }
   });
+
+  async function search(box: SearchBox, query: string) {
+    await waitForNextStateChange(box, {
+      action: () => box.updateText(query),
+      expectedSubscriberCalls: 3,
+    });
+  }
 });

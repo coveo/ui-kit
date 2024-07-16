@@ -4,9 +4,12 @@ import {
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -64,7 +67,9 @@ export function buildFieldSuggestionsGenerator(
   const createFieldSuggestionsControllers = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder!,
     (state: CommerceEngineState) => state.commerceFacetSet,
-    (facetOrder, _) =>
+    (state: CommerceEngineState) => state.facetSearchSet,
+    (state: CommerceEngineState) => state.categoryFacetSearchSet,
+    (facetOrder, _commerceFacetSet, _facetSearchSet, _categoryFacetSearchSet) =>
       facetOrder.map(({type, facetId}) => {
         switch (type) {
           case 'hierarchical':
@@ -97,6 +102,9 @@ function loadFieldSuggestionsGeneratorReducers(
 ): engine is CommerceEngine {
   engine.addReducers({
     fieldSuggestionsOrder,
+    commerceFacetSet,
+    facetSearchSet,
+    categoryFacetSearchSet,
   });
   return true;
 }
