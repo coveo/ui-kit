@@ -1,24 +1,8 @@
-export enum UserActionType {
-  SEARCH = 'SEARCH',
-  CLICK = 'CLICK',
-  VIEW = 'VIEW',
-  CUSTOM = 'CUSTOM',
-  TICKET_CREATE = 'TICKET_CREATE',
-}
+import {UserActionType} from '../../../../features/insight-user-actions/insight-user-actions-state';
 
 export interface InsightUserActionsResponse {
   value: Array<UserAction>;
 }
-
-// interface UserActionTimeline {
-//   sessions: UserSession[];
-// }
-
-// interface UserSession {
-//   start: Date;
-//   end: Date;
-//   actions: UserAction[];
-// }
 
 interface UserAction {
   name: UserActionType;
