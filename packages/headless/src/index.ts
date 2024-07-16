@@ -284,6 +284,12 @@ export type {
 export {buildTab} from './controllers/tab/headless-tab';
 
 export type {
+  TabManagerState,
+  TabManager,
+} from './controllers/tab-manager/headless-tab-manager';
+export {buildTabManager} from './controllers/tab-manager/headless-tab-manager';
+
+export type {
   FacetManagerPayload,
   FacetManagerState,
   FacetManager,
