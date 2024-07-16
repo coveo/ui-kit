@@ -5,3 +5,16 @@
 .feedback-modal-qna__radio-group {
     min-width: 11.7rem;
 }
+
+.feedback-modal-qna__body {
+    container-type: inline-size;
+}
+
+@container (width < 40rem) {
+    .feedback-modal-qna__question {
+        flex-direction: column;
+    }
+    .feedback-modal-qna__radio-group {
+        margin-top: 0.5rem;
+    }
+}

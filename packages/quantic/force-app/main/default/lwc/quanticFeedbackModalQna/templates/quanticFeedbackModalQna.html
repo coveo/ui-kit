@@ -3,7 +3,7 @@
     label={labels.helpUsImprove}
   ></lightning-modal-header>
   <lightning-modal-body>
-    <div class="slds-grid slds-grid_vertical slds-var-m-around_x-large">
+    <div class="slds-grid slds-grid_vertical slds-var-m-around_x-large feedback-modal-qna__body">
       <div class="slds-col slds-grid slds-grid_align-center">
         <div
           class="slds-grid slds-grid_vertical slds-size_5-of-6 slds-grid_align-center"
@@ -15,7 +15,7 @@
           </div>
           <template for:each={questions} for:item="question">
             <div
-              class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start slds-var-p-bottom_x-small"
+              class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start slds-var-p-bottom_x-small feedback-modal-qna__question"
               key={question.id}
             >
               <div class="slds-col slds-var-p-top_x-small">
