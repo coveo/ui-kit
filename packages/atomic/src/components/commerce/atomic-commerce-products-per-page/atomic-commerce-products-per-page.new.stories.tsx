@@ -29,12 +29,11 @@ export const Default: Story = {
   name: 'atomic-commerce-products-per-page',
 };
 
-export const InPage: Story = {
+export const InAPage: Story = {
   name: 'In a page',
   decorators: [
     (story) =>
       html` <atomic-commerce-layout>
-        <atomic-layout-section section="search"> </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-commerce-facets></atomic-commerce-facets>
         </atomic-layout-section>
@@ -53,7 +52,44 @@ export const InPage: Story = {
             <atomic-commerce-query-error></atomic-commerce-query-error>
           </atomic-layout-section>
           <atomic-layout-section section="pagination">
-            <atomic-commerce-pager></atomic-commerce-pager>
+            ${story()}
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-commerce-layout>`,
+  ],
+  play: async (context) => {
+    await play(context);
+    await playExecuteFirstSearch(context);
+  },
+};
+
+export const InAPageWithCustomChoicesDisplayed: Story = {
+  name: 'In a page with custom choices displayed',
+  args: {
+    'attributes-choices-displayed': '2,3,4,5,6',
+  },
+  tags: ['test'],
+  decorators: [
+    (story) =>
+      html` <atomic-commerce-layout>
+        <atomic-layout-section section="facets">
+          <atomic-commerce-facets></atomic-commerce-facets>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
+            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+          </atomic-layout-section>
+          <atomic-layout-section section="products">
+            <atomic-commerce-product-list
+              display="grid"
+              density="compact"
+              image-size="small"
+            >
+            </atomic-commerce-product-list>
+            <atomic-commerce-query-error></atomic-commerce-query-error>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
             ${story()}
           </atomic-layout-section>
         </atomic-layout-section>

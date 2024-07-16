@@ -1,80 +1,100 @@
 import {test, expect} from './fixture';
 
-test.describe('atomic-commerce-products-per-page', () => {
-  test.describe('with default parameters', () => {
-    test.beforeEach(async ({productsPerPage}) => {
-      await productsPerPage.load(undefined, 'in-page');
-    });
+test.describe('default', () => {
+  test('should be A11Y compliant', async ({
+    productsPerPage,
+    makeAxeBuilder,
+  }) => {
+    await productsPerPage.load({story: 'in-a-page'});
 
-    test('should be A11y compliant', async ({
-      productsPerPage,
-      makeAxeBuilder,
-    }) => {
-      await productsPerPage.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
+    await productsPerPage.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
 
-    test('should execute the first query with the default number of products', async ({
-      querySummary,
-    }) => {
-      await expect(
-        querySummary
-          .querySummary({indexOfFirstResult: 1, indexOfLastResults: 10})
-          .first()
-      ).toBeVisible();
-    });
-
-    test.describe('when selecting a different number of products', () => {
-      test.beforeEach(async ({productsPerPage}) => {
-        await productsPerPage.choice(25).click();
-      });
-
-      test('should render the component with the right choice selected', async ({
-        productsPerPage,
-      }) => {
-        await expect(productsPerPage.label().first()).toBeVisible();
-        await expect(productsPerPage.choice(25)).toBeChecked();
-      });
-
-      test('should execute a query with the selected number of products', async ({
-        querySummary,
-      }) => {
-        await expect(
-          querySummary.querySummary({indexOfLastResults: 25}).first()
-        ).toBeVisible();
-      });
-    });
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test.describe('when the initial choice is not in the list of choicesDisplayed', () => {
-    test.beforeEach(async ({productsPerPage}) => {
-      await productsPerPage.load({initialChoice: 59});
-    });
+  test('should execute the first query with the default number of products', async ({
+    productsPerPage,
+    querySummary,
+  }) => {
+    await productsPerPage.load({story: 'in-a-page'});
 
-    test('should not render the component', async ({productsPerPage}) => {
-      await expect(productsPerPage.label()).not.toBeVisible();
-    });
+    await expect(
+      querySummary
+        .querySummary({indexOfFirstResult: 1, indexOfLastResults: 10})
+        .first()
+    ).toBeVisible();
   });
 
-  test.describe('when a valid initial choice is provided', () => {
-    test.beforeEach(async ({productsPerPage}) => {
-      await productsPerPage.load({initialChoice: 25}, 'in-page');
+  test('should render the component with the number of products selected', async ({
+    productsPerPage,
+  }) => {
+    await productsPerPage.load({story: 'in-a-page'});
+
+    await productsPerPage.choice(25).click();
+
+    await expect(productsPerPage.label().first()).toBeVisible();
+    await expect(productsPerPage.choice(25)).toBeChecked();
+  });
+
+  test('should execute a query with the selected number of products', async ({
+    productsPerPage,
+    querySummary,
+  }) => {
+    await productsPerPage.load({story: 'in-a-page'});
+
+    await productsPerPage.choice(25).click();
+
+    await expect(
+      querySummary.querySummary({indexOfLastResults: 25}).first()
+    ).toBeVisible();
+  });
+
+  test('should render correct choices when the choicesDisplayed prop is enabled', async ({
+    productsPerPage,
+  }) => {
+    await productsPerPage.load({
+      story: 'in-a-page-with-custom-choices-displayed',
     });
 
-    test('should render the component with the right initial choice selected', async ({
-      productsPerPage,
-    }) => {
-      await expect(productsPerPage.label().first()).toBeVisible();
-      await expect(productsPerPage.choice(25)).toBeChecked();
+    await expect(productsPerPage.choice(2)).toBeVisible();
+    await expect(productsPerPage.choice(2)).toBeChecked();
+  });
+
+  test('should render the component with the initial choice selected', async ({
+    productsPerPage,
+  }) => {
+    await productsPerPage.load({
+      args: {initialChoice: 25},
+      story: 'in-a-page',
     });
 
-    test('should execute the first query with the selected number of products', async ({
-      querySummary,
-    }) => {
-      await expect(
-        querySummary.querySummary({indexOfLastResults: 25}).first()
-      ).toBeVisible();
+    await expect(productsPerPage.label().first()).toBeVisible();
+    await expect(productsPerPage.choice(25)).toBeChecked();
+  });
+
+  test('should execute a query with the initial number of products', async ({
+    productsPerPage,
+    querySummary,
+  }) => {
+    await productsPerPage.load({
+      args: {initialChoice: 25},
+      story: 'in-a-page',
     });
+
+    await expect(
+      querySummary.querySummary({indexOfLastResults: 25}).first()
+    ).toBeVisible();
+  });
+
+  test('should not render the component if the initial choice is not in the list of choicesDisplayed', async ({
+    productsPerPage,
+  }) => {
+    await productsPerPage.load({
+      args: {initialChoice: 59},
+      story: 'in-a-page',
+    });
+
+    await expect(productsPerPage.label()).not.toBeVisible();
   });
 });

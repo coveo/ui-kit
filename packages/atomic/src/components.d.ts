@@ -494,7 +494,6 @@ export namespace Components {
         "choicesDisplayed": string;
         /**
           * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-          * @type {number}
          */
         "initialChoice"?: number;
     }
@@ -6029,7 +6028,6 @@ declare namespace LocalJSX {
         "choicesDisplayed"?: string;
         /**
           * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-          * @type {number}
          */
         "initialChoice"?: number;
         "onAtomic/scrollToTop"?: (event: AtomicCommerceProductsPerPageCustomEvent<any>) => void;

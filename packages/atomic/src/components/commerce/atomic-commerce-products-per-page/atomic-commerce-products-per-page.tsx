@@ -66,7 +66,6 @@ export class AtomicCommerceProductsPerPage
   @Prop({reflect: true}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-   * @type {number}
    */
   @Prop({mutable: true, reflect: true}) initialChoice?: number;
 
