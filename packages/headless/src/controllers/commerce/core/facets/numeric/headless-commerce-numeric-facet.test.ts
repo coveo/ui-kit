@@ -3,7 +3,7 @@ import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-  updateNumericFacetValues,
+  updateManualNumericFacetRange,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
@@ -103,23 +103,15 @@ describe('NumericFacet', () => {
   });
 
   describe('#setRanges', () => {
-    let values: NumericRangeRequest[];
+    let range: NumericRangeRequest;
     beforeEach(() => {
-      values = [buildMockCommerceNumericFacetValue()].map(
-        ({start, end, endInclusive, state}) => ({
-          start,
-          end,
-          endInclusive,
-          state,
-        })
-      );
-      facet.setRanges(values);
+      range = {start, end, endInclusive: true, state: 'selected'};
+      facet.setRanges([range]);
     });
-    it('dispatches #updateNumericFacetValues with the correct payload', () => {
-      expect(updateNumericFacetValues).toHaveBeenCalledWith({
-        facetId,
-        values: values.map((value) => ({...value, numberOfResults: 0})),
-      });
+    it('dispatches #updateManualNumericFacetRange with the correct payload', () => {
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        updateManualNumericFacetRange({facetId, ...range})
+      );
     });
 
     it('dispatches #fetchProductsActionCreator', () => {

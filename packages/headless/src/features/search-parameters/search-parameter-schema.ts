@@ -21,6 +21,7 @@ export const searchParametersDefinition: SchemaDefinition<
   fExcluded: new RecordValue(),
   cf: new RecordValue(),
   nf: new RecordValue(),
+  mnf: new RecordValue(),
   df: new RecordValue(),
   debug: new BooleanValue(),
   sf: new RecordValue(),

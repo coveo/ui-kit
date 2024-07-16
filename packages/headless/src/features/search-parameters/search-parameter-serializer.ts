@@ -15,13 +15,13 @@ import {SearchParameters} from './search-parameter-actions';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
-export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af|mnf)-(.+)$/;
 export type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
 
 type FacetSearchParameters = keyof Pick<
   SearchParameters,
-  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df'
+  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df' | 'mnf'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
@@ -34,6 +34,7 @@ const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
   af: true,
   nf: true,
   df: true,
+  mnf: true,
 };
 
 export const delimiter = '&';
@@ -69,13 +70,14 @@ export function isValidBasicKey(
 
 export function isRangeFacetKey(
   key: string
-): key is Extract<FacetKey, 'nf' | 'df'> {
+): key is Extract<FacetKey, 'nf' | 'df' | 'mnf'> {
   const supportedRangeFacetParameters: Pick<
     typeof supportedFacetParameters,
-    'df' | 'nf'
+    'df' | 'nf' | 'mnf'
   > = {
     nf: true,
     df: true,
+    mnf: true,
   };
   const isRangeFacet = key in supportedRangeFacetParameters;
   return keyHasObjectValue(key) && isRangeFacet;
@@ -230,7 +232,7 @@ export function preprocessObjectPairs(pair: string[]) {
 }
 
 function processObjectValues(key: string, values: string[]) {
-  if (key === 'nf') {
+  if (key === 'nf' || key === 'mnf') {
     return buildNumericRanges(values);
   }
 
