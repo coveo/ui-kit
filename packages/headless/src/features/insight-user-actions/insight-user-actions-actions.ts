@@ -13,6 +13,7 @@ import {buildFetchUserActionsRequest} from './insight-user-actions-request';
 
 interface RegisterUserActionsPayload {
   ticketCreationDate: string;
+  userId: string;
   excludedCustomActions?: string[];
 }
 
@@ -20,6 +21,9 @@ const registerUserActionsPayloadSchema = {
   ticketCreationDate: new StringValue({
     emptyAllowed: false,
     ISODate: true,
+  }),
+  userId: new StringValue({
+    emptyAllowed: false,
   }),
   excludedCustomActions: new ArrayValue({
     required: false,
@@ -42,19 +46,17 @@ export type StateNeededByFetchUserActions = ConfigurationSection &
   InsightConfigurationSection &
   InsightUserActionSection;
 
-type UserId = string;
-
 export const fetchUserActions = createAsyncThunk<
   FetchUserActionsThunkReturn,
-  UserId,
+  void,
   AsyncThunkInsightOptions<StateNeededByFetchUserActions>
 >(
   'insight/userActions/fetch',
-  async (userId, {getState, rejectWithValue, extra: {apiClient}}) => {
+  async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
 
     const fetched = await apiClient.userActions(
-      await buildFetchUserActionsRequest(state, userId)
+      await buildFetchUserActionsRequest(state, state.insightUserAction.userId)
     );
 
     if (isErrorResponse(fetched)) {

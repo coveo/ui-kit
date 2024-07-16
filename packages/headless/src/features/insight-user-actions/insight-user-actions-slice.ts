@@ -11,6 +11,7 @@ export const insightUserActionsReducer = createReducer(
     builder
       .addCase(registerUserActions, (state, action) => {
         state.ticketCreationDate = action.payload.ticketCreationDate;
+        state.userId = action.payload.userId;
         if (action.payload.excludedCustomActions) {
           state.excludedCustomActions = action.payload.excludedCustomActions;
         }
@@ -23,14 +24,10 @@ export const insightUserActionsReducer = createReducer(
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(fetchUserActions.fulfilled, (state, action) => {
+      .addCase(fetchUserActions.fulfilled, (state, _action) => {
         state.loading = false;
         state.error = undefined;
-
-        console.log('state got--------------');
-        console.log(action.payload.response.value);
-
-        // state.timeline = action.payload.response;
+        // TODO: SFINT-5639 Preprocess the user actions data returned from the API and set the state.
       });
   }
 );

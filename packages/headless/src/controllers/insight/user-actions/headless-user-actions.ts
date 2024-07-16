@@ -26,6 +26,9 @@ export interface UserActionsProps {
 }
 
 export interface UserActionsOptions {
+  /**
+   * The user ID to which the user's actions belong.
+   */
   userId: string;
   /**
    * The ticket creation date in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.
@@ -56,7 +59,6 @@ export function buildUserActions(
   engine: InsightEngine,
   props: UserActionsProps
 ): UserActions {
-  console.log('controller built!');
   if (!loadUserActionsReducers(engine)) {
     throw loadReducerError;
   }
@@ -64,11 +66,11 @@ export function buildUserActions(
   const {dispatch} = engine;
   const getState = () => engine.state.insightUserAction;
   const controller = buildController(engine);
+  const {ticketCreationDate, userId, excludedCustomActions} = props.options;
 
   dispatch(
-    registerUserActions({ticketCreationDate: props.options.ticketCreationDate})
+    registerUserActions({ticketCreationDate, userId, excludedCustomActions})
   );
-
   return {
     ...controller,
 
@@ -77,7 +79,7 @@ export function buildUserActions(
     },
 
     fetchUserActions() {
-      dispatch(fetchUserActions(props.options.userId));
+      dispatch(fetchUserActions());
     },
   };
 }

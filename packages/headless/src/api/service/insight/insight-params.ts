@@ -69,7 +69,7 @@ export const pickNonInsightParams = (req: InsightParam) => {
   return nonInsightParams;
 };
 
-const validateInsightRequestParams = (req: InsightParam) => {
+const validateConfigParams = (req: BaseParam) => {
   if (!req.url) {
     throw new Error("The 'url' attribute must contain a valid platform URL.");
   }
@@ -83,6 +83,10 @@ const validateInsightRequestParams = (req: InsightParam) => {
       "The 'accessToken' attribute must contain a valid platform access token."
     );
   }
+};
+
+const validateInsightRequestParams = (req: InsightParam) => {
+  validateConfigParams(req);
   if (!req.insightId) {
     throw new Error(
       "The 'insightId' attribute must contain a valid Insight Panel configuration ID."
@@ -93,19 +97,7 @@ const validateInsightRequestParams = (req: InsightParam) => {
 const validateInsightUserActionRequestParams = (
   req: InsightUserActionsRequest
 ) => {
-  if (!req.url) {
-    throw new Error("The 'url' attribute must contain a valid platform URL.");
-  }
-  if (!req.organizationId) {
-    throw new Error(
-      "The 'organizationId' attribute must contain a valid organization ID."
-    );
-  }
-  if (!req.accessToken) {
-    throw new Error(
-      "The 'accessToken' attribute must contain a valid platform access token."
-    );
-  }
+  validateConfigParams(req);
   if (!req.userId) {
     throw new Error("The 'userId' attribute must contain a valid user ID.");
   }
