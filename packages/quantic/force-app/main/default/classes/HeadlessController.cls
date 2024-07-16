@@ -15,6 +15,6 @@ global with sharing class HeadlessController {
      * e.g. To switch to the Coveo Token Provider, you simply need to replace the following line by:
      * `return CoveoTokenProvider.getHeadlessConfiguration();`
      */
-    return CoveoTokenProvider.getHeadlessConfiguration();
+    return SampleTokenProvider.getHeadlessConfiguration();
   }
 }
