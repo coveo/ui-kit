@@ -127,12 +127,14 @@ export class AtomicCommerceNumericFacet
   @Listen('atomic/numberInputApply')
   public applyNumberInput({detail}: CustomEvent<Range>) {
     const {start, end} = detail;
-    this.facet.setManualRange({
-      start,
-      end,
-      endInclusive: true,
-      state: 'selected',
-    });
+    this.facet.setRanges([
+      {
+        start,
+        end,
+        endInclusive: true,
+        state: 'selected',
+      },
+    ]);
   }
 
   public render() {

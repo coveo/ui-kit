@@ -6,7 +6,6 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
-  updateNumericFacetValues,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
 import {ManualRangeSection} from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
@@ -62,7 +61,6 @@ export type NumericFacet = CoreCommerceFacet<
    * @param ranges - The new ranges to set.
    */
   setRanges: (ranges: NumericRangeRequest[]) => void;
-  setManualRange: (ranges: NumericRangeRequest) => void;
   /**
    * The state of the `NumericFacet` controller.
    */
@@ -107,18 +105,10 @@ export function buildCommerceNumericFacet(
   return {
     ...coreController,
 
-    setManualRange(range: NumericRangeRequest) {
-      dispatch(updateManualNumericFacetRange({facetId, ...range}));
-      dispatch(fetchProductsActionCreator());
-    },
-
     setRanges(ranges: NumericRangeRequest[]) {
-      dispatch(
-        updateNumericFacetValues({
-          facetId,
-          values: ranges.map((range) => ({...range, numberOfResults: 0})),
-        })
-      );
+      ranges.forEach((range) => {
+        dispatch(updateManualNumericFacetRange({facetId, ...range}));
+      });
       dispatch(fetchProductsActionCreator());
     },
 
