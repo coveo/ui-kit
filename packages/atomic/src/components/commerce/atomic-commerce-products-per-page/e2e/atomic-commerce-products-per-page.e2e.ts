@@ -61,6 +61,17 @@ test.describe('default', () => {
     await expect(productsPerPage.choice(2)).toBeChecked();
   });
 
+  test('should not render correct choices when the choicesDisplayed prop is invalid', async ({
+    productsPerPage,
+  }) => {
+    await productsPerPage.load({
+      args: {choicesDisplayed: 'invalid'},
+      story: 'in-a-page-with-custom-choices-displayed',
+    });
+
+    await expect(productsPerPage.error).toBeVisible();
+  });
+
   test('should render the component with the initial choice selected', async ({
     productsPerPage,
   }) => {
@@ -95,6 +106,6 @@ test.describe('default', () => {
       story: 'in-a-page',
     });
 
-    await expect(productsPerPage.label()).not.toBeVisible();
+    await expect(productsPerPage.error).toBeVisible();
   });
 });

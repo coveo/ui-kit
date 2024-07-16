@@ -11,4 +11,7 @@ export class ProductsPerPageObject extends BasePageObject<'atomic-commerce-produ
   choice(value: number) {
     return this.page.getByLabel(value?.toString(), {exact: true});
   }
+  get error() {
+    return this.page.locator('atomic-component-error').first();
+  }
 }
