@@ -80,7 +80,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   /** @type {boolean} */
   hasActiveFilters = false;
   /** @type {boolean} */
-  shouldDisplaySort = false;
+  sortOptionsInitialized = false;
   /** @type {AnyHeadless} */
   headless;
   /** @type {object} */
@@ -138,7 +138,9 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   gatherSortOptions() {
     this.sortData = getAllSortOptionsFromStore(this.engineId);
-    this.shouldDisplaySort = true;
+    if (this.sortData !== undefined && this.sortData.length > 0) {
+      this.sortOptionsInitialized = true;
+    }
   }
 
   /**
