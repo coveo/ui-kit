@@ -1,0 +1,21 @@
+:host {
+  border-radius: 60px;
+  height: inherit;
+  width: inherit;
+  & > slot {
+    height: inherit;
+  }
+  .active-tab {
+    position: relative;
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 5px;
+      position: absolute;
+      bottom: -2.5px;
+      background: var(--atomic-primary);
+      border-radius: 20px;
+    }
+  }
+}
