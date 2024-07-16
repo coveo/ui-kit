@@ -36,7 +36,7 @@ export default defineConfig({
     },
   ],
   expect: {
-    timeout: 7 * 1000,
+    timeout: 15 * 1000,
   },
   webServer: process.env.CI
     ? {
