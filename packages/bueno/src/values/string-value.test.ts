@@ -101,7 +101,7 @@ describe('string value', () => {
       when passing a valid URL value
       it returns null`, () => {
       value = new StringValue({ISODate: true});
-      expect(value.validate('2023-01-15T22:02:06.553Z')).toBeNull();
+      expect(value.validate('2024-07-16T22:02:06.553Z')).toBeNull();
     });
   });
 });
