@@ -1,4 +1,4 @@
-import {BooleanValue, RecordValue} from '@coveo/bueno';
+import {RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -16,10 +16,6 @@ export interface RegisterTabActionCreatorPayload {
    * The tab filter expression.
    */
   expression: string;
-  /**
-   * Whether to clear the state when the active tab changes.
-   */
-  clearFiltersOnTabChange: boolean;
 }
 
 export const registerTab = createAction(
@@ -29,7 +25,6 @@ export const registerTab = createAction(
       values: {
         id: requiredNonEmptyString,
         expression: requiredEmptyAllowedString,
-        clearFiltersOnTabChange: new BooleanValue(),
       },
     });
 

@@ -124,9 +124,9 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
     'buildTab'
   );
 
-  const {id, expression, clearFiltersOnTabChange = false} = props.options;
+  const {id, expression} = props.options;
 
-  dispatch(registerTab({id, expression, clearFiltersOnTabChange}));
+  dispatch(registerTab({id, expression}));
 
   if (initialState.isActive) {
     dispatch(updateActiveTab(id));
