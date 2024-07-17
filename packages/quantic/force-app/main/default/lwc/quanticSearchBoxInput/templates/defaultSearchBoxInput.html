@@ -20,7 +20,7 @@
                 id="combobox-with-button-id"
                 class={searchBoxInputClass}
                 type="search"
-                value={value}
+                value={inputValue}
                 placeholder={placeholder}
                 onkeydown={onKeyDown}
                 onfocus={onFocus}
@@ -73,7 +73,7 @@
             <c-quantic-search-box-suggestions-list
               onselection={handleSelection}
               suggestions={suggestions}
-              query={value}
+              query={inputValue}
               recent-queries={recentQueries}
               max-number-of-suggestions={maxNumberOfSuggestions}
             ></c-quantic-search-box-suggestions-list>

@@ -24,11 +24,6 @@ const expectedAriaLiveMessage = (suggestionsCount: number) => {
   return `${suggestionsCount} search suggestions found, to navigate use up and down arrows.`;
 };
 
-const variants = [
-  {variantName: 'default', textarea: false},
-  {variantName: 'expandable', textarea: true},
-];
-
 function setRecentQueriesInLocalStorage(recentQueries: String[]) {
   window.localStorage.setItem(
     recentQueriesLSKey,
@@ -51,6 +46,11 @@ describe('quantic-search-box', () => {
     configure(options);
     cy.wait(InterceptAliases.Search);
   }
+
+  const variants = [
+    {variantName: 'default', textarea: false},
+    {variantName: 'expandable', textarea: true},
+  ];
 
   variants.forEach(({variantName, textarea}) => {
     describe(`variant ${variantName} with default options`, () => {
@@ -304,7 +304,7 @@ describe('quantic-search-box', () => {
           });
         });
 
-        describe('when using the keyboard to select a recent query', () => {
+        describe('when using the keyboard', () => {
           const exampleRecentQueries = ['foo', 'bar'];
 
           beforeEach(() => {
@@ -351,16 +351,6 @@ describe('quantic-search-box', () => {
                 exampleRecentQueries[clickedSuggestionIndex]
               );
             });
-          });
-        });
-
-        describe('when using the keyboard to select a query suggestion', () => {
-          const exampleRecentQueries = ['foo', 'bar'];
-
-          beforeEach(() => {
-            setRecentQueriesInLocalStorage(exampleRecentQueries);
-            visitSearchBox({...defaultOptions, textarea});
-            mockQuerySuggestions(exampleQuerySuggestions);
           });
 
           it('should properly navigate and select the right suggestion', () => {

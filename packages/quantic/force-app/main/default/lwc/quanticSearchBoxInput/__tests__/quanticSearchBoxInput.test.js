@@ -229,7 +229,7 @@ describe('c-quantic-search-box-input', () => {
               suggestions: mockSuggestions,
               recentQueries: exampleRecentQueries,
               textarea: textareaValue,
-              value: '',
+              inputValue: '',
             });
             await flushPromises();
 
@@ -337,7 +337,7 @@ describe('c-quantic-search-box-input', () => {
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
-            /** @type{object} */
+            /** @type{{detail: {selectedSuggestion: object}}} */
             const eventData =
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
             const expectedFirstSuggestionSelected = {
@@ -359,7 +359,7 @@ describe('c-quantic-search-box-input', () => {
               suggestions: mockSuggestions,
               textarea: textareaValue,
               recentQueries: exampleRecentQueries,
-              value: '',
+              inputValue: '',
             });
             setupEventListeners(element);
             await flushPromises();
@@ -391,7 +391,7 @@ describe('c-quantic-search-box-input', () => {
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
-            /** @type{object} */
+            /** @type{{detail: {selectedSuggestion: object}}} */
             const eventData =
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
             const expectedFirstSuggestionSelected = {
@@ -413,7 +413,7 @@ describe('c-quantic-search-box-input', () => {
               suggestions: mockSuggestions,
               textarea: textareaValue,
               recentQueries: exampleRecentQueries,
-              value: '',
+              inputValue: '',
             });
             setupEventListeners(element);
             await flushPromises();
@@ -444,7 +444,7 @@ describe('c-quantic-search-box-input', () => {
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
-            /** @type{object} */
+            /** @type{{detail: {selectedSuggestion: object}}} */
             const eventData =
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
             const expectedFirstSuggestionSelected = {
@@ -465,7 +465,7 @@ describe('c-quantic-search-box-input', () => {
           const element = createTestComponent({
             ...defaultOptions,
             textarea: textareaValue,
-            value: mockInputValue,
+            inputValue: mockInputValue,
           });
           setupEventListeners(element);
           await flushPromises();
@@ -482,7 +482,7 @@ describe('c-quantic-search-box-input', () => {
             functionsMocks.exampleHandleInputValueChange
           ).toHaveBeenCalledTimes(1);
 
-          /** @type{object} */
+          /** @type{{detail: {value: string}}} */
           const eventData =
             functionsMocks.exampleHandleInputValueChange.mock.calls[0][0];
           expect(eventData.detail.value).toEqual(mockInputValue);

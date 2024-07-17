@@ -116,6 +116,16 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     return null;
   }
 
+  // TODO SFINT-5646: Remove deprecated method
+  /**
+   * @deprecated
+   * Reset the current selection.
+   */
+  @api
+  resetSelection() {
+    this.selectionIndex = -1;
+  }
+
   /** @type {number} */
   selectionIndex = -1;
   /** @type {boolean} */

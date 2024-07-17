@@ -40,7 +40,7 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
           }
         })
         .logDetail(
-          `should make a search request with the query ${expectedQuery}`
+          `should make a search request with the query ${expectedQuery} ${expectedRecentQueriesInLocalStorage ? 'and should add it the local storage' : ''}`
         );
     },
     displaySearchBoxInput: (display: boolean, textarea = false) => {
