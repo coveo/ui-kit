@@ -1,13 +1,13 @@
 /**
- * Utility functions to be used for Server Side Rendering.
+ * Utility functions to be used for Commerce Server Side Rendering.
  */
 import {UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
+import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
-import {NavigatorContextProvider} from '../navigatorContextProvider';
 import {
   buildControllerDefinitions,
   composeFunction,
@@ -45,38 +45,29 @@ export type SearchCompletedAction = ReturnType<
   LegacySearchAction['fulfilled' | 'rejected']
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// function isSearchCompletedAction(
-//   action: unknown
-// ): action is SearchCompletedAction {
-//   return /^search\/executeSearch\/(fulfilled|rejected)$/.test(
-//     (action as UnknownAction).type
-//   );
-// }
-
 function isListingFetchCompletedAction(
   action: unknown
 ): action is SearchCompletedAction {
-  // TODO: find a cleaner way to check if the action is a listing fetch action or a commerce search
-  // TODO: this will be used in the case of a listing page
-  const listingAction =
-    /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
-      (action as UnknownAction).type
-    );
-  // TODO: this will be used in the case of a search page
-  const searchAction =
-    /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
-      (action as UnknownAction).type
-    );
-  return listingAction || searchAction;
+  return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
+    (action as UnknownAction).type
+  );
+}
+
+function isSearchCompletedAction(
+  action: unknown
+): action is SearchCompletedAction {
+  return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
+    (action as UnknownAction).type
+  );
 }
 
 function buildSSRCommerceEngine(
   options: CommerceEngineOptions
 ): SSRCommerceEngine {
   const {middleware, promise} = createWaitForActionMiddleware(
-    // isSearchCompletedAction // TODO: maybe a argument to pass the action type
-    isListingFetchCompletedAction
+    options.solutionType === 'listing'
+      ? isListingFetchCompletedAction
+      : isSearchCompletedAction
   );
   const commerceEngine = buildCommerceEngine({
     ...options,
@@ -115,13 +106,8 @@ export function defineCommerceEngine<
     Controller
   >,
 >(
-  // TODO: add a type (search / listing) for the controller definitions
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-): CommerceEngineDefinition<TControllerDefinitions> & {
-  setNavigatorContext: (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => void;
-} {
+): CommerceEngineDefinition<TControllerDefinitions> {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
   type Definition = CommerceEngineDefinition<TControllerDefinitions>;
   type BuildFunction = Definition['build'];
@@ -162,7 +148,6 @@ export function defineCommerceEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      // console.log('::::: fetchStaticState');
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
@@ -179,14 +164,11 @@ export function defineCommerceEngine<
           },
         ] = params;
 
-        const productListing = buildProductListing(engine);
-        // TODO: tracking id should not be undefined
-        productListing.executeFirstRequest();
-        //  TODO: should now call the appropriate controller
-        // this.searchOrListing =
-        //   this.type === 'product-listing'
-        //     ? buildProductListing(this.engine!)
-        //     : buildSearch(this.engine!);
+        if (options.solutionType === 'listing') {
+          buildProductListing(engine).executeFirstRequest();
+        } else {
+          buildSearch(engine).executeFirstSearch();
+        }
 
         return createStaticState({
           searchAction: await engine.waitForSearchCompletedAction(),
@@ -222,16 +204,9 @@ export function defineCommerceEngine<
     }
   );
 
-  //   const setNavigatorContext = (
-  //     navigatorContextProvider: NavigatorContextProvider
-  //   ) => {
-  //     engineOptions.navigatorContextProvider = navigatorContextProvider;
-  //   };
-
   return {
     build,
     fetchStaticState,
     hydrateStaticState,
-    // setNavigatorContext,
   };
 }
