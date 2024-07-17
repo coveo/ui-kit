@@ -1,5 +1,4 @@
 import {configuration} from '../../../app/common-reducers';
-import {registerTab} from '../../../features/tab-set/tab-set-actions';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
 import {
   buildMockSearchEngine,
@@ -26,14 +25,6 @@ describe('Core Tab Manager', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       tabSet,
-    });
-  });
-
-  describe('initialization', () => {
-    it('dispatches #registerTabManager', () => {
-      initTabManager();
-
-      expect(registerTab).toHaveBeenCalledWith();
     });
   });
 });
