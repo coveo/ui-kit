@@ -6,8 +6,8 @@ import {
   SearchSummaryState,
   ProductListingSummaryState,
   Summary,
+  loadPaginationActions,
 } from '@coveo/headless/commerce';
-import {setPageSize} from '@coveo/headless/dist/definitions/features/commerce/pagination/pagination-actions';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
@@ -86,6 +86,7 @@ export class AtomicCommerceProductsPerPage
 
     this.summary = controller.summary();
     this.pagination = controller.pagination();
+    const {setPageSize} = loadPaginationActions(this.bindings.engine);
     this.bindings.engine.dispatch(setPageSize({pageSize: this.initialChoice!}));
   }
 
