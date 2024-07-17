@@ -81,9 +81,8 @@ export interface TabProps {
 export interface Tab extends Controller {
   /**
    * Activates the tab.
-   * @param triggerSearch - Optional parameter indicating whether to trigger a search when the tab is activated.
    */
-  select(triggerSearch?: boolean): void;
+  select(): void;
   /**
    * The state of the `Tab` controller.
    */
