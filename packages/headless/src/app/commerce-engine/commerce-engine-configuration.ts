@@ -50,7 +50,7 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
       country: 'US',
       currency: 'USD',
       view: {
-        url: 'https://sports.barca.group/search',
+        url: 'https://sports.barca.group',
       },
     },
     cart: {
