@@ -17,16 +17,4 @@ export class QuerySummaryPageObject extends BasePageObject<'atomic-commerce-quer
   text(summaryRegex: RegExp) {
     return this.page.getByText(summaryRegex);
   }
-
-  querySummary({
-    indexOfFirstResult,
-    indexOfLastResults,
-    totalResults,
-  }: Record<string, number | undefined>) {
-    return this.page.getByText(
-      new RegExp(
-        `Products ${indexOfFirstResult ?? '[\\d,]?'}-${indexOfLastResults ?? '[\\d,]?'} of ${totalResults ?? '[\\d,]?'}`
-      )
-    );
-  }
 }

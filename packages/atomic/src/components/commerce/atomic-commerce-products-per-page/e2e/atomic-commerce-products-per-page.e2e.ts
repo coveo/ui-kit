@@ -1,5 +1,14 @@
 import {test, expect} from './fixture';
 
+const SUMMARY_REGEX = ({
+  indexOfFirstResult,
+  indexOfLastResults,
+  totalResults,
+}: Record<string, number | undefined>) =>
+  new RegExp(
+    `Products ${indexOfFirstResult ?? '[\\d,]?'}-${indexOfLastResults ?? '[\\d,]?'} of ${totalResults ?? '[\\d,]?'}`
+  );
+
 test.describe('default', () => {
   test('should be A11Y compliant', async ({
     productsPerPage,
@@ -21,7 +30,7 @@ test.describe('default', () => {
 
     await expect(
       querySummary
-        .querySummary({indexOfFirstResult: 1, indexOfLastResults: 10})
+        .text(SUMMARY_REGEX({indexOfFirstResult: 1, indexOfLastResults: 10}))
         .first()
     ).toBeVisible();
   });
@@ -46,7 +55,7 @@ test.describe('default', () => {
     await productsPerPage.choice(25).click();
 
     await expect(
-      querySummary.querySummary({indexOfLastResults: 25}).first()
+      querySummary.text(SUMMARY_REGEX({indexOfLastResults: 25})).first()
     ).toBeVisible();
   });
 
@@ -94,7 +103,7 @@ test.describe('default', () => {
     });
 
     await expect(
-      querySummary.querySummary({indexOfLastResults: 25}).first()
+      querySummary.text(SUMMARY_REGEX({indexOfLastResults: 25})).first()
     ).toBeVisible();
   });
 
