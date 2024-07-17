@@ -545,12 +545,28 @@
     <name>quantic_SendFeedback</name>
   </customLabels>
   <customLabels>
+    <label>Requis avant de soumettre.</label>
+    <name>quantic_requiredFeedbackQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Champs requis</label>
+    <name>quantic_requiredFields</name>
+  </customLabels>
+  <customLabels>
+    <label>Ignorer</label>
+    <name>quantic_Skip</name>
+  </customLabels>
+  <customLabels>
     <label>Terminé</label>
     <name>quantic_Done</name>
   </customLabels>
   <customLabels>
     <label>Vos commentaires permettent d'améliorer l'expérience de recherche.</label>
     <name>quantic_YourFeedbackHelps</name>
+  </customLabels>
+  <customLabels>
+    <label>"Aidez-nous à nous améliorer! Envoyez-nous un commentaire supplémentaire"</label>
+    <name>quantic_FeedbackHelpUsImprove</name>
   </customLabels>
   <customLabels>
     <label>Merci pour vos commentaires!</label>
@@ -795,5 +811,37 @@
   <customLabels>
     <label>Voir moins</label>
     <name>quantic_GeneratedAnswerShowLess</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse concerne-t-elle le bon sujet?</label>
+    <name>quantic_FeedbackQuestionTopic</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse est-elle exempte de contenu halluciné?</label>
+    <name>quantic_FeedbackQuestionHallucination</name>
+  </customLabels>
+  <customLabels>
+    <label>La question peut-elle être répondue par la documentation?</label>
+    <name>quantic_FeedbackQuestionDocumented</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse est-elle lisible?</label>
+    <name>quantic_FeedbackQuestionReadable</name>
+  </customLabels>
+  <customLabels>
+    <label>Incertain</label>
+    <name>quantic_FeedbackNotSure</name>
+  </customLabels>
+  <customLabels>
+    <label>Évaluation de la réponse</label>
+    <name>quantic_FeedbackAnswerEvaluation</name>
+  </customLabels>
+  <customLabels>
+    <label>Lien vers la bonne réponse</label>
+    <name>quantic_FeedbackDocumentUrl</name>
+  </customLabels>
+  <customLabels>
+    <label>Veuillez fournir un lien vers la bonne réponse</label>
+    <name>quantic_FeedbackDocumentUrlExplanation</name>
   </customLabels>
 </Translations>
