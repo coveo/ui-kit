@@ -1,3 +1,9 @@
+# 2.53.0 (2024-07-17)
+
+### Features
+
+- **quantic:** new feedback modal for RGA ([#4162](https://github.com/coveo/ui-kit/issues/4162)) ([ada849a](https://github.com/coveo/ui-kit/commits/ada849a8c75a2db44c7c80c1737a6f766d1b4836))
+
 ## 2.52.3 (2024-07-09)
 
 ### Bug Fixes
