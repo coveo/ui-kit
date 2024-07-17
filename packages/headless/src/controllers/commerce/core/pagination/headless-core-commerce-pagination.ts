@@ -50,13 +50,6 @@ export interface Pagination extends Controller {
   setPageSize(pageSize: number): void;
 
   /**
-   * Sets the page size without fetching.
-   *
-   * @param pageSize - The page size.
-   */
-  setPageSizeWithoutFetch(pageSize: number): void;
-
-  /**
    * Fetches the next page of products, and appends them to the current list of products.
    */
   fetchMoreProducts(): void;
@@ -175,10 +168,6 @@ export function buildCorePagination(
     setPageSize(pageSize: number) {
       dispatch(setPageSize({slotId, pageSize}));
       dispatch(props.fetchProductsActionCreator());
-    },
-
-    setPageSizeWithoutFetch(pageSize: number) {
-      dispatch(setPageSize({slotId, pageSize}));
     },
 
     fetchMoreProducts() {
