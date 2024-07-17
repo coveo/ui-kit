@@ -90,6 +90,7 @@ export function buildSearch(engine: CommerceEngine): Search {
   }
 
   const controller = buildController(engine);
+
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
   const subControllers = buildSearchSubControllers(engine, {
