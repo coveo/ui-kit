@@ -66,6 +66,8 @@ export class AtomicPager implements InitializableComponent {
    */
   @Prop({reflect: true}) numberOfPages = 5;
 
+  @Prop({reflect: true}) Gabago = 5;
+
   /**
    * The SVG icon to use to display the Previous button.
    *
