@@ -37,24 +37,20 @@ export const commerceEngineConfigurationSchema =
     }),
   });
 
-// TODO KIT-3244: Use a different sample organization
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {
-    accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
-    organizationId: 'barcasportsmcy01fvu',
-    organizationEndpoints: getOrganizationEndpoints(
-      'barcasportsmcy01fvu',
-      'dev'
-    ),
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationId: 'searchuisamples',
+    organizationEndpoints: getOrganizationEndpoints('searchuisamples', 'prod'),
     analytics: {
-      trackingId: 'sports',
+      trackingId: 'sports-ui-samples',
     },
     context: {
       language: 'en',
       country: 'US',
       currency: 'USD',
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports.barca.group/search',
       },
     },
     cart: {
