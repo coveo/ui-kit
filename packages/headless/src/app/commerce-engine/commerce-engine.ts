@@ -77,12 +77,6 @@ export interface CommerceEngineOptions
    * The commerce engine configuration options.
    */
   configuration: CommerceEngineConfiguration;
-  /**
-   * The type of the solution the engine will be used for
-   * - 'search': Indicates that the engine is used for Search.
-   * - 'product-listing': Indicates that the engine is used for Product listing.
-   */
-  solutionType: 'search' | 'listing';
 }
 
 /**

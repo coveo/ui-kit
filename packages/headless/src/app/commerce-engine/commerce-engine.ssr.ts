@@ -27,6 +27,15 @@ import {
   buildCommerceEngine,
 } from './commerce-engine';
 
+type SSRCommerceEngineOptions = CommerceEngineOptions & {
+  /**
+   * The type of the solution the engine will be used for
+   * - 'search': Indicates that the engine is used for Search.
+   * - 'product-listing': Indicates that the engine is used for Product listing.
+   */
+  solutionType: 'search' | 'listing';
+};
+
 /**
  * The SSR commerce engine.
  */
@@ -39,7 +48,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 
 export type CommerceEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
-> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
 
 export type SearchCompletedAction = ReturnType<
   LegacySearchAction['fulfilled' | 'rejected']
@@ -62,7 +71,7 @@ function isSearchCompletedAction(
 }
 
 function buildSSRCommerceEngine(
-  options: CommerceEngineOptions
+  options: SSRCommerceEngineOptions
 ): SSRCommerceEngine {
   const {middleware, promise} = createWaitForActionMiddleware(
     options.solutionType === 'listing'
@@ -91,7 +100,7 @@ export interface CommerceEngineDefinition<
 > extends EngineDefinition<
     SSRCommerceEngine,
     TControllers,
-    CommerceEngineOptions
+    SSRCommerceEngineOptions
   > {}
 
 /**
