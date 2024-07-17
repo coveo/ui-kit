@@ -819,14 +819,14 @@ export declare interface AtomicNumericRange extends Components.AtomicNumericRang
 
 
 @ProxyCmp({
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
+  inputs: ['Gabago', 'nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
 })
 @Component({
   selector: 'atomic-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
+  inputs: ['Gabago', 'nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
 })
 export class AtomicPager {
   protected el: HTMLElement;
