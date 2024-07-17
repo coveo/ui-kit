@@ -1,4 +1,10 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
+import {
+  ArrayValue,
+  RecordValue,
+  NumberValue,
+  StringValue,
+  BooleanValue,
+} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -7,6 +13,7 @@ import {
   validatePayloadAndThrow,
 } from '../../../../utils/validate-payload';
 import {numericFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
 import {
   ToggleSelectNumericFacetValueActionCreatorPayload,
   UpdateNumericFacetValuesActionCreatorPayload,
@@ -40,6 +47,10 @@ export const toggleExcludeNumericFacetValue = createAction(
 export type UpdateNumericFacetValuesPayload =
   UpdateNumericFacetValuesActionCreatorPayload;
 
+export type UpdateManualNumericFacetRangePayload = {
+  facetId: string;
+} & NumericRangeRequest;
+
 export const updateNumericFacetValues = createAction(
   'commerce/facets/numericFacet/updateValues',
   (payload: UpdateNumericFacetValuesPayload) => {
@@ -56,4 +67,19 @@ export const updateNumericFacetValues = createAction(
       return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
+);
+
+export const updateManualNumericFacetRange = createAction(
+  'commerce/facets/numericFacet/updateManualRange',
+  (payload: UpdateManualNumericFacetRangePayload) =>
+    validatePayloadAndThrow(payload, {
+      facetId: requiredNonEmptyString,
+      start: new NumberValue({required: true, min: 0}),
+      end: new NumberValue({required: true, min: 0}),
+      endInclusive: new BooleanValue({required: true}),
+      state: new StringValue<'idle' | 'selected' | 'excluded'>({
+        required: true,
+        constrainTo: ['idle', 'selected', 'excluded'],
+      }),
+    })
 );

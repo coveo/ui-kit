@@ -52,7 +52,6 @@ describe('commerce query trigger', () => {
       engine = buildMockCommerceEngine(buildMockCommerceState());
       initQueryTrigger();
       queryTrigger.subscribe(listener);
-      console.log(engine[stateKey]);
       engine[stateKey].commerceQuery.query = 'Oranges';
       engine[stateKey].triggers!.query = '';
 
