@@ -1811,7 +1811,6 @@ export namespace Components {
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
      */
     interface AtomicPager {
-        "Gabago": number;
         /**
           * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
@@ -7234,7 +7233,6 @@ declare namespace LocalJSX {
      * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
      */
     interface AtomicPager {
-        "Gabago"?: number;
         /**
           * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
