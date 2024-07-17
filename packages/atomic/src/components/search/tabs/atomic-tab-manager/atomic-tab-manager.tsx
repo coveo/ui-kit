@@ -81,7 +81,7 @@ export class AtomicTabManager {
               label={tab.label}
               handleClick={() => {
                 if (!tab.tabController.state.isActive) {
-                  tab.tabController.select(true);
+                  tab.tabController.select();
                 }
               }}
             ></TabButton>
@@ -95,7 +95,7 @@ export class AtomicTabManager {
               (tab) => tab.name === (e as string)
             );
             if (selectedTab) {
-              selectedTab.tabController.select(true);
+              selectedTab.tabController.select();
             }
           }}
         >
