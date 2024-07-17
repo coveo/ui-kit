@@ -39,7 +39,7 @@ describe('Tab', () => {
 
   describe('#select', () => {
     it('dispatches #executeSearch', () => {
-      tab.select(true);
+      tab.select();
       expect(executeSearch).toHaveBeenCalled();
     });
   });

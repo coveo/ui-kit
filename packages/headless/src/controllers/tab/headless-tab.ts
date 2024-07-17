@@ -40,11 +40,9 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
       return tab.state;
     },
 
-    select(triggerSearch: boolean) {
-      tab.select(false);
-      if (triggerSearch) {
-        search();
-      }
+    select() {
+      tab.select();
+      search();
     },
   };
 }
