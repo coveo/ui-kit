@@ -85,7 +85,7 @@ export class AtomicCommerceProductsPerPage
 
     this.summary = controller.summary();
     this.pagination = controller.pagination();
-    this.pagination.setPageSize(this.initialChoice!);
+    this.pagination.setInitialPageSize(this.initialChoice!);
   }
 
   private get label() {
