@@ -27,14 +27,14 @@ import {
   buildCommerceEngine,
 } from './commerce-engine';
 
-type SSRCommerceEngineOptions = CommerceEngineOptions & {
+export interface SSRCommerceEngineOptions extends CommerceEngineOptions {
   /**
    * The type of the solution the engine will be used for
    * - 'search': Indicates that the engine is used for Search.
    * - 'product-listing': Indicates that the engine is used for Product listing.
    */
   solutionType: 'search' | 'listing';
-};
+}
 
 /**
  * The SSR commerce engine.
