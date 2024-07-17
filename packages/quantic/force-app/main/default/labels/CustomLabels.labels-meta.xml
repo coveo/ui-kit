@@ -1023,6 +1023,27 @@
     <shortDescription>Send feedback</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_requiredFeedbackQuestion</fullName>
+    <value>This field is required.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback question required</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_requiredFields</fullName>
+    <value>Required fields</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Required fields explanation</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Skip</fullName>
+    <value>Skip</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Skip</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_Done</fullName>
     <value>Done</value>
     <language>en_US</language>
@@ -1035,6 +1056,13 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Your feedback helps</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackHelpUsImprove</fullName>
+    <value>Help us improve! Provide additional feedback</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Provide additional feedback</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_ThankYouForYourFeedback</fullName>
@@ -1441,5 +1469,75 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Show less</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackQuestionTopic</fullName>
+    <value>Is the answer about the right topic?</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Question Topic</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackQuestionHallucination</fullName>
+    <value>Is the answer free of hallucinated content?</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Question Hallucination</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackQuestionDocumented</fullName>
+    <value>Can the question be answered by the documentation?</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Question Documented</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackQuestionReadable</fullName>
+    <value>Is the answer readable?</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Question Readable</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackNotSure</fullName>
+    <value>Not sure</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Answer Not Sure</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackAnswerEvaluation</fullName>
+    <value>Answer evaluation</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Answer Evaluation</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackDocumentUrl</fullName>
+    <value>Link to correct answer</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Document Url</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackDocumentUrlExplanation</fullName>
+    <value>Please provide a link to the correct answer</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Document Url Explanation</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackAdditionalNotes</fullName>
+    <value>Additional notes</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Additional Notes</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_FeedbackAdditionalNotesExplanation</fullName>
+    <value>Please provide any additional notes or feedback here</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback Additional Notes Explanation</shortDescription>
   </labels>
 </CustomLabels>

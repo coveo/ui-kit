@@ -1,4 +1,3 @@
-import {Relay} from '@coveo/relay';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
@@ -15,9 +14,11 @@ import {
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
+  ManualRangeSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {getProductsFromCartState} from '../context/cart/cart-state';
+import {AnyFacetRequest} from '../facets/facet-set/interfaces/request';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
@@ -27,7 +28,12 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
 
 export type ListingAndSearchStateNeededByQueryCommerceAPI =
   StateNeededByQueryCommerceAPI &
-    Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection>;
+    Partial<
+      CommerceSortSection &
+        CommerceFacetSetSection &
+        FacetOrderSection &
+        ManualRangeSection
+    >;
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful response. */
@@ -36,12 +42,11 @@ export interface QueryCommerceAPIThunkReturn {
 
 export const buildCommerceAPIRequest = (
   state: ListingAndSearchStateNeededByQueryCommerceAPI,
-  relay: Relay,
   navigatorContext: NavigatorContext
 ): CommerceAPIRequest => {
   return {
-    ...buildBaseCommerceAPIRequest(state, relay, navigatorContext),
-    facets: getFacets(state),
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
+    facets: [...getFacets(state), ...getManualNumericFacets(state)],
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
@@ -50,7 +55,6 @@ export const buildCommerceAPIRequest = (
 
 export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
-  relay: Relay,
   navigatorContext: NavigatorContext,
   slotId?: string
 ): BaseCommerceAPIRequest => {
@@ -61,7 +65,7 @@ export const buildBaseCommerceAPIRequest = (
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: relay.getMeta('').clientId,
+    clientId: navigatorContext.clientId,
     context: {
       ...(navigatorContext.userAgent
         ? {
@@ -107,8 +111,32 @@ function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
   }
 
   return state.facetOrder
+    .filter((facetId) => state.commerceFacetSet?.[facetId])
     .map((facetId) => state.commerceFacetSet![facetId].request)
-    .filter((facet) => facet.values.length > 0);
+    .filter((facet) => facet && facet.values.length > 0);
+}
+
+function getManualNumericFacets(
+  state: ListingAndSearchStateNeededByQueryCommerceAPI
+): AnyFacetRequest[] {
+  if (!state.manualNumericFacetSet) {
+    return [];
+  }
+
+  return Object.entries(state.manualNumericFacetSet!)
+    .filter(
+      ([_, manualNumericFacet]) => manualNumericFacet.manualRange !== undefined
+    )
+    .map(([facetId, manualNumericFacet]) => ({
+      facetId,
+      field: facetId,
+      numberOfValues: 1,
+      isFieldExpanded: false,
+      preventAutoSelect: true,
+      type: 'numericalRange' as const,
+      values: [manualNumericFacet.manualRange!],
+      initialNumberOfValues: 1,
+    }));
 }
 
 function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {

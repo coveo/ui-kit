@@ -1,4 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
+import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -60,6 +61,7 @@ export function buildFieldSuggestionsGenerator(
     fetchProductsActionCreator: executeSearch,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
   const controller = buildController(engine);

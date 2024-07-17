@@ -249,14 +249,14 @@ describe('commerce api client', () => {
       json: () => Promise.resolve('some content'),
     });
 
-    await client.facetSearch(request);
+    await client.facetSearch(request, 'SEARCH');
 
     expect(platformCallMock).toHaveBeenCalled();
     const mockRequest = platformCallMock.mock.calls[0][0];
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/facet`,
+      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/facet?type=SEARCH`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {

@@ -15,11 +15,19 @@ const meta: Meta = {
   component: 'atomic-color-facet',
   title: 'Atomic/ColorFacet',
   id: 'atomic-color-facet',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
   play,
+  argTypes: {
+    'attributes-number-of-values': {
+      name: 'number-of-values',
+      control: {type: 'number', min: 1},
+    },
+  },
+  args: {
+    'attributes-number-of-values': 8,
+  },
 };
 
 export default meta;
@@ -115,6 +123,15 @@ export const Default: Story = {
     ...args,
     'attributes-field': 'filetype',
     'attributes-number-of-values': 9,
+  },
+  decorators: [facetDecorator],
+};
+
+export const LowFacetValues: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'objecttype',
+    'attributes-number-of-values': 2,
   },
   decorators: [facetDecorator],
 };

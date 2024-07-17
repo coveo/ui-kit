@@ -13,6 +13,7 @@ import {
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
+import {answerApi} from '../api/knowledge/stream-answer-api';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -288,17 +289,29 @@ function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const navigatorContextProvider =
-    options.navigatorContextProvider ?? isBrowser()
-      ? defaultBrowserNavigatorContextProvider
-      : defaultNodeJSNavigatorContextProvider;
+  const getClientId = () => {
+    let clientId = '';
+    try {
+      clientId = getRelayInstanceFromState(engine.state).getMeta('').clientId;
+    } catch (e) {
+      logger.warn('Error while obtaining clientID from relay', e);
+    }
+    return clientId;
+  };
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
       return getRelayInstanceFromState(engine.state);
     },
     get navigatorContext() {
-      return navigatorContextProvider();
+      if (options.navigatorContextProvider) {
+        return options.navigatorContextProvider();
+      }
+      if (!isBrowser()) {
+        return defaultNodeJSNavigatorContextProvider();
+      }
+
+      return defaultBrowserNavigatorContextProvider(getClientId());
     },
   };
   const store = createStore(
@@ -338,7 +351,14 @@ function buildCoreEngine<
     },
 
     get navigatorContext() {
-      return navigatorContextProvider();
+      if (options.navigatorContextProvider) {
+        return options.navigatorContextProvider();
+      }
+      if (!isBrowser()) {
+        return defaultNodeJSNavigatorContextProvider();
+      }
+
+      return defaultBrowserNavigatorContextProvider(getClientId());
     },
 
     logger,
@@ -384,7 +404,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(options.middlewares || []);
+  ].concat(answerApi.middleware, options.middlewares || []);
 }
 
 function shouldWarnAboutOrganizationEndpoints(

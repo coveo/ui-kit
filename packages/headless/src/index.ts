@@ -483,6 +483,7 @@ export type {
   GeneratedAnswerProps,
   GeneratedAnswerCitation,
   GeneratedResponseFormat,
+  GeneratedAnswerPropsInitialState,
 } from './controllers/generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer';
 
@@ -645,4 +646,8 @@ export type {
 
 export * from './utils/query-expression/query-expression';
 
-export type {GeneratedAnswerFeedback} from './features/generated-answer/generated-answer-analytics-actions';
+export type {
+  GeneratedAnswerFeedback,
+  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedbackOption,
+} from './features/generated-answer/generated-answer-analytics-actions';

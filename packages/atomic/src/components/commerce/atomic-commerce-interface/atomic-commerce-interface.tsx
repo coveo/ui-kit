@@ -4,7 +4,7 @@ import {
   Unsubscribe,
   UrlManager,
   buildSearch,
-  updateQuery,
+  loadQueryActions,
   CommerceEngine,
   CommerceEngineConfiguration,
   buildCommerceEngine,
@@ -295,7 +295,9 @@ export class AtomicCommerceInterface
       safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
       const {value} = standaloneSearchBoxData;
 
-      this.engine.dispatch(updateQuery({query: value}));
+      this.engine.dispatch(
+        loadQueryActions(this.engine).updateQuery({query: value})
+      );
       (this.searchOrListing as Search).executeFirstSearch();
     } else {
       (this.searchOrListing as ProductListing).executeFirstRequest();
@@ -436,9 +438,9 @@ export class AtomicCommerceInterface
 
     this.initRequestStatus();
     this.initSummary();
-    this.initUrlManager();
     this.initContext();
     this.initLanguage();
+    this.initUrlManager();
     this.initialized = true;
   }
 

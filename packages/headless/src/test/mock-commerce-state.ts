@@ -2,6 +2,7 @@ import {getCartInitialState} from '../features/commerce/context/cart/cart-state'
 import {getContextInitialState} from '../features/commerce/context/context-state';
 import {getCommerceFacetSetInitialState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {getFieldSuggestionsOrderInitialState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
+import {getManualNumericFacetInitialState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state';
 import {getInstantProductsInitialState} from '../features/commerce/instant-products/instant-products-state';
 import {getCommercePaginationInitialState} from '../features/commerce/pagination/pagination-state';
 import {getProductListingInitialState} from '../features/commerce/product-listing/product-listing-state';
@@ -47,6 +48,7 @@ export function buildMockCommerceState(
       getCommerceStandaloneSearchBoxSetInitialState(),
     triggers: getTriggerInitialState(),
     fieldSuggestionsOrder: getFieldSuggestionsOrderInitialState(),
+    manualNumericFacetSet: getManualNumericFacetInitialState(),
     version: 'unit-testing-version',
     ...config,
   };

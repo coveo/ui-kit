@@ -16,6 +16,8 @@
         const commerceInterface = document.querySelector('atomic-commerce-interface');
 
         await commerceInterface.initializeWithEngine(commerceEngine);
+
+        commerceInterface.executeFirstRequest();
       })();
     </script>
   </head>
@@ -25,11 +27,15 @@
 
     <atomic-commerce-interface type="product-listing">
       <atomic-commerce-layout>
-        <atomic-layout-section section="facets">Here be facets</atomic-layout-section>
+        <atomic-layout-section section="facets"
+          ><atomic-commerce-facets></atomic-commerce-facets
+        ></atomic-layout-section>
         <atomic-layout-section section="main">
           <atomic-layout-section section="status">
+            <atomic-commerce-breadbox></atomic-commerce-breadbox>
             <atomic-commerce-query-summary></atomic-commerce-query-summary>
             <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+            <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
           </atomic-layout-section>
           <atomic-layout-section section="products">
             <atomic-commerce-product-list display="grid" density="compact" image-size="small">

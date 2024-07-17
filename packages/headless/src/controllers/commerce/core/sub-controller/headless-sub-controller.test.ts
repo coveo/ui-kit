@@ -11,9 +11,9 @@ import * as DidYouMean from '../../search/did-you-mean/headless-did-you-mean';
 import {SearchSummaryState} from '../../search/summary/headless-search-summary';
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator';
+import * as CoreInteractiveProduct from '../interactive-product/headless-core-interactive-product';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination';
 import * as CoreParameterManager from '../parameter-manager/headless-core-parameter-manager';
-import * as CoreInteractiveProduct from '../product-list/headless-core-interactive-product';
 import * as CoreSort from '../sort/headless-core-commerce-sort';
 import * as CoreUrlManager from '../url-manager/headless-core-url-manager';
 import {
@@ -136,6 +136,7 @@ describe('sub-controllers', () => {
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
         enrichParameters: mockEnrichParameters,
+        facetSearchType: 'LISTING',
       });
     });
 

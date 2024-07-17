@@ -1,5 +1,6 @@
 import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response';
 import {buildMockSearch} from '../../test/mock-search';
+import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions';
 import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions';
 import {
   QuerySearchCommerceAPIThunkReturn,
@@ -75,26 +76,38 @@ describe('querySet slice', () => {
     expect(finalState[id]).toBe(query);
   });
 
-  it(`when a query suggestion is selected,
-  it updates the query if the id exists`, () => {
-    const id = '1';
-    const query = 'query';
+  const describeSelectSuggestion = (
+    selectSuggestion:
+      | typeof selectQuerySuggestion
+      | typeof selectCommerceQuerySuggestion
+  ) => {
+    it('updates the query if the id exists', () => {
+      const id = '1';
+      const query = 'query';
 
-    registerQueryWithId(id);
-    const action = selectQuerySuggestion({id, expression: query});
-    const finalState = querySetReducer(state, action);
+      registerQueryWithId(id);
+      const action = selectSuggestion({id, expression: query});
+      const finalState = querySetReducer(state, action);
 
-    expect(finalState[id]).toBe(query);
+      expect(finalState[id]).toBe(query);
+    });
+
+    it('does not update the query if the id does not exist', () => {
+      const id = '1';
+
+      const action = selectSuggestion({id, expression: 'query'});
+      const finalState = querySetReducer(state, action);
+
+      expect(finalState[id]).toBe(undefined);
+    });
+  };
+
+  describe('#selectQuerySuggestion', () => {
+    describeSelectSuggestion(selectQuerySuggestion);
   });
 
-  it(`when a query suggestion is selected,
-  it does not update the query if the id does not exist`, () => {
-    const id = '1';
-
-    const action = selectQuerySuggestion({id, expression: 'query'});
-    const finalState = querySetReducer(state, action);
-
-    expect(finalState[id]).toBe(undefined);
+  describe('#selectCommerceQuerySuggestion', () => {
+    describeSelectSuggestion(selectCommerceQuerySuggestion);
   });
 
   it.each([{action: executeSearch}, {action: commerceExecuteSearch}])(

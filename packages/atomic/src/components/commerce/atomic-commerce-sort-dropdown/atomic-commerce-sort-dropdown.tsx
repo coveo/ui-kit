@@ -7,7 +7,6 @@ import {
   buildSearch,
   SearchState,
   ProductListingState,
-  SortCriterion,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element} from '@stencil/core';
 import {
@@ -19,9 +18,9 @@ import {randomID} from '../../../utils/utils';
 import {SortContainer} from '../../common/sort/container';
 import {SortGuard} from '../../common/sort/guard';
 import {SortLabel} from '../../common/sort/label';
-import {SortOption} from '../../common/sort/option';
 import {SortSelect} from '../../common/sort/select';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceSortOption, getSortByLabel} from '../sort/option';
 
 /**
  * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
@@ -71,19 +70,9 @@ export class AtomicCommerceSortDropdown
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
-    this.sort.sortBy(this.getSortByLabel(select.value));
-  }
-
-  private getLabel(sort: SortCriterion) {
-    if (sort.by === 'relevance') {
-      return 'relevance';
-    } else {
-      return sort.fields
-        .map((sortByField) => {
-          return sortByField.displayName || sortByField.name;
-        })
-        .join(' ');
-    }
+    this.sort.sortBy(
+      getSortByLabel(select.value, this.sortState.availableSorts)
+    );
   }
 
   public render() {
@@ -103,29 +92,16 @@ export class AtomicCommerceSortDropdown
         <SortContainer>
           <SortLabel i18n={i18n} id={id} />
           <SortSelect i18n={i18n} id={id} onSelect={(evt) => this.select(evt)}>
-            {this.sortState.availableSorts.map((availableSort) => {
-              const label = this.getLabel(availableSort);
-              return (
-                <SortOption
-                  i18n={i18n}
-                  label={label}
-                  selected={this.sort.isSortedBy(availableSort)}
-                  value={label}
-                />
-              );
-            })}
+            {this.sortState.availableSorts.map((sort) => (
+              <CommerceSortOption
+                i18n={i18n}
+                selected={this.sort.isSortedBy(sort)}
+                sort={sort}
+              />
+            ))}
           </SortSelect>
         </SortContainer>
       </SortGuard>
     );
-  }
-
-  private getSortByLabel(label: string) {
-    const sortByLabel: Record<string, SortCriterion> = {};
-    this.sortState.availableSorts.forEach((availableSort) => {
-      sortByLabel[this.getLabel(availableSort)] = availableSort;
-    });
-
-    return sortByLabel[label];
   }
 }

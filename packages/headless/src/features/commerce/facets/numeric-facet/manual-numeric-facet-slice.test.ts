@@ -1,0 +1,85 @@
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
+import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions';
+import {manualNumericFacetReducer} from './manual-numeric-facet-slice';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateManualNumericFacetRange,
+} from './numeric-facet-actions';
+
+describe('manualNumericFacetSlice', () => {
+  const someManualRange = {
+    start: 1,
+    end: 2,
+    endInclusive: false,
+    state: 'selected' as const,
+  };
+  it('should #updateManualNumericFacetRange', () => {
+    const state = buildMockCommerceState();
+
+    const finalState = manualNumericFacetReducer(
+      state.manualNumericFacetSet,
+      updateManualNumericFacetRange({
+        facetId: 'some-facet',
+        ...someManualRange,
+      })
+    );
+
+    expect(finalState).toEqual({'some-facet': {manualRange: someManualRange}});
+  });
+
+  it.each([
+    {
+      action: toggleExcludeNumericFacetValue,
+      name: 'toggleExcludeNumericFacetValue',
+    },
+    {
+      action: toggleSelectNumericFacetValue,
+      name: 'toggleSelectNumericFacetValue',
+    },
+    {
+      action: deselectAllValuesInCoreFacet,
+      name: 'deselectAllValuesInCoreFacet',
+    },
+  ])('should clear manual range when "$name" is dispatched', ({action}) => {
+    const state = buildMockCommerceState({
+      manualNumericFacetSet: {
+        'some-facet': {
+          manualRange: someManualRange,
+        },
+      },
+    });
+
+    const finalState = manualNumericFacetReducer(
+      state.manualNumericFacetSet,
+      action({
+        facetId: 'some-facet',
+      } as never)
+    );
+
+    expect(finalState).toEqual({'some-facet': {manualRange: undefined}});
+  });
+
+  it.each([
+    {action: restoreSearchParameters, name: 'restoreSearchParameters'},
+    {
+      action: restoreProductListingParameters,
+      name: 'restoreProductListingParameters',
+    },
+  ])('should restore manual range when "$name" is dispatched', ({action}) => {
+    const state = buildMockCommerceState();
+
+    const finalState = manualNumericFacetReducer(
+      state.manualNumericFacetSet,
+      action({
+        mnf: {
+          'some-facet': [someManualRange],
+        },
+      })
+    );
+
+    expect(finalState).toEqual({'some-facet': {manualRange: someManualRange}});
+  });
+});

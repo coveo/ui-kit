@@ -14,7 +14,6 @@ import {
 } from '../../../../features/commerce/sort/sort';
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
@@ -142,7 +141,6 @@ export function buildCoreSort(
 
     sortBy(criterion: SortCriterion) {
       dispatch(applySort(criterion));
-      dispatch(updatePage(0));
       dispatch(props.fetchProductsActionCreator());
     },
 

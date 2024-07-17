@@ -1,3 +1,4 @@
+import {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request';
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {
@@ -5,6 +6,7 @@ import {
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
 import {CategoryFacetSearchSection} from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
 import {
@@ -16,7 +18,9 @@ import {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-f
 export type CategoryFacetSearchProps = Omit<
   CoreCategoryFacetSearchProps,
   'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
->;
+> & {
+  options: FacetSearchOptions & {type: FacetSearchType};
+};
 
 export type CategoryFacetSearchState =
   CoreFacetSearchState<CategoryFacetSearchResult>;
@@ -39,8 +43,16 @@ export function buildCategoryFacetSearch(
   const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
     buildCoreCategoryFacetSearch(engine, {
       ...props,
-      executeFacetSearchActionCreator: executeCommerceFacetSearch,
-      executeFieldSuggestActionCreator: executeCommerceFieldSuggest,
+      executeFacetSearchActionCreator: (facetId: string) =>
+        executeCommerceFacetSearch({
+          facetId,
+          facetSearchType: props.options.type,
+        }),
+      executeFieldSuggestActionCreator: (facetId: string) =>
+        executeCommerceFieldSuggest({
+          facetId,
+          facetSearchType: props.options.type,
+        }),
     });
 
   return restOfFacetSearch;
