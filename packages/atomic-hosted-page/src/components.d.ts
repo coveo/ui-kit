@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { PlatformEnvironment } from "@coveo/headless";
+export { PlatformEnvironment } from "@coveo/headless";
 export namespace Components {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
