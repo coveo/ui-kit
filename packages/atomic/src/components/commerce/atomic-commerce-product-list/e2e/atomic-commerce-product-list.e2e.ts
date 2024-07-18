@@ -1,6 +1,6 @@
 import {test, expect} from './fixture';
 
-test.describe.only('when no first search has yet been executed', async () => {
+test.describe('when no first search has yet been executed', async () => {
   test.beforeEach(async ({productList}) => {
     await productList.load({story: 'no-first-search'});
     await productList.hydrated.waitFor();
