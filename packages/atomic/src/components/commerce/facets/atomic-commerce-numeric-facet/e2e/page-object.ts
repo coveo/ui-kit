@@ -10,11 +10,19 @@ export class NumericFacetPageObject extends AnyFacetPageObject<'atomic-commerce-
     return this.page.getByText('Price');
   }
 
-  getFacetValueButton(start: string, end: string) {
+  getFacetValueByPosition(position: number) {
+    return this.page.getByRole('listitem').nth(position);
+  }
+
+  getFacetValueButtonByPosition(position: number) {
+    return this.getFacetValueByPosition(position).locator('button');
+  }
+
+  getFacetValueButtonByLabel(start: string, end: string) {
     return this.page.getByLabel(`Inclusion filter on ${start} to ${end}`);
   }
 
-  getFacetValue(start: string, end: string) {
+  getFacetValueByRange(start: string, end: string) {
     return this.page
       .getByRole('listitem')
       .filter({hasText: `${start} to ${end}`});
