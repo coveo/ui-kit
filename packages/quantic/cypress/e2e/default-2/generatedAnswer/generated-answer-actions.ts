@@ -48,7 +48,7 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .feedbackOption(value, index)
         .click({force: true})
         .logAction(
-          `When clicking the feedback option ${value} at the index ${index}`
+          `When clicking the feedback option ${value} at the question at index ${index}`
         ),
 
     clickFeedbackSubmitButton: () =>
