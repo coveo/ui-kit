@@ -60,7 +60,7 @@ export const OpenInNewTab: Story = {
   },
   args: {'attributes-grid-cell-link-target': '_blank'},
   play: async (context) => {
-    await play(context);
+    await wrapInCommerceInterface({skipFirstSearch: true}).play(context);
     await playExecuteFirstSearch(context);
   },
 };
