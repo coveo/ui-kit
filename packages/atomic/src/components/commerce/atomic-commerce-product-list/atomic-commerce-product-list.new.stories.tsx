@@ -45,6 +45,13 @@ export const Default: Story = {
   },
 };
 
+export const NoFirstSearch: Story = {
+  name: 'atomic-commerce-product-list',
+  play: async (context) => {
+    await play(context);
+  },
+};
+
 export const OpenInNewTab: Story = {
   name: 'Open Product in New Tab',
   tags: ['test'],
