@@ -3,7 +3,13 @@ import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface({
+  accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+  organizationId: 'fashioncoveodemocomgzh7iep8',
+  search: {
+    searchHub: 'MainSearch',
+  },
+});
 
 const meta: Meta = {
   component: 'atomic-search-box',
