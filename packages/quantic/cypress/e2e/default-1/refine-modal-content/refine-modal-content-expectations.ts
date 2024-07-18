@@ -297,6 +297,13 @@ function sortExpectations(selector: SortSelector) {
           .logDetail(`The option's label should be equal to ${option.label}`);
       });
     },
+
+    sortCriteriaInSearchRequest: (
+      body: Record<string, unknown>,
+      value: string
+    ) => {
+      expect(body.sortCriteria).to.equal(value);
+    },
   };
 }
 
