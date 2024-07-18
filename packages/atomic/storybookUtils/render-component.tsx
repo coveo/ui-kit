@@ -11,7 +11,11 @@ export const parseSlots = (args: Args, slotsControls: string[]) =>
       : `<template slot="${unfurledSlotName}">${args[slotName]}</template>`;
   })}`;
 
-export const renderComponent = (args: Args, context: StoryContext) => {
+const renderComponentInternal = (
+  args: Args,
+  context: StoryContext,
+  withRoot: boolean
+) => {
   const shadowPartArgs: string[] = [];
   const attributeControls: string[] = [];
   const slotsControls: string[] = [];
@@ -28,22 +32,35 @@ export const renderComponent = (args: Args, context: StoryContext) => {
         break;
     }
   }
-  return html`<div id="code-root"><style>
-        ${unsafeStatic(
-          shadowPartArgs
-            .map(
-              (arg) =>
-                `${context.componentId}::part(${unfurlArg(arg)}) {${Object.entries(
-                  args[arg]
-                )
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join(';')}}`
-            )
-            .join('\n')
-        )}
-      </style>
-      <${unsafeStatic(context.componentId)}	
-        ${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}
-      >${unsafeStatic(parseSlots(args, slotsControls))}
-      </${unsafeStatic(context.componentId)}></div>`;
+
+  console.log(withRoot);
+
+  const out = html`<div id="code-root"><style>
+  ${unsafeStatic(
+    shadowPartArgs
+      .map(
+        (arg) =>
+          `${context.componentId}::part(${unfurlArg(arg)}) {${Object.entries(
+            args[arg]
+          )
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(';')}}`
+      )
+      .join('\n')
+  )}
+</style>
+<${unsafeStatic(context.componentId)}	
+  ${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}
+>${unsafeStatic(parseSlots(args, slotsControls))}
+</${unsafeStatic(context.componentId)}></div>`;
+
+  return out;
+};
+
+export const renderComponent = (args: Args, context: StoryContext) => {
+  return renderComponentInternal(args, context, true);
+};
+
+export const renderResultComponent = (args: Args, context: StoryContext) => {
+  return renderComponentInternal(args, context, false);
 };

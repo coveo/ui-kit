@@ -4,6 +4,7 @@ import {
 } from '@coveo/headless/commerce';
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
+import {TemplateResult} from 'lit-html';
 import {html} from 'lit/static-html.js';
 import type * as _ from '../src/components.d.ts';
 
@@ -93,6 +94,49 @@ export const wrapInCommerceInterface = ({
     });
   },
 });
+
+export const wrapInCommerceProductList = ({
+  engineConfig,
+  skipFirstSearch,
+  productListAttributes,
+}: {
+  engineConfig?: Partial<CommerceEngineConfiguration>;
+  skipFirstSearch?: boolean;
+  productListAttributes?: string;
+}): {
+  decorator: Decorator;
+  play: (context: StoryContext) => Promise<void>;
+} => {
+  const {play} = wrapInCommerceInterface({
+    engineConfig,
+    skipFirstSearch,
+  });
+  const listAttributes =
+    productListAttributes ||
+    'display="grid" density="compact" image-size="small"';
+
+  const decorator: Decorator = (story) => {
+    // lit-html does not support adding expressions to `template` tags
+    // https://lit.dev/docs/templates/expressions/#invalid-locations
+
+    const templateTag = document.createElement('template');
+    templateTag.innerHTML = (story() as TemplateResult).strings[0];
+    templateTag.id = 'code-root';
+    return html`
+      <atomic-commerce-interface data-testid="root-interface">
+        <atomic-layout-section section="products">
+          <atomic-commerce-product-list ${listAttributes}>
+            <atomic-product-template>${templateTag}</atomic-product-template>
+          </atomic-commerce-product-list>
+        </atomic-layout-section>
+      </atomic-commerce-interface>
+    `;
+  };
+  return {
+    decorator,
+    play,
+  };
+};
 
 export const playExecuteFirstSearch: (
   context: StoryContext
