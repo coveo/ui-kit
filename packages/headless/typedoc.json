@@ -12,5 +12,6 @@
     "./src/insight.index.ts",
     "./src/recommendation.index.ts",
     "./src/ssr.index.ts"
-  ]
+  ],
+  "projectDocuments": ["./src/docs/usage.md"]
 }
