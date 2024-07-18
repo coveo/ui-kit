@@ -1943,6 +1943,10 @@ export namespace Components {
          */
         "previousImage": () => Promise<void>;
     }
+    /**
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+     * @alpha 
+     */
     interface AtomicProductLink {
         /**
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -4481,6 +4485,10 @@ declare global {
         prototype: HTMLAtomicProductImageElement;
         new (): HTMLAtomicProductImageElement;
     };
+    /**
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+     * @alpha 
+     */
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
     var HTMLAtomicProductLinkElement: {
@@ -7374,6 +7382,10 @@ declare namespace LocalJSX {
          */
         "imageAltField"?: string;
     }
+    /**
+     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+     * @alpha 
+     */
     interface AtomicProductLink {
         /**
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -9251,6 +9263,10 @@ declare module "@stencil/core" {
              * The `atomic-product-image` component renders an image from a product field.
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
+            /**
+             * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+             * @alpha 
+             */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
