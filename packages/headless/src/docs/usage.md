@@ -1,10 +1,9 @@
 ---
-
 title: Usage
 group: Documentation
 category: Guides
-children: - ./child.md
-
+children:
+  - ./child.md
 ---
 
 # Usage
