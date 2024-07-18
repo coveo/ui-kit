@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-import { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
@@ -16,11 +16,11 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-import { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
+import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
@@ -29,7 +29,7 @@ import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
-import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -37,7 +37,7 @@ import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/s
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-export { Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
@@ -46,11 +46,11 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-export { AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightGeneratedAnswerStyle, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
+export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
@@ -59,7 +59,7 @@ export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
-export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -1943,10 +1943,6 @@ export namespace Components {
          */
         "previousImage": () => Promise<void>;
     }
-    /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     * @alpha 
-     */
     interface AtomicProductLink {
         /**
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -4485,10 +4481,6 @@ declare global {
         prototype: HTMLAtomicProductImageElement;
         new (): HTMLAtomicProductImageElement;
     };
-    /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     * @alpha 
-     */
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
     var HTMLAtomicProductLinkElement: {
@@ -7382,10 +7374,6 @@ declare namespace LocalJSX {
          */
         "imageAltField"?: string;
     }
-    /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     * @alpha 
-     */
     interface AtomicProductLink {
         /**
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
@@ -9263,10 +9251,6 @@ declare module "@stencil/core" {
              * The `atomic-product-image` component renders an image from a product field.
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
-            /**
-             * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-             * @alpha 
-             */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;

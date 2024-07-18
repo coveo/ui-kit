@@ -98,7 +98,6 @@ export const wrapInCommerceInterface = ({
 export const wrapInCommerceProductList = ({
   engineConfig,
   skipFirstSearch,
-  productListAttributes,
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstSearch?: boolean;
@@ -111,21 +110,22 @@ export const wrapInCommerceProductList = ({
     engineConfig,
     skipFirstSearch,
   });
-  const listAttributes =
-    productListAttributes ||
-    'display="grid" density="compact" image-size="small"';
 
   const decorator: Decorator = (story) => {
     // lit-html does not support adding expressions to `template` tags
     // https://lit.dev/docs/templates/expressions/#invalid-locations
 
     const templateTag = document.createElement('template');
-    templateTag.innerHTML = (story() as TemplateResult).strings[0];
+    templateTag.innerHTML = `${(story() as TemplateResult).strings.join('')}`;
     templateTag.id = 'code-root';
     return html`
       <atomic-commerce-interface data-testid="root-interface">
         <atomic-layout-section section="products">
-          <atomic-commerce-product-list ${listAttributes}>
+          <atomic-commerce-product-list
+            display="list"
+            density="compact"
+            image-size="small"
+          >
             <atomic-product-template>${templateTag}</atomic-product-template>
           </atomic-commerce-product-list>
         </atomic-layout-section>

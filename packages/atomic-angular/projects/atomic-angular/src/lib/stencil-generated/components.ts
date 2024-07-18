@@ -866,6 +866,28 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
 @ProxyCmp({
+  inputs: ['hrefTemplate']
+})
+@Component({
+  selector: 'atomic-product-link',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['hrefTemplate'],
+})
+export class AtomicProductLink {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductLink extends Components.AtomicProductLink {}
+
+
+@ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
 })
