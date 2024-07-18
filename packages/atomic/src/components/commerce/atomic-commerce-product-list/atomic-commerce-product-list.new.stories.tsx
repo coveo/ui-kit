@@ -45,10 +45,15 @@ export const Default: Story = {
   },
 };
 
+const {play: playNoFirstSearch} = wrapInCommerceInterface({
+  skipFirstSearch: true,
+  engineConfig: noResultsEngineConfig,
+});
+
 export const NoFirstSearch: Story = {
   name: 'atomic-commerce-product-list',
   play: async (context) => {
-    await play(context);
+    await playNoFirstSearch(context);
   },
 };
 
