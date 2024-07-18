@@ -18,20 +18,18 @@ function sortExpectations(selector: SortSelector) {
       selector.listbox().should(display ? 'exist' : 'not.exist');
     },
 
-    containsSortOptions: (values: string[]) => {
-      values.forEach((value) => {
-        selector.option(value).should('exist');
+    sortOptionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector
+          .sortOption(option.value)
+          .should('exist')
+          .should('contain', option.label)
+          .logDetail(`${option} label should be equal to ${option.label}`);
       });
     },
 
     labelContains: (label: string) => {
       selector.label().should('contain', label);
-    },
-
-    optionsEqual: (options: {value: string; label: string}[]) => {
-      options.forEach((option) => {
-        selector.option(option.value).should('contain', option.label);
-      });
     },
 
     sortCriteriaInSearchRequest: (

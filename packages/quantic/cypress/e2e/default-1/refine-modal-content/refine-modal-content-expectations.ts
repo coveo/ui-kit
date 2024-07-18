@@ -273,7 +273,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
           .should('exist')
           .should('contain', option.label)
           .logDetail(
-            'should contain the sort options in the refine modal sort component'
+            'should contain the sort option ${option.label} in the refine modal sort component'
           );
       });
     },
@@ -295,7 +295,7 @@ function sortExpectations(selector: SortSelector) {
           .sortOption(option.value)
           .should('exist')
           .should('contain', option.label)
-          .logDetail(`${option} label should be equal to ${option.label}`);
+          .logDetail(`The option's label should be equal to ${option.label}`);
       });
     },
   };

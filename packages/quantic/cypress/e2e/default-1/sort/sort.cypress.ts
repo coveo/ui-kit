@@ -128,8 +128,7 @@ describe('quantic-sort', () => {
 
           Actions.openDropdown();
 
-          Expect.containsSortOptions(sortOptionValues);
-          Expect.optionsEqual(sortOptions);
+          Expect.sortOptionsEqual(sortOptions);
           Expect.selectedOption(defaultOptionValue);
         });
       });
@@ -173,8 +172,7 @@ describe('quantic-sort', () => {
 
           Actions.openDropdown();
 
-          Expect.containsSortOptions(customSortOptionsValues);
-          Expect.optionsEqual(customSortOptions);
+          Expect.sortOptionsEqual(customSortOptions);
         });
 
         customSortOptionsValues

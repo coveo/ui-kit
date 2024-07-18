@@ -138,7 +138,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   gatherSortOptions() {
     this.sortData = getAllSortOptionsFromStore(this.engineId);
-    if (this.sortData !== undefined && this.sortData.length > 0) {
+    if (this.sortData?.length) {
       this.sortOptionsInitialized = true;
     }
   }

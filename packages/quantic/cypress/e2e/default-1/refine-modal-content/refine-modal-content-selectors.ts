@@ -88,6 +88,5 @@ export const SortSelectors: SortSelector = {
   sort: () => SortSelectors.get(),
   sortOption: (value: string) =>
     SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
-  sortDropdown: () =>
-    SortSelectors.get().find('[data-cy="sort-dropdown"]').first(),
+  sortDropdown: () => SortSelectors.get().find('[data-cy="sort-dropdown"]'),
 };
