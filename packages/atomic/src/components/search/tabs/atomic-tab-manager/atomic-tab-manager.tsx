@@ -17,6 +17,9 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
+ *
+ * @part button-container - The container for the tab button.
+ * @part button - The tab button.
  */
 @Component({
   tag: 'atomic-tab-manager',
