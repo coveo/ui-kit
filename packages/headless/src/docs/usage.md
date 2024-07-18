@@ -1,5 +1,3 @@
-// cspell
-
 ---
 
 title: Usage

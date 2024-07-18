@@ -13,5 +13,6 @@
     "./src/recommendation.index.ts",
     "./src/ssr.index.ts"
   ],
-  "projectDocuments": ["./src/docs/usage.md"]
+  "projectDocuments": ["./src/docs/usage.md"],
+  "gitRevision": "typedoc-POC"
 }
