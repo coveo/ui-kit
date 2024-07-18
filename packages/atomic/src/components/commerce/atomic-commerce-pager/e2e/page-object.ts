@@ -11,7 +11,7 @@ export class AtomicCommercePagerLocators extends BasePageObject<'atomic-commerce
   }
 
   get pages() {
-    return this.page.getByLabel('Page {{page}}');
+    return this.page.getByLabel(/Page \d/);
   }
 
   numericButton(pageNumber: number) {

@@ -2004,6 +2004,9 @@ export namespace Components {
          */
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
@@ -2013,6 +2016,20 @@ export namespace Components {
           * Gets the product template to apply based on the evaluated conditions.
          */
         "getTemplate": () => Promise<ProductTemplate<DocumentFragment> | null>;
+        /**
+          * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist" `;type: Record<string, string[]> ;default: {}
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicProductText {
         /**
@@ -4553,6 +4570,9 @@ declare global {
         prototype: HTMLAtomicProductSectionVisualElement;
         new (): HTMLAtomicProductSectionVisualElement;
     };
+    /**
+     * @alpha 
+     */
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
     var HTMLAtomicProductTemplateElement: {
@@ -7423,11 +7443,28 @@ declare namespace LocalJSX {
          */
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicProductTemplate {
         /**
           * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
          */
         "conditions"?: ProductTemplateCondition[];
+        /**
+          * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist" `;type: Record<string, string[]> ;default: {}
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicProductText {
         /**
@@ -9246,6 +9283,9 @@ declare module "@stencil/core" {
             "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
             "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
             "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
+            /**
+             * @alpha 
+             */
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
