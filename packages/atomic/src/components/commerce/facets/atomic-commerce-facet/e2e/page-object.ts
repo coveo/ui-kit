@@ -10,12 +10,21 @@ export class FacetPageObject extends AnyFacetPageObject<'atomic-commerce-facet'>
     return this.page.getByText('Brand');
   }
 
-  getFacetValueButton(value: string) {
-    return this.page.getByLabel(`Inclusion filter on ${value}`);
+  getFacetValueButtonByPosition(valuePosition: number) {
+    const value = this.getFacetValueByPosition(valuePosition);
+    return value.locator('button');
   }
 
-  getFacetValue(value: string | RegExp) {
+  getFacetValueByPosition(valuePosition: number) {
+    return this.page.getByRole('listitem').nth(valuePosition);
+  }
+
+  getFacetValueByLabel(value: string | RegExp) {
     return this.page.getByRole('listitem').filter({hasText: value});
+  }
+
+  getFacetValueButtonByLabel(value: string | RegExp) {
+    return this.page.getByLabel(`Inclusion filter on ${value}`);
   }
 
   get clearFilter() {
