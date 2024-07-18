@@ -5,6 +5,9 @@ import {
   ProductListingSummaryState,
   SearchSummaryState,
   Summary,
+  Context,
+  ContextState,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -22,8 +25,8 @@ import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {
+  defaultCurrencyFormatter,
   defaultNumberFormatter,
-  NumberFormatter,
 } from '../../../common/formats/format-common';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
@@ -52,10 +55,12 @@ export class AtomicCommerceNumericFacet
   @State()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
+  public context!: Context;
+  @BindStateToController('context') contextState!: ContextState;
+
   @State() public error!: Error;
 
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
-  private formatter: NumberFormatter = defaultNumberFormatter;
 
   /**
    * The Summary controller instance.
@@ -90,6 +95,8 @@ export class AtomicCommerceNumericFacet
       return;
     }
 
+    this.context = buildContext(this.bindings.engine);
+
     this.unsubscribeFacetController = this.facet.subscribe(
       () => (this.facetState = this.facet.state)
     );
@@ -99,6 +106,13 @@ export class AtomicCommerceNumericFacet
 
   public disconnectedCallback() {
     this.unsubscribeFacetController();
+  }
+
+  private get formatter() {
+    if (this.field === 'ec_price' || this.field === 'ec_promo_price') {
+      return defaultCurrencyFormatter(this.contextState.currency);
+    }
+    return defaultNumberFormatter;
   }
 
   private registerFacetToStore() {
@@ -115,13 +129,6 @@ export class AtomicCommerceNumericFacet
       hasValues: () => this.hasValues,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });
-  }
-
-  @Listen('atomic/numberFormat')
-  public setFormat(event: CustomEvent<NumberFormatter>) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.formatter = event.detail;
   }
 
   @Listen('atomic/numberInputApply')
