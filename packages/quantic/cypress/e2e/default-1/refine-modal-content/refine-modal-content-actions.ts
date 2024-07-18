@@ -1,8 +1,6 @@
 import {
   RefineContentSelector,
   RefineContentSelectors,
-  SortSelector,
-  SortSelectors,
 } from './refine-modal-content-selectors';
 
 function refineContentActions(selector: RefineContentSelector) {
@@ -47,14 +45,14 @@ function refineContentActions(selector: RefineContentSelector) {
     },
     openRefineModalSortDropdown: () => {
       selector
-        .refineSortDropdown()
+        .sortDropdown()
         .click()
         .logAction('when opening the sort dropdown in the refine modal');
     },
   };
 }
 
-function sortActions(selector: SortSelector) {
+function sortActions(selector: RefineContentSelector) {
   return {
     openSortDropdown: () => {
       selector
@@ -67,5 +65,5 @@ function sortActions(selector: SortSelector) {
 
 export const RefineContentActions = {
   ...refineContentActions(RefineContentSelectors),
-  ...sortActions(SortSelectors),
+  ...sortActions(RefineContentSelectors),
 };

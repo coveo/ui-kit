@@ -3,7 +3,6 @@ import {
   RefineContentSelector,
   RefineContentSelectors,
   SortSelector,
-  SortSelectors,
 } from './refine-modal-content-selectors';
 
 const COMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
@@ -190,7 +189,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayRefineModalSort: (display: boolean) => {
       selector
-        .refineSort()
+        .sort()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the Quantic Sort component`);
     },
@@ -269,7 +268,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
     refineSortOptionsEqual: (options: {value: string; label: string}[]) => {
       options.forEach((option) => {
         selector
-          .refineSortOption(option.value)
+          .sortOption(option.value)
           .should('exist')
           .should('contain', option.label)
           .logDetail(
@@ -303,5 +302,5 @@ function sortExpectations(selector: SortSelector) {
 
 export const RefineContentExpectations = {
   ...refineContentExpectations(RefineContentSelectors),
-  ...sortExpectations(SortSelectors),
+  ...sortExpectations(RefineContentSelectors),
 };

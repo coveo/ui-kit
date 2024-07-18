@@ -21,6 +21,25 @@ export interface FacetSelector extends ComponentSelector {
   timeframeFacetValues: () => CypressSelector;
 }
 
+export interface SortSelector extends ComponentSelector {
+  get: () => CypressSelector;
+  sort: () => CypressSelector;
+  sortOption: (value: string) => CypressSelector;
+  sortDropdown: () => CypressSelector;
+}
+
+const getCommonSortSelectors = (
+  rootSelector: () => CypressSelector
+): SortSelector => {
+  return {
+    get: rootSelector,
+    sort: () => rootSelector().find('c-quantic-sort'),
+    sortOption: (value: string) =>
+      rootSelector().find(`.slds-listbox__option[data-value="${value}"]`),
+    sortDropdown: () => rootSelector().find('[data-cy="sort-dropdown"]'),
+  };
+};
+
 const getCommonFacetSelectors = (
   rootSelector: () => CypressSelector
 ): FacetSelector => {
@@ -53,11 +72,8 @@ const getCommonFacetSelectors = (
   };
 };
 
-export interface RefineContentSelector extends FacetSelector {
+export interface RefineContentSelector extends FacetSelector, SortSelector {
   container: FacetSelector;
-  refineSort: () => CypressSelector;
-  refineSortOption: (value: string) => CypressSelector;
-  refineSortDropdown: () => CypressSelector;
   clearAllFiltersButton: () => CypressSelector;
   filtersTitle: () => CypressSelector;
 }
@@ -65,28 +81,9 @@ export interface RefineContentSelector extends FacetSelector {
 export const RefineContentSelectors: RefineContentSelector = {
   container: getCommonFacetSelectors(() => cy.get(refineContentContainer)),
   ...getCommonFacetSelectors(() => cy.get(refineContentComponent)),
-  refineSort: () => RefineContentSelectors.get().find('c-quantic-sort'),
-  refineSortOption: (value: string) =>
-    SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
-  refineSortDropdown: () =>
-    RefineContentSelectors.get().find('[data-cy="sort-dropdown"]'),
+  ...getCommonSortSelectors(() => cy.get(refineContentComponent)),
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
     RefineContentSelectors.get().find('[data-cy="filters-title"]'),
-};
-
-export interface SortSelector extends ComponentSelector {
-  get: () => CypressSelector;
-  sort: () => CypressSelector;
-  sortOption: (value: string) => CypressSelector;
-  sortDropdown: () => CypressSelector;
-}
-
-export const SortSelectors: SortSelector = {
-  get: () => cy.get('[data-cy="main-sort"]'),
-  sort: () => SortSelectors.get(),
-  sortOption: (value: string) =>
-    SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
-  sortDropdown: () => SortSelectors.get().find('[data-cy="sort-dropdown"]'),
 };
