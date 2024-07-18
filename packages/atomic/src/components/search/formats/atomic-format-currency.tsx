@@ -1,5 +1,6 @@
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
+  defaultCurrencyFormatter,
   dispatchNumberFormatEvent,
   NumberFormatter,
 } from '../../common/formats/format-common';
@@ -34,12 +35,7 @@ export class AtomicFormatCurrency {
     }
   }
 
-  private format: NumberFormatter = (value, languages) => {
-    return value.toLocaleString(languages, {
-      style: 'currency',
-      currency: this.currency,
-    });
-  };
+  private format: NumberFormatter = defaultCurrencyFormatter(this.currency);
 
   public render() {
     if (this.error) {
