@@ -1,6 +1,7 @@
 import answerGenerated from '@salesforce/label/c.quantic_AnswerGenerated';
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import feedback from '@salesforce/label/c.quantic_Feedback';
+import feedbackHelpUsImprove from '@salesforce/label/c.quantic_FeedbackHelpUsImprove';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import generatedAnswerIsHidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
 import showLess from '@salesforce/label/c.quantic_GeneratedAnswerShowLess';
@@ -16,7 +17,7 @@ import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpf
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
-import FeedbackModal from 'c/quanticFeedbackModal';
+import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -110,6 +111,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     irrelevant,
     inaccurate,
     outOfDate,
+    feedbackHelpUsImprove,
     feedback,
     whyGeneratedAnswerWasNotHelpful,
     generatingAnswer,
@@ -140,6 +142,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _maximumAnswerHeight = 250;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
+  /** @type {boolean} */
+  _liked = false;
+  /** @type {boolean} */
+  _disliked = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -286,9 +292,24 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * handles liking the generated answer.
    * @param {CustomEvent} event
    */
-  handleLike(event) {
+  async handleLike(event) {
     event.stopPropagation();
-    this.generatedAnswer.like?.();
+    if (!this._liked) {
+      this._liked = true;
+      this._disliked = false;
+      this.generatedAnswer.like?.();
+    }
+    if (!this.feedbackSubmitted) {
+      // @ts-ignore
+      await FeedbackModalQna.open({
+        size: 'small',
+        label: this.labels.feedbackHelpUsImprove,
+        handleSubmit: (feedbackPayload) => {
+          this.submitFeedback({...feedbackPayload, helpful: true});
+        },
+      });
+      this.generatedAnswer.closeFeedbackModal();
+    }
   }
 
   /**
@@ -297,16 +318,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
-    this.generatedAnswer.dislike?.();
+    if (!this._disliked) {
+      this._disliked = true;
+      this._liked = false;
+      this.generatedAnswer.dislike?.();
+    }
     if (!this.feedbackSubmitted) {
       // @ts-ignore
-      await FeedbackModal.open({
-        label: this.labels.feedback,
+      await FeedbackModalQna.open({
         size: 'small',
-        description: this.labels.feedback,
-        options: this.options,
-        handleSubmit: this.submitFeedback.bind(this),
-        optionsLabel: this.labels.whyGeneratedAnswerWasNotHelpful,
+        label: this.labels.feedbackHelpUsImprove,
+        handleSubmit: (feedbackPayload) => {
+          this.submitFeedback({...feedbackPayload, helpful: false});
+        },
       });
       this.generatedAnswer.closeFeedbackModal();
     }
@@ -317,11 +341,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @returns {void}
    */
   submitFeedback(feedbackPayload) {
-    if (feedbackPayload?.details) {
-      this.generatedAnswer.sendDetailedFeedback(feedbackPayload.details);
-    } else if (feedbackPayload?.value) {
-      this.generatedAnswer.sendFeedback(feedbackPayload.value);
-    }
+    this.generatedAnswer.sendFeedback(feedbackPayload);
     this.feedbackSubmitted = true;
   }
 

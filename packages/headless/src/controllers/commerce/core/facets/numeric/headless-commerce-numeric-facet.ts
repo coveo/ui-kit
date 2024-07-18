@@ -1,10 +1,14 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
+import {selectManualRange} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
+import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-  updateNumericFacetValues,
+  updateManualNumericFacetRange,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
+import {ManualRangeSection} from '../../../../../state/state-sections';
+import {loadReducerError} from '../../../../../utils/errors';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -30,6 +34,7 @@ export interface NumericFacetState
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
+  manualRange?: NumericRangeRequest;
 }
 
 /**
@@ -100,6 +105,10 @@ export function buildCommerceNumericFacet(
     },
   });
 
+  if (!loadCommerceNumericFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {dispatch} = engine;
   const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
     options;
@@ -108,17 +117,19 @@ export function buildCommerceNumericFacet(
     ...coreController,
 
     setRanges(ranges: NumericRangeRequest[]) {
-      dispatch(
-        updateNumericFacetValues({
-          facetId,
-          values: ranges.map((range) => ({...range, numberOfResults: 0})),
-        })
-      );
+      ranges.forEach((range) => {
+        dispatch(updateManualNumericFacetRange({facetId, ...range}));
+      });
       dispatch(fetchProductsActionCreator());
     },
 
-    get state() {
+    get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
+      const manualRange = selectManualRange(
+        facetId,
+        engine[stateKey].manualNumericFacetSet
+      );
+
       if (response?.type === 'numericalRange' && response.domain) {
         const {min, max} = response.domain;
         return {
@@ -127,14 +138,23 @@ export function buildCommerceNumericFacet(
             min,
             max,
           },
+          manualRange,
         };
       }
 
       return {
         ...coreController.state,
+        manualRange,
       };
     },
 
     type: 'numericalRange',
   };
+}
+
+function loadCommerceNumericFacetReducers(
+  engine: CommerceEngine
+): engine is CommerceEngine<ManualRangeSection> {
+  engine.addReducers({manualNumericFacetSet});
+  return true;
 }

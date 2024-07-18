@@ -10,7 +10,7 @@ runs:
       run: npx playwright test
       working-directory: packages/atomic-hosted-page
       shell: bash
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
       if: always()
       with:
         name: atomic-hosted-page-playwright-report

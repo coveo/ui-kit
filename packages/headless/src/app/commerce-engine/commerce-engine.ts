@@ -9,6 +9,7 @@ import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
 import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
+import {manualNumericFacetReducer} from '../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
@@ -47,6 +48,7 @@ const commerceEngineReducers = {
   facetSearchSet: specificFacetSearchSetReducer,
   categoryFacetSearchSet: categoryFacetSearchSetReducer,
   commerceFacetSet: commerceFacetSetReducer,
+  manualNumericFacetSet: manualNumericFacetReducer,
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,

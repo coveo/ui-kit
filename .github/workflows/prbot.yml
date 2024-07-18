@@ -8,10 +8,10 @@ jobs:
   report-size:
     if: github.event_name == 'pull_request'
     name: 'Report bundle size'
-    environment: PR Artifacts
     runs-on: ubuntu-latest
     env:
       NODE_OPTIONS: --max_old_space_size=4096
+      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
@@ -20,29 +20,12 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - run: npm ci
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - run: npm run pr:report
-        env:
-          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build:
     name: 'Build'
     runs-on: ubuntu-latest
-    environment: PR Artifacts
     steps:
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-        with:
-          token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
   lint-check:
@@ -71,15 +54,61 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-csp
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
-    environment: PR Artifacts
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex:
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+          ]
+        shardTotal: [24]
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
       - uses: ./.github/actions/setup
       - run: npm run build
       - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic
+        with:
+          shardIndex: ${{ matrix.shardIndex }}
+          shardTotal: ${{ matrix.shardTotal }}
+  merge-playwright-reports:
+    name: 'Merge Playwright reports'
+    environment: PR Artifacts
+    if: ${{ !cancelled() }}
+    needs:
+      - 'playwright-atomic'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - run: cat packages/atomic/dist/atomic/atomic.esm.js
+      - uses: ./.github/actions/merge-playwright-reports
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token

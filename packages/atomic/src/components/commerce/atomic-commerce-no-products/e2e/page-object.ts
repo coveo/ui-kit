@@ -1,9 +1,9 @@
-import type {Page} from '@playwright/test';
+import {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class NoProductsPageObject {
-  private page: Page;
+export class NoProductsPageObject extends BasePageObject<'atomic-commerce-no-products'> {
   constructor(page: Page) {
-    this.page = page;
+    super(page, 'atomic-commerce-no-products');
   }
 
   searchTips() {

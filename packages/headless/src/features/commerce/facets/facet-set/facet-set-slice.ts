@@ -43,6 +43,7 @@ import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-se
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateManualNumericFacetRange,
   updateNumericFacetValues,
 } from '../numeric-facet/numeric-facet-actions';
 import {
@@ -398,6 +399,16 @@ export const commerceFacetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
       .addCase(deselectAllValuesInCoreFacet, (state, action) => {
+        const {facetId} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        handleDeselectAllFacetValues(request);
+      })
+      .addCase(updateManualNumericFacetRange, (state, action) => {
         const {facetId} = action.payload;
         const request = state[facetId]?.request;
 
