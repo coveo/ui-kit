@@ -1976,95 +1976,6 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  describe('#selectCategoryFacetSearchResult', () => {
-    it('when facet request is not found in state, does not throw', () => {
-      const action = selectCategoryFacetSearchResult({
-        facetId: 'invalid!',
-        value: buildMockCategoryFacetSearchResult(),
-      });
-
-      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
-    });
-
-    it('when facet request type is invalid (i.e., is not "hierarchical"), does not throw', () => {
-      const facetId = 'regular_facet_id';
-      state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({
-          type: 'regular',
-          values: [],
-        }),
-      });
-      const action = selectCategoryFacetSearchResult({
-        facetId,
-        value: buildMockCategoryFacetSearchResult(),
-      });
-
-      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
-    });
-
-    it('when facet search result exists in request values array, updates its state to "selected"', () => {
-      const facetId = 'category_facet_id';
-      const facetValue = buildMockCategoryFacetValue({value: 'test'});
-      const facetValueRequest = convertCategoryFacetValueToRequest(facetValue);
-
-      state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({
-          type: 'hierarchical',
-          values: [facetValueRequest],
-        }),
-      });
-
-      const facetSearchResult = buildMockCategoryFacetSearchResult({
-        displayValue: facetValue.value,
-        rawValue: facetValue.value,
-      });
-
-      const action = selectCategoryFacetSearchResult({
-        facetId,
-        value: facetSearchResult,
-      });
-      const finalState = commerceFacetSetReducer(state, action);
-
-      const targetValue = finalState[facetId]?.request
-        .values[0] as CategoryFacetValueRequest;
-      expect(targetValue?.state).toBe('selected');
-    });
-
-    it('when facet search result is nested in request, updates its state to "selected"', () => {
-      const facetId = 'category_facet_id';
-      const nestedFacetValue = buildMockCategoryFacetValue({value: 'nested'});
-      const facetValue = buildMockCategoryFacetValue({
-        value: 'test',
-        children: [nestedFacetValue],
-      });
-      const facetValueRequest = convertCategoryFacetValueToRequest(facetValue);
-
-      state[facetId] = buildMockCommerceFacetSlice({
-        request: buildMockCommerceFacetRequest({
-          type: 'hierarchical',
-          values: [facetValueRequest],
-        }),
-      });
-
-      const facetSearchResult = buildMockCategoryFacetSearchResult({
-        displayValue: nestedFacetValue.value,
-        rawValue: nestedFacetValue.value,
-        path: [facetValue.value],
-      });
-
-      const action = selectCategoryFacetSearchResult({
-        facetId,
-        value: facetSearchResult,
-      });
-      const finalState = commerceFacetSetReducer(state, action);
-
-      const targetValue = (
-        finalState[facetId]?.request.values[0] as CategoryFacetValueRequest
-      ).children[0];
-      expect(targetValue?.state).toBe('selected');
-    });
-  });
-
   describe.each([
     {
       actionToDispatch: selectFacetSearchResult,
@@ -2201,6 +2112,95 @@ describe('commerceFacetSetReducer', () => {
       });
     }
   );
+
+  describe('#selectCategoryFacetSearchResult', () => {
+    it('when facet request is not found in state, does not throw', () => {
+      const action = selectCategoryFacetSearchResult({
+        facetId: 'invalid!',
+        value: buildMockCategoryFacetSearchResult(),
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet request type is invalid (i.e., is not "hierarchical"), does not throw', () => {
+      const facetId = 'regular_facet_id';
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'regular',
+          values: [],
+        }),
+      });
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value: buildMockCategoryFacetSearchResult(),
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when facet search result exists in request values array, updates its state to "selected"', () => {
+      const facetId = 'category_facet_id';
+      const facetValue = buildMockCategoryFacetValue({value: 'test'});
+      const facetValueRequest = convertCategoryFacetValueToRequest(facetValue);
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'hierarchical',
+          values: [facetValueRequest],
+        }),
+      });
+
+      const facetSearchResult = buildMockCategoryFacetSearchResult({
+        displayValue: facetValue.value,
+        rawValue: facetValue.value,
+      });
+
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value: facetSearchResult,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValue = finalState[facetId]?.request
+        .values[0] as CategoryFacetValueRequest;
+      expect(targetValue?.state).toBe('selected');
+    });
+
+    it('when facet search result is nested in request, updates its state to "selected"', () => {
+      const facetId = 'category_facet_id';
+      const nestedFacetValue = buildMockCategoryFacetValue({value: 'nested'});
+      const facetValue = buildMockCategoryFacetValue({
+        value: 'test',
+        children: [nestedFacetValue],
+      });
+      const facetValueRequest = convertCategoryFacetValueToRequest(facetValue);
+
+      state[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({
+          type: 'hierarchical',
+          values: [facetValueRequest],
+        }),
+      });
+
+      const facetSearchResult = buildMockCategoryFacetSearchResult({
+        displayValue: nestedFacetValue.value,
+        rawValue: nestedFacetValue.value,
+        path: [facetValue.value],
+      });
+
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value: facetSearchResult,
+      });
+      const finalState = commerceFacetSetReducer(state, action);
+
+      const targetValue = (
+        finalState[facetId]?.request.values[0] as CategoryFacetValueRequest
+      ).children[0];
+      expect(targetValue?.state).toBe('selected');
+    });
+  });
 
   describe('#updateNumericFacetValues', () => {
     it('when facet request is not found in state, does not throw', () => {
