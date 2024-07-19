@@ -16,6 +16,9 @@ import {
   SearchStatusState,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  buildTabManager,
+  TabManager,
+  TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -24,9 +27,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -68,6 +72,7 @@ export class AtomicTimeframeFacet implements InitializableComponent {
   private timeframeFacetCommon?: TimeframeFacetCommon;
   public filter?: DateFilter;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facetForDateRange')
@@ -82,6 +87,9 @@ export class AtomicTimeframeFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -97,6 +105,32 @@ export class AtomicTimeframeFacet implements InitializableComponent {
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field = 'date';
+  /**
+   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   /**
    * Whether this facet should contain an datepicker allowing users to set custom ranges.
    */
@@ -211,6 +245,16 @@ export class AtomicTimeframeFacet implements InitializableComponent {
       sortCriteria: this.sortCriteria,
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
+  }
+
+  public componentShouldUpdate(): void {
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.tabManagerState?.activeTab,
+      this.facetForDateRange
+    );
   }
 
   public disconnectedCallback() {
