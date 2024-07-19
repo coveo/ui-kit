@@ -90,6 +90,63 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadQueryActions',
   },
+  {
+    initializer: 'loadProductListingParametersActions',
+  },
+  {
+    initializer: 'loadQuerySetActions',
+  },
+  {
+    initializer: 'loadPaginationActions',
+  },
+  {
+    initializer: 'loadInstantProductsActions',
+  },
+  {
+    initializer: 'loadProductActions',
+  },
+  {
+    initializer: 'loadRecentQueriesActions',
+  },
+  {
+    initializer: 'loadRecommendationsActions',
+  },
+  {
+    initializer: 'loadSearchActions',
+  },
+  {
+    initializer: 'loadSortActions',
+  },
+  {
+    initializer: 'loadTriggersActions',
+  },
+  {
+    initializer: 'loadSearchParametersActions',
+  },
+  {
+    initializer: 'loadStandaloneSearchBoxSetActions',
+  },
+  {
+    initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadCartActions',
+  },
+  {
+    initializer: 'loadCategoryFacetSetActions',
+  },
+  {
+    initializer: 'loadCoreFacetActions',
+  },
+  {
+    initializer: 'loadDateFacetActions',
+  },
+  {
+    initializer: 'loadNumericFacetActions',
+  },
+  {
+    initializer: 'loadRegularFacetActions',
+  },
 ];
 
 const engine: EngineConfiguration = {
