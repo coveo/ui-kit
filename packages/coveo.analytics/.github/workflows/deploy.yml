@@ -1,0 +1,38 @@
+name: Deployment
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+      FORCE_DEPLOY:
+        type: boolean
+        description: Force the deploy, even if the last commit is a version bump?
+      DRY_RUN:
+        type: boolean
+        description: Dry run?
+
+jobs:
+  deploy:
+    name: Trigger Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build
+        run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Call coveo.analytics.js-infra
+        run: node ./scripts/trigger-cd.mjs
+        env:
+          GH_TOKEN: ${{ secrets.CD_DISPATCHER }}
+          FORCE_DEPLOY: ${{ inputs.FORCE_DEPLOY || false }}
+          DRY_RUN: ${{ inputs.DRY_RUN || github.base_ref == 'master' || false }}
+
