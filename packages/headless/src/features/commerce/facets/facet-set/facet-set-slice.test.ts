@@ -41,6 +41,10 @@ import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeri
 import {setContext, setView} from '../../context/context-actions';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {
+  fetchQuerySuggestions,
+  FetchQuerySuggestionsThunkReturn,
+} from '../../query-suggest/query-suggest-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
@@ -638,6 +642,65 @@ describe('commerceFacetSetReducer', () => {
       );
     }
   );
+
+  describe('#fetchQuerySuggestions.fulfilled', () => {
+    const payloadWithoutFieldSuggestionsFacets = {
+      query: '',
+      id: '',
+      completions: [],
+      responseId: '',
+    };
+    it('does not change the state when there are no field suggestion facets in the payload', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        fetchQuerySuggestions.fulfilled(
+          payloadWithoutFieldSuggestionsFacets as unknown as FetchQuerySuggestionsThunkReturn,
+          '',
+          {id: ''}
+        )
+      );
+      expect(finalState).toEqual(state);
+    });
+
+    it('initializes field suggestion facets when they are in the payload', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        fetchQuerySuggestions.fulfilled(
+          {
+            ...payloadWithoutFieldSuggestionsFacets,
+            fieldSuggestionsFacets: [
+              {
+                facetId: 'regular_field',
+                field: 'regular_field',
+                displayName: 'Regular Field',
+                type: 'regular',
+              },
+              {
+                facetId: 'hierarchical_field',
+                field: 'hierarchical_field',
+                displayName: 'Hierarchical Field',
+                type: 'hierarchical',
+              },
+            ],
+          },
+          '',
+          {id: ''}
+        )
+      );
+      expect(finalState).toEqual({
+        regular_field: {
+          request: {
+            initialNumberOfValues: 10,
+          },
+        },
+        hierarchical_field: {
+          request: {
+            initialNumberOfValues: 10,
+          },
+        },
+      });
+    });
+  });
 
   describe('for regular facets', () => {
     describe.each([

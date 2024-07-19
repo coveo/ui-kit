@@ -10,6 +10,7 @@ import {CommerceContextState} from '../features/commerce/context/context-state';
 import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state';
 import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
+import {ManualNumericFacetSetState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state';
 import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingState} from '../features/commerce/product-listing/product-listing-state';
@@ -509,4 +510,8 @@ export interface InsightUserActionSection {
    * The insight user action state.
    */
   insightUserAction: UserActionsState;
+}
+
+export interface ManualRangeSection {
+  manualNumericFacetSet: ManualNumericFacetSetState;
 }

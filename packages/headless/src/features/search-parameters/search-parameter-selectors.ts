@@ -32,5 +32,6 @@ export function initialSearchParameterSelector(
     sf: {},
     tab: '',
     af: {},
+    mnf: {},
   };
 }
