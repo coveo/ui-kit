@@ -19,7 +19,7 @@ import {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
 } from '../../generated-answer/headless-generated-answer';
-import {buildKnowledgeGeneratedAnswer} from './headless-knowledge-generated-answer';
+import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer';
 
 jest.mock('../../../features/generated-answer/generated-answer-actions');
 jest.mock(
@@ -44,7 +44,7 @@ describe('knowledge-generated-answer', () => {
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
-    buildKnowledgeGeneratedAnswer(
+    buildAnswerApiGeneratedAnswer(
       engine,
       generatedAnswerAnalyticsClient,
       props

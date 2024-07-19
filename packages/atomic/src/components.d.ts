@@ -887,8 +887,6 @@ export namespace Components {
          */
         "ifNotDefined"?: string;
     }
-    interface AtomicFocusDetector {
-    }
     interface AtomicFocusTrap {
         "active": boolean;
         /**
@@ -1006,6 +1004,7 @@ export namespace Components {
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
@@ -3388,10 +3387,6 @@ export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFacetNumberInputElement;
 }
-export interface AtomicFocusDetectorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicFocusDetectorElement;
-}
 export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
@@ -3902,24 +3897,6 @@ declare global {
     var HTMLAtomicFieldConditionElement: {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
-    };
-    interface HTMLAtomicFocusDetectorElementEventMap {
-        "focusEnter": any;
-        "focusExit": any;
-    }
-    interface HTMLAtomicFocusDetectorElement extends Components.AtomicFocusDetector, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicFocusDetectorElementEventMap>(type: K, listener: (this: HTMLAtomicFocusDetectorElement, ev: AtomicFocusDetectorCustomEvent<HTMLAtomicFocusDetectorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicFocusDetectorElementEventMap>(type: K, listener: (this: HTMLAtomicFocusDetectorElement, ev: AtomicFocusDetectorCustomEvent<HTMLAtomicFocusDetectorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicFocusDetectorElement: {
-        prototype: HTMLAtomicFocusDetectorElement;
-        new (): HTMLAtomicFocusDetectorElement;
     };
     interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
     }
@@ -5459,7 +5436,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
-        "atomic-focus-detector": HTMLAtomicFocusDetectorElement;
         "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
@@ -6391,10 +6367,6 @@ declare namespace LocalJSX {
          */
         "ifNotDefined"?: string;
     }
-    interface AtomicFocusDetector {
-        "onFocusEnter"?: (event: AtomicFocusDetectorCustomEvent<any>) => void;
-        "onFocusExit"?: (event: AtomicFocusDetectorCustomEvent<any>) => void;
-    }
     interface AtomicFocusTrap {
         "active"?: boolean;
         /**
@@ -6508,6 +6480,7 @@ declare namespace LocalJSX {
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
          */
@@ -8800,7 +8773,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
-        "atomic-focus-detector": AtomicFocusDetector;
         "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
@@ -9132,7 +9104,6 @@ declare module "@stencil/core" {
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
-            "atomic-focus-detector": LocalJSX.AtomicFocusDetector & JSXBase.HTMLAttributes<HTMLAtomicFocusDetectorElement>;
             "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             /**
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
