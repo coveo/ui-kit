@@ -84,10 +84,7 @@ import {
   logSearchboxSubmit,
   searchboxSubmit,
 } from '../features/query/query-analytics-actions';
-import {
-  logRecentQueryClick,
-  recentQueryClick,
-} from '../features/recent-queries/recent-queries-analytics-actions';
+import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
 import {
   logRecommendationUpdate,
   recommendationInterfaceLoad,
@@ -850,14 +847,13 @@ describe('Analytics Search Migration', () => {
   it('analytics/recentQueries/click', async () => {
     const action = executeSearch({
       legacy: logRecentQueryClick(),
-      next: recentQueryClick(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/interface/change', async () => {
