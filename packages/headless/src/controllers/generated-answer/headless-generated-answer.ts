@@ -9,6 +9,7 @@ import {
   GeneratedAnswerPropsInitialState,
 } from '../core/generated-answer/headless-core-generated-answer';
 import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer';
+import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer';
 
 export type {
   GeneratedAnswerCitation,
@@ -21,7 +22,7 @@ export type {
 
 /**
  * Creates a `GeneratedAnswer` controller instance.
- *
+
  * @param engine - The headless engine.
  * @param props - The configurable `GeneratedAnswer` properties.
  * @returns A `GeneratedAnswer` controller instance.
@@ -30,11 +31,17 @@ export function buildGeneratedAnswer(
   engine: SearchEngine,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
-  const controller = buildSearchAPIGeneratedAnswer(
-    engine,
-    generatedAnswerAnalyticsClient,
-    props
-  );
+  const controller = props.answerConfigurationId
+    ? buildAnswerApiGeneratedAnswer(
+        engine,
+        generatedAnswerAnalyticsClient,
+        props
+      )
+    : buildSearchAPIGeneratedAnswer(
+        engine,
+        generatedAnswerAnalyticsClient,
+        props
+      );
 
   return {
     ...controller,

@@ -13,7 +13,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
-    ? [['html'], ['list'], ['github']]
+    ? [['html'], ['list'], ['github'], ['blob']]
     : [['html'], ['list']],
   use: {
     trace: 'retain-on-failure',
@@ -36,7 +36,7 @@ export default defineConfig({
     },
   ],
   expect: {
-    timeout: 20 * 1000,
+    timeout: 7 * 1000,
   },
   webServer: process.env.CI
     ? {

@@ -5,6 +5,9 @@ import {
   ProductListingSummaryState,
   SearchSummaryState,
   Summary,
+  Context,
+  ContextState,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -22,8 +25,8 @@ import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {
+  defaultCurrencyFormatter,
   defaultNumberFormatter,
-  NumberFormatter,
 } from '../../../common/formats/format-common';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
@@ -44,8 +47,7 @@ export class AtomicCommerceNumericFacet
   @InitializeBindings() public bindings!: Bindings;
   @Element() private host!: HTMLElement;
 
-  @State() private range?: Range;
-
+  @BindStateToController('facet')
   @State()
   public facetState!: NumericFacetState;
 
@@ -53,10 +55,12 @@ export class AtomicCommerceNumericFacet
   @State()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
+  public context!: Context;
+  @BindStateToController('context') contextState!: ContextState;
+
   @State() public error!: Error;
 
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
-  private formatter: NumberFormatter = defaultNumberFormatter;
 
   /**
    * The Summary controller instance.
@@ -91,6 +95,8 @@ export class AtomicCommerceNumericFacet
       return;
     }
 
+    this.context = buildContext(this.bindings.engine);
+
     this.unsubscribeFacetController = this.facet.subscribe(
       () => (this.facetState = this.facet.state)
     );
@@ -100,6 +106,13 @@ export class AtomicCommerceNumericFacet
 
   public disconnectedCallback() {
     this.unsubscribeFacetController();
+  }
+
+  private get formatter() {
+    if (this.field === 'ec_price' || this.field === 'ec_promo_price') {
+      return defaultCurrencyFormatter(this.contextState.currency);
+    }
+    return defaultNumberFormatter;
   }
 
   private registerFacetToStore() {
@@ -118,16 +131,17 @@ export class AtomicCommerceNumericFacet
     });
   }
 
-  @Listen('atomic/numberFormat')
-  public setFormat(event: CustomEvent<NumberFormatter>) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.formatter = event.detail;
-  }
-
   @Listen('atomic/numberInputApply')
   public applyNumberInput({detail}: CustomEvent<Range>) {
-    this.range = {start: detail.start, end: detail.end};
+    const {start, end} = detail;
+    this.facet.setRanges([
+      {
+        start,
+        end,
+        endInclusive: true,
+        state: 'selected',
+      },
+    ]);
   }
 
   public render() {
@@ -150,7 +164,6 @@ export class AtomicCommerceNumericFacet
               onClearFilters={() => {
                 this.focusTarget.focusAfterSearch();
                 this.facet.deselectAll();
-                this.facet.setRanges([]);
               }}
               numberOfActiveValues={this.numberOfSelectedValues}
               isCollapsed={this.isCollapsed}
@@ -165,7 +178,7 @@ export class AtomicCommerceNumericFacet
                   bindings={this.bindings}
                   label={this.displayName}
                   facet={this.facet}
-                  range={this.range}
+                  range={this.facetState.manualRange}
                 ></atomic-commerce-facet-number-input>
               ),
             ]}
@@ -209,10 +222,6 @@ export class AtomicCommerceNumericFacet
   }
 
   private get numberOfSelectedValues() {
-    if (this.range) {
-      return 1;
-    }
-
     return (
       this.facetState.values.filter(({state}) => state === 'selected').length ||
       0
@@ -220,7 +229,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasInputRange() {
-    return !!this.range;
+    return !!this.facetState.manualRange || this.summaryState.isLoading;
   }
 
   private get shouldRenderValues() {

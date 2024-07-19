@@ -78,7 +78,12 @@
       "c/quanticTimeframeFacet": [
         "quanticTimeframeFacet/quanticTimeframeFacet.js"
       ],
-      "c/quanticFeedbackModal": ["quanticFeedbackModal/quanticFeedbackModal.js"]
+      "c/quanticFeedbackModal": [
+        "quanticFeedbackModal/quanticFeedbackModal.js"
+      ],
+      "c/quanticFeedbackModalQna": [
+        "quanticFeedbackModalQna/quanticFeedbackModalQna.js"
+      ]
     }
   },
   "include": [

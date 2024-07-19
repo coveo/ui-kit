@@ -14,8 +14,8 @@ test.describe('default', () => {
   test('should allow to select and deselect a range', async ({
     numericFacet,
   }) => {
-    const facetValueLabel = numericFacet.getFacetValue('12', '4,200');
-    const facetValueBtn = numericFacet.getFacetValueButton('12', '4,200');
+    const facetValueLabel = numericFacet.getFacetValueByPosition(0);
+    const facetValueBtn = numericFacet.getFacetValueButtonByPosition(0);
 
     await expect(facetValueBtn).not.toBeChecked();
     await facetValueLabel.click();
@@ -29,7 +29,7 @@ test.describe('default', () => {
   test('should allow to deselect a filter with the clear button', async ({
     numericFacet,
   }) => {
-    const facetValueLabel = numericFacet.getFacetValue('12', '4,200');
+    const facetValueLabel = numericFacet.getFacetValueByPosition(0);
 
     await facetValueLabel.click();
 

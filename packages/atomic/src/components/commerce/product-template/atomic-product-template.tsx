@@ -10,7 +10,7 @@ import {
 } from './product-template-common';
 
 /**
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product-template',
@@ -32,10 +32,24 @@ export class AtomicProductTemplate {
    */
   @Prop() public conditions: ProductTemplateCondition[] = [];
 
-  @MapProp({splitValues: true}) public mustMatch: Record<string, string[]> = {};
+  /**
+   * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute
+   * only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"
+   * `;type: Record<string, string[]> ;default: {}
+   */
+  @Prop() @MapProp({splitValues: true}) public mustMatch: Record<
+    string,
+    string[]
+  > = {};
 
-  @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
-    {};
+  /**
+   * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute
+   * only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+   */
+  @Prop() @MapProp({splitValues: true}) public mustNotMatch: Record<
+    string,
+    string[]
+  > = {};
 
   constructor() {
     this.productTemplateCommon = new ProductTemplateCommon({
