@@ -27,10 +27,6 @@ export interface UserActionsProps {
 
 export interface UserActionsOptions {
   /**
-   * The user ID to which the user's actions belong.
-   */
-  userId: string;
-  /**
    * The ticket creation date in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.
    */
   ticketCreationDate: string;
@@ -47,8 +43,9 @@ export interface UserActionsOptions {
 export interface UserActions extends Controller {
   /**
    * Fetch the list of user actions surrounding the ticket creation.
+   * @param userId The user ID to which the user's actions belong.
    */
-  fetchUserActions(): void;
+  fetchUserActions(userId: string): void;
   /**
    * The state of the UserActions controller.
    */
@@ -66,11 +63,9 @@ export function buildUserActions(
   const {dispatch} = engine;
   const getState = () => engine.state.insightUserAction;
   const controller = buildController(engine);
-  const {ticketCreationDate, userId, excludedCustomActions} = props.options;
+  const {ticketCreationDate, excludedCustomActions} = props.options;
 
-  dispatch(
-    registerUserActions({ticketCreationDate, userId, excludedCustomActions})
-  );
+  dispatch(registerUserActions({ticketCreationDate, excludedCustomActions}));
   return {
     ...controller,
 
@@ -78,8 +73,8 @@ export function buildUserActions(
       return getState();
     },
 
-    fetchUserActions() {
-      dispatch(fetchUserActions());
+    fetchUserActions(userId: string) {
+      dispatch(fetchUserActions(userId));
     },
   };
 }

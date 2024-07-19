@@ -11,7 +11,6 @@ export const insightUserActionsReducer = createReducer(
     builder
       .addCase(registerUserActions, (state, action) => {
         state.ticketCreationDate = action.payload.ticketCreationDate;
-        state.userId = action.payload.userId;
         if (action.payload.excludedCustomActions) {
           state.excludedCustomActions = action.payload.excludedCustomActions;
         }

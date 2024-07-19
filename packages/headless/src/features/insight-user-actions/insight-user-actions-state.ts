@@ -52,10 +52,6 @@ export interface UserActionsState {
    */
   ticketCreationDate?: string;
   /**
-   * The user ID to which the user's actions belong.
-   */
-  userId: string;
-  /**
    * `true` if fetching the user actions is in progress and `false` otherwise.
    */
   loading: boolean;
@@ -68,7 +64,6 @@ export interface UserActionsState {
 export function getInsightUserActionsInitialState(): UserActionsState {
   return {
     timeline: undefined,
-    userId: '',
     excludedCustomActions: [],
     loading: false,
   };

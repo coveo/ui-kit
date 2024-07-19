@@ -26,7 +26,7 @@ describe('insight user actions slice', () => {
     it('should set #loading to #true when fetching the user actions', () => {
       const modifiedState = insightUserActionsReducer(
         getInsightUserActionsInitialState(),
-        fetchUserActions.pending(requestId)
+        fetchUserActions.pending(exampleUserId, requestId)
       );
 
       expect(modifiedState.loading).toBe(true);
@@ -40,7 +40,7 @@ describe('insight user actions slice', () => {
 
       const modifiedState = insightUserActionsReducer(
         errorState,
-        fetchUserActions.pending(requestId)
+        fetchUserActions.pending(exampleUserId, requestId)
       );
 
       expect(modifiedState.error).toBeUndefined();
@@ -87,7 +87,11 @@ describe('insight user actions slice', () => {
       it('should set #loading to #false', () => {
         const modifiedState = insightUserActionsReducer(
           getInsightUserActionsInitialState(),
-          fetchUserActions.fulfilled({response: {value: []}}, requestId)
+          fetchUserActions.fulfilled(
+            {response: {value: []}},
+            exampleUserId,
+            requestId
+          )
         );
 
         expect(modifiedState.loading).toBe(false);
@@ -96,7 +100,11 @@ describe('insight user actions slice', () => {
       it('should set #error to #undefined', () => {
         const modifiedState = insightUserActionsReducer(
           getInsightUserActionsInitialState(),
-          fetchUserActions.fulfilled({response: {value: []}}, requestId)
+          fetchUserActions.fulfilled(
+            {response: {value: []}},
+            exampleUserId,
+            requestId
+          )
         );
 
         expect(modifiedState.error).toBeUndefined();
@@ -110,23 +118,10 @@ describe('insight user actions slice', () => {
         getInsightUserActionsInitialState(),
         registerUserActions({
           ticketCreationDate: exampleTicketCreationDate,
-          userId: exampleUserId,
         })
       );
 
       expect(modifiedState.ticketCreationDate).toBe(exampleTicketCreationDate);
-    });
-
-    it('should set the #userId', () => {
-      const modifiedState = insightUserActionsReducer(
-        getInsightUserActionsInitialState(),
-        registerUserActions({
-          ticketCreationDate: exampleTicketCreationDate,
-          userId: exampleUserId,
-        })
-      );
-
-      expect(modifiedState.userId).toBe(exampleUserId);
     });
 
     it('should set valid #excludedCustomActions', () => {
@@ -135,7 +130,6 @@ describe('insight user actions slice', () => {
         getInsightUserActionsInitialState(),
         registerUserActions({
           ticketCreationDate: exampleTicketCreationDate,
-          userId: exampleUserId,
           excludedCustomActions: testExcludedCustomActions,
         })
       );

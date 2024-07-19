@@ -35,7 +35,6 @@ describe('UserActions', () => {
 
   beforeEach(() => {
     options = {
-      userId: exampleUserId,
       ticketCreationDate: exampleTicketCreationDate,
       excludedCustomActions: exampleExcludedCustomActions,
     };
@@ -62,14 +61,14 @@ describe('UserActions', () => {
   it('registers and updates the state with the given options', () => {
     expect(registerUserActions).toHaveBeenCalled();
     expect(registerUserActions).toHaveBeenCalledWith({
-      userId: exampleUserId,
       ticketCreationDate: exampleTicketCreationDate,
       excludedCustomActions: exampleExcludedCustomActions,
     });
   });
 
   it('#fetchUserActions dispatches #fetchUserActions', () => {
-    userActions.fetchUserActions();
+    userActions.fetchUserActions(exampleUserId);
     expect(fetchUserActions).toHaveBeenCalled();
+    expect(fetchUserActions).toHaveBeenCalledWith(exampleUserId);
   });
 });
