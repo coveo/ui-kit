@@ -76,17 +76,13 @@ export const loadCollection = createAsyncThunk<
   'folding/loadCollection',
   async (
     collectionId: CollectionId,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext, relay}}
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
       state.configuration.analytics.analyticsMode === 'legacy'
         ? await legacyBuildSearchAndFoldingLoadCollectionRequest(state)
-        : buildSearchAndFoldingLoadCollectionRequest(
-            state,
-            navigatorContext,
-            relay
-          );
+        : buildSearchAndFoldingLoadCollectionRequest(state, navigatorContext);
 
     const response = await apiClient.search(
       {

@@ -33,6 +33,9 @@ export type {
 };
 
 /**
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ *
  * @param engine - The headless engine.
  * @param props - The configurable `DateFilter` properties.
  * @returns - A `DateFilter` controller instance.

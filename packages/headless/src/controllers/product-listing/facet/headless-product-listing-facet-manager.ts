@@ -16,6 +16,9 @@ export type {FacetManager, FacetManagerState, FacetManagerPayload};
 /**
  * Creates a `FacetManager` instance for the product listing.
  *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ *
  * @param productListingEngine - The headless engine.
  */
 export function buildFacetManager(

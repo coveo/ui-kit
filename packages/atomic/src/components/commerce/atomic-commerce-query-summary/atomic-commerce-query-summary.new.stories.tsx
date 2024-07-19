@@ -6,20 +6,10 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 
 const {decorator, play} = wrapInCommerceInterface({
-  skipFirstSearch: true,
+  skipFirstSearch: false,
 });
 
-const noResultsEngineConfig: Partial<CommerceEngineConfiguration> = {
-  preprocessRequest: (r) => {
-    const parsed = JSON.parse(r.body as string);
-    // eslint-disable-next-line @cspell/spellchecker
-    parsed.query = 'qnjssoptjhyalwnmrbgtyslsd';
-    r.body = JSON.stringify(parsed);
-    return r;
-  },
-};
-
-const fixedNumberOfResults = (
+const fixedNumberOfProducts = (
   perPage: number
 ): Partial<CommerceEngineConfiguration> => ({
   preprocessRequest: (r) => {
@@ -30,14 +20,13 @@ const fixedNumberOfResults = (
   },
 });
 
-const {play: playNoresults} = wrapInCommerceInterface({
-  skipFirstSearch: false,
-  engineConfig: noResultsEngineConfig,
+const {play: playNoInitialSearch} = wrapInCommerceInterface({
+  skipFirstSearch: true,
 });
 
-const {play: playFixedNumberOfResults} = wrapInCommerceInterface({
+const {play: playFixedNumberOfProducts} = wrapInCommerceInterface({
   skipFirstSearch: false,
-  engineConfig: fixedNumberOfResults(27),
+  engineConfig: fixedNumberOfProducts(27),
 });
 
 const meta: Meta = {
@@ -56,21 +45,21 @@ export const Default: Story = {
   name: 'atomic-query-summary',
 };
 
-export const NoResults: Story = {
-  name: 'No Results',
+export const NoInitialSearch: Story = {
+  name: 'No Initial Search',
   tags: ['test'],
   decorators: [(story) => story()],
   play: async (context) => {
-    await playNoresults(context);
+    await playNoInitialSearch(context);
   },
 };
 
-export const FixedNumberOfResults: Story = {
-  name: 'Fixed Number of Results',
+export const FixedNumberOfProducts: Story = {
+  name: 'Fixed Number of Products',
   tags: ['test'],
   decorators: [(story) => story()],
   play: async (context) => {
-    await playFixedNumberOfResults(context);
+    await playFixedNumberOfProducts(context);
   },
 };
 
@@ -92,6 +81,6 @@ export const WithSearchBox: Story = {
       </atomic-commerce-layout>`,
   ],
   play: async (context) => {
-    await play(context);
+    await playNoInitialSearch(context);
   },
 };

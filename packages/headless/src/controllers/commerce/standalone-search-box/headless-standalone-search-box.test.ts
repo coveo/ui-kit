@@ -4,6 +4,7 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
@@ -12,7 +13,6 @@ import {
   resetStandaloneSearchBox,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
-import {selectQuerySuggestion} from '../../../features/query-suggest/query-suggest-actions';
 // TODO: KIT-3127: import from commerce
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
@@ -30,7 +30,7 @@ import {
 import {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options';
 
 jest.mock('../../../features/commerce/query-set/query-set-actions');
-jest.mock('../../../features/query-suggest/query-suggest-actions'); // TODO: KIT-3127: add missing commerce actions
+jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/query/query-actions');
 jest.mock(
   '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions'

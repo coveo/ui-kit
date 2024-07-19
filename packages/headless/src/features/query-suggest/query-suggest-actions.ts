@@ -1,5 +1,4 @@
 import {NumberValue} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   getVisitorID,
@@ -131,7 +130,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     {
       getState,
       rejectWithValue,
-      extra: {apiClient, validatePayload, navigatorContext, relay},
+      extra: {apiClient, validatePayload, navigatorContext},
     }
   ) => {
     validatePayload(payload, idDefinition);
@@ -139,8 +138,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     const request = await buildQuerySuggestRequest(
       id,
       getState(),
-      navigatorContext,
-      relay
+      navigatorContext
     );
     const response = await apiClient.querySuggest(request);
 
@@ -159,8 +157,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
 export const buildQuerySuggestRequest = async (
   id: string,
   s: StateNeededByQuerySuggest,
-  navigatorContext: NavigatorContext,
-  relay: Relay
+  navigatorContext: NavigatorContext
 ): Promise<QuerySuggestRequest> => {
   return {
     accessToken: s.configuration.accessToken,
@@ -186,8 +183,7 @@ export const buildQuerySuggestRequest = async (
           )
         : fromAnalyticsStateToAnalyticsParams(
             s.configuration.analytics,
-            navigatorContext,
-            relay
+            navigatorContext
           )),
     }),
     ...(s.configuration.search.authenticationProviders.length && {

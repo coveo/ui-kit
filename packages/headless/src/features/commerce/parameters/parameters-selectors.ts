@@ -14,6 +14,7 @@ import {
   NumericFacetRequest,
   RegularFacetRequest,
 } from '../facets/facet-set/interfaces/request';
+import {ManualNumericFacetSetState} from '../facets/numeric-facet/manual-numeric-facet-state';
 import {
   CommercePaginationState,
   getCommercePaginationInitialSlice,
@@ -36,6 +37,7 @@ export function initialParametersSelector(
       getCommerceSortInitialState().appliedSort,
     cf: {},
     nf: {},
+    mnf: {},
     df: {},
     f: {},
   };
@@ -84,6 +86,7 @@ export function activeParametersSelector(
       getSelectedRangeValues,
       'nf'
     ),
+    ...getManualNumericFacet(state.manualNumericFacetSet),
   };
 }
 
@@ -97,7 +100,7 @@ export function enrichedParametersSelector(
   };
 }
 
-export function getPage(
+function getPage(
   section: CommercePaginationState | undefined,
   pageSelector: (section: CommercePaginationState) => number,
   initialState: number
@@ -111,7 +114,7 @@ export function getPage(
   return shouldInclude ? {page} : {};
 }
 
-export function getPerPage(
+function getPerPage(
   section: CommercePaginationState | undefined,
   perPageSelector: (section: CommercePaginationState) => number,
   initialState: number
@@ -125,19 +128,37 @@ export function getPerPage(
   return shouldInclude ? {perPage} : {};
 }
 
-export function getSelectedValues(request: AnyFacetRequest) {
+function getSelectedValues(request: AnyFacetRequest) {
   return (request as RegularFacetRequest).values
     .filter((fv) => fv.state === 'selected')
     .map((fv) => fv.value);
 }
 
-export function getSelectedRangeValues(request: AnyFacetRequest) {
+function getSelectedRangeValues(request: AnyFacetRequest) {
   return (request as NumericFacetRequest | DateFacetRequest).values.filter(
     (fv) => fv.state === 'selected'
   );
 }
 
-export function getSelectedCategoryValues(request: AnyFacetRequest): string[] {
+function getManualNumericFacet(section?: ManualNumericFacetSetState) {
+  if (!section) {
+    return {};
+  }
+
+  const manualNumericFacets = Object.entries(section)
+    .map(([facetId, manualFacetRange]) => {
+      if (manualFacetRange.manualRange === undefined) {
+        return;
+      }
+      return {[facetId]: [manualFacetRange.manualRange]};
+    })
+    .filter((manualRange) => manualRange !== undefined)
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return {mnf: manualNumericFacets};
+}
+
+function getSelectedCategoryValues(request: AnyFacetRequest): string[] {
   const categoryRequest = request as CategoryFacetRequest;
   return findActiveValueAncestry(
     categoryRequest.values as Parameters<typeof findActiveValueAncestry>[0]

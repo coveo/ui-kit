@@ -10,6 +10,12 @@ interface i18nKeyProps {
   i18n: i18n;
 }
 
+interface QuerySummaryLabels {
+  loadingStatus: string;
+  itemsForQuery: string;
+  allItems: string;
+}
+
 const WrapHighlight: FunctionalComponent<{part?: string}> = (
   props,
   children
@@ -24,16 +30,27 @@ const WrapHighlight: FunctionalComponent<{part?: string}> = (
   );
 };
 
-export const getQuerySummaryI18nParameters = ({
-  first,
-  last,
-  query,
-  total,
-  isLoading,
-  i18n,
-}: i18nKeyProps) => {
-  const i18nKey =
-    query !== '' ? 'showing-results-of-with-query' : 'showing-results-of';
+export const getQuerySummaryI18nParameters = (props: i18nKeyProps) => {
+  return getQuerySummaryData(props, {
+    loadingStatus: 'loading-results',
+    itemsForQuery: 'showing-results-of-with-query',
+    allItems: 'showing-results-of',
+  });
+};
+
+export const getProductQuerySummaryI18nParameters = (props: i18nKeyProps) => {
+  return getQuerySummaryData(props, {
+    loadingStatus: 'loading-products',
+    itemsForQuery: 'showing-products-of-with-query',
+    allItems: 'showing-products-of',
+  });
+};
+
+const getQuerySummaryData = (
+  {first, last, query, total, isLoading, i18n}: i18nKeyProps,
+  {allItems, itemsForQuery, loadingStatus}: QuerySummaryLabels
+) => {
+  const i18nKey = query !== '' ? itemsForQuery : allItems;
 
   const params = {
     first: first.toLocaleString(),
@@ -51,7 +68,7 @@ export const getQuerySummaryI18nParameters = ({
   };
 
   const ariaLiveMessage = isLoading
-    ? i18n.t('loading-results')
+    ? i18n.t(loadingStatus)
     : i18n.t(i18nKey, params);
 
   return {i18nKey, highlights, ariaLiveMessage};

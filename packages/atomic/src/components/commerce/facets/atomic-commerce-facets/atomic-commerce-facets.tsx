@@ -104,6 +104,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
             summary: this.summary,
             facet: facet as T,
             field: facet.state.field,
+            key: facet.state.facetId,
           });
 
           switch (facet.state.type) {

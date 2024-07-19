@@ -1,12 +1,12 @@
-import {StringValue} from '@coveo/bueno';
+import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {ProductListingSection} from '../../../state/state-sections';
 import {validatePayload} from '../../../utils/validate-payload';
-import {logQueryError} from '../../search/search-analytics-actions';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
@@ -29,20 +29,14 @@ export const fetchProductListing = createAsyncThunk<
   'commerce/productListing/fetch',
   async (
     _action,
-    {
-      getState,
-      dispatch,
-      rejectWithValue,
-      extra: {apiClient, relay, navigatorContext},
-    }
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const fetched = await apiClient.getProductListing(
-      buildCommerceAPIRequest(state, relay, navigatorContext)
+      buildCommerceAPIRequest(state, navigatorContext)
     );
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 
@@ -60,12 +54,7 @@ export const fetchMoreProducts = createAsyncThunk<
   'commerce/productListing/fetchMoreProducts',
   async (
     _action,
-    {
-      getState,
-      dispatch,
-      rejectWithValue,
-      extra: {apiClient, relay, navigatorContext},
-    }
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const moreProductsAvailable = moreProductsAvailableSelector(state);
@@ -77,12 +66,11 @@ export const fetchMoreProducts = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({
-      ...buildCommerceAPIRequest(state, relay, navigatorContext),
+      ...buildCommerceAPIRequest(state, navigatorContext),
       page: nextPageToRequest,
     });
 
     if (isErrorResponse(fetched)) {
-      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 
@@ -92,18 +80,21 @@ export const fetchMoreProducts = createAsyncThunk<
   }
 );
 
-export interface PromoteChildToParentActionCreatorPayload {
-  childPermanentId: string;
-  parentPermanentId: string;
+export interface PromoteChildToParentPayload {
+  child: ChildProduct;
 }
 
 export const promoteChildToParentDefinition = {
-  childPermanentId: new StringValue({required: true}),
-  parentPermanentId: new StringValue({required: true}),
+  child: new RecordValue({
+    options: {required: true},
+    values: {
+      permanentid: new StringValue({required: true}),
+    },
+  }),
 };
 
 export const promoteChildToParent = createAction(
   'commerce/productListing/promoteChildToParent',
-  (payload: PromoteChildToParentActionCreatorPayload) =>
+  (payload: PromoteChildToParentPayload) =>
     validatePayload(payload, promoteChildToParentDefinition)
 );

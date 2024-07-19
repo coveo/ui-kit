@@ -21,6 +21,7 @@ import {
   RecentQueriesSection,
   FieldSuggestionsOrderSection,
   TriggerSection,
+  ManualRangeSection,
 } from './state-sections';
 
 export type CommerceProductListingParametersState = CommerceFacetSetSection &
@@ -50,4 +51,5 @@ export type CommerceAppState = ConfigurationSection &
   InstantProductsSection &
   FieldSuggestionsOrderSection &
   TriggerSection &
+  ManualRangeSection &
   VersionSection;

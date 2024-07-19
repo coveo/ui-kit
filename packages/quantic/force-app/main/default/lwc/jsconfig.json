@@ -77,6 +77,9 @@
       "c/quanticFeedbackModal": [
         "quanticFeedbackModal/quanticFeedbackModal.js"
       ],
+      "c/quanticFeedbackModalQna": [
+        "quanticFeedbackModalQna/quanticFeedbackModalQna.js"
+      ],
       "c/quanticRadioButtonsGroup": [
         "quanticRadioButtonsGroup/quanticRadioButtonsGroup.js"
       ],

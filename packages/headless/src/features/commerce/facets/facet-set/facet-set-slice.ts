@@ -5,47 +5,52 @@ import {
   FacetValueRequest,
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {
-  defaultNumberOfValuesIncrement,
-  toggleSelectCategoryFacetValue,
-  updateCategoryFacetNumberOfValues,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
+import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-  updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues,
-  updateFreezeCurrentValues,
-} from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-  updateDateFacetValues,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
-import {
-  toggleExcludeNumericFacetValue,
-  toggleSelectNumericFacetValue,
-  updateNumericFacetValues,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setView} from '../../context/context-actions';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
+import '../category-facet/category-facet-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../category-facet/category-facet-actions';
+import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+  updateCoreFacetIsFieldExpanded,
+  updateCoreFacetNumberOfValues,
+  updateAutoSelectionForAllCoreFacets,
+  clearAllCoreFacets,
+} from '../core-facet/core-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+  updateDateFacetValues,
+} from '../date-facet/date-facet-actions';
 import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateManualNumericFacetRange,
+  updateNumericFacetValues,
+} from '../numeric-facet/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../regular-facet/regular-facet-actions';
 import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
 import {
   buildCategoryFacetValueRequest,
@@ -75,10 +80,18 @@ export const commerceFacetSetReducer = createReducer(
     builder
       .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
       .addCase(executeSearch.fulfilled, handleQueryFulfilled)
-      .addCase(
-        executeCommerceFieldSuggest.fulfilled,
-        handleFieldSuggestionsFulfilled
+      .addCase(executeCommerceFieldSuggest.fulfilled, (state, action) =>
+        handleFieldSuggestionsFulfilled(state, action.payload.facetId)
       )
+      .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
+        if (!action.payload.fieldSuggestionsFacets) {
+          return;
+        }
+
+        for (const {facetId} of action.payload.fieldSuggestionsFacets) {
+          handleFieldSuggestionsFulfilled(state, facetId);
+        }
+      })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -296,11 +309,7 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (
-          !facetRequest ||
-          (facetRequest.type !== 'regular' &&
-            facetRequest.type !== 'hierarchical')
-        ) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
@@ -352,16 +361,6 @@ export const commerceFacetSetReducer = createReducer(
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
-      .addCase(updateFacetNumberOfValues, (state, action) => {
-        const {facetId, numberOfValues} = action.payload;
-        const facetRequest = state[facetId]?.request;
-
-        if (!facetRequest) {
-          return;
-        }
-
-        facetRequest.numberOfValues = numberOfValues;
-      })
       .addCase(updateDateFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
         const request = state[facetId]?.request;
@@ -373,7 +372,17 @@ export const commerceFacetSetReducer = createReducer(
         request.values = convertToDateRangeRequests(values);
         request.numberOfValues = values.length;
       })
-      .addCase(updateFacetIsFieldExpanded, (state, action) => {
+      .addCase(updateCoreFacetNumberOfValues, (state, action) => {
+        const {facetId, numberOfValues} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.numberOfValues = numberOfValues;
+      })
+      .addCase(updateCoreFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -383,12 +392,12 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.isFieldExpanded = isFieldExpanded;
       })
-      .addCase(updateFacetAutoSelection, (state, action) =>
+      .addCase(updateAutoSelectionForAllCoreFacets, (state, action) =>
         Object.values(state).forEach((slice) => {
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
-      .addCase(updateFreezeCurrentValues, (state, action) => {
+      .addCase(updateCoreFacetFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -398,8 +407,8 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
-      .addCase(deselectAllFacetValues, (state, action) => {
-        const facetId = action.payload;
+      .addCase(deselectAllValuesInCoreFacet, (state, action) => {
+        const {facetId} = action.payload;
         const request = state[facetId]?.request;
 
         if (!request) {
@@ -408,7 +417,17 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(updateManualNumericFacetRange, (state, action) => {
+        const {facetId} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        handleDeselectAllFacetValues(request);
+      })
+      .addCase(clearAllCoreFacets, setAllFacetValuesToIdle)
       .addCase(setContext, clearAllFacetValues)
       .addCase(setView, clearAllFacetValues)
       .addCase(restoreSearchParameters, restoreFromParameters)
@@ -459,10 +478,8 @@ function handleQueryFulfilled(
 
 function handleFieldSuggestionsFulfilled(
   state: WritableDraft<CommerceFacetSetState>,
-  action: ReturnType<typeof executeCommerceFieldSuggest.fulfilled>
+  facetId: string
 ) {
-  const facetId = action.payload.facetId;
-
   let facetRequest = state[facetId]?.request;
   if (!facetRequest) {
     state[facetId] = {request: {} as AnyFacetRequest};

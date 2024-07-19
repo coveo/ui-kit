@@ -210,7 +210,6 @@ describe('analytics-utils', () => {
         emit: relayEmitSpy as unknown as ReturnType<typeof createRelay>['emit'],
         on: jest.fn(),
         off: jest.fn(),
-        clearStorage: jest.fn(),
         getMeta: jest.fn(),
         updateConfig: jest.fn(),
         version: 'test',

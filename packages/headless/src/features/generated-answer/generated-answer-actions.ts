@@ -160,6 +160,11 @@ export const updateResponseFormat = createAction(
     })
 );
 
+export const updateAnswerConfigurationId = createAction(
+  'knowledge/updateAnswerConfigurationId',
+  (payload: string) => validatePayload(payload, stringValue)
+);
+
 export const registerFieldsToIncludeInCitations = createAction(
   'generatedAnswer/registerFieldsToIncludeInCitations',
   (payload: string[]) => validatePayload<string[]>(payload, nonEmptyStringArray)

@@ -34,7 +34,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../utils/utils';
+import {isFocusingOut, once, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
@@ -267,11 +267,7 @@ export class AtomicCommerceSearchBox
   @Listen('atomic/selectChildProduct')
   public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
     event.stopPropagation();
-    const {parentPermanentId, childPermanentId} = event.detail;
-    this.bindings.store.state.activeProductChild = {
-      parentPermanentId,
-      childPermanentId,
-    };
+    this.bindings.store.state.activeProductChild = event.detail.child;
     this.suggestionManager.forceUpdate();
   }
 
@@ -367,6 +363,9 @@ export class AtomicCommerceSearchBox
   }
 
   private async onFocus() {
+    if (this.isExpanded) {
+      return;
+    }
     if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
       return;
     }
@@ -681,23 +680,28 @@ export class AtomicCommerceSearchBox
       <Host>
         {this.renderAbsolutePositionSpacer()}
         {[
-          <SearchBoxWrapper disabled={isDisabled} textArea={true}>
-            <atomic-focus-detector
-              style={{display: 'contents'}}
-              onFocusExit={() => this.suggestionManager.clearSuggestions()}
-            >
-              {this.renderTextBox(searchLabel)}
-              <Submit
-                bindings={this.bindings}
-                disabled={isDisabled}
-                onClick={() => {
-                  this.searchBox.submit();
-                  this.suggestionManager.clearSuggestions();
-                }}
-                title={searchLabel}
-              />
-              {this.renderSuggestions()}
-            </atomic-focus-detector>
+          <SearchBoxWrapper
+            disabled={isDisabled}
+            textArea={true}
+            onFocusout={(event) => {
+              if (!isFocusingOut(event)) {
+                return;
+              }
+              this.suggestionManager.clearSuggestions();
+              this.isExpanded = false;
+            }}
+          >
+            {this.renderTextBox(searchLabel)}
+            <Submit
+              bindings={this.bindings}
+              disabled={isDisabled}
+              onClick={() => {
+                this.searchBox.submit();
+                this.suggestionManager.clearSuggestions();
+              }}
+              title={searchLabel}
+            />
+            {this.renderSuggestions()}
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>

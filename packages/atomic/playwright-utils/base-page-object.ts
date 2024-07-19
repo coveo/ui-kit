@@ -19,7 +19,10 @@ export class BasePageObject<
     return 'http://localhost:4400/iframe.html';
   }
 
-  async load(args?: Component, story: string = 'default') {
+  async load({
+    args,
+    story = 'default',
+  }: {args?: Component; story?: string} = {}) {
     if (args) {
       await this.page.goto(
         `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`
@@ -27,6 +30,25 @@ export class BasePageObject<
     } else {
       await this.page.goto(`${this.urlRoot}?id=${this.tag}--${story}`);
     }
+  }
+
+  async noProducts() {
+    await this.page.route('**/commerce/v2/search', async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body.products = [];
+      if (body.pagination) {
+        body.pagination.totalEntries = 0;
+        body.pagination.totalPages = 0;
+      }
+      body.facets = [];
+      await route.fulfill({
+        response,
+        json: body,
+      });
+    });
+
+    return this;
   }
 
   private camelToKebab(args: Component) {

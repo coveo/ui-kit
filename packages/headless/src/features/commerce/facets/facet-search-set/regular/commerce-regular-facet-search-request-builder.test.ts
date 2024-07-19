@@ -1,4 +1,3 @@
-import {Relay, createRelay} from '@coveo/relay';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import * as Actions from '../../../../../features/commerce/common/actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
@@ -10,7 +9,6 @@ import {buildFacetSearchRequest} from './commerce-regular-facet-search-request-b
 
 describe('#buildFacetSearchRequest', () => {
   let state: CommerceAppState;
-  let relay: Relay;
   let navigatorContext: NavigatorContext;
   let facetId: string;
   let query: string;
@@ -31,7 +29,6 @@ describe('#buildFacetSearchRequest', () => {
       'buildCommerceAPIRequest'
     );
 
-    relay = createRelay({token: 'token', url: 'url', trackingId: 'trackingId'});
     navigatorContext = buildMockNavigatorContextProvider()();
   });
 
@@ -40,7 +37,6 @@ describe('#buildFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay,
       navigatorContext
     );
 
@@ -52,7 +48,6 @@ describe('#buildFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay,
       navigatorContext
     );
 
@@ -71,7 +66,6 @@ describe('#buildFacetSearchRequest', () => {
       facetId,
       state,
       false,
-      relay,
       navigatorContext
     );
 
@@ -88,7 +82,6 @@ describe('#buildFacetSearchRequest', () => {
       facetId,
       state,
       true,
-      relay,
       navigatorContext
     );
 
@@ -98,6 +91,7 @@ describe('#buildFacetSearchRequest', () => {
     expect(request).toEqual({
       ...expectedBaseRequest,
       facetId,
+      query: '',
       facetQuery: `*${query}*`,
     });
   });

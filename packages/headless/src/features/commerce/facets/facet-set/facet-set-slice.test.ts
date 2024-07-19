@@ -23,12 +23,7 @@ import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {
-  defaultNumberOfValuesIncrement,
-  toggleSelectCategoryFacetValue,
-  updateCategoryFacetNumberOfValues,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
+import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {
   FacetValueState,
   facetValueStates,
@@ -38,35 +33,46 @@ import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-  updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues,
-  updateFreezeCurrentValues,
-} from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
-import {
-  toggleExcludeDateFacetValue,
-  toggleSelectDateFacetValue,
-  updateDateFacetValues,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
-import {
-  toggleExcludeNumericFacetValue,
-  toggleSelectNumericFacetValue,
-  updateNumericFacetValues,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {setContext, setView} from '../../context/context-actions';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {
+  fetchQuerySuggestions,
+  FetchQuerySuggestionsThunkReturn,
+} from '../../query-suggest/query-suggest-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
 import {executeSearch} from '../../search/search-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../category-facet/category-facet-actions';
+import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+  updateCoreFacetIsFieldExpanded,
+  updateCoreFacetNumberOfValues,
+  updateAutoSelectionForAllCoreFacets,
+  clearAllCoreFacets,
+} from '../core-facet/core-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+  updateDateFacetValues,
+} from '../date-facet/date-facet-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
+} from '../numeric-facet/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../regular-facet/regular-facet-actions';
 import * as CommerceFacetReducers from './facet-set-reducer-helpers';
 import {
   commerceFacetSetReducer,
@@ -636,6 +642,65 @@ describe('commerceFacetSetReducer', () => {
       );
     }
   );
+
+  describe('#fetchQuerySuggestions.fulfilled', () => {
+    const payloadWithoutFieldSuggestionsFacets = {
+      query: '',
+      id: '',
+      completions: [],
+      responseId: '',
+    };
+    it('does not change the state when there are no field suggestion facets in the payload', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        fetchQuerySuggestions.fulfilled(
+          payloadWithoutFieldSuggestionsFacets as unknown as FetchQuerySuggestionsThunkReturn,
+          '',
+          {id: ''}
+        )
+      );
+      expect(finalState).toEqual(state);
+    });
+
+    it('initializes field suggestion facets when they are in the payload', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        fetchQuerySuggestions.fulfilled(
+          {
+            ...payloadWithoutFieldSuggestionsFacets,
+            fieldSuggestionsFacets: [
+              {
+                facetId: 'regular_field',
+                field: 'regular_field',
+                displayName: 'Regular Field',
+                type: 'regular',
+              },
+              {
+                facetId: 'hierarchical_field',
+                field: 'hierarchical_field',
+                displayName: 'Hierarchical Field',
+                type: 'hierarchical',
+              },
+            ],
+          },
+          '',
+          {id: ''}
+        )
+      );
+      expect(finalState).toEqual({
+        regular_field: {
+          request: {
+            initialNumberOfValues: 10,
+          },
+        },
+        hierarchical_field: {
+          request: {
+            initialNumberOfValues: 10,
+          },
+        },
+      });
+    });
+  });
 
   describe('for regular facets', () => {
     describe.each([
@@ -2195,9 +2260,9 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  describe('#updateFacetNumberOfValues', () => {
+  describe('#updateCoreFacetNumberOfValues', () => {
     it('when facet request is not found in state, does not throw', () => {
-      const action = updateFacetNumberOfValues({
+      const action = updateCoreFacetNumberOfValues({
         facetId: 'invalid!',
         numberOfValues: 10,
       });
@@ -2213,7 +2278,7 @@ describe('commerceFacetSetReducer', () => {
       });
       state[facetId] = buildMockCommerceFacetSlice({request});
 
-      const action = updateFacetNumberOfValues({
+      const action = updateCoreFacetNumberOfValues({
         facetId,
         numberOfValues: 10,
       });
@@ -2296,7 +2361,7 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  describe('#updateFacetIsFieldExpanded', () => {
+  describe('#updateCoreFacetIsFieldExpanded', () => {
     describe.each([
       {type: 'regular' as FacetType},
       {type: 'numericalRange' as FacetType},
@@ -2313,7 +2378,10 @@ describe('commerceFacetSetReducer', () => {
           }),
         });
 
-        const action = updateFacetIsFieldExpanded({facetId, isFieldExpanded});
+        const action = updateCoreFacetIsFieldExpanded({
+          facetId,
+          isFieldExpanded,
+        });
         const finalState = commerceFacetSetReducer(state, action);
 
         expect(finalState[facetId]?.request.isFieldExpanded).toBe(
@@ -2322,7 +2390,7 @@ describe('commerceFacetSetReducer', () => {
       });
     });
     it('dispatching with an unregistered id does not throw', () => {
-      const action = updateFacetIsFieldExpanded({
+      const action = updateCoreFacetIsFieldExpanded({
         facetId: '1',
         isFieldExpanded: true,
       });
@@ -2330,7 +2398,7 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  it('#updateFacetAutoSelection updates autoSelection for all facets', () => {
+  it('#updateGlobalFacetAutoSelection updates autoSelection for all facets', () => {
     const facetId = '1';
     const anotherFacetId = '2';
     state[facetId] = buildMockCommerceFacetSlice({
@@ -2342,14 +2410,14 @@ describe('commerceFacetSetReducer', () => {
 
     const finalState = commerceFacetSetReducer(
       state,
-      updateFacetAutoSelection({allow: true})
+      updateAutoSelectionForAllCoreFacets({allow: true})
     );
 
     expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
     expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
   });
 
-  it('#updateFreezeCurrentValues updates freezeCurrentValues for specified facet', () => {
+  it('#updateCoreFacetFreezeCurrentValues updates freezeCurrentValues for specified facet', () => {
     const facetId = '1';
     const anotherFacetId = '2';
     state[facetId] = buildMockCommerceFacetSlice({
@@ -2361,15 +2429,15 @@ describe('commerceFacetSetReducer', () => {
 
     const finalState = commerceFacetSetReducer(
       state,
-      updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
+      updateCoreFacetFreezeCurrentValues({facetId, freezeCurrentValues: false})
     );
 
     expect(finalState[facetId]!.request.freezeCurrentValues).toBe(false);
     expect(finalState[anotherFacetId]!.request.freezeCurrentValues).toBe(true);
   });
-  describe('#deselectAllFacetValues', () => {
+  describe('#deselectAllCoreFacetValues', () => {
     it('when called on an unregistered facet id, does not throw', () => {
-      const action = deselectAllFacetValues('1');
+      const action = deselectAllValuesInCoreFacet({facetId: '1'});
       expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
     });
 
@@ -2393,7 +2461,7 @@ describe('commerceFacetSetReducer', () => {
 
         finalState = commerceFacetSetReducer(
           state,
-          deselectAllFacetValues(facetId)
+          deselectAllValuesInCoreFacet({facetId})
         );
       });
       it('sets #request.numberOfValues to 0', () => {
@@ -2422,7 +2490,7 @@ describe('commerceFacetSetReducer', () => {
 
       const finalState = commerceFacetSetReducer(
         state,
-        deselectAllFacetValues(facetId)
+        deselectAllValuesInCoreFacet({facetId})
       );
 
       expect(
@@ -2433,7 +2501,7 @@ describe('commerceFacetSetReducer', () => {
     });
   });
 
-  it('#deselectAllBreadcrumbs resets the state of all facet values to "idle"', () => {
+  it('#clearAllCoreFacets resets the state of all facet values to "idle"', () => {
     const facetIds = ['1', '2'];
     for (const facetId of facetIds) {
       state[facetId] = buildMockCommerceFacetSlice({
@@ -2448,7 +2516,7 @@ describe('commerceFacetSetReducer', () => {
       });
     }
 
-    const finalState = commerceFacetSetReducer(state, deselectAllBreadcrumbs());
+    const finalState = commerceFacetSetReducer(state, clearAllCoreFacets());
 
     for (const facetId in finalState) {
       for (const value of finalState[facetId]!.request.values) {
