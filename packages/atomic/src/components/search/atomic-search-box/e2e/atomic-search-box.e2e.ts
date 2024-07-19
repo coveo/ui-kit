@@ -47,7 +47,7 @@ test.describe('default', () => {
   });
 });
 
-test.describe.only('with instant results & query suggestions', () => {
+test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
     await searchBox.load({
       story: 'rich-search-box',
