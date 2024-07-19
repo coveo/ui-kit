@@ -9,10 +9,10 @@ export interface UserActionTimeline {
 export interface UserSession {
   start: string;
   end: string;
-  actions: UserActionBeta[];
+  actions: UserAction[];
 }
 
-export interface UserActionBeta {
+export interface UserAction {
   actionType: UserActionType;
   timestamp: string;
   eventData: {
