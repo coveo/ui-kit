@@ -13,6 +13,9 @@ import {
   FacetResultsMustMatch,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  buildTabManager,
+  TabManager,
+  TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
@@ -42,6 +45,7 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -98,6 +102,7 @@ export class AtomicColorFacet implements InitializableComponent {
   private dependenciesManager?: FacetConditionsManager;
   private resultIndexToFocusOnShowMore = 0;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -106,6 +111,9 @@ export class AtomicColorFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -121,6 +129,32 @@ export class AtomicColorFacet implements InitializableComponent {
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field!: string;
+  /**
+   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
@@ -250,6 +284,7 @@ export class AtomicColorFacet implements InitializableComponent {
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
+    this.tabManager = buildTabManager(this.bindings.engine);
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -310,6 +345,12 @@ export class AtomicColorFacet implements InitializableComponent {
     prev: unknown,
     propName: keyof AtomicColorFacet
   ) {
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.tabManagerState?.activeTab,
+      this.facet
+    );
     if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
@@ -438,7 +479,7 @@ export class AtomicColorFacet implements InitializableComponent {
           >
             <div
               part={`value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value`}
-              class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
+              class="w-full h-12 mb-2 rounded-md value-box-color bg-neutral-dark"
             ></div>
             <FacetValueLabelHighlight
               displayValue={displayValue}

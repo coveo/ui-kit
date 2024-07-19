@@ -12,6 +12,9 @@ import {
   FacetConditionsManager,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  TabManagerState,
+  TabManager,
+  buildTabManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -49,6 +52,7 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {
   FacetValueProps,
   FacetValue,
@@ -105,6 +109,7 @@ export class AtomicFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -113,6 +118,9 @@ export class AtomicFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -129,10 +137,37 @@ export class AtomicFacet implements InitializableComponent {
    */
   @Prop({reflect: true}) public field!: string;
   /**
+   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet>
+   * ```
+   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
+  /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+
   /**
    * Whether this facet should contain a search box.
    *
@@ -260,6 +295,7 @@ export class AtomicFacet implements InitializableComponent {
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.initAriaLive();
     this.initConditionManager();
     this.initPopover();
@@ -278,6 +314,12 @@ export class AtomicFacet implements InitializableComponent {
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
+    updateFacetVisibilityForActiveTab(
+      this.tabsIncluded,
+      this.tabsExcluded,
+      this.tabManagerState?.activeTab,
+      this.facet
+    );
     if (
       this.isFacetState(prev, propName) &&
       this.isFacetState(next, propName)
