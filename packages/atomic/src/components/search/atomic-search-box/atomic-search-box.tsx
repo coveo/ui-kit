@@ -56,6 +56,8 @@ import {
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
+ * @slot default - The default slot where you can add child components to the search box.
+ *
  * @part wrapper - The search box wrapper.
  * @part input - The search box input.
  * @part loading - The search box loading animation.

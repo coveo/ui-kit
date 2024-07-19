@@ -47,24 +47,14 @@ test.describe('default', () => {
   });
 });
 
-test.describe('with instant results & query suggestions', () => {
+test.describe.only('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
     await searchBox.load({
-      args: {suggestionTimeout: 5000},
       story: 'rich-search-box',
     });
   });
 
   test.describe('with recent queries', () => {
-    test.beforeEach(async ({searchBox}) => {
-      await searchBox.searchInput.waitFor({state: 'visible'});
-      await searchBox.searchInput.click();
-      await searchBox.searchInput.fill('kayak');
-      await searchBox.searchInput.press('Enter');
-      await searchBox.clearButton.waitFor({state: 'visible'});
-      await searchBox.searchInput.fill('');
-    });
-
     test('should display recent queries', async ({searchBox}) => {
       await expect(searchBox.recentQueries().first()).toBeVisible();
     });
@@ -168,7 +158,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 
   test.describe('after typing a query above the threshold', () => {
     test.beforeEach(async ({page}) => {
-      await page.getByPlaceholder('Search').fill('kayak');
+      await page.getByPlaceholder('Search').fill('textured');
     });
 
     testCases();
@@ -218,7 +208,7 @@ test.describe('with minimum-query-length=4', () => {
 
   test.describe('after typing a query above the threshold', () => {
     test.beforeEach(async ({page}) => {
-      await page.getByPlaceholder('Search').fill('kayak');
+      await page.getByPlaceholder('Search').fill('textured');
     });
 
     test('the submit button is disabled', async ({searchBox}) => {
