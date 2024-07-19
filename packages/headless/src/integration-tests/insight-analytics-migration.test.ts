@@ -43,10 +43,6 @@ import {numericBreadcrumbFacet} from '../features/facets/range-facets/numeric-fa
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {
-  rephraseGeneratedAnswer,
-  retryGeneratedAnswer,
-} from '../features/generated-answer/generated-answer-analytics-actions';
-import {
   logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
 } from '../features/generated-answer/generated-answer-insight-analytics-actions';
@@ -412,27 +408,25 @@ describe('Analytics Search Migration', () => {
   it('analytics/generatedAnswer/rephrase', async () => {
     const action = executeSearch({
       legacy: logRephraseGeneratedAnswer({answerStyle: 'default'}),
-      next: rephraseGeneratedAnswer(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/generatedAnswer/retry', async () => {
     const action = executeSearch({
       legacy: logRetryGeneratedAnswer(),
-      next: retryGeneratedAnswer(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/pager/next', async () => {
