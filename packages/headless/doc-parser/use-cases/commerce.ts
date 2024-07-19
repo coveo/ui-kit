@@ -94,9 +94,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadProductListingParametersActions',
   },
   {
-    initializer: 'loadQuerySetActions',
-  },
-  {
     initializer: 'loadPaginationActions',
   },
   {
@@ -118,9 +115,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadSortActions',
   },
   {
-    initializer: 'loadTriggersActions',
-  },
-  {
     initializer: 'loadSearchParametersActions',
   },
   {
@@ -128,9 +122,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadContextActions',
-  },
-  {
-    initializer: 'loadCartActions',
   },
   {
     initializer: 'loadCategoryFacetSetActions',
@@ -147,6 +138,15 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadRegularFacetActions',
   },
+  // {
+  //   initializer: 'loadQuerySetActions',
+  // },
+  // {
+  //   initializer: 'loadTriggersActions',
+  // },
+  // {
+  //   initializer: 'loadCartActions',
+  // },
 ];
 
 const engine: EngineConfiguration = {
