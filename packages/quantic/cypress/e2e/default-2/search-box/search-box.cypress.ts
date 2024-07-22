@@ -131,15 +131,15 @@ describe('quantic-search-box', () => {
               const clickedSuggestionIndex = 0;
               Actions.clickQuerySuggestion(clickedSuggestionIndex);
 
+              Expect.logClickRecentQueries(
+                exampleRecentQueries[clickedSuggestionIndex]
+              );
               Expect.searchWithQuery(
                 exampleRecentQueries[clickedSuggestionIndex],
                 {
                   LSkey: recentQueriesLSKey,
                   queries: exampleRecentQueries,
                 }
-              );
-              Expect.logClickRecentQueries(
-                exampleRecentQueries[clickedSuggestionIndex]
               );
             });
           });
@@ -282,23 +282,7 @@ describe('quantic-search-box', () => {
 
               Expect.logClearRecentQueries();
               Expect.displayClearRecentQueriesButton(false);
-            });
-
-            scope('when selecting a query suggestion', () => {
-              Actions.focusSearchBox(textarea);
-              cy.wait(InterceptAliases.QuerySuggestions);
-              Expect.displaySuggestionList(true);
-              Expect.numberOfQuerySuggestions(exampleQuerySuggestions.length);
-              Expect.querySuggestionsEquals(exampleQuerySuggestions);
-              const clickedSuggestionIndex = 0;
-              Actions.clickQuerySuggestion(clickedSuggestionIndex);
-              Expect.searchWithQuery(
-                exampleQuerySuggestions[clickedSuggestionIndex],
-                {
-                  LSkey: recentQueriesLSKey,
-                  queries: [exampleQuerySuggestions[clickedSuggestionIndex]],
-                }
-              );
+              Expect.displaySuggestionList(false);
             });
           });
         });
@@ -339,15 +323,15 @@ describe('quantic-search-box', () => {
               Actions.pressDownArrowOnSearchBox(textarea);
               Actions.pressEnterOnSearchBox(textarea);
               const clickedSuggestionIndex = 0;
+              Expect.logClickRecentQueries(
+                exampleRecentQueries[clickedSuggestionIndex]
+              );
               Expect.searchWithQuery(
                 exampleRecentQueries[clickedSuggestionIndex],
                 {
                   LSkey: recentQueriesLSKey,
                   queries: exampleRecentQueries,
                 }
-              );
-              Expect.logClickRecentQueries(
-                exampleRecentQueries[clickedSuggestionIndex]
               );
             });
           });
@@ -382,6 +366,9 @@ describe('quantic-search-box', () => {
 
               Actions.pressEnterOnSearchBox(textarea);
               const clickedSuggestionIndex = 0;
+              Expect.logClickSuggestion(
+                exampleQuerySuggestions[clickedSuggestionIndex]
+              );
               Expect.searchWithQuery(
                 exampleQuerySuggestions[clickedSuggestionIndex],
                 {
@@ -391,9 +378,6 @@ describe('quantic-search-box', () => {
                     ...exampleRecentQueries,
                   ],
                 }
-              );
-              Expect.logClickSuggestion(
-                exampleQuerySuggestions[clickedSuggestionIndex]
               );
             });
           });

@@ -292,6 +292,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleSelection(event) {
     this.sendSelectSuggestionEvent(event.detail.selection);
+    this.inputIsFocused = false;
     this.input.blur();
   }
 
