@@ -41,7 +41,7 @@ export interface SummaryState {
 export interface Summary<State extends SummaryState = SummaryState>
   extends Controller {
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `SearchSummary` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `SearchSummary` sub-controller.
    */
   state: State;
 }

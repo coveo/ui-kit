@@ -35,11 +35,11 @@ interface CoreUrlManagerProps<T extends Parameters> extends UrlManagerProps {
 
 /**
  * @internal
- * Creates a `UrlManager` controller instance.
+ * Creates a `UrlManager` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `UrlManager` properties.
- * @returns A `UrlManager` controller instance.
+ * @returns A `UrlManager` sub-controller instance.
  */
 export function buildCoreUrlManager<T extends Parameters>(
   engine: CommerceEngine,

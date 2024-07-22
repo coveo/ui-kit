@@ -32,7 +32,7 @@ export {
 
 export interface SortProps {
   /**
-   * The initial state that should be applied to this `Sort` controller.
+   * The initial state that should be applied to this `Sort` sub-controller.
    */
   initialState?: SortInitialState;
 }
@@ -88,7 +88,7 @@ export interface Sort extends Controller {
   isAvailable(criterion: SortCriterion): boolean;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Sort` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Sort` sub-controller.
    */
   state: SortState;
 }
@@ -107,11 +107,11 @@ export interface SortState {
 
 /**
  * @internal
- * Creates a core `Sort` controller instance for commerce solution types.
+ * Creates a core `Sort` sub-controller instance for commerce solution types.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `Sort` controller properties.
- * @returns A `Sort` controller instance.
+ * @param props - The configurable `Sort` sub-controller properties.
+ * @returns A `Sort` sub-controller instance.
  */
 export function buildCoreSort(
   engine: CommerceEngine,
