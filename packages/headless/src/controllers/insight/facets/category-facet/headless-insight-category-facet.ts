@@ -4,8 +4,6 @@ import {
   facetClearAll,
   facetDeselect,
   facetSelect,
-  facetShowLess,
-  facetShowMore,
   facetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -141,7 +139,6 @@ export function buildCategoryFacet(
       dispatch(
         fetchFacetValues({
           legacy: logFacetShowMore(getFacetId()),
-          next: facetShowMore(),
         })
       );
     },
@@ -151,7 +148,6 @@ export function buildCategoryFacet(
       dispatch(
         fetchFacetValues({
           legacy: logFacetShowLess(getFacetId()),
-          next: facetShowLess(),
         })
       );
     },
