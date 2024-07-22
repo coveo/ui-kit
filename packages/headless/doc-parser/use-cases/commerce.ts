@@ -138,6 +138,7 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadRegularFacetActions',
   },
+  // TODO: KIT-3422 - Uncomment when ready to generate typedoc docs
   // {
   //   initializer: 'loadQuerySetActions',
   // },
