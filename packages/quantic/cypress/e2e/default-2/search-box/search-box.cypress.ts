@@ -84,15 +84,15 @@ describe('quantic-search-box', () => {
               const clickedSuggestionIndex = 0;
               Actions.clickQuerySuggestion(clickedSuggestionIndex);
 
+              Expect.logClickSuggestion(
+                exampleQuerySuggestions[clickedSuggestionIndex]
+              );
               Expect.searchWithQuery(
                 exampleQuerySuggestions[clickedSuggestionIndex],
                 {
                   LSkey: recentQueriesLSKey,
                   queries: [exampleQuerySuggestions[clickedSuggestionIndex]],
                 }
-              );
-              Expect.logClickSuggestion(
-                exampleQuerySuggestions[clickedSuggestionIndex]
               );
             });
           });
