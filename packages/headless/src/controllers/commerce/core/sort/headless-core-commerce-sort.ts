@@ -63,6 +63,9 @@ function validateSortInitialState(
   validateInitialState(engine, schema, state, 'buildSort');
 }
 
+/**
+ * The `Sort` sub-controller lets you sort the products in a commerce interface.
+ */
 export interface Sort extends Controller {
   /**
    * Updates the sort criterion and executes a new query.
