@@ -209,22 +209,17 @@ export const fetchFacetValues = createAsyncThunk<
   'search/fetchFacetValues',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
+    >({...config, analyticsAction: {}});
 
     const request = await buildFetchFacetValuesRequest(
       state,
-      config.extra.navigatorContext,
-      analyticsAction
+      config.extra.navigatorContext
     );
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'facetValues',
