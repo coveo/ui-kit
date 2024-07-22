@@ -81,7 +81,9 @@ export const InterceptAliases = {
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
       ShowGeneratedAnswer: uaAlias('generatedAnswerShowAnswers'),
       HideGeneratedAnswer: uaAlias('generatedAnswerHideAnswers'),
-      GeneratedAnswerFeedbackSubmit: uaAlias('generatedAnswerFeedbackSubmit'),
+      GeneratedAnswerFeedbackSubmitV2: uaAlias(
+        'generatedAnswerFeedbackSubmitV2'
+      ),
       RephraseGeneratedAnswer: uaAlias('rephraseGeneratedAnswer'),
       GeneratedAnswerSourceHover: uaAlias('generatedAnswerSourceHover'),
       GeneratedAnswerCopyToClipboard: uaAlias('generatedAnswerCopyToClipboard'),
@@ -115,6 +117,7 @@ export const InterceptAliases = {
         Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
+      SubmitRgaFeedback: nextAnalyticsAlias('Qna.SubmitRgaFeedback'),
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(
