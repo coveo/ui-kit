@@ -43,6 +43,8 @@ import {
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
@@ -90,7 +92,10 @@ import {
   logRecommendationUpdate,
   recommendationInterfaceLoad,
 } from '../features/recommendation/recommendation-analytics-actions';
-import {executeSearch} from '../features/search/search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../features/search/search-actions';
 import {
   logResultsSort,
   resultsSort,
@@ -995,5 +1000,29 @@ describe('Analytics Search Migration', () => {
     await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/showMore', async () => {
+    const action = fetchFacetValues({
+      legacy: logFacetShowMore(ANY_FACET_ID),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await clearMicrotaskQueue();
+
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+  });
+
+  it('analytics/facet/showLess', async () => {
+    const action = fetchFacetValues({
+      legacy: logFacetShowLess(ANY_FACET_ID),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await clearMicrotaskQueue();
+
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 });
