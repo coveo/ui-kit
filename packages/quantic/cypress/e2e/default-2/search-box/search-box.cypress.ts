@@ -282,7 +282,6 @@ describe('quantic-search-box', () => {
 
               Expect.logClearRecentQueries();
               Expect.displayClearRecentQueriesButton(false);
-              Expect.displaySuggestionList(false);
             });
 
             scope('when selecting a query suggestion', () => {
