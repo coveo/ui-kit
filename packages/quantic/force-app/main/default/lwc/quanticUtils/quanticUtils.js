@@ -31,6 +31,7 @@ import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 /** @typedef {import("coveo").Result} Result */
 
+export * from './recentQueriesUtils';
 export * from './markdownUtils';
 
 export class Debouncer {
@@ -233,9 +234,13 @@ export class I18nUtils {
 export const STANDALONE_SEARCH_BOX_STORAGE_KEY = 'coveo-standalone-search-box';
 
 export const keys = {
+  ESC: 'Escape',
+  TAB: 'Tab',
   ENTER: 'Enter',
   ARROWUP: 'ArrowUp',
   ARROWDOWN: 'ArrowDown',
+  ARROWRIGHT: 'ArrowRight',
+  ARROWLEFT: 'ArrowLeft',
 };
 
 export function getItemFromLocalStorage(key) {
@@ -530,6 +535,7 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
   function dispatchMessage(message) {
     const ariaLiveMessageEvent = new CustomEvent('arialivemessage', {
       bubbles: true,
+      composed: true,
       detail: {
         regionName,
         assertive,
@@ -542,6 +548,7 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
   function registerRegion() {
     const registerRegionEvent = new CustomEvent('registerregion', {
       bubbles: true,
+      composed: true,
       detail: {
         regionName,
         assertive,
