@@ -3336,6 +3336,9 @@ export namespace Components {
          */
         "name": string;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
@@ -5441,6 +5444,9 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    /**
+     * @alpha 
+     */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
     var HTMLAtomicTabManagerElement: {
@@ -8808,6 +8814,9 @@ declare namespace LocalJSX {
          */
         "name": string;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
@@ -9836,6 +9845,9 @@ declare module "@stencil/core" {
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            /**
+             * @alpha 
+             */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
