@@ -216,8 +216,6 @@ export type {
   RecentQueriesState,
 } from './controllers/recent-queries-list/headless-recent-queries-list.ts';
 
-export type {RegisterRecentQueriesCreatorPayload} from './features/recent-queries/recent-queries-actions';
-
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
   InstantProducts,
@@ -291,8 +289,6 @@ export type {
   QueryTriggerState,
 } from './controllers/core/triggers/headless-core-query-trigger';
 export {buildQueryTrigger} from './controllers/commerce/triggers/headless-commerce-query-trigger';
-
-export type {updateIgnoreQueryTrigger} from './features/commerce/triggers/triggers-actions';
 
 export type {
   FieldSuggestions,
