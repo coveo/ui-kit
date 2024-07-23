@@ -1,12 +1,11 @@
 /**
  * Utility functions to be used for Commerce Server Side Rendering.
  */
-import {UnknownAction} from '@reduxjs/toolkit';
+import {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
-import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
 import {
   buildControllerDefinitions,
@@ -43,28 +42,20 @@ export interface SSRCommerceEngine extends CommerceEngine {
   /**
    * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
    */
-  waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
+  waitForSearchCompletedAction(): Promise<Action>;
 }
 
 export type CommerceEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
 > = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
 
-export type SearchCompletedAction = ReturnType<
-  LegacySearchAction['fulfilled' | 'rejected']
->;
-
-function isListingFetchCompletedAction(
-  action: unknown
-): action is SearchCompletedAction {
+function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
     (action as UnknownAction).type
   );
 }
 
-function isSearchCompletedAction(
-  action: unknown
-): action is SearchCompletedAction {
+function isSearchCompletedAction(action: unknown): action is Action {
   return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
     (action as UnknownAction).type
   );
