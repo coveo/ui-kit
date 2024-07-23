@@ -447,14 +447,14 @@ export declare interface AtomicDidYouMean extends Components.AtomicDidYouMean {}
 
 
 @ProxyCmp({
-  inputs: ['selector']
+  inputs: ['boundInterface', 'selector']
 })
 @Component({
   selector: 'atomic-external',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['selector'],
+  inputs: ['boundInterface', 'selector'],
 })
 export class AtomicExternal {
   protected el: HTMLElement;
