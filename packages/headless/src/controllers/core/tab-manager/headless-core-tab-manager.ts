@@ -1,7 +1,7 @@
-import {configuration} from '../../../app/common-reducers';
+import {createSelector} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../../app/engine';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
-import {ConfigurationSection, TabSection} from '../../../state/state-sections';
+import {TabSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -23,10 +23,7 @@ export interface TabManagerState {
 }
 
 /**
- * Creates a `TabManager` controller instance.
- *
- * @param engine - The headless engine.
- * @returns A `TabManager` controller instance.
+ * @internal
  */
 export function buildCoreTabManager(engine: CoreEngine): TabManager {
   if (!loadTabReducers(engine)) {
@@ -35,26 +32,24 @@ export function buildCoreTabManager(engine: CoreEngine): TabManager {
 
   const controller = buildController(engine);
 
-  const getCurrentTab = () => {
-    return (
-      Object.values(engine.state.tabSet ?? {}).find((tab) => tab.isActive)
-        ?.id ?? ''
-    );
-  };
+  const currentTab = createSelector(
+    (state: typeof engine.state) => state.tabSet,
+    (state) => {
+      const activeTab = Object.values(state).find((tab) => tab.isActive);
+      return activeTab?.id ?? '';
+    }
+  );
 
   return {
     ...controller,
 
     get state() {
-      const activeTab = getCurrentTab();
-      return {activeTab};
+      return {activeTab: currentTab(engine.state)};
     },
   };
 }
 
-function loadTabReducers(
-  engine: CoreEngine
-): engine is CoreEngine<ConfigurationSection & TabSection> {
-  engine.addReducers({configuration, tabSet});
+function loadTabReducers(engine: CoreEngine): engine is CoreEngine<TabSection> {
+  engine.addReducers({tabSet});
   return true;
 }
