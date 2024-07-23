@@ -1,12 +1,8 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {
-  deselectAllBreadcrumbs,
-  deselectAllNonBreadcrumbs,
-} from '../../../features/breadcrumb/breadcrumb-actions';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
-import {updateQuery} from '../../../features/query/query-actions';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
 import {
   registerTab,
   updateActiveTab,
@@ -136,9 +132,12 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
 
     select() {
       if (props.options.clearFiltersOnTabChange) {
-        dispatch(deselectAllBreadcrumbs());
-        dispatch(deselectAllNonBreadcrumbs());
-        dispatch(updateQuery({q: ''}));
+        dispatch(
+          prepareForSearchWithQuery({
+            q: '',
+            clearFilters: true,
+          })
+        );
       }
       dispatch(updateActiveTab(id));
     },
