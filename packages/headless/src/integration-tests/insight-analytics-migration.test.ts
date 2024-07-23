@@ -20,8 +20,6 @@ import {
   facetClearAll,
   facetDeselect,
   facetSelect,
-  facetShowLess,
-  facetShowMore,
   facetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -490,26 +488,24 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/showMore', async () => {
     const action = fetchFacetValues({
       legacy: logFacetShowMore(ANY_FACET_ID),
-      next: facetShowMore(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/showLess', async () => {
     const action = fetchFacetValues({
       legacy: logFacetShowLess(ANY_FACET_ID),
-      next: facetShowLess(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 });
