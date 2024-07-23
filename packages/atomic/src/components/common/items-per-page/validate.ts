@@ -1,15 +1,10 @@
-import {AtomicCommerceProductsPerPage} from '../../commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page';
-import {AtomicResultsPerPage} from '../../search/atomic-results-per-page/atomic-results-per-page';
+import {ChoiceIsNaNError, InitialChoiceNotInChoicesError} from './error';
 
-export function validateChoicesDisplayed(
-  context: AtomicResultsPerPage | AtomicCommerceProductsPerPage
-) {
-  return context.choicesDisplayed.split(',').map((choice) => {
+export function convertChoicesToNumbers(choices: string) {
+  return choices.split(',').map((choice) => {
     const parsedChoice = parseInt(choice);
     if (isNaN(parsedChoice)) {
-      const errorMsg = `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`;
-      context.bindings.engine.logger.error(errorMsg, context);
-      throw new Error(errorMsg);
+      throw new ChoiceIsNaNError(choice);
     }
 
     return parsedChoice;
@@ -17,16 +12,12 @@ export function validateChoicesDisplayed(
 }
 
 export function validateInitialChoice(
-  context: AtomicResultsPerPage | AtomicCommerceProductsPerPage,
+  initialChoice: number,
   choices: number[]
-) {
-  if (!context.initialChoice) {
-    context.initialChoice = choices[0];
-    return;
+): number {
+  if (!choices.includes(initialChoice)) {
+    throw new InitialChoiceNotInChoicesError(initialChoice, choices);
   }
-  if (!choices.includes(context.initialChoice)) {
-    const errorMsg = `The "initialChoice" option value "${context.initialChoice}" is not included in the "choicesDisplayed" option "${context.choicesDisplayed}".`;
-    context.bindings.engine.logger.error(errorMsg, context);
-    throw new Error(errorMsg);
-  }
+
+  return initialChoice;
 }

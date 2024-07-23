@@ -15,9 +15,13 @@ import {
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
 import {Choices} from '../../common/items-per-page/choices';
+import {
+  ChoiceIsNaNError,
+  InitialChoiceNotInChoicesError,
+} from '../../common/items-per-page/error';
 import {Label} from '../../common/items-per-page/label';
 import {
-  validateChoicesDisplayed,
+  convertChoicesToNumbers,
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
 import {PagerGuard} from '../../common/pager/pager-guard';
@@ -57,8 +61,9 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @Prop({reflect: true}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+   * @type {number}
    */
-  @Prop({mutable: true, reflect: true}) initialChoice?: number;
+  @Prop({reflect: true}) initialChoice?: number;
 
   @Event({
     eventName: 'atomic/scrollToTop',
@@ -66,8 +71,18 @@ export class AtomicResultsPerPage implements InitializableComponent {
   private scrollToTopEvent!: EventEmitter;
 
   public initialize() {
-    this.choices = validateChoicesDisplayed(this);
-    validateInitialChoice(this, this.choices);
+    try {
+      this.choices = convertChoicesToNumbers(this.choicesDisplayed);
+      this.initialChoice = this.initialChoice ?? this.choices[0];
+      validateInitialChoice(this.initialChoice, this.choices);
+    } catch (error) {
+      if (error instanceof ChoiceIsNaNError) {
+        this.bindings.engine.logger.error(error.message, this);
+      }
+      if (error instanceof InitialChoiceNotInChoicesError) {
+        this.bindings.engine.logger.error(error.message, this);
+      }
+    }
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {

@@ -6,7 +6,6 @@ import {
   SearchSummaryState,
   ProductListingSummaryState,
   Summary,
-  loadPaginationActions,
 } from '@coveo/headless/commerce';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {
@@ -17,9 +16,13 @@ import {
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
 import {Choices} from '../../common/items-per-page/choices';
+import {
+  ChoiceIsNaNError,
+  InitialChoiceNotInChoicesError,
+} from '../../common/items-per-page/error';
 import {Label} from '../../common/items-per-page/label';
 import {
-  validateChoicesDisplayed,
+  convertChoicesToNumbers,
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
 import {PagerGuard} from '../../common/pager/pager-guard';
@@ -67,8 +70,9 @@ export class AtomicCommerceProductsPerPage
   @Prop({reflect: true}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+   * @type {number}
    */
-  @Prop({mutable: true, reflect: true}) initialChoice?: number;
+  @Prop({reflect: true}) initialChoice?: number;
 
   @Event({
     eventName: 'atomic/scrollToTop',
@@ -76,8 +80,18 @@ export class AtomicCommerceProductsPerPage
   private scrollToTopEvent!: EventEmitter;
 
   public initialize() {
-    this.choices = validateChoicesDisplayed(this);
-    validateInitialChoice(this, this.choices);
+    try {
+      this.choices = convertChoicesToNumbers(this.choicesDisplayed);
+      this.initialChoice = this.initialChoice ?? this.choices[0];
+      validateInitialChoice(this.initialChoice, this.choices);
+    } catch (error) {
+      if (error instanceof ChoiceIsNaNError) {
+        this.bindings.engine.logger.error(error.message, this);
+      }
+      if (error instanceof InitialChoiceNotInChoicesError) {
+        this.bindings.engine.logger.error(error.message, this);
+      }
+    }
 
     const controller =
       this.bindings.interfaceElement.type === 'search'
@@ -85,9 +99,9 @@ export class AtomicCommerceProductsPerPage
         : buildProductListing(this.bindings.engine);
 
     this.summary = controller.summary();
-    this.pagination = controller.pagination();
-    const {setPageSize} = loadPaginationActions(this.bindings.engine);
-    this.bindings.engine.dispatch(setPageSize({pageSize: this.initialChoice!}));
+    this.pagination = controller.pagination(
+      this.initialChoice ? {options: {pageSize: this.initialChoice}} : {}
+    );
   }
 
   private get label() {
