@@ -1,3 +1,18 @@
 .quantic-suggestions-list {
   margin-top: 0;
 }
+
+.option {
+  align-items: center;
+}
+
+.suggestion-option__icon {
+  display: flex;
+  justify-content: flex-start;
+  margin-right: 0;
+}
+
+.recent-searches__label {
+  justify-content: space-between;
+  font-size: 14px;
+}
