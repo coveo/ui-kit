@@ -6,10 +6,6 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     super(page, 'atomic-tab-manager');
   }
 
-  get placeholders() {
-    return this.page.locator('atomic-tab-manager-placeholder');
-  }
-
   get tabDropdown() {
     return this.page.locator('atomic-tab-manager .dropdown-area select');
   }
