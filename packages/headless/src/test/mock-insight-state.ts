@@ -14,6 +14,7 @@ import {getFoldingInitialState} from '../features/folding/folding-state';
 import {getGeneratedAnswerInitialState} from '../features/generated-answer/generated-answer-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
+import {getInsightUserActionsInitialState} from '../features/insight-user-actions/insight-user-actions-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
@@ -59,6 +60,7 @@ export function buildMockInsightState(
     folding: getFoldingInitialState(),
     generatedAnswer: getGeneratedAnswerInitialState(),
     context: getContextInitialState(),
+    insightUserAction: getInsightUserActionsInitialState(),
     ...config,
   };
 }

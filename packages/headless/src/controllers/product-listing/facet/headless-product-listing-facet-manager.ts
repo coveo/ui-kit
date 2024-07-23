@@ -1,7 +1,7 @@
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
 import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
-import {ProductListingSection} from '../../../state/state-sections';
+import {OldProductListingSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {sortFacets} from '../../../utils/facet-utils';
 import {buildController} from '../../controller/headless-controller';
@@ -15,6 +15,9 @@ export type {FacetManager, FacetManagerState, FacetManagerPayload};
 
 /**
  * Creates a `FacetManager` instance for the product listing.
+ *
+ * Deprecated. The `product-listing` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
  *
  * @param productListingEngine - The headless engine.
  */
@@ -46,7 +49,7 @@ export function buildFacetManager(
 
 function loadFacetManagerReducers(
   productListingEngine: ProductListingEngine
-): productListingEngine is ProductListingEngine<ProductListingSection> {
+): productListingEngine is ProductListingEngine<OldProductListingSection> {
   productListingEngine.addReducers({productListing, facetOptions});
   return true;
 }

@@ -1,17 +1,19 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
+import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
+import {manualNumericFacetReducer} from '../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
-import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
+import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
 import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
-import {executeSearch} from '../../features/commerce/search/search-actions';
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
@@ -37,7 +39,7 @@ import {
 export type {CommerceEngineConfiguration};
 
 const commerceEngineReducers = {
-  productListing: productListingV2Reducer,
+  productListing: productListingReducer,
   recommendations: recommendationsReducer,
   commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,
@@ -46,9 +48,11 @@ const commerceEngineReducers = {
   facetSearchSet: specificFacetSearchSetReducer,
   categoryFacetSearchSet: categoryFacetSearchSetReducer,
   commerceFacetSet: commerceFacetSetReducer,
+  manualNumericFacetSet: manualNumericFacetReducer,
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
+  didYouMean: didYouMeanReducer,
   triggers: commerceTriggersReducer,
 };
 type CommerceEngineReducers = typeof commerceEngineReducers;
@@ -59,29 +63,15 @@ export type CommerceEngineState =
 
 /**
  * The engine for powering commerce experiences.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
     State & CommerceEngineState,
     CommerceThunkExtraArguments
-  > {
-  /**
-   * Executes the first search.
-   */
-  executeFirstSearch(): void;
-
-  /**
-   * Executes the first search after a redirection from a standalone search box.
-   */
-  executeFirstSearchAfterStandaloneSearchBoxRedirect(): void;
-}
+  > {}
 
 /**
  * The commerce engine options.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -93,8 +83,6 @@ export interface CommerceEngineOptions
 
 /**
  * Creates a commerce engine instance.
- *
- * In Open Beta. Reach out to your Coveo team for support in adopting this.
  *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
@@ -114,6 +102,16 @@ export function buildCommerceEngine(
 
   const augmentedOptions: EngineOptions<CommerceEngineReducers> = {
     ...options,
+    configuration: {
+      ...options.configuration,
+      organizationEndpoints: {
+        ...getOrganizationEndpoints(
+          options.configuration.organizationId,
+          options.configuration.environment
+        ),
+        ...options.configuration.organizationEndpoints,
+      },
+    },
     reducers: commerceEngineReducers,
   };
 
@@ -137,16 +135,6 @@ export function buildCommerceEngine(
 
     get configuration() {
       return internalEngine.state.configuration;
-    },
-
-    executeFirstSearch() {
-      const action = executeSearch();
-      internalEngine.dispatch(action);
-    },
-
-    executeFirstSearchAfterStandaloneSearchBoxRedirect() {
-      const action = executeSearch();
-      internalEngine.dispatch(action);
     },
   });
 }

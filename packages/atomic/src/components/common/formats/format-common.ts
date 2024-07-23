@@ -18,3 +18,11 @@ export const dispatchNumberFormatEvent = (
 
 export const defaultNumberFormatter: NumberFormatter = (value, languages) =>
   value.toLocaleString(languages);
+
+export const defaultCurrencyFormatter: (currency: string) => NumberFormatter =
+  (currency) => (value, languages) => {
+    return value.toLocaleString(languages, {
+      style: 'currency',
+      currency,
+    });
+  };

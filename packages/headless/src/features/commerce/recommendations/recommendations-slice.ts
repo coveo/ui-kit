@@ -1,12 +1,17 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {
+  BaseProduct,
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
 import {
   fetchRecommendations,
   registerRecommendationsSlot,
   fetchMoreRecommendations,
   promoteChildToParent,
+  QueryRecommendationsCommerceAPIThunkReturn,
 } from './recommendations-actions';
 import {
   getRecommendationsInitialState,
@@ -45,8 +50,10 @@ export const recommendationsReducer = createReducer(
         if (!recommendations) {
           return;
         }
-        recommendations.products = response.products.map(
-          prependProductInItsOwnChildrenIfNeeded
+        const paginationOffset = getPaginationOffset(action.payload);
+
+        recommendations.products = response.products.map((product, index) =>
+          preprocessProduct(product, paginationOffset + index + 1)
         );
       })
       .addCase(fetchMoreRecommendations.fulfilled, (state, action) => {
@@ -62,8 +69,13 @@ export const recommendationsReducer = createReducer(
         if (!recommendations) {
           return;
         }
+
+        const paginationOffset = getPaginationOffset(action.payload);
+
         recommendations.products = recommendations.products.concat(
-          response.products.map(prependProductInItsOwnChildrenIfNeeded)
+          response.products.map((product, index) =>
+            preprocessProduct(product, paginationOffset + index + 1)
+          )
         );
       })
       .addCase(fetchRecommendations.pending, (state, action) => {
@@ -80,28 +92,26 @@ export const recommendationsReducer = createReducer(
         }
 
         const {products} = recommendations;
-        const currentParentIndex = products.findIndex(
-          (product) => product.permanentid === action.payload.parentPermanentId
-        );
+        let childToPromote;
+        const currentParentIndex = products.findIndex((product) => {
+          childToPromote = product.children.find(
+            (child) => child.permanentid === action.payload.child.permanentid
+          );
+          return !!childToPromote;
+        });
 
-        if (currentParentIndex === -1) {
+        if (currentParentIndex === -1 || childToPromote === undefined) {
           return;
         }
 
+        const position = products[currentParentIndex].position;
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
-        const childToPromote = children.find(
-          (child) => child.permanentid === action.payload.childPermanentId
-        );
-
-        if (childToPromote === undefined) {
-          return;
-        }
-
         const newParent: Product = {
-          ...childToPromote,
+          ...(childToPromote as ChildProduct),
           children,
           totalNumberOfChildren,
+          position,
         };
 
         products.splice(currentParentIndex, 1, newParent);
@@ -159,12 +169,19 @@ function handlePending(state: RecommendationsState, slotId: string) {
   recommendations.isLoading = true;
 }
 
-function prependProductInItsOwnChildrenIfNeeded(product: Product) {
+function getPaginationOffset(
+  actionPayload: QueryRecommendationsCommerceAPIThunkReturn
+): number {
+  const pagination = actionPayload.response.pagination;
+  return pagination.page * pagination.perPage;
+}
+
+function preprocessProduct(product: BaseProduct, position: number): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
   if (product.children.length === 0 || isParentAlreadyInChildren) {
-    return product;
+    return {...product, position};
   }
 
   const {children, totalNumberOfChildren, ...restOfProduct} = product;
@@ -172,5 +189,6 @@ function prependProductInItsOwnChildrenIfNeeded(product: Product) {
   return {
     ...product,
     children: [restOfProduct, ...children],
+    position,
   };
 }

@@ -1,5 +1,7 @@
 import {SchemaDefinition} from '@coveo/bueno';
 import {UnknownAction} from '@reduxjs/toolkit';
+import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response';
+import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -10,10 +12,12 @@ import {Parameters} from '../../../../features/commerce/parameters/parameters-ac
 import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer';
 import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
 import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions';
+import {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary';
 import {
   buildDidYouMean,
   DidYouMean,
 } from '../../search/did-you-mean/headless-did-you-mean';
+import {SearchSummaryState} from '../../search/summary/headless-search-summary';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
@@ -28,6 +32,11 @@ import {
 import {buildCommerceNumericFacet} from '../facets/numeric/headless-commerce-numeric-facet';
 import {buildCommerceRegularFacet} from '../facets/regular/headless-commerce-regular-facet';
 import {
+  buildCoreInteractiveProduct,
+  InteractiveProduct,
+  InteractiveProductProps,
+} from '../interactive-product/headless-core-interactive-product';
+import {
   buildCorePagination,
   Pagination,
   PaginationProps,
@@ -38,22 +47,22 @@ import {
   ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager';
 import {
-  buildCoreInteractiveProduct,
-  InteractiveProduct,
-  InteractiveProductProps,
-} from '../product-list/headless-core-interactive-product';
-import {
   buildCoreSort,
   Sort,
   SortProps,
 } from '../sort/headless-core-commerce-sort';
+import {
+  buildCoreSummary,
+  Summary,
+  SummaryState,
+} from '../summary/headless-core-summary';
 import {
   buildCoreUrlManager,
   UrlManager,
   type UrlManagerProps,
 } from '../url-manager/headless-core-url-manager';
 
-export interface BaseSolutionTypeSubControllers {
+export interface BaseSolutionTypeSubControllers<S extends SummaryState> {
   /**
    * Creates an `InteractiveProduct` sub-controller.
    * @param props - The properties for the `InteractiveProduct` sub-controller.
@@ -67,10 +76,18 @@ export interface BaseSolutionTypeSubControllers {
    * @returns A `Pagination` sub-controller.
    */
   pagination(props?: PaginationProps): Pagination;
+
+  /**
+   * Creates a `Summary` sub-controller.
+   * @returns A `Summary` sub-controller.
+   */
+  summary(): Summary<S>;
 }
 
-export interface SearchAndListingSubControllers<P extends Parameters>
-  extends BaseSolutionTypeSubControllers {
+export interface SearchAndListingSubControllers<
+  P extends Parameters,
+  S extends SummaryState,
+> extends BaseSolutionTypeSubControllers<S> {
   /**
    * Creates a `Sort` sub-controller.
    * @param props - Optional properties for the `Sort` sub-controller.
@@ -106,7 +123,10 @@ export interface SearchAndListingSubControllers<P extends Parameters>
 }
 
 export interface SearchSubControllers
-  extends SearchAndListingSubControllers<CommerceSearchParameters> {
+  extends SearchAndListingSubControllers<
+    CommerceSearchParameters,
+    SearchSummaryState
+  > {
   /**
    * Creates a `DidYouMean` sub-controller.
    * @returns A `DidYouMean` sub-controller.
@@ -114,15 +134,26 @@ export interface SearchSubControllers
   didYouMean(): DidYouMean;
 }
 
-interface BaseSubControllerProps {
+interface BaseSubControllerProps<S extends SummaryState> {
   responseIdSelector: (state: CommerceEngineState) => string;
+  isLoadingSelector: (state: CommerceEngineState) => boolean;
+  numberOfProductsSelector: (state: CommerceEngineState) => number;
+  errorSelector: (
+    state: CommerceEngineState
+  ) => CommerceAPIErrorStatusResponse | null;
+  pageSelector: (state: CommerceEngineState) => number;
+  perPageSelector: (state: CommerceEngineState) => number;
+  totalEntriesSelector: (state: CommerceEngineState) => number;
   fetchProductsActionCreator: FetchProductsActionCreator;
   fetchMoreProductsActionCreator: FetchProductsActionCreator;
+  enrichSummary?: (state: CommerceEngineState) => Partial<S>;
   slotId?: string;
 }
 
-export interface SearchAndListingSubControllerProps<P extends Parameters>
-  extends BaseSubControllerProps {
+export interface SearchAndListingSubControllerProps<
+  P extends Parameters,
+  S extends SummaryState,
+> extends BaseSubControllerProps<S> {
   facetResponseSelector: (
     state: CommerceEngine[typeof stateKey],
     facetId: string
@@ -139,6 +170,7 @@ export interface SearchAndListingSubControllerProps<P extends Parameters>
     state: CommerceEngine[typeof stateKey],
     activeParams: P
   ) => Required<P>;
+  facetSearchType: FacetSearchType;
 }
 
 /**
@@ -150,10 +182,19 @@ export interface SearchAndListingSubControllerProps<P extends Parameters>
  */
 export function buildSearchSubControllers(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps<CommerceSearchParameters>
+  subControllerProps: Omit<
+    SearchAndListingSubControllerProps<
+      CommerceSearchParameters,
+      SearchSummaryState
+    >,
+    'facetSearchType'
+  >
 ): SearchSubControllers {
   return {
-    ...buildSearchAndListingsSubControllers(engine, subControllerProps),
+    ...buildSearchAndListingsSubControllers(engine, {
+      ...subControllerProps,
+      facetSearchType: 'SEARCH',
+    }),
     didYouMean() {
       return buildDidYouMean(engine);
     },
@@ -169,9 +210,21 @@ export function buildSearchSubControllers(
  */
 export function buildProductListingSubControllers(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps<ProductListingParameters>
-): SearchAndListingSubControllers<ProductListingParameters> {
-  return buildSearchAndListingsSubControllers(engine, subControllerProps);
+  subControllerProps: Omit<
+    SearchAndListingSubControllerProps<
+      ProductListingParameters,
+      ProductListingSummaryState
+    >,
+    'facetSearchType'
+  >
+): SearchAndListingSubControllers<
+  ProductListingParameters,
+  ProductListingSummaryState
+> {
+  return buildSearchAndListingsSubControllers(engine, {
+    ...subControllerProps,
+    facetSearchType: 'LISTING',
+  });
 }
 
 /**
@@ -181,10 +234,13 @@ export function buildProductListingSubControllers(
  * @param subControllerProps - The properties for the search and product listing sub-controllers.
  * @returns The search and product listing sub-controllers.
  */
-export function buildSearchAndListingsSubControllers<P extends Parameters>(
+export function buildSearchAndListingsSubControllers<
+  P extends Parameters,
+  S extends SummaryState,
+>(
   engine: CommerceEngine,
-  subControllerProps: SearchAndListingSubControllerProps<P>
-): SearchAndListingSubControllers<P> {
+  subControllerProps: SearchAndListingSubControllerProps<P, S>
+): SearchAndListingSubControllers<P, S> {
   const {
     fetchProductsActionCreator,
     facetResponseSelector,
@@ -195,6 +251,7 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
     activeParametersSelector,
     restoreActionCreator,
     enrichParameters,
+    facetSearchType,
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
@@ -209,6 +266,7 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
         fetchProductsActionCreator,
         facetResponseSelector,
         isFacetLoadingResponseSelector,
+        facetSearch: {type: facetSearchType},
       };
       return buildFacetGenerator(engine, {
         buildRegularFacet: (_engine, options) =>
@@ -219,6 +277,7 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+        fetchProductsActionCreator,
       });
     },
     breadcrumbManager() {
@@ -255,15 +314,22 @@ export function buildSearchAndListingsSubControllers<P extends Parameters>(
  * @param subControllerProps - The properties for the `InteractiveProduct` and `Pagination` sub-controllers.
  * @returns The `InteractiveProduct` and `Pagination` sub-controllers.
  */
-export function buildBaseSubControllers(
+export function buildBaseSubControllers<S extends SummaryState>(
   engine: CommerceEngine,
-  subControllerProps: BaseSubControllerProps
-): BaseSolutionTypeSubControllers {
+  subControllerProps: BaseSubControllerProps<S>
+): BaseSolutionTypeSubControllers<S> {
   const {
     responseIdSelector,
+    isLoadingSelector,
+    errorSelector,
+    numberOfProductsSelector,
     fetchProductsActionCreator,
     fetchMoreProductsActionCreator,
     slotId,
+    pageSelector,
+    perPageSelector,
+    totalEntriesSelector,
+    enrichSummary,
   } = subControllerProps;
   return {
     interactiveProduct(props: InteractiveProductProps) {
@@ -281,6 +347,20 @@ export function buildBaseSubControllers(
         },
         fetchProductsActionCreator,
         fetchMoreProductsActionCreator,
+      });
+    },
+    summary(): Summary<S> {
+      return buildCoreSummary(engine, {
+        options: {
+          responseIdSelector,
+          isLoadingSelector,
+          errorSelector,
+          numberOfProductsSelector,
+          pageSelector,
+          perPageSelector,
+          totalEntriesSelector,
+          enrichSummary,
+        },
       });
     },
   };

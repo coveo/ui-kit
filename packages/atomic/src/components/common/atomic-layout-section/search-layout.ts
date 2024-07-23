@@ -10,11 +10,15 @@ export function buildSearchLayoutCommon(
   element: HTMLElement,
   mobileBreakpoint: string,
   layoutWebComponentTagName: string,
-  containerWebComponentTagName: string
+  containerWebComponentTagName: string,
+  noItemsSelector: string,
+  errorSelector: string,
+  refineToggleSelector: string,
+  sortDropdownSelector: string
 ) {
   const id = element.id;
   const layoutSelector = `${layoutWebComponentTagName}#${id}`;
-  const cleanStatusSelector = `${containerWebComponentTagName}:not(.${containerWebComponentTagName}-no-results, .${containerWebComponentTagName}-error)`;
+  const cleanStatusSelector = `${containerWebComponentTagName}:not(.${noItemsSelector}, .${errorSelector})`;
   const mediaQuerySelector = `@media ${makeDesktopQuery(mobileBreakpoint)}`;
 
   const display = `${layoutSelector} { display: grid }`;
@@ -60,28 +64,28 @@ export function buildSearchLayoutCommon(
     }`;
   };
 
-  const refine = () => {
+  const refine = (): string => {
     const statusSection = findSection(element, 'status');
     if (!statusSection) {
       return '';
     }
 
-    const refineToggle = statusSection.querySelector('atomic-refine-toggle');
+    const refineToggle = statusSection.querySelector(refineToggleSelector);
     if (!refineToggle) {
       return '';
     }
 
     const statusSelector = `${layoutSelector} ${sectionSelector('status')}`;
-    return `${statusSelector} atomic-sort-dropdown {
+    return `${statusSelector} ${sortDropdownSelector} {
       display: none;
     }
 
     ${mediaQuerySelector} {
-     ${statusSelector} atomic-sort-dropdown {
+     ${statusSelector} ${sortDropdownSelector} {
        display: block;
       }
 
-      ${statusSelector} atomic-refine-toggle {
+      ${statusSelector} ${refineToggleSelector} {
         display: none;
        }
     }`;

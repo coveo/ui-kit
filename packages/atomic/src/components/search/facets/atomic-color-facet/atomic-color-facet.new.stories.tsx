@@ -15,11 +15,19 @@ const meta: Meta = {
   component: 'atomic-color-facet',
   title: 'Atomic/ColorFacet',
   id: 'atomic-color-facet',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
   play,
+  argTypes: {
+    'attributes-number-of-values': {
+      name: 'number-of-values',
+      control: {type: 'number', min: 1},
+    },
+  },
+  args: {
+    'attributes-number-of-values': 8,
+  },
 };
 
 export default meta;
@@ -62,7 +70,7 @@ const facetValueToCss = {
 const argTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
   (acc, facetValue) =>
     Object.assign(acc, {
-      [`value-${facetValue}`]: {
+      [`cssParts-value-${facetValue}`]: {
         control: {
           type: 'object',
         },
@@ -94,7 +102,7 @@ const baseFacetValueCss = {
 const args = Object.entries(facetValueToCss).reduce<Args>(
   (acc, [facetValue, css]) =>
     Object.assign(acc, {
-      [`value-${facetValue}`]: {
+      [`cssParts-value-${facetValue}`]: {
         ...baseFacetValueCss,
         ...css,
       },
@@ -106,10 +114,24 @@ export const Default: Story = {
   name: 'atomic-color-facet',
   argTypes: {
     ...argTypes,
-    'value-*': {
+    'cssParts-value-*': {
+      name: 'value-*',
       control: false,
     },
   },
-  args: {...args, field: 'filetype', 'number-of-values': 9},
+  args: {
+    ...args,
+    'attributes-field': 'filetype',
+    'attributes-number-of-values': 9,
+  },
+  decorators: [facetDecorator],
+};
+
+export const LowFacetValues: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'objecttype',
+    'attributes-number-of-values': 2,
+  },
   decorators: [facetDecorator],
 };

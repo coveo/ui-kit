@@ -153,7 +153,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   documentLocation?: string;
   /**
-   * TBD
+   * The unique identifier of the tracking target.
    */
   trackingId?: string;
   /**
@@ -171,7 +171,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-const analyticsConfigurationSchema: SchemaDefinition<
+export const analyticsConfigurationSchema: SchemaDefinition<
   Required<UpdateAnalyticsConfigurationActionCreatorPayload>
 > = {
   enabled: new BooleanValue({default: true}),

@@ -17,7 +17,7 @@
 
         await commerceInterface.initializeWithEngine(commerceEngine);
 
-        commerceInterface.executeFirstSearch();
+        commerceInterface.executeFirstRequest();
       })();
     </script>
   </head>
@@ -67,9 +67,11 @@
             ></atomic-layout-section>
             <atomic-layout-section section="main">
               <atomic-layout-section section="status">
+                <atomic-commerce-breadbox></atomic-commerce-breadbox>
                 <atomic-commerce-query-summary></atomic-commerce-query-summary>
                 <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
                 <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
+                <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
               </atomic-layout-section>
               <atomic-layout-section section="products">
                 <atomic-commerce-product-list display="grid" density="compact" image-size="small">
@@ -95,7 +97,7 @@
                         <atomic-product-price currency="USD"></atomic-product-price>
                       </atomic-product-section-emphasized>
                       <atomic-product-section-description>
-                        <atomic-product-description></atomic-product-description>
+                        <atomic-product-text field="excerpt" class="block text-neutral-dark"></atomic-product-text>
                       </atomic-product-section-description>
                       <atomic-product-section-children>
                         <atomic-product-children></atomic-product-children>

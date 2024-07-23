@@ -1,5 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Product} from '../../../api/commerce/common/product';
+import {
+  Product,
+  BaseProduct,
+  ChildProduct,
+} from '../../../api/commerce/common/product';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -53,7 +57,9 @@ export const instantProductsReducer = createReducer(
           },
           state,
           {
-            products: products.map(prependProductInItsOwnChildrenIfNeeded),
+            products: products.map((product, index) =>
+              preprocessProduct(product, index + 1)
+            ),
           }
         );
       })
@@ -67,30 +73,26 @@ export const instantProductsReducer = createReducer(
         }
         const products = cache.products;
 
-        const currentParentIndex = products.findIndex(
-          (product) => product.permanentid === action.payload.parentPermanentId
-        );
+        let childToPromote;
+        const currentParentIndex = products.findIndex((product) => {
+          childToPromote = product.children.find(
+            (child) => child.permanentid === action.payload.child.permanentid
+          );
+          return !!childToPromote;
+        });
 
-        if (currentParentIndex === -1) {
-          console.log('parent not found');
+        if (currentParentIndex === -1 || childToPromote === undefined) {
           return;
         }
 
+        const position = products[currentParentIndex].position;
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
-        const childToPromote = children.find(
-          (child) => child.permanentid === action.payload.childPermanentId
-        );
-
-        if (childToPromote === undefined) {
-          console.log('child not found');
-          return;
-        }
-
         const newParent: Product = {
-          ...childToPromote,
+          ...(childToPromote as ChildProduct),
           children,
           totalNumberOfChildren,
+          position,
         };
 
         const newProducts = [...products];
@@ -101,12 +103,12 @@ export const instantProductsReducer = createReducer(
   }
 );
 
-function prependProductInItsOwnChildrenIfNeeded(product: Product) {
+function preprocessProduct(product: BaseProduct, position: number): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
   if (product.children.length === 0 || isParentAlreadyInChildren) {
-    return product;
+    return {...product, position};
   }
 
   const {children, totalNumberOfChildren, ...restOfProduct} = product;
@@ -114,5 +116,6 @@ function prependProductInItsOwnChildrenIfNeeded(product: Product) {
   return {
     ...product,
     children: [restOfProduct, ...children],
+    position,
   };
 }

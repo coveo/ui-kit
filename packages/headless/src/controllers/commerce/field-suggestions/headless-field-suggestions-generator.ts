@@ -1,12 +1,16 @@
 import {createSelector} from '@reduxjs/toolkit';
+import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
 import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -35,9 +39,17 @@ export interface FieldSuggestionsGenerator extends Controller {
    */
   fieldSuggestions: GeneratedFieldSuggestionsControllers;
 
+  /**
+   * The state of the field suggestions generator.
+   */
   state: FieldSuggestionsFacet[];
 }
 
+/**
+ * Builds a field suggestions generator controller for a given commerce engine.
+ * @param engine The commerce engine.
+ * @returns The field suggestions generator controller.
+ */
 export function buildFieldSuggestionsGenerator(
   engine: CommerceEngine
 ): FieldSuggestionsGenerator {
@@ -49,13 +61,17 @@ export function buildFieldSuggestionsGenerator(
     fetchProductsActionCreator: executeSearch,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
   const controller = buildController(engine);
 
   const createFieldSuggestionsControllers = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder!,
-    (facetOrder) =>
+    (state: CommerceEngineState) => state.commerceFacetSet,
+    (state: CommerceEngineState) => state.facetSearchSet,
+    (state: CommerceEngineState) => state.categoryFacetSearchSet,
+    (facetOrder, _commerceFacetSet, _facetSearchSet, _categoryFacetSearchSet) =>
       facetOrder.map(({type, facetId}) => {
         switch (type) {
           case 'hierarchical':
@@ -88,6 +104,9 @@ function loadFieldSuggestionsGeneratorReducers(
 ): engine is CommerceEngine {
   engine.addReducers({
     fieldSuggestionsOrder,
+    commerceFacetSet,
+    facetSearchSet,
+    categoryFacetSearchSet,
   });
   return true;
 }

@@ -240,6 +240,7 @@ export class AtomicResultList implements InitializableComponent {
       return (
         <DisplayGrid
           item={result}
+          gridTarget={this.gridCellLinkTarget}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
             element && this.resultListCommon.setNewResultRef(element, i)

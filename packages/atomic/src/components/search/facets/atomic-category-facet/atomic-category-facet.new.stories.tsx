@@ -9,11 +9,19 @@ const meta: Meta = {
   component: 'atomic-category-facet',
   title: 'Atomic/CategoryFacet',
   id: 'atomic-category-facet',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
   play,
+  argTypes: {
+    'attributes-number-of-values': {
+      name: 'number-of-values',
+      control: {type: 'number', min: 1},
+    },
+  },
+  args: {
+    'attributes-number-of-values': 8,
+  },
 };
 
 export default meta;
@@ -21,10 +29,19 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-category-facet',
   args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
+    'attributes-field': 'geographicalhierarchy',
+    'attributes-label': 'Geographical Hierarchy',
+    'attributes-with-search': true,
+    'attributes-number-of-values': 5,
+    'attributes-sort-criteria': 'occurrences',
+  },
+};
+
+export const LowFacetValues: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'geographicalhierarchy',
+    'attributes-number-of-values': 2,
+    'attributes-with-search': true,
   },
 };

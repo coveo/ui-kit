@@ -10,11 +10,19 @@ const meta: Meta = {
   component: 'atomic-rating-range-facet',
   title: 'Atomic/RatingRangeFacet',
   id: 'atomic-rating-range-facet',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
   play,
+  argTypes: {
+    'attributes-number-of-values': {
+      name: 'number-of-values',
+      control: {type: 'number', min: 1},
+    },
+  },
+  args: {
+    'attributes-number-of-values': 8,
+  },
 };
 
 export default meta;
@@ -22,7 +30,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-rating-range-facet',
   args: {
-    field: 'snrating',
+    'attributes-field': 'snrating',
   },
   decorators: [facetDecorator],
 };

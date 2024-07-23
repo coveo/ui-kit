@@ -89,13 +89,19 @@ export const automaticFacetSetReducer = createReducer(
         for (const field in af) {
           const facet = state.set[field]?.response;
           if (facet) {
-            const values = facet.values;
-            for (const value of values) {
-              if (!af[field].includes(value.value)) {
-                value.state = 'idle';
-              } else if (value.state === 'idle') {
+            const stateFacetValues = facet.values;
+            const urlFacetValues = new Set<string>(af[field]);
+            for (const value of stateFacetValues) {
+              if (urlFacetValues.has(value.value)) {
                 value.state = 'selected';
+                urlFacetValues.delete(value.value);
+              } else {
+                value.state = 'idle';
               }
+            }
+
+            for (const value of urlFacetValues) {
+              facet.values.push(buildTemporarySelectedFacetValue(value));
             }
           }
         }

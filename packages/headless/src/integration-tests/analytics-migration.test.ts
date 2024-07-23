@@ -43,6 +43,8 @@ import {
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
@@ -82,15 +84,15 @@ import {
   logSearchboxSubmit,
   searchboxSubmit,
 } from '../features/query/query-analytics-actions';
-import {
-  logRecentQueryClick,
-  recentQueryClick,
-} from '../features/recent-queries/recent-queries-analytics-actions';
+import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions';
 import {
   logRecommendationUpdate,
   recommendationInterfaceLoad,
 } from '../features/recommendation/recommendation-analytics-actions';
-import {executeSearch} from '../features/search/search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../features/search/search-actions';
 import {
   logResultsSort,
   resultsSort,
@@ -126,15 +128,34 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
-export function assertNextEqualsLegacy(call: jest.SpyInstance) {
-  expect(extractAndExcludeProperties(call, 0)).toEqual(
-    extractAndExcludeProperties(call, 1)
+export function assertNextEqualsLegacy(
+  call: jest.SpyInstance,
+  excludedProperties: string[] = excludedBaseProperties
+) {
+  expect(extractAndExcludeProperties(call, 0, excludedProperties)).toEqual(
+    extractAndExcludeProperties(call, 1, excludedProperties)
+  );
+}
+
+export function assertActionCause(
+  call: jest.SpyInstance,
+  callIndex: number,
+  expectedActionCause: string
+) {
+  expect(call).toHaveBeenNthCalledWith(
+    callIndex,
+    expect.objectContaining({
+      requestParams: expect.objectContaining({
+        analytics: expect.objectContaining({actionCause: expectedActionCause}),
+      }),
+    })
   );
 }
 
 export function extractAndExcludeProperties(
   call: jest.SpyInstance,
-  callIndex: number
+  callIndex: number,
+  excludedProperties: string[]
 ): Record<string, unknown> {
   const {
     requestParams: {analytics = {} as Record<string, unknown>},
@@ -142,7 +163,7 @@ export function extractAndExcludeProperties(
     requestParams: {analytics?: Record<string, unknown>};
   };
   let result = analytics;
-  result = excludeProperties(result, excludedBaseProperties);
+  result = excludeProperties(result, excludedProperties);
   return result;
 }
 
@@ -155,7 +176,7 @@ function excludeProperties(
   return result;
 }
 
-const excludedBaseProperties = [
+export const excludedBaseProperties = [
   'clientId',
   'capture',
   'clientTimestamp',
@@ -163,6 +184,7 @@ const excludedBaseProperties = [
   'source',
   'customData',
   'documentReferrer',
+  'documentLocation',
 ];
 
 const ANY_FACET_VALUE = 'any facet value';
@@ -234,7 +256,7 @@ describe('Analytics Search Migration', () => {
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/deselect', async () => {
@@ -825,14 +847,13 @@ describe('Analytics Search Migration', () => {
   it('analytics/recentQueries/click', async () => {
     const action = executeSearch({
       legacy: logRecentQueryClick(),
-      next: recentQueryClick(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/interface/change', async () => {
@@ -938,7 +959,7 @@ describe('Analytics Search Migration', () => {
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/instantResult/searchboxAsYouType', async () => {
@@ -975,5 +996,29 @@ describe('Analytics Search Migration', () => {
     await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
+  });
+
+  it('analytics/facet/showMore', async () => {
+    const action = fetchFacetValues({
+      legacy: logFacetShowMore(ANY_FACET_ID),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await clearMicrotaskQueue();
+
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+  });
+
+  it('analytics/facet/showLess', async () => {
+    const action = fetchFacetValues({
+      legacy: logFacetShowLess(ANY_FACET_ID),
+    });
+
+    legacySearchEngine.dispatch(action);
+    nextSearchEngine.dispatch(action);
+    await clearMicrotaskQueue();
+
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 });

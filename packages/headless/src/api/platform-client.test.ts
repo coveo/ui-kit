@@ -275,14 +275,17 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it('when status is 419 should return a TokenExpiredError', async () => {
-    mockFetch.mockReturnValueOnce(
-      Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
-    );
+  it.each([401, 419])(
+    'when status is %d should return a TokenExpiredError',
+    async (status) => {
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status}))
+      );
 
-    const response = await platformCall();
-    expect(response).toBeInstanceOf(ExpiredTokenError);
-  });
+      const response = await platformCall();
+      expect(response).toBeInstanceOf(ExpiredTokenError);
+    }
+  );
 
   it('when status is 429 should try exponential backOff', async () => {
     mockFetch

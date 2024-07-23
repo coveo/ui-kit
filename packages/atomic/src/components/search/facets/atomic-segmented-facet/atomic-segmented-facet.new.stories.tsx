@@ -9,11 +9,19 @@ const meta: Meta = {
   component: 'atomic-segmented-facet',
   title: 'Atomic/SegmentedFacet',
   id: 'atomic-segmented-facet',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
   play,
+  argTypes: {
+    'attributes-number-of-values': {
+      name: 'number-of-values',
+      control: {type: 'number', min: 1},
+    },
+  },
+  args: {
+    'attributes-number-of-values': 8,
+  },
 };
 
 export default meta;
@@ -21,7 +29,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-segmented-facet',
   args: {
-    field: 'objecttype',
-    label: 'Object Type',
+    'attributes-field': 'objecttype',
+    'attributes-label': 'Object Type',
   },
 };

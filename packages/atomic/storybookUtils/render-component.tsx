@@ -1,12 +1,15 @@
 import type {Args, StoryContext} from '@storybook/web-components';
 import {html, unsafeStatic} from 'lit/static-html.js';
 
+export const unfurlArg = (arg: string) => arg.slice(arg.indexOf('-') + 1);
+
 export const parseSlots = (args: Args, slotsControls: string[]) =>
-  `${slotsControls.map((slotName) =>
-    slotName === 'default'
+  `${slotsControls.map((slotName) => {
+    const unfurledSlotName = unfurlArg(slotName);
+    return unfurledSlotName === 'default'
       ? args[slotName]
-      : `<template slot="${slotName}">${args[slotName]}</template>`
-  )}`;
+      : `<template slot="${unfurledSlotName}">${args[slotName]}</template>`;
+  })}`;
 
 export const renderComponent = (args: Args, context: StoryContext) => {
   const shadowPartArgs: string[] = [];
@@ -25,20 +28,24 @@ export const renderComponent = (args: Args, context: StoryContext) => {
         break;
     }
   }
-  return html`<div id="code-root"><style>
+  return html`
+  <div id="code-root">
+    <style>
         ${unsafeStatic(
           shadowPartArgs
             .map(
               (arg) =>
-                `atomic-breadbox::part(${arg}) {${Object.entries(args[arg])
+                `${context.componentId}::part(${unfurlArg(arg)}) {${Object.entries(
+                  args[arg]
+                )
                   .map(([key, value]) => `${key}: ${value}`)
                   .join(';')}}`
             )
             .join('\n')
         )}
-      </style>
-      <${unsafeStatic(context.componentId)}	
-        ${unsafeStatic(attributeControls.map((arg) => `${arg}="${args[arg]}"`).join('\n'))}
-      >${unsafeStatic(parseSlots(args, slotsControls))}
-      </${unsafeStatic(context.componentId)}></div>`;
+    </style>
+      <${unsafeStatic(context.componentId)}	${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
+        ${unsafeStatic(parseSlots(args, slotsControls))}
+      </${unsafeStatic(context.componentId)}>
+  </div>`;
 };

@@ -1,9 +1,10 @@
 import {
   CategoryFacetState,
   CategoryFacetValue,
-  ListingSummary,
-  SearchSummary,
   CategoryFacet,
+  SearchSummaryState,
+  ProductListingSummaryState,
+  Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
@@ -38,14 +39,49 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
  *
- * @internal
+ * @part facet - The wrapper for the entire facet.
+ * @part placeholder - The placeholder shown before the first search is executed.
+ *
+ * @part label-button - The button that displays the label and allows to expand/collapse the facet.
+ * @part label-button-icon - The label button icon.
+ *
+ * @part search-wrapper - The search box wrapper.
+ * @part search-input - The search box input.
+ * @part search-icon - The search box submit button.
+ * @part search-clear-button - The button to clear the search box of input.
+ * @part more-matches - The label indicating there are more matches for the current facet search query.
+ * @part no-matches - The label indicating there are no matches for the current facet search query.
+ * @part matches-query - The highlighted query inside the matches labels.
+ * @part search-results - The search results container.
+ * @part search-result - The search result value.
+ * @part search-result-path - The search result path.
+ * @part search-highlight - The highlighted query inside the facet values.
+ *
+ * @part parents - The container surrounding the whole hierarchy of values.
+ * @part sub-parents - The container surrounding a sub-hierarchy of values.
+ * @part values - The container surrounding either the children of the active value or the values at the base.
+ * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part parent-button - The clickable parent button displayed first within sub-parents.
+ * @part active-parent - The clickable active parent displayed first within the last sub-parents.
+ * @part value-link - The clickable value displayed first within values.
+ * @part back-arrow - The back arrow displayed before the clickable parents.
+ * @part value-label - The facet value label within a value button.
+ * @part value-count - The facet value count within a value button.
+ * @part leaf-value - A facet value with no child value.
+ * @part node-value - A facet value with child values.
+ *
+ * @part show-more - The show more results button.
+ * @part show-less - The show less results button.
+ * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-category-facet',
@@ -59,45 +95,65 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   /**
    * The summary controller instance.
    */
-  @Prop() summary!: SearchSummary | ListingSummary;
+  @Prop() summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   /**
    * The category facet controller instance.
    */
   @Prop() public facet!: CategoryFacet;
+  /**
+   * Specifies whether the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The field identifier for this facet.
+   */
+  @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
-  @State() public error!: Error;
 
-  @State() private isCollapsed = false;
+  @BindStateToController('summary')
+  @State()
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
+
+  @State() public error!: Error;
 
   private resultIndexToFocusOnShowMore = 0;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
+  private unsubscribeFacetController!: () => void;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (!this.facet) {
+      return;
+    }
+
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
+
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.displayName,
       (msg) => (this.facetSearchAriaMessage = msg),
       this.bindings.i18n
     );
+
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facet.state.facetId,
+      facetId: this.facetState.facetId,
       element: this.host,
       isHidden: () => this.isHidden,
     };
-    this.bindings.store.registerFacet('categoryFacets', facetInfo);
+
     initializePopover(this.host, {
       ...facetInfo,
-      hasValues: () => !!this.facet.state.values.length,
+      hasValues: () => !!this.facetState.values.length,
       numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
   }
@@ -132,13 +188,14 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
     if (this.host.isConnected) {
       return;
     }
+    this.unsubscribeFacetController();
   }
 
   private get isHidden() {
     return (
-      this.summary.state.hasError ||
-      (!this.facet.state.values.length &&
-        !this.facet.state.selectedValueAncestry?.length)
+      this.summaryState.hasError ||
+      (!this.facetState.values.length &&
+        !this.facetState.selectedValueAncestry?.length)
     );
   }
 
@@ -393,12 +450,12 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
       facetState: {facetSearch, selectedValueAncestry, values},
     } = this;
 
-    const {hasError, firstSearchExecuted} = this.summary.state;
+    const {hasError, firstRequestExecuted} = this.summaryState;
 
     return (
       <FacetGuard
         enabled={true}
-        firstSearchExecuted={firstSearchExecuted}
+        firstSearchExecuted={firstRequestExecuted}
         hasError={hasError}
         hasResults={values.length > 0}
       >

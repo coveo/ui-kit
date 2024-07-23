@@ -60,7 +60,7 @@ export const isLoadingSelector = createSelector(
 
 export const errorSelector = createSelector(
   (state: Partial<CommerceSearchSection>) => state.commerceSearch?.error,
-  (error) => error
+  (error) => error ?? null
 );
 
 export const querySelector = createSelector(
@@ -104,5 +104,11 @@ export function enrichedParametersSelector(
   return {
     q: getCommerceQueryInitialState().query!,
     ...coreEnrichedParametersSelector(state, activeParams),
+  };
+}
+
+export function enrichedSummarySelector(state: CommerceEngineState) {
+  return {
+    query: queryExecutedSelector(state) || '',
   };
 }

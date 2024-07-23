@@ -39,7 +39,6 @@ jest.mocked(createRelay).mockReturnValue({
   on: jest.fn(),
   off: jest.fn(),
   updateConfig: jest.fn(),
-  clearStorage: jest.fn(),
   version: 'foo',
 });
 

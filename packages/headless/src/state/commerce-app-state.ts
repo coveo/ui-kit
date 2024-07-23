@@ -3,7 +3,7 @@ import {
   CartSection,
   CommerceContextSection,
   ConfigurationSection,
-  ProductListingV2Section,
+  ProductListingSection,
   RecommendationsSection,
   VersionSection,
   CommerceSortSection,
@@ -21,6 +21,7 @@ import {
   RecentQueriesSection,
   FieldSuggestionsOrderSection,
   TriggerSection,
+  ManualRangeSection,
 } from './state-sections';
 
 export type CommerceProductListingParametersState = CommerceFacetSetSection &
@@ -31,7 +32,7 @@ export type CommerceSearchParametersState =
 
 export type CommerceAppState = ConfigurationSection &
   CommerceStandaloneSearchBoxSection &
-  ProductListingV2Section &
+  ProductListingSection &
   RecommendationsSection &
   CommerceSearchSection &
   CommerceQuerySection &
@@ -50,4 +51,5 @@ export type CommerceAppState = ConfigurationSection &
   InstantProductsSection &
   FieldSuggestionsOrderSection &
   TriggerSection &
+  ManualRangeSection &
   VersionSection;

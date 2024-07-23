@@ -15,7 +15,7 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
             updateText += letter;
             cy.wrap(searchbox)
               .invoke('val', updateText)
-              .trigger('keyup', {which: letter.charCodeAt(0)});
+              .trigger('input', {which: letter.charCodeAt(0)});
             cy.wait(InterceptAliases.QuerySuggestions);
           });
         })
@@ -38,7 +38,7 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     },
     pressEnter: (textarea = false) => {
       selector.input(textarea).then((searchbox) => {
-        cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
+        cy.wrap(searchbox).trigger('keydown', {key: 'Enter'});
       });
     },
     keyboardTypeInSearchBox: (query: string, textarea = false) => {
