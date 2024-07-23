@@ -9,8 +9,4 @@ export class AtomicCommerceTextLocators extends BasePageObject<'atomic-commerce-
   get getText() {
     return this.page.locator('atomic-commerce-text');
   }
-
-  get hydrated() {
-    return this.page.locator('atomic-commerce-text[class*="hydrated"]');
-  }
 }
