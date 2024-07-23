@@ -67,9 +67,11 @@ test.describe('when viewport is large enough to display all tabs', () => {
         await tabManager.tabButtons('all').click();
       });
 
-      test('should change other component visibility', async ({tabManager}) => {
-        expect(tabManager.excludedFacet).toBeVisible();
-        expect(tabManager.includedFacet).not.toBeVisible();
+      test.describe('should change other component visibility', async () => {
+        test('facets', async ({tabManager}) => {
+          expect(tabManager.excludedFacet).toBeVisible();
+          expect(tabManager.includedFacet).not.toBeVisible();
+        });
       });
     });
 
@@ -152,9 +154,11 @@ test.describe('when viewport is too small to display all buttons', () => {
       expect(activeTabName).toBe(tabLabel);
     });
 
-    test('should change other component visibility', async ({tabManager}) => {
-      expect(tabManager.includedFacet).toBeVisible();
-      expect(tabManager.excludedFacet).not.toBeVisible();
+    test.describe('should change other component visibility', async () => {
+      test('facets', async ({tabManager}) => {
+        expect(tabManager.includedFacet).toBeVisible();
+        expect(tabManager.excludedFacet).not.toBeVisible();
+      });
     });
 
     test.describe('when selecting previous dropdown option', () => {
