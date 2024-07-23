@@ -25,18 +25,14 @@ export default function ProductList(props: IProductListProps) {
   return (
     <ul className="ProductList">
       {products.map((product, index) => (
-        <>
-          {' '}
-          <li className="Product" key={index}>
-            <InteractiveProduct
-              product={product}
-              controller={controllerBuilder({options: {product}})}
-              cartController={cartController}
-              navigate={navigate}
-            ></InteractiveProduct>
-          </li>
-          <hr />
-        </>
+        <li className="Product" key={index}>
+          <InteractiveProduct
+            product={product}
+            controller={controllerBuilder({options: {product}})}
+            cartController={cartController}
+            navigate={navigate}
+          ></InteractiveProduct>
+        </li>
       ))}
     </ul>
   );
