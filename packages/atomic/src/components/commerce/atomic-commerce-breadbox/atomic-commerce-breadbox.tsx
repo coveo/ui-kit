@@ -14,6 +14,7 @@ import {
   BreadcrumbValue,
   Context,
   ContextState,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -124,6 +125,8 @@ export class AtomicCommerceBreadbox
     } else {
       this.searchOrListing = buildSearch(this.bindings.engine);
     }
+
+    this.context = buildContext(this.bindings.engine);
 
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 
