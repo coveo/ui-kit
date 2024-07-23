@@ -1471,6 +1471,48 @@
     <shortDescription>Show less</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_SearchFieldWithSuggestions</fullName>
+    <value>Search field with suggestions. Suggestions may be available under this field. To send, press Enter.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Search field with suggestions.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SuggestionFound</fullName>
+    <value>{{0}} search suggestion found, to navigate use up and down arrows.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>1 search suggestion found</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SuggestionFound_plural</fullName>
+    <value>{{0}} search suggestions found, to navigate use up and down arrows.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>4 suggestions found</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SuggestionNotFound</fullName>
+    <value>There are no search suggestions.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>There are no search suggestions.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_RecentQueryAriaLabel</fullName>
+    <value>Recent query,</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Recent query,</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_QuerySuggestionAriaLabel</fullName>
+    <value>Query suggestion,</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Query suggestions,</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_FeedbackQuestionTopic</fullName>
     <value>Is the answer about the right topic?</value>
     <language>en_US</language>
