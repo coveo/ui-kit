@@ -72,7 +72,7 @@ export class AtomicCommerceProductsPerPage
    * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    * @type {number}
    */
-  @Prop({reflect: true}) initialChoice?: number;
+  @Prop({mutable: true, reflect: true}) initialChoice?: number;
 
   @Event({
     eventName: 'atomic/scrollToTop',
@@ -85,11 +85,12 @@ export class AtomicCommerceProductsPerPage
       this.initialChoice = this.initialChoice ?? this.choices[0];
       validateInitialChoice(this.initialChoice, this.choices);
     } catch (error) {
-      if (error instanceof ChoiceIsNaNError) {
+      if (
+        error instanceof ChoiceIsNaNError ||
+        error instanceof InitialChoiceNotInChoicesError
+      ) {
         this.bindings.engine.logger.error(error.message, this);
-      }
-      if (error instanceof InitialChoiceNotInChoicesError) {
-        this.bindings.engine.logger.error(error.message, this);
+        throw error;
       }
     }
 

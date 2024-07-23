@@ -63,7 +63,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    * @type {number}
    */
-  @Prop({reflect: true}) initialChoice?: number;
+  @Prop({mutable: true, reflect: true}) initialChoice?: number;
 
   @Event({
     eventName: 'atomic/scrollToTop',
