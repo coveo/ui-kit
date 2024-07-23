@@ -1,8 +1,8 @@
+import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
-} from '@coveo/atomic/playwrightUtils/base-fixture';
-import {test as base} from '@playwright/test';
+} from '../../../../../playwright-utils/base-fixture';
 import {AtomicCommerceTextLocators as Text} from './page-object';
 
 type MyFixtures = {

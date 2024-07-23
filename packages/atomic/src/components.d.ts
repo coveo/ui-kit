@@ -715,6 +715,7 @@ export namespace Components {
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
+          * @type {number}
          */
         "count"?: number;
         /**
@@ -6199,6 +6200,7 @@ declare namespace LocalJSX {
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
+          * @type {number}
          */
         "count"?: number;
         /**

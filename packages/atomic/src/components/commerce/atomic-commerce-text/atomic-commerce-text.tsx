@@ -32,6 +32,7 @@ export class AtomicCommerceText
   @Prop({reflect: true}) public value!: string;
   /**
    * The count value used for plurals.
+   * @type {number}
    */
   @Prop({reflect: true}) public count?: number;
 

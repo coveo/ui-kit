@@ -1,9 +1,9 @@
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class AtomicCommerceTextLocators {
-  private page: Page;
+export class AtomicCommerceTextLocators extends BasePageObject<'atomic-commerce-text'> {
   constructor(page: Page) {
-    this.page = page;
+    super(page, 'atomic-commerce-text');
   }
 
   get getText() {
