@@ -2198,6 +2198,28 @@ export declare interface AtomicSortExpression extends Components.AtomicSortExpre
 
 
 @ProxyCmp({
+  inputs: ['clearFiltersOnTabChange']
+})
+@Component({
+  selector: 'atomic-tab-manager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['clearFiltersOnTabChange'],
+})
+export class AtomicTabManager {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicTabManager extends Components.AtomicTabManager {}
+
+
+@ProxyCmp({
   inputs: ['label']
 })
 @Component({
