@@ -9,7 +9,7 @@ export interface TabButtonProps {
 
 export const TabButton: FunctionalComponent<TabButtonProps> = (props) => {
   const activeTabClass = props.isActive
-    ? "relative after:content-[''] after:block after:w-full after:h-1 after:absolute after:-bottom-0.5 after:bg-primary after:rounded"
+    ? "active-tab relative after:content-[''] after:block after:w-full after:h-1 after:absolute after:-bottom-0.5 after:bg-primary after:rounded"
     : '';
   const activeTabTextClass = props.isActive ? '' : 'text-neutral-dark';
   return (
