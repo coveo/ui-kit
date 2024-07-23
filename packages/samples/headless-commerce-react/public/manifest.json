@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Headless Commerce + React",
+  "name": "Coveo Headless Commerce + React Sample",
   "icons": [
     {
       "src": "favicon.ico",
