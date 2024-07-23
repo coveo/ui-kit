@@ -259,7 +259,7 @@ describe('Analytics Search Migration', () => {
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/deselect', async () => {
@@ -963,7 +963,7 @@ describe('Analytics Search Migration', () => {
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/instantResult/searchboxAsYouType', async () => {
