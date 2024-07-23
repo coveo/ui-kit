@@ -8,8 +8,7 @@ test.describe('Default', () => {
   });
 
   test('should be A11y compliant', async ({breadbox, makeAxeBuilder}) => {
-    await breadbox.getRegularFacetValue('Black').click();
-    await breadbox.getBreadcrumbButtons('Black').waitFor({state: 'visible'});
+    await breadbox.getRegularFacetValue().first().click();
 
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
@@ -19,13 +18,13 @@ test.describe('Default', () => {
     [
       {
         facetType: 'regular',
-        filter: '&f-cat_color=Black',
-        breadcrumbLabel: 'Color:Black',
+        filter: '&f-cat_color=Brown',
+        breadcrumbLabel: 'Color:Brown',
       },
       {
         facetType: 'numerical range',
         filter: '&nf-ec_price=15..20 ',
-        breadcrumbLabel: 'Price:15 to 20',
+        breadcrumbLabel: 'Price:$15.00 to $20.00',
       },
       {
         facetType: 'date range',
@@ -61,40 +60,23 @@ test.describe('Default', () => {
   });
 
   test.describe('when a regular facet value is selected', () => {
+    let firstValueText: string | RegExp;
+
     test.beforeEach(async ({breadbox}) => {
-      await breadbox.getRegularFacetValue('Black').click();
-      await breadbox.getBreadcrumbButtons('Black').waitFor({state: 'visible'});
-    });
-
-    test('should disappear when clicking on the breadcrumb button', async ({
-      breadbox,
-    }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Black');
-      await breadcrumbButton.click();
-
-      await expect(breadcrumbButton).not.toBeVisible();
-    });
-
-    test('should contain the selected value and the facet name in the breadcrumb button', async ({
-      breadbox,
-    }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Black');
-
-      await expect(breadcrumbButton).toHaveText('Color:Black');
-    });
-  });
-  test.describe('when a category facet value is selected', () => {
-    test.beforeEach(async ({breadbox}) => {
-      await breadbox.getCategoryFacetValue('Accessories').click();
+      firstValueText = (await breadbox
+        .getRegularFacetValue()
+        .first()
+        .textContent()) as string;
+      await breadbox.getRegularFacetValue(firstValueText).click();
       await breadbox
-        .getBreadcrumbButtons('Accessories')
+        .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
     });
 
     test('should disappear when clicking on the breadcrumb button', async ({
       breadbox,
     }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Accessories');
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
@@ -103,13 +85,49 @@ test.describe('Default', () => {
     test('should contain the selected value and the facet name in the breadcrumb button', async ({
       breadbox,
     }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons('Accessories');
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Category:Accessories');
+      await expect(breadcrumbButton).toHaveText(`Color:${firstValueText}`);
+    });
+  });
+  test.describe('when a category facet value is selected', () => {
+    let firstValueText: string | RegExp;
+    test.beforeEach(async ({breadbox}) => {
+      firstValueText = (await breadbox
+        .getCategoryFacetValue()
+        .first()
+        .textContent()) as string;
+      await breadbox.getCategoryFacetValue(firstValueText).click();
+      await breadbox
+        .getBreadcrumbButtons(firstValueText)
+        .waitFor({state: 'visible'});
+    });
+
+    test('should disappear when clicking on the breadcrumb button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      await breadcrumbButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should contain the selected value and the facet name in the breadcrumb button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+
+      await expect(breadcrumbButton).toHaveText(`Category:${firstValueText}`);
     });
     test.describe('when a nested category facet value is selected', () => {
+      let breadcrumbText: string | RegExp;
+
       test.beforeEach(async ({breadbox}) => {
-        await breadbox.getCategoryFacetValue(/^Surf Accessories$/).click();
+        breadcrumbText =
+          (await breadbox.getCategoryFacetValue().first().textContent()) +
+          ' / ' +
+          (await breadbox.getNestedCategoryFacetValue().first().textContent());
+        await breadbox.getNestedCategoryFacetValue().first().click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -130,9 +148,7 @@ test.describe('Default', () => {
       }) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
-        await expect(breadcrumbButton).toHaveText(
-          'Category:Accessories / Surf Accessories'
-        );
+        await expect(breadcrumbButton).toHaveText(`Category:${breadcrumbText}`);
       });
     });
   });

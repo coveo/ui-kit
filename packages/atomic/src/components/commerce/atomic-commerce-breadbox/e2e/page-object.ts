@@ -20,6 +20,13 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject<'atomic-com
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
+  getNestedCategoryFacetValue(value?: string | RegExp) {
+    const baseLocator = this.page.locator(
+      'atomic-commerce-category-facet [part="values"] [part="value-label"]'
+    );
+    return value ? baseLocator.filter({hasText: value}) : baseLocator;
+  }
+
   getNumericalFacetValue(value?: string | RegExp) {
     const baseLocator = this.page.locator(
       'atomic-commerce-numeric-facet [part="value-label"]'
