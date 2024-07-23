@@ -16,10 +16,11 @@ import {TabDropdownOption} from '../../../common/tab-manager/tab-dropdown-option
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * @internal
+ * @alpha
  *
  * @part button-container - The container for the tab button.
  * @part button - The tab button.
+ * @slot default
  */
 @Component({
   tag: 'atomic-tab-manager',
