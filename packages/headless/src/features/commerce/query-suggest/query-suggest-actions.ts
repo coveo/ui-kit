@@ -129,7 +129,9 @@ export const buildQuerySuggestRequest = (
     trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: navigatorContext.clientId,
+    clientId: state.configuration.analytics.enabled
+      ? navigatorContext.clientId
+      : '',
     context: {
       ...(navigatorContext.userAgent
         ? {
