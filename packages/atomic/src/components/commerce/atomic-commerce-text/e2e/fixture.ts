@@ -3,7 +3,7 @@ import {
   AxeFixture,
   makeAxeBuilder,
 } from '../../../../../playwright-utils/base-fixture';
-import {AtomicCommerceTextLocators as Text} from './page-object';
+import {AtomicCommerceText as Text} from './page-object';
 
 type MyFixtures = {
   text: Text;
