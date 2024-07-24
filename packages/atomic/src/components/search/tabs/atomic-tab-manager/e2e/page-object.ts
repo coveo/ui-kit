@@ -30,8 +30,8 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.locator('atomic-smart-snippet [part="smart-snippet"]');
   }
 
-  get sortExpressionLabels() {
-    return this.page.locator('atomic-sort-expression option');
+  get sortDropdownOptions() {
+    return this.page.locator('atomic-sort-dropdown option');
   }
 
   tabButtons(value?: string) {

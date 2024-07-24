@@ -62,6 +62,7 @@ export const Default: Story = {
   decorators: [
     (story) => html`
       ${story()}
+      <atomic-refine-toggle></atomic-refine-toggle>
       <div style="padding:10px;">
         <atomic-sort-dropdown>
           <atomic-sort-expression

@@ -54,6 +54,11 @@ test.describe('when viewport is large enough to display all tabs', () => {
       test('smart snippet', async ({tabManager}) => {
         expect(tabManager.smartSnippet).toBeVisible();
       });
+      test('sort dropdown', async ({tabManager}) => {
+        const expectedOptions = ['Most Recent', 'Least Recent', 'Relevance'];
+        const options = await tabManager.sortDropdownOptions.allTextContents();
+        expect(options).toEqual(expectedOptions);
+      });
     });
 
     test.describe('when selecting previous tab', () => {
@@ -68,6 +73,16 @@ test.describe('when viewport is large enough to display all tabs', () => {
         });
         test('smart snippet', async ({tabManager}) => {
           expect(tabManager.smartSnippet).not.toBeVisible();
+        });
+        test('sort dropdown', async ({tabManager}) => {
+          const expectedOptions = [
+            'Name descending',
+            'Name ascending',
+            'Relevance',
+          ];
+          const options =
+            await tabManager.sortDropdownOptions.allTextContents();
+          expect(options).toEqual(expectedOptions);
         });
       });
     });
