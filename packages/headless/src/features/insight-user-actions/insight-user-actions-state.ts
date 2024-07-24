@@ -23,7 +23,7 @@ export interface UserAction {
   searchHub?: string;
   document?: {
     title: string;
-    clickUri: string;
+    clickUri?: string; // Will be supported later
     uriHash?: string;
     contentIdKey?: string;
     contentIdValue?: string;

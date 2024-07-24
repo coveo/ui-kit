@@ -1,6 +1,12 @@
-import { InsightUserActionSection } from '../../state/state-sections';
-import { UserActionTimeline } from './insight-user-actions-state';
+/* eslint-disable @cspell/spellchecker */
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {InsightUserActionSection} from '../../state/state-sections';
+import {
+  UserAction,
+  UserActionTimeline,
+  UserActionType,
+} from './insight-user-actions-state';
 
 const mockActions: Object[] = [
   {
@@ -103,12 +109,28 @@ export const filterActions = (
   return actions;
 };
 
-export const mapUserActions = (rawActions: rawUserAction[]) => {
-  return rawActions.map((rawAction) => {
-    const actionValueObject = JSON.parse(rawAction.value);
-
-    return {};
+export const mapUserActions = (rawActions: rawUserAction[]): UserAction[] => {
+  const mappedUserActions = rawActions.map((rawAction) => {
+    const actionData = JSON.parse(rawAction.value);
+    return {
+      actionType: rawAction.name as UserActionType,
+      timestamp: rawAction.time,
+      eventData: {
+        type: actionData.event_type,
+        value: actionData.event_value,
+      },
+      cause: actionData.cause,
+      searchHub: actionData.origin_level_1,
+      document: {
+        title: actionData.title,
+        uriHash: actionData.uri_hash,
+        contentIdKey: actionData.c_contentidkey,
+        contentIdValue: actionData.c_contentidvalue,
+      },
+      query: actionData.query_expression,
+    };
   });
+  return mappedUserActions;
 };
 
 export const splitActionsIntoSessions = (actions: rawUserAction[]) => {};
