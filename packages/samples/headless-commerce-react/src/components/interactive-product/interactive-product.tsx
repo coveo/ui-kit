@@ -58,26 +58,6 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
     });
   };
 
-  const renderProductPrice = () => {
-    const promoPrice = product.ec_promo_price;
-    const price = product.ec_price;
-
-    if (promoPrice && price && promoPrice < price) {
-      return (
-        <span className="InteractiveProductPrice">
-          <s>{formatCurrency(price)}</s>
-          <span> {formatCurrency(promoPrice)}</span>
-        </span>
-      );
-    }
-
-    if (price || promoPrice) {
-      return <span>{formatCurrency((price ?? promoPrice)!)}</span>;
-    }
-
-    return <span>Price not available</span>;
-  };
-
   const renderProductCartControls = () => {
     return (
       <div className="ProductCartControls">
@@ -103,6 +83,26 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
         </button>
       </div>
     );
+  };
+
+  const renderProductPrice = () => {
+    const promoPrice = product.ec_promo_price;
+    const price = product.ec_price;
+
+    if (promoPrice && price && promoPrice < price) {
+      return (
+        <span className="InteractiveProductPrice">
+          <s>{formatCurrency(price)}</s>
+          <span> {formatCurrency(promoPrice)}</span>
+        </span>
+      );
+    }
+
+    if (price || promoPrice) {
+      return <span>{formatCurrency((price ?? promoPrice)!)}</span>;
+    }
+
+    return <span>Price not available</span>;
   };
 
   const clickProduct = () => {
