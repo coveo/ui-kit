@@ -2202,14 +2202,14 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 
 @ProxyCmp({
-  inputs: ['expression', 'label']
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['expression', 'label'],
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSortExpression {
   protected el: HTMLElement;

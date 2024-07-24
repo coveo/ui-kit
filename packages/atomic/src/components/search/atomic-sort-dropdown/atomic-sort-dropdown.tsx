@@ -7,6 +7,9 @@ import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
 import {
@@ -14,6 +17,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {randomID} from '../../../utils/utils';
 import {SortContainer} from '../../common/sort/container';
 import {SortGuard} from '../../common/sort/guard';
@@ -50,6 +54,10 @@ export class AtomicSortDropdown implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   public initialize() {
@@ -60,6 +68,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         criterion: this.bindings.store.state.sortOptions[0]?.criteria,
       },
     });
+    this.tabManager = buildTabManager(this.bindings.engine);
   }
 
   private buildOptions() {
@@ -76,17 +85,23 @@ export class AtomicSortDropdown implements InitializableComponent {
 
     this.bindings.store.set(
       'sortOptions',
-      sortExpressionElements.map(({expression, label}) => {
-        new Schema({
-          label: new StringValue({emptyAllowed: false, required: true}),
-        }).validate({label});
+      sortExpressionElements.map(
+        ({expression, label, tabsIncluded, tabsExcluded}) => {
+          new Schema({
+            label: new StringValue({emptyAllowed: false, required: true}),
+          }).validate({label});
 
-        return {
-          criteria: parseCriterionExpression(expression),
-          expression,
-          label,
-        };
-      })
+          return {
+            tabs: {
+              included: tabsIncluded,
+              excluded: tabsExcluded,
+            },
+            criteria: parseCriterionExpression(expression),
+            expression,
+            label,
+          };
+        }
+      )
     );
   }
 
@@ -118,14 +133,25 @@ export class AtomicSortDropdown implements InitializableComponent {
         <SortContainer>
           <SortLabel i18n={i18n} id={id} />
           <SortSelect i18n={i18n} id={id} onSelect={(evt) => this.select(evt)}>
-            {this.options.map(({label, criteria, expression}) => (
-              <SortOption
-                i18n={i18n}
-                label={label}
-                selected={this.sort.isSortedBy(criteria)}
-                value={expression}
-              />
-            ))}
+            {this.options.map(({label, criteria, expression, tabs}) => {
+              if (
+                !shouldDisplayOnCurrentTab(
+                  tabs.included,
+                  tabs.excluded,
+                  this.tabManagerState?.activeTab
+                )
+              ) {
+                return;
+              }
+              return (
+                <SortOption
+                  i18n={i18n}
+                  label={label}
+                  selected={this.sort.isSortedBy(criteria)}
+                  value={expression}
+                />
+              );
+            })}
           </SortSelect>
         </SortContainer>
       </SortGuard>,
