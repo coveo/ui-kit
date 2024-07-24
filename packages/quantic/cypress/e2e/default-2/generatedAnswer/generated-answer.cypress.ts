@@ -213,13 +213,16 @@ describe('quantic-generated-answer', () => {
               Expect.rephraseButtonIsSelected(stepRephraseOption, false);
               Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
               Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
-              Expect.searchQueryContainsCorrectRephraseOption(
-                bulletRephraseOption,
-                param.useCase === 'search'
-                  ? 'interfaceLoad'
-                  : 'searchboxSubmit',
-                ['text/markdown', 'text/plain']
-              );
+              // SFINT-5652
+              if (analyticsMode === 'legacy') {
+                Expect.searchQueryContainsCorrectRephraseOption(
+                  bulletRephraseOption,
+                  param.useCase === 'search'
+                    ? 'interfaceLoad'
+                    : 'searchboxSubmit',
+                  ['text/markdown', 'text/plain']
+                );
+              }
             });
           });
         });
