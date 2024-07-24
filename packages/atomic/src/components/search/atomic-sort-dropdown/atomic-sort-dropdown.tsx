@@ -149,25 +149,14 @@ export class AtomicSortDropdown implements InitializableComponent {
         <SortContainer>
           <SortLabel i18n={i18n} id={id} />
           <SortSelect i18n={i18n} id={id} onSelect={(evt) => this.select(evt)}>
-            {this.options.map(({label, criteria, expression, tabs}) => {
-              if (
-                !shouldDisplayOnCurrentTab(
-                  tabs.included,
-                  tabs.excluded,
-                  this.tabManagerState?.activeTab
-                )
-              ) {
-                return;
-              }
-              return (
-                <SortOption
-                  i18n={i18n}
-                  label={label}
-                  selected={this.sort.isSortedBy(criteria)}
-                  value={expression}
-                />
-              );
-            })}
+            {this.options.map(({label, criteria, expression}) => (
+              <SortOption
+                i18n={i18n}
+                label={label}
+                selected={this.sort.isSortedBy(criteria)}
+                value={expression}
+              />
+            ))}
           </SortSelect>
         </SortContainer>
       </SortGuard>,
