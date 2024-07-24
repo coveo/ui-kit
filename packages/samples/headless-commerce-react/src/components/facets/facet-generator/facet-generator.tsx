@@ -12,20 +12,21 @@ interface IFacetGeneratorProps {
 export default function FacetGenerator(props: IFacetGeneratorProps) {
   const {controller} = props;
 
-  const [state, setState] = useState(controller.state);
-  const facets = controller.facets;
+  const [facetState, setFacetState] = useState(controller.facets);
 
   useEffect(() => {
-    controller.subscribe(() => setState(controller.state));
+    controller.subscribe(() => {
+      setFacetState(controller.facets);
+    });
   }, [controller]);
 
-  if (state.length === 0) {
+  if (facetState.length === 0) {
     return null;
   }
 
   return (
     <ul className="Facets">
-      {facets.map((facet, index) => {
+      {facetState.map((facet, index) => {
         switch (facet.type) {
           case 'regular':
             return <RegularFacet key={index} controller={facet}></RegularFacet>;
