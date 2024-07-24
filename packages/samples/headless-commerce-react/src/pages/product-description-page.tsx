@@ -5,7 +5,7 @@ import {
   buildProductView,
   buildRecommendations,
 } from '@coveo/headless/commerce';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface';
 import {formatCurrency} from '../utils/format-currency';
 import {loadProduct} from '../utils/pdp-utils';
@@ -26,6 +26,7 @@ export default function ProductDescriptionPage(
   props: IProductDescriptionPageProps
 ) {
   const {engine, cartController, contextController, url, navigate} = props;
+  const [cartState, setCartState] = useState(cartController.state);
 
   /**
    * It is important to log the `ec.productView` event only once per PDP load. This is why we use a ref here.
@@ -73,14 +74,71 @@ export default function ProductDescriptionPage(
     }
   }, [recommendationsController]);
 
+  useEffect(() => {
+    cartController.subscribe(() => setCartState(cartController.state));
+  }, [cartController]);
+
   if (!product) {
     return null;
   }
 
+  const isInCart = () => {
+    return cartState.items.some((item) => item.productId === product.productId);
+  };
+
+  const numberInCart = () => {
+    return (
+      cartState.items.find((item) => item.productId === product.productId)
+        ?.quantity ?? 0
+    );
+  };
+
+  const adjustQuantity = (delta: number) => {
+    cartController.updateItemQuantity({
+      name: product.name,
+      price: product.price,
+      productId: product.productId,
+      quantity: numberInCart() + delta,
+    });
+  };
+
+  const removeFromCart = () => {
+    cartController.updateItemQuantity({
+      name: product.name,
+      price: product.price,
+      productId: product.productId,
+      quantity: 0,
+    });
+  };
+
   return (
-    <div className="Homepage">
+    <div className="ProductDescriptionPage">
       <h2 className="PageTitle">{product.name}</h2>
-      <p className="ProductPrice">{formatCurrency(product.price)}</p>
+      <p className="ProductPrice">
+        Price:<span> {formatCurrency(product.price)}</span>
+      </p>
+      <div className="ProductCartControls">
+        <p className="CartCurrentQuantity">
+          Currently in cart:<span> {numberInCart()}</span>
+        </p>
+        <button className="CartAddOne" onClick={() => adjustQuantity(1)}>
+          Add one
+        </button>
+        <button
+          className="CartRemoveOne"
+          disabled={!isInCart()}
+          onClick={() => adjustQuantity(-1)}
+        >
+          Remove one
+        </button>
+        <button
+          className="CartRemoveAll"
+          disabled={!isInCart()}
+          onClick={removeFromCart}
+        >
+          Remove all
+        </button>
+      </div>
       <RecommendationsInterface
         cartController={cartController}
         navigate={navigate}
