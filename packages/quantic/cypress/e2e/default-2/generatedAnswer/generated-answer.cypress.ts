@@ -160,11 +160,11 @@ describe('quantic-generated-answer', () => {
             Expect.disclaimerContains(GENERATED_ANSWER_DISCLAIMER);
             Expect.generatedAnswerIsStreaming(false);
           });
-          // SFINT-5652
-          (analyticsMode === 'legacy' ? it : it.skip)(
-            'should perform a search query with the default rephrase button',
-            () => {
-              cy.wait(InterceptAliases.Search);
+
+          it('should perform a search query with the default rephrase button', () => {
+            cy.wait(InterceptAliases.Search);
+            // SFINT-5652
+            if (analyticsMode === 'legacy') {
               Expect.searchQueryContainsCorrectRephraseOption(
                 defaultRephraseOption,
                 param.useCase === 'search'
@@ -173,7 +173,7 @@ describe('quantic-generated-answer', () => {
                 ['text/markdown', 'text/plain']
               );
             }
-          );
+          });
 
           it('should perform a search query with the default fields to include in citations', () => {
             cy.wait(InterceptAliases.Search);
