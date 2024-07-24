@@ -21,7 +21,7 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
       navigate(`${state.redirectTo}#q=${state.value}`);
       controller.afterRedirection();
     } else if (state.redirectTo !== '') {
-      navigate(state.redirectTo);
+      window.location.href = state.redirectTo;
     }
   }, [state.redirectTo, navigate, state.value, controller]);
 
