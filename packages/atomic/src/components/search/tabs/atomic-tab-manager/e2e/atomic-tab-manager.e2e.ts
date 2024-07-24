@@ -57,9 +57,14 @@ test.describe('when viewport is large enough to display all tabs', () => {
       expect(activeTabName).toBe(tabLabel);
     });
 
-    test('should change other component visibility', async ({tabManager}) => {
-      expect(tabManager.excludedFacet).not.toBeVisible();
-      expect(tabManager.includedFacet).toBeVisible();
+    test.describe('should change other component visibility', async () => {
+      test('facets', async ({tabManager}) => {
+        expect(tabManager.excludedFacet).not.toBeVisible();
+        expect(tabManager.includedFacet).toBeVisible();
+      });
+      test('smart snippet', async ({tabManager}) => {
+        expect(tabManager.smartSnippet).toBeVisible();
+      });
     });
 
     test.describe('when selecting previous tab', () => {
@@ -71,6 +76,9 @@ test.describe('when viewport is large enough to display all tabs', () => {
         test('facets', async ({tabManager}) => {
           expect(tabManager.excludedFacet).toBeVisible();
           expect(tabManager.includedFacet).not.toBeVisible();
+        });
+        test('smart snippet', async ({tabManager}) => {
+          expect(tabManager.smartSnippet).not.toBeVisible();
         });
       });
     });
@@ -159,6 +167,10 @@ test.describe('when viewport is too small to display all buttons', () => {
         expect(tabManager.includedFacet).toBeVisible();
         expect(tabManager.excludedFacet).not.toBeVisible();
       });
+
+      test('smart snippet', async ({tabManager}) => {
+        expect(tabManager.smartSnippet).toBeVisible();
+      });
     });
 
     test.describe('when selecting previous dropdown option', () => {
@@ -166,9 +178,15 @@ test.describe('when viewport is too small to display all buttons', () => {
         await tabManager.tabDropdown.selectOption('all');
       });
 
-      test('should change other component visibility', async ({tabManager}) => {
-        expect(tabManager.includedFacet).not.toBeVisible();
-        expect(tabManager.excludedFacet).toBeVisible();
+      test.describe('should change other component visibility', async () => {
+        test('facets', async ({tabManager}) => {
+          expect(tabManager.includedFacet).not.toBeVisible();
+          expect(tabManager.excludedFacet).toBeVisible();
+        });
+
+        test('smart snippet', async ({tabManager}) => {
+          expect(tabManager.smartSnippet).not.toBeVisible();
+        });
       });
     });
     test.describe('when resizing viewport', () => {

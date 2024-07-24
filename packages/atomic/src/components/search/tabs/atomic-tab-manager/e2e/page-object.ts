@@ -26,6 +26,10 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.getByTestId('included-facet');
   }
 
+  get smartSnippet() {
+    return this.page.locator('atomic-smart-snippet [part="smart-snippet"]');
+  }
+
   tabButtons(value?: string) {
     const baseLocator = this.page.locator('[part="tab-button"]');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
