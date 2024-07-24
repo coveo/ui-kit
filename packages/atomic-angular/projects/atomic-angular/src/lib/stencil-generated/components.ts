@@ -623,14 +623,14 @@ export declare interface AtomicFrequentlyBoughtTogether extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['answerStyle', 'collapsible', 'tabsExcluded', 'tabsIncluded', 'withToggle']
+  inputs: ['answerStyle', 'collapsible', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerStyle', 'collapsible', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
+  inputs: ['answerStyle', 'collapsible', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -2020,14 +2020,14 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
 
 
 @ProxyCmp({
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-segmented-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria'],
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSegmentedFacet {
   protected el: HTMLElement;
