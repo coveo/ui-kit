@@ -62,6 +62,34 @@ export const Default: Story = {
   decorators: [
     (story) => html`
       ${story()}
+      <div style="padding:10px;">
+        <atomic-sort-dropdown>
+          <atomic-sort-expression
+            tabs-excluded='["article"]'
+            label="Name descending"
+            expression="name descending"
+          ></atomic-sort-expression>
+          <atomic-sort-expression
+            tabs-excluded='["article"]'
+            label="Name ascending"
+            expression="name ascending"
+          ></atomic-sort-expression>
+          <atomic-sort-expression
+            tabs-included='["article"]'
+            label="Most Recent"
+            expression="date descending"
+          ></atomic-sort-expression>
+          <atomic-sort-expression
+            tabs-included='["article"]'
+            label="Least Recent"
+            expression="date ascending"
+          ></atomic-sort-expression>
+          <atomic-sort-expression
+            label="relevance"
+            expression="relevancy"
+          ></atomic-sort-expression>
+        </atomic-sort-dropdown>
+      </div>
       <div style="display: flex;">
         <atomic-smart-snippet
           tabs-included='["article", "documentation"]'
