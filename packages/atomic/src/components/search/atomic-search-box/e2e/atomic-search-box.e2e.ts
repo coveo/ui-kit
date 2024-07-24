@@ -50,11 +50,21 @@ test.describe('default', () => {
 test.describe('with instant results & query suggestions', () => {
   test.beforeEach(async ({searchBox}) => {
     await searchBox.load({
+      args: {suggestionTimeout: 5000},
       story: 'rich-search-box',
     });
   });
 
   test.describe('with recent queries', () => {
+    test.beforeEach(async ({searchBox, page}) => {
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('shoe');
+      await searchBox.searchInput.press('Enter');
+      await searchBox.clearButton.waitFor({state: 'visible'});
+      await searchBox.searchInput.fill('');
+      await page.waitForLoadState('networkidle');
+    });
     test('should display recent queries', async ({searchBox}) => {
       await expect(searchBox.recentQueries().first()).toBeVisible();
     });
@@ -101,19 +111,19 @@ test.describe('with instant results & query suggestions', () => {
     test('should display in the search box what has been submitted', async ({
       searchBox,
     }) => {
-      await searchBox.searchInput.fill('Rec');
+      await searchBox.searchInput.fill('shoe');
       await searchBox.searchInput.press('Enter');
-      await expect(searchBox.searchInput).toHaveValue('Rec');
+      await expect(searchBox.searchInput).toHaveValue('shoe');
     });
 
     test.describe('after focusing on suggestion with the mouse', () => {
       test('should submit what is in the search box regardless of the mouse position', async ({
         searchBox,
       }) => {
-        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchInput.fill('shoe');
         await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
         await searchBox.searchInput.press('Enter');
-        await expect(searchBox.searchInput).toHaveValue('Rec');
+        await expect(searchBox.searchInput).toHaveValue('shoes');
       });
     });
   });
