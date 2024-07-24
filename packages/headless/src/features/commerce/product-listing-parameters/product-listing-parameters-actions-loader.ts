@@ -30,11 +30,7 @@ export interface ProductListingParametersActionCreators {
  * Loads the commerce facet order, facet set, pagination, and sort reducers and returns the available product listing parameters action creators.
  *
  * @param engine - The headless commerce engine.
-<<<<<<< HEAD
- * @returns An object holding the action creators.
-=======
  * @returns An object holding the product listing parameters action creators.
->>>>>>> ce6fb7ee5e23f10840b4cc654544e7dde05d80d2
  */
 export function loadProductListingParametersActions(
   engine: CommerceEngine

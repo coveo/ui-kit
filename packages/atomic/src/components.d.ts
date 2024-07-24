@@ -709,9 +709,13 @@ export namespace Components {
      */
     interface AtomicCommerceSortDropdown {
     }
+    /**
+     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+     */
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
+          * @type {number}
          */
         "count"?: number;
         /**
@@ -3784,6 +3788,9 @@ declare global {
         prototype: HTMLAtomicCommerceSortDropdownElement;
         new (): HTMLAtomicCommerceSortDropdownElement;
     };
+    /**
+     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+     */
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
     }
     var HTMLAtomicCommerceTextElement: {
@@ -6187,9 +6194,13 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceSortDropdown {
     }
+    /**
+     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+     */
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
+          * @type {number}
          */
         "count"?: number;
         /**
@@ -9062,6 +9073,9 @@ declare module "@stencil/core" {
              * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
              */
             "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
+            /**
+             * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+             */
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
