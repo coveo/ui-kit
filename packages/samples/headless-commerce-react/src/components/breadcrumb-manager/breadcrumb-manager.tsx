@@ -53,11 +53,9 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
 
   return (
     <div className="BreadcrumbManager">
-      {state.hasBreadcrumbs && (
-        <div className="ClearAllBreadcrumbs">
-          <button onClick={controller.deselectAll}>Clear all filters</button>
-        </div>
-      )}
+      <div className="ClearAllBreadcrumbs">
+        <button onClick={controller.deselectAll}>Clear all filters</button>
+      </div>
       <ul className="Breadcrumbs">
         {state.facetBreadcrumbs.map((facetBreadcrumb, index) => {
           return (
