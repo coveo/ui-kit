@@ -282,6 +282,11 @@ export class AtomicColorFacet implements InitializableComponent {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behavior.'
+      );
+    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.tabManager = buildTabManager(this.bindings.engine);

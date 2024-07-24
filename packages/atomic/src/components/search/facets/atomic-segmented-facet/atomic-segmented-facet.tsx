@@ -191,6 +191,11 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   private dependenciesManager!: FacetConditionsManager;
 
   public initialize() {
+    if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behavior.'
+      );
+    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
 
