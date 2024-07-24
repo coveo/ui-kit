@@ -6,7 +6,7 @@ import {
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
  */
 @Component({
@@ -32,6 +32,7 @@ export class AtomicCommerceText
   @Prop({reflect: true}) public value!: string;
   /**
    * The count value used for plurals.
+   * @type {number}
    */
   @Prop({reflect: true}) public count?: number;
 

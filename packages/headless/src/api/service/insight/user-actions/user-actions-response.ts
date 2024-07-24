@@ -1,23 +1,11 @@
+import {UserActionType} from '../../../../features/insight-user-actions/insight-user-actions-state';
+
 export interface InsightUserActionsResponse {
-  timeline?: UserActionTimeline;
+  value: Array<UserAction>;
 }
 
-interface UserActionTimeline {
-  sessions: UserSession[];
-}
-
-interface UserSession {
-  start: Date;
-  end: Date;
-  actions: UserAction[];
-}
-
-type UserActionType = 'SEARCH' | 'CLICK' | 'VIEW' | 'CUSTOM';
 interface UserAction {
-  actionType: UserActionType;
-  timestamp: Date;
-  raw: Record<string, string>;
-  searchHub?: string;
-  document?: string;
-  query?: string;
+  name: UserActionType;
+  time: string;
+  value: string;
 }
