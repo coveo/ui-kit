@@ -63,7 +63,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
 
     if (promoPrice && price && promoPrice < price) {
       return (
-        <span>
+        <span className="InteractiveProductPrice">
           <s>{formatCurrency(price)}</s>
           <span> {formatCurrency(promoPrice)}</span>
         </span>
@@ -100,14 +100,28 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
       <div className="InteractiveProductDescription">
         <p>{product.ec_description}</p>
       </div>
-      <div>Currently in cart: {numberInCart()}</div>
-      <button onClick={() => adjustQuantity(1)}>Add one</button>
-      <button disabled={!isInCart()} onClick={() => adjustQuantity(-1)}>
-        Remove one
-      </button>
-      <button disabled={!isInCart()} onClick={removeFromCart}>
-        Remove all
-      </button>
+      <div className="ProductCartControls">
+        <p className="CartCurrentQuantity">
+          Currently in cart:<span> {numberInCart()}</span>
+        </p>
+        <button className="CartAddOne" onClick={() => adjustQuantity(1)}>
+          Add one
+        </button>
+        <button
+          className="CartRemoveOne"
+          disabled={!isInCart()}
+          onClick={() => adjustQuantity(-1)}
+        >
+          Remove one
+        </button>
+        <button
+          className="CartRemoveAll"
+          disabled={!isInCart()}
+          onClick={removeFromCart}
+        >
+          Remove all
+        </button>
+      </div>
     </div>
   );
 }
