@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
 import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface';
+import {saveCartItemsToLocaleStorage} from '../utils/cart-utils';
 import {formatCurrency} from '../utils/format-currency';
 import {loadProduct} from '../utils/pdp-utils';
 
@@ -39,7 +40,7 @@ export default function ProductDescriptionPage(
    * Typically, the product data used on a PDP will not be fetched from Coveo, but rather from another backend service
    * such as an SAP commerce API.
    *
-   * In this example, the bare-minimum product necessary data to emit an `ec.productView` event is simply encoded in
+   * In this example, the bare-minimum necessary product data to emit an `ec.productView` event is simply encoded in,
    * and extracted from the URL. This is of course not a realistic scenario.
    */
   const product = loadProduct();
@@ -74,8 +75,12 @@ export default function ProductDescriptionPage(
     }
   }, [recommendationsController]);
 
+  // When the cart state changes, you should save it so that you can restore it when you initialize the commerce engine.
   useEffect(() => {
-    cartController.subscribe(() => setCartState(cartController.state));
+    cartController.subscribe(() => {
+      setCartState(cartController.state);
+      saveCartItemsToLocaleStorage(cartController.state);
+    });
   }, [cartController]);
 
   if (!product) {
@@ -93,7 +98,7 @@ export default function ProductDescriptionPage(
     );
   };
 
-  const adjustQuantity = (delta: number) => {
+  const adjustQuantityInCart = (delta: number) => {
     cartController.updateItemQuantity({
       name: product.name,
       price: product.price,
@@ -111,23 +116,19 @@ export default function ProductDescriptionPage(
     });
   };
 
-  return (
-    <div className="ProductDescriptionPage">
-      <h2 className="PageTitle">{product.name}</h2>
-      <p className="ProductPrice">
-        Price:<span> {formatCurrency(product.price)}</span>
-      </p>
+  const renderProductCartControls = () => {
+    return (
       <div className="ProductCartControls">
         <p className="CartCurrentQuantity">
           Currently in cart:<span> {numberInCart()}</span>
         </p>
-        <button className="CartAddOne" onClick={() => adjustQuantity(1)}>
+        <button className="CartAddOne" onClick={() => adjustQuantityInCart(1)}>
           Add one
         </button>
         <button
           className="CartRemoveOne"
           disabled={!isInCart()}
-          onClick={() => adjustQuantity(-1)}
+          onClick={() => adjustQuantityInCart(-1)}
         >
           Remove one
         </button>
@@ -139,6 +140,16 @@ export default function ProductDescriptionPage(
           Remove all
         </button>
       </div>
+    );
+  };
+
+  return (
+    <div className="ProductDescriptionPage">
+      <h2 className="PageTitle">{product.name}</h2>
+      <p className="ProductPrice">
+        Price:<span> {formatCurrency(product.price)}</span>
+      </p>
+      {renderProductCartControls()}
       <RecommendationsInterface
         cartController={cartController}
         navigate={navigate}

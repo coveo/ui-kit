@@ -12,6 +12,7 @@ export default function Cart(props: ICartProps) {
 
   const [state, setState] = useState(controller.state);
 
+  // When the cart state changes, you should save it so that you can restore it when you initialize the commerce engine.
   useEffect(() => {
     controller.subscribe(() => {
       setState(controller.state);

@@ -19,6 +19,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
 
   const [cartState, setCartState] = useState(cartController.state);
 
+  // When the cart state changes, you should save it so that you can restore it when you initialize the commerce engine.
   useEffect(() => {
     cartController.subscribe(() => {
       setCartState(cartController.state);
@@ -57,7 +58,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
     });
   };
 
-  const renderPrice = () => {
+  const renderProductPrice = () => {
     const promoPrice = product.ec_promo_price;
     const price = product.ec_price;
 
@@ -77,29 +78,8 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
     return <span>Price not available</span>;
   };
 
-  const clickProduct = () => {
-    controller.select();
-    navigate(
-      `/product/${product.ec_product_id ?? product.permanentid}/${product.ec_name ?? product.permanentid}/${product.ec_promo_price ?? product.ec_price ?? NaN}`
-    );
-  };
-
-  return (
-    <div className="InteractiveProduct">
-      <button className="InteractiveProductLink" onClick={clickProduct}>
-        {product.ec_name}
-      </button>
-      <div className="InteractiveProductImageWrapper">
-        <img
-          src={product.ec_images[0]}
-          alt={product.permanentid}
-          height={100}
-        ></img>
-      </div>
-      {renderPrice()}
-      <div className="InteractiveProductDescription">
-        <p>{product.ec_description}</p>
-      </div>
+  const renderProductCartControls = () => {
+    return (
       <div className="ProductCartControls">
         <p className="CartCurrentQuantity">
           Currently in cart:<span> {numberInCart()}</span>
@@ -122,6 +102,41 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
           Remove all
         </button>
       </div>
+    );
+  };
+
+  const clickProduct = () => {
+    controller.select();
+
+    // Normally here, you would simply navigate to product.clickUri.
+    const productId = product.ec_product_id ?? product.permanentid;
+    const productName = product.ec_name ?? product.permanentid;
+    const productPrice = product.ec_promo_price ?? product.ec_price ?? NaN;
+    navigate(`/product/${productId}/${productName}/${productPrice}`);
+    // In this sample project, we navigate to a custom URL because the app doesn't have access to a commerce backend
+    // service to retrieve detailed product information from for the purpose of rendering a product description page
+    // (PDP).
+    // Therefore, we encode bare-minimum product information in the URL, and use it to render the PDP.
+    // This is by no means a realistic scenario.
+  };
+
+  return (
+    <div className="InteractiveProduct">
+      <button className="ProductLink" onClick={clickProduct}>
+        {product.ec_name}
+      </button>
+      <div className="ProductImageWrapper">
+        <img
+          src={product.ec_images[0]}
+          alt={product.permanentid}
+          height={100}
+        ></img>
+      </div>
+      {renderProductPrice()}
+      <div className="ProductDescription">
+        <p>{product.ec_description}</p>
+      </div>
+      {renderProductCartControls()}
     </div>
   );
 }
