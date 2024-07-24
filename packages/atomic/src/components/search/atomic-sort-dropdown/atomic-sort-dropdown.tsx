@@ -106,7 +106,13 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   private get options() {
-    return this.bindings.store.state.sortOptions;
+    return this.bindings.store.state.sortOptions.filter(({tabs}) =>
+      shouldDisplayOnCurrentTab(
+        tabs.included,
+        tabs.excluded,
+        this.tabManagerState?.activeTab
+      )
+    );
   }
 
   private select(e: Event) {
@@ -115,6 +121,16 @@ export class AtomicSortDropdown implements InitializableComponent {
       (option) => option.expression === select.value
     );
     option && this.sort.sortBy(option.criteria);
+  }
+
+  public componentShouldUpdate(): void {
+    if (
+      !this.options
+        .map((option) => option.expression)
+        .includes(this.sortState.sortCriteria)
+    ) {
+      this.sort.sortBy(this.options[0].criteria);
+    }
   }
 
   public render() {
