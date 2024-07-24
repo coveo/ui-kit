@@ -40,8 +40,8 @@ export class AtomicExternal {
 
   get #interface() {
     if (!this.boundInterface) {
-      const element = document.querySelector(this.selector);
-      if (!element) {
+      this.boundInterface = document.querySelector(this.selector) ?? undefined;
+      if (!this.boundInterface) {
         throw new Error(
           `Cannot find interface element with selector "${this.selector}"`
         );

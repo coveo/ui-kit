@@ -142,10 +142,17 @@ export class AtomicRefineModal implements InitializableComponent {
     const facetsSection = [];
     const horizontalFacetsSection = [];
     for (const boundInterface of boundInterfaces) {
-      facetsSection.push(findSection(boundInterface, 'facets'));
-      horizontalFacetsSection.push(
-        findSection(boundInterface, 'horizontal-facets')
+      const facetSection = findSection(boundInterface, 'facets');
+      if (facetSection) {
+        facetsSection.push(facetSection);
+      }
+      const horizontalFacetSection = findSection(
+        boundInterface,
+        'horizontal-facets'
       );
+      if (horizontalFacetSection) {
+        horizontalFacetsSection.push(horizontalFacetSection);
+      }
     }
     const triagedFacets = triageFacetsByParents(
       facets,
