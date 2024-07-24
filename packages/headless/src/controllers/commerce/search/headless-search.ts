@@ -43,6 +43,9 @@ import {
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options';
 
+/**
+ * The `Search` controller lets you create a commerce search page.
+ */
 export interface Search extends Controller, SearchSubControllers {
   /**
    * Executes the first search.
