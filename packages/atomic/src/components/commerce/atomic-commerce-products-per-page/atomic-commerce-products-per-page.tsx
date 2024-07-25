@@ -33,7 +33,7 @@ import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/at
  *
  * @part label - The "Products per page" label.
  * @part buttons - The list of buttons.
- * @part button - The product per page button.
+ * @part button - The individual products per page buttons.
  * @part active-button - The active products per page button.
  *
  * @alpha
