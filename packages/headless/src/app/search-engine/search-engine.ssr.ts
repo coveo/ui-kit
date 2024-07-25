@@ -5,6 +5,7 @@ import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
+import {NavigatorContextProvider} from '../navigatorContextProvider';
 import {
   buildControllerDefinitions,
   composeFunction,
@@ -108,11 +109,19 @@ export function defineSearchEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
+  const getOpts = () => {
+    return engineOptions;
+  };
+
+  const setNavigatorContextProvider = (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => {
+    engineOptions.navigatorContextProvider = navigatorContextProvider;
+  };
+
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const engine = buildSSRSearchEngine(
-      buildOptions?.extend
-        ? await buildOptions.extend(engineOptions)
-        : engineOptions
+      buildOptions?.extend ? await buildOptions.extend(getOpts()) : getOpts()
     );
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -184,5 +193,6 @@ export function defineSearchEngine<
     build,
     fetchStaticState,
     hydrateStaticState,
+    setNavigatorContextProvider,
   };
 }

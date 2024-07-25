@@ -2,6 +2,7 @@ import {AnyAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
+import {NavigatorContextProvider} from '../../navigatorContextProvider';
 import {Build} from './build';
 import {
   ControllerDefinitionsMap,
@@ -58,6 +59,11 @@ export interface EngineDefinition<
     InferControllersMapFromDefinition<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+
+  // TODO: document this
+  setNavigatorContextProvider: (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => void;
 }
 
 export type InferStaticState<

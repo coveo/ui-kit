@@ -1,22 +1,28 @@
 'use client';
 
+import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 import {
   hydrateStaticState,
   ListingHydratedState,
   ListingStaticState,
+  setNavigatorContextProvider,
 } from '../lib/commerce-engine';
 import {ProductList} from './product-list';
 import {Summary} from './summary';
 
 export default function ListingPage({
   staticState,
+  navigatorContext,
 }: {
   staticState: ListingStaticState;
+  navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
     ListingHydratedState | undefined
   >(undefined);
+
+  setNavigatorContextProvider(() => navigatorContext);
 
   useEffect(() => {
     hydrateStaticState({

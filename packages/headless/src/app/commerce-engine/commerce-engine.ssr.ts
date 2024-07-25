@@ -6,6 +6,7 @@ import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {createWaitForActionMiddleware} from '../../utils/utils';
+import {NavigatorContextProvider} from '../navigatorContextProvider';
 import {
   buildControllerDefinitions,
   composeFunction,
@@ -120,6 +121,12 @@ export function defineCommerceEngine<
     return engineOptions;
   };
 
+  const setNavigatorContextProvider = (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => {
+    engineOptions.navigatorContextProvider = navigatorContextProvider;
+  };
+
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const engine = buildSSRCommerceEngine(
       buildOptions?.extend ? await buildOptions.extend(getOpts()) : getOpts()
@@ -197,5 +204,6 @@ export function defineCommerceEngine<
     build,
     fetchStaticState,
     hydrateStaticState,
+    setNavigatorContextProvider,
   };
 }
