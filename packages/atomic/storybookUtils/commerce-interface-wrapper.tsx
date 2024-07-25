@@ -24,6 +24,7 @@ const getSampleCommerceEngineConfiguration =
       currency: 'USD',
       view: {
         url: 'https://github.com/coveo/ui-kit',
+        referrer: document.referrer,
       },
     },
     cart: {
