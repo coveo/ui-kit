@@ -210,3 +210,4 @@ export function defineCommerceEngine<
     hydrateStaticState,
   };
 }
+// Proposition 4 available in KIT-3394-proposition-4
