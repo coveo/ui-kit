@@ -264,8 +264,8 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   public componentShouldUpdate(): void {
     updateFacetVisibilityForActiveTab(
-      this.tabsIncluded,
-      this.tabsExcluded,
+      [...this.tabsIncluded],
+      [...this.tabsExcluded],
       this.tabManagerState?.activeTab,
       this.facetForRange
     );

@@ -343,8 +343,8 @@ export class AtomicCategoryFacet implements InitializableComponent {
     propName: keyof AtomicCategoryFacet
   ) {
     updateFacetVisibilityForActiveTab(
-      this.tabsIncluded,
-      this.tabsExcluded,
+      [...this.tabsIncluded],
+      [...this.tabsExcluded],
       this.tabManagerState?.activeTab,
       this.facet
     );

@@ -255,8 +255,8 @@ export class AtomicTimeframeFacet implements InitializableComponent {
 
   public componentShouldUpdate(): void {
     updateFacetVisibilityForActiveTab(
-      this.tabsIncluded,
-      this.tabsExcluded,
+      [...this.tabsIncluded],
+      [...this.tabsExcluded],
       this.tabManagerState?.activeTab,
       this.facetForDateRange
     );

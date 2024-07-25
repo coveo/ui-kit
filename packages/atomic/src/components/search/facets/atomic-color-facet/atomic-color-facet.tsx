@@ -351,8 +351,8 @@ export class AtomicColorFacet implements InitializableComponent {
     propName: keyof AtomicColorFacet
   ) {
     updateFacetVisibilityForActiveTab(
-      this.tabsIncluded,
-      this.tabsExcluded,
+      [...this.tabsIncluded],
+      [...this.tabsExcluded],
       this.tabManagerState?.activeTab,
       this.facet
     );
