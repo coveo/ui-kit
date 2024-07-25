@@ -3,7 +3,7 @@ import {
   AxeFixture,
   makeAxeBuilder,
 } from '../../../../../playwright-utils/base-fixture';
-import {SearchBoxPageObject} from '../../../commerce/atomic-commerce-search-box/e2e/page-object';
+import {SearchBoxPageObject} from './page-object';
 
 type AtomicSearchBoxE2EFixtures = {
   searchBox: SearchBoxPageObject;
