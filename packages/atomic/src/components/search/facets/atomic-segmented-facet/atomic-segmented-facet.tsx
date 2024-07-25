@@ -193,7 +193,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   public initialize() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
       console.warn(
-        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behavior.'
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
     }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
