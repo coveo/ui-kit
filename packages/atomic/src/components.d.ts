@@ -724,9 +724,13 @@ export namespace Components {
      */
     interface AtomicCommerceSortDropdown {
     }
+    /**
+     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+     */
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
+          * @type {number}
          */
         "count"?: number;
         /**
@@ -3278,6 +3282,26 @@ export namespace Components {
          */
         "label": string;
     }
+    interface AtomicTab {
+        /**
+          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
+         */
+        "expression": string;
+        /**
+          * The label to display on the tab.
+         */
+        "label": string;
+        /**
+          * The internal name of the atomic tab.
+         */
+        "name": string;
+    }
+    interface AtomicTabManager {
+        /**
+          * Whether to clear the filters when the active tab changes.
+         */
+        "clearFiltersOnTabChange"?: boolean;
+    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -3825,6 +3849,9 @@ declare global {
         prototype: HTMLAtomicCommerceSortDropdownElement;
         new (): HTMLAtomicCommerceSortDropdownElement;
     };
+    /**
+     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+     */
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
     }
     var HTMLAtomicCommerceTextElement: {
@@ -5385,6 +5412,18 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
+    }
+    var HTMLAtomicTabElement: {
+        prototype: HTMLAtomicTabElement;
+        new (): HTMLAtomicTabElement;
+    };
+    interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
+    }
+    var HTMLAtomicTabManagerElement: {
+        prototype: HTMLAtomicTabManagerElement;
+        new (): HTMLAtomicTabManagerElement;
+    };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -5619,6 +5658,8 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-tab": HTMLAtomicTabElement;
+        "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -6245,9 +6286,13 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceSortDropdown {
     }
+    /**
+     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+     */
     interface AtomicCommerceText {
         /**
           * The count value used for plurals.
+          * @type {number}
          */
         "count"?: number;
         /**
@@ -8688,6 +8733,26 @@ declare namespace LocalJSX {
          */
         "label": string;
     }
+    interface AtomicTab {
+        /**
+          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
+         */
+        "expression"?: string;
+        /**
+          * The label to display on the tab.
+         */
+        "label": string;
+        /**
+          * The internal name of the atomic tab.
+         */
+        "name": string;
+    }
+    interface AtomicTabManager {
+        /**
+          * Whether to clear the filters when the active tab changes.
+         */
+        "clearFiltersOnTabChange"?: boolean;
+    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -8974,6 +9039,8 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-tab": AtomicTab;
+        "atomic-tab-manager": AtomicTabManager;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -9127,6 +9194,9 @@ declare module "@stencil/core" {
              * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
              */
             "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
+            /**
+             * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
+             */
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
@@ -9702,6 +9772,8 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
