@@ -4,10 +4,10 @@ export default function Home() {
   return (
     <ul>
       <li>
-        <Link href={'/generic'}>Framework agnostic example</Link>
+        <Link href={'/listing'}>Surfboard Listing Page</Link>
       </li>
       <li>
-        <Link href={'/react'}>React example</Link>
+        <Link href={'/search'}>Search Page</Link>
       </li>
     </ul>
   );

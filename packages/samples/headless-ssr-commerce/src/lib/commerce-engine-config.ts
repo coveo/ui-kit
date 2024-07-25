@@ -3,14 +3,9 @@ import {
   ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
   CommerceEngine,
-  defineProductListing,
-  defineStandaloneSearchBox,
-  defineContext,
+  defineProductList,
   getSampleCommerceEngineConfiguration,
-  defineFacets,
   defineQuerySummary,
-  defineSearchBox,
-  defineSearch,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -21,21 +16,14 @@ const configuration = {
   ...getSampleCommerceEngineConfiguration(),
   analytics: {
     trackingId: 'sports',
-    enabled: false, // TODO: setup navigatorContext
+    enabled: false, // TODO: enable analytics
   },
 };
 
-export const masterEngineConfig = {
+export default {
   configuration: configuration,
   controllers: {
-    context: defineContext(),
-    searchBox: defineSearchBox({options: {}}),
-    standaloneSearchBox: defineStandaloneSearchBox({
-      options: {redirectionUrl: '/search'},
-    }),
-    search: defineSearch(),
-    productList: defineProductListing(), // TODO: also need to know how to configure a search page
     summary: defineQuerySummary(),
-    facets: defineFacets(),
+    productList: defineProductList(),
   },
 } satisfies CommerceEngineConfig;
