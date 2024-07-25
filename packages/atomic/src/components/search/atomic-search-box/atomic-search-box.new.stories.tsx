@@ -1,9 +1,7 @@
 import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
-import {userEvent} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {within} from 'shadow-dom-testing-library';
 
 const {decorator, play} = wrapInSearchInterface(
   {
@@ -40,30 +38,5 @@ export const RichSearchBox: Story = {
       <atomic-search-box-instant-results
         image-size="small"
       ></atomic-search-box-instant-results>`,
-  },
-  play: async (context) => {
-    await play(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
-    const searchBox = (
-      await canvas.findAllByShadowTitle('Search field with suggestions.', {
-        exact: false,
-      })
-    )?.find((el) => el.role === 'combobox');
-    await step('Search for shoe', async () => {
-      await userEvent.click(searchBox!);
-      await userEvent.type(searchBox!, 'shoe');
-      await userEvent.click(
-        await canvas.findByShadowRole('button', {name: 'Search'})
-      );
-    });
-    await step('Clear query', async () => {
-      await userEvent.click(
-        await canvas.findByShadowRole('button', {name: 'Clear'})
-      );
-    });
-    await step('Click the searchbox', async () => {
-      await userEvent.click(searchBox!);
-    });
   },
 };

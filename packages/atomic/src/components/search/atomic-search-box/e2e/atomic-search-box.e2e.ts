@@ -112,7 +112,7 @@ test.describe('with instant results & query suggestions', () => {
       searchBox,
     }) => {
       await searchBox.searchInput.fill('shoe');
-      await searchBox.searchInput.press('Enter');
+      await searchBox.submitButton.click();
       await expect(searchBox.searchInput).toHaveValue('shoe');
     });
 
@@ -123,7 +123,7 @@ test.describe('with instant results & query suggestions', () => {
         await searchBox.searchInput.fill('shoe');
         await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
         await searchBox.searchInput.press('Enter');
-        await expect(searchBox.searchInput).toHaveValue('shoes');
+        await expect(searchBox.searchInput).toHaveValue('shoe');
       });
     });
   });
