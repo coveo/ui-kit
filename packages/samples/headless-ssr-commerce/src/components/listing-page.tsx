@@ -7,7 +7,6 @@ import {
   ListingStaticState,
 } from '../lib/commerce-engine';
 import {ProductList} from './product-list';
-// import {ProductList} from './product-list';
 import {Summary} from './summary';
 
 export default function ListingPage({

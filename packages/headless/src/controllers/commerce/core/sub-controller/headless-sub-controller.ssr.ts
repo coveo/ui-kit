@@ -13,9 +13,7 @@ export interface SummaryDefinition
   > {}
 
 /**
- *
  * @internal
- *
  */
 export function defineQuerySummary(): SummaryDefinition {
   return {
