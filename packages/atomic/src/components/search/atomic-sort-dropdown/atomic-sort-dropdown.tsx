@@ -10,6 +10,7 @@ import {
   TabManager,
   TabManagerState,
   buildTabManager,
+  loadSortCriteriaActions,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
 import {
@@ -129,7 +130,11 @@ export class AtomicSortDropdown implements InitializableComponent {
         .map((option) => option.expression)
         .includes(this.sortState.sortCriteria)
     ) {
-      this.sort.sortBy(this.options[0].criteria);
+      const action = loadSortCriteriaActions(
+        this.bindings.engine
+      ).updateSortCriterion(this.options[0].criteria);
+
+      this.bindings.engine.dispatch(action);
     }
   }
 
