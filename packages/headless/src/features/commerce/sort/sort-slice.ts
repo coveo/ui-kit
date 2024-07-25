@@ -25,10 +25,10 @@ export const sortReducer = createReducer(
       })
       .addCase(fetchProductListing.fulfilled, handleFetchFulfilled)
       .addCase(executeSearch.fulfilled, handleFetchFulfilled)
-      .addCase(setContext, getCommerceSortInitialState)
-      .addCase(setView, getCommerceSortInitialState)
       .addCase(restoreSearchParameters, handleRestoreParameters)
-      .addCase(restoreProductListingParameters, handleRestoreParameters);
+      .addCase(restoreProductListingParameters, handleRestoreParameters)
+      .addCase(setContext, getCommerceSortInitialState)
+      .addCase(setView, getCommerceSortInitialState);
   }
 );
 
