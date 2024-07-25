@@ -260,7 +260,9 @@ describe('commerce common actions', () => {
           navigatorContext
         );
 
-        expect(request.clientId).toEqual(analyticsEnabled ? 'client_id' : '');
+        expect(request.clientId).toEqual(
+          analyticsEnabled ? 'client_id' : undefined
+        );
       }
     );
 
