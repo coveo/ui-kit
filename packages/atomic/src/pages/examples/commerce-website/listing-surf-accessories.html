@@ -16,6 +16,8 @@
         const commerceInterface = document.querySelector('atomic-commerce-interface');
 
         await commerceInterface.initializeWithEngine(commerceEngine);
+
+        commerceInterface.executeFirstRequest();
       })();
     </script>
   </head>
