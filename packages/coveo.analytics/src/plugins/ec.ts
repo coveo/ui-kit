@@ -135,14 +135,6 @@ export class ECPlugin extends BasePlugin {
     }
 
     private addECDataToPayload(eventType: string, payload: any) {
-        if (eventType === ECPluginEventTypes.pageview) {
-            return {
-                ...this.getLocationInformation(eventType, payload),
-                ...this.getDefaultContextInformation(eventType),
-                ...payload,
-            };
-        }
-
         const ecPayload = {
             ...this.getLocationInformation(eventType, payload),
             ...this.getDefaultContextInformation(eventType),

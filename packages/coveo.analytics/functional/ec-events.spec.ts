@@ -99,7 +99,7 @@ describe('ec events', () => {
         });
     });
 
-    it('will not include the product or action when sending a pageview event', async () => {
+    it('can send a product detail view event', async () => {
         coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
         coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
         await coveoua('send', 'pageview');
@@ -109,53 +109,6 @@ describe('ec events', () => {
         expect(body).toEqual({
             ...defaultContextValues,
             t: 'pageview',
-        });
-    });
-
-    it('will include the product and action only when sending a detail event', async () => {
-        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
-        coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
-        coveoua('send', 'pageview');
-        await coveoua('send', 'event');
-
-        coveoua('ec:addProduct', {name: 'wow2', id: 'something2', brand: 'brand2'});
-        coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
-        coveoua('send', 'event');
-        await coveoua('send', 'pageview');
-
-        const [pageviewBody, eventBody, eventBody2, pageviewBody2] = getParsedBody();
-
-        expect(pageviewBody.pa).toBeUndefined();
-        expect(pageviewBody.pr1nm).toBeUndefined();
-        expect(pageviewBody.pr1id).toBeUndefined();
-        expect(pageviewBody.pr1br).toBeUndefined();
-
-        expect(eventBody.pa).toEqual('detail');
-        expect(eventBody.pr1nm).toEqual('wow');
-        expect(eventBody.pr1id).toEqual('something');
-        expect(eventBody.pr1br).toEqual('brand');
-
-        expect(eventBody2.pa).toEqual('detail');
-        expect(eventBody2.pr1nm).toEqual('wow2');
-        expect(eventBody2.pr1id).toEqual('something2');
-        expect(eventBody2.pr1br).toEqual('brand2');
-
-        expect(pageviewBody2.pa).toBeUndefined();
-        expect(pageviewBody2.pr1nm).toBeUndefined();
-        expect(pageviewBody2.pr1id).toBeUndefined();
-        expect(pageviewBody2.pr1br).toBeUndefined();
-    });
-
-    it('can send a product detail view event', async () => {
-        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
-        coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
-        await coveoua('send', 'event');
-
-        const [body] = getParsedBody();
-
-        expect(body).toEqual({
-            ...defaultContextValues,
-            t: 'event',
             pr1nm: 'wow',
             pr1id: 'something',
             pr1br: 'brand',
@@ -166,13 +119,13 @@ describe('ec events', () => {
     it('can send a product detail view event with custom values', async () => {
         coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand'});
         coveoua('ec:setAction', 'detail', {storeid: 'amazing', custom: {verycustom: 'value'}});
-        await coveoua('send', 'event');
+        await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
 
         expect(body).toEqual({
             ...defaultContextValues,
-            t: 'event',
+            t: 'pageview',
             pr1nm: 'wow',
             pr1id: 'something',
             pr1br: 'brand',
@@ -820,13 +773,13 @@ describe('ec events', () => {
     it('should append custom values to product', async () => {
         var partialProduct = {name: 'wow', custom: {verycustom: 'value'}};
         await coveoua('ec:addProduct', partialProduct);
-        await coveoua('send', 'event');
+        await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
 
         expect(body).toEqual({
             ...defaultContextValues,
-            t: 'event',
+            t: 'pageview',
             pr1nm: partialProduct.name,
             pr1verycustom: partialProduct.custom.verycustom,
         });
@@ -904,7 +857,7 @@ describe('ec events', () => {
 
         await coveoua('ec:addImpression', productImpression1);
         await coveoua('ec:addImpression', productImpression2);
-        await coveoua('send', 'event');
+        await coveoua('send', 'pageview');
 
         const [event] = getParsedBody();
 
@@ -930,7 +883,7 @@ describe('ec events', () => {
             il1pi2ps: productImpression2.position,
             sd: defaultContextValues.sd,
             sr: defaultContextValues.sr,
-            t: 'event',
+            t: 'pageview',
             tm: expect.any(Number),
             ua: defaultContextValues.ua,
             ul: defaultContextValues.ul,
