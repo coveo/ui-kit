@@ -17,7 +17,7 @@ const useCaseEntries = {
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
-  'commerce-ssr': 'src/commerce-ssr.index.ts',
+  'ssr-commerce': 'src/ssr-commerce.index.ts',
   commerce: 'src/commerce.index.ts',
 };
 
@@ -37,7 +37,7 @@ function getUmdGlobalName(useCase) {
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
-    'commerce-ssr': 'CoveoHeadlessCommerceSSR',
+    'ssr-commerce': 'CoveoHeadlessCommerceSSR',
     commerce: 'CoveoHeadlessCommerce',
   };
 
