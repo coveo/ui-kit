@@ -76,11 +76,12 @@ export class AtomicResultsPerPage implements InitializableComponent {
       this.initialChoice = this.initialChoice ?? this.choices[0];
       validateInitialChoice(this.initialChoice, this.choices);
     } catch (error) {
-      if (error instanceof ChoiceIsNaNError) {
+      if (
+        error instanceof ChoiceIsNaNError ||
+        error instanceof InitialChoiceNotInChoicesError
+      ) {
         this.bindings.engine.logger.error(error.message, this);
-      }
-      if (error instanceof InitialChoiceNotInChoicesError) {
-        this.bindings.engine.logger.error(error.message, this);
+        throw error;
       }
     }
 
