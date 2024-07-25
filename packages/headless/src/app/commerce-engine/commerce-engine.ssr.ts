@@ -4,7 +4,6 @@
 import {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
-import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {createWaitForActionMiddleware} from '../../utils/utils';
 import {
@@ -26,15 +25,6 @@ import {
   buildCommerceEngine,
 } from './commerce-engine';
 
-export interface SSRCommerceEngineOptions extends CommerceEngineOptions {
-  /**
-   * The type of the solution the engine will be used for
-   * - 'search': Indicates that the engine is used for Search.
-   * - 'product-listing': Indicates that the engine is used for Product listing.
-   */
-  solutionType: 'search' | 'listing';
-}
-
 /**
  * The SSR commerce engine.
  */
@@ -47,7 +37,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 
 export type CommerceEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
-> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -55,19 +45,20 @@ function isListingFetchCompletedAction(action: unknown): action is Action {
   );
 }
 
-function isSearchCompletedAction(action: unknown): action is Action {
-  return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
+// TODO: KIT-3394 - Uncomment this function when implementing the search solution type
+// function isSearchCompletedAction(action: unknown): action is Action {
+//   return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
+//     (action as UnknownAction).type
+//   );
+// }
 
 function buildSSRCommerceEngine(
-  options: SSRCommerceEngineOptions
+  options: CommerceEngineOptions
 ): SSRCommerceEngine {
   const {middleware, promise} = createWaitForActionMiddleware(
-    options.solutionType === 'listing'
-      ? isListingFetchCompletedAction
-      : isSearchCompletedAction
+    isListingFetchCompletedAction
+    // TODO: KIT-3394 - Implement the logic for the search solution type
+    // isSearchCompletedAction
   );
   const commerceEngine = buildCommerceEngine({
     ...options,
@@ -91,7 +82,7 @@ export interface CommerceEngineDefinition<
 > extends EngineDefinition<
     SSRCommerceEngine,
     TControllers,
-    SSRCommerceEngineOptions
+    CommerceEngineOptions
   > {}
 
 /**
@@ -164,11 +155,9 @@ export function defineCommerceEngine<
           },
         ] = params;
 
-        if (options.solutionType === 'listing') {
-          buildProductListing(engine).executeFirstRequest();
-        } else {
-          buildSearch(engine).executeFirstSearch();
-        }
+        buildProductListing(engine).executeFirstRequest();
+        // TODO: KIT-3394 - Implement the logic for the search solution type
+        // buildSearch(engine).executeFirstSearch();
 
         return createStaticState({
           searchAction: await engine.waitForSearchCompletedAction(),
