@@ -158,6 +158,12 @@ test.describe('when viewport is too small to display all buttons', () => {
       test('smart snippet', async ({tabManager}) => {
         expect(tabManager.smartSnippet).toBeVisible();
       });
+      test('sort dropdown', async ({tabManager}) => {
+        const expectedOptions = ['Most Recent', 'Least Recent', 'Relevance'];
+        const options =
+          await tabManager.refineModalsortDropdownOptions.allTextContents();
+        expect(options).toEqual(expectedOptions);
+      });
     });
 
     test.describe('when selecting previous dropdown option', () => {
@@ -172,6 +178,17 @@ test.describe('when viewport is too small to display all buttons', () => {
         });
         test('smart snippet', async ({tabManager}) => {
           expect(tabManager.smartSnippet).not.toBeVisible();
+        });
+
+        test('sort dropdown', async ({tabManager}) => {
+          const expectedOptions = [
+            'Name descending',
+            'Name ascending',
+            'Relevance',
+          ];
+          const options =
+            await tabManager.refineModalsortDropdownOptions.allTextContents();
+          expect(options).toEqual(expectedOptions);
         });
       });
     });

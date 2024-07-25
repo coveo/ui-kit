@@ -34,6 +34,10 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.locator('atomic-sort-dropdown option');
   }
 
+  get refineModalsortDropdownOptions() {
+    return this.page.locator('atomic-modal [aria-label="Sort by"] option');
+  }
+
   tabButtons(value?: string) {
     const baseLocator = this.page.getByRole('listitem');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
