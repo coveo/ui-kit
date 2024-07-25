@@ -45,6 +45,18 @@ export const Default: Story = {
   },
 };
 
+const {play: playNoFirstSearch} = wrapInCommerceInterface({
+  skipFirstSearch: true,
+  engineConfig: noResultsEngineConfig,
+});
+
+export const NoFirstSearch: Story = {
+  name: 'atomic-commerce-product-list',
+  play: async (context) => {
+    await playNoFirstSearch(context);
+  },
+};
+
 export const OpenInNewTab: Story = {
   name: 'Open Product in New Tab',
   tags: ['test'],
@@ -53,7 +65,7 @@ export const OpenInNewTab: Story = {
   },
   args: {'attributes-grid-cell-link-target': '_blank'},
   play: async (context) => {
-    await play(context);
+    await wrapInCommerceInterface({skipFirstSearch: true}).play(context);
     await playExecuteFirstSearch(context);
   },
 };

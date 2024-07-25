@@ -2,6 +2,7 @@ import {
   playExecuteFirstSearch,
   wrapInCommerceInterface,
 } from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
+import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce-recommendation-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderTemplate} from '@coveo/atomic/storybookUtils/render-template';
 import {userEvent, waitFor, expect} from '@storybook/test';
@@ -76,19 +77,22 @@ export const InAProductList: Story = {
   },
 };
 
+const {decorator: recommendationDecorator, play: recommendationPlay} =
+  wrapInCommerceRecommendationInterface();
+
 export const InARecommendationList: Story = {
   name: 'In a recommendation list',
+  decorators: [recommendationDecorator],
   args: {
     parent: 'atomic-commerce-recommendation-list',
     parentArgs: [
       'id="popular_bought"',
-      'slot-id="3216339b-f776-4cb1-8a21-018c8ec0f08c"',
+      'slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"',
       'products-per-page="3"',
     ],
   },
   play: async (context) => {
-    await play(context);
-    await playExecuteFirstSearch(context);
+    await recommendationPlay(context);
   },
 };
 

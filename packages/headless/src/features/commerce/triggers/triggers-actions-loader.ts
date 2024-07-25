@@ -11,6 +11,7 @@ import {commerceTriggersReducer as triggers} from './triggers-slice';
 export type {
   UpdateIgnoreQueryTriggerPayload,
   ApplyQueryTriggerModificationPayload,
+  updateIgnoreQueryTrigger,
 };
 
 /**
