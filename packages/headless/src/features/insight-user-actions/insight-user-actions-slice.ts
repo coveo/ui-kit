@@ -3,7 +3,7 @@ import {
   fetchUserActions,
   registerUserActions,
 } from './insight-user-actions-actions';
-import {preprocessActionsData} from './insight-user-actions-preprocessing';
+// import {preprocessActionsData} from './insight-user-actions-preprocessing';
 import {getInsightUserActionsInitialState} from './insight-user-actions-state';
 
 export const insightUserActionsReducer = createReducer(
@@ -24,14 +24,14 @@ export const insightUserActionsReducer = createReducer(
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(fetchUserActions.fulfilled, (state, action) => {
+      .addCase(fetchUserActions.fulfilled, (state, _action) => {
+        // To change to action
         state.loading = false;
         state.error = undefined;
-        // TODO: SFINT-5639 Preprocess the user actions data returned from the API and set the state.
-        state.timeline = preprocessActionsData(
-          state,
-          action.payload.response.value
-        );
+        // state.timeline = preprocessActionsData(
+        //   state, // ???
+        //   action.payload.response.value
+        // );
       });
   }
 );
