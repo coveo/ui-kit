@@ -73,6 +73,18 @@ export type {
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 
+export type {
+  ProductList,
+  ProductListState,
+} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+
+export type {
+  ProductListingSummaryState,
+  Summary,
+} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+export {defineQuerySummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
