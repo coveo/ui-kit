@@ -28,10 +28,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "eslint": "8.57.0",
-    "eslint-config-react-app": "7.0.1",
-    "typescript": "5.4.5"
   }
 }
