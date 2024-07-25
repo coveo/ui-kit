@@ -5,6 +5,10 @@ This project demonstrates how to use the @coveo/headless/commerce sub-package to
 ## Getting Started
 
 ```bash
+npm run build
+```
+
+```bash
 npm run dev
 ```
 
