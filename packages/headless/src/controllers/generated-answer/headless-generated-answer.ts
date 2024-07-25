@@ -9,7 +9,7 @@ import {
   GeneratedAnswerPropsInitialState,
 } from '../core/generated-answer/headless-core-generated-answer';
 import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer';
-import {buildKnowledgeGeneratedAnswer} from '../knowledge/generatedAnswer/headless-knowledge-generated-answer';
+import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer';
 
 export type {
   GeneratedAnswerCitation,
@@ -32,7 +32,7 @@ export function buildGeneratedAnswer(
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
   const controller = props.answerConfigurationId
-    ? buildKnowledgeGeneratedAnswer(
+    ? buildAnswerApiGeneratedAnswer(
         engine,
         generatedAnswerAnalyticsClient,
         props
