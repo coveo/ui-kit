@@ -2,6 +2,7 @@ import {BooleanValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
 import {
   registerTab,
   updateActiveTab,
@@ -31,6 +32,11 @@ export interface TabOptions {
   expression: string;
 
   /**
+   * Whether to clear the state when the active tab changes.
+   */
+  clearFiltersOnTabChange?: boolean;
+
+  /**
    * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
    */
   id: string;
@@ -47,6 +53,7 @@ export interface TabInitialState {
 const optionsSchema = new Schema<Required<TabOptions>>({
   expression: requiredEmptyAllowedString,
   id: requiredNonEmptyString,
+  clearFiltersOnTabChange: new BooleanValue(),
 });
 
 const initialStateSchema = new Schema({
@@ -72,7 +79,6 @@ export interface Tab extends Controller {
    * Activates the tab.
    */
   select(): void;
-
   /**
    * The state of the `Tab` controller.
    */
@@ -105,7 +111,6 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-
   validateOptions(engine, optionsSchema, props.options, 'buildTab');
   const initialState = validateInitialState(
     engine,
@@ -126,6 +131,14 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
     ...controller,
 
     select() {
+      if (props.options.clearFiltersOnTabChange) {
+        dispatch(
+          prepareForSearchWithQuery({
+            q: '',
+            clearFilters: true,
+          })
+        );
+      }
       dispatch(updateActiveTab(id));
     },
 

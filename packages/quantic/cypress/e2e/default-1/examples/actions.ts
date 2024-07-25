@@ -6,7 +6,7 @@ export const insightInterfaceComponent = 'c-quantic-insight-interface';
 function actions(selector: Selector) {
   return {
     typeInSearchbox: (text: string) => selector.searchbox().type(text),
-    submitQuery: () => selector.searchbox().trigger('keyup', {key: 'Enter'}),
+    submitQuery: () => selector.searchbox().trigger('keydown', {key: 'Enter'}),
     selectFacetValue: (value: string) =>
       selector.facetValue(value).check({force: true}),
     selectPagerButton: (index: number) => selector.pagerButton(index).click(),

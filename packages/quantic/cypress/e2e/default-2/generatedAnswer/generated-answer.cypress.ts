@@ -36,14 +36,6 @@ const exampleTrackingId = 'tracking_id_123';
 const answerType = 'RGA';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
-const otherOption = 'other';
-const feedbackOptions = [
-  'irrelevant',
-  'notAccurate',
-  'outOfDate',
-  'harmful',
-  otherOption,
-];
 
 const defaultFieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
 const defaultRephraseOption = 'default';
@@ -674,8 +666,7 @@ describe('quantic-generated-answer', () => {
                 visitGeneratedAnswer({useCase: param.useCase});
               });
 
-              // TODO: SFINT-5608 Skipping this test for now, it will be adapted to the new logic in another ticket
-              it.skip('should properly display the like button', () => {
+              it('should properly display the like button', () => {
                 Expect.displayLikeButton(true);
                 Expect.displayDislikeButton(true);
                 Expect.likeButtonIsChecked(false);
@@ -684,11 +675,9 @@ describe('quantic-generated-answer', () => {
                 scope('should properly log the analytics', () => {
                   Actions.likeGeneratedAnswer();
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaLikeEvent(
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
-                        feedback: {
-                          liked: true,
-                        },
+                        action: 'like',
                         answer: {
                           responseId,
                           type: answerType,
@@ -717,6 +706,12 @@ describe('quantic-generated-answer', () => {
                 const streamId = crypto.randomUUID();
                 const responseId = crypto.randomUUID();
 
+                const yesOption = 'yes';
+                const unknownOption = 'unknown';
+                const noOption = 'no';
+                const exampleDetails = 'example details';
+                const exampleDocumentUrl = 'https://www.foo.com/';
+
                 beforeEach(() => {
                   mockSearchWithGeneratedAnswer(
                     streamId,
@@ -728,8 +723,6 @@ describe('quantic-generated-answer', () => {
                 });
 
                 it('should send detailed feedback', () => {
-                  const exampleDetails = 'example details';
-
                   Expect.displayLikeButton(true);
                   Expect.displayDislikeButton(true);
                   Expect.likeButtonIsChecked(false);
@@ -738,11 +731,9 @@ describe('quantic-generated-answer', () => {
                   scope('when disliking the generated answer', () => {
                     Actions.dislikeGeneratedAnswer();
                     if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaDislikeEvent(
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
-                          feedback: {
-                            liked: false,
-                          },
+                          action: 'dislike',
                           answer: {
                             responseId,
                             type: answerType,
@@ -751,11 +742,78 @@ describe('quantic-generated-answer', () => {
                         exampleTrackingId
                       );
                     } else {
+                      Expect.logDislikeGeneratedAnswer(streamId);
+                    }
+                  });
+
+                  const feedbackQuestionsIndexes = {
+                    correctTopic: 0,
+                    hallucinationFree: 1,
+                    documented: 2,
+                    readable: 3,
+                  };
+
+                  scope('when submiting invalid feedback', () => {
+                    Actions.clickFeedbackOption(
+                      unknownOption,
+                      feedbackQuestionsIndexes.correctTopic
+                    );
+
+                    Actions.clickFeedbackSubmitButton();
+                    Expect.displaySuccessMessage(false);
+                  });
+
+                  scope('when submiting valid feedback', () => {
+                    Actions.clickFeedbackOption(
+                      unknownOption,
+                      feedbackQuestionsIndexes.correctTopic
+                    );
+                    Actions.clickFeedbackOption(
+                      yesOption,
+                      feedbackQuestionsIndexes.hallucinationFree
+                    );
+                    Actions.clickFeedbackOption(
+                      yesOption,
+                      feedbackQuestionsIndexes.documented
+                    );
+                    Actions.clickFeedbackOption(
+                      noOption,
+                      feedbackQuestionsIndexes.readable
+                    );
+                    Actions.typeInFeedbackDocumentUrlInput(exampleDocumentUrl);
+                    Actions.typeInFeedbackDetailsInput(exampleDetails);
+
+                    Actions.clickFeedbackSubmitButton();
+                    Expect.displaySuccessMessage(true);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaSubmitRgaFeedbackEvent(
+                        {
+                          feedback: {
+                            helpful: false,
+                            readable: noOption,
+                            documented: yesOption,
+                            details: exampleDetails,
+                            hallucination_free: yesOption,
+                            document_url: exampleDocumentUrl,
+                          },
+                          answer: {
+                            responseId,
+                          },
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
                       Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-                        reason: otherOption,
+                        helpful: false,
+                        correctTopicValue: unknownOption,
+                        hallucinationFree: yesOption,
+                        documented: yesOption,
+                        readable: noOption,
+                        documentUrl: exampleDocumentUrl,
                         details: exampleDetails,
                       });
                     }
+
                     Actions.clickFeedbackDoneButton();
                   });
 
@@ -763,75 +821,6 @@ describe('quantic-generated-answer', () => {
                     Actions.dislikeGeneratedAnswer();
                     Expect.displayFeedbackModal(false);
                   });
-
-                  scope(
-                    'when trying to open the feedback modal after rephrasing the generated answer',
-                    () => {
-                      const secondStreamId = crypto.randomUUID();
-
-                      mockSearchWithGeneratedAnswer(
-                        secondStreamId,
-                        param.useCase
-                      );
-                      mockStreamResponse(
-                        secondStreamId,
-                        genQaMessageTypePayload
-                      );
-                      Actions.clickRephraseButton(rephraseOptions[0]);
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              responseId,
-                              type: answerType,
-                            },
-                          },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(
-                          secondStreamId,
-                          {
-                            reason: otherOption,
-                            details: exampleDetails,
-                          }
-                        );
-                      }
-
-                      Actions.clickFeedbackDoneButton();
-                    }
-                  );
-
-                  scope(
-                    'when trying to open the feedback modal after executing a new query',
-                    () => {
-                      const thirdStreamId = crypto.randomUUID();
-
-                      mockSearchWithGeneratedAnswer(
-                        thirdStreamId,
-                        param.useCase
-                      );
-                      mockStreamResponse(
-                        thirdStreamId,
-                        genQaMessageTypePayload
-                      );
-                      performSearch();
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(false);
-                    }
-                  );
 
                   scope(
                     'when trying to open the feedback modal after rephrasing the generated answer',
@@ -851,36 +840,25 @@ describe('quantic-generated-answer', () => {
                       Actions.clickRephraseButton(rephraseOptions[0]);
                       Actions.dislikeGeneratedAnswer();
                       Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              responseId: secondResponseId,
-                              type: answerType,
-                            },
-                          },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(
-                          secondStreamId,
-                          {
-                            reason: otherOption,
-                            details: exampleDetails,
-                          }
-                        );
-                      }
 
+                      Actions.clickFeedbackOption(
+                        unknownOption,
+                        feedbackQuestionsIndexes.correctTopic
+                      );
+                      Actions.clickFeedbackOption(
+                        yesOption,
+                        feedbackQuestionsIndexes.hallucinationFree
+                      );
+                      Actions.clickFeedbackOption(
+                        yesOption,
+                        feedbackQuestionsIndexes.documented
+                      );
+                      Actions.clickFeedbackOption(
+                        noOption,
+                        feedbackQuestionsIndexes.readable
+                      );
+
+                      Actions.clickFeedbackSubmitButton();
                       Actions.clickFeedbackDoneButton();
                     }
                   );
@@ -903,34 +881,6 @@ describe('quantic-generated-answer', () => {
                       performSearch();
                       Actions.dislikeGeneratedAnswer();
                       Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              responseId: thirdResponseId,
-                              type: answerType,
-                            },
-                          },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
-                          reason: otherOption,
-                          details: exampleDetails,
-                        });
-                      }
-
-                      Actions.clickFeedbackDoneButton();
                     }
                   );
                 });

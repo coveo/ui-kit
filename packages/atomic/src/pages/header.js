@@ -17,6 +17,7 @@ const links = [
   {href: '/examples/horizontal-facets.html', label: 'Horizontal Facets'},
   {href: '/examples/ipx.html', label: 'IPX'},
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
+  {href: '/examples/tabs.html', label: 'Tabs'},
   {href: '/examples/commerce-website/homepage.html', label: 'Commerce Website'},
 ];
 
