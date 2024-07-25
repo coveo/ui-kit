@@ -89,13 +89,13 @@ export default function Router(props: IRouterProps) {
       />
     );
   } else if (/\/product/.test(page)) {
-    const hash = new URLSearchParams(window.location.hash.substring(1));
+    const productId = page.split('/')[2];
     content = (
       <ProductDescriptionPage
         engine={engine}
         cartController={cartController}
         contextController={contextController}
-        url={`https://sports.barca.group/pdp/${hash.get('productId')}`}
+        url={`https://sports.barca.group/pdp/${productId}`}
         navigate={navigate}
       ></ProductDescriptionPage>
     );
