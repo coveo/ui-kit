@@ -11,8 +11,8 @@ type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
  * @param facet - The facet to update.
  */
 export function updateFacetVisibilityForActiveTab(
-  tabsIncluded: string[] | string,
-  tabsExcluded: string[] | string,
+  tabsIncluded: string[],
+  tabsExcluded: string[],
   activeTab: string,
   facet?: AnyFacetType
 ): void {

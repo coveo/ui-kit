@@ -137,26 +137,26 @@ export class AtomicFacet implements InitializableComponent {
    */
   @Prop({reflect: true}) public field!: string;
   /**
-   * The tabs on which the facet can be displayed. This property complements `tabs-excluded`.
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
    *  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet>
    * ```
-   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs. In either case, the facet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
   public tabsIncluded: string[] | string = '[]';
 
   /**
-   * The tabs on which this facet must not be displayed. This property complements `tabs-included`.
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
    *  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet>
    * ```
-   * If you don't set this property, or set it to `'[]'`, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the facet can be displayed.
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
@@ -292,6 +292,14 @@ export class AtomicFacet implements InitializableComponent {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -315,8 +323,8 @@ export class AtomicFacet implements InitializableComponent {
     propName: keyof AtomicFacet
   ) {
     updateFacetVisibilityForActiveTab(
-      this.tabsIncluded,
-      this.tabsExcluded,
+      [...this.tabsIncluded],
+      [...this.tabsExcluded],
       this.tabManagerState?.activeTab,
       this.facet
     );

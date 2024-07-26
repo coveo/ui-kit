@@ -8,7 +8,8 @@ import {html} from 'lit/static-html.js';
 import type * as _ from '../src/components.d.ts';
 
 export const wrapInSearchInterface = (
-  config?: Partial<SearchEngineConfiguration>
+  config?: Partial<SearchEngineConfiguration>,
+  skipFirstSearch = false
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -31,6 +32,9 @@ export const wrapInSearchInterface = (
         ...config,
       });
     });
+    if (skipFirstSearch) {
+      return;
+    }
     await step('Execute the first search', async () => {
       await searchInterface!.executeFirstSearch();
     });
