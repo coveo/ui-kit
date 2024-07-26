@@ -1,7 +1,7 @@
-import {NavigatorContext as SSRNavigatorContext} from '@coveo/headless/ssr-commerce';
+import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import type {ReadonlyHeaders} from 'next/dist/server/web/spec-extension/adapters/headers';
 
-export class NavigatorContext implements SSRNavigatorContext {
+export class NextJsNavigatorContext implements NavigatorContext {
   constructor(private headers: ReadonlyHeaders) {}
 
   get referrer() {
@@ -21,7 +21,7 @@ export class NavigatorContext implements SSRNavigatorContext {
     return clientId || crypto.randomUUID();
   }
 
-  get marshal(): SSRNavigatorContext {
+  get marshal(): NavigatorContext {
     return {
       clientId: this.clientId,
       location: this.location,
