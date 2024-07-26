@@ -23,10 +23,6 @@ export class NavigatorContext implements SSRNavigatorContext {
   }
 
   get marshal(): SSRNavigatorContext {
-    console.log({
-      clientId: this.clientId,
-    });
-
     return {
       clientId: this.clientId,
       location: this.location,
