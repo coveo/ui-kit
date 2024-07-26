@@ -17,8 +17,8 @@ export class NavigatorContext implements SSRNavigatorContext {
   }
 
   get clientId() {
-    const clientId2 = this.headers.get('x-coveo-client-id');
-    return clientId2 || crypto.randomUUID();
+    const clientId = this.headers.get('x-coveo-client-id');
+    return clientId || crypto.randomUUID();
   }
 
   get marshal(): SSRNavigatorContext {
