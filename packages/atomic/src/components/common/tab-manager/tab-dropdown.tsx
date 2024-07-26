@@ -11,7 +11,10 @@ export const TabDropdown: FunctionalComponent<TabDropdownProps> = (
   children
 ) => {
   return (
-    <div class="hidden pb-1 border-b dropdown-area">
+    <div
+      class="hidden pb-1 border-b tab-dropdown-area"
+      aria-label="tab-dropdown-area"
+    >
       <select
         aria-label="tab-dropdown"
         class="py-2 text-xl font-bold cursor-pointer btn-text-primary"

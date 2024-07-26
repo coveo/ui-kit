@@ -7,15 +7,11 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   get tabDropdown() {
-    return this.page.locator('atomic-tab-manager .dropdown-area select');
+    return this.page.getByLabel('tab-dropdown-area').getByRole('combobox');
   }
 
-  get tabsArea() {
-    return this.page.locator('atomic-tab-manager .tabs-area');
-  }
-
-  get activeTab() {
-    return this.page.locator('atomic-tab-manager .active-tab button');
+  get tabArea() {
+    return this.page.getByLabel('tab-area');
   }
 
   get excludedFacet() {
@@ -31,14 +27,14 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.locator('[part="tab-button"]');
+    const baseLocator = this.page.getByRole('listitem');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
   tabDropdownOptions(value?: string) {
-    const baseLocator = this.page.locator(
-      'atomic-tab-manager .dropdown-area option'
-    );
+    const baseLocator = this.page
+      .getByLabel('tab-dropdown-area')
+      .getByRole('option');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 

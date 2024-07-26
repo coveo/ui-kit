@@ -13,7 +13,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
   });
 
   test('should display tabs area', async ({tabManager}) => {
-    await expect(tabManager.tabsArea).toBeVisible();
+    await expect(tabManager.tabArea).toBeVisible();
   });
 
   test('should not display tabs dropdown', async ({tabManager}) => {
@@ -50,11 +50,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
     });
 
     test('should change active tab', async ({tabManager}) => {
-      const tabLabel = await tabButton.textContent();
-
-      const activeTabName = await tabManager.activeTab.textContent();
-
-      expect(activeTabName).toBe(tabLabel);
+      expect(tabManager.tabButtons('article')).toHaveClass(/active-tab/);
     });
 
     test.describe('should change other component visibility', async () => {
@@ -93,16 +89,13 @@ test.describe('when viewport is large enough to display all tabs', () => {
       });
 
       test('should hide tabs area', async ({tabManager}) => {
-        await expect(tabManager.tabsArea).not.toBeVisible();
+        await expect(tabManager.tabArea).not.toBeVisible();
       });
 
       test('should have the active tab selected in the dropdown', async ({
         tabManager,
       }) => {
-        const activeTabName = await tabManager.activeTab.textContent();
-        const selectedOption = await tabManager.tabDropdown.textContent();
-
-        expect(selectedOption).toContain(activeTabName);
+        expect(tabManager.tabDropdown).toHaveValue('article');
       });
     });
   });
@@ -119,7 +112,7 @@ test.describe('when viewport is too small to display all buttons', () => {
   });
 
   test('should not display tabs area', async ({tabManager}) => {
-    await expect(tabManager.tabsArea).not.toBeVisible();
+    await expect(tabManager.tabArea).not.toBeVisible();
   });
 
   test('should display tabs dropdown', async ({tabManager}) => {
@@ -145,21 +138,14 @@ test.describe('when viewport is too small to display all buttons', () => {
   });
 
   test.describe('when selecting a dropdown option', () => {
-    let tabOption: Locator;
-
     test.beforeEach(async ({tabManager, facets}) => {
-      tabOption = tabManager.tabDropdownOptions('article');
       await tabManager.tabDropdown.selectOption('article');
       await facets.inclusionFilters.first().click();
       await facets.clearFilters().waitFor({state: 'visible'});
     });
 
     test('should change active tab', async ({tabManager}) => {
-      const tabLabel = await tabOption.textContent();
-
-      const activeTabName = await tabManager.activeTab.textContent();
-
-      expect(activeTabName).toBe(tabLabel);
+      expect(tabManager.tabDropdown).toHaveValue('article');
     });
 
     test.describe('should change other component visibility', async () => {
@@ -194,21 +180,18 @@ test.describe('when viewport is too small to display all buttons', () => {
         await page.setViewportSize({width: 1000, height: 500});
       });
 
-      test('should display tabs dropdown', async ({tabManager}) => {
+      test('should hide tabs dropdown', async ({tabManager}) => {
         await expect(tabManager.tabDropdown).not.toBeVisible();
       });
 
-      test('should hide tabs area', async ({tabManager}) => {
-        await expect(tabManager.tabsArea).toBeVisible();
+      test('should display tabs area', async ({tabManager}) => {
+        await expect(tabManager.tabArea).toBeVisible();
       });
 
       test('should have the active tab button selected', async ({
         tabManager,
       }) => {
-        const activeTabName = await tabManager.activeTab.textContent();
-        const selectedOption = await tabManager.tabDropdown.textContent();
-
-        expect(selectedOption).toContain(activeTabName);
+        expect(tabManager.tabButtons('article')).toHaveClass(/active-tab/);
       });
     });
   });
