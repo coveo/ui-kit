@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/no-unpublished-import
 import {CyHttpMessages, Interception} from 'cypress/types/net-stubbing';
 import {getQueryAlias} from '../page-objects/search';
 import {useCaseEnum} from '../page-objects/use-case';
