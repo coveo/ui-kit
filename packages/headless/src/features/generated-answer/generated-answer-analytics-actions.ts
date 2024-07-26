@@ -408,10 +408,6 @@ export const retryGeneratedAnswer = (): SearchAction => ({
   actionCause: SearchPageEvents.retryGeneratedAnswer,
 });
 
-export const rephraseGeneratedAnswer = (): SearchAction => ({
-  actionCause: SearchPageEvents.rephraseGeneratedAnswer,
-});
-
 export const generatedAnswerAnalyticsClient = {
   logCopyGeneratedAnswer,
   logGeneratedAnswerHideAnswers,
