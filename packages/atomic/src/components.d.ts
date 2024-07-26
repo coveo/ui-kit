@@ -490,6 +490,21 @@ export namespace Components {
         "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
+     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
+     */
+    interface AtomicCommerceProductsPerPage {
+        /**
+          * A list of choices for the number of products to display per page, separated by commas.
+         */
+        "choicesDisplayed": string;
+        /**
+          * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
+         */
+        "initialChoice"?: number;
+    }
+    /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicCommerceQueryError {
@@ -2899,6 +2914,7 @@ export namespace Components {
         "choicesDisplayed": string;
         /**
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
          */
         "initialChoice"?: number;
     }
@@ -3266,6 +3282,26 @@ export namespace Components {
          */
         "label": string;
     }
+    interface AtomicTab {
+        /**
+          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
+         */
+        "expression": string;
+        /**
+          * The label to display on the tab.
+         */
+        "label": string;
+        /**
+          * The internal name of the atomic tab.
+         */
+        "name": string;
+    }
+    interface AtomicTabManager {
+        /**
+          * Whether to clear the filters when the active tab changes.
+         */
+        "clearFiltersOnTabChange"?: boolean;
+    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -3378,6 +3414,10 @@ export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEven
 export interface AtomicCommercePagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommercePagerElement;
+}
+export interface AtomicCommerceProductsPerPageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicCommerceProductsPerPageElement;
 }
 export interface AtomicCommerceSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3672,6 +3712,27 @@ declare global {
     var HTMLAtomicCommerceProductListElement: {
         prototype: HTMLAtomicCommerceProductListElement;
         new (): HTMLAtomicCommerceProductListElement;
+    };
+    interface HTMLAtomicCommerceProductsPerPageElementEventMap {
+        "atomic/scrollToTop": any;
+    }
+    /**
+     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
+     */
+    interface HTMLAtomicCommerceProductsPerPageElement extends Components.AtomicCommerceProductsPerPage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicCommerceProductsPerPageElement: {
+        prototype: HTMLAtomicCommerceProductsPerPageElement;
+        new (): HTMLAtomicCommerceProductsPerPageElement;
     };
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -5351,6 +5412,18 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
+    }
+    var HTMLAtomicTabElement: {
+        prototype: HTMLAtomicTabElement;
+        new (): HTMLAtomicTabElement;
+    };
+    interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
+    }
+    var HTMLAtomicTabManagerElement: {
+        prototype: HTMLAtomicTabManagerElement;
+        new (): HTMLAtomicTabManagerElement;
+    };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -5422,6 +5495,7 @@ declare global {
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
+        "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
@@ -5584,6 +5658,8 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-tab": HTMLAtomicTabElement;
+        "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -5997,6 +6073,22 @@ declare namespace LocalJSX {
           * The desired number of placeholders to display while the product list is loading.
          */
         "numberOfPlaceholders"?: number;
+    }
+    /**
+     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
+     */
+    interface AtomicCommerceProductsPerPage {
+        /**
+          * A list of choices for the number of products to display per page, separated by commas.
+         */
+        "choicesDisplayed"?: string;
+        /**
+          * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
+         */
+        "initialChoice"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicCommerceProductsPerPageCustomEvent<any>) => void;
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -8278,6 +8370,7 @@ declare namespace LocalJSX {
         "choicesDisplayed"?: string;
         /**
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
          */
         "initialChoice"?: number;
         "onAtomic/scrollToTop"?: (event: AtomicResultsPerPageCustomEvent<any>) => void;
@@ -8640,6 +8733,26 @@ declare namespace LocalJSX {
          */
         "label": string;
     }
+    interface AtomicTab {
+        /**
+          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
+         */
+        "expression"?: string;
+        /**
+          * The label to display on the tab.
+         */
+        "label": string;
+        /**
+          * The internal name of the atomic tab.
+         */
+        "name": string;
+    }
+    interface AtomicTabManager {
+        /**
+          * Whether to clear the filters when the active tab changes.
+         */
+        "clearFiltersOnTabChange"?: boolean;
+    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -8763,6 +8876,7 @@ declare namespace LocalJSX {
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
+        "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
@@ -8925,6 +9039,8 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-tab": AtomicTab;
+        "atomic-tab-manager": AtomicTabManager;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -9024,6 +9140,11 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
+            /**
+             * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+             * @alpha 
+             */
+            "atomic-commerce-products-per-page": LocalJSX.AtomicCommerceProductsPerPage & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductsPerPageElement>;
             /**
              * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
@@ -9651,6 +9772,8 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
