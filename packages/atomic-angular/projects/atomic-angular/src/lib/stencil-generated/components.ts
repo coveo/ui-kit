@@ -275,6 +275,32 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
 
 
 @ProxyCmp({
+  inputs: ['choicesDisplayed', 'initialChoice']
+})
+@Component({
+  selector: 'atomic-commerce-products-per-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['choicesDisplayed', 'initialChoice'],
+})
+export class AtomicCommerceProductsPerPage {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicCommerceProductsPerPage extends Components.AtomicCommerceProductsPerPage {
+
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
 })
 @Component({
   selector: 'atomic-commerce-query-summary',
@@ -378,6 +404,28 @@ Example:
    */
   redirect: EventEmitter<CustomEvent<IAtomicCommerceSearchBoxRedirectionPayload>>;
 }
+
+
+@ProxyCmp({
+  inputs: ['count', 'value']
+})
+@Component({
+  selector: 'atomic-commerce-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['count', 'value'],
+})
+export class AtomicCommerceText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceText extends Components.AtomicCommerceText {}
 
 
 @ProxyCmp({

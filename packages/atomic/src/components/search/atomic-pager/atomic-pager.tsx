@@ -97,7 +97,8 @@ export class AtomicPager implements InitializableComponent {
   public render() {
     return (
       <PagerGuard
-        {...this.searchStatusState}
+        hasError={this.searchStatusState.hasError}
+        hasItems={this.searchStatusState.hasResults}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
         <PagerNavigation i18n={this.bindings.i18n}>

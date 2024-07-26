@@ -115,6 +115,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() collapsible?: boolean;
 
+  /**
+   * @internal
+   * The unique identifier of the answer configuration to use to generate the answer.
+   */
+  @Prop() answerConfigurationId?: string;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -147,6 +153,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },
+      ...(this.answerConfigurationId && {
+        answerConfigurationId: this.answerConfigurationId,
+      }),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
