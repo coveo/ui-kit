@@ -17,7 +17,7 @@
     "cypress": "13.13.1",
     "cypress-repeat": "2.3.5",
     "ncp": "2.0.0",
-    "typescript": "5.5.4"
+    "typescript": "5.4.5"
   },
   "scripts": {
     "build": "nx build",
