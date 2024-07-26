@@ -51,6 +51,15 @@ export interface EngineDefinition<
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
+   * Sets the navigator context provider.
+   * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
+   *
+   * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
+   */
+  setNavigatorContextProvider: (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => void;
+  /**
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
@@ -59,11 +68,6 @@ export interface EngineDefinition<
     InferControllersMapFromDefinition<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
-
-  // TODO: document this
-  setNavigatorContextProvider: (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => void;
 }
 
 export type InferStaticState<
