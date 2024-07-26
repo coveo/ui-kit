@@ -2,7 +2,7 @@ import {test, expect} from './fixture';
 
 test.describe('when no first search has yet been executed', async () => {
   test.beforeEach(async ({productList}) => {
-    await productList.load();
+    await productList.load({story: 'no-first-search'});
     await productList.hydrated.waitFor();
   });
 
@@ -14,16 +14,6 @@ test.describe('when no first search has yet been executed', async () => {
     productList,
   }) => {
     await expect(productList.placeholders.nth(23)).toBeVisible();
-  });
-
-  test('should open product in the same tab by default', async ({
-    page,
-    productList,
-  }) => {
-    const expectedUrl = /sports\.barca\.group\/pdp\/.*$/;
-    await productList.products.first().click();
-    await page.waitForURL(expectedUrl);
-    expect(page.url()).toMatch(expectedUrl);
   });
 });
 

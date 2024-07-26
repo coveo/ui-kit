@@ -11,6 +11,7 @@ import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider';
 import {VERSION} from '../../../utils/version';
 import {CommerceFacetSlice} from '../facets/facet-set/facet-set-state';
+import {ManualNumericFacetSetSlice} from '../facets/numeric-facet/manual-numeric-facet-state';
 import {
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
@@ -66,7 +67,7 @@ describe('commerce common actions', () => {
               quantity: product.quantity,
             },
           ],
-          source: [`@coveo/headless@${VERSION}`, '@coveo/atomic@version'],
+          source: ['@coveo/atomic@version', `@coveo/headless@${VERSION}`],
         },
       };
 
@@ -243,6 +244,93 @@ describe('commerce common actions', () => {
         expect(request.context.capture).toEqual(analyticsEnabled);
       }
     );
+
+    it.each([true, false])(
+      'sets the clientId conditionally upon the analytics configuration',
+      (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request.clientId).toEqual(
+          analyticsEnabled ? 'client_id' : undefined
+        );
+      }
+    );
+
+    describe('given a state that has the commerceFacetSet and manualNumericFacetSet', () => {
+      let facet1: CommerceFacetSlice;
+      let manualFacet1: ManualNumericFacetSetSlice;
+
+      beforeEach(() => {
+        delete state.commerceSort;
+        facet1 = buildMockCommerceFacetSlice({
+          request: {
+            ...buildMockCommerceFacetRequest({
+              facetId: 'facet_1_id',
+              values: [buildMockCommerceRegularFacetValue()],
+            }),
+          },
+        });
+
+        manualFacet1 = {
+          manualRange: {
+            start: 0,
+            end: 10,
+            endInclusive: false,
+            state: 'selected',
+          },
+        };
+
+        state.facetOrder = ['facet_id_1'];
+
+        state.commerceFacetSet = {
+          [facet1.request.facetId]: facet1,
+        };
+
+        state.manualNumericFacetSet = {
+          facet_id_1: manualFacet1,
+        };
+      });
+
+      it('includes only the manual numeric facet in the #facets array of the returned request', () => {
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request).toEqual({
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
+          facets: [
+            {
+              facetId: 'facet_id_1',
+              field: 'facet_id_1',
+              initialNumberOfValues: 1,
+              isFieldExpanded: false,
+              numberOfValues: 1,
+              preventAutoSelect: true,
+              type: 'numericalRange',
+              values: [
+                {start: 0, end: 10, endInclusive: false, state: 'selected'},
+              ],
+            },
+          ],
+        });
+      });
+    });
 
     describe('given a state that has the commerceFacetSet and facetOrder sections', () => {
       let facet1: CommerceFacetSlice;

@@ -259,19 +259,19 @@ test.describe('with instant results & query suggestions', () => {
     test('should display in the search box what has been submitted', async ({
       searchBox,
     }) => {
-      await searchBox.searchInput.fill('Rec');
+      await searchBox.searchInput.fill('surf');
       await searchBox.searchInput.press('Enter');
-      await expect(searchBox.searchInput).toHaveValue('Rec');
+      await expect(searchBox.searchInput).toHaveValue('surf');
     });
 
     test.describe('after focusing on suggestion with the mouse', () => {
       test('should submit what is in the search box regardless of the mouse position', async ({
         searchBox,
       }) => {
-        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchInput.fill('surf');
         await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
         await searchBox.searchInput.press('Enter');
-        await expect(searchBox.searchInput).toHaveValue('Rec');
+        await expect(searchBox.searchInput).toHaveValue('surf');
       });
     });
   });

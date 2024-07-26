@@ -1,3 +1,33 @@
+# 2.74.0 (2024-07-24)
+
+### Bug Fixes
+
+- enhance focus handling for search-box components ([#4027](https://github.com/coveo/ui-kit/issues/4027)) ([d5f04b7](https://github.com/coveo/ui-kit/commits/d5f04b70ee32ecd1879496448471c408c281ed6d))
+- ensure quickview minimize ([#4193](https://github.com/coveo/ui-kit/issues/4193)) ([c366764](https://github.com/coveo/ui-kit/commits/c366764255de30b29bb14bb5f6439bca8164c97a))
+
+### Features
+
+- answerapi-generated-answer ([#4157](https://github.com/coveo/ui-kit/issues/4157)) ([aafe3fe](https://github.com/coveo/ui-kit/commits/aafe3fed4a9ba3962a3edd73288a59ed1ecb5b1e))
+- **atomic:** format commerce numeric facet for price with currency by default ([#4201](https://github.com/coveo/ui-kit/issues/4201)) ([bf6e2de](https://github.com/coveo/ui-kit/commits/bf6e2de55692d31808ea031eb6e2d90eb70ac3b5))
+
+# 2.73.0 (2024-07-17)
+
+### Bug Fixes
+
+- add atomic version in the analytics initial config for Headless ([#4171](https://github.com/coveo/ui-kit/issues/4171)) ([a72c3ac](https://github.com/coveo/ui-kit/commits/a72c3ac349f62e819c77aeef4ed2e85b97375a2c))
+- **atomic/commerce:** fix breadbox labels / values ([#4178](https://github.com/coveo/ui-kit/issues/4178)) ([6ab1e3b](https://github.com/coveo/ui-kit/commits/6ab1e3bd374c6257908f69c7882c227c348fbce6))
+- **atomic:** breaking change in `SearchBoxSuggestionsEvent` ([#4186](https://github.com/coveo/ui-kit/issues/4186)) ([8e7f6ab](https://github.com/coveo/ui-kit/commits/8e7f6abd820f5074fb28324cfbf8dc8532201e4a))
+- **deps:** update stencil j:kit-282 ([#3833](https://github.com/coveo/ui-kit/issues/3833)) ([095ab4b](https://github.com/coveo/ui-kit/commits/095ab4b7ca97b21dc01fc488b9f91ee12f9705f1))
+- **headless:** separate manual numeric facet in a separate slice for commerce ([#4183](https://github.com/coveo/ui-kit/issues/4183)) ([3c58454](https://github.com/coveo/ui-kit/commits/3c58454d0b6776d0988ef61011db7930be819bba))
+- interpolate page# in pageNumber label ([#4190](https://github.com/coveo/ui-kit/issues/4190)) ([d2719b4](https://github.com/coveo/ui-kit/commits/d2719b4077f1fd2893304bf961fd597be6489592))
+- **storybook:** add min & preset value for nbOfVal (facets) ([#4191](https://github.com/coveo/ui-kit/issues/4191)) ([edac684](https://github.com/coveo/ui-kit/commits/edac6847811f94f7c2fe33cc1859b81f83c53bf3))
+
+### Features
+
+- **answer:** knowledge controller preparation ([#4129](https://github.com/coveo/ui-kit/issues/4129)) ([3e1b7d1](https://github.com/coveo/ui-kit/commits/3e1b7d1e8df18d07949e2a51b54e63920eb37b3a))
+- **atomic:** clickable "More matches for {query}" in facetSearch ([#4154](https://github.com/coveo/ui-kit/issues/4154)) ([a389b40](https://github.com/coveo/ui-kit/commits/a389b402e2022486d8ba68d7538421603a3016b5))
+- **genqa:** new feedback modal ([#4092](https://github.com/coveo/ui-kit/issues/4092)) ([7bf9bfe](https://github.com/coveo/ui-kit/commits/7bf9bfecfa2f01a250ebf13897d5322472873855))
+
 # 2.72.0 (2024-07-09)
 
 ### Bug Fixes

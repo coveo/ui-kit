@@ -1,3 +1,19 @@
+# 2.54.0 (2024-07-24)
+
+### Bug Fixes
+
+- **quantic:** styling of the search box input adjusted ([#4220](https://github.com/coveo/ui-kit/issues/4220)) ([6cf2171](https://github.com/coveo/ui-kit/commits/6cf2171525e062ccd18a97b3ad94d16e0cbcb8a2))
+
+### Features
+
+- **quantic:** quantic search box improvements ([#4120](https://github.com/coveo/ui-kit/issues/4120)) ([f2363fa](https://github.com/coveo/ui-kit/commits/f2363fa2beeb8abc444acd2fa8b210a970916c80))
+
+# 2.53.0 (2024-07-17)
+
+### Features
+
+- **quantic:** new feedback modal for RGA ([#4162](https://github.com/coveo/ui-kit/issues/4162)) ([ada849a](https://github.com/coveo/ui-kit/commits/ada849a8c75a2db44c7c80c1737a6f766d1b4836))
+
 ## 2.52.3 (2024-07-09)
 
 ### Bug Fixes

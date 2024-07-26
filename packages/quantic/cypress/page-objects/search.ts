@@ -81,7 +81,9 @@ export const InterceptAliases = {
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
       ShowGeneratedAnswer: uaAlias('generatedAnswerShowAnswers'),
       HideGeneratedAnswer: uaAlias('generatedAnswerHideAnswers'),
-      GeneratedAnswerFeedbackSubmit: uaAlias('generatedAnswerFeedbackSubmit'),
+      GeneratedAnswerFeedbackSubmitV2: uaAlias(
+        'generatedAnswerFeedbackSubmitV2'
+      ),
       RephraseGeneratedAnswer: uaAlias('rephraseGeneratedAnswer'),
       GeneratedAnswerSourceHover: uaAlias('generatedAnswerSourceHover'),
       GeneratedAnswerCopyToClipboard: uaAlias('generatedAnswerCopyToClipboard'),
@@ -96,6 +98,11 @@ export const InterceptAliases = {
     },
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
+    RecentQueries: {
+      ClearRecentQueries: uaAlias('clearRecentQueries'),
+      ClickRecentQueries: uaAlias('recentQueriesClick'),
+    },
+    OmniboxAnalytics: uaAlias('omniboxAnalytics'),
   },
   NextAnalytics: {
     Qna: {
@@ -110,6 +117,7 @@ export const InterceptAliases = {
         Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
+      SubmitRgaFeedback: nextAnalyticsAlias('Qna.SubmitRgaFeedback'),
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(
@@ -649,4 +657,18 @@ export function mockSearchWithNotifyTrigger(
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockQuerySuggestions(suggestions: string[]) {
+  cy.intercept(routeMatchers.querySuggest, (req) => {
+    req.continue((res) => {
+      res.body.completions = suggestions.map((suggestion) => ({
+        expression: suggestion,
+        highlighted: suggestion,
+      }));
+
+      res.body.responseId = crypto.randomUUID();
+      res.send();
+    });
+  }).as(InterceptAliases.QuerySuggestions.substring(1));
 }

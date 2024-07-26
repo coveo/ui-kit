@@ -1,6 +1,9 @@
 import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
+import {
+  browseResults,
+  logPagerResize,
+} from '../../features/pagination/pagination-analytics-actions';
 import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
 import {fetchPage} from '../../features/search/search-actions';
 import {
@@ -52,7 +55,7 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(fetchPage({legacy: logPagerResize()}));
+      dispatch(fetchPage({legacy: logPagerResize(), next: browseResults()}));
     },
   };
 }
