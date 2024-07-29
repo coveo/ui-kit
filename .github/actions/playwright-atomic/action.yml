@@ -13,9 +13,6 @@ runs:
     - name: Install Playwright Browsers
       run: npx playwright install
       shell: bash
-    - name: Install Playwright Browsers with deps
-      run: npx playwright install-deps
-      shell: bash
     - name: Run Playwright tests
       run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
