@@ -1,8 +1,12 @@
 import {
   BreadcrumbManager,
-  buildBreadcrumbManager,
+  buildProductListing,
+  buildSearch,
   Product,
+  ProductListing,
   ProductTemplatesHelpers,
+  Search,
+  RegularFacetValue,
 } from '@coveo/headless/commerce';
 import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
@@ -26,6 +30,7 @@ import {ProductContext} from '../product-template-decorators';
 })
 export class AtomicProductMultiValueText {
   public breadcrumbManager!: BreadcrumbManager;
+  public searchOrListing!: Search | ProductListing;
 
   @InitializeBindings() public bindings!: CommerceBindings;
   @ProductContext() private product!: Product;
@@ -55,7 +60,13 @@ export class AtomicProductMultiValueText {
   private sortedValues: string[] | null = null;
 
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.searchOrListing = buildProductListing(this.bindings.engine);
+    } else {
+      this.searchOrListing = buildSearch(this.bindings.engine);
+    }
+
+    this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
   }
 
   private get productValues() {
@@ -90,7 +101,7 @@ export class AtomicProductMultiValueText {
       .reduce(
         (values, facet) => [
           ...values,
-          ...facet.values.map(({value}) => value.value),
+          ...facet.values.map(({value}) => (value as RegularFacetValue).value),
         ],
         [] as string[]
       );
