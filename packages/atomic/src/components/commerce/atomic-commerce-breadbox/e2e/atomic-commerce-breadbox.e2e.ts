@@ -8,7 +8,7 @@ test.describe('Default', () => {
   });
 
   test('should be A11y compliant', async ({breadbox, makeAxeBuilder}) => {
-    await breadbox.getRegularFacetValue().first().click();
+    await breadbox.getFacetValue('regular').first().click();
 
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
@@ -64,10 +64,11 @@ test.describe('Default', () => {
 
     test.beforeEach(async ({breadbox}) => {
       firstValueText = (await breadbox
-        .getRegularFacetValue()
+        .getFacetValue('regular')
+        .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox.getRegularFacetValue(firstValueText).click();
+      await breadbox.getFacetValue('regular', firstValueText).click();
       await breadbox
         .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
@@ -94,10 +95,12 @@ test.describe('Default', () => {
     let firstValueText: string | RegExp;
     test.beforeEach(async ({breadbox}) => {
       firstValueText = (await breadbox
-        .getCategoryFacetValue()
+        .getFacetValue('category')
+        .first()
+        .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox.getCategoryFacetValue(firstValueText).click();
+      await breadbox.getFacetValue('category', firstValueText).click();
       await breadbox
         .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
@@ -124,10 +127,20 @@ test.describe('Default', () => {
 
       test.beforeEach(async ({breadbox}) => {
         breadcrumbText =
-          (await breadbox.getCategoryFacetValue().first().textContent()) +
+          (await breadbox
+            .getFacetValue('category')
+            .first()
+            .locator('li span')
+            .first()
+            .textContent()) +
           ' / ' +
-          (await breadbox.getNestedCategoryFacetValue().first().textContent());
-        await breadbox.getNestedCategoryFacetValue().first().click();
+          (await breadbox
+            .getFacetValue('nestedCategory')
+            .first()
+            .locator('span')
+            .first()
+            .textContent());
+        await breadbox.getFacetValue('nestedCategory').first().click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -156,9 +169,10 @@ test.describe('Default', () => {
     let firstValueText: string | RegExp;
 
     test.beforeEach(async ({breadbox}) => {
-      await breadbox.getNumericalFacetValue().first().click();
+      await breadbox.getFacetValue('numerical').first().click();
       firstValueText = (await breadbox
-        .getNumericalFacetValue()
+        .getFacetValue('numerical')
+        .locator('span')
         .first()
         .textContent()) as string;
       await breadbox
@@ -188,10 +202,12 @@ test.describe('Default', () => {
     let firstValueText: string | RegExp;
 
     test.beforeEach(async ({breadbox}) => {
-      await breadbox.getDateRangeFacetValue().first().click();
+      await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
-        .getDateRangeFacetValue()
+        .getFacetValue('dateRange')
         .first()
+        .locator('span')
+        .nth(1)
         .textContent()) as string;
       await breadbox
         .getBreadcrumbButtons(firstValueText)
@@ -219,7 +235,7 @@ test.describe('Default', () => {
   test.describe('when selecting multiple facet values', () => {
     test.beforeEach(async ({breadbox}) => {
       for (let i = 0; i < 6; i++) {
-        await breadbox.getRegularFacetValue().nth(i).click();
+        await breadbox.getFacetValue('regular').nth(i).click();
         await breadbox
           .getBreadcrumbButtons()
           .nth(i)
@@ -255,12 +271,11 @@ test.describe('Default', () => {
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(6);
 
       await page.setViewportSize({width: 240, height: 480});
-      await page.waitForTimeout(1000);
-      expect(await breadbox.getBreadcrumbButtons().count()).toBe(0);
+      await breadbox.getBreadcrumbButtons().first().waitFor({state: 'hidden'});
       await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
 
       await page.setViewportSize({width: 1920, height: 480});
-      await page.waitForTimeout(1000);
+      await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
       await expect(breadbox.getShowMorebutton()).not.toBeVisible();
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(6);
     });
@@ -283,7 +298,10 @@ test.describe('Default', () => {
       });
 
       test('should uncheck the facet value', async ({breadbox}) => {
-        const facetValueButton = breadbox.getRegularFacetValue(firstButtonText);
+        const facetValueButton = breadbox.getFacetValue(
+          'regular',
+          firstButtonText
+        );
         if (await facetValueButton.isVisible()) {
           await expect(facetValueButton).not.toBeChecked();
         }

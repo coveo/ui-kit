@@ -4,20 +4,28 @@ import {
 } from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import {CommerceEngineConfiguration} from '@coveo/headless/commerce';
+import {
+  CommerceEngineConfiguration,
+  getSampleCommerceEngineConfiguration,
+} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
+
+const {context, ...restOfConfiguration} =
+  getSampleCommerceEngineConfiguration();
 
 const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
   {
     context: {
+      ...context,
       country: 'US',
       currency: 'USD',
       language: 'en',
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/ui-kit-testing',
+        url: context.view.url + '/browse/promotions/ui-kit-testing',
       },
     },
+    ...restOfConfiguration,
   };
 
 const {decorator, play} = wrapInCommerceInterface({

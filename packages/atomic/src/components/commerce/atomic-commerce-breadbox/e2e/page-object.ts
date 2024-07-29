@@ -6,54 +6,45 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject<'atomic-com
     super(page, 'atomic-commerce-breadbox');
   }
 
-  getRegularFacetValue(value?: string | RegExp) {
-    const baseLocator = this.page.locator(
-      'atomic-commerce-facet [part="value-label"]'
-    );
-    return value ? baseLocator.filter({hasText: value}) : baseLocator;
-  }
+  getFacetValue(
+    facetType:
+      | 'regular'
+      | 'category'
+      | 'nestedCategory'
+      | 'numerical'
+      | 'dateRange',
+    value?: string | RegExp
+  ) {
+    const facetTypeLocators = {
+      regular: 'atomic-commerce-facet',
+      category: 'atomic-commerce-category-facet',
+      nestedCategory: 'atomic-commerce-category-facet [part="values"]',
+      numerical: 'atomic-commerce-numeric-facet',
+      dateRange: 'atomic-commerce-timeframe-facet',
+    };
 
-  getCategoryFacetValue(value?: string | RegExp) {
-    const baseLocator = this.page.locator(
-      'atomic-commerce-category-facet [part="value-label"]'
-    );
-    return value ? baseLocator.filter({hasText: value}) : baseLocator;
-  }
-
-  getNestedCategoryFacetValue(value?: string | RegExp) {
-    const baseLocator = this.page.locator(
-      'atomic-commerce-category-facet [part="values"] [part="value-label"]'
-    );
-    return value ? baseLocator.filter({hasText: value}) : baseLocator;
-  }
-
-  getNumericalFacetValue(value?: string | RegExp) {
-    const baseLocator = this.page.locator(
-      'atomic-commerce-numeric-facet [part="value-label"]'
-    );
-    return value ? baseLocator.filter({hasText: value}) : baseLocator;
-  }
-  getDateRangeFacetValue(value?: string | RegExp) {
-    const baseLocator = this.page.locator(
-      'atomic-commerce-timeframe-facet [part="value-label"]'
-    );
+    const baseLocator = this.page
+      .locator(facetTypeLocators[facetType])
+      .getByRole('listitem');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
   getBreadcrumbButtons(value?: string | RegExp) {
-    const baseLocator = this.page.locator('[part="breadcrumb-button"]:visible');
+    const baseLocator = this.page.getByLabel('Remove Inclusion filter on', {
+      exact: false,
+    });
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
   getShowMorebutton() {
-    return this.page.locator('[part="breadcrumb-list"] [part="show-more"]');
+    return this.page.getByLabel(/Show \d+ more filters/);
   }
 
   getClearAllButton() {
-    return this.page.locator('[part="breadcrumb-list"] [part="clear"]');
+    return this.page.getByLabel('Clear all filters');
   }
 
   getShowLessbutton() {
-    return this.page.locator('[part="breadcrumb-list"] [part="show-less"]');
+    return this.page.getByRole('button').filter({hasText: /Show less/});
   }
 }
