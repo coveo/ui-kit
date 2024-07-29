@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, unknown as LogLevel, NumericFacet, unknown as PlatformEnvironment, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -26,12 +28,15 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { unknown as PlatformEnvironment1, unknown as RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, unknown as RecsLogLevel, Result as RecsResult, unknown as RecsResultTemplate, unknown as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, unknown as LogLevel, NumericFacet, unknown as PlatformEnvironment, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -53,6 +58,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { unknown as PlatformEnvironment1, unknown as RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, unknown as RecsLogLevel, Result as RecsResult, unknown as RecsResultTemplate, unknown as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -2282,7 +2288,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -3097,7 +3103,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment2) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The search interface i18next instance.
          */
@@ -3109,7 +3115,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
-        "initialize": (options: SearchEngineConfiguration) => Promise<void>;
+        "initialize": (options: InitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
@@ -3129,7 +3135,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -3253,11 +3259,11 @@ export namespace Components {
          */
         "snippetStyle"?: string;
         /**
-          * The tabs on which this smart snippet must not be displayed. This property complements `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, or set it to `'[]'`, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the smart snippet can be displayed.
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the smart snippet can be displayed. This property complements `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, or set it to `'[]'`, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs. In either case, the smart snippet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -8645,7 +8651,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -8769,11 +8775,11 @@ declare namespace LocalJSX {
          */
         "snippetStyle"?: string;
         /**
-          * The tabs on which this smart snippet must not be displayed. This property complements `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, or set it to `'[]'`, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the smart snippet can be displayed.
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the smart snippet can be displayed. This property complements `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, or set it to `'[]'`, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs. In either case, the smart snippet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }

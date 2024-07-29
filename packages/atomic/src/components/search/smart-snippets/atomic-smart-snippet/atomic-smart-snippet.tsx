@@ -111,26 +111,26 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @Prop({reflect: true}) snippetStyle?: string;
 
   /**
-   * The tabs on which the smart snippet can be displayed. This property complements `tabs-excluded`.
+   * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
    *  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet>
    * ```
-   * If you don't set this property, or set it to `'[]'`, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs. In either case, the smart snippet won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+   * If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
   public tabsIncluded: string[] | string = '[]';
 
   /**
-   * The tabs on which this smart snippet must not be displayed. This property complements `tabs-included`.
+   * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
    *  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet>
    * ```
-   * If you don't set this property, or set it to `'[]'`, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the smart snippet can be displayed.
+   * If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
