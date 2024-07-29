@@ -74,7 +74,7 @@
     "@nx/storybook": "19.5.3",
     "@nx/vite": "19.5.3",
     "@nx/web": "19.5.3",
-    "@playwright/test": "1.45.3",
+    "@playwright/test": "1.41.2",
     "@rollup/plugin-alias": "5.1.0",
     "@rollup/plugin-replace": "5.0.7",
     "@stencil-community/postcss": "2.2.0",

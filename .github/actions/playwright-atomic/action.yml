@@ -10,11 +10,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Uninstall Playwright Browsers
-      run: npx playwright uninstall --all
-      shell: bash
     - name: Install Playwright Browsers
       run: npx playwright install
+      shell: bash
+    - name: Install Playwright Browsers
+      run: npx playwright install-deps
       shell: bash
     - name: Run Playwright tests
       run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
