@@ -24,6 +24,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
     tabManager,
   }) => {
     expect(tabManager.tabDropdown).not.toBeVisible();
+    await tabManager.tabArea.waitFor({state: 'visible'});
 
     expect(tabManager.tabButtons()).toHaveText([
       'All',
