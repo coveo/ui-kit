@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-import */
 import vue from '@vitejs/plugin-vue';
 import {defineConfig} from 'vite';
 
