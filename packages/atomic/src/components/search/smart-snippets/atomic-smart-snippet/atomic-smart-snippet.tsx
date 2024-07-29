@@ -117,7 +117,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
    * ```html
    *  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet>
    * ```
-   * If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   * If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})

@@ -3263,7 +3263,7 @@ export namespace Components {
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -8779,7 +8779,7 @@ declare namespace LocalJSX {
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
