@@ -109,8 +109,8 @@ export class AtomicSortDropdown implements InitializableComponent {
   private get options() {
     return this.bindings.store.state.sortOptions.filter(({tabs}) =>
       shouldDisplayOnCurrentTab(
-        tabs.included,
-        tabs.excluded,
+        [...tabs.included],
+        [...tabs.excluded],
         this.tabManagerState?.activeTab
       )
     );

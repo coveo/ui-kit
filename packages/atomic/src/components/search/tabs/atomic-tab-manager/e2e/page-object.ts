@@ -31,11 +31,22 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   get sortDropdownOptions() {
-    return this.page.locator('atomic-sort-dropdown option');
+    return this.page.getByLabel('Sort by').getByRole('option');
   }
 
-  get refineModalsortDropdownOptions() {
-    return this.page.locator('atomic-modal [aria-label="Sort by"] option');
+  get refineModalSortDropdownOptions() {
+    return this.page
+      .locator('atomic-modal [part="select-wrapper"]')
+      .getByLabel('Sort by')
+      .getByRole('option');
+  }
+
+  get refineModalButton() {
+    return this.page.getByRole('button', {name: 'Sort & Filter'});
+  }
+
+  get refineModalHeader() {
+    return this.page.getByRole('heading', {name: 'Sort & Filter'});
   }
 
   tabButtons(value?: string) {

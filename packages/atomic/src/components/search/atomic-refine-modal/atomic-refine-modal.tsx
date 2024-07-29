@@ -241,8 +241,8 @@ export class AtomicRefineModal implements InitializableComponent {
   private buildOption({expression, criteria, label, tabs}: SortDropdownOption) {
     if (
       !shouldDisplayOnCurrentTab(
-        tabs.included,
-        tabs.excluded,
+        [...tabs.included],
+        [...tabs.excluded],
         this.tabManagerState?.activeTab
       )
     ) {

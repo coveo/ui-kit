@@ -111,7 +111,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
 
 test.describe('when viewport is too small to display all buttons', () => {
   test.beforeEach(async ({page}) => {
-    await page.setViewportSize({width: 300, height: 500});
+    await page.setViewportSize({width: 300, height: 1000});
   });
 
   test('should be A11y compliant', async ({makeAxeBuilder}) => {
@@ -130,7 +130,7 @@ test.describe('when viewport is too small to display all buttons', () => {
   test('should display tab dropdown options for each atomic-tab elements', async ({
     tabManager,
   }) => {
-    tabManager.tabDropdown.waitFor({state: 'visible'});
+    await tabManager.tabDropdown.waitFor({state: 'visible'});
 
     expect(tabManager.tabDropdownOptions()).toHaveText([
       'All',
@@ -160,15 +160,19 @@ test.describe('when viewport is too small to display all buttons', () => {
       });
       test('sort dropdown', async ({tabManager}) => {
         const expectedOptions = ['Most Recent', 'Least Recent', 'Relevance'];
+        tabManager.refineModalButton.click();
+        await tabManager.refineModalHeader.waitFor({state: 'visible'});
         const options =
-          await tabManager.refineModalsortDropdownOptions.allTextContents();
+          await tabManager.refineModalSortDropdownOptions.allTextContents();
         expect(options).toEqual(expectedOptions);
       });
     });
 
     test.describe('when selecting previous dropdown option', () => {
-      test.beforeEach(async ({tabManager}) => {
+      test.beforeEach(async ({tabManager, facets}) => {
         await tabManager.tabDropdown.selectOption('all');
+        await facets.inclusionFilters.first().click();
+        await facets.clearFilters().waitFor({state: 'visible'});
       });
 
       test.describe('should change other component visibility', async () => {
@@ -186,16 +190,19 @@ test.describe('when viewport is too small to display all buttons', () => {
             'Name ascending',
             'Relevance',
           ];
+          tabManager.refineModalButton.click();
+          await tabManager.refineModalHeader.waitFor({state: 'visible'});
           const options =
-            await tabManager.refineModalsortDropdownOptions.allTextContents();
+            await tabManager.refineModalSortDropdownOptions.allTextContents();
           expect(options).toEqual(expectedOptions);
         });
       });
     });
 
     test.describe('when resizing viewport', () => {
-      test.beforeEach(async ({page}) => {
+      test.beforeEach(async ({page, tabManager}) => {
         await page.setViewportSize({width: 1000, height: 500});
+        await tabManager.tabArea.waitFor({state: 'visible'});
       });
 
       test('should hide tabs dropdown', async ({tabManager}) => {

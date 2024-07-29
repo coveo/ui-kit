@@ -36,7 +36,7 @@ export class AtomicSortExpression {
    * ```html
    *  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet>
    * ```
-   * If you don't set this property, or set it to `'[]'`, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs. In either case, the sort expression won't be displayed on any of the tabs specified in the `tabs-excluded` property (exclusion takes precedence).
+   * If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
@@ -49,7 +49,7 @@ export class AtomicSortExpression {
    * ```html
    *  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression>
    * ```
-   * If you don't set this property, or set it to `'[]'`, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs. In either case, the `tabs-included` property can further restrict the tabs on which the sort expression can be displayed.
+   * If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
