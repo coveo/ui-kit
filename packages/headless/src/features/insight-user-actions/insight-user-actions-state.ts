@@ -4,7 +4,10 @@ export interface UserActionTimeline {
   precedingSessions: UserSession[];
   session: UserSession;
   followingSessions: UserSession[];
+  caseSessionFound: boolean;
 }
+
+export type PreprocessedUserActions = UserActionTimeline | UserSession[];
 
 export interface UserSession {
   start: string;
@@ -43,7 +46,7 @@ export interface UserActionsState {
   /**
    * The timeline of user actions.
    */
-  timeline?: UserActionTimeline;
+  userActionsToDisplay?: PreprocessedUserActions;
   /**
    * The names of custom actions to exclude from the user actions.
    */
@@ -64,7 +67,7 @@ export interface UserActionsState {
 
 export function getInsightUserActionsInitialState(): UserActionsState {
   return {
-    timeline: undefined,
+    userActionsToDisplay: undefined,
     excludedCustomActions: [],
     loading: false,
   };
