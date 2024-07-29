@@ -7,8 +7,8 @@
  * @returns A boolean indicating whether the component should be displayed on the current tab.
  */
 export function shouldDisplayOnCurrentTab(
-  includeTabs: string[] | string,
-  excludeTabs: string[] | string,
+  includeTabs: string[],
+  excludeTabs: string[],
   activeTab: string
 ) {
   if (!activeTab) {
