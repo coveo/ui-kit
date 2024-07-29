@@ -13,7 +13,11 @@ export const TabButton: FunctionalComponent<TabButtonProps> = (props) => {
     : '';
   const activeTabTextClass = props.isActive ? '' : 'text-neutral-dark';
   return (
-    <div part="button-container" class={activeTabClass}>
+    <li
+      aria-current={props.isActive ? 'true' : false}
+      part="button-container"
+      class={activeTabClass}
+    >
       <Button
         style="text-transparent"
         class={`px-6 pb-1 w-full text-xl ${activeTabTextClass}`}
@@ -21,6 +25,6 @@ export const TabButton: FunctionalComponent<TabButtonProps> = (props) => {
         part="tab-button"
         onClick={props.handleClick}
       ></Button>
-    </div>
+    </li>
   );
 };
