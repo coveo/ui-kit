@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-process-exit */
-/* eslint-disable node/shebang */
 'use strict';
 
 const childProcess = require('child_process');
