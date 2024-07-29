@@ -212,8 +212,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
   public render() {
     if (
       !shouldDisplayOnCurrentTab(
-        this.tabsIncluded,
-        this.tabsExcluded,
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
         this.tabManagerState?.activeTab
       )
     ) {
