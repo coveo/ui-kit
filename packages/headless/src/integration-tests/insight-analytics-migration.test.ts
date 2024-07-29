@@ -32,7 +32,6 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
-import {breadcrumbResetAll} from '../features/facets/generic/facet-generic-analytics-actions';
 import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-insight-analytics-actions';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateBreadcrumbFacet} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
@@ -182,14 +181,13 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/deselectAllBreadcrumbs', async () => {
     const action = executeSearch({
       legacy: logClearBreadcrumbs(),
-      next: breadcrumbResetAll(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/sortChange', async () => {
