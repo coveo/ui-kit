@@ -23,20 +23,13 @@ test.describe('when viewport is large enough to display all tabs', () => {
   test('should display tab buttons for each atomic-tab elements', async ({
     tabManager,
   }) => {
-    const atomicTabElements = tabManager.atomicTabElements();
     expect(tabManager.tabDropdown).not.toBeVisible();
 
-    for (let i = 0; i < (await atomicTabElements.count()); i++) {
-      const tabElement = atomicTabElements.nth(i);
-      const button = tabManager.tabButtons().nth(i);
-
-      button.waitFor({state: 'visible'});
-
-      const expectedName = await tabElement.getAttribute('Label');
-      const buttonText = await button.textContent();
-
-      expect(buttonText).toContain(expectedName);
-    }
+    expect(tabManager.tabButtons()).toHaveText([
+      'All',
+      'Articles',
+      'Documentation',
+    ]);
   });
 
   test.describe('when clicking on tab button', () => {
@@ -124,17 +117,11 @@ test.describe('when viewport is too small to display all buttons', () => {
   }) => {
     tabManager.tabDropdown.waitFor({state: 'visible'});
 
-    const atomicTabElements = tabManager.atomicTabElements();
-
-    for (let i = 0; i < (await atomicTabElements.count()); i++) {
-      const tabElement = atomicTabElements.nth(i);
-      const option = tabManager.tabDropdownOptions().nth(i);
-
-      const expectedName = await tabElement.getAttribute('Label');
-      const optionText = await option.textContent();
-
-      expect(optionText).toContain(expectedName);
-    }
+    expect(tabManager.tabDropdownOptions()).toHaveText([
+      'All',
+      'Articles',
+      'Documentation',
+    ]);
   });
 
   test.describe('when selecting a dropdown option', () => {
