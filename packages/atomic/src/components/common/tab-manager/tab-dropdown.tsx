@@ -11,9 +11,9 @@ export const TabDropdown: FunctionalComponent<TabDropdownProps> = (
   children
 ) => {
   return (
-    <div class="hidden pb-1 border-b dropdown-area">
+    <div class="dropdown-area hidden border-b pb-1">
       <select
-        class="py-2 text-xl font-bold cursor-pointer btn-text-primary"
+        class="btn-text-primary cursor-pointer py-2 text-xl font-bold"
         onChange={(e) =>
           props.onTabChange((e.target as HTMLSelectElement).value)
         }

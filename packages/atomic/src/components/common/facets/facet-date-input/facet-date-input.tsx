@@ -95,7 +95,7 @@ export class FacetDateInput {
 
     return (
       <form
-        class="grid gap-2 grid-cols-min-1fr mt-4 px-2"
+        class="grid-cols-min-1fr mt-4 grid gap-2 px-2"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();
@@ -159,7 +159,7 @@ export class FacetDateInput {
           style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class="p-2.5 col-span-2 truncate"
+          class="col-span-2 truncate p-2.5"
           ariaLabel={applyAria}
           text={apply}
         ></Button>

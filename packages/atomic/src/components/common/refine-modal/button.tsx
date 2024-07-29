@@ -13,7 +13,7 @@ export const RefineToggleButton: FunctionalComponent<
   return (
     <Button
       style="outline-primary"
-      class="p-3 w-full"
+      class="w-full p-3"
       onClick={onClick}
       text={i18n.t('sort-and-filter')}
       ref={setRef}

@@ -72,11 +72,11 @@ export class SmartSnippetSuggestionCommon {
         <atomic-icon
           icon={relatedQuestion.expanded ? ArrowDown : ArrowRight}
           part={this.getQuestionPart('question-icon', relatedQuestion)}
-          class="w-2.5 mr-3 stroke-[1.25]"
+          class="mr-3 w-2.5 stroke-[1.25]"
         ></atomic-icon>
         <Heading
           level={headingLevel ? headingLevel + 1 : headingLevel}
-          class="text-left text-xl font-bold py-4"
+          class="py-4 text-left text-xl font-bold"
           part={this.getQuestionPart('question-text', relatedQuestion)}
         >
           {relatedQuestion.question}
@@ -172,7 +172,7 @@ export class SmartSnippetSuggestionCommon {
           {relatedQuestion.expanded && (
             <div
               part="answer-and-source"
-              class="pl-10 pr-6 pb-6"
+              class="pb-6 pl-10 pr-6"
               id={this.getRelatedQuestionId(index)}
             >
               {this.renderContent(relatedQuestion)}
@@ -192,12 +192,12 @@ export class SmartSnippetSuggestionCommon {
     return (
       <aside
         part="container"
-        class="bg-background border border-neutral rounded-lg text-on-background overflow-hidden"
+        class="bg-background border-neutral text-on-background overflow-hidden rounded-lg border"
       >
         <Heading
           level={this.props.getHeadingLevel()}
           part="heading"
-          class="px-6 py-4 text-xl leading-8 border-b border-neutral"
+          class="border-neutral border-b px-6 py-4 text-xl leading-8"
         >
           {this.props.getBindings().i18n.t('smart-snippet-people-also-ask')}
         </Heading>
