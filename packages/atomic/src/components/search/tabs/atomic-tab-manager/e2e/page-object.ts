@@ -14,6 +14,10 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.getByLabel('tab-area');
   }
 
+  get activeTab() {
+    return this.page.locator('atomic-tab-manager .active-tab button');
+  }
+
   get excludedFacet() {
     return this.page.getByTestId('excluded-facet');
   }

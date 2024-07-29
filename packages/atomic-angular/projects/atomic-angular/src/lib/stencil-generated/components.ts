@@ -275,6 +275,32 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
 
 
 @ProxyCmp({
+  inputs: ['choicesDisplayed', 'initialChoice']
+})
+@Component({
+  selector: 'atomic-commerce-products-per-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['choicesDisplayed', 'initialChoice'],
+})
+export class AtomicCommerceProductsPerPage {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicCommerceProductsPerPage extends Components.AtomicCommerceProductsPerPage {
+
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
 })
 @Component({
   selector: 'atomic-commerce-query-summary',

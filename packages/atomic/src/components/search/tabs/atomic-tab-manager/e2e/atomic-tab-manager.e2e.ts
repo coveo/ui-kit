@@ -153,7 +153,6 @@ test.describe('when viewport is too small to display all buttons', () => {
         expect(tabManager.includedFacet).toBeVisible();
         expect(tabManager.excludedFacet).not.toBeVisible();
       });
-
       test('smart snippet', async ({tabManager}) => {
         expect(tabManager.smartSnippet).toBeVisible();
       });
