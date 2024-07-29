@@ -10,6 +10,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Uninstall Playwright Browsers
+      run: npx playwright uninstall --all
+      shell: bash
     - name: Install Playwright Browsers
       run: npx playwright install
       shell: bash
