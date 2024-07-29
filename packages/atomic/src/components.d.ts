@@ -506,6 +506,21 @@ export namespace Components {
         "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
+     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
+     */
+    interface AtomicCommerceProductsPerPage {
+        /**
+          * A list of choices for the number of products to display per page, separated by commas.
+         */
+        "choicesDisplayed": string;
+        /**
+          * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
+         */
+        "initialChoice"?: number;
+    }
+    /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicCommerceQueryError {
@@ -2947,6 +2962,7 @@ export namespace Components {
         "choicesDisplayed": string;
         /**
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
          */
         "initialChoice"?: number;
     }
@@ -3463,6 +3479,10 @@ export interface AtomicCommercePagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommercePagerElement;
 }
+export interface AtomicCommerceProductsPerPageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicCommerceProductsPerPageElement;
+}
 export interface AtomicCommerceSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommerceSearchBoxElement;
@@ -3756,6 +3776,27 @@ declare global {
     var HTMLAtomicCommerceProductListElement: {
         prototype: HTMLAtomicCommerceProductListElement;
         new (): HTMLAtomicCommerceProductListElement;
+    };
+    interface HTMLAtomicCommerceProductsPerPageElementEventMap {
+        "atomic/scrollToTop": any;
+    }
+    /**
+     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
+     */
+    interface HTMLAtomicCommerceProductsPerPageElement extends Components.AtomicCommerceProductsPerPage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicCommerceProductsPerPageElement: {
+        prototype: HTMLAtomicCommerceProductsPerPageElement;
+        new (): HTMLAtomicCommerceProductsPerPageElement;
     };
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -5518,6 +5559,7 @@ declare global {
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
+        "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
@@ -6111,6 +6153,22 @@ declare namespace LocalJSX {
           * The desired number of placeholders to display while the product list is loading.
          */
         "numberOfPlaceholders"?: number;
+    }
+    /**
+     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+     * @alpha 
+     */
+    interface AtomicCommerceProductsPerPage {
+        /**
+          * A list of choices for the number of products to display per page, separated by commas.
+         */
+        "choicesDisplayed"?: string;
+        /**
+          * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
+         */
+        "initialChoice"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicCommerceProductsPerPageCustomEvent<any>) => void;
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -8424,6 +8482,7 @@ declare namespace LocalJSX {
         "choicesDisplayed"?: string;
         /**
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+          * @type {number}
          */
         "initialChoice"?: number;
         "onAtomic/scrollToTop"?: (event: AtomicResultsPerPageCustomEvent<any>) => void;
@@ -8945,6 +9004,7 @@ declare namespace LocalJSX {
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
+        "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
@@ -9208,6 +9268,11 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
+            /**
+             * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+             * @alpha 
+             */
+            "atomic-commerce-products-per-page": LocalJSX.AtomicCommerceProductsPerPage & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductsPerPageElement>;
             /**
              * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
