@@ -97,10 +97,10 @@ export function defineCommerceEngine<
     CommerceEngine,
     Controller
   >,
->({
-  controllers: controllerDefinitions,
-  ...engineOptions
-}: CommerceEngineDefinitionOptions<TControllerDefinitions>): CommerceEngineDefinition<TControllerDefinitions> {
+>(
+  options: CommerceEngineDefinitionOptions<TControllerDefinitions>
+): CommerceEngineDefinition<TControllerDefinitions> {
+  const {controllers: controllerDefinitions, ...engineOptions} = options;
   type Definition = CommerceEngineDefinition<TControllerDefinitions>;
   type BuildFunction = Definition['build'];
   type FetchStaticStateFunction = Definition['fetchStaticState'];

@@ -14,7 +14,10 @@ import {
 export const config = {
   configuration: {
     ...getSampleSearchEngineConfiguration(),
-    analytics: {enabled: false},
+    analytics: {
+      analyticsMode: 'next',
+      trackingId: 'sports-ui-samples-legacy',
+    },
   },
   controllers: {
     context: defineContext(),

@@ -88,6 +88,7 @@ export type {
   InferBuildResult,
 } from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {LogLevel} from './app/logger';
 
