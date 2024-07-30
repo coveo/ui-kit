@@ -5,7 +5,7 @@ import {
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
-import type * as _ from '../src/components';
+import type * as _ from '../../src/components';
 
 export const wrapInRecommendationInterface = (
   config?: Partial<RecommendationEngineConfiguration>
