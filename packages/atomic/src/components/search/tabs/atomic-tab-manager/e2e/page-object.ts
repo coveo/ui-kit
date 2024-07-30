@@ -19,11 +19,11 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   get excludedFacet() {
-    return this.page.getByTestId('excluded-facet');
+    return this.page.getByLabel(/^excluded-facet$/);
   }
 
   get includedFacet() {
-    return this.page.getByTestId('included-facet');
+    return this.page.getByLabel(/^included-facet$/);
   }
 
   get smartSnippet() {
