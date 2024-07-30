@@ -13,7 +13,6 @@ export interface RefineToggleSelector extends ComponentSelector {
   modalFooter: () => CypressSelector;
   viewResultsButton: () => CypressSelector;
   total: () => CypressSelector;
-  sort: () => CypressSelector;
   filtersCountBadge: () => CypressSelector;
   timeframeFacetExpandButton: () => CypressSelector;
   defaultFacetExpandButton: () => CypressSelector;
@@ -47,7 +46,6 @@ export const RefineToggleSelectors: RefineToggleSelector = {
   viewResultsButton: () =>
     RefineToggleSelectors.modalFooter().find('.slds-button'),
   total: () => RefineToggleSelectors.get().find('.summary__total'),
-  sort: () => RefineToggleSelectors.modalContent().find('c-quantic-sort'),
   filtersCountBadge: () =>
     RefineToggleSelectors.get().find('.refine-button_filters-badge'),
   timeframeFacetExpandButton: () =>
