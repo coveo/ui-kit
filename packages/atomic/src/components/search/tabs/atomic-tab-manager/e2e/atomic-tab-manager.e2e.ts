@@ -25,7 +25,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
   }) => {
     expect(tabManager.tabDropdown).not.toBeVisible();
 
-    expect(tabManager.tabButtons()).toHaveText([
+    expect(await tabManager.tabButtons().allTextContents()).toEqual([
       'All',
       'Articles',
       'Documentation',
@@ -36,14 +36,14 @@ test.describe('when viewport is large enough to display all tabs', () => {
     let tabButton: Locator;
 
     test.beforeEach(async ({tabManager, facets}) => {
-      tabButton = tabManager.tabButtons('article');
+      tabButton = tabManager.tabButtons('Articles');
       await tabButton.click();
       await facets.inclusionFilters.first().click();
       await facets.clearFilters().waitFor({state: 'visible'});
     });
 
     test('should change active tab', async ({tabManager}) => {
-      expect(tabManager.tabButtons('article')).toHaveClass(/active-tab/);
+      expect(tabManager.tabButtons('Articles')).toHaveClass(/active-tab/);
     });
 
     test.describe('should change other component visibility', async () => {
@@ -55,7 +55,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
 
     test.describe('when selecting previous tab', () => {
       test.beforeEach(async ({tabManager}) => {
-        await tabManager.tabButtons('all').click();
+        await tabManager.tabButtons('All').click();
       });
 
       test.describe('should change other component visibility', async () => {
@@ -90,7 +90,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
 
 test.describe('when viewport is too small to display all buttons', () => {
   test.beforeEach(async ({page}) => {
-    await page.setViewportSize({width: 300, height: 500});
+    await page.setViewportSize({width: 300, height: 1000});
   });
 
   test('should be A11y compliant', async ({makeAxeBuilder}) => {
@@ -109,7 +109,7 @@ test.describe('when viewport is too small to display all buttons', () => {
   test('should display tab dropdown options for each atomic-tab elements', async ({
     tabManager,
   }) => {
-    tabManager.tabDropdown.waitFor({state: 'visible'});
+    await tabManager.tabDropdown.waitFor({state: 'visible'});
 
     expect(tabManager.tabDropdownOptions()).toHaveText([
       'All',
@@ -150,8 +150,9 @@ test.describe('when viewport is too small to display all buttons', () => {
     });
 
     test.describe('when resizing viewport', () => {
-      test.beforeEach(async ({page}) => {
+      test.beforeEach(async ({page, tabManager}) => {
         await page.setViewportSize({width: 1000, height: 500});
+        await tabManager.tabArea.waitFor({state: 'visible'});
       });
 
       test('should hide tabs dropdown', async ({tabManager}) => {
@@ -165,7 +166,7 @@ test.describe('when viewport is too small to display all buttons', () => {
       test('should have the active tab button selected', async ({
         tabManager,
       }) => {
-        expect(tabManager.tabButtons('article')).toHaveClass(/active-tab/);
+        expect(tabManager.tabButtons('Articles')).toHaveClass(/active-tab/);
       });
     });
   });

@@ -31,7 +31,7 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.getByRole('listitem');
+    const baseLocator = this.page.getByLabel(/tab for .*/);
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
