@@ -11,6 +11,14 @@ import {
 
 /**
  * @alpha
+ * * A [product template](todo) determines the format of the query results, depending on the conditions that are defined for each template.
+ *
+ * A `template` element must be the child of an `atomic-product-template`, and either an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list` or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+ *
+ * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+ * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which product items the condition must be applied to. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+ * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which product items the condition must not be applied to. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+ * @slot default - The default slot where to insert the template element.
  */
 @Component({
   tag: 'atomic-product-template',

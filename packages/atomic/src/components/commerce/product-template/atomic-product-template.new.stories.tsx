@@ -1,14 +1,15 @@
-import {
-  playExecuteFirstSearch,
-  wrapInCommerceInterface,
-} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
+import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce-recommendation-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderTemplate} from '@coveo/atomic/storybookUtils/render-template';
 import {userEvent, waitFor, expect} from '@storybook/test';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {
+  Decorator,
+  Meta,
+  StoryObj as Story,
+} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import {renderComponentWithoutCodeRoot} from '../../../../storybookUtils/render-component';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
@@ -44,66 +45,88 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-product-section-children>
 </template>`;
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
-
 const meta: Meta = {
   component: 'atomic-product-template',
   title: 'Atomic-Commerce/Product Template Components/atomic-product-template',
   id: 'atomic-product-template',
-  render: renderTemplate,
-  decorators: [decorator],
+  render: renderComponentWithoutCodeRoot,
   parameters,
-  play,
-  argTypes: {
-    template: {table: {disable: true}},
-    parent: {table: {disable: true}},
-    parentArgs: {table: {disable: true}},
-  },
   args: {
-    template: TEMPLATE_EXAMPLE,
+    'slots-default': TEMPLATE_EXAMPLE,
   },
 };
 
 export default meta;
 
-export const InAProductList: Story = {
-  name: 'In a product list',
-  args: {
-    parent: 'atomic-commerce-product-list',
-  },
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstSearch(context);
-  },
+const {
+  decorator: commerceInterfaceDecorator,
+  play: initializeCommerceInterface,
+} = wrapInCommerceInterface({skipFirstSearch: false});
+const atomicCommerceResultListDecorator: Decorator = (story) => {
+  return html`
+    <atomic-commerce-product-list
+      number-of-placeholders="24"
+      display="grid"
+      density="normal"
+      image-size="small"
+    >
+      ${story()}
+    </atomic-commerce-product-list>
+  `;
 };
 
-const {decorator: recommendationDecorator, play: recommendationPlay} =
-  wrapInCommerceRecommendationInterface();
+export const InAProductList: Story = {
+  name: 'In a product list',
+  decorators: [atomicCommerceResultListDecorator, commerceInterfaceDecorator],
+  play: initializeCommerceInterface,
+};
+
+const {
+  decorator: commerceRecommendationInterfaceDecorator,
+  play: initializeCommerceRecommendationInterface,
+} = wrapInCommerceRecommendationInterface();
+const atomicCommerceRecommendationDecorator: Decorator = (story) => {
+  return html`
+    <atomic-commerce-recommendation-list
+      id="popular_bought"
+      slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+      products-per-page="3"
+    >
+      ${story()}
+    </atomic-commerce-recommendation-list>
+  `;
+};
 
 export const InARecommendationList: Story = {
   name: 'In a recommendation list',
-  decorators: [recommendationDecorator],
-  args: {
-    parent: 'atomic-commerce-recommendation-list',
-    parentArgs: [
-      'id="popular_bought"',
-      'slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"',
-      'products-per-page="3"',
-    ],
-  },
-  play: async (context) => {
-    await recommendationPlay(context);
-  },
+  decorators: [
+    atomicCommerceRecommendationDecorator,
+    commerceRecommendationInterfaceDecorator,
+  ],
+
+  play: initializeCommerceRecommendationInterface,
+};
+
+const atomicCommerceSearchBoxInstantProductsDecorator: Decorator = (story) => {
+  return html`
+    <atomic-commerce-search-box data-testid="search-box">
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      <atomic-commerce-search-box-instant-products image-size="small">
+        ${story()}
+      </atomic-commerce-search-box-instant-products>
+    </atomic-commerce-search-box>
+    <atomic-commerce-query-error></atomic-commerce-query-error>
+  `;
 };
 
 export const InASearchBoxInstantProducts: Story = {
   name: 'In a search box instant products',
-  args: {
-    parent: 'atomic-commerce-search-box-instant-products',
-    parentArgs: ['image-size="small"'],
-  },
+  decorators: [
+    atomicCommerceSearchBoxInstantProductsDecorator,
+    commerceInterfaceDecorator,
+  ],
   play: async (context) => {
-    await play(context);
+    initializeCommerceInterface(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
 
@@ -123,22 +146,11 @@ export const InASearchBoxInstantProducts: Story = {
       );
     });
   },
-  decorators: [
-    (story) => html`
-      <atomic-commerce-search-box data-testid="search-box">
-        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-        ${story()}
-      </atomic-commerce-search-box>
-      <atomic-commerce-query-error></atomic-commerce-query-error>
-    `,
-  ],
 };
 
 export const WithoutValidParent: Story = {
   name: 'Without a valid parent',
   tags: ['test'],
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstSearch(context);
-  },
+  decorators: [commerceInterfaceDecorator],
+  play: initializeCommerceInterface,
 };
