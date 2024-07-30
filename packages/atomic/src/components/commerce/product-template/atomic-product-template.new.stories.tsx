@@ -1,6 +1,6 @@
-import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
-import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce-recommendation-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
+import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-recommendation-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
 import {userEvent, waitFor, expect} from '@storybook/test';
 import type {
   Decorator,
@@ -9,7 +9,7 @@ import type {
 } from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
-import {renderComponentWithoutCodeRoot} from '../../../../storybookUtils/render-component';
+import {renderComponentWithoutCodeRoot} from '../../../../storybookUtils/common/render-component';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
