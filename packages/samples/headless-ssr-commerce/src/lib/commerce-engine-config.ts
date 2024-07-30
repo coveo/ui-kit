@@ -15,7 +15,7 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
 const configuration = {
   ...getSampleCommerceEngineConfiguration(),
   analytics: {
-    trackingId: 'sports',
+    trackingId: 'sports-ui-samples',
     enabled: false, // TODO: enable analytics
   },
 };
