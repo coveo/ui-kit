@@ -30,6 +30,10 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.locator('atomic-smart-snippet [part="smart-snippet"]');
   }
 
+  get sortDropdown() {
+    return this.page.getByRole('combobox', {name: 'Sort by'});
+  }
+
   get sortDropdownOptions() {
     return this.page.getByLabel('Sort by').getByRole('option');
   }
@@ -50,7 +54,7 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.getByRole('listitem');
+    const baseLocator = this.page.getByLabel(/tab for .*/);
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
