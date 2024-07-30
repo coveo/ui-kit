@@ -8,7 +8,6 @@ import {
   getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
-  routeMatchers,
 } from '../../../page-objects/search';
 import {
   useCaseParamTest,
@@ -64,7 +63,7 @@ describe('quantic-sort', () => {
     },
   ];
 
-  const customSortOptionsValues = [defaultCustomSort, ...customSortOptions].map(
+  const customSortOptionsValues = [...customSortOptions].map(
     (option) => option.value
   );
   interface SortOptions {
@@ -154,19 +153,12 @@ describe('quantic-sort', () => {
 
       describe('when passing custom options as slots to the component', () => {
         it('should display the custom options properly', () => {
-          const routeMatcherToUse =
-            param.useCase === useCaseEnum.insight
-              ? routeMatchers.insight
-              : routeMatchers.search;
-          cy.intercept('POST', routeMatcherToUse).as('searchRequest');
           visitSort({useCase: param.useCase}, {withCustomSortOptions: true});
 
-          cy.wait('@searchRequest').then((interception) => {
-            Expect.sortCriteriaInSearchRequest(
-              interception.request.body,
-              defaultCustomSort.value
-            );
-          });
+          Expect.sortCriteriaInInitialSearchRequest(
+            defaultCustomSort.value,
+            param.useCase
+          );
           Expect.displaySortDropdown(true);
           Expect.labelContains('Sort by');
 

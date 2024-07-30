@@ -1,4 +1,6 @@
+import {Interception} from 'cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
+import {useCaseEnum} from '../../../page-objects/use-case';
 import {
   completeSearchRequest,
   ComponentErrorExpectations,
@@ -37,6 +39,25 @@ function sortExpectations(selector: SortSelector) {
       value: string
     ) => {
       expect(body.sortCriteria).to.equal(value);
+    },
+
+    sortCriteriaInInitialSearchRequest: (
+      value: string,
+      useCase: useCaseEnum
+    ) => {
+      const interceptAliasToUse =
+        useCase === useCaseEnum.search
+          ? InterceptAliases.Search
+          : InterceptAliases.Insight;
+
+      cy.get<Interception>(interceptAliasToUse)
+        .then((interception) => {
+          const body = interception.request.body;
+          expect(body.sortCriteria).to.equal(value);
+        })
+        .logDetail(
+          'should have the correct sort criteria in the search request'
+        );
     },
 
     logSortResults: (value: string) => {
