@@ -15,7 +15,6 @@ import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-i
 import {facetResponseActiveValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetSlice} from '../../../features/facets/facet-set/facet-set-state';
-import {breadcrumbResetAll} from '../../../features/facets/generic/facet-generic-analytics-actions';
 import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -296,7 +295,6 @@ export function buildBreadcrumbManager(
       dispatch(
         executeSearch({
           legacy: logClearBreadcrumbs(),
-          next: breadcrumbResetAll(),
         })
       );
     },

@@ -18,7 +18,7 @@ export interface CurrencyParam {
 }
 
 export interface ClientIdParam {
-  clientId: string;
+  clientId?: string;
 }
 
 export interface ContextParam {

@@ -42,7 +42,7 @@ export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
 };
 
 /**
- * The `CategoryFacet` controller offers a high-level programming interface for implementing a commerce category
+ * The `CategoryFacet` sub-controller offers a high-level programming interface for implementing a commerce category
  * facet UI component.
  */
 export type CategoryFacet = Omit<
@@ -61,12 +61,12 @@ export type CategoryFacet = Omit<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `CategoryFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `CategoryFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `CategoryFacet` options used internally.
- * @returns A `CategoryFacet` controller instance.
+ * @returns A `CategoryFacet` sub-controller instance.
  * */
 export function buildCategoryFacet(
   engine: CommerceEngine,

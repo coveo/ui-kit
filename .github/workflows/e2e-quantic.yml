@@ -10,7 +10,7 @@ jobs:
     name: 'Setup e2e tests on Quantic'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
@@ -32,7 +32,7 @@ jobs:
             'cypress/e2e/facets-2/**/*',
           ]
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-quantic
         with:
@@ -42,7 +42,7 @@ jobs:
     needs: e2e-quantic-test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts

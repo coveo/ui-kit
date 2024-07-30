@@ -15,24 +15,24 @@ test.describe('default', () => {
   test('should allow to filter by selecting and deselecting a value', async ({
     facet,
   }) => {
-    const facetValueLabel = facet.getFacetValue('Ecco');
-    const facetValueBtn = facet.getFacetValueButton('Ecco');
+    const firstFacetValue = facet.getFacetValueByPosition(0);
+    const firstFacetValueBtn = await facet.getFacetValueButtonByPosition(0);
 
-    await expect(facetValueBtn).not.toBeChecked();
-    await facetValueLabel.click();
+    await expect(firstFacetValueBtn).not.toBeChecked();
+    await firstFacetValue.click();
 
-    await expect(facetValueBtn).toBeChecked();
+    await expect(firstFacetValueBtn).toBeChecked();
 
-    await facetValueLabel.click();
-    await expect(facetValueBtn).not.toBeChecked();
+    await firstFacetValue.click();
+    await expect(firstFacetValueBtn).not.toBeChecked();
   });
 
   test('should allow to filter by selecting multiple values', async ({
     facet,
     page,
   }) => {
-    const firstValueBtn = facet.getFacetValueButton('Ecco');
-    const secondValueBtn = facet.getFacetValueButton('Nike');
+    const firstValueBtn = facet.getFacetValueButtonByPosition(0);
+    const secondValueBtn = facet.getFacetValueButtonByPosition(1);
 
     await expect(firstValueBtn).not.toBeChecked();
     await expect(secondValueBtn).not.toBeChecked();
@@ -47,7 +47,7 @@ test.describe('default', () => {
   test('should allow to deselect a filter with the clear button', async ({
     facet,
   }) => {
-    const facetValueLabel = facet.getFacetValue('Ecco');
+    const facetValueLabel = facet.getFacetValueByPosition(0);
 
     await expect(facet.clearFilter).toHaveCount(0);
 
@@ -78,15 +78,15 @@ test.describe('default', () => {
   });
 
   test('allow to search for a value', async ({facet, page}) => {
-    await facet.searchInput.fill('n');
+    await facet.searchInput.fill('o');
 
     expect(await page.getByRole('listitem').count()).toBeGreaterThanOrEqual(8);
-    await expect(page.getByText('More matches for n')).toBeVisible();
+    await expect(page.getByText('More matches for o')).toBeVisible();
     await facet.searchInput.fill('Ecco');
 
-    await facet.getFacetValue('Ecco').click();
+    await facet.getFacetValueByLabel('Ecco').click();
 
-    await expect(facet.getFacetValueButton('Ecco')).toBeChecked();
+    await expect(facet.getFacetValueButtonByLabel('Ecco')).toBeChecked();
   });
 
   test('allow to clear the search input', async ({facet}) => {

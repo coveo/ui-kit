@@ -110,14 +110,13 @@ export const executeSearch = createAsyncThunk<
   'search/executeSearch',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
     addEntryInActionsHistory(state);
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
+    const analyticsAction = searchAction.next
+      ? buildSearchReduxAction(searchAction.next)
+      : undefined;
 
     const request = await buildSearchRequest(
       state,
@@ -127,7 +126,7 @@ export const executeSearch = createAsyncThunk<
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
+    >({...config, analyticsAction: analyticsAction ?? {}});
 
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'mainSearch',
@@ -209,22 +208,17 @@ export const fetchFacetValues = createAsyncThunk<
   'search/fetchFacetValues',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
+    >({...config, analyticsAction: {}});
 
     const request = await buildFetchFacetValuesRequest(
       state,
-      config.extra.navigatorContext,
-      analyticsAction
+      config.extra.navigatorContext
     );
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'facetValues',
