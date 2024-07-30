@@ -1,13 +1,11 @@
+import {wrapInCommerceProductList} from '@coveo/atomic/storybookUtils/commerce/atomic-commerce-product-list-wrapper';
+import {wrapInCommerceRecommendationList} from '@coveo/atomic/storybookUtils/commerce/atomic-commerce-recommendation-list-wrapper';
+import {wrapInCommerceSearchBoxInstantProducts} from '@coveo/atomic/storybookUtils/commerce/atomic-commerce-searchbox-instant-products-wrapper';
 import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
 import {userEvent, waitFor, expect} from '@storybook/test';
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {within} from 'shadow-dom-testing-library';
 import {renderComponentWithoutCodeRoot} from '../../../../storybookUtils/common/render-component';
 
@@ -62,23 +60,11 @@ const {
   decorator: commerceInterfaceDecorator,
   play: initializeCommerceInterface,
 } = wrapInCommerceInterface({skipFirstSearch: false});
-const atomicCommerceResultListDecorator: Decorator = (story) => {
-  return html`
-    <atomic-commerce-product-list
-      id="code-root"
-      number-of-placeholders="24"
-      display="grid"
-      density="normal"
-      image-size="small"
-    >
-      ${story()}
-    </atomic-commerce-product-list>
-  `;
-};
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 
 export const InAProductList: Story = {
   name: 'In a product list',
-  decorators: [atomicCommerceResultListDecorator, commerceInterfaceDecorator],
+  decorators: [commerceProductListDecorator, commerceInterfaceDecorator],
   play: initializeCommerceInterface,
 };
 
@@ -86,47 +72,26 @@ const {
   decorator: commerceRecommendationInterfaceDecorator,
   play: initializeCommerceRecommendationInterface,
 } = wrapInCommerceRecommendationInterface();
-const atomicCommerceRecommendationDecorator: Decorator = (story) => {
-  return html`
-    <atomic-commerce-recommendation-list
-      id="code-root"
-      slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
-      products-per-page="3"
-    >
-      ${story()}
-    </atomic-commerce-recommendation-list>
-  `;
-};
+const {decorator: commerceRecommendationListDecorator} =
+  wrapInCommerceRecommendationList();
 
 export const InARecommendationList: Story = {
   name: 'In a recommendation list',
   decorators: [
-    atomicCommerceRecommendationDecorator,
+    commerceRecommendationListDecorator,
     commerceRecommendationInterfaceDecorator,
   ],
 
   play: initializeCommerceRecommendationInterface,
 };
 
-const atomicCommerceSearchBoxInstantProductsDecorator: Decorator = (story) => {
-  return html`
-    <atomic-commerce-search-box data-testid="search-box">
-      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-      <atomic-commerce-search-box-instant-products
-        id="code-root"
-        image-size="small"
-      >
-        ${story()}
-      </atomic-commerce-search-box-instant-products>
-    </atomic-commerce-search-box>
-    <atomic-commerce-query-error></atomic-commerce-query-error>
-  `;
-};
+const {decorator: commerceSearchBoxInstantsProductsDecorator} =
+  wrapInCommerceSearchBoxInstantProducts();
 
 export const InASearchBoxInstantProducts: Story = {
   name: 'In a search box instant products',
   decorators: [
-    atomicCommerceSearchBoxInstantProductsDecorator,
+    commerceSearchBoxInstantsProductsDecorator,
     commerceInterfaceDecorator,
   ],
   play: async (context) => {
