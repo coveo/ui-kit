@@ -8,7 +8,6 @@
     "notifications": {
       "slack_channels": ["analyticsdeployments"]
     },
-    "team_jenkins": "uabuilds",
     "start_environment_automatically": true,
     "prd": {
       "start_environment_automatically": false
