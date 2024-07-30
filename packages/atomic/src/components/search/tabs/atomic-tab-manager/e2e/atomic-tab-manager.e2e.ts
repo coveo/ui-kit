@@ -42,6 +42,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
 
     test.describe('should change other component visibility', async () => {
       test('facets', async ({tabManager}) => {
+        await tabManager.includedFacet.first().waitFor({state: 'visible'});
         (await tabManager.includedFacet.all()).forEach(async (facet) => {
           await expect(facet).toBeVisible();
         });
@@ -58,6 +59,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
 
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
+          await tabManager.excludedFacet.first().waitFor({state: 'visible'});
           (await tabManager.excludedFacet.all()).forEach(async (facet) => {
             await expect(facet).toBeVisible();
           });
@@ -129,6 +131,7 @@ test.describe('when viewport is too small to display all buttons', () => {
 
     test.describe('should change other component visibility', async () => {
       test('facets', async ({tabManager}) => {
+        await tabManager.includedFacet.first().waitFor({state: 'visible'});
         (await tabManager.includedFacet.all()).forEach(async (facet) => {
           await expect(facet).toBeVisible();
         });
@@ -145,6 +148,7 @@ test.describe('when viewport is too small to display all buttons', () => {
 
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
+          await tabManager.excludedFacet.first().waitFor({state: 'visible'});
           (await tabManager.excludedFacet.all()).forEach(async (facet) => {
             await expect(facet).toBeVisible();
           });
