@@ -23,6 +23,7 @@
     "insight/",
     "case-assist/",
     "ssr/",
+    "ssr-commerce/",
     "commerce/"
   ],
   "scripts": {
