@@ -3,9 +3,11 @@ import {
   ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
   CommerceEngine,
-  defineProductList,
+  defineProductListing,
   getSampleCommerceEngineConfiguration,
   defineQuerySummary,
+  defineCart,
+  defineSearchBox,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -24,6 +26,8 @@ export default {
   configuration: configuration,
   controllers: {
     summary: defineQuerySummary(),
-    productList: defineProductList(),
+    productListing: defineProductListing(),
+    cart: defineCart(),
+    searchBox: defineSearchBox(),
   },
 } satisfies CommerceEngineConfig;

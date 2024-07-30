@@ -64,11 +64,42 @@ export type {
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 
+// Product Listing
 export type {
-  ProductList,
-  ProductListState,
+  ProductListing,
+  ProductListingState,
 } from './controllers/commerce/product-listing/headless-product-listing.ssr';
-export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+export {defineProductListing} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+
+// Cart
+export type {CartItem} from './controllers/commerce/context/cart/headless-cart.ts';
+export type {
+  Cart,
+  CartState,
+} from './controllers/commerce/context/cart/headless-cart.ssr';
+export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr';
+
+// Context
+export type {
+  Context,
+  ContextState,
+} from './controllers/commerce/context/headless-context.ssr';
+export {defineContext} from './controllers/commerce/context/headless-context.ssr';
+
+// Search Box
+export type {
+  SearchBox,
+  SearchBoxState,
+} from './controllers/commerce/search-box/headless-search-box.ssr';
+export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr';
+
+// Standalone Search Box
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+  StandaloneSearchBoxProps,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+export {defineStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
 
 export type {
   ProductListingSummaryState,

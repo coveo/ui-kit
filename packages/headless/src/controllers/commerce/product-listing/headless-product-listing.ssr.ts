@@ -1,22 +1,27 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common';
-import {ProductListing, buildProductListing} from './headless-product-listing';
+import {
+  ProductListing as ProductListingController,
+  buildProductListing,
+} from './headless-product-listing';
 
-export type {ProductListingState as ProductListState} from './headless-product-listing';
-export type ProductList = Pick<ProductListing, 'state' | 'subscribe'>;
+export type {ProductListingState} from './headless-product-listing';
+export type ProductListing = Pick<
+  ProductListingController,
+  'state' | 'subscribe'
+>;
 
 export interface ProductListDefinition
-  extends ControllerDefinitionWithoutProps<CommerceEngine, ProductList> {}
+  extends ControllerDefinitionWithoutProps<CommerceEngine, ProductListing> {}
 
 /**
  * Defines a `ProductListing` controller instance.
  *
- * @param props - The configurable `ProductListing` properties.
  * @returns The `ProductListing` controller definition.
  *
  * @internal
  * */
-export function defineProductList(): ProductListDefinition {
+export function defineProductListing(): ProductListDefinition {
   return {
     build: (engine) => buildProductListing(engine),
   };
