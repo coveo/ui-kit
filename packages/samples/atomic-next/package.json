@@ -6,16 +6,16 @@
     "@coveo/atomic": "2.74.0",
     "@coveo/atomic-react": "2.12.2",
     "@coveo/headless": "2.74.0",
-    "next": "14.2.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "@types/react": "18.0.17",
-    "@types/react-dom": "18.0.6",
-    "cypress": "13.9.0",
-    "cypress-repeat": "2.3.4",
+    "@types/node": "20.14.12",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "cypress": "13.13.1",
+    "cypress-repeat": "2.3.5",
     "ncp": "2.0.0",
     "typescript": "5.4.5"
   },
