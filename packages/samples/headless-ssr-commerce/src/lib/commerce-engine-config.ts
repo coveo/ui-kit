@@ -21,7 +21,17 @@ const configuration = {
 };
 
 export default {
-  configuration: configuration,
+  configuration: {
+    ...configuration,
+    context: {
+      country: 'US',
+      currency: 'USD',
+      language: 'en',
+      view: {
+        url: 'https://sports.barca.group/browse/promotions/skis-boards/surfboards',
+      },
+    },
+  },
   controllers: {
     summary: defineQuerySummary(),
     productList: defineProductList(),
