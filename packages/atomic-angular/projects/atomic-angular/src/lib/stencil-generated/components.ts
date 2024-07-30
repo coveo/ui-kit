@@ -937,6 +937,28 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
 @ProxyCmp({
+  inputs: ['delimiter', 'field', 'maxValuesToDisplay']
+})
+@Component({
+  selector: 'atomic-product-multi-value-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['delimiter', 'field', 'maxValuesToDisplay'],
+})
+export class AtomicProductMultiValueText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductMultiValueText extends Components.AtomicProductMultiValueText {}
+
+
+@ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
 })
