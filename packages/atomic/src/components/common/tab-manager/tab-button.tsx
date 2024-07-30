@@ -17,7 +17,6 @@ export const TabButton: FunctionalComponent<TabButtonProps> = (props) => {
       aria-current={props.isActive ? 'true' : false}
       aria-label={'tab for ' + props.label}
       part="button-container"
-      aria-label={'tab for ' + props.label}
       class={activeTabClass}
     >
       <Button
