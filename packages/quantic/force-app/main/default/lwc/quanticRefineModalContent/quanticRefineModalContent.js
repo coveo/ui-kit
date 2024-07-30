@@ -112,10 +112,10 @@ export default class QuanticRefineModalContent extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
-    this.gatherSortOptions();
+    this.initializeSortOptions();
 
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.gatherFacets()
+      this.initializeFacets()
     );
     this.unsubscribeBreadcrumbManager = this.breadcrumbManager.subscribe(() =>
       this.updateHasActiveFilters()
@@ -123,20 +123,20 @@ export default class QuanticRefineModalContent extends LightningElement {
   };
 
   /**
-   * Gather all facets registered in the Quantic store.
+   * Initializes all facets registered in the Quantic store.
    * @returns {void}
    */
-  gatherFacets() {
+  initializeFacets() {
     if (!this.hasFacets) {
       this.data = getAllFacetsFromStore(this.engineId);
     }
   }
 
   /**
-   * Gather all sort options registered in the Quantic store.
+   * Initializes all sort options registered in the Quantic store.
    * @returns {void}
    */
-  gatherSortOptions() {
+  initializeSortOptions() {
     this.sortData = getAllSortOptionsFromStore(this.engineId);
     if (this.sortData?.length) {
       this.sortOptionsInitialized = true;
