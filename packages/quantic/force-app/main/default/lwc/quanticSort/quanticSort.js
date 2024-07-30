@@ -1,3 +1,4 @@
+import invalidCustomSortConfig from '@salesforce/label/c.quantic_InvalidCustomSortConfiguration';
 import newest from '@salesforce/label/c.quantic_Newest';
 import oldest from '@salesforce/label/c.quantic_Oldest';
 import relevancy from '@salesforce/label/c.quantic_Relevancy';
@@ -76,6 +77,7 @@ export default class QuanticSort extends LightningElement {
     relevancy,
     newest,
     oldest,
+    invalidCustomSortConfig,
   };
 
   connectedCallback() {
@@ -149,7 +151,7 @@ export default class QuanticSort extends LightningElement {
    * Sets the error when custom sort options have an invalid configuration.
    */
   setSortOptionsConfigurationError() {
-    this.errorMessage = `Custom sort options configuration is invalid.`;
+    this.errorMessage = this.labels.invalidCustomSortConfig;
   }
 
   /**

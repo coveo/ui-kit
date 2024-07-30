@@ -796,4 +796,8 @@
     <label>Voir moins</label>
     <name>quantic_GeneratedAnswerShowLess</name>
   </customLabels>
+  <customLabels>
+    <label>La configuration des options de tri personnalisées est invalide.</label>
+    <name>quantic_InvalidCustomSortConfiguration</name>
+  </customLabels>
 </Translations>
