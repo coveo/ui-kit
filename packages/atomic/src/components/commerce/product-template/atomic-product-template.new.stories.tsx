@@ -65,6 +65,7 @@ const {
 const atomicCommerceResultListDecorator: Decorator = (story) => {
   return html`
     <atomic-commerce-product-list
+      id="code-root"
       number-of-placeholders="24"
       display="grid"
       density="normal"
@@ -88,7 +89,7 @@ const {
 const atomicCommerceRecommendationDecorator: Decorator = (story) => {
   return html`
     <atomic-commerce-recommendation-list
-      id="popular_bought"
+      id="code-root"
       slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
       products-per-page="3"
     >
@@ -111,7 +112,10 @@ const atomicCommerceSearchBoxInstantProductsDecorator: Decorator = (story) => {
   return html`
     <atomic-commerce-search-box data-testid="search-box">
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-      <atomic-commerce-search-box-instant-products image-size="small">
+      <atomic-commerce-search-box-instant-products
+        id="code-root"
+        image-size="small"
+      >
         ${story()}
       </atomic-commerce-search-box-instant-products>
     </atomic-commerce-search-box>
@@ -151,6 +155,5 @@ export const InASearchBoxInstantProducts: Story = {
 export const WithoutValidParent: Story = {
   name: 'Without a valid parent',
   tags: ['test'],
-  decorators: [commerceInterfaceDecorator],
   play: initializeCommerceInterface,
 };
