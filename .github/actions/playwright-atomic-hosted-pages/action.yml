@@ -5,6 +5,7 @@ runs:
   steps:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+      working-directory: packages/atomic-hosted-page
       shell: bash
     - name: Run Playwright tests
       run: npx playwright test

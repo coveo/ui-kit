@@ -19,11 +19,11 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   get excludedFacet() {
-    return this.page.getByTestId('excluded-facet');
+    return this.page.getByLabel(/^excluded-facet$/);
   }
 
   get includedFacet() {
-    return this.page.getByTestId('included-facet');
+    return this.page.getByLabel(/^included-facet$/);
   }
 
   get smartSnippet() {
@@ -31,7 +31,7 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.getByRole('listitem');
+    const baseLocator = this.page.getByLabel(/tab for .*/);
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 

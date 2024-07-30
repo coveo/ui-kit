@@ -1,4 +1,3 @@
-import {Locator} from '@playwright/test';
 import {test, expect} from './fixture';
 
 test.beforeEach(async ({tabManager}) => {
@@ -23,9 +22,9 @@ test.describe('when viewport is large enough to display all tabs', () => {
   test('should display tab buttons for each atomic-tab elements', async ({
     tabManager,
   }) => {
-    expect(tabManager.tabDropdown).not.toBeVisible();
+    await expect(tabManager.tabDropdown).not.toBeVisible();
 
-    expect(tabManager.tabButtons()).toHaveText([
+    expect(await tabManager.tabButtons().allTextContents()).toEqual([
       'All',
       'Articles',
       'Documentation',
@@ -33,41 +32,44 @@ test.describe('when viewport is large enough to display all tabs', () => {
   });
 
   test.describe('when clicking on tab button', () => {
-    let tabButton: Locator;
-
-    test.beforeEach(async ({tabManager, facets}) => {
-      tabButton = tabManager.tabButtons('article');
-      await tabButton.click();
-      await facets.inclusionFilters.first().click();
-      await facets.clearFilters().waitFor({state: 'visible'});
+    test.beforeEach(async ({tabManager}) => {
+      await tabManager.tabButtons('Articles').click();
     });
 
     test('should change active tab', async ({tabManager}) => {
-      expect(tabManager.tabButtons('article')).toHaveClass(/active-tab/);
+      await expect(tabManager.tabButtons('Articles')).toHaveClass(/active-tab/);
     });
 
     test.describe('should change other component visibility', async () => {
       test('facets', async ({tabManager}) => {
-        expect(tabManager.excludedFacet).not.toBeVisible();
-        expect(tabManager.includedFacet).toBeVisible();
+        (await tabManager.includedFacet.all()).forEach(async (facet) => {
+          await expect(facet).toBeVisible();
+        });
+        (await tabManager.excludedFacet.all()).forEach(async (facet) => {
+          await expect(facet).not.toBeVisible();
+        });
       });
       test('smart snippet', async ({tabManager}) => {
-        expect(tabManager.smartSnippet).toBeVisible();
+        await expect(tabManager.smartSnippet).toBeVisible();
       });
     });
 
     test.describe('when selecting previous tab', () => {
       test.beforeEach(async ({tabManager}) => {
-        await tabManager.tabButtons('all').click();
+        await tabManager.tabButtons('All').click();
       });
 
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
-          expect(tabManager.excludedFacet).toBeVisible();
-          expect(tabManager.includedFacet).not.toBeVisible();
+          (await tabManager.excludedFacet.all()).forEach(async (facet) => {
+            await expect(facet).toBeVisible();
+          });
+          (await tabManager.includedFacet.all()).forEach(async (facet) => {
+            await expect(facet).not.toBeVisible();
+          });
         });
         test('smart snippet', async ({tabManager}) => {
-          expect(tabManager.smartSnippet).not.toBeVisible();
+          await expect(tabManager.smartSnippet).not.toBeVisible();
         });
       });
     });
@@ -88,7 +90,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
       test('should have the active tab selected in the dropdown', async ({
         tabManager,
       }) => {
-        expect(tabManager.tabDropdown).toHaveValue('article');
+        await expect(tabManager.tabDropdown).toHaveValue('article');
       });
     });
   });
@@ -96,7 +98,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
 
 test.describe('when viewport is too small to display all buttons', () => {
   test.beforeEach(async ({page}) => {
-    await page.setViewportSize({width: 300, height: 500});
+    await page.setViewportSize({width: 300, height: 1000});
   });
 
   test('should be A11y compliant', async ({makeAxeBuilder}) => {
@@ -115,9 +117,7 @@ test.describe('when viewport is too small to display all buttons', () => {
   test('should display tab dropdown options for each atomic-tab elements', async ({
     tabManager,
   }) => {
-    tabManager.tabDropdown.waitFor({state: 'visible'});
-
-    expect(tabManager.tabDropdownOptions()).toHaveText([
+    await expect(tabManager.tabDropdownOptions()).toHaveText([
       'All',
       'Articles',
       'Documentation',
@@ -125,23 +125,25 @@ test.describe('when viewport is too small to display all buttons', () => {
   });
 
   test.describe('when selecting a dropdown option', () => {
-    test.beforeEach(async ({tabManager, facets}) => {
+    test.beforeEach(async ({tabManager}) => {
       await tabManager.tabDropdown.selectOption('article');
-      await facets.inclusionFilters.first().click();
-      await facets.clearFilters().waitFor({state: 'visible'});
     });
 
     test('should change active tab', async ({tabManager}) => {
-      expect(tabManager.tabDropdown).toHaveValue('article');
+      await expect(tabManager.tabDropdown).toHaveValue('article');
     });
 
     test.describe('should change other component visibility', async () => {
       test('facets', async ({tabManager}) => {
-        expect(tabManager.includedFacet).toBeVisible();
-        expect(tabManager.excludedFacet).not.toBeVisible();
+        (await tabManager.includedFacet.all()).forEach(async (facet) => {
+          await expect(facet).toBeVisible();
+        });
+        (await tabManager.excludedFacet.all()).forEach(async (facet) => {
+          await expect(facet).not.toBeVisible();
+        });
       });
       test('smart snippet', async ({tabManager}) => {
-        expect(tabManager.smartSnippet).toBeVisible();
+        await expect(tabManager.smartSnippet).toBeVisible();
       });
     });
 
@@ -152,11 +154,16 @@ test.describe('when viewport is too small to display all buttons', () => {
 
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
-          expect(tabManager.includedFacet).not.toBeVisible();
-          expect(tabManager.excludedFacet).toBeVisible();
+          (await tabManager.excludedFacet.all()).forEach(async (facet) => {
+            await expect(facet).toBeVisible();
+          });
+          (await tabManager.includedFacet.all()).forEach(async (facet) => {
+            await expect(facet).not.toBeVisible();
+          });
         });
+
         test('smart snippet', async ({tabManager}) => {
-          expect(tabManager.smartSnippet).not.toBeVisible();
+          await expect(tabManager.smartSnippet).not.toBeVisible();
         });
       });
     });
@@ -177,7 +184,9 @@ test.describe('when viewport is too small to display all buttons', () => {
       test('should have the active tab button selected', async ({
         tabManager,
       }) => {
-        expect(tabManager.tabButtons('article')).toHaveClass(/active-tab/);
+        await expect(tabManager.tabButtons('Articles')).toHaveClass(
+          /active-tab/
+        );
       });
     });
   });
