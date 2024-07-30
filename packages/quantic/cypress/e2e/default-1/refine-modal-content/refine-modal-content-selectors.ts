@@ -28,18 +28,6 @@ export interface SortSelector extends ComponentSelector {
   sortDropdown: () => CypressSelector;
 }
 
-const getCommonSortSelectors = (
-  rootSelector: () => CypressSelector
-): SortSelector => {
-  return {
-    get: rootSelector,
-    sort: () => rootSelector().find('c-quantic-sort'),
-    sortOption: (value: string) =>
-      rootSelector().find(`.slds-listbox__option[data-value="${value}"]`),
-    sortDropdown: () => rootSelector().find('[data-cy="sort-dropdown"]'),
-  };
-};
-
 const getCommonFacetSelectors = (
   rootSelector: () => CypressSelector
 ): FacetSelector => {
@@ -76,14 +64,30 @@ export interface RefineContentSelector extends FacetSelector, SortSelector {
   container: FacetSelector;
   clearAllFiltersButton: () => CypressSelector;
   filtersTitle: () => CypressSelector;
+  refineSort: () => CypressSelector;
+  refineSortDropdown: () => CypressSelector;
+  refineSortOptions: (value: string) => CypressSelector;
 }
 
 export const RefineContentSelectors: RefineContentSelector = {
   container: getCommonFacetSelectors(() => cy.get(refineContentContainer)),
   ...getCommonFacetSelectors(() => cy.get(refineContentComponent)),
-  ...getCommonSortSelectors(() => cy.get(refineContentComponent)),
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
     RefineContentSelectors.get().find('[data-cy="filters-title"]'),
+  refineSort: () => cy.get('c-quantic-refine-modal-content c-quantic-sort'),
+  refineSortDropdown: () =>
+    RefineContentSelectors.refineSort().find('[data-cy="sort-dropdown"]'),
+  refineSortOptions: (value: string) =>
+    RefineContentSelectors.refineSortDropdown().find(
+      `.slds-listbox__option[data-value="${value}"]`
+    ),
+  sort: () => cy.get('c-quantic-sort[data-cy="main-sort"]'),
+  sortDropdown: () =>
+    RefineContentSelectors.sort().find('[data-cy="sort-dropdown"]'),
+  sortOption: (value: string) =>
+    RefineContentSelectors.sortDropdown().find(
+      `.slds-listbox__option[data-value="${value}"]`
+    ),
 };

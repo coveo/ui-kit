@@ -1,3 +1,5 @@
+import {Interception} from 'cypress/types/net-stubbing';
+import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {
   RefineContentSelector,
@@ -187,13 +189,6 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should display the duplicated date facet');
     },
 
-    displayRefineModalSort: (display: boolean) => {
-      selector
-        .sort()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the Quantic Sort component`);
-    },
-
     displayDuplicatedTimeframeFacetClearFiltersButton: (display: boolean) => {
       selector
         .timeframeFacetClearFiltersButton()
@@ -265,14 +260,21 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should order the facets correctly');
     },
 
+    displayRefineModalSort: (display: boolean) => {
+      selector
+        .refineSort()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the Quantic Sort component`);
+    },
+
     refineSortOptionsEqual: (options: {value: string; label: string}[]) => {
       options.forEach((option) => {
         selector
-          .sortOption(option.value)
+          .refineSortOptions(option.value)
           .should('exist')
           .should('contain', option.label)
           .logDetail(
-            'should contain the sort option ${option.label} in the refine modal sort component'
+            `should contain the sort option ${option.label} in the refine modal sort component`
           );
       });
     },
@@ -298,11 +300,15 @@ function sortExpectations(selector: SortSelector) {
       });
     },
 
-    sortCriteriaInSearchRequest: (
-      body: Record<string, unknown>,
-      value: string
-    ) => {
-      expect(body.sortCriteria).to.equal(value);
+    sortCriteriaInSearchRequest: (value: string) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const body = interception.request.body;
+          expect(body.sortCriteria).to.equal(value);
+        })
+        .logDetail(
+          'should have the correct sort criteria in the search request'
+        );
     },
   };
 }

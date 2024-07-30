@@ -1,9 +1,5 @@
 import {configure} from '../../../page-objects/configurator';
-import {
-  interceptSearch,
-  InterceptAliases,
-  routeMatchers,
-} from '../../../page-objects/search';
+import {interceptSearch, InterceptAliases} from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 import {RefineContentActions as Actions} from './refine-modal-content-actions';
 import {RefineContentExpectations as Expect} from './refine-modal-content-expectations';
@@ -148,15 +144,9 @@ describe('quantic-refine-content', () => {
 
   describe('when using custom sort options', () => {
     it('should render the same custom sort options in the sort component and in the refine modal', () => {
-      cy.intercept('POST', routeMatchers.search).as('searchRequest');
       visitRefineContent({});
+      Expect.sortCriteriaInSearchRequest(defaultCustomOptionValue);
 
-      cy.wait('@searchRequest').then((interception) => {
-        Expect.sortCriteriaInSearchRequest(
-          interception.request.body,
-          defaultCustomOptionValue
-        );
-      });
       scope(
         'when opening the sort options of the quantic sort component',
         () => {

@@ -45,7 +45,7 @@ function refineContentActions(selector: RefineContentSelector) {
     },
     openRefineModalSortDropdown: () => {
       selector
-        .sortDropdown()
+        .refineSortDropdown()
         .click()
         .logAction('when opening the sort dropdown in the refine modal');
     },
