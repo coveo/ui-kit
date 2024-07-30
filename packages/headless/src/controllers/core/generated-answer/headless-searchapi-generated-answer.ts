@@ -9,6 +9,7 @@ import {
   setId,
   streamAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
+import {rephraseGeneratedAnswer} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
@@ -167,6 +168,7 @@ export function buildSearchAPIGeneratedAnswer(
       engine.dispatch(
         executeSearch({
           legacy: analyticsClient.logRephraseGeneratedAnswer(responseFormat),
+          next: rephraseGeneratedAnswer(),
         })
       );
     },

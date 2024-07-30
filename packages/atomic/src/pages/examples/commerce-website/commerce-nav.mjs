@@ -1,4 +1,4 @@
-const barcaRoot = 'https://sports-dev.barca.group';
+const barcaRoot = 'https://sports.barca.group';
 export const navContent = {
   Homepage: {href: 'homepage.html', label: 'Homepage', barcaUrl: barcaRoot},
   Pants: {
@@ -9,7 +9,7 @@ export const navContent = {
   'Surf accessories': {
     href: 'listing-surf-accessories.html',
     label: 'Surf accessories',
-    barcaUrl: `${barcaRoot}/browse/promotions/surf-with-us-this-year`,
+    barcaUrl: `${barcaRoot}/browse/promotions/surf-accessories`,
   },
   Towels: {
     href: 'listing-towels.html',

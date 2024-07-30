@@ -56,15 +56,15 @@ test.describe('with instant results & query suggestions', () => {
   });
 
   test.describe('with recent queries', () => {
-    test.beforeEach(async ({searchBox}) => {
+    test.beforeEach(async ({searchBox, page}) => {
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
-      await searchBox.searchInput.fill('kayak');
+      await searchBox.searchInput.fill('shoe');
       await searchBox.searchInput.press('Enter');
       await searchBox.clearButton.waitFor({state: 'visible'});
       await searchBox.searchInput.fill('');
+      await page.waitForLoadState('networkidle');
     });
-
     test('should display recent queries', async ({searchBox}) => {
       await expect(searchBox.recentQueries().first()).toBeVisible();
     });
@@ -111,19 +111,19 @@ test.describe('with instant results & query suggestions', () => {
     test('should display in the search box what has been submitted', async ({
       searchBox,
     }) => {
-      await searchBox.searchInput.fill('Rec');
-      await searchBox.searchInput.press('Enter');
-      await expect(searchBox.searchInput).toHaveValue('Rec');
+      await searchBox.searchInput.fill('shoe');
+      await searchBox.submitButton.click();
+      await expect(searchBox.searchInput).toHaveValue('shoe');
     });
 
     test.describe('after focusing on suggestion with the mouse', () => {
       test('should submit what is in the search box regardless of the mouse position', async ({
         searchBox,
       }) => {
-        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchInput.fill('shoe');
         await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
         await searchBox.searchInput.press('Enter');
-        await expect(searchBox.searchInput).toHaveValue('Rec');
+        await expect(searchBox.searchInput).toHaveValue('shoe');
       });
     });
   });
@@ -168,7 +168,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 
   test.describe('after typing a query above the threshold', () => {
     test.beforeEach(async ({page}) => {
-      await page.getByPlaceholder('Search').fill('kayak');
+      await page.getByPlaceholder('Search').fill('textured');
     });
 
     testCases();
@@ -218,7 +218,7 @@ test.describe('with minimum-query-length=4', () => {
 
   test.describe('after typing a query above the threshold', () => {
     test.beforeEach(async ({page}) => {
-      await page.getByPlaceholder('Search').fill('kayak');
+      await page.getByPlaceholder('Search').fill('textured');
     });
 
     test('the submit button is disabled', async ({searchBox}) => {

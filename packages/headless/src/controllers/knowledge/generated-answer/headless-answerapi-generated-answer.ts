@@ -24,14 +24,14 @@ import {
   GeneratedResponseFormat,
 } from '../../core/generated-answer/headless-core-generated-answer';
 
-export interface KnowledgeGeneratedAnswer extends GeneratedAnswer {
+export interface AnswerApiGeneratedAnswer extends GeneratedAnswer {
   /**
    * Resets the last answer.
    */
   reset(): void;
 }
 
-interface KnowledgeGeneratedAnswerProps extends GeneratedAnswerProps {}
+interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
 
 export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
@@ -56,17 +56,20 @@ const subscribeToSearchRequest = (
 };
 
 /**
- * Creates a `GeneratedAnswer` controller instance using the Answer API stream pattern.
+ *
+ * @internal
+ *
+ * Creates a `AnswerApiGeneratedAnswer` controller instance using the Answer API stream pattern.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `GeneratedAnswer` properties.
- * @returns A `GeneratedAnswer` controller instance.
+ * @param props - The configurable `AnswerApiGeneratedAnswer` properties.
+ * @returns A `AnswerApiGeneratedAnswer` controller instance.
  */
-export function buildKnowledgeGeneratedAnswer(
+export function buildAnswerApiGeneratedAnswer(
   engine: SearchEngine,
   analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient,
-  props: KnowledgeGeneratedAnswerProps = {}
-): KnowledgeGeneratedAnswer {
+  props: AnswerApiGeneratedAnswerProps = {}
+): AnswerApiGeneratedAnswer {
   if (!loadAnswerApiReducers(engine)) {
     throw loadReducerError;
   }

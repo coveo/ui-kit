@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/no-unpublished-import
 import {Interception} from 'cypress/types/net-stubbing';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
