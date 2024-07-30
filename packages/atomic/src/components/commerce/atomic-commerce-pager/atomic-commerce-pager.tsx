@@ -1,3 +1,4 @@
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
   Pagination,
   PaginationState,
@@ -39,7 +40,7 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
  * @part previous-button-icon - Icon of the previous button.
  * @part next-button-icon - Icon of the next button.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-pager',
@@ -76,7 +77,7 @@ export class AtomicCommercePager
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) previousButtonIcon = ArrowLeftIcon;
+  @Prop({reflect: true}) previousButtonIcon: string = ArrowLeftIcon;
 
   /**
    * The SVG icon to use to display the Next button.
@@ -85,18 +86,27 @@ export class AtomicCommercePager
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
+  @Prop({reflect: true}) nextButtonIcon: string = ArrowRightIcon;
 
   private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-commerce-pager-');
 
   public initialize() {
+    this.validateProps();
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.listingOrSearch = buildProductListing(this.bindings.engine);
     } else {
       this.listingOrSearch = buildSearch(this.bindings.engine);
     }
     this.pager = this.listingOrSearch.pagination();
+  }
+
+  private validateProps() {
+    new Schema({
+      numberOfPages: new NumberValue({min: 0}),
+    }).validate({
+      numberOfPages: this.numberOfPages,
+    });
   }
 
   public render() {
@@ -109,7 +119,7 @@ export class AtomicCommercePager
     return (
       <PagerGuard
         hasError={false}
-        hasResults={this.pagerState.totalPages > 1}
+        hasItems={this.pagerState.totalPages > 1}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
         <PagerNavigation i18n={this.bindings.i18n}>

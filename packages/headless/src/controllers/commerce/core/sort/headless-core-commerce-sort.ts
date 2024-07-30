@@ -14,7 +14,6 @@ import {
 } from '../../../../features/commerce/sort/sort';
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
@@ -33,7 +32,7 @@ export {
 
 export interface SortProps {
   /**
-   * The initial state that should be applied to this `Sort` controller.
+   * The initial state that should be applied to this `Sort` sub-controller.
    */
   initialState?: SortInitialState;
 }
@@ -64,6 +63,9 @@ function validateSortInitialState(
   validateInitialState(engine, schema, state, 'buildSort');
 }
 
+/**
+ * The `Sort` sub-controller lets you sort the products in a commerce interface.
+ */
 export interface Sort extends Controller {
   /**
    * Updates the sort criterion and executes a new query.
@@ -89,7 +91,7 @@ export interface Sort extends Controller {
   isAvailable(criterion: SortCriterion): boolean;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Sort` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Sort` sub-controller.
    */
   state: SortState;
 }
@@ -108,11 +110,11 @@ export interface SortState {
 
 /**
  * @internal
- * Creates a core `Sort` controller instance for commerce solution types.
+ * Creates a core `Sort` sub-controller instance for commerce solution types.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `Sort` controller properties.
- * @returns A `Sort` controller instance.
+ * @param props - The configurable `Sort` sub-controller properties.
+ * @returns A `Sort` sub-controller instance.
  */
 export function buildCoreSort(
   engine: CommerceEngine,
@@ -142,7 +144,6 @@ export function buildCoreSort(
 
     sortBy(criterion: SortCriterion) {
       dispatch(applySort(criterion));
-      dispatch(updatePage(0));
       dispatch(props.fetchProductsActionCreator());
     },
 

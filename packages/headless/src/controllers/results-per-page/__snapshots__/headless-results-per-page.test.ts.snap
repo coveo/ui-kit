@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResultsPerPage calling #set executes a fetchPage with the proper analytics payload 1`] = `
+[
+  {
+    "legacy": [Function],
+    "next": {
+      "actionCause": "browseResults",
+    },
+  },
+]
+`;

@@ -7,7 +7,7 @@ import {stateKey} from '../../../../../app/state-key';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -35,7 +35,7 @@ export type RegularFacetState = CoreCommerceFacetState<RegularFacetValue> & {
 };
 
 /**
- * The `RegularFacet` controller offers a high-level programming interface for implementing a regular commerce
+ * The `RegularFacet` sub-controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
  */
 export type RegularFacet = CoreCommerceFacet<
@@ -51,12 +51,12 @@ export type RegularFacet = CoreCommerceFacet<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `RegularFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `RegularFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `RegularFacet` options used internally.
- * @returns A `RegularFacet` controller instance.
+ * @returns A `RegularFacet` sub-controller instance.
  * */
 export function buildCommerceRegularFacet(
   engine: CommerceEngine,

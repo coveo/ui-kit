@@ -1,12 +1,12 @@
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, State, Method} from '@stencil/core';
-import {Bindings} from '../../../../components';
 import {
-  InitializeBindings,
   InitializableComponent,
+  InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
 import {ImageCarousel} from '../../../common/image-carousel/image-carousel';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 
 type Image = {
@@ -23,7 +23,7 @@ type Image = {
   styleUrl: 'atomic-product-image.pcss',
   shadow: true,
 })
-export class AtomicProductImage implements InitializableComponent {
+export class AtomicProductImage implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   @ProductContext() private product!: Product;
   @Element() private host!: HTMLElement;
@@ -48,7 +48,7 @@ export class AtomicProductImage implements InitializableComponent {
    *
    * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
    */
-  @Prop({reflect: true}) imagesAltField?: string;
+  @Prop({reflect: true}) imageAltField?: string;
 
   /**
    * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
@@ -128,7 +128,7 @@ export class AtomicProductImage implements InitializableComponent {
       (image) => typeof image === 'string'
     );
 
-    const validImagesAlt = this.imagesAlt;
+    const validImageAlt = this.imageAlt;
 
     this.images = validImages.map((url, index) => {
       const finalUrl = this.useFallback ? this.fallback : url;
@@ -136,15 +136,15 @@ export class AtomicProductImage implements InitializableComponent {
       this.validateUrl(finalUrl);
       let altText;
 
-      if (Array.isArray(validImagesAlt) && validImagesAlt[index]) {
-        altText = validImagesAlt[index];
-      } else if (typeof validImagesAlt === 'string') {
-        altText = validImagesAlt;
+      if (Array.isArray(validImageAlt) && validImageAlt[index]) {
+        altText = validImageAlt[index];
+      } else if (typeof validImageAlt === 'string') {
+        altText = validImageAlt;
       } else {
-        altText = this.bindings.i18n.t('image-alt-fallback', {
+        altText = this.bindings.i18n.t('image-alt-fallback-multiple', {
           count: index + 1,
           max: validImages?.length,
-          productName: this.product.ec_name,
+          itemName: this.product.ec_name,
         });
       }
 
@@ -164,11 +164,11 @@ export class AtomicProductImage implements InitializableComponent {
     return Array.isArray(value) ? value : [value];
   }
 
-  private get imagesAlt() {
-    if (this.imagesAltField) {
+  private get imageAlt() {
+    if (this.imageAltField) {
       const value = ProductTemplatesHelpers.getProductProperty(
         this.product,
-        this.imagesAltField
+        this.imageAltField
       );
 
       if (Array.isArray(value)) {

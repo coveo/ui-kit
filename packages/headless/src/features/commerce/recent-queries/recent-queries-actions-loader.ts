@@ -7,13 +7,16 @@ import {
 } from '../../recent-queries/recent-queries-actions';
 import {recentQueriesReducer as recentQueries} from './recent-queries-slice';
 
+export type {RegisterRecentQueriesCreatorPayload};
+
 /**
- * The RecentQueries action creators.
+ * The commerce recent queries action creators.
  */
 export interface RecentQueriesActionCreators {
   /**
-   * Initializes the `recentQueries` state.
-   * @param payload (RegisterRecentQueriesCreatorPayload) The initial state and options.
+   * Initializes the recent queries state.
+   *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   registerRecentQueries(
@@ -22,16 +25,17 @@ export interface RecentQueriesActionCreators {
 
   /**
    * Clears the recent queries list.
+   *
    * @returns A dispatchable action.
    */
   clearRecentQueries(): PayloadAction;
 }
 
 /**
- * Loads the `recentQueries` reducer and returns possible action creators.
+ * Loads the recent queries reducer and returns available commerce recent queries actions.
  *
- * @param engine - The headless engine.
- * @returns An object holding the action creators.
+ * @param engine - The headless commerce engine.
+ * @returns An object holding the commerce recent queries action creators.
  */
 export function loadRecentQueriesActions(
   engine: CommerceEngine

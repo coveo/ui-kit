@@ -1,10 +1,11 @@
-import {getVisitorID} from '../../../api/analytics/coveo-analytics-utils';
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
   BaseCommerceAPIRequest,
   CommerceAPIRequest,
 } from '../../../api/commerce/common/request';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {
   CartSection,
   CommerceContextSection,
@@ -13,9 +14,11 @@ import {
   CommerceSortSection,
   ConfigurationSection,
   FacetOrderSection,
+  ManualRangeSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {getProductsFromCartState} from '../context/cart/cart-state';
+import {AnyFacetRequest} from '../facets/facet-set/interfaces/request';
 import {SortBy, SortCriterion} from '../sort/sort';
 
 export type StateNeededByQueryCommerceAPI = ConfigurationSection &
@@ -25,42 +28,63 @@ export type StateNeededByQueryCommerceAPI = ConfigurationSection &
 
 export type ListingAndSearchStateNeededByQueryCommerceAPI =
   StateNeededByQueryCommerceAPI &
-    Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection>;
+    Partial<
+      CommerceSortSection &
+        CommerceFacetSetSection &
+        FacetOrderSection &
+        ManualRangeSection
+    >;
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful response. */
   response: CommerceSuccessResponse;
 }
 
-export const buildCommerceAPIRequest = async (
-  state: ListingAndSearchStateNeededByQueryCommerceAPI
-): Promise<CommerceAPIRequest> => {
+export const buildCommerceAPIRequest = (
+  state: ListingAndSearchStateNeededByQueryCommerceAPI,
+  navigatorContext: NavigatorContext
+): CommerceAPIRequest => {
   return {
-    ...(await buildBaseCommerceAPIRequest(state)),
-    facets: getFacets(state),
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
+    facets: [...getFacets(state), ...getManualNumericFacets(state)],
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
   };
 };
 
-export const buildBaseCommerceAPIRequest = async (
+export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
+  navigatorContext: NavigatorContext,
   slotId?: string
-): Promise<BaseCommerceAPIRequest> => {
-  const {view, user, ...restOfContext} = state.commerceContext;
+): BaseCommerceAPIRequest => {
+  const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: await getVisitorID(state.configuration.analytics),
+    ...(state.configuration.analytics.enabled
+      ? {clientId: navigatorContext.clientId}
+      : {}),
     context: {
-      user,
-      view,
+      ...(navigatorContext.userAgent
+        ? {
+            user: {
+              userAgent: navigatorContext.userAgent,
+            },
+          }
+        : {}),
+      view: {
+        ...view,
+        ...(navigatorContext.referrer
+          ? {referrer: navigatorContext.referrer}
+          : {}),
+      },
       capture: state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
+      source: getAnalyticsSource(state.configuration.analytics),
     },
     ...effectivePagination(state, slotId),
   };
@@ -89,8 +113,32 @@ function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
   }
 
   return state.facetOrder
+    .filter((facetId) => state.commerceFacetSet?.[facetId])
     .map((facetId) => state.commerceFacetSet![facetId].request)
-    .filter((facet) => facet.values.length > 0);
+    .filter((facet) => facet && facet.values.length > 0);
+}
+
+function getManualNumericFacets(
+  state: ListingAndSearchStateNeededByQueryCommerceAPI
+): AnyFacetRequest[] {
+  if (!state.manualNumericFacetSet) {
+    return [];
+  }
+
+  return Object.entries(state.manualNumericFacetSet!)
+    .filter(
+      ([_, manualNumericFacet]) => manualNumericFacet.manualRange !== undefined
+    )
+    .map(([facetId, manualNumericFacet]) => ({
+      facetId,
+      field: facetId,
+      numberOfValues: 1,
+      isFieldExpanded: false,
+      preventAutoSelect: true,
+      type: 'numericalRange' as const,
+      values: [manualNumericFacet.manualRange!],
+      initialNumberOfValues: 1,
+    }));
 }
 
 function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {

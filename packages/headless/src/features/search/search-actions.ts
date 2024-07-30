@@ -1,5 +1,4 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
-import {Relay} from '@coveo/relay';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
 import {historyStore} from '../../api/analytics/coveo-analytics-utils';
@@ -111,25 +110,23 @@ export const executeSearch = createAsyncThunk<
   'search/executeSearch',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
     addEntryInActionsHistory(state);
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
+    const analyticsAction = searchAction.next
+      ? buildSearchReduxAction(searchAction.next)
+      : undefined;
 
     const request = await buildSearchRequest(
       state,
       config.extra.navigatorContext,
-      config.extra.relay,
       analyticsAction
     );
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
+    >({...config, analyticsAction: analyticsAction ?? {}});
 
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'mainSearch',
@@ -164,7 +161,6 @@ export const fetchPage = createAsyncThunk<
   const request = await buildSearchRequest(
     state,
     config.extra.navigatorContext,
-    config.extra.relay,
     searchAction.next
   );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
@@ -183,7 +179,7 @@ export const fetchMoreResults = createAsyncThunk<
   }
 
   const analyticsAction = makeBasicNewSearchAnalyticsAction(
-    SearchPageEvents.pagerScrolling,
+    SearchPageEvents.browseResults,
     config.getState
   );
 
@@ -197,7 +193,6 @@ export const fetchMoreResults = createAsyncThunk<
   const request = await buildFetchMoreRequest(
     state,
     config.extra.navigatorContext,
-    config.extra.relay,
     analyticsAction
   );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
@@ -213,23 +208,17 @@ export const fetchFacetValues = createAsyncThunk<
   'search/fetchFacetValues',
   async (searchAction: TransitiveSearchAction, config) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !searchAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, searchAction.legacy);
     }
-    const analyticsAction = buildSearchReduxAction(searchAction.next);
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction});
+    >({...config, analyticsAction: {}});
 
     const request = await buildFetchFacetValuesRequest(
       state,
-      config.extra.navigatorContext,
-      config.extra.relay,
-      analyticsAction
+      config.extra.navigatorContext
     );
     const fetched = await processor.fetchFromAPI(request, {
       origin: 'facetValues',
@@ -266,7 +255,6 @@ export const fetchInstantResults = createAsyncThunk<
     const request = await buildInstantResultSearchRequest(
       state,
       config.extra.navigatorContext,
-      config.extra.relay,
       q,
       maxResultsPerQuery,
       analyticsAction
@@ -300,13 +288,11 @@ export const fetchInstantResults = createAsyncThunk<
 const buildFetchMoreRequest = async (
   state: StateNeededByExecuteSearch,
   navigatorContext: NavigatorContext,
-  relay: Relay,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
   const mappedRequest = await buildSearchRequest(
     state,
     navigatorContext,
-    relay,
     eventDescription
   );
   mappedRequest.request = {
@@ -321,18 +307,15 @@ const buildFetchMoreRequest = async (
 export const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
   navigatorContext: NavigatorContext,
-  relay: Relay,
   q: string,
   numberOfResults: number,
   eventDescription: EventDescription
 ) => {
-  const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(
-      state,
-      navigatorContext,
-      relay,
-      eventDescription
-    );
+  const sharedWithFoldingRequest = buildSearchAndFoldingLoadCollectionRequest(
+    state,
+    navigatorContext,
+    eventDescription
+  );
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
@@ -347,13 +330,11 @@ export const buildInstantResultSearchRequest = async (
 const buildFetchFacetValuesRequest = async (
   state: StateNeededByExecuteSearch,
   navigatorContext: NavigatorContext,
-  relay: Relay,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
   const mappedRequest = await buildSearchRequest(
     state,
     navigatorContext,
-    relay,
     eventDescription
   );
   // Specifying a numberOfResults of 0 will not log the query as a full fledged query in the API

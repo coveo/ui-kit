@@ -18,7 +18,7 @@ export interface CurrencyParam {
 }
 
 export interface ClientIdParam {
-  clientId: string;
+  clientId?: string;
 }
 
 export interface ContextParam {
@@ -36,6 +36,7 @@ export interface ContextParams {
   cart?: CartItemParam[];
   purchased?: CartItemParam[];
   capture: boolean;
+  source: string[];
 }
 
 export interface ViewParams {

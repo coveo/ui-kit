@@ -25,7 +25,11 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildProductListing',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildProductTemplatesManager',
@@ -41,7 +45,11 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildRecommendations',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/recommendations.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildRedirectionTrigger',
@@ -53,7 +61,11 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildSearch',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/commerce/search.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildSearchBox',
@@ -78,6 +90,64 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadQueryActions',
   },
+  {
+    initializer: 'loadProductListingParametersActions',
+  },
+  {
+    initializer: 'loadPaginationActions',
+  },
+  {
+    initializer: 'loadInstantProductsActions',
+  },
+  {
+    initializer: 'loadProductActions',
+  },
+  {
+    initializer: 'loadRecentQueriesActions',
+  },
+  {
+    initializer: 'loadRecommendationsActions',
+  },
+  {
+    initializer: 'loadSearchActions',
+  },
+  {
+    initializer: 'loadSortActions',
+  },
+  {
+    initializer: 'loadSearchParametersActions',
+  },
+  {
+    initializer: 'loadStandaloneSearchBoxSetActions',
+  },
+  {
+    initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadCategoryFacetSetActions',
+  },
+  {
+    initializer: 'loadCoreFacetActions',
+  },
+  {
+    initializer: 'loadDateFacetActions',
+  },
+  {
+    initializer: 'loadNumericFacetActions',
+  },
+  {
+    initializer: 'loadRegularFacetActions',
+  },
+  // TODO: KIT-3422 - Uncomment when ready to generate typedoc docs
+  // {
+  //   initializer: 'loadQuerySetActions',
+  // },
+  // {
+  //   initializer: 'loadTriggersActions',
+  // },
+  // {
+  //   initializer: 'loadCartActions',
+  // },
 ];
 
 const engine: EngineConfiguration = {

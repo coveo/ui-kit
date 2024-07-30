@@ -3,7 +3,7 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+} from '../../../../../features/commerce/facets/date-facet/date-facet-actions';
 import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range';
 import {
   CoreCommerceFacet,
@@ -23,7 +23,7 @@ export type DateFacetOptions = Omit<
 export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
 
 /**
- * The `DateFacet` controller offers a high-level programming interface for implementing date commerce
+ * The `DateFacet` sub-controller offers a high-level programming interface for implementing date commerce
  * facet UI component.
  */
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
@@ -34,7 +34,7 @@ export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
    */
   setRanges: (ranges: DateRangeRequest[]) => void;
   /**
-   * The state of the `DateFacet` controller.
+   * The state of the `DateFacet` sub-controller.
    */
   state: DateFacetState;
 } & FacetControllerType<'dateRange'>;
@@ -46,12 +46,12 @@ export {buildDateRange};
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `DateFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `DateFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `DateFacet` options used internally.
- * @returns A `DateFacet` controller instance.
+ * @returns A `DateFacet` sub-controller instance.
  */
 export function buildCommerceDateFacet(
   engine: CommerceEngine,

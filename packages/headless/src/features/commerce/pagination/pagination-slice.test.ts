@@ -1,25 +1,34 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {setContext, setView} from '../context/context-actions';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
 import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from '../../facets/facet-set/facet-set-actions';
+  clearAllCoreFacets,
+  deselectAllValuesInCoreFacet,
+} from '../facets/core-facet/core-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../facets/date-facet/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {setContext, setUser, setView} from '../context/context-actions';
+} from '../facets/numeric-facet/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../facets/regular-facet/regular-facet-actions';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
+import {applySort} from '../sort/sort-actions';
 import {
   nextPage,
   previousPage,
+  registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
 } from './pagination-actions';
@@ -176,7 +185,7 @@ describe('pagination slice', () => {
   );
 
   it('sets the principal pagination on #fetchProductListing.fulfilled', () => {
-    const response = buildFetchProductListingV2Response({
+    const response = buildFetchProductListingResponse({
       pagination,
     });
 
@@ -245,12 +254,12 @@ describe('pagination slice', () => {
 
   describe.each([
     {
-      actionName: '#deselectAllBreadcrumbs',
-      action: deselectAllBreadcrumbs,
+      actionName: '#clearAllCoreFacets',
+      action: clearAllCoreFacets,
     },
     {
-      actionName: '#deselectAllFacetValues',
-      action: deselectAllFacetValues,
+      actionName: '#deselectAllValuesInCoreFacet',
+      action: deselectAllValuesInCoreFacet,
     },
     {
       actionName: '#toggleSelectFacetValue',
@@ -269,16 +278,28 @@ describe('pagination slice', () => {
       action: toggleExcludeNumericFacetValue,
     },
     {
+      actionName: '#toggleSelectDateFacetValue',
+      action: toggleSelectDateFacetValue,
+    },
+    {
+      actionName: '#toggleExcludeDateFacetValue',
+      action: toggleExcludeDateFacetValue,
+    },
+    {
+      actionName: '#toggleSelectCategoryFacetValue',
+      action: toggleSelectCategoryFacetValue,
+    },
+    {
+      actionName: '#applySort',
+      action: applySort,
+    },
+    {
       actionName: '#setContext',
       action: setContext,
     },
     {
       actionName: '#setView',
       action: setView,
-    },
-    {
-      actionName: '#setUser',
-      action: setUser,
     },
   ])('$actionName', ({action}) => {
     it('resets principal pagination', () => {
@@ -287,6 +308,36 @@ describe('pagination slice', () => {
       const finalState = paginationReducer(state, action({} as never));
 
       expect(finalState.principal.page).toBe(0);
+    });
+  });
+
+  describe('#registerRecommendationsSlotPagination', () => {
+    it('when slot id is not already registered, registers the slot', () => {
+      const finalState = paginationReducer(
+        state,
+        registerRecommendationsSlotPagination({slotId})
+      );
+
+      expect(finalState.recommendations[slotId]).toEqual(
+        getCommercePaginationInitialSlice()
+      );
+    });
+
+    it('when slot id is already registered, does not register the slot', () => {
+      const recommendation = {
+        page: 5,
+        perPage: 3,
+        totalEntries: 35,
+        totalPages: 12,
+      };
+      state.recommendations[slotId] = recommendation;
+
+      const finalState = paginationReducer(
+        state,
+        registerRecommendationsSlotPagination({slotId})
+      );
+
+      expect(finalState.recommendations[slotId]).toEqual(recommendation);
     });
   });
 });

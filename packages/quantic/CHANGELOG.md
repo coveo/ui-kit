@@ -1,3 +1,37 @@
+# 2.54.0 (2024-07-24)
+
+### Bug Fixes
+
+- **quantic:** styling of the search box input adjusted ([#4220](https://github.com/coveo/ui-kit/issues/4220)) ([6cf2171](https://github.com/coveo/ui-kit/commits/6cf2171525e062ccd18a97b3ad94d16e0cbcb8a2))
+
+### Features
+
+- **quantic:** quantic search box improvements ([#4120](https://github.com/coveo/ui-kit/issues/4120)) ([f2363fa](https://github.com/coveo/ui-kit/commits/f2363fa2beeb8abc444acd2fa8b210a970916c80))
+
+# 2.53.0 (2024-07-17)
+
+### Features
+
+- **quantic:** new feedback modal for RGA ([#4162](https://github.com/coveo/ui-kit/issues/4162)) ([ada849a](https://github.com/coveo/ui-kit/commits/ada849a8c75a2db44c7c80c1737a6f766d1b4836))
+
+## 2.52.3 (2024-07-09)
+
+### Bug Fixes
+
+- **SFINT-5598:** Always send contentFormat even with rephrase RGA ([#4134](https://github.com/coveo/ui-kit/issues/4134)) ([3890010](https://github.com/coveo/ui-kit/commits/389001005a577b9787bcdd46369909c77a13ec5f))
+
+## 2.52.1 (2024-07-03)
+
+### Features
+
+- **headless:** update rga and smart snippets feedback events ([#4105](https://github.com/coveo/ui-kit/issues/4105)) ([5b8eab2](https://github.com/coveo/ui-kit/commits/5b8eab22499d695a89c5633a365569e7f039b3d9))
+
+# 2.51.0 (2024-06-26)
+
+### Features
+
+- **quantic:** rich text formatting for quantic RGA ([#4015](https://github.com/coveo/ui-kit/issues/4015)) ([bb4f76a](https://github.com/coveo/ui-kit/commits/bb4f76aa2ee627e0315b7930e89a2f399d35e914))
+
 ## 2.50.9 (2024-06-12)
 
 ### Bug Fixes

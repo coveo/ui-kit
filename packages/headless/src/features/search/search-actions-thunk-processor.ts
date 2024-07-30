@@ -53,7 +53,7 @@ import {
 import {buildSearchRequest} from './search-request';
 
 export interface AnalyticsAction {
-  actionCause: string;
+  actionCause?: string;
 }
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
@@ -319,14 +319,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const state = this.getState();
     const {actionCause} = didYouMeanAutomatic();
     const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(
-        state,
-        this.extra.navigatorContext,
-        this.extra.relay,
-        {
-          actionCause,
-        }
-      ),
+      await buildSearchRequest(state, this.extra.navigatorContext, {
+        actionCause,
+      }),
       {origin: 'mainSearch'}
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
@@ -344,11 +339,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI(
-      await buildSearchRequest(
-        this.getState(),
-        this.extra.navigatorContext,
-        this.extra.relay
-      ),
+      await buildSearchRequest(this.getState(), this.extra.navigatorContext),
       {origin: 'mainSearch'}
     );
 

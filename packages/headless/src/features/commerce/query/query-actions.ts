@@ -2,16 +2,16 @@ import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload';
 
-export interface UpdateQueryActionCreatorPayload {
+export interface UpdateQueryPayload {
   /**
-   * The basic query expression (e.g., `acme tornado seeds`).
+   * The new basic query expression (e.g., `red surfboards`).
    */
   query?: string;
 }
 
 export const updateQuery = createAction(
-  'query/updateQuery',
-  (payload: UpdateQueryActionCreatorPayload) =>
+  'commerce/query/update',
+  (payload: UpdateQueryPayload) =>
     validatePayload(payload, {
       query: new StringValue(),
     })

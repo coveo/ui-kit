@@ -17,7 +17,6 @@ import {
   CommerceDidYouMeanSection,
   TriggerSection,
 } from '../../../state/state-sections';
-import {logQueryError} from '../../search/search-analytics-actions';
 import {
   ListingAndSearchStateNeededByQueryCommerceAPI,
   buildCommerceAPIRequest,
@@ -100,7 +99,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> | null {
     if (isErrorResponse(fetched.response)) {
-      this.dispatch(logQueryError(fetched.response.error));
       return this.rejectWithValue(fetched.response.error) as RejectionType;
     }
 
@@ -158,7 +156,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const ignored = this.getState().triggers?.queryModification.queryToIgnore;
 
     if (ignored === correctedQuery) {
-      this.dispatch(updateIgnoreQueryTrigger(''));
+      this.dispatch(updateIgnoreQueryTrigger({q: ''}));
       return null;
     }
 
@@ -167,7 +165,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
-      this.dispatch(logQueryError(retried.response.error));
       return this.rejectWithValue(retried.response.error) as RejectionType;
     }
 
@@ -191,7 +188,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI({
-      ...(await buildCommerceAPIRequest(this.getState())),
+      ...buildCommerceAPIRequest(this.getState(), this.navigatorContext),
       query: modified,
     });
 
@@ -208,6 +205,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   private getState() {
     return this.config.getState();
+  }
+
+  private get navigatorContext() {
+    return this.config.extra.navigatorContext;
   }
 
   private getCurrentQuery() {

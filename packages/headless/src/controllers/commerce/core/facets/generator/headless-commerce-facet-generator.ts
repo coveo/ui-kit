@@ -4,6 +4,7 @@ import {
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
+import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state';
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
@@ -19,6 +20,7 @@ import {
   Controller,
   buildController,
 } from '../../../../controller/headless-controller';
+import {FetchProductsActionCreator} from '../../common';
 import {CategoryFacet} from '../category/headless-commerce-category-facet';
 import {DateFacet} from '../date/headless-commerce-date-facet';
 import {
@@ -45,8 +47,14 @@ export interface FacetGenerator extends Controller {
 
   /**
    * The facet sub-controllers created by the facet generator.
+   * Array of [RegularFacet](./regular-facet), [DateRangeFacet](./date-range-facet), [NumericFacet](./numeric-facet), and [CategoryFacet](./category-facet).
    */
   facets: GeneratedFacetControllers;
+
+  /**
+   * Deselects all values in all facets.
+   * */
+  deselectAll(): void;
 }
 
 /**
@@ -100,6 +108,7 @@ export interface FacetGeneratorOptions {
   buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
   buildDateFacet: CommerceFacetBuilder<DateFacet>;
   buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
+  fetchProductsActionCreator: FetchProductsActionCreator;
 }
 
 /**
@@ -120,6 +129,7 @@ export function buildFacetGenerator(
   }
 
   const controller = buildController(engine);
+  const {dispatch} = engine;
 
   const createFacetControllers = createSelector(
     [
@@ -155,6 +165,11 @@ export function buildFacetGenerator(
 
   return {
     ...controller,
+
+    deselectAll: () => {
+      dispatch(clearAllCoreFacets());
+      dispatch(options.fetchProductsActionCreator());
+    },
 
     get facets() {
       return createFacetControllers(engine[stateKey]);

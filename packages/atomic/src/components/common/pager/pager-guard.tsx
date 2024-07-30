@@ -4,14 +4,14 @@ import {Hidden} from '../hidden';
 export interface PagerGuardProps {
   hasError: boolean;
   isAppLoaded: boolean;
-  hasResults: boolean;
+  hasItems: boolean;
 }
 
 export const PagerGuard: FunctionalComponent<PagerGuardProps> = (
   props,
   children
 ) => {
-  if (props.hasError || !props.isAppLoaded || !props.hasResults) {
+  if (props.hasError || !props.isAppLoaded || !props.hasItems) {
     return <Hidden />;
   }
   return <Fragment>{...children}</Fragment>;

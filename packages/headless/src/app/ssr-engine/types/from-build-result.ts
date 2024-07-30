@@ -1,15 +1,15 @@
-import {CoreEngine} from '../../engine';
+import {CoreEngine, CoreEngineNext} from '../../engine';
 import {ControllersMap, EngineDefinitionBuildResult} from './common';
 
 export interface FromBuildResultOptions<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
 > {
   buildResult: EngineDefinitionBuildResult<TEngine, TControllers>;
 }
 
 export interface FromBuildResult<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TOptions,
   TReturn,

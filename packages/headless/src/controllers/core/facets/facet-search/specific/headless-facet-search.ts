@@ -26,14 +26,14 @@ export interface FacetSearchProps {
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
   executeFieldSuggestActionCreator: (
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
 }

@@ -20,8 +20,6 @@ import {
   facetClearAll,
   facetDeselect,
   facetSelect,
-  facetShowLess,
-  facetShowMore,
   facetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -34,7 +32,6 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
-import {breadcrumbResetAll} from '../features/facets/generic/facet-generic-analytics-actions';
 import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-insight-analytics-actions';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateBreadcrumbFacet} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
@@ -62,11 +59,7 @@ import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
 } from '../features/insight-search/insight-search-analytics-actions';
-import {
-  pagerNext,
-  pagerNumber,
-  pagerPrevious,
-} from '../features/pagination/pagination-analytics-actions';
+import {browseResults} from '../features/pagination/pagination-analytics-actions';
 import {
   logPageNext,
   logPagePrevious,
@@ -82,7 +75,11 @@ import {
 } from '../features/static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {clearMicrotaskQueue} from '../test/unit-test-utils';
-import {assertNextEqualsLegacy} from './analytics-migration.test';
+import {
+  assertActionCause,
+  assertNextEqualsLegacy,
+  excludedBaseProperties,
+} from './analytics-migration.test';
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
@@ -184,14 +181,13 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/deselectAllBreadcrumbs', async () => {
     const action = executeSearch({
       legacy: logClearBreadcrumbs(),
-      next: breadcrumbResetAll(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/sortChange', async () => {
@@ -442,65 +438,72 @@ describe('Analytics Search Migration', () => {
   it('analytics/pager/next', async () => {
     const action = fetchPage({
       legacy: logPageNext(),
-      next: pagerNext(),
+      next: browseResults(),
     });
 
     legacyInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+    assertActionCause(callSpy, 1, 'pagerNext');
+    assertActionCause(callSpy, 2, 'browseResults');
   });
 
   it('analytics/pager/previous', async () => {
     const action = fetchPage({
       legacy: logPagePrevious(),
-      next: pagerPrevious(),
+      next: browseResults(),
     });
 
     legacyInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+    assertActionCause(callSpy, 1, 'pagerPrevious');
+    assertActionCause(callSpy, 2, 'browseResults');
   });
 
   it('analytics/pager/number', async () => {
     const action = fetchPage({
       legacy: logPageNumber(),
-      next: pagerNumber(),
+      next: browseResults(),
     });
 
     legacyInsightEngine.dispatch(action);
+    await clearMicrotaskQueue();
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
+    assertActionCause(callSpy, 1, 'pagerNumber');
+    assertActionCause(callSpy, 2, 'browseResults');
   });
 
   it('analytics/facet/showMore', async () => {
     const action = fetchFacetValues({
       legacy: logFacetShowMore(ANY_FACET_ID),
-      next: facetShowMore(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/showLess', async () => {
     const action = fetchFacetValues({
       legacy: logFacetShowLess(ANY_FACET_ID),
-      next: facetShowLess(),
     });
 
     legacyInsightEngine.dispatch(action);
     nextInsightEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 });

@@ -1,3 +1,4 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
 import {
   buildMockChildProduct,
@@ -340,7 +341,7 @@ describe('instant products slice', () => {
   });
 
   describe('on #promoteChildToParent', () => {
-    const childPermanentId = 'child-id';
+    const permanentid = 'child-id';
     const parentPermanentId = 'parent-id';
     const id: string = id1;
     const query = 'some_query';
@@ -349,8 +350,7 @@ describe('instant products slice', () => {
 
     beforeEach(() => {
       action = promoteChildToParent({
-        childPermanentId,
-        parentPermanentId,
+        child: {permanentid} as ChildProduct,
         id,
         query,
       });
@@ -395,11 +395,11 @@ describe('instant products slice', () => {
 
     it('when both parent and child exist in cache for query, promotes the child to parent', () => {
       const childProduct = buildMockChildProduct({
-        permanentid: childPermanentId,
+        permanentid,
         additionalFields: {test: 'test'},
         clickUri: 'child-uri',
         ec_brand: 'child brand',
-        ec_category: 'child category',
+        ec_category: ['child category'],
         ec_description: 'child description',
         ec_gender: 'child gender',
         ec_images: ['child image'],

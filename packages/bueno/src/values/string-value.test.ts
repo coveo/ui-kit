@@ -89,5 +89,19 @@ describe('string value', () => {
       value = new StringValue({regex: /ab/});
       expect(value.validate('cd')).toContain('ab');
     });
+
+    it(`when ISODate is true
+      when passing an invalid date string
+      it returns an error description`, () => {
+      value = new StringValue({ISODate: true});
+      expect(value.validate('hello')).not.toBeNull();
+    });
+
+    it(`when ISODate is true
+      when passing a valid URL value
+      it returns null`, () => {
+      value = new StringValue({ISODate: true});
+      expect(value.validate('2024-07-16T22:02:06.553Z')).toBeNull();
+    });
   });
 });

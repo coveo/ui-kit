@@ -22,10 +22,7 @@ import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {FacetSlice} from '../../features/facets/facet-set/facet-set-state';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {
-  breadcrumbResetAll,
-  logClearBreadcrumbs,
-} from '../../features/facets/generic/facet-generic-analytics-actions';
+import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -316,9 +313,9 @@ export function buildBreadcrumbManager(
 
   const getAutomaticFacetBreadcrumbs = (): AutomaticFacetBreadcrumb[] => {
     const set = getState().automaticFacetSet?.set ?? {};
-    return Object.values(set).map((slice) =>
-      buildAutomaticFacetBreadcrumb(slice.response)
-    );
+    return Object.values(set)
+      .map((slice) => buildAutomaticFacetBreadcrumb(slice.response))
+      .filter((breadcrumb) => breadcrumb.values.length > 0);
   };
 
   const buildAutomaticFacetBreadcrumb = (
@@ -326,7 +323,7 @@ export function buildBreadcrumbManager(
   ): AutomaticFacetBreadcrumb => {
     const {field, label} = response;
     const values = response.values
-      .filter((value) => value.state === 'selected')
+      .filter((value) => value.state !== 'idle')
       .map((value) => buildAutomaticFacetBreadcrumbValue(field, value));
     return {
       facetId: field,
@@ -393,7 +390,6 @@ export function buildBreadcrumbManager(
       dispatch(
         executeSearch({
           legacy: logClearBreadcrumbs(),
-          next: breadcrumbResetAll(),
         })
       );
     },

@@ -1,5 +1,11 @@
+import {ChildProduct} from '../../../api/commerce/common/product';
 import {configuration} from '../../../app/common-reducers';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
 import {
   activeParametersSelector,
@@ -9,10 +15,13 @@ import {productListingSerializer} from '../../../features/commerce/parameters/pa
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions';
 import {
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
+import {productListingReducer} from '../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   MockedCommerceEngine,
@@ -58,12 +67,18 @@ describe('headless product-listing', () => {
       activeParametersSelector,
       restoreActionCreator: restoreProductListingParameters,
       enrichParameters: enrichedParametersSelector,
+      isLoadingSelector,
+      errorSelector,
+      pageSelector: pagePrincipalSelector,
+      perPageSelector: perPagePrincipalSelector,
+      totalEntriesSelector: totalEntriesPrincipalSelector,
+      numberOfProductsSelector,
     });
   });
 
   it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      productListing: productListingV2Reducer,
+      productListing: productListingReducer,
       commerceContext: contextReducer,
       configuration,
     });
@@ -74,18 +89,16 @@ describe('headless product-listing', () => {
       ProductListingActions,
       'promoteChildToParent'
     );
-    const childPermanentId = 'childPermanentId';
-    const parentPermanentId = 'parentPermanentId';
+    const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
-    productListing.promoteChildToParent(childPermanentId, parentPermanentId);
+    productListing.promoteChildToParent(child);
 
     expect(promoteChildToParent).toHaveBeenCalledWith({
-      childPermanentId,
-      parentPermanentId,
+      child,
     });
   });
 
-  it('refresh dispatches #fetchProductListing', () => {
+  it('#refresh dispatches #fetchProductListing', () => {
     const fetchProductListing = jest.spyOn(
       ProductListingActions,
       'fetchProductListing'
@@ -94,5 +107,16 @@ describe('headless product-listing', () => {
     productListing.refresh();
 
     expect(fetchProductListing).toHaveBeenCalled();
+  });
+
+  it('#executeFirstRequest dispatches #fetchProductListing', () => {
+    const executeRequest = jest.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+
+    productListing.executeFirstRequest();
+
+    expect(executeRequest).toHaveBeenCalled();
   });
 });

@@ -8,7 +8,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+    - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
       with:
         registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
@@ -24,7 +24,7 @@ runs:
         path: |
           **/node_modules/
           !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json') }}}}
+        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}}}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources

@@ -2,9 +2,10 @@ import {getCartInitialState} from '../features/commerce/context/cart/cart-state'
 import {getContextInitialState} from '../features/commerce/context/context-state';
 import {getCommerceFacetSetInitialState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {getFieldSuggestionsOrderInitialState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
+import {getManualNumericFacetInitialState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state';
 import {getInstantProductsInitialState} from '../features/commerce/instant-products/instant-products-state';
 import {getCommercePaginationInitialState} from '../features/commerce/pagination/pagination-state';
-import {getProductListingV2InitialState} from '../features/commerce/product-listing/product-listing-state';
+import {getProductListingInitialState} from '../features/commerce/product-listing/product-listing-state';
 import {getCommerceQueryInitialState} from '../features/commerce/query/query-state';
 import {getRecommendationsInitialState} from '../features/commerce/recommendations/recommendations-state';
 import {getCommerceSearchInitialState} from '../features/commerce/search/search-state';
@@ -26,7 +27,7 @@ export function buildMockCommerceState(
 ): CommerceAppState {
   return {
     configuration: getConfigurationInitialState(),
-    productListing: getProductListingV2InitialState(),
+    productListing: getProductListingInitialState(),
     recommendations: getRecommendationsInitialState(),
     commerceSearch: getCommerceSearchInitialState(),
     commerceQuery: getCommerceQueryInitialState(),
@@ -47,6 +48,7 @@ export function buildMockCommerceState(
       getCommerceStandaloneSearchBoxSetInitialState(),
     triggers: getTriggerInitialState(),
     fieldSuggestionsOrder: getFieldSuggestionsOrderInitialState(),
+    manualNumericFacetSet: getManualNumericFacetInitialState(),
     version: 'unit-testing-version',
     ...config,
   };
