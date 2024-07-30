@@ -31,25 +31,7 @@ export const Default: Story = {
 export const WithMaxValuesToDisplay: Story = {
   name: 'With max values to display',
   args: {
-    field: 'multi_value_field',
-    'max-values-to-display': 2,
-  },
-};
-
-export const WithCustomSlotValues: Story = {
-  name: 'With custom slot values',
-  args: {
-    field: 'multi_value_field',
-  },
-  render: (args) => {
-    const element = document.createElement('atomic-product-multi-value-text');
-    Object.keys(args).forEach((key) => {
-      element.setAttribute(key, args[key]);
-    });
-    const customSlot = document.createElement('span');
-    customSlot.setAttribute('slot', 'product-multi-value-text-value-custom');
-    customSlot.innerText = 'Custom Value';
-    element.appendChild(customSlot);
-    return element;
+    'attributes-field': 'ec_category',
+    'attributes-max-values-to-display': 1,
   },
 };
