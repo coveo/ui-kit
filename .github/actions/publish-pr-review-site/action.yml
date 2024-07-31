@@ -21,7 +21,6 @@ runs:
       run: |
         BRANCH_NAME="${{ github.event.pull_request.number }}"
 
-        # Fetch all branches to ensure we have the latest information
         git fetch origin
 
         # Check if the branch exists on the remote
