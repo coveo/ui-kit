@@ -7,7 +7,7 @@ export const wrapInCommerceSearchBoxInstantProducts = (): {
   decorator: (story) => html`
     <atomic-commerce-search-box
       data-testid="search-box"
-      suggestionTimeout="30000"
+      suggestion-timeout="30000"
     >
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
       <atomic-commerce-search-box-instant-products

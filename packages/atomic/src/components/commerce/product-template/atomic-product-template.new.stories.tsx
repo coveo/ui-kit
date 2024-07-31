@@ -5,7 +5,6 @@ import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/com
 import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
 import {renderComponentWithoutCodeRoot} from '@coveo/atomic/storybookUtils/common/render-component';
-import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {within} from 'shadow-dom-testing-library';
 
@@ -98,21 +97,14 @@ export const InASearchBoxInstantProducts: Story = {
     initializeCommerceInterface(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
-
-    await step('Wait for the search box to render', async () => {
-      await waitFor(
-        () =>
-          expect(
-            canvas.getByShadowPlaceholderText('Search')
-          ).toBeInTheDocument(),
-        {
-          timeout: 30e3,
-        }
-      );
-      await userEvent.type(
-        canvas.getByShadowPlaceholderText('Search'),
-        'shirt'
-      );
+    await step('Click Searchbox', async () => {
+      (
+        await canvas.findAllByShadowTitle('Search field with suggestions.', {
+          exact: false,
+        })
+      )
+        ?.find((el) => el.role === 'combobox')
+        ?.focus();
     });
   },
 };
