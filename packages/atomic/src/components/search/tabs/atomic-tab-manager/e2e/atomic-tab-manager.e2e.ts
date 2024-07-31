@@ -37,7 +37,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
     });
 
     test('should change active tab', async ({tabManager}) => {
-      await expect(tabManager.tabButtons('Articles')).toHaveClass(/active-tab/);
+      await expect(tabManager.activeTab).toHaveText('Articles');
     });
 
     test.describe('should change other component visibility', async () => {
@@ -188,9 +188,7 @@ test.describe('when viewport is too small to display all buttons', () => {
       test('should have the active tab button selected', async ({
         tabManager,
       }) => {
-        await expect(tabManager.tabButtons('Articles')).toHaveClass(
-          /active-tab/
-        );
+        await expect(tabManager.activeTab).toHaveText('Articles');
       });
     });
   });

@@ -15,7 +15,7 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   get activeTab() {
-    return this.page.locator('atomic-tab-manager .active-tab button');
+    return this.page.locator('atomic-tab-manager [aria-current="true"]');
   }
 
   get excludedFacet() {
