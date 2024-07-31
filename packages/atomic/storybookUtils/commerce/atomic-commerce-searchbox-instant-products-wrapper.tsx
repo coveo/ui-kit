@@ -5,7 +5,10 @@ export const wrapInCommerceSearchBoxInstantProducts = (): {
   decorator: Decorator;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-search-box data-testid="search-box">
+    <atomic-commerce-search-box
+      data-testid="search-box"
+      suggestionTimeout="30000"
+    >
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
       <atomic-commerce-search-box-instant-products
         id="code-root"
