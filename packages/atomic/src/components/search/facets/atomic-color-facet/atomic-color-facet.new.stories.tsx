@@ -1,6 +1,6 @@
 import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
-import {facetDecorator} from '@coveo/atomic/storybookUtils/facets-decorator';
+import {facetDecorator} from '@coveo/atomic/storybookUtils/commons/facets-decorator';
 import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
 import {
   ArgTypes,
