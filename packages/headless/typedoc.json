@@ -14,5 +14,6 @@
     "./src/ssr.index.ts"
   ],
   "projectDocuments": ["./src/docs/usage.md"],
-  "gitRevision": "typedoc-POC"
+  "gitRevision": "typedoc-POC",
+  "plugin": ["@coveo/headless-typedoc"]
 }

@@ -105,6 +105,7 @@
     "packages/atomic",
     "packages/quantic",
     "packages/headless-react",
+    "packages/headless-typedoc",
     "packages/ssr",
     "packages/atomic-hosted-page",
     "packages/atomic-react",
