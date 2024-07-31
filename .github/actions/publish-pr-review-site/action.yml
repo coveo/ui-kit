@@ -19,15 +19,34 @@ runs:
         token: ${{inputs.token}}
     - name: 'Setup branch'
       run: |
-        if [[ -z $(git ls-remote --heads origin refs/heads/${{github.event.pull_request.number}} | tr -s '[:blank:]') ]]; then
-          git switch -c "${{github.event.pull_request.number}}"
+        BRANCH_NAME="${{ github.event.pull_request.number }}"
+
+        # Fetch all branches to ensure we have the latest information
+        git fetch origin
+
+        # Check if the branch exists on the remote
+        if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH_NAME"; then
+          echo "Branch $BRANCH_NAME exists remotely. Checking out..."
+          
+          # If the branch exists locally, switch to it; otherwise, create a tracking branch
+          if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+            git switch "$BRANCH_NAME"
+          else
+            git switch --track "origin/$BRANCH_NAME"
+          fi
+
+          # Reset the branch to match the latest commit from the main branch
+          git reset --hard origin/main
         else
-          git fetch origin "refs/heads/${{github.event.pull_request.number}}"
-          git switch "${{github.event.pull_request.number}}"
-          git reset --hard main
+          echo "Branch $BRANCH_NAME does not exist remotely. Creating a new branch..."
+          
+          # Create a new branch locally and push it to the remote
+          git switch -c "$BRANCH_NAME"
+          git push -u origin "$BRANCH_NAME"
         fi
       working-directory: prs
       shell: bash
+
     - name: 'Ensure clean directory exists'
       run: |
         rm -rf "${{github.event.pull_request.number}}"
