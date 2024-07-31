@@ -13,15 +13,15 @@
   "dependencies": {
     "@coveo/headless": "^2.74.0",
     "next": "14.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.3.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "20.14.12",
-    "@types/react": "18.2.21",
-    "@types/react-dom": "18.2.7",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "eslint": "8.57",
     "eslint-config-next": "14.2.5",
-    "typescript": "5.5.4"
+    "typescript": "5.4.5"
   }
 }
