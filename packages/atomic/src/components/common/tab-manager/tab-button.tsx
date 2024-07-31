@@ -9,12 +9,12 @@ export interface TabButtonProps {
 
 export const TabButton: FunctionalComponent<TabButtonProps> = (props) => {
   const activeTabClass = props.isActive
-    ? "active-tab relative after:content-[''] after:block after:w-full after:h-1 after:absolute after:-bottom-0.5 after:bg-primary after:rounded"
+    ? "relative after:content-[''] after:block after:w-full after:h-1 after:absolute after:-bottom-0.5 after:bg-primary after:rounded"
     : '';
   const activeTabTextClass = props.isActive ? '' : 'text-neutral-dark';
   return (
     <li
-      aria-current={props.isActive ? 'true' : false}
+      aria-current={props.isActive ? 'true' : 'false'}
       aria-label={'tab for ' + props.label}
       part="button-container"
       class={activeTabClass}
