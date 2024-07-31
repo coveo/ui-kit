@@ -6,7 +6,7 @@
       "sequential": ["dev", "stg", "prd"]
     },
     "notifications": {
-      "slack_channels": ["analyticsdeployments"]
+      "slack_channels": ["relay-deployments"]
     },
     "start_environment_automatically": true,
     "prd": {
