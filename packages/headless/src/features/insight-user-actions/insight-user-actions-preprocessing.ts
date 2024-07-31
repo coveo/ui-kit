@@ -14,41 +14,6 @@ const SECONDS_IN_MINUTE = 60;
 const MAX_MINUTES_IN_SESSION = 30;
 const MAX_MSEC_IN_SESSION =
   MAX_MINUTES_IN_SESSION * SECONDS_IN_MINUTE * MSEC_IN_SECOND;
-// const SESSION_BEFORE_TO_DISPLAY = 2;
-// const SESSION_AFTER_TO_DISPLAY = 2;
-
-// const mockActions: Object[] = [
-//   {
-//     name: 'CUSTOM', // (3)
-//     value:
-//       '{"event_type":"User Actions","event_value":"openUserActions","origin_level_1":"AgentPanel","origin_level_2":"All"}',
-//     time: '1719581379164', // Friday, June 28, 2024 1:29:39.164 PM
-//   },
-//   {
-//     name: 'CLICK', // (2)
-//     value:
-//       '{"c_contentidkey":"urihash","c_contentidvalue":"8FibZquZa6ChJWzF","language":"en","origin_level_1":"AgentPanel","origin_level_2":"All","title":"Update the documentation for the floor counter to clarify the \\"skipping floors\\" issues.","uri_hash":"8FibZquZa6ChJWzF"}',
-//     time: '1719581369248', // Friday, June 28, 2024 1:29:29.248 PM
-//   },
-//   {
-//     name: 'CLICK', // (1)
-//     value:
-//       '{"c_contentidkey":"urihash","c_contentidvalue":"8FibZquZa6ChJWzF","language":"en","origin_level_1":"AgentPanel","origin_level_2":"All","title":"Update the documentation for the floor counter to clarify the \\"skipping floors\\" issues.","uri_hash":"8FibZquZa6ChJWzF"}',
-//     time: '1719581367957', // Friday, June 28, 2024 1:29:27.957 PM
-//   },
-//   {
-//     name: 'SEARCH', // (5)
-//     value:
-//       '{"cause":"userActionLoad","origin_level_1":"AgentPanel","origin_level_2":"All"}',
-//     time: '1719581379516', // Friday, June 28, 2024 1:29:39.516 PM
-//   },
-//   {
-//     name: 'SEARCH', // (4)
-//     value:
-//       '{"cause":"userActionLoad","origin_level_1":"AgentPanel","origin_level_2":"All"}',
-//     time: '1719581379368', // Friday, June 28, 2024 1:29:39.368 PM
-//   },
-// ];
 
 interface rawUserAction {
   name: string;
@@ -88,11 +53,11 @@ export const preprocessActionsData = (
     ticketCreationDate
   );
 
-  // IF: no sessions contain the ticket creation action, return the last 5 sessions.
+  // If no sessions contain the ticket creation action, we return the last 5 sessions.
   if (!caseSubmitSessionIndex || !caseSubmitSession) {
     return returnLastFiveSessions(sessions, excludedCustomActions);
   }
-  // ELSE: We build the timeline with the current session including the ticket creation action.
+  // Else we build the timeline with the current session including the ticket creation action.
   const precedingSessions = buildPrecedingSessions(
     sessions,
     caseSubmitSessionIndex,
@@ -124,11 +89,12 @@ export const returnLastFiveSessions = (
   if (excludedCustomActions && excludedCustomActions.length > 0) {
     const filteredLastFiveSessions: UserSession[] = lastFiveSessions.map(
       (session) => {
+        const {start, end} = session;
         const filteredSessionActions = filterActions(
           session.actions,
           excludedCustomActions
         );
-        const filteredSession = {...session, actions: filteredSessionActions};
+        const filteredSession = {start, end, actions: filteredSessionActions};
         return filteredSession;
       }
     );
@@ -142,22 +108,20 @@ export const filterActions = (
   excludedCustomActions: string[]
 ): UserAction[] => {
   const filteredActions = actions.filter((action) => {
-    const actionEventData = action.eventData;
+    let shouldExcludeCustomAction = false;
+    const eventType = action.eventData?.type || '';
+    const eventValue = action.eventData?.value || '';
 
-    const excludedActionsIncludesActionType =
-      typeof actionEventData?.type === 'string' &&
-      excludedCustomActions.includes(actionEventData.type);
+    if (action.eventData?.type && action.eventData?.value) {
+      shouldExcludeCustomAction =
+        !excludedCustomActions.includes(eventType) ||
+        !excludedCustomActions.includes(eventValue);
+    }
 
-    const excludedActionsIncludesActionValue =
-      typeof actionEventData?.value === 'string' &&
-      excludedCustomActions.includes(actionEventData.value);
-
-    const shouldExcludeCustomAction =
-      excludedActionsIncludesActionType || excludedActionsIncludesActionValue;
-
-    return action.actionType !== 'CUSTOM' || !shouldExcludeCustomAction;
+    return (
+      action.actionType !== UserActionType.CUSTOM || shouldExcludeCustomAction
+    );
   });
-  console.log(filteredActions); // To remove later
   return filteredActions;
 };
 
@@ -312,11 +276,12 @@ export const buildPrecedingSessions = (
   );
   if (excludedCustomActions && excludedCustomActions.length > 0) {
     precedingSessions = precedingSessions.map((session) => {
+      const {start, end} = session;
       const filteredActions = filterActions(
         session.actions,
         excludedCustomActions
       );
-      return {...session, session: {actions: filteredActions}};
+      return {start, end, actions: filteredActions};
     });
   }
   return precedingSessions;
@@ -333,10 +298,15 @@ export const buildFollowingSessions = (
   );
   if (excludedCustomActions && excludedCustomActions.length > 0) {
     followingSessions = followingSessions.map((session) => {
-      filterActions(session.actions, excludedCustomActions);
-      return session;
+      const {start, end} = session;
+      const filteredActions = filterActions(
+        session.actions,
+        excludedCustomActions
+      );
+      return {start, end, actions: filteredActions};
     });
   }
+
   return followingSessions;
 };
 

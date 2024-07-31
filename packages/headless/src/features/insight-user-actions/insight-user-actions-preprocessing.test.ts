@@ -175,6 +175,41 @@ const mockSplitSessions = [
   },
 ];
 
+const expectedPrecedingSessions = [
+  {start: '1719589200000', end: '1719590200000', actions: []},
+  {start: '1719584600000', end: '1719585600000', actions: []},
+];
+
+const expectedFollowingSessions = [
+  {
+    start: '1719603000000',
+    end: '1719604000000',
+    actions: [
+      {
+        actionType: 'SEARCH',
+        timestamp: '1719586800000',
+        eventData: {},
+        cause: 'userActionLoad',
+        searchHub: 'AgentPanel',
+        document: {},
+      },
+      {
+        actionType: 'CLICK',
+        timestamp: '1719581367957',
+        eventData: {},
+        searchHub: 'AgentPanel',
+        document: {
+          title: 'Title 1',
+          uriHash: 'exampleUriHash',
+          contentIdKey: 'urihash1',
+          contentIdValue: '1',
+        },
+      },
+    ],
+  },
+  {start: '1719598400000', end: '1719599400000', actions: []},
+];
+
 describe('insight user actions preprocessing', () => {
   describe('#sortActions', () => {
     it('should properly sort the raw user actions by most recent to least recent', async () => {
@@ -197,15 +232,18 @@ describe('insight user actions preprocessing', () => {
     describe('when there are custom actions to be excluded', () => {
       it('should properly return the last five sessions with their actions filtered', async () => {
         const expectedLastFiveSessions = mockSplitSessions.slice(0, 5);
+        expectedLastFiveSessions[0].actions = [
+          mockMappedActions[0],
+          mockMappedActions[2],
+        ];
+        expectedLastFiveSessions[3].actions = [];
+
         const mockExcludedCustomActions = [
           'CUSTOM',
           'openUserActions',
           'User Actions',
         ];
-        expectedLastFiveSessions[0].actions = [
-          mockMappedActions[0],
-          mockMappedActions[2],
-        ];
+
         const lastFiveSessions = returnLastFiveSessions(
           mockSplitSessions,
           mockExcludedCustomActions
@@ -347,10 +385,6 @@ describe('insight user actions preprocessing', () => {
         const mockCaseSubmitSessionIndex = 2;
         const mockExcludedCustomActions = ['CUSTOM'];
 
-        const expectedPrecedingSessions = mockSplitSessions.slice(
-          mockCaseSubmitSessionIndex + 1,
-          mockCaseSubmitSessionIndex + 3
-        );
         const precedingSessions = buildPrecedingSessions(
           mockSplitSessions,
           mockCaseSubmitSessionIndex,
@@ -365,7 +399,9 @@ describe('insight user actions preprocessing', () => {
           expect(session.end).toEqual(expectedPrecedingSessions[index].end);
 
           const actions = session.actions;
-          expect(actions.length).toEqual(0);
+          expect(actions.length).toEqual(
+            expectedPrecedingSessions[index].actions.length
+          );
           actions.forEach((action) => {
             expect(action.actionType).not.toEqual(mockExcludedCustomActions[0]);
           });
@@ -402,10 +438,6 @@ describe('insight user actions preprocessing', () => {
         const mockCaseSubmitSessionIndex = 2;
         const mockExcludedCustomActions = ['CUSTOM'];
 
-        const expectedFollowingSessions = mockSplitSessions.slice(
-          mockCaseSubmitSessionIndex - 2,
-          mockCaseSubmitSessionIndex
-        );
         const followingSessions = buildFollowingSessions(
           mockSplitSessions,
           mockCaseSubmitSessionIndex,
@@ -420,7 +452,9 @@ describe('insight user actions preprocessing', () => {
           expect(session.end).toEqual(expectedFollowingSessions[index].end);
 
           const actions = session.actions;
-          expect(actions.length).toEqual(0);
+          expect(actions.length).toEqual(
+            expectedFollowingSessions[index].actions.length
+          );
           actions.forEach((action) => {
             expect(action.actionType).not.toEqual(mockExcludedCustomActions[0]);
           });
