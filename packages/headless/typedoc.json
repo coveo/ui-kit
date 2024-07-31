@@ -15,5 +15,5 @@
   ],
   "projectDocuments": ["./src/docs/usage.md"],
   "gitRevision": "typedoc-POC",
-  "plugin": ["@coveo/headless-typedoc"]
+  "plugin": ["./typedoc/lib/index.mjs"]
 }

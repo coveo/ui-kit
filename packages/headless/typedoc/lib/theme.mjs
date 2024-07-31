@@ -2,16 +2,10 @@ import {
   themeFromSourceColor,
   hexFromArgb,
   argbFromHex,
-  Theme,
 } from '@material/material-color-utilities';
 
-export type Color = number;
-
 // https://github.com/material-foundation/material-color-utilities/issues/98#issuecomment-1535869882
-export const getSurfaceProperties = (
-  theme: Theme,
-  dark: boolean
-): {[key: string]: Color} =>
+export const getSurfaceProperties = (theme, dark) =>
   dark
     ? {
         'surface-dim': theme.palettes.neutral.tone(6),
@@ -31,8 +25,7 @@ export const getSurfaceProperties = (
         'surface-container-high': theme.palettes.neutral.tone(92),
         'surface-container-highest': theme.palettes.neutral.tone(90),
       };
-
-export function getSchemeProperties(properties: object) {
+export function getSchemeProperties(properties) {
   return Object.entries(properties).map(
     ([key, value]) =>
       `--md-sys-color-${key
@@ -40,13 +33,12 @@ export function getSchemeProperties(properties: object) {
         .toLowerCase()}: ${hexFromArgb(value)}`
   );
 }
-
 /**
  * Get the CSS properties from a single color using Material 3.
  * @param hex
  * @returns The CSS string with dark and light properties
  */
-export function getThemeCSSProperties(hex: string) {
+export function getThemeCSSProperties(hex) {
   const theme = themeFromSourceColor(argbFromHex(hex));
   const dark = getSchemeProperties({
     ...theme.schemes.dark.toJSON(),
@@ -56,7 +48,6 @@ export function getThemeCSSProperties(hex: string) {
     ...theme.schemes.light.toJSON(),
     ...getSurfaceProperties(theme, false),
   });
-
   return /* css */ `
 @media (prefers-color-scheme: dark) {
   :root {

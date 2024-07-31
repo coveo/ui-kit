@@ -46,13 +46,13 @@
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
-    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0",
-    "@coveo/headless-typedoc": "file:../headless-typedoc"
+    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
   },
   "dependencies": {
     "@coveo/bueno": "0.45.9",
     "@coveo/relay": "0.7.10",
     "@coveo/relay-event-types": "9.2.0",
+    "@material/material-color-utilities": "0.3.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.6",
     "abab": "2.0.6",
