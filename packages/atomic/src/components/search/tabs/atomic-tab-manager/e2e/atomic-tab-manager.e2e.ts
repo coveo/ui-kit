@@ -43,13 +43,15 @@ test.describe('when viewport is large enough to display all tabs', () => {
     test.describe('should change other component visibility', async () => {
       test('facets', async ({tabManager}) => {
         await tabManager.excludedFacet.last().waitFor({state: 'hidden'});
+        const includedFacets = await tabManager.includedFacet.all();
+        for (let i = 0; i < includedFacets.length; i++) {
+          await expect(includedFacets[i]).toBeVisible();
+        }
 
-        (await tabManager.includedFacet.all()).forEach(async (facet) => {
-          await expect(facet).toBeVisible();
-        });
-        (await tabManager.excludedFacet.all()).forEach(async (facet) => {
-          await expect(facet).not.toBeVisible();
-        });
+        const excludedFacets = await tabManager.excludedFacet.all();
+        for (let i = 0; i < excludedFacets.length; i++) {
+          await expect(excludedFacets[i]).not.toBeVisible();
+        }
       });
       test('smart snippet', async ({tabManager}) => {
         await expect(tabManager.smartSnippet).toBeVisible();
@@ -64,12 +66,16 @@ test.describe('when viewport is large enough to display all tabs', () => {
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
           await tabManager.includedFacet.last().waitFor({state: 'hidden'});
-          (await tabManager.excludedFacet.all()).forEach(async (facet) => {
-            await expect(facet).toBeVisible();
-          });
-          (await tabManager.includedFacet.all()).forEach(async (facet) => {
-            await expect(facet).not.toBeVisible();
-          });
+
+          const excludedFacets = await tabManager.excludedFacet.all();
+          for (let i = 0; i < excludedFacets.length; i++) {
+            await expect(excludedFacets[i]).toBeVisible();
+          }
+
+          const includedFacets = await tabManager.includedFacet.all();
+          for (let i = 0; i < includedFacets.length; i++) {
+            await expect(includedFacets[i]).not.toBeVisible();
+          }
         });
         test('smart snippet', async ({tabManager}) => {
           await expect(tabManager.smartSnippet).not.toBeVisible();
@@ -139,12 +145,16 @@ test.describe('when viewport is too small to display all buttons', () => {
     test.describe('should change other component visibility', async () => {
       test('facets', async ({tabManager}) => {
         await tabManager.excludedFacet.last().waitFor({state: 'hidden'});
-        (await tabManager.includedFacet.all()).forEach(async (facet) => {
-          await expect(facet).toBeVisible();
-        });
-        (await tabManager.excludedFacet.all()).forEach(async (facet) => {
-          await expect(facet).not.toBeVisible();
-        });
+
+        const includedFacets = await tabManager.includedFacet.all();
+        for (let i = 0; i < includedFacets.length; i++) {
+          await expect(includedFacets[i]).toBeVisible();
+        }
+
+        const excludedFacets = await tabManager.excludedFacet.all();
+        for (let i = 0; i < excludedFacets.length; i++) {
+          await expect(excludedFacets[i]).not.toBeVisible();
+        }
       });
       test('smart snippet', async ({tabManager}) => {
         await expect(tabManager.smartSnippet).toBeVisible();
@@ -159,12 +169,16 @@ test.describe('when viewport is too small to display all buttons', () => {
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
           await tabManager.includedFacet.last().waitFor({state: 'hidden'});
-          (await tabManager.excludedFacet.all()).forEach(async (facet) => {
-            await expect(facet).toBeVisible();
-          });
-          (await tabManager.includedFacet.all()).forEach(async (facet) => {
-            await expect(facet).not.toBeVisible();
-          });
+
+          const excludedFacets = await tabManager.excludedFacet.all();
+          for (let i = 0; i < excludedFacets.length; i++) {
+            await expect(excludedFacets[i]).toBeVisible();
+          }
+
+          const includedFacets = await tabManager.includedFacet.all();
+          for (let i = 0; i < includedFacets.length; i++) {
+            await expect(includedFacets[i]).not.toBeVisible();
+          }
         });
 
         test('smart snippet', async ({tabManager}) => {
