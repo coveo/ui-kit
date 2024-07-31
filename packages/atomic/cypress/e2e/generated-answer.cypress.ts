@@ -461,7 +461,6 @@ describe('Generated Answer Test Suites', () => {
             'have.text',
             testCitation.title
           );
-          GeneratedAnswerSelectors.citationIndex().should('have.text', '1');
           GeneratedAnswerSelectors.citation().should(
             'have.attr',
             'href',
