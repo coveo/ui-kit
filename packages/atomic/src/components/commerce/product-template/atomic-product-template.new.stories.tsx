@@ -4,10 +4,10 @@ import {wrapInCommerceSearchBoxInstantProducts} from '@coveo/atomic/storybookUti
 import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponentWithoutCodeRoot} from '@coveo/atomic/storybookUtils/common/render-component';
 import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {within} from 'shadow-dom-testing-library';
-import {renderComponentWithoutCodeRoot} from '../../../../storybookUtils/common/render-component';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
