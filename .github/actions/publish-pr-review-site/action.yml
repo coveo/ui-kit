@@ -7,7 +7,6 @@ inputs:
     required: true
   copy:
     description: 'Files to copy'
-
 runs:
   using: composite
   steps:
