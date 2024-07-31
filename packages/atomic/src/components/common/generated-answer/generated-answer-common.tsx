@@ -195,7 +195,17 @@ export class GeneratedAnswerCommon {
     const {citations} = getGeneratedAnswerState() ?? {};
     const {logCitationHover} = getGeneratedAnswer() ?? {};
 
-    return citations?.map(
+    const uniqueCitations = citations?.reduce(
+      (acc: GeneratedAnswerCitation[], citation) => {
+        if (!acc.some((item) => item?.clickUri === citation.clickUri)) {
+          acc.push(citation);
+        }
+        return acc;
+      },
+      []
+    );
+
+    return uniqueCitations?.map(
       (citation: GeneratedAnswerCitation, index: number) => {
         const interactiveCitation = buildInteractiveCitation({
           options: {

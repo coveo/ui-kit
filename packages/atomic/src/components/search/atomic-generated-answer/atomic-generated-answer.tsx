@@ -59,7 +59,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
- * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-generated-answer',
