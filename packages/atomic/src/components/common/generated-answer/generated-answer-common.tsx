@@ -195,36 +195,34 @@ export class GeneratedAnswerCommon {
     const {citations} = getGeneratedAnswerState() ?? {};
     const {logCitationHover} = getGeneratedAnswer() ?? {};
 
-    const uniqueCitations = citations?.reduce(
-      (acc: GeneratedAnswerCitation[], citation) => {
-        if (!acc.some((item) => item?.clickUri === citation.clickUri)) {
-          acc.push(citation);
-        }
-        return acc;
-      },
-      []
-    );
+    const uniqueUris = new Set<string>();
 
-    return uniqueCitations?.map(
+    return citations?.flatMap(
       (citation: GeneratedAnswerCitation, index: number) => {
-        const interactiveCitation = buildInteractiveCitation({
-          options: {
-            citation,
-          },
-        });
-        return (
-          <li key={citation.id} class="max-w-full">
-            <atomic-citation
-              citation={this.getCitation(citation)}
-              index={index}
-              sendHoverEndEvent={(citationHoverTimeMs: number) => {
-                logCitationHover?.(citation.id, citationHoverTimeMs);
-              }}
-              interactiveCitation={interactiveCitation}
-              exportparts="citation,citation-popover"
-            />
-          </li>
-        );
+        const clickUri = citation.clickUri;
+        if (clickUri && !uniqueUris.has(clickUri)) {
+          uniqueUris.add(clickUri);
+
+          const interactiveCitation = buildInteractiveCitation({
+            options: {
+              citation,
+            },
+          });
+
+          return (
+            <li key={citation.id} class="max-w-full">
+              <atomic-citation
+                citation={this.getCitation(citation)}
+                index={index}
+                sendHoverEndEvent={(citationHoverTimeMs: number) => {
+                  logCitationHover?.(citation.id, citationHoverTimeMs);
+                }}
+                interactiveCitation={interactiveCitation}
+                exportparts="citation,citation-popover"
+              />
+            </li>
+          );
+        }
       }
     );
   }
