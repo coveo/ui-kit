@@ -11,8 +11,4 @@ const engineDefinition = defineCommerceEngine(engineConfig);
 export type ListingStaticState = InferStaticState<typeof engineDefinition>;
 export type ListingHydratedState = InferHydratedState<typeof engineDefinition>;
 
-export const {
-  fetchStaticState,
-  hydrateStaticState,
-  setNavigatorContextProvider,
-} = engineDefinition;
+export const {fetchStaticState, hydrateStaticState} = engineDefinition;
