@@ -2,7 +2,7 @@ import {ensureAtLeastOneSolutionType} from '../../../app/commerce-ssr-engine/com
 import {
   ControllerDefinitionOption,
   SolutionType,
-  SolutionTypeControllerDefinition,
+  SubControllerDefinitionWithoutProps,
 } from '../../../app/commerce-ssr-engine/types/common';
 import {buildSearch, Search} from '../search/headless-search';
 import {ProductListing, buildProductListing} from './headless-product-listing';
@@ -28,5 +28,5 @@ export function defineProductList<
       solutionType === SolutionType.Listing
         ? (buildProductListing(engine) as ProductList)
         : (buildSearch(engine) as ProductList),
-  } as SolutionTypeControllerDefinition<ProductList, TOptions>;
+  } as SubControllerDefinitionWithoutProps<ProductList, TOptions>;
 }

@@ -1,6 +1,6 @@
 import {
-  SearchOnlyControllerDefinition,
-  SharedControllerDefinition,
+  SearchOnlyControllerDefinitionWithoutProps,
+  SharedControllerDefinitionWithoutProps,
 } from '../../../app/commerce-ssr-engine/types/common';
 import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box';
 import {
@@ -12,7 +12,7 @@ import {SearchBox, SearchBoxProps, buildSearchBox} from './headless-search-box';
 export * from './headless-search-box';
 
 export interface SearchBoxDefinition
-  extends SearchOnlyControllerDefinition<SearchBox> {}
+  extends SearchOnlyControllerDefinitionWithoutProps<SearchBox> {}
 
 /**
  * Defines a `SearchBox` controller instance.
@@ -28,7 +28,7 @@ export function defineSearchBox(props?: SearchBoxProps): SearchBoxDefinition {
 }
 
 export interface StandaloneSearchBoxDefinition
-  extends SharedControllerDefinition<StandaloneSearchBox> {}
+  extends SharedControllerDefinitionWithoutProps<StandaloneSearchBox> {}
 
 /**
  * Defines a `SearchBox` controller instance.

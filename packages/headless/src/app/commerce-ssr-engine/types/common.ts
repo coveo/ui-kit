@@ -126,43 +126,87 @@ export interface ControllerDefinitionOption {
   search?: boolean;
 }
 
-export interface SearchOnlyControllerDefinition<TController extends Controller>
-  // TODO: also apply the same logic to controllers with props
-  extends ControllerDefinitionWithoutProps<CommerceEngine, TController> {
+interface SearchOnlyController {
   /**
    * @internal
    */
   [SolutionType.Search]: true;
 }
 
-export interface ListingOnlyControllerDefinition<TController extends Controller>
-  // TODO: also apply the same logic to controllers with props
-  extends ControllerDefinitionWithoutProps<CommerceEngine, TController> {
+interface ListingOnlyController {
   /**
    * @internal
    */
   [SolutionType.Listing]: true;
 }
 
-export interface SharedControllerDefinition<TController extends Controller>
-  // TODO: also apply the same logic to controllers with props
-  extends ControllerDefinitionWithoutProps<CommerceEngine, TController> {
+interface SharedController {
   /**
    * @internal
    */
   [SolutionType.Search]: true;
+  /**
+   * @internal
+   */
   [SolutionType.Listing]: true;
 }
 
-export type SolutionTypeControllerDefinition<
+export type SearchOnlyControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  SearchOnlyController;
+
+export type SearchOnlyControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  SearchOnlyController;
+
+export type ListingOnlyControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  ListingOnlyController;
+
+export type ListingOnlyControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  ListingOnlyController;
+
+export type SharedControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  SharedController;
+
+export type SharedControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  SharedController;
+
+export type SubControllerDefinitionWithoutProps<
   TController extends Controller,
   TDefinition extends ControllerDefinitionOption | undefined,
 > = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SharedControllerDefinition<TController>
+  ? SharedControllerDefinitionWithoutProps<TController>
   : TDefinition extends {listing?: true; search?: false}
-    ? ListingOnlyControllerDefinition<TController>
+    ? ListingOnlyControllerDefinitionWithoutProps<TController>
     : TDefinition extends {listing?: false; search?: true}
-      ? SearchOnlyControllerDefinition<TController>
+      ? SearchOnlyControllerDefinitionWithoutProps<TController>
+      : TDefinition extends {listing: false; search: false}
+        ? InvalidControllerDefinition
+        : never;
+
+export type SubControllerDefinitionWithProps<
+  TController extends Controller,
+  TDefinition extends ControllerDefinitionOption | undefined,
+  TProps,
+> = TDefinition extends {listing?: true; search?: true} | undefined
+  ? SharedControllerDefinitionWithProps<TController, TProps>
+  : TDefinition extends {listing?: true; search?: false}
+    ? ListingOnlyControllerDefinitionWithProps<TController, TProps>
+    : TDefinition extends {listing?: false; search?: true}
+      ? SearchOnlyControllerDefinitionWithProps<TController, TProps>
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;

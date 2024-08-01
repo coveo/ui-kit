@@ -2,7 +2,7 @@ import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/
 import {
   ControllerDefinitionOption,
   SolutionType,
-  SolutionTypeControllerDefinition,
+  SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common';
 import type {Summary} from '../../core/summary/headless-core-summary';
 import {buildProductListing} from '../../product-listing/headless-product-listing';
@@ -22,7 +22,7 @@ export function defineQuerySummary<
       solutionType === SolutionType.Listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
-  } as SolutionTypeControllerDefinition<
+  } as SubControllerDefinitionWithoutProps<
     Summary<ProductListingSummaryState & SearchSummaryState>, // TODO: fix conditional typing to return the appropriate type based on current solution type
     TOptions
   >;
