@@ -179,6 +179,30 @@ function nextAnalyticsExpectations() {
         );
     },
 
+    emitQnaSubmitRgaFeedbackEvent: (
+      expectedEvent: Qna.SubmitRgaFeedback,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Qna.SubmitRgaFeedback)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
+          expect(eventBody.feedback).to.deep.equal(expectedEvent.feedback);
+
+          expect(eventMeta).to.have.property('type', 'Qna.SubmitRgaFeedback');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail(
+          'should emit the Qna.SubmitRgaFeedback event for submitting rga feedback'
+        );
+    },
+
     emitCaseAssistSelectFieldClassification: (
       expectedEvent: CaseAssist.SelectFieldClassification,
       expectedTrackingId: string

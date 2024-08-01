@@ -9,16 +9,6 @@ const {decorator, play} = wrapInCommerceInterface({
   skipFirstSearch: false,
 });
 
-const noProductsEngineConfig: Partial<CommerceEngineConfiguration> = {
-  preprocessRequest: (r) => {
-    const parsed = JSON.parse(r.body as string);
-    // eslint-disable-next-line @cspell/spellchecker
-    parsed.query = 'qnjssoptjhyalwnmrbgtyslsd';
-    r.body = JSON.stringify(parsed);
-    return r;
-  },
-};
-
 const fixedNumberOfProducts = (
   perPage: number
 ): Partial<CommerceEngineConfiguration> => ({
@@ -32,11 +22,6 @@ const fixedNumberOfProducts = (
 
 const {play: playNoInitialSearch} = wrapInCommerceInterface({
   skipFirstSearch: true,
-});
-
-const {play: playNoProducts} = wrapInCommerceInterface({
-  skipFirstSearch: false,
-  engineConfig: noProductsEngineConfig,
 });
 
 const {play: playFixedNumberOfProducts} = wrapInCommerceInterface({
@@ -66,15 +51,6 @@ export const NoInitialSearch: Story = {
   decorators: [(story) => story()],
   play: async (context) => {
     await playNoInitialSearch(context);
-  },
-};
-
-export const NoProducts: Story = {
-  name: 'No Products',
-  tags: ['test'],
-  decorators: [(story) => story()],
-  play: async (context) => {
-    await playNoProducts(context);
   },
 };
 

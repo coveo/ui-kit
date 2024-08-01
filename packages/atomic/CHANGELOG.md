@@ -1,3 +1,22 @@
+# 2.75.0 (2024-07-31)
+
+### Features
+
+- **atomic-commerce:** products-per-page ([#4107](https://github.com/coveo/ui-kit/issues/4107)) ([81e31cf](https://github.com/coveo/ui-kit/commits/81e31cff63c19f19b12babd4b10aa5b2e60c19e6))
+- **atomic:** add atomic-tab-manager component ([#4196](https://github.com/coveo/ui-kit/issues/4196)) ([523ab9b](https://github.com/coveo/ui-kit/commits/523ab9be9ba9bf8d14ef304d98726680bea63b71))
+
+# 2.74.0 (2024-07-24)
+
+### Bug Fixes
+
+- enhance focus handling for search-box components ([#4027](https://github.com/coveo/ui-kit/issues/4027)) ([d5f04b7](https://github.com/coveo/ui-kit/commits/d5f04b70ee32ecd1879496448471c408c281ed6d))
+- ensure quickview minimize ([#4193](https://github.com/coveo/ui-kit/issues/4193)) ([c366764](https://github.com/coveo/ui-kit/commits/c366764255de30b29bb14bb5f6439bca8164c97a))
+
+### Features
+
+- answerapi-generated-answer ([#4157](https://github.com/coveo/ui-kit/issues/4157)) ([aafe3fe](https://github.com/coveo/ui-kit/commits/aafe3fed4a9ba3962a3edd73288a59ed1ecb5b1e))
+- **atomic:** format commerce numeric facet for price with currency by default ([#4201](https://github.com/coveo/ui-kit/issues/4201)) ([bf6e2de](https://github.com/coveo/ui-kit/commits/bf6e2de55692d31808ea031eb6e2d90eb70ac3b5))
+
 # 2.73.0 (2024-07-17)
 
 ### Bug Fixes

@@ -15,6 +15,12 @@ export class QuerySummaryPageObject extends BasePageObject<'atomic-commerce-quer
   }
 
   text(summaryRegex: RegExp) {
-    return this.page.getByText(summaryRegex);
+    return this.page
+      .locator(':not([role="status"])')
+      .filter({hasText: summaryRegex});
+  }
+
+  get container() {
+    return this.page.locator('[part="container"]');
   }
 }

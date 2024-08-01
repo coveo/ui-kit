@@ -48,7 +48,7 @@ type NumericFacetDomain = {
 };
 
 /**
- * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
+ * The `NumericFacet` sub-controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
  */
 export type NumericFacet = CoreCommerceFacet<
@@ -62,7 +62,7 @@ export type NumericFacet = CoreCommerceFacet<
    */
   setRanges: (ranges: NumericRangeRequest[]) => void;
   /**
-   * The state of the `NumericFacet` controller.
+   * The state of the `NumericFacet` sub-controller.
    */
   state: NumericFacetState;
 } & FacetControllerType<'numericalRange'>;
@@ -72,12 +72,12 @@ export type NumericFacet = CoreCommerceFacet<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `NumericFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `NumericFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `NumericFacet` options used internally.
- * @returns A `NumericFacet` controller instance.
+ * @returns A `NumericFacet` sub-controller instance.
  */
 export function buildCommerceNumericFacet(
   engine: CommerceEngine,

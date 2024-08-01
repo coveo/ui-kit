@@ -6,7 +6,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   preprocessRequest: (request) => {
-    const fakeQuery = '';
+    const fakeQuery = 'test';
     switch (
       (request.headers as Record<string, string> | undefined)?.['Content-Type']
     ) {
