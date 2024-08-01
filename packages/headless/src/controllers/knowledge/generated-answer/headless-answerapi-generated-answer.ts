@@ -1,6 +1,11 @@
 import {
+  answerEvaluation,
+  AnswerEvaluationPOSTParams,
+} from '../../../api/knowledge/post-answer-evaluation';
+import {
   answerApi,
   fetchAnswer,
+  GeneratedAnswerStream,
   selectAnswer,
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
@@ -10,6 +15,7 @@ import {
   resetAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions';
+import {GeneratedAnswerFeedbackV2} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   GeneratedAnswerSection,
@@ -24,17 +30,63 @@ import {
   GeneratedResponseFormat,
 } from '../../core/generated-answer/headless-core-generated-answer';
 
-export interface AnswerApiGeneratedAnswer extends GeneratedAnswer {
+export interface AnswerApiGeneratedAnswer
+  extends Omit<GeneratedAnswer, 'sendFeedback'> {
   /**
    * Resets the last answer.
    */
   reset(): void;
+  /**
+   * Sends feedback about why the generated answer was not relevant.
+   * @param feedback - The feedback that the end user wishes to send.
+   */
+  sendFeedback(feedback: GeneratedAnswerFeedbackV2): void;
 }
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
 
 export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
+
+interface ParseEvaluationArgumentsParams {
+  feedback: GeneratedAnswerFeedbackV2;
+  answerApiState: GeneratedAnswerStream;
+  query: string;
+}
+
+const parseEvaluationDetails = (
+  detail: 'yes' | 'no' | 'unknown'
+): Boolean | null => {
+  if (detail === 'yes') {
+    return true;
+  }
+  if (detail === 'no') {
+    return false;
+  }
+  return null;
+};
+
+const parseEvaluationArguments = ({
+  answerApiState,
+  feedback,
+  query,
+}: ParseEvaluationArgumentsParams): AnswerEvaluationPOSTParams => ({
+  additionalNotes: feedback.details ?? null,
+  answer: {
+    text: answerApiState.answer!,
+    responseId: answerApiState.answerId!,
+    format: answerApiState.contentFormat ?? 'text/plain',
+  },
+  correctAnswerUrl: feedback.documentUrl ?? null,
+  details: {
+    correctTopic: parseEvaluationDetails(feedback.correctTopic),
+    documented: parseEvaluationDetails(feedback.documented),
+    hallucinationFree: parseEvaluationDetails(feedback.hallucinationFree),
+    readable: parseEvaluationDetails(feedback.readable),
+  },
+  helpful: feedback.helpful,
+  question: query,
+});
 
 const subscribeToSearchRequest = (
   engine: SearchEngine<StateNeededByAnswerAPI>
@@ -112,6 +164,14 @@ export function buildAnswerApiGeneratedAnswer(
     },
     reset() {
       engine.dispatch(resetAnswer());
+    },
+    async sendFeedback(feedback) {
+      const args = parseEvaluationArguments({
+        query: getState().query.q,
+        feedback,
+        answerApiState: selectAnswer(engine.state).data!,
+      });
+      engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
     },
   };
 }
