@@ -1,6 +1,9 @@
 import {executeCommerceFieldSuggest} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {RegularFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
 import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice';
@@ -58,6 +61,14 @@ describe('fieldSuggestions', () => {
     setFacetRequest();
 
     initFacet();
+  });
+
+  it('adds correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      fieldSuggestionsOrder,
+      commerceFacetSet,
+      facetSearchSet,
+    });
   });
 
   it('should dispatch an #updateFacetSearch and #executeFieldSuggest action on #updateText', () => {
