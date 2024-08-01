@@ -146,6 +146,7 @@ function loadFieldSuggestionsReducers(
   engine.addReducers({
     fieldSuggestionsOrder,
     categoryFacetSearchSet,
+    commerceFacetSet,
   });
   return true;
 }
