@@ -1,5 +1,4 @@
 import {executeCommerceFieldSuggest} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CategoryFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
@@ -64,7 +63,6 @@ describe('categoryFieldSuggestions', () => {
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       fieldSuggestionsOrder,
-      commerceFacetSet,
       categoryFacetSearchSet,
     });
   });
