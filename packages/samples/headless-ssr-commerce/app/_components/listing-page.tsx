@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from 'react';
 import {
-  hydrateStaticState,
+  ProductListingEngine,
   ListingHydratedState,
   ListingStaticState,
 } from '../_lib/commerce-engine';
@@ -19,7 +19,7 @@ export default function ListingPage({
   >(undefined);
 
   useEffect(() => {
-    hydrateStaticState({
+    ProductListingEngine.hydrateStaticState({
       searchAction: staticState.searchAction,
     }).then(({engine, controllers}) => {
       setHydratedState({engine, controllers});

@@ -2,15 +2,18 @@ import {AnyAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
-import {Build} from './build';
+import {Build} from '../../ssr-engine/types/build';
 import {
-  ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
+} from '../../ssr-engine/types/common';
+import {FetchStaticState} from '../../ssr-engine/types/fetch-static-state';
+import {HydrateStaticState} from '../../ssr-engine/types/hydrate-static-state';
+import {
+  ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
+  SolutionType,
 } from './common';
-import {FetchStaticState} from './fetch-static-state';
-import {HydrateStaticState} from './hydrate-static-state';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
@@ -29,13 +32,14 @@ export interface EngineDefinition<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
+  TSolutionType extends SolutionType,
 > {
   /**
    * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
     TEngine,
-    InferControllersMapFromDefinition<TControllers>,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
     AnyAction,
     InferControllerStaticStateMapFromDefinitions<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
@@ -45,7 +49,7 @@ export interface EngineDefinition<
    */
   hydrateStaticState: HydrateStaticState<
     TEngine,
-    InferControllersMapFromDefinition<TControllers>,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
     AnyAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
@@ -55,7 +59,7 @@ export interface EngineDefinition<
   build: Build<
     TEngine,
     TEngineOptions,
-    InferControllersMapFromDefinition<TControllers>,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
 }

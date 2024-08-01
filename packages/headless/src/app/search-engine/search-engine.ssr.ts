@@ -5,7 +5,6 @@ import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
-import {NavigatorContextProvider} from '../navigatorContextProvider';
 import {
   buildControllerDefinitions,
   composeFunction,
@@ -109,21 +108,11 @@ export function defineSearchEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const getOptions = () => {
-    return engineOptions;
-  };
-
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
-  };
-
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const engine = buildSSRSearchEngine(
       buildOptions?.extend
-        ? await buildOptions.extend(getOptions())
-        : getOptions()
+        ? await buildOptions.extend(engineOptions)
+        : engineOptions
     );
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -140,12 +129,6 @@ export function defineSearchEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-        console.warn(
-          '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-        );
-      }
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
@@ -173,12 +156,6 @@ export function defineSearchEngine<
 
   const hydrateStaticState: HydrateStaticStateFunction = composeFunction(
     async (...params: HydrateStaticStateParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-        console.warn(
-          '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
-        );
-      }
       const buildResult = await build(...(params as BuildParameters));
       const staticState = await hydrateStaticState.fromBuildResult({
         buildResult,
@@ -207,6 +184,5 @@ export function defineSearchEngine<
     build,
     fetchStaticState,
     hydrateStaticState,
-    setNavigatorContextProvider,
   };
 }

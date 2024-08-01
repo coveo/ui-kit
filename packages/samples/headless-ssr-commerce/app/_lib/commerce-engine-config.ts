@@ -16,7 +16,6 @@ const configuration = {
   ...getSampleCommerceEngineConfiguration(),
   analytics: {
     trackingId: 'sports-ui-samples',
-    enabled: false, // TODO: enable analytics
   },
 };
 
