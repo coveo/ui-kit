@@ -16,7 +16,7 @@ export const config = {
     ...getSampleSearchEngineConfiguration(),
     analytics: {
       analyticsMode: 'next',
-      trackingId: 'sports-ui-samples-legacy',
+      trackingId: 'sports-ui-samples',
     },
   },
   controllers: {
