@@ -61,8 +61,7 @@ function buildSSRCommerceEngine(
   options: CommerceEngineOptions
 ): SSRCommerceEngine {
   const {middleware, promise} = createWaitForActionMiddleware(
-    // solutionType === SolutionType.Listing
-    solutionType === SolutionType.Listing
+    solutionType === SolutionType.listing
       ? isListingFetchCompletedAction
       : isSearchCompletedAction
   );
@@ -109,11 +108,11 @@ export function defineCommerceEngine<
 ): {
   ProductListingEngine: CommerceEngineDefinition<
     TControllerDefinitions,
-    SolutionType.Listing
+    SolutionType.listing
   >;
   SearchEngine: CommerceEngineDefinition<
     TControllerDefinitions,
-    SolutionType.Search
+    SolutionType.search
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
@@ -199,7 +198,7 @@ export function defineCommerceEngine<
             },
           ] = params;
 
-          if (solutionType === SolutionType.Listing) {
+          if (solutionType === SolutionType.listing) {
             buildProductListing(engine).executeFirstRequest();
           } else {
             buildSearch(engine).executeFirstSearch();
@@ -256,16 +255,16 @@ export function defineCommerceEngine<
     );
   return {
     ProductListingEngine: {
-      build: buildFactory(SolutionType.Listing),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.Listing),
-      hydrateStaticState: hydrateStaticStateFactory(SolutionType.Listing),
+      build: buildFactory(SolutionType.listing),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.listing),
+      hydrateStaticState: hydrateStaticStateFactory(SolutionType.listing),
       setNavigatorContextProvider,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.Listing>,
+    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
     SearchEngine: {
-      build: buildFactory(SolutionType.Search),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.Search),
-      hydrateStaticState: hydrateStaticStateFactory(SolutionType.Search),
+      build: buildFactory(SolutionType.search),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.search),
+      hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.Search>,
+    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
   };
 }

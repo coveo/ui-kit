@@ -93,13 +93,20 @@ export function resetTimeout(
 
 export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   obj: Record<TKey, TInitialValue>,
-  predicate: (value: TInitialValue, key: TKey) => TNewValue
+  predicate: (value: TInitialValue, key: TKey) => TNewValue,
+  options: {filterNullValue?: boolean} = {
+    filterNullValue: false,
+  }
 ): Record<TKey, TNewValue> {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      predicate(value as TInitialValue, key as TKey),
-    ])
+    Object.entries(obj)
+      .map(([key, value]) => {
+        const newValue = predicate(value as TInitialValue, key as TKey);
+        return newValue === null && options.filterNullValue
+          ? []
+          : [key, newValue];
+      })
+      .filter((entry) => entry.length > 0)
   ) as Record<TKey, TNewValue>;
 }
 

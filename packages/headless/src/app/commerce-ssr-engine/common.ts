@@ -55,13 +55,32 @@ export function buildControllerDefinitions<
   TControllerDefinitionsMap,
   TSolutionType
 > {
-  return mapObject(definitionsMap, (definition, key) =>
-    buildControllerFromDefinition({
-      definition,
-      engine,
-      solutionType,
-      props: propsMap?.[key as keyof typeof propsMap],
-    })
+  return mapObject(
+    definitionsMap,
+    (definition, key) => {
+      // TODO: find a way to make it dynamic
+      const searchDisabled =
+        'search' in definition &&
+        definition['search'] === false &&
+        solutionType === SolutionType['search'];
+
+      const listingDisabled =
+        'listing' in definition &&
+        definition['listing'] === false &&
+        solutionType === SolutionType['listing'];
+
+      if (searchDisabled || listingDisabled) {
+        return null;
+      }
+
+      return buildControllerFromDefinition({
+        definition,
+        engine,
+        solutionType,
+        props: propsMap?.[key as keyof typeof propsMap],
+      });
+    },
+    {filterNullValue: true}
   ) as InferControllersMapFromDefinition<
     TControllerDefinitionsMap,
     TSolutionType

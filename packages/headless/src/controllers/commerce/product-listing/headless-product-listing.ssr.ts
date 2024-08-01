@@ -25,7 +25,7 @@ export function defineProductList<
   return {
     ...options,
     build: (engine, solutionType) =>
-      solutionType === SolutionType.Listing
+      solutionType === SolutionType.listing
         ? (buildProductListing(engine) as ProductList)
         : (buildSearch(engine) as ProductList),
   } as SubControllerDefinitionWithoutProps<ProductList, TOptions>;

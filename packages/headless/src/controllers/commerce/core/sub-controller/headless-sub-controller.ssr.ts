@@ -19,7 +19,7 @@ export function defineQuerySummary<
   return {
     ...options,
     build: (engine, solutionType) =>
-      solutionType === SolutionType.Listing
+      solutionType === SolutionType.listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
   } as SubControllerDefinitionWithoutProps<
