@@ -3,6 +3,7 @@ import {
   executeSearch,
   fetchQuerySuggestions,
 } from '../../../features/insight-search/insight-search-actions';
+import {searchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {logSearchboxSubmit} from '../../../features/query/query-insight-analytics-actions';
 import {Controller} from '../../controller/headless-controller';
 import {
@@ -86,7 +87,7 @@ export function buildSearchBox(
   return {
     ...searchBox,
     submit() {
-      searchBox.submit(logSearchboxSubmit());
+      searchBox.submit(logSearchboxSubmit(), searchboxSubmit());
     },
     get state() {
       return searchBox.state;

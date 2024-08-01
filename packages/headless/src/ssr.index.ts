@@ -315,6 +315,12 @@ export type {
 export {defineTab} from './controllers/tab/headless-tab.ssr';
 
 export type {
+  TabManagerState,
+  TabManager,
+} from './controllers/tab-manager/headless-tab-manager.ssr';
+export {defineTabManager} from './controllers/tab-manager/headless-tab-manager.ssr';
+
+export type {
   FacetManagerPayload,
   FacetManagerState,
   FacetManager,

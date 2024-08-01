@@ -14,6 +14,9 @@ import {
   FacetConditionsManager,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  buildTabManager,
+  TabManager,
+  TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
@@ -23,13 +26,14 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -71,6 +75,7 @@ export class AtomicRatingFacet implements InitializableComponent {
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -79,6 +84,9 @@ export class AtomicRatingFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -94,6 +102,32 @@ export class AtomicRatingFacet implements InitializableComponent {
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field!: string;
+  /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
@@ -184,8 +218,17 @@ export class AtomicRatingFacet implements InitializableComponent {
   }
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.initializeFacet();
     this.initializeDependenciesManager();
   }
@@ -226,6 +269,15 @@ export class AtomicRatingFacet implements InitializableComponent {
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  public componentShouldUpdate(): void {
+    updateFacetVisibilityForActiveTab(
+      [...this.tabsIncluded],
+      [...this.tabsExcluded],
+      this.tabManagerState?.activeTab,
+      this.facet
+    );
   }
 
   private get isHidden() {

@@ -214,14 +214,28 @@ describe('automatic-facet-set slice', () => {
   describe('#restoreSearchParameters', () => {
     it('sets #values to the selected values in the payload when a facet is found in the #af payload', () => {
       const field = 'field';
-      const value = 'a';
+      const initialValue = buildMockFacetValue({value: 'a', state: 'idle'});
+      state.set[field] = {
+        response: {
+          field,
+          values: [initialValue],
+          moreValuesAvailable: true,
+          indexScore: 0.42,
+          label: 'potato',
+        },
+      };
+
+      const value = 'b';
       const af = {[field]: [value]};
       const action = restoreSearchParameters({af});
 
       const finalState = automaticFacetSetReducer(state, action);
       const selectedValue = buildMockFacetValue({value, state: 'selected'});
 
-      expect(finalState.set[field].response.values).toEqual([selectedValue]);
+      expect(finalState.set[field].response.values).toEqual([
+        initialValue,
+        selectedValue,
+      ]);
     });
   });
 

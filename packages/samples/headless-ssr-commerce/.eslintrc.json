@@ -2,10 +2,5 @@
   "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
-  "root": true,
-  "settings": {
-    "next": {
-      "rootDir": "packages/samples/headless-ssr-commerce/src"
-    }
-  }
+  "root": true
 }

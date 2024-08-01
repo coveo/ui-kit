@@ -114,10 +114,7 @@ export const executeSearch = createAsyncThunk<
     config: AsyncThunkConfig
   ) => {
     const state = config.getState();
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !analyticsAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, analyticsAction.legacy);
     }
 
@@ -127,7 +124,9 @@ export const executeSearch = createAsyncThunk<
       ...config,
     });
 
-    const eventDescription = buildEventDescription(analyticsAction.next);
+    const eventDescription = analyticsAction.next
+      ? buildEventDescription(analyticsAction.next)
+      : undefined;
     const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
@@ -147,10 +146,7 @@ export const fetchPage = createAsyncThunk<
   ) => {
     const state = config.getState();
 
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !analyticsAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyFetchPage(state, config, analyticsAction.legacy);
     }
 
@@ -160,7 +156,9 @@ export const fetchPage = createAsyncThunk<
       ...config,
     });
 
-    const eventDescription = buildEventDescription(analyticsAction.next);
+    const eventDescription = analyticsAction.next
+      ? buildEventDescription(analyticsAction.next)
+      : undefined;
     const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
@@ -208,10 +206,7 @@ export const fetchFacetValues = createAsyncThunk<
   ) => {
     const state = config.getState();
 
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !analyticsAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyFetchFacetValues(state, config, analyticsAction.legacy);
     }
 
@@ -219,11 +214,7 @@ export const fetchFacetValues = createAsyncThunk<
       ...config,
     });
 
-    const eventDescription = buildEventDescription(analyticsAction.next);
-    const request = await buildInsightFetchFacetValuesRequest(
-      state,
-      eventDescription
-    );
+    const request = await buildInsightFetchFacetValuesRequest(state);
     const fetched = await processor.fetchFromAPI(request);
 
     return await processor.process(fetched);
