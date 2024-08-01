@@ -1,12 +1,23 @@
+import {createSelector} from '@reduxjs/toolkit';
 import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
 import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {
+  CommerceFacetSetSection,
+  FacetSearchSection,
+  FieldSuggestionsOrderSection,
+} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
-  Subscribable,
+  Controller,
 } from '../../controller/headless-controller';
 import {FacetControllerType} from '../core/facets/headless-core-commerce-facet';
 import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet';
@@ -28,7 +39,7 @@ export type FieldSuggestionsState = RegularFacetSearchState &
  * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
  */
 export interface FieldSuggestions
-  extends Subscribable,
+  extends Controller,
     FacetControllerType<'regular'> {
   /**
    * Requests field suggestions based on a query.
@@ -100,12 +111,23 @@ export function buildFieldSuggestions(
   });
 
   const getFacetForFieldSuggestions = (facetId: string) => {
-    return engine[stateKey].fieldSuggestionsOrder!.find(
+    return engine[stateKey].fieldSuggestionsOrder.find(
       (facet) => facet.facetId === facetId
     )!;
   };
 
   const controller = buildController(engine);
+
+  const facetSearchStateSelector = createSelector(
+    (state: CommerceEngineState) => state.facetSearchSet[options.facetId],
+    (facetSearch) => ({
+      isLoading: facetSearch.isLoading,
+      moreValuesAvailable: facetSearch.response.moreValuesAvailable,
+      query: facetSearch.options.query,
+      values: facetSearch.response.values,
+    })
+  );
+
   return {
     ...controller,
     ...facetSearch,
@@ -121,7 +143,7 @@ export function buildFieldSuggestions(
         displayName: facet.displayName,
         field: facet.field,
         facetId: facet.facetId,
-        ...facetSearch.state,
+        ...facetSearchStateSelector(engine[stateKey]),
       };
     },
 
@@ -131,7 +153,9 @@ export function buildFieldSuggestions(
 
 function loadFieldSuggestionsReducers(
   engine: CommerceEngine
-): engine is CommerceEngine {
-  engine.addReducers({commerceFacetSet});
+): engine is CommerceEngine<
+  FieldSuggestionsOrderSection & CommerceFacetSetSection & FacetSearchSection
+> {
+  engine.addReducers({fieldSuggestionsOrder, commerceFacetSet, facetSearchSet});
   return true;
 }
