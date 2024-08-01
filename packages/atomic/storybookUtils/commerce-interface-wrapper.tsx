@@ -10,15 +10,17 @@ import type * as _ from '../src/components.d.ts';
 export const wrapInCommerceInterface = ({
   engineConfig,
   skipFirstSearch,
+  type = 'search',
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstSearch?: boolean;
+  type?: 'search' | 'product-listing';
 }): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-interface data-testid="root-interface">
+    <atomic-commerce-interface type="${type}" data-testid="root-interface">
       ${story()}
     </atomic-commerce-interface>
   `,
