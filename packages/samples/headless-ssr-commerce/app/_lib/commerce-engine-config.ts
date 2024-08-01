@@ -12,24 +12,9 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
   ControllerDefinitionsMap<CommerceEngine, Controller>
 >;
 
-const configuration = {
-  ...getSampleCommerceEngineConfiguration(),
-  analytics: {
-    trackingId: 'sports-ui-samples',
-  },
-};
-
 export default {
   configuration: {
-    ...configuration,
-    context: {
-      country: 'US',
-      currency: 'USD',
-      language: 'en',
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/skis-boards/surfboards',
-      },
-    },
+    ...getSampleCommerceEngineConfiguration(),
   },
   controllers: {
     summary: defineQuerySummary(),
