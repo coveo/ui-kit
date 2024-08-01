@@ -110,8 +110,10 @@ export function buildFieldSuggestions(
     isForFieldSuggestions: true,
   });
 
+  const getState = () => engine[stateKey];
+
   const getFacetForFieldSuggestions = (facetId: string) => {
-    return engine[stateKey].fieldSuggestionsOrder.find(
+    return getState().fieldSuggestionsOrder.find(
       (facet) => facet.facetId === facetId
     )!;
   };
@@ -143,7 +145,7 @@ export function buildFieldSuggestions(
         displayName: facet.displayName,
         field: facet.field,
         facetId: facet.facetId,
-        ...facetSearchStateSelector(engine[stateKey]),
+        ...facetSearchStateSelector(getState()),
       };
     },
 
