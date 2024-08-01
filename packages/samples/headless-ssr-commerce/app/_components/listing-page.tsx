@@ -1,5 +1,6 @@
 'use client';
 
+import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 import {
   ProductListingEngine,
@@ -11,12 +12,17 @@ import {Summary} from './summary';
 
 export default function ListingPage({
   staticState,
+  navigatorContext,
 }: {
   staticState: ListingStaticState;
+  navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
     ListingHydratedState | undefined
   >(undefined);
+
+  // Setting the navigator context provider also in client-side before hydrating the application
+  ProductListingEngine.setNavigatorContextProvider(() => navigatorContext);
 
   useEffect(() => {
     ProductListingEngine.hydrateStaticState({

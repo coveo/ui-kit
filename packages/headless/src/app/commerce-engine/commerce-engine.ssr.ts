@@ -16,6 +16,7 @@ import {
   EngineDefinition,
   EngineDefinitionOptions,
 } from '../commerce-ssr-engine/types/core-engine';
+import {NavigatorContextProvider} from '../navigatorContextProvider';
 import {composeFunction} from '../ssr-engine/common';
 import {createStaticState} from '../ssr-engine/common';
 import {
@@ -135,8 +136,14 @@ export function defineCommerceEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const getOpts = () => {
+  const getOptions = () => {
     return engineOptions;
+  };
+
+  const setNavigatorContextProvider = (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => {
+    engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
   const buildFactory =
@@ -144,7 +151,9 @@ export function defineCommerceEngine<
     async (...[buildOptions]: BuildParameters) => {
       const engine = buildSSRCommerceEngine(
         solutionType,
-        buildOptions?.extend ? await buildOptions.extend(getOpts()) : getOpts()
+        buildOptions?.extend
+          ? await buildOptions.extend(getOptions())
+          : getOptions()
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -166,6 +175,12 @@ export function defineCommerceEngine<
   ) => FetchStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: FetchStaticStateParameters) => {
+        if (!getOptions().navigatorContextProvider) {
+          // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
+          console.warn(
+            '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+          );
+        }
         const buildResult = await buildFactory(solutionType)(...params);
         const staticState = await fetchStaticStateFactory(
           solutionType
@@ -206,6 +221,12 @@ export function defineCommerceEngine<
   ) => HydrateStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: HydrateStaticStateParameters) => {
+        if (!getOptions().navigatorContextProvider) {
+          // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
+          console.warn(
+            '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
+          );
+        }
         const buildResult = await buildFactory(solutionType)(
           ...(params as BuildParameters)
         );
@@ -238,11 +259,13 @@ export function defineCommerceEngine<
       build: buildFactory(SolutionType.Listing),
       fetchStaticState: fetchStaticStateFactory(SolutionType.Listing),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.Listing),
+      setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.Listing>,
     SearchEngine: {
       build: buildFactory(SolutionType.Search),
       fetchStaticState: fetchStaticStateFactory(SolutionType.Search),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.Search),
+      setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.Search>,
   };
 }
