@@ -90,6 +90,64 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadQueryActions',
   },
+  {
+    initializer: 'loadProductListingParametersActions',
+  },
+  {
+    initializer: 'loadPaginationActions',
+  },
+  {
+    initializer: 'loadInstantProductsActions',
+  },
+  {
+    initializer: 'loadProductActions',
+  },
+  {
+    initializer: 'loadRecentQueriesActions',
+  },
+  {
+    initializer: 'loadRecommendationsActions',
+  },
+  {
+    initializer: 'loadSearchActions',
+  },
+  {
+    initializer: 'loadSortActions',
+  },
+  {
+    initializer: 'loadSearchParametersActions',
+  },
+  {
+    initializer: 'loadStandaloneSearchBoxSetActions',
+  },
+  {
+    initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadCategoryFacetSetActions',
+  },
+  {
+    initializer: 'loadCoreFacetActions',
+  },
+  {
+    initializer: 'loadDateFacetActions',
+  },
+  {
+    initializer: 'loadNumericFacetActions',
+  },
+  {
+    initializer: 'loadRegularFacetActions',
+  },
+  // TODO: KIT-3422 - Uncomment when ready to generate typedoc docs
+  // {
+  //   initializer: 'loadQuerySetActions',
+  // },
+  // {
+  //   initializer: 'loadTriggersActions',
+  // },
+  // {
+  //   initializer: 'loadCartActions',
+  // },
 ];
 
 const engine: EngineConfiguration = {

@@ -1,3 +1,31 @@
+# 2.75.0 (2024-07-31)
+
+### Bug Fixes
+
+- **deps:** update dependency @reduxjs/toolkit to v2.2.7 j:kit-282 ([#4232](https://github.com/coveo/ui-kit/issues/4232)) ([0d28438](https://github.com/coveo/ui-kit/commits/0d2843805abd8e0305b3349732554e63a3fdde64))
+- **ep:** do not send actionCause w/ breadcrumbResetAll ([#4207](https://github.com/coveo/ui-kit/issues/4207)) ([bcecc55](https://github.com/coveo/ui-kit/commits/bcecc552b433b5da3b9940bae96c725ea731df90))
+- **headless/commerce:** send clientId only when analytics are enabled ([#4217](https://github.com/coveo/ui-kit/issues/4217)) ([323cede](https://github.com/coveo/ui-kit/commits/323cedefc60292ec9193b01e500372ddde1ebcc6))
+
+### Features
+
+- **headless SSR:** define the SSR Commerce Engine ([#4198](https://github.com/coveo/ui-kit/issues/4198)) ([c474a8d](https://github.com/coveo/ui-kit/commits/c474a8d9cb77aeb5b88a992847e5a233adb55123))
+
+# 2.74.0 (2024-07-24)
+
+### Bug Fixes
+
+- **commerce:** properly memoize suggestions controllers ([#4184](https://github.com/coveo/ui-kit/issues/4184)) ([b5d226b](https://github.com/coveo/ui-kit/commits/b5d226b1c6ccd31053934f586964504d43a54ebd))
+- **ep:** camelCase causes ([#4204](https://github.com/coveo/ui-kit/issues/4204)) ([ed89da4](https://github.com/coveo/ui-kit/commits/ed89da4b7081649b7ab048943e520b05b64085b4))
+- **ep:** do not send actionCause w/ recentQueriesClick ([#4206](https://github.com/coveo/ui-kit/issues/4206)) ([a47697e](https://github.com/coveo/ui-kit/commits/a47697e50bfa5c943343f69f22b101de1e6f77ed))
+- **ep:** remove actionCause for fetchFacetValues ([#4205](https://github.com/coveo/ui-kit/issues/4205)) ([2989ff7](https://github.com/coveo/ui-kit/commits/2989ff77bf63de949dcbaf4859c8d2b3a1c94d60))
+- **headless:** ensure facet value from URL are always considered for auto-facets ([#4200](https://github.com/coveo/ui-kit/issues/4200)) ([40ebf94](https://github.com/coveo/ui-kit/commits/40ebf94bb6f189d17bb0d9a37e51d270907060ba))
+
+### Features
+
+- answerapi-generated-answer ([#4157](https://github.com/coveo/ui-kit/issues/4157)) ([aafe3fe](https://github.com/coveo/ui-kit/commits/aafe3fed4a9ba3962a3edd73288a59ed1ecb5b1e))
+- **headless:** add tab manager controller ([#4195](https://github.com/coveo/ui-kit/issues/4195)) ([0eddd7f](https://github.com/coveo/ui-kit/commits/0eddd7fe48c63b2e96e3d035adf32c1af36decbc))
+- **headless:** creation of the new headless insight user actions controller ([#4192](https://github.com/coveo/ui-kit/issues/4192)) ([b52953e](https://github.com/coveo/ui-kit/commits/b52953e2053ba7fd4b9fe4bec35000075fc95af5))
+
 # 2.73.0 (2024-07-17)
 
 ### Bug Fixes

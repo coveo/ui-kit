@@ -38,6 +38,7 @@ export interface SmartSnippetInteractiveInlineLinks {
    * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
    *
    * In a DOM context, it's recommended to call this method on all of the following events:
+   *
    * * `contextmenu`
    * * `click`
    * * `mouseup`

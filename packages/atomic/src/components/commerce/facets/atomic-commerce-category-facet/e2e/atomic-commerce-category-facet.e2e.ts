@@ -59,19 +59,18 @@ test.describe('default', () => {
   });
 
   test('allow to search for a value', async ({categoryFacet, page}) => {
-    await categoryFacet.searchInput.fill('c');
+    await categoryFacet.searchInput.fill('o');
 
-    expect(await page.getByRole('listitem').count()).toBeGreaterThanOrEqual(8);
-    await expect(page.getByText('More matches for c')).toBeVisible();
-    await categoryFacet.searchInput.fill('classic');
+    await expect(page.getByText('More matches for o')).toBeVisible();
+    await categoryFacet.searchInput.fill('accessories');
 
     const foundValue = page.getByRole('button', {
-      name: /Classic \([0-9]+\) in Canoes & Kayaks/,
+      name: /Accessories \([0-9]+\) in All Categories/,
     });
 
     await foundValue.click();
 
-    const classicCanoes = categoryFacet.getFacetValue('Classic');
+    const classicCanoes = categoryFacet.getFacetValue('accessories');
     await expect(classicCanoes).toBeVisible();
     await expect(classicCanoes).toHaveAttribute('aria-pressed', 'true');
   });

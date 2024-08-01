@@ -4,9 +4,9 @@
 import {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
-import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {createWaitForActionMiddleware} from '../../utils/utils';
+import {NavigatorContextProvider} from '../navigatorContextProvider';
 import {
   buildControllerDefinitions,
   composeFunction,
@@ -26,15 +26,6 @@ import {
   buildCommerceEngine,
 } from './commerce-engine';
 
-export interface SSRCommerceEngineOptions extends CommerceEngineOptions {
-  /**
-   * The type of the solution the engine will be used for
-   * - 'search': Indicates that the engine is used for Search.
-   * - 'product-listing': Indicates that the engine is used for Product listing.
-   */
-  solutionType: 'search' | 'listing';
-}
-
 /**
  * The SSR commerce engine.
  */
@@ -47,7 +38,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 
 export type CommerceEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
-> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -55,19 +46,20 @@ function isListingFetchCompletedAction(action: unknown): action is Action {
   );
 }
 
-function isSearchCompletedAction(action: unknown): action is Action {
-  return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
+// TODO: KIT-3394 - Uncomment this function when implementing the search solution type
+// function isSearchCompletedAction(action: unknown): action is Action {
+//   return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
+//     (action as UnknownAction).type
+//   );
+// }
 
 function buildSSRCommerceEngine(
-  options: SSRCommerceEngineOptions
+  options: CommerceEngineOptions
 ): SSRCommerceEngine {
   const {middleware, promise} = createWaitForActionMiddleware(
-    options.solutionType === 'listing'
-      ? isListingFetchCompletedAction
-      : isSearchCompletedAction
+    isListingFetchCompletedAction
+    // TODO: KIT-3394 - Implement the logic for the search solution type
+    // isSearchCompletedAction
   );
   const commerceEngine = buildCommerceEngine({
     ...options,
@@ -91,10 +83,11 @@ export interface CommerceEngineDefinition<
 > extends EngineDefinition<
     SSRCommerceEngine,
     TControllers,
-    SSRCommerceEngineOptions
+    CommerceEngineOptions
   > {}
 
 /**
+ * @internal
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
@@ -125,13 +118,21 @@ export function defineCommerceEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const getOpts = () => {
+  const getOptions = () => {
     return engineOptions;
+  };
+
+  const setNavigatorContextProvider = (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => {
+    engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const engine = buildSSRCommerceEngine(
-      buildOptions?.extend ? await buildOptions.extend(getOpts()) : getOpts()
+      buildOptions?.extend
+        ? await buildOptions.extend(getOptions())
+        : getOptions()
     );
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -148,6 +149,12 @@ export function defineCommerceEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
+      if (!getOptions().navigatorContextProvider) {
+        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
+        console.warn(
+          '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+        );
+      }
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
@@ -164,11 +171,9 @@ export function defineCommerceEngine<
           },
         ] = params;
 
-        if (options.solutionType === 'listing') {
-          buildProductListing(engine).executeFirstRequest();
-        } else {
-          buildSearch(engine).executeFirstSearch();
-        }
+        buildProductListing(engine).executeFirstRequest();
+        // TODO: KIT-3394 - Implement the logic for the search solution type
+        // buildSearch(engine).executeFirstSearch();
 
         return createStaticState({
           searchAction: await engine.waitForSearchCompletedAction(),
@@ -180,6 +185,12 @@ export function defineCommerceEngine<
 
   const hydrateStaticState: HydrateStaticStateFunction = composeFunction(
     async (...params: HydrateStaticStateParameters) => {
+      if (!getOptions().navigatorContextProvider) {
+        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
+        console.warn(
+          '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
+        );
+      }
       const buildResult = await build(...(params as BuildParameters));
       const staticState = await hydrateStaticState.fromBuildResult({
         buildResult,
@@ -208,6 +219,7 @@ export function defineCommerceEngine<
     build,
     fetchStaticState,
     hydrateStaticState,
+    setNavigatorContextProvider,
   };
 }
 // Proposition 4 available in KIT-3394-proposition-4
