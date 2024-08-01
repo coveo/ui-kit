@@ -17,8 +17,6 @@ dist_test
 node_modules
 coverage
 deploy
-Jenkinsfile
-Jenkinsfile_FT
 Dockerfile
 *.sh
 
