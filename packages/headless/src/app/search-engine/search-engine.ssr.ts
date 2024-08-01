@@ -89,10 +89,10 @@ export function defineSearchEngine<
     SearchEngine,
     Controller
   >,
->({
-  controllers: controllerDefinitions,
-  ...engineOptions
-}: SearchEngineDefinitionOptions<TControllerDefinitions>): SearchEngineDefinition<TControllerDefinitions> {
+>(
+  options: SearchEngineDefinitionOptions<TControllerDefinitions>
+): SearchEngineDefinition<TControllerDefinitions> {
+  const {controllers: controllerDefinitions, ...engineOptions} = options;
   type Definition = SearchEngineDefinition<TControllerDefinitions>;
   type BuildFunction = Definition['build'];
   type FetchStaticStateFunction = Definition['fetchStaticState'];
