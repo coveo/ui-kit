@@ -116,6 +116,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() collapsible?: boolean;
 
   /**
+   * Whether to render the rephrase buttons that lets the user rephrase the answer.
+   * @default false
+   */
+  @Prop() withRephraseButtons?: boolean;
+
+  /**
    * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
    */
@@ -133,6 +139,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      withRephraseButtons: this.withRephraseButtons,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,

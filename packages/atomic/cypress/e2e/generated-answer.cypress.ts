@@ -85,7 +85,7 @@ describe('Generated Answer Test Suites', () => {
         .init();
     }
 
-    describe('when an answerStyle prop is provided', () => {
+    describe('when an answerStyle and withRephraseButtons props are provided', () => {
       const streamId = crypto.randomUUID();
       const answerStyle = rephraseOptions[0];
 
@@ -93,6 +93,7 @@ describe('Generated Answer Test Suites', () => {
         mockStreamResponse(streamId, testMessagePayload);
         setupGeneratedAnswerWithoutFirstIntercept(streamId, {
           'answer-style': answerStyle.value,
+          'with-rephrase-buttons': true,
         });
       });
 
@@ -370,12 +371,8 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerSelectors.copyButton().should('exist');
         });
 
-        it('should display rephrase options', () => {
-          rephraseOptions.forEach((option) =>
-            GeneratedAnswerSelectors.rephraseButton(option.label).should(
-              'exist'
-            )
-          );
+        it('should not display rephrase options', () => {
+          GeneratedAnswerSelectors.rephraseButtons().should('not.exist');
         });
 
         it('should display the disclaimer', () => {
@@ -419,6 +416,26 @@ describe('Generated Answer Test Suites', () => {
 
             GeneratedAnswerAssertions.assertLogCopyGeneratedAnswer();
           });
+        });
+      });
+
+      describe('when withRephraseButtons option is provided', () => {
+        const streamId = crypto.randomUUID();
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswer(streamId, {
+            'with-rephrase-buttons': true,
+          });
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should display rephrase options', () => {
+          rephraseOptions.forEach((option) =>
+            GeneratedAnswerSelectors.rephraseButton(option.label).should(
+              'exist'
+            )
+          );
         });
 
         describe('when a rephrase option is selected', () => {

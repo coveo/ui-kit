@@ -1058,6 +1058,11 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
+        /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
          */
@@ -1198,6 +1203,11 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -6682,6 +6692,11 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
+        /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
          */
@@ -6819,6 +6834,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
