@@ -8,22 +8,24 @@ import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-fac
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options';
 import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider';
+import {namespaceCommerceFieldSuggestionFacet} from '../../../../facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CategoryFacetValueRequest} from '../../facet-set/interfaces/request';
+import {removeCommerceFieldSuggestionNamespace} from '../regular/commerce-regular-facet-search-request-builder';
 import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-request-builder';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   let state: CommerceAppState;
   let navigatorContext: NavigatorContext;
-  let facetId: string;
+  const facetId = '1';
   let query: string;
   let buildCommerceAPIRequestMock: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    facetId = '1';
     query = 'test';
     state = buildMockCommerceState();
+
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch({
       options: {...buildMockFacetSearchRequestOptions(), query},
     });
@@ -64,7 +66,25 @@ describe('#buildCategoryFacetSearchRequest', () => {
     );
   });
 
-  describe('returned object #ignorePaths property', () => {
+  describe.each([
+    {
+      facetId: 'a_non_namespaced_facet_id',
+    },
+    {
+      facetId: namespaceCommerceFieldSuggestionFacet('a_namespaced_facet_id'),
+    },
+  ])('returned object #ignorePaths property', ({facetId}) => {
+    beforeEach(() => {
+      state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch({
+        options: {...buildMockFacetSearchRequestOptions(), query},
+      });
+
+      state.commerceFacetSet[removeCommerceFieldSuggestionNamespace(facetId)] =
+        buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({type: 'hierarchical'}),
+        });
+    });
+
     it('when the facet request has no selected value, is an empty array', () => {
       const request = buildCategoryFacetSearchRequest(
         facetId,
@@ -77,8 +97,12 @@ describe('#buildCategoryFacetSearchRequest', () => {
     });
 
     it('when the facet request has a selected value with no ancestry, is an array with a single array containing the selected value', () => {
-      state.commerceFacetSet[facetId].request.values[0] =
-        buildMockCategoryFacetValue({state: 'selected', value: 'test'});
+      state.commerceFacetSet[
+        removeCommerceFieldSuggestionNamespace(facetId)
+      ].request.values[0] = buildMockCategoryFacetValue({
+        state: 'selected',
+        value: 'test',
+      });
       const request = buildCategoryFacetSearchRequest(
         facetId,
         state,
@@ -89,15 +113,17 @@ describe('#buildCategoryFacetSearchRequest', () => {
       expect(request.ignorePaths).toStrictEqual([
         [
           (
-            state.commerceFacetSet[facetId].request
-              .values[0] as CategoryFacetValueRequest
+            state.commerceFacetSet[
+              removeCommerceFieldSuggestionNamespace(facetId)
+            ].request.values[0] as CategoryFacetValueRequest
           ).value,
         ],
       ]);
     });
 
     it('when the facet request has a selected value with ancestry, is an array with a single array containing the selected value and its ancestors', () => {
-      state.commerceFacetSet[facetId].request.values[0] =
+      const nonNamespacedId = removeCommerceFieldSuggestionNamespace(facetId);
+      state.commerceFacetSet[nonNamespacedId].request.values[0] =
         buildMockCategoryFacetValue({
           value: 'test',
           children: [
@@ -122,15 +148,15 @@ describe('#buildCategoryFacetSearchRequest', () => {
       expect(request.ignorePaths).toStrictEqual([
         [
           (
-            state.commerceFacetSet[facetId].request
+            state.commerceFacetSet[nonNamespacedId].request
               .values[0] as CategoryFacetValueRequest
           ).value,
           (
-            state.commerceFacetSet[facetId].request
+            state.commerceFacetSet[nonNamespacedId].request
               .values[0] as CategoryFacetValueRequest
           ).children[0].value,
           (
-            state.commerceFacetSet[facetId].request
+            state.commerceFacetSet[nonNamespacedId].request
               .values[0] as CategoryFacetValueRequest
           ).children[0].children[0].value,
         ],

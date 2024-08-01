@@ -16,7 +16,9 @@ export const buildCategoryFacetSearchRequest = (
 ): CategoryFacetSearchRequest => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const categoryFacet = state.commerceFacetSet[facetId]?.request;
+  const categoryFacet =
+    state.commerceFacetSet[removeCommerceFieldSuggestionNamespace(facetId)]
+      ?.request;
   const path =
     categoryFacet && isCategoryFacetRequest(categoryFacet)
       ? categoryFacet && getPathToSelectedCategoryFacetItem(categoryFacet)
