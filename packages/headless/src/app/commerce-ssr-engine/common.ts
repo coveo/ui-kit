@@ -1,6 +1,6 @@
 import {Controller} from '../../controllers/controller/headless-controller';
 import {InvalidControllerDefinition} from '../../utils/errors';
-import {mapObject} from '../../utils/utils';
+import {filterObject, mapObject} from '../../utils/utils';
 import {CoreEngine, CoreEngineNext} from '../engine';
 import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common';
 import {
@@ -55,32 +55,33 @@ export function buildControllerDefinitions<
   TControllerDefinitionsMap,
   TSolutionType
 > {
-  return mapObject(
-    definitionsMap,
-    (definition, key) => {
-      // TODO: find a way to make it dynamic
-      const searchDisabled =
-        'search' in definition &&
-        definition['search'] === false &&
-        solutionType === SolutionType['search'];
+  const controllerMap = mapObject(definitionsMap, (definition, key) => {
+    // TODO: find a way to make it dynamic
+    const searchDisabled =
+      'search' in definition &&
+      definition['search'] === false &&
+      solutionType === SolutionType['search'];
 
-      const listingDisabled =
-        'listing' in definition &&
-        definition['listing'] === false &&
-        solutionType === SolutionType['listing'];
+    const listingDisabled =
+      'listing' in definition &&
+      definition['listing'] === false &&
+      solutionType === SolutionType['listing'];
 
-      if (searchDisabled || listingDisabled) {
-        return null;
-      }
+    if (searchDisabled || listingDisabled) {
+      return null;
+    }
 
-      return buildControllerFromDefinition({
-        definition,
-        engine,
-        solutionType,
-        props: propsMap?.[key as keyof typeof propsMap],
-      });
-    },
-    {filterNullValue: true}
+    return buildControllerFromDefinition({
+      definition,
+      engine,
+      solutionType,
+      props: propsMap?.[key as keyof typeof propsMap],
+    });
+  });
+
+  return filterObject(
+    controllerMap,
+    (value) => value !== null
   ) as InferControllersMapFromDefinition<
     TControllerDefinitionsMap,
     TSolutionType

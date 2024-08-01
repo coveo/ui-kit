@@ -93,21 +93,25 @@ export function resetTimeout(
 
 export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   obj: Record<TKey, TInitialValue>,
-  predicate: (value: TInitialValue, key: TKey) => TNewValue,
-  options: {filterNullValue?: boolean} = {
-    filterNullValue: false,
-  }
+  predicate: (value: TInitialValue, key: TKey) => TNewValue
 ): Record<TKey, TNewValue> {
   return Object.fromEntries(
-    Object.entries(obj)
-      .map(([key, value]) => {
-        const newValue = predicate(value as TInitialValue, key as TKey);
-        return newValue === null && options.filterNullValue
-          ? []
-          : [key, newValue];
-      })
-      .filter((entry) => entry.length > 0)
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      predicate(value as TInitialValue, key as TKey),
+    ])
   ) as Record<TKey, TNewValue>;
+}
+
+export function filterObject<TKey extends string, TValue>(
+  obj: Record<TKey, TValue>,
+  predicate: (value: TValue, key: TKey) => boolean
+): Record<TKey, TValue> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key, value]) =>
+      predicate(value as TValue, key as TKey)
+    )
+  ) as Record<TKey, TValue>;
 }
 
 // TODO: Could eventually be replaced with `structuredClone`.
