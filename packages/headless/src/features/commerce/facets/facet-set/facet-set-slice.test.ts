@@ -33,6 +33,7 @@ import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
+import {namespaceCommerceFieldSuggestionFacet} from '../../../facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
@@ -688,12 +689,12 @@ describe('commerceFacetSetReducer', () => {
         )
       );
       expect(finalState).toEqual({
-        regular_field: {
+        [namespaceCommerceFieldSuggestionFacet('regular_field')]: {
           request: {
             initialNumberOfValues: 10,
           },
         },
-        hierarchical_field: {
+        [namespaceCommerceFieldSuggestionFacet('hierarchical_field')]: {
           request: {
             initialNumberOfValues: 10,
           },

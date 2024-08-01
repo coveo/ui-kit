@@ -8,7 +8,10 @@ import {
 import {stateKey} from '../../../app/state-key';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {
+  namespaceCommerceFieldSuggestionFacet,
+  specificFacetSearchSetReducer as facetSearchSet,
+} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   CommerceFacetSetSection,
   FacetSearchSection,
@@ -99,8 +102,11 @@ export function buildFieldSuggestions(
 
   const {dispatch} = engine;
 
+  const namespacedFacetId = namespaceCommerceFieldSuggestionFacet(
+    options.facetId
+  );
   const facetSearch = buildRegularFacetSearch(engine, {
-    options: {facetId: options.facetId, ...options.facetSearch},
+    options: {facetId: namespacedFacetId, ...options.facetSearch},
     select: () => {
       dispatch(options.fetchProductsActionCreator());
     },
@@ -121,7 +127,7 @@ export function buildFieldSuggestions(
   const controller = buildController(engine);
 
   const facetSearchStateSelector = createSelector(
-    (state: CommerceEngineState) => state.facetSearchSet[options.facetId],
+    (state: CommerceEngineState) => state.facetSearchSet[namespacedFacetId],
     (facetSearch) => ({
       isLoading: facetSearch.isLoading,
       moreValuesAvailable: facetSearch.response.moreValuesAvailable,

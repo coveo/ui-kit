@@ -46,7 +46,11 @@ export const specificFacetSearchSetReducer = createReducer(
       })
       .addCase(executeCommerceFieldSuggest.pending, (state, action) => {
         const {facetId} = action.meta.arg;
-        handleFacetSearchPending(state, facetId, action.meta.requestId);
+        handleFacetSearchPending(
+          state,
+          namespaceCommerceFieldSuggestionFacet(facetId),
+          action.meta.requestId
+        );
       })
       .addCase(executeFacetSearch.pending, (state, action) => {
         const facetId = action.meta.arg;
@@ -58,7 +62,10 @@ export const specificFacetSearchSetReducer = createReducer(
       })
       .addCase(executeCommerceFieldSuggest.rejected, (state, action) => {
         const {facetId} = action.meta.arg;
-        handleFacetSearchRejected(state, facetId);
+        handleFacetSearchRejected(
+          state,
+          namespaceCommerceFieldSuggestionFacet(facetId)
+        );
       })
       .addCase(executeFacetSearch.rejected, (state, action) => {
         const facetId = action.meta.arg;
@@ -111,6 +118,13 @@ export const specificFacetSearchSetReducer = createReducer(
       );
   }
 );
+
+export function namespaceCommerceFieldSuggestionFacet(facetId: string): string {
+  if (facetId.includes(':')) {
+    return facetId;
+  }
+  return 'field_suggestion:' + facetId;
+}
 
 function buildEmptyResponse(): SpecificFacetSearchResponse {
   return {

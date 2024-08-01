@@ -1,6 +1,7 @@
 import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
 import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
+import {namespaceCommerceFieldSuggestionFacet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
@@ -38,16 +39,22 @@ describe('fieldSuggestionsGenerator', () => {
 
   function setFacetState(config: FieldSuggestionsFacet[] = []) {
     for (const facet of config) {
+      const namespacedFacetId = namespaceCommerceFieldSuggestionFacet(
+        facet.facetId
+      );
       state.fieldSuggestionsOrder.push(facet);
-      state.commerceFacetSet[facet.facetId] = {
-        request: buildMockCommerceFacetRequest({
-          facetId: facet.facetId,
-          type: facet.type,
-        }),
-      };
-      state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
-      state.categoryFacetSearchSet[facet.facetId] =
-        buildMockCategoryFacetSearch();
+      if (facet.type === 'regular') {
+        state.facetSearchSet[namespacedFacetId] = buildMockFacetSearch();
+      } else {
+        state.commerceFacetSet[facet.facetId] = {
+          request: buildMockCommerceFacetRequest({
+            facetId: facet.facetId,
+            type: facet.type,
+          }),
+        };
+        state.categoryFacetSearchSet[namespacedFacetId] =
+          buildMockCategoryFacetSearch();
+      }
     }
   }
 

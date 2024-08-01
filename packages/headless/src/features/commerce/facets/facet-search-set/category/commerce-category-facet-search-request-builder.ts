@@ -5,6 +5,7 @@ import {
   AnyFacetRequest,
   CategoryFacetRequest,
 } from '../../facet-set/interfaces/request';
+import {removeCommerceFieldSuggestionNamespace} from '../regular/commerce-regular-facet-search-request-builder';
 import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state';
 
 export const buildCategoryFacetSearchRequest = (
@@ -40,7 +41,7 @@ export const buildCategoryFacetSearchRequest = (
     url,
     accessToken,
     organizationId,
-    facetId,
+    facetId: removeCommerceFieldSuggestionNamespace(facetId),
     facetQuery,
     ignorePaths,
     trackingId,

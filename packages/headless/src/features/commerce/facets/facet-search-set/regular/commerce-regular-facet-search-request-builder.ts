@@ -30,7 +30,7 @@ export const buildFacetSearchRequest = (
     url,
     accessToken,
     organizationId,
-    facetId,
+    facetId: removeCommerceFieldSuggestionNamespace(facetId),
     facetQuery,
     trackingId,
     language,
@@ -42,3 +42,9 @@ export const buildFacetSearchRequest = (
     ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query: ''}),
   };
 };
+
+export function removeCommerceFieldSuggestionNamespace(facetId: string) {
+  return facetId.startsWith('field_suggestion:')
+    ? facetId.split(':')[1]
+    : facetId;
+}
