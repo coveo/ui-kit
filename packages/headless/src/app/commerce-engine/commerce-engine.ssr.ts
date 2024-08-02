@@ -10,6 +10,7 @@ import {createWaitForActionMiddleware} from '../../utils/utils';
 import {buildControllerDefinitions} from '../commerce-ssr-engine/common';
 import {
   ControllerDefinitionsMap,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
 } from '../commerce-ssr-engine/types/common';
 import {
@@ -22,7 +23,6 @@ import {createStaticState} from '../ssr-engine/common';
 import {
   EngineStaticState,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
 } from '../ssr-engine/types/common';
 import {
   CommerceEngine,
@@ -209,7 +209,10 @@ export function defineCommerceEngine<
             controllers,
           }) as EngineStaticState<
             AnyAction,
-            InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+            InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+              TControllerDefinitions,
+              SolutionType
+            >
           >;
         },
       }

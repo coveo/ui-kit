@@ -6,12 +6,10 @@ import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromDefinitions,
 } from '../../ssr-engine/types/common';
 
 export type {
   InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromDefinitions,
   InferControllerStaticStateMapFromControllers,
 };
 
@@ -111,6 +109,23 @@ export type InferControllersMapFromDefinition<
   > extends never
     ? never
     : K]: InferControllerFromDefinition<TControllers[K]>;
+};
+
+export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+  TControllers extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
+  TSolutionType extends SolutionType,
+> = {
+  [K in keyof TControllers as HasKey<
+    TControllers[K],
+    TSolutionType
+  > extends never
+    ? never
+    : K]: InferControllerStaticStateFromController<
+    InferControllerFromDefinition<TControllers[K]>
+  >;
 };
 
 export interface ControllerDefinitionOption {

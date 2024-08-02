@@ -26,7 +26,7 @@ export type {
   InferControllersMapFromDefinition,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
 } from './app/commerce-ssr-engine/types/common';
 export type {Build} from './app/ssr-engine/types/build';
 export type {

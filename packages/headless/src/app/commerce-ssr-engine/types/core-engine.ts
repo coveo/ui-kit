@@ -4,16 +4,14 @@ import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
 import {NavigatorContextProvider} from '../../navigatorContextProvider';
 import {Build} from '../../ssr-engine/types/build';
-import {
-  InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
-} from '../../ssr-engine/types/common';
+import {InferControllerPropsMapFromDefinitions} from '../../ssr-engine/types/common';
 import {FetchStaticState} from '../../ssr-engine/types/fetch-static-state';
 import {HydrateStaticState} from '../../ssr-engine/types/hydrate-static-state';
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
   SolutionType,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
 } from './common';
 
 export type EngineDefinitionOptions<
@@ -42,7 +40,10 @@ export interface EngineDefinition<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     AnyAction,
-    InferControllerStaticStateMapFromDefinitions<TControllers>,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+      TControllers,
+      TSolutionType
+    >,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
