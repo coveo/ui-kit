@@ -47,7 +47,12 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        state.citations = state.citations.concat(payload.citations);
+        const allCitations = state.citations.concat(payload.citations);
+        state.citations = allCitations.flatMap((citation, index, self) =>
+          self.findIndex((c) => c.uri === citation.uri) === index
+            ? [citation]
+            : []
+        );
         delete state.error;
       })
       .addCase(updateError, (state, {payload}) => {
