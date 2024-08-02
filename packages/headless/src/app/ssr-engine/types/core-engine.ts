@@ -51,15 +51,6 @@ export interface EngineDefinition<
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
-   * Builds an engine and its controllers from an engine definition.
-   */
-  build: Build<
-    TEngine,
-    TEngineOptions,
-    InferControllersMapFromDefinition<TControllers>,
-    InferControllerPropsMapFromDefinitions<TControllers>
-  >;
-  /**
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
    *
@@ -68,6 +59,15 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
+  /**
+   * Builds an engine and its controllers from an engine definition.
+   */
+  build: Build<
+    TEngine,
+    TEngineOptions,
+    InferControllersMapFromDefinition<TControllers>,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
 }
 
 export type InferStaticState<
