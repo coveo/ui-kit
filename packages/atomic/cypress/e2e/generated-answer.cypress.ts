@@ -423,6 +423,26 @@ describe('Generated Answer Test Suites', () => {
             GeneratedAnswerAssertions.assertLogCopyGeneratedAnswer();
           });
         });
+
+        describe('when a rephrase option is selected', () => {
+          rephraseOptions
+            .filter((option) => option.value !== 'default')
+            .forEach((option) => {
+              it(`should rephrase in "${option.value}" format`, () => {
+                GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+                GeneratedAnswerAssertions.assertAnswerStyle(option.value);
+              });
+
+              it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
+                GeneratedAnswerSelectors.rephraseButton(option.label).click();
+
+                GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
+                  option.value
+                );
+              });
+            });
+        });
       });
 
       describe('when a citation event is received', () => {
