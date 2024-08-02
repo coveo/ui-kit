@@ -27,7 +27,7 @@ export const insightUserActionsReducer = createReducer(
       .addCase(fetchUserActions.fulfilled, (state, action) => {
         state.loading = false;
         state.error = undefined;
-        state.userActionsToDisplay = preprocessActionsData(
+        state.timeline = preprocessActionsData(
           state,
           action.payload.response.value
         );

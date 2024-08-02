@@ -1,6 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   UserAction,
   UserActionsState,
@@ -21,57 +18,40 @@ interface rawUserAction {
   time: string;
 }
 
-type CaseSubmitSession = {
-  caseSubmitSessionIndex: number;
-  caseSubmitSession: UserSession | null;
-};
-
-// TODO: Change to: sort, map, split, findCaseSubmitSession, build preceding/following/current session, filter out actions, buildTimeline
 export const preprocessActionsData = (
   state: UserActionsState,
   actions: Array<rawUserAction>
-): UserActionTimeline | UserSession[] => {
-  // Sort actions by most recent first
-  const sortedActions: rawUserAction[] = sortActions(actions);
-
-  // Map the rawUserActions from the api to UserAction objects
-  const mappedUserActions = mapUserActions(sortedActions);
-
-  // Split actions into sessions
-  const sessions = splitActionsIntoSessions(mappedUserActions);
-
-  // Checks if the ticketCreationDate is defined, if not, return last 5 sessions.
+): UserActionTimeline => {
   const ticketCreationDate = state.ticketCreationDate;
   const excludedCustomActions = state.excludedCustomActions;
-  if (!ticketCreationDate) {
-    return returnLastFiveSessions(sessions, excludedCustomActions);
+
+  // If there is no ticket creation date or no actions, we return an empty timeline.
+  if (!ticketCreationDate || actions.length === 0) {
+    return {
+      precedingSessions: [],
+      session: undefined,
+      followingSessions: [],
+      caseSessionFound: false,
+    };
   }
 
-  // Find in which session the ticket creation action is located. Returns the index and the session.
-  const {caseSubmitSession, caseSubmitSessionIndex} = findCaseSubmitSession(
-    sessions,
+  // Sort actions by most recent
+  const sortedActions: rawUserAction[] = sortActions(actions);
+
+  const mappedUserActions = mapUserActions(sortedActions);
+
+  const timeline = splitActionsIntoTimelineSessions(
+    mappedUserActions,
     ticketCreationDate
   );
 
-  // If no sessions contain the ticket creation action, we return the last 5 sessions.
-  if (!caseSubmitSessionIndex || !caseSubmitSession) {
-    return returnLastFiveSessions(sessions, excludedCustomActions);
-  }
-  // Else we build the timeline with the current session including the ticket creation action.
-  const precedingSessions = buildPrecedingSessions(
-    sessions,
-    caseSubmitSessionIndex,
+  // Filter out custom actions to be excluded from the timeline
+  const filteredTimeline = filterTimelineActions(
+    timeline,
     excludedCustomActions
   );
 
-  const followingSessions = buildFollowingSessions(
-    sessions,
-    caseSubmitSessionIndex,
-    excludedCustomActions
-  );
-
-  // Build the timeline object to be displayed.
-  return buildTimeline(precedingSessions, caseSubmitSession, followingSessions);
+  return filteredTimeline;
 };
 
 export const sortActions = (actions: rawUserAction[]) => {
@@ -79,28 +59,6 @@ export const sortActions = (actions: rawUserAction[]) => {
     Number(b.time) - Number(a.time);
 
   return [...actions].sort(sortedActionsByMostRecent);
-};
-
-export const returnLastFiveSessions = (
-  sessions: UserSession[],
-  excludedCustomActions?: string[]
-): UserSession[] => {
-  const lastFiveSessions = sessions.slice(0, 5);
-  if (excludedCustomActions && excludedCustomActions.length > 0) {
-    const filteredLastFiveSessions: UserSession[] = lastFiveSessions.map(
-      (session) => {
-        const {start, end} = session;
-        const filteredSessionActions = filterActions(
-          session.actions,
-          excludedCustomActions
-        );
-        const filteredSession = {start, end, actions: filteredSessionActions};
-        return filteredSession;
-      }
-    );
-    return filteredLastFiveSessions;
-  }
-  return lastFiveSessions;
 };
 
 export const filterActions = (
@@ -112,12 +70,11 @@ export const filterActions = (
     const eventType = action.eventData?.type || '';
     const eventValue = action.eventData?.value || '';
 
-    if (action.eventData?.type && action.eventData?.value) {
+    if (eventType && eventValue) {
       shouldExcludeCustomAction =
-        !excludedCustomActions.includes(eventType) ||
-        !excludedCustomActions.includes(eventValue);
+        excludedCustomActions.includes(eventType) ||
+        excludedCustomActions.includes(eventValue);
     }
-
     return (
       action.actionType !== UserActionType.CUSTOM || shouldExcludeCustomAction
     );
@@ -140,7 +97,9 @@ export const mapUserActions = (rawActions: rawUserAction[]): UserAction[] => {
       document: {
         title: actionData.title,
         uriHash: actionData.uri_hash,
+        // eslint-disable-next-line @cspell/spellchecker
         contentIdKey: actionData.c_contentidkey,
+        // eslint-disable-next-line @cspell/spellchecker
         contentIdValue: actionData.c_contentidvalue,
       },
       query: actionData.query_expression,
@@ -149,38 +108,60 @@ export const mapUserActions = (rawActions: rawUserAction[]): UserAction[] => {
   return mappedUserActions;
 };
 
-export const splitActionsIntoSessions = (
-  actions: UserAction[]
-): UserSession[] => {
-  if (actions.length === 0) {
-    return [];
-  }
+export const splitActionsIntoTimelineSessions = (
+  actions: UserAction[],
+  ticketCreationDate: string
+): UserActionTimeline => {
+  const returnTimeline: UserActionTimeline = {
+    precedingSessions: [],
+    session: undefined,
+    followingSessions: [],
+    caseSessionFound: false,
+  };
 
-  const initialSession: UserSession = {
+  let currentSession: UserSession = {
     start: actions[0].timestamp,
     end: actions[0].timestamp,
     actions: [],
   };
-  const splitSessions = [initialSession];
-
-  let previousEndDateTime = initialSession?.end;
-  let currentSession: UserSession = splitSessions[0];
 
   actions.forEach((action) => {
-    if (isPartOfTheSameSession(action, previousEndDateTime)) {
+    if (isPartOfTheSameSession(action, currentSession.end)) {
       currentSession.actions.push(action);
       currentSession.start = action.timestamp;
     } else {
-      splitSessions.push({
+      if (currentSessionHasTicketCreation(currentSession, ticketCreationDate)) {
+        console.log('CURRENT SESSION HAS TICKET CREATION');
+        returnTimeline.session = currentSession;
+        returnTimeline.caseSessionFound = true;
+      } else if (
+        currentSessionIsBeforeCaseCreation(currentSession, ticketCreationDate)
+      ) {
+        // console.log('CURRENT SESSION IS BEFORE CASE CREATION');
+        returnTimeline.precedingSessions.push(currentSession);
+      } else {
+        // console.log('CURRENT SESSION IS AFTER CASE CREATION');
+        returnTimeline.followingSessions.push(currentSession);
+      }
+      currentSession = {
         start: action.timestamp,
         end: action.timestamp,
-        actions: [action],
-      });
-      currentSession = splitSessions[splitSessions.length - 1];
+        actions: [],
+      };
+      currentSession.actions.push(action);
     }
-    previousEndDateTime = action.timestamp;
   });
-  return splitSessions;
+
+  // If no case session was found, we insert the session containing the ticket creation action in the timeline
+  if (returnTimeline.session === undefined) {
+    const caseCreationSession: UserSession = {
+      start: ticketCreationDate,
+      end: ticketCreationDate,
+      actions: [buildTicketCreationAction(ticketCreationDate)],
+    };
+    returnTimeline.session = caseCreationSession;
+  }
+  return returnTimeline;
 };
 
 // Checks if an action is within 30mins of the previous action
@@ -194,66 +175,29 @@ export const isPartOfTheSameSession = (
   );
 };
 
-export const findCaseSubmitSession = (
-  sessions: UserSession[],
+const currentSessionHasTicketCreation = (
+  currentSession: UserSession,
   ticketCreationDate: string
-): CaseSubmitSession => {
-  let caseSubmitSessionIndex = null;
-  let caseSubmitSession = null;
-  // Find the session index that contains the ticket creation action
-  caseSubmitSessionIndex = sessions.findIndex(
-    (session) =>
-      session.actions[0].timestamp >= ticketCreationDate &&
-      session.actions[session.actions.length - 1].timestamp <=
-        ticketCreationDate
-  );
+): boolean => {
+  console.log('COMPARISON: ', ticketCreationDate <= currentSession.end);
 
-  if (caseSubmitSessionIndex && caseSubmitSessionIndex !== -1) {
-    // If we found a session that correctly includes the timestamp when the ticket was created
-    caseSubmitSession = sessions[caseSubmitSessionIndex];
-  } else {
-    // We can try to find a session that occurred just before the ticket create.
-    caseSubmitSessionIndex = findPotentialSessionJustBeforeCaseSubmit(
-      sessions,
-      ticketCreationDate
-    );
-    // If we found a session that occured right before the ticket creation date
-    if (caseSubmitSessionIndex !== -1) {
-      caseSubmitSession = sessions[caseSubmitSessionIndex];
-    }
+  if (
+    currentSession.start <= ticketCreationDate &&
+    ticketCreationDate <= currentSession.end
+  ) {
+    return true;
   }
-  // Returns the index and the session
-  return {
-    caseSubmitSessionIndex,
-    caseSubmitSession,
-  };
+  return false;
 };
 
-export const findPotentialSessionJustBeforeCaseSubmit = (
-  sessions: UserSession[],
+const currentSessionIsBeforeCaseCreation = (
+  currentSession: UserSession,
   ticketCreationDate: string
-): number => {
-  const potentialSessionIndex = sessions.findIndex(
-    (session) => session.actions[0].timestamp <= ticketCreationDate
-  );
-  if (potentialSessionIndex !== -1) {
-    const lastActionInSession = sessions[potentialSessionIndex].actions[0];
-    if (!isPartOfTheSameSession(lastActionInSession, ticketCreationDate)) {
-      // If the session before the ticket create is not part of the same session, create a standalone session.
-      sessions.splice(potentialSessionIndex, 0, {
-        start: ticketCreationDate,
-        end: ticketCreationDate,
-        actions: [
-          {
-            actionType: UserActionType.TICKET_CREATION,
-            timestamp: ticketCreationDate,
-          },
-        ],
-      } as UserSession);
-    }
-    return potentialSessionIndex;
+): boolean => {
+  if (currentSession.end < ticketCreationDate) {
+    return true;
   }
-  return -1;
+  return false;
 };
 
 export const buildTicketCreationAction = (
@@ -265,65 +209,37 @@ export const buildTicketCreationAction = (
   };
 };
 
-export const buildPrecedingSessions = (
-  sessions: UserSession[],
-  caseSubmitSessionIndex: number,
-  excludedCustomActions?: string[]
-): UserSession[] => {
-  let precedingSessions = sessions.slice(
-    caseSubmitSessionIndex + 1,
-    caseSubmitSessionIndex + 3
-  );
-  if (excludedCustomActions && excludedCustomActions.length > 0) {
-    precedingSessions = precedingSessions.map((session) => {
-      const {start, end} = session;
-      const filteredActions = filterActions(
-        session.actions,
-        excludedCustomActions
-      );
-      return {start, end, actions: filteredActions};
-    });
-  }
-  return precedingSessions;
-};
-
-export const buildFollowingSessions = (
-  sessions: UserSession[],
-  caseSubmitSessionIndex: number,
-  excludedCustomActions?: string[]
-): UserSession[] => {
-  let followingSessions = sessions.slice(
-    caseSubmitSessionIndex - 2,
-    caseSubmitSessionIndex
-  );
-  if (excludedCustomActions && excludedCustomActions.length > 0) {
-    followingSessions = followingSessions.map((session) => {
-      const {start, end} = session;
-      const filteredActions = filterActions(
-        session.actions,
-        excludedCustomActions
-      );
-      return {start, end, actions: filteredActions};
-    });
-  }
-
-  return followingSessions;
-};
-
-export const buildTimeline = (
-  precedingSessions: UserSession[],
-  currentSession: UserSession,
-  followingSessions: UserSession[]
+export const filterTimelineActions = (
+  timeline: UserActionTimeline,
+  actionsToExclude: string[]
 ): UserActionTimeline => {
-  const timeline: UserActionTimeline = {
-    precedingSessions: precedingSessions,
-    session: {
-      start: currentSession.start,
-      end: currentSession.end,
-      actions: currentSession.actions,
-    },
-    followingSessions: followingSessions,
-    caseSessionFound: true,
+  const filteredPrecedingSessions = timeline.precedingSessions.map(
+    (session) => {
+      const {start, end} = session;
+      const filteredActions = filterActions(session.actions, actionsToExclude);
+      return {start, end, actions: filteredActions};
+    }
+  );
+
+  const filteredFollowingSessions = timeline.followingSessions.map(
+    (session) => {
+      const {start, end} = session;
+      const filteredActions = filterActions(session.actions, actionsToExclude);
+      return {start, end, actions: filteredActions};
+    }
+  );
+
+  if (timeline.session) {
+    const {start, end, actions} = timeline.session;
+    const filteredActions = filterActions(actions, actionsToExclude);
+    timeline.session = {start, end, actions: filteredActions};
+  }
+
+  const filteredTimeline = {
+    precedingSessions: filteredPrecedingSessions,
+    session: timeline.session,
+    followingSessions: filteredFollowingSessions,
+    caseSessionFound: timeline.caseSessionFound,
   };
-  return timeline;
+  return filteredTimeline;
 };

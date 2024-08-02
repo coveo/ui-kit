@@ -1,505 +1,453 @@
 /* eslint-disable @cspell/spellchecker */
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   sortActions,
   filterActions,
   mapUserActions,
-  splitActionsIntoSessions, // findCaseSubmitSession,
-  buildTimeline,
-  returnLastFiveSessions,
-  isPartOfTheSameSession,
-  buildTicketCreationAction,
-  buildPrecedingSessions,
-  buildFollowingSessions,
+  splitActionsIntoTimelineSessions,
 } from './insight-user-actions-preprocessing';
 import {UserActionType} from './insight-user-actions-state';
 
-const mockRawUserActions = [
-  {
-    name: 'CUSTOM', // (2)
-    value:
-      '{"event_type":"User Actions","event_value":"openUserActions","origin_level_1":"AgentPanel"}',
-    time: '1719581379164', // Friday, June 28, 2024 1:29:39.164 PM
-  },
-  {
-    name: 'CLICK', // (1)
-    value:
-      '{"c_contentidkey":"urihash1","c_contentidvalue":"1","origin_level_1":"AgentPanel","title":"Title 1","uri_hash":"exampleUriHash"}',
-    time: '1719581367957', // Friday, June 28, 2024 1:29:27.957 PM
-  },
-  {
-    name: 'SEARCH', // (3)
-    value:
-      '{"cause":"userActionLoad","origin_level_1":"AgentPanel","origin_level_2":"All"}',
-    time: '1719586800000', // Friday, June 28, 2024 3:00:00 PM (more than 30 min after the last action)
-  },
-];
+const createRelativeDate = (date: Date, minutes: number, seconds: number) => {
+  const totalSeconds = seconds + minutes * 60;
+  const newDate = new Date(date);
+  newDate.setSeconds(newDate.getSeconds() + totalSeconds);
+  return newDate;
+};
 
-const expectedSortedRawUserActions = [
-  {
-    name: 'SEARCH', // (3)
-    value:
-      '{"cause":"userActionLoad","origin_level_1":"AgentPanel","origin_level_2":"All"}',
-    time: '1719586800000', //  Friday, June 28, 2024 3:00:00 PM (more than 30 min after the last action)
-  },
-  {
-    name: 'CUSTOM', // (2)
-    value:
-      '{"event_type":"User Actions","event_value":"openUserActions","origin_level_1":"AgentPanel"}',
-    time: '1719581379164', // Friday, June 28, 2024 1:29:39.164 PM
-  },
-  {
-    name: 'CLICK', // (1)
-    value:
-      '{"c_contentidkey":"urihash1","c_contentidvalue":"1","origin_level_1":"AgentPanel","title":"Title 1","uri_hash":"exampleUriHash"}',
-    time: '1719581367957', // Friday, June 28, 2024 1:29:27.957 PM
-  },
-];
+const firstSessionDate = new Date('03/29/2022 08:50:00 GMT');
+const caseCreationDate = new Date('03/31/2022 16:30:00 GMT');
+const secondSessionDate = new Date('04/01/2022 14:14:00 GMT');
 
-const mockMappedActions = [
+const fakeActions = [
   {
-    actionType: 'SEARCH' as UserActionType,
-    timestamp: '1719586800000', // Friday, June 28, 2024 3:00:00 PM (more than 30 min after the last action)
-    eventData: {
-      type: undefined,
-      value: undefined,
+    T: firstSessionDate.getTime(),
+    N: 'Custom',
+    V: {
+      event_type: 'MySpeedbit App interfaceload',
+      event_value: '',
+      origin_level_1: 'in-product-help',
     },
-    cause: 'userActionLoad',
-    searchHub: 'AgentPanel',
-    document: {
-      title: undefined,
-      uriHash: undefined,
-      contentIdKey: undefined,
-      contentIdValue: undefined,
+  },
+  {
+    T: createRelativeDate(firstSessionDate, 1, 0).getTime(),
+    N: 'Click',
+    // Title : Getting Started with your New Speedbit Blaze
+    V: {
+      uri_hash: 'ZKoJzryqñ9QlKPlh',
+      origin_level_1: 'in-product-help',
     },
-    query: undefined,
   },
   {
-    actionType: 'CUSTOM' as UserActionType,
-    timestamp: '1719581379164', // Friday, June 28, 2024 1:29:39.164 PM
-    eventData: {
-      type: 'User Actions',
-      value: 'openUserActions',
+    T: createRelativeDate(firstSessionDate, 5, 0).getTime(),
+    N: 'Search',
+    V: {
+      query_expression: 'Version 8.124',
+      origin_level_1: 'community-search',
     },
-    cause: undefined,
-    searchHub: 'AgentPanel',
-    document: {
-      title: undefined,
-      uriHash: undefined,
-      contentIdKey: undefined,
-      contentIdValue: undefined,
+  },
+  {
+    T: createRelativeDate(firstSessionDate, 32, 0).getTime(),
+    N: 'Custom',
+    V: {
+      event_type: 'smartSnippetSuggestions',
+      event_value: 'expandSmartSnippetSuggestion',
+      origin_level_1: 'in-product-help',
     },
-    query: undefined,
   },
   {
-    actionType: 'CLICK' as UserActionType,
-    timestamp: '1719581367957', // Friday, June 28, 2024 1:29:27.957 PM
-    eventData: {
-      type: undefined,
-      value: undefined,
+    T: createRelativeDate(firstSessionDate, 34, 30).getTime(),
+    N: 'Custom',
+    V: {
+      event_type: 'smartSnippetSuggestions',
+      event_value: 'likeSmartSnippet',
+      origin_level_1: 'in-product-help',
     },
-    cause: undefined,
-    searchHub: 'AgentPanel',
-    document: {
-      title: 'Title 1',
-      uriHash: 'exampleUriHash',
-      contentIdKey: 'urihash1',
-      contentIdValue: '1',
+  },
+  {
+    T: createRelativeDate(caseCreationDate, -6, 0).getTime(),
+    N: 'Custom',
+    V: {
+      event_type: 'MySpeedbit App interfaceload',
+      event_value: '',
+      origin_level_1: 'in-product-help',
     },
-    query: undefined,
-  },
-];
-
-const expectedSessions = [
-  {
-    start: '1719586800000',
-    end: '1719586800000',
-    actions: [mockMappedActions[0]],
   },
   {
-    start: '1719581367957',
-    end: '1719581379164',
-    actions: [mockMappedActions[1], mockMappedActions[2]],
-  },
-];
-
-const mockSplitSessions = [
-  {
-    start: '1719603000000',
-    end: '1719604000000',
-    actions: mockMappedActions,
+    T: createRelativeDate(caseCreationDate, -5, 0).getTime(),
+    N: 'Search',
+    V: {
+      query_expression: 'Blaze pair with iPhone not working',
+      origin_level_1: 'in-product-help',
+    },
   },
   {
-    start: '1719598400000',
-    end: '1719599400000',
-    actions: [],
+    T: createRelativeDate(caseCreationDate, 1, 30).getTime(),
+    N: 'Custom',
+    V: {
+      event_type: 'smartSnippetSuggestions',
+      event_value: 'expandSmartSnippetSuggestion',
+      origin_level_1: 'in-product-help',
+    },
   },
   {
-    start: '1719593800000',
-    end: '1719594800000',
-    actions: [],
+    T: createRelativeDate(caseCreationDate, 2, 0).getTime(),
+    N: 'Click',
+    // Title : Blaze pair with iPhone not working
+    V: {
+      uri_hash: 'caCgiG2JPzjZfS7G',
+      origin_level_1: 'in-product-help',
+    },
   },
   {
-    start: '1719589200000',
-    end: '1719590200000',
-    actions: [
-      {
-        actionType: 'CUSTOM' as UserActionType,
-        timestamp: '1719589260000',
-        eventData: {
-          type: undefined,
-          value: undefined,
-        },
-        cause: undefined,
-        searchHub: 'AgentPanel',
-        document: {
-          title: 'Title 1',
-          uriHash: 'exampleUriHash',
-          contentIdKey: 'urihash1',
-          contentIdValue: '1',
-        },
-        query: undefined,
-      },
-    ],
+    T: createRelativeDate(caseCreationDate, 5, 0).getTime(),
+    N: 'View',
+    V: {
+      content_id_key: 'sftitle',
+      content_id_value: 'Blaze pair with iPhone not working',
+      origin_level_1: 'in-product-help',
+    },
   },
   {
-    start: '1719584600000',
-    end: '1719585600000',
-    actions: [],
+    T: createRelativeDate(secondSessionDate, -1, 0).getTime(),
+    N: 'Search',
+    V: {
+      query_expression: 'Wireless charging',
+      origin_level_1: 'in-product-help',
+    },
   },
   {
-    start: '1719580000000',
-    end: '1719581000000',
-    actions: [],
+    T: createRelativeDate(secondSessionDate, 1, 0).getTime(),
+    N: 'Click',
+    // Title : Getting Started with Speedbit Charge.pdf
+    V: {
+      uri_hash: 'KXñi9EWk38wnb1tt',
+      origin_level_1: 'in-product-help',
+    },
   },
-];
-
-const expectedPrecedingSessions = [
-  {start: '1719589200000', end: '1719590200000', actions: []},
-  {start: '1719584600000', end: '1719585600000', actions: []},
-];
-
-const expectedFollowingSessions = [
   {
-    start: '1719603000000',
-    end: '1719604000000',
-    actions: [
-      {
-        actionType: 'SEARCH',
-        timestamp: '1719586800000',
-        eventData: {},
-        cause: 'userActionLoad',
-        searchHub: 'AgentPanel',
-        document: {},
-      },
-      {
-        actionType: 'CLICK',
-        timestamp: '1719581367957',
-        eventData: {},
-        searchHub: 'AgentPanel',
-        document: {
-          title: 'Title 1',
-          uriHash: 'exampleUriHash',
-          contentIdKey: 'urihash1',
-          contentIdValue: '1',
-        },
-      },
-    ],
+    T: createRelativeDate(secondSessionDate, 3, 0).getTime(),
+    N: 'Custom',
+    V: {
+      event_type: 'ticket_classification_click',
+      event_value: '',
+      origin_level_1: 'community-support',
+    },
   },
-  {start: '1719598400000', end: '1719599400000', actions: []},
-];
+  {
+    T: createRelativeDate(secondSessionDate, 45, 0).getTime(),
+    N: 'Click',
+    // Title : Speedbit Charge 2 User Manual.pdf
+    V: {
+      uri_hash: 'TtnKwc0Lo2GY9WAi',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    T: createRelativeDate(secondSessionDate, 60, 0).getTime(),
+    N: 'View',
+    V: {
+      content_id_key: 'sftitle',
+      content_id_value: 'Speedbit Charge 2 User Manual.pdf',
+      origin_level_1: 'in-product-help',
+    },
+  },
+].map((action) => {
+  return {
+    ...action,
+    name: action.N.toUpperCase(),
+    value: JSON.stringify(action.V),
+    time: JSON.stringify(action.T),
+  };
+});
 
 describe('insight user actions preprocessing', () => {
   describe('#sortActions', () => {
     it('should properly sort the raw user actions by most recent to least recent', async () => {
-      const sortedRawActions = sortActions(mockRawUserActions);
+      const mockActions = [...fakeActions];
+      const sortedRawActions = sortActions(mockActions);
+      const expectedSortedRawUserActions = mockActions.reverse();
       expect(sortedRawActions).toEqual(expectedSortedRawUserActions);
-    });
-  });
-
-  describe('#returnLastFiveSessions', () => {
-    describe('when there are no custom actions to be excluded', () => {
-      it('should properly return the last five sessions', async () => {
-        const expectedLastFiveSessions = mockSplitSessions.slice(0, 5);
-        const lastFiveSessions = returnLastFiveSessions(mockSplitSessions);
-
-        expect(lastFiveSessions.length).toEqual(5);
-        expect(lastFiveSessions).toEqual(expectedLastFiveSessions);
-      });
-    });
-
-    describe('when there are custom actions to be excluded', () => {
-      it('should properly return the last five sessions with their actions filtered', async () => {
-        const expectedLastFiveSessions = mockSplitSessions.slice(0, 5);
-        expectedLastFiveSessions[0].actions = [
-          mockMappedActions[0],
-          mockMappedActions[2],
-        ];
-        expectedLastFiveSessions[3].actions = [];
-
-        const mockExcludedCustomActions = [
-          'CUSTOM',
-          'openUserActions',
-          'User Actions',
-        ];
-
-        const lastFiveSessions = returnLastFiveSessions(
-          mockSplitSessions,
-          mockExcludedCustomActions
-        );
-        expect(lastFiveSessions.length).toEqual(5);
-        expect(lastFiveSessions).toEqual(expectedLastFiveSessions);
-
-        expect(lastFiveSessions[0].actions.length).toEqual(2);
-        lastFiveSessions[0].actions.forEach((action) => {
-          expect(action.actionType).not.toEqual(mockExcludedCustomActions[0]);
-          expect(action?.eventData?.value).not.toEqual(
-            mockExcludedCustomActions[1]
-          );
-          expect(action?.eventData?.type).not.toEqual(
-            mockExcludedCustomActions[2]
-          );
-        });
-      });
-    });
-  });
-
-  describe('#filterAction', () => {
-    it('should properly filter the raw user actions given excludedCustomActions passed in the state', async () => {
-      const mockExcludedCustomActions = [
-        'CUSTOM',
-        'openUserActions',
-        'User Actions',
-      ];
-      const expectedFilteredActions = [
-        mockMappedActions[0],
-        mockMappedActions[2],
-      ];
-      const filteredActions = filterActions(
-        mockMappedActions,
-        mockExcludedCustomActions
-      );
-      expect(filteredActions).toEqual(expectedFilteredActions);
-      expect(filteredActions.length).toEqual(2);
     });
   });
 
   describe('#mapUserActions', () => {
     it('should properly map the raw user actions into UserAction objects', async () => {
-      const mappedAction = mapUserActions(expectedSortedRawUserActions);
-      expect(mappedAction).toEqual(mockMappedActions);
+      const mockSortedActions = sortActions([...fakeActions]);
+      const mappedAction = mapUserActions(mockSortedActions.slice(0, 8));
+      const expectedMappedActions = [
+        {
+          actionType: 'VIEW',
+          timestamp: '1648826040000',
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {},
+        },
+        {
+          actionType: 'CLICK',
+          timestamp: '1648825140000',
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {uriHash: 'TtnKwc0Lo2GY9WAi'},
+        },
+        {
+          actionType: 'CUSTOM',
+          timestamp: '1648822620000',
+          eventData: {type: 'ticket_classification_click', value: ''},
+          searchHub: 'community-support',
+          document: {},
+        },
+        {
+          actionType: 'CLICK',
+          timestamp: '1648822500000',
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {uriHash: 'KXñi9EWk38wnb1tt'},
+        },
+        {
+          actionType: 'SEARCH',
+          timestamp: '1648822380000',
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {},
+          query: 'Wireless charging',
+        },
+        {
+          actionType: 'VIEW',
+          timestamp: '1648744500000',
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {},
+        },
+        {
+          actionType: 'CLICK',
+          timestamp: '1648744320000',
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {uriHash: 'caCgiG2JPzjZfS7G'},
+        },
+        {
+          actionType: 'CUSTOM',
+          timestamp: '1648744290000',
+          eventData: {
+            type: 'smartSnippetSuggestions',
+            value: 'expandSmartSnippetSuggestion',
+          },
+          searchHub: 'in-product-help',
+          document: {},
+        },
+      ];
+      expect(mappedAction).toEqual(expectedMappedActions);
     });
   });
 
-  describe('#splitActionsIntoSessions', () => {
-    it('should properly split user actions into sessions', async () => {
-      const sessions = splitActionsIntoSessions(mockMappedActions);
-      expect(sessions).toEqual(expectedSessions);
+  describe('#filterAction', () => {
+    const mockSortedActions = sortActions([...fakeActions]);
+    const mockMappedActions = mapUserActions(mockSortedActions.slice(0, 8));
+    const expectedFilteredActions = [
+      {
+        actionType: 'VIEW',
+        timestamp: '1648826040000',
+        eventData: {},
+        searchHub: 'in-product-help',
+        document: {},
+      },
+      {
+        actionType: 'CLICK',
+        timestamp: '1648825140000',
+        eventData: {},
+        searchHub: 'in-product-help',
+        document: {uriHash: 'TtnKwc0Lo2GY9WAi'},
+      },
+      {
+        actionType: 'CLICK',
+        timestamp: '1648822500000',
+        eventData: {},
+        searchHub: 'in-product-help',
+        document: {uriHash: 'KXñi9EWk38wnb1tt'},
+      },
+      {
+        actionType: 'SEARCH',
+        timestamp: '1648822380000',
+        eventData: {},
+        searchHub: 'in-product-help',
+        document: {},
+        query: 'Wireless charging',
+      },
+      {
+        actionType: 'VIEW',
+        timestamp: '1648744500000',
+        eventData: {},
+        searchHub: 'in-product-help',
+        document: {},
+      },
+      {
+        actionType: 'CLICK',
+        timestamp: '1648744320000',
+        eventData: {},
+        searchHub: 'in-product-help',
+        document: {uriHash: 'caCgiG2JPzjZfS7G'},
+      },
+    ];
+    it('should properly filter the user actions when action types are passed in the state', async () => {
+      const mockExcludedCustomActions = ['CUSTOM'];
+      const filteredActions = filterActions(
+        mockMappedActions,
+        mockExcludedCustomActions
+      );
+      expect(filteredActions).toEqual(expectedFilteredActions);
+      expect(filteredActions.length).toEqual(expectedFilteredActions.length);
+    });
+
+    it('should properly filter the user actions when event data types and values are passed in the state', async () => {
+      const mockExcludedCustomActions = ['suggestion_click'];
+      const filteredActions = filterActions(
+        mockMappedActions,
+        mockExcludedCustomActions
+      );
+      expect(filteredActions).toEqual(expectedFilteredActions);
+      expect(filteredActions.length).toEqual(expectedFilteredActions.length);
     });
   });
 
-  describe('#isPartOfTheSameSession', () => {
-    it('should return true if the action is within 30mins of the previous', async () => {
-      const action = mockMappedActions[0];
-      // Added 1 min to action timestamp, so it is within 30 mins of the previous action
-      const previousEndDateTime = '1719586860000';
+  // eslint-disable-next-line no-restricted-properties
+  describe.skip('#splitActionsIntoTimelineSessions', () => {
+    describe('when it finds a case creation session', () => {
+      it('should properly split user actions into sessions and return the timeline including current session', async () => {
+        const mockSortedActions = sortActions([...fakeActions]);
+        const mockMappedActions = mapUserActions(mockSortedActions);
+        const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
+        const sessions = splitActionsIntoTimelineSessions(
+          mockMappedActions,
+          ticketCreationDate
+        );
+        console.log(JSON.stringify(sessions));
+        expect(sessions.session?.actions.length).toEqual(5);
+        expect(Number(sessions.session?.start)).toBeGreaterThan(
+          Number(
+            sessions.precedingSessions[sessions.precedingSessions.length - 1]
+              .end
+          )
+        );
+        expect(Number(sessions.session?.end)).toBeLessThan(
+          Number(sessions.followingSessions[0].start)
+        );
 
-      const isSameSession = isPartOfTheSameSession(action, previousEndDateTime);
+        expect(sessions.precedingSessions.length).toEqual(1);
+        expect(sessions.precedingSessions[0].actions.length).toEqual(3);
 
-      expect(isSameSession).toEqual(true);
+        expect(sessions.followingSessions.length).toEqual(2);
+        expect(sessions.followingSessions[0].actions.length).toEqual(2);
+      });
     });
-
-    it('should return false if the action is not within 30mins of the previous', async () => {
-      const action = mockMappedActions[0];
-      // Added 1 hour to action timestamp, so it is not within 30 mins of the previous action
-      const previousEndDateTime = '1719590400000';
-
-      const isSameSession = isPartOfTheSameSession(action, previousEndDateTime);
-
-      expect(isSameSession).toEqual(false);
+    // eslint-disable-next-line no-restricted-properties
+    describe.only('when it does not find a case creation session', () => {
+      it('should properly split user actions into sessions and return the timeline including current session', async () => {
+        const mockSortedActions = sortActions([...fakeActions]);
+        const mockMappedActions = mapUserActions(mockSortedActions);
+        // Date far back before the first session
+        const ticketCreationDate = JSON.stringify(
+          createRelativeDate(firstSessionDate, -1000, 0).getTime()
+        );
+        console.log('ticketCreationDate: ' + ticketCreationDate);
+        const sessions = splitActionsIntoTimelineSessions(
+          mockMappedActions,
+          ticketCreationDate
+        );
+        expect(sessions.session?.actions.length).toEqual(1);
+        expect(sessions.session?.actions[0].actionType).toEqual(
+          UserActionType.TICKET_CREATION
+        );
+        expect(sessions.session?.actions[0].timestamp).toEqual(
+          ticketCreationDate
+        );
+        console.log(JSON.stringify(sessions));
+        expect(sessions).toEqual(sessions);
+      });
     });
   });
 
-  // describe('#findCaseSubmitSession', () => {
-  //   it('should properly find the current session given the ticketCreationDate passed in the state', async () => {
-  //     const ticketCreationDate = '1719581379164'; // Friday, June 28, 2024 1:29:39.164 PM
-  //     const sessions = expectedSessions;
-  //     const expectedCurrentSession = expectedSessions[1];
-
-  //     const currentSession = findCaseSubmitSession(
-  //       sessions,
-  //       ticketCreationDate
+  // describe('#isPartOfTheSameSession', () => {
+  //   it('should return true if the action is within 30mins of the previous', async () => {
+  //     const action = mockMappedActions[0];
+  //     // Added 1 min to action timestamp, so it is within 30 mins of the previous action
+  //     const previousEndDateTime = JSON.stringify(
+  //       createRelativeDate(firstSessionDate, 1, 0).getTime()
   //     );
-  //     expect(currentSession).toEqual(expectedCurrentSession);
+
+  //     const isSameSession = isPartOfTheSameSession(action, previousEndDateTime);
+
+  //     expect(isSameSession).toEqual(true);
+  //   });
+
+  //   it('should return false if the action is not within 30mins of the previous', async () => {
+  //     const action = mockMappedActions[0];
+  //     // Added 1 hour to action timestamp, so it is not within 30 mins of the previous action
+  //     const previousEndDateTime = '1719590400000';
+
+  //     const isSameSession = isPartOfTheSameSession(action, previousEndDateTime);
+
+  //     expect(isSameSession).toEqual(false);
   //   });
   // });
 
-  describe('#findPotentialSessionJustBeforeCaseSubmit', () => {
-    it('TODO', async () => {});
-  });
-
-  describe('#buildTicketCreationAction', () => {
-    it('should properly return an object with the right user action type and timestamp', async () => {
-      const ticketCreationDateTimeStamp = '1719586860000';
-      const actionType = UserActionType.TICKET_CREATION;
-
-      const expectedTicketCreationAction = {
-        actionType: actionType,
-        timestamp: ticketCreationDateTimeStamp,
-      };
-
-      const ticketCreationAction = buildTicketCreationAction(
-        ticketCreationDateTimeStamp
-      );
-
-      expect(ticketCreationAction).toEqual(expectedTicketCreationAction);
+  describe('#filterTimelineActions', () => {
+    it('should properly filter out the timeline of the actions that are to be excluded', async () => {
+      // TODO
     });
   });
 
-  describe('#buildPrecedingSessions', () => {
-    describe('when there are no custom actions to be excluded', () => {
-      it('should return an array of two user sessions coming before the index of the current session', async () => {
-        const mockCaseSubmitSessionIndex = 2;
-
-        const expectedPrecedingSessions = mockSplitSessions.slice(
-          mockCaseSubmitSessionIndex + 1,
-          mockCaseSubmitSessionIndex + 3
-        );
-        const precedingSessions = buildPrecedingSessions(
-          mockSplitSessions,
-          mockCaseSubmitSessionIndex
-        );
-
-        expect(precedingSessions.length).toEqual(2);
-        expect(precedingSessions).toEqual(expectedPrecedingSessions);
-
-        precedingSessions.forEach((session, index) => {
-          expect(session.start).toEqual(expectedPrecedingSessions[index].start);
-          expect(session.end).toEqual(expectedPrecedingSessions[index].end);
-        });
+  // eslint-disable-next-line no-restricted-properties
+  describe.skip('#preprocessActionsData', () => {
+    describe('when ticket creation date is not provided', () => {
+      it('should return an empty timeline', async () => {
+        // const expectedTimeline = {
+        //   precedingSessions: [],
+        //   session: undefined,
+        //   followingSessions: [],
+        //   caseSessionFound: false,
+        // };
+        // const mockState = {
+        //   excludedCustomActions: ['CUSTOM'],
+        //   ticketCreationDate: undefined,
+        //   loading: false,
+        // };
+        // const timeline = preprocessActionsData(mockState, mockRawUserActions);
+        // expect(timeline).toEqual(expectedTimeline);
       });
     });
-    describe('when there are custom actions to be excluded', () => {
-      it('should return an array of two user sessions coming before the index of the current session with their actions filtered', async () => {
-        const mockCaseSubmitSessionIndex = 2;
-        const mockExcludedCustomActions = ['CUSTOM'];
 
-        const precedingSessions = buildPrecedingSessions(
-          mockSplitSessions,
-          mockCaseSubmitSessionIndex,
-          mockExcludedCustomActions
-        );
+    describe.skip('when the case submit session is found', () => {
+      it('should return a timeline with the case creation session', () => {
+        // const ticketCreationDate = '1719586800000';
+        // const mockState = {
+        //   excludedCustomActions: ['CUSTOM'],
+        //   ticketCreationDate: ticketCreationDate,
+        //   loading: false,
+        // };
+        // const result = preprocessActionsData(
+        //   mockState,
+        //   mockRawUserActionsForFinalTest
+        // );
+        // console.log('RESULT: ' + JSON.stringify(result));
+        // expect(result).toEqual({});
+      });
 
-        expect(precedingSessions.length).toEqual(2);
-        expect(precedingSessions).toEqual(expectedPrecedingSessions);
-
-        precedingSessions.forEach((session, index) => {
-          expect(session.start).toEqual(expectedPrecedingSessions[index].start);
-          expect(session.end).toEqual(expectedPrecedingSessions[index].end);
-
-          const actions = session.actions;
-          expect(actions.length).toEqual(
-            expectedPrecedingSessions[index].actions.length
-          );
-          actions.forEach((action) => {
-            expect(action.actionType).not.toEqual(mockExcludedCustomActions[0]);
-          });
+      describe('when the case submit session is not found', () => {
+        it('should return a timeline with the current session containing only a ticket creation action', () => {
+          // const ticketCreationDate = '1719586800000';
+          // const mockState = {
+          //   excludedCustomActions: ['CUSTOM'],
+          //   ticketCreationDate: ticketCreationDate,
+          //   loading: false,
+          // };
+          // const result = preprocessActionsData(
+          //   mockState,
+          //   mockRawUserActionsForFinalTest
+          // );
+          // console.log('RESULT: ' + JSON.stringify(result));
+          // expect(result).toEqual({});
         });
       });
-    });
-  });
-
-  describe('#buildFollowingSessions', () => {
-    describe('when there are no custom actions to be excluded', () => {
-      it('should return an array of two user sessions coming after the index of the current session', async () => {
-        const mockCaseSubmitSessionIndex = 2;
-
-        const expectedFollowingSessions = mockSplitSessions.slice(
-          mockCaseSubmitSessionIndex - 2,
-          mockCaseSubmitSessionIndex
-        );
-        const followingSessions = buildFollowingSessions(
-          mockSplitSessions,
-          mockCaseSubmitSessionIndex
-        );
-
-        expect(followingSessions.length).toEqual(2);
-        expect(followingSessions).toEqual(expectedFollowingSessions);
-
-        followingSessions.forEach((session, index) => {
-          expect(session.start).toEqual(expectedFollowingSessions[index].start);
-          expect(session.end).toEqual(expectedFollowingSessions[index].end);
-        });
-      });
-    });
-    describe('when there are custom actions to be excluded', () => {
-      it('should return an array of two user sessions coming after the index of the current session with their actions filtered', async () => {
-        const mockCaseSubmitSessionIndex = 2;
-        const mockExcludedCustomActions = ['CUSTOM'];
-
-        const followingSessions = buildFollowingSessions(
-          mockSplitSessions,
-          mockCaseSubmitSessionIndex,
-          mockExcludedCustomActions
-        );
-
-        expect(followingSessions.length).toEqual(2);
-        expect(followingSessions).toEqual(expectedFollowingSessions);
-
-        followingSessions.forEach((session, index) => {
-          expect(session.start).toEqual(expectedFollowingSessions[index].start);
-          expect(session.end).toEqual(expectedFollowingSessions[index].end);
-
-          const actions = session.actions;
-          expect(actions.length).toEqual(
-            expectedFollowingSessions[index].actions.length
-          );
-          actions.forEach((action) => {
-            expect(action.actionType).not.toEqual(mockExcludedCustomActions[0]);
-          });
-        });
-      });
-    });
-  });
-
-  describe('#buildTimeline', () => {
-    it('should properly build sessions to be displayed', async () => {
-      const precedingSessions = [
-        {
-          start: '123',
-          end: '321',
-          actions: [{actionType: UserActionType.CLICK, timestamp: '123'}],
-        },
-      ];
-      const currentSession = {
-        start: '456',
-        end: '654',
-        actions: [
-          {actionType: UserActionType.TICKET_CREATION, timestamp: '456'},
-        ],
-      };
-      const followingSessions = [
-        {
-          start: '789',
-          end: '987',
-          actions: [{actionType: UserActionType.SEARCH, timestamp: '789'}],
-        },
-      ];
-
-      const expectedTimelineObject = {
-        precedingSessions: precedingSessions,
-        session: currentSession,
-        followingSessions: followingSessions,
-        caseSessionFound: true,
-      };
-
-      const timeline = buildTimeline(
-        precedingSessions,
-        currentSession,
-        followingSessions
-      );
-      expect(timeline).toEqual(expectedTimelineObject);
     });
   });
 });

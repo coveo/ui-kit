@@ -1,13 +1,12 @@
 import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client';
 
+// If ticketcreation date not in a session, we pass preceding/following sessions based on the ticket creation date
 export interface UserActionTimeline {
   precedingSessions: UserSession[];
-  session: UserSession;
+  session: UserSession | undefined;
   followingSessions: UserSession[];
   caseSessionFound: boolean;
 }
-
-export type PreprocessedUserActions = UserActionTimeline | UserSession[];
 
 export interface UserSession {
   start: string;
@@ -46,7 +45,7 @@ export interface UserActionsState {
   /**
    * The timeline of user actions.
    */
-  userActionsToDisplay?: PreprocessedUserActions;
+  timeline?: UserActionTimeline;
   /**
    * The names of custom actions to exclude from the user actions.
    */
@@ -67,7 +66,7 @@ export interface UserActionsState {
 
 export function getInsightUserActionsInitialState(): UserActionsState {
   return {
-    userActionsToDisplay: undefined,
+    timeline: undefined,
     excludedCustomActions: [],
     loading: false,
   };
