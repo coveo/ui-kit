@@ -1,11 +1,11 @@
-import {executeCommerceFieldSuggest} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {
+  executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {
-  namespaceCommerceFieldSuggestionFacet,
-  specificFacetSearchSetReducer as facetSearchSet,
-} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
@@ -39,10 +39,11 @@ describe('fieldSuggestions', () => {
   }
 
   function setFacetSearchRequest() {
-    state.facetSearchSet[namespaceCommerceFieldSuggestionFacet(facetId)] =
-      buildMockFacetSearch({
-        initialNumberOfValues: 5,
-      });
+    state.facetSearchSet[
+      getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
+    ] = buildMockFacetSearch({
+      initialNumberOfValues: 5,
+    });
   }
 
   beforeEach(() => {

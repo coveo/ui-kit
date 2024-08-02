@@ -1,7 +1,7 @@
 import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
 import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {namespaceCommerceFieldSuggestionFacet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
@@ -39,7 +39,7 @@ describe('fieldSuggestionsGenerator', () => {
 
   function setFacetState(config: FieldSuggestionsFacet[] = []) {
     for (const facet of config) {
-      const namespacedFacetId = namespaceCommerceFieldSuggestionFacet(
+      const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
         facet.facetId
       );
       state.fieldSuggestionsOrder.push(facet);

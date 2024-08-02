@@ -6,12 +6,10 @@ import {
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../app/state-key';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {
-  namespaceCommerceFieldSuggestionFacet,
-  specificFacetSearchSetReducer as facetSearchSet,
-} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   CommerceFacetSetSection,
   FacetSearchSection,
@@ -102,7 +100,7 @@ export function buildFieldSuggestions(
 
   const {dispatch} = engine;
 
-  const namespacedFacetId = namespaceCommerceFieldSuggestionFacet(
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
     options.facetId
   );
   const facetSearch = buildRegularFacetSearch(engine, {

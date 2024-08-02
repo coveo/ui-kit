@@ -33,7 +33,6 @@ import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {namespaceCommerceFieldSuggestionFacet} from '../../../facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
@@ -65,6 +64,7 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -689,16 +689,17 @@ describe('commerceFacetSetReducer', () => {
         )
       );
       expect(finalState).toEqual({
-        [namespaceCommerceFieldSuggestionFacet('regular_field')]: {
+        [getFacetIdWithCommerceFieldSuggestionNamespace('regular_field')]: {
           request: {
             initialNumberOfValues: 10,
           },
         },
-        [namespaceCommerceFieldSuggestionFacet('hierarchical_field')]: {
-          request: {
-            initialNumberOfValues: 10,
+        [getFacetIdWithCommerceFieldSuggestionNamespace('hierarchical_field')]:
+          {
+            request: {
+              initialNumberOfValues: 10,
+            },
           },
-        },
       });
     });
   });

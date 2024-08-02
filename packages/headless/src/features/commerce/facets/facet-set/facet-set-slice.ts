@@ -11,7 +11,6 @@ import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {namespaceCommerceFieldSuggestionFacet} from '../../../facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
 import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
@@ -41,7 +40,10 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions';
-import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
+import {
+  executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+} from '../facet-search-set/commerce-facet-search-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -84,7 +86,7 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(executeCommerceFieldSuggest.fulfilled, (state, action) =>
         handleFieldSuggestionsFulfilled(
           state,
-          namespaceCommerceFieldSuggestionFacet(action.payload.facetId)
+          getFacetIdWithCommerceFieldSuggestionNamespace(action.payload.facetId)
         )
       )
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
@@ -95,7 +97,7 @@ export const commerceFacetSetReducer = createReducer(
         for (const {facetId} of action.payload.fieldSuggestionsFacets) {
           handleFieldSuggestionsFulfilled(
             state,
-            namespaceCommerceFieldSuggestionFacet(facetId)
+            getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
           );
         }
       })

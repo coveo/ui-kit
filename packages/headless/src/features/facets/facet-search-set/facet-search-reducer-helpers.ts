@@ -1,9 +1,9 @@
 import {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {FieldSuggestionsFacet} from '../../commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {FacetSearchOptions} from './facet-search-request-options';
-import {namespaceCommerceFieldSuggestionFacet} from './specific/specific-facet-search-set-slice';
 
 export type FacetSearchState<T extends FacetSearchResponse> = {
   /**
@@ -157,7 +157,8 @@ export function handleCommerceFacetFieldSuggestionsFulfilled<
   buildEmptyResponse: () => T
 ) {
   const {facetId, response} = payload;
-  const namespacedFacetId = namespaceCommerceFieldSuggestionFacet(facetId);
+  const namespacedFacetId =
+    getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
   let search = state[namespacedFacetId];
 
   if (!search) {
@@ -229,7 +230,7 @@ export function handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet<
   }
 
   for (const fieldSuggestionFacet of payload.fieldSuggestionsFacets) {
-    const namespacedFacetId = namespaceCommerceFieldSuggestionFacet(
+    const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
       fieldSuggestionFacet.facetId
     );
     if (

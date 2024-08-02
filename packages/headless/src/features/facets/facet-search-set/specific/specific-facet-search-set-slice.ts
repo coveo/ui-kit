@@ -4,29 +4,32 @@ import {setView} from '../../../commerce/context/context-actions';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
 import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
 import {executeSearch} from '../../../search/search-actions';
 import {
-  handleFacetSearchRegistration,
-  handleFacetSearchUpdate,
-  handleFacetSearchPending,
-  handleFacetSearchRejected,
-  handleFacetSearchFulfilled,
-  handleFacetSearchClear,
-  handleFacetSearchSetClear,
-  handleCommerceFacetSearchFulfilled,
   handleCommerceFacetFieldSuggestionsFulfilled,
+  handleCommerceFacetSearchFulfilled,
   handleCommerceFetchQuerySuggestionsFulfilledForRegularFacet,
+  handleFacetSearchClear,
+  handleFacetSearchFulfilled,
+  handleFacetSearchPending,
+  handleFacetSearchRegistration,
+  handleFacetSearchRejected,
+  handleFacetSearchSetClear,
+  handleFacetSearchUpdate,
 } from '../facet-search-reducer-helpers';
 import {
   clearFacetSearch,
   executeFacetSearch,
 } from '../generic/generic-facet-search-actions';
-import {registerFacetSearch} from './specific-facet-search-actions';
-import {updateFacetSearch} from './specific-facet-search-actions';
+import {
+  registerFacetSearch,
+  updateFacetSearch,
+} from './specific-facet-search-actions';
 import {getFacetSearchSetInitialState} from './specific-facet-search-set-state';
 
 export const specificFacetSearchSetReducer = createReducer(
@@ -48,7 +51,7 @@ export const specificFacetSearchSetReducer = createReducer(
         const {facetId} = action.meta.arg;
         handleFacetSearchPending(
           state,
-          namespaceCommerceFieldSuggestionFacet(facetId),
+          getFacetIdWithCommerceFieldSuggestionNamespace(facetId),
           action.meta.requestId
         );
       })
@@ -64,7 +67,7 @@ export const specificFacetSearchSetReducer = createReducer(
         const {facetId} = action.meta.arg;
         handleFacetSearchRejected(
           state,
-          namespaceCommerceFieldSuggestionFacet(facetId)
+          getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
         );
       })
       .addCase(executeFacetSearch.rejected, (state, action) => {
@@ -118,13 +121,6 @@ export const specificFacetSearchSetReducer = createReducer(
       );
   }
 );
-
-export function namespaceCommerceFieldSuggestionFacet(facetId: string): string {
-  if (facetId.includes(':')) {
-    return facetId;
-  }
-  return 'field_suggestion:' + facetId;
-}
 
 function buildEmptyResponse(): SpecificFacetSearchResponse {
   return {

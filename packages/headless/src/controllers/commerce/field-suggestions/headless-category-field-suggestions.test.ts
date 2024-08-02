@@ -1,10 +1,12 @@
-import {executeCommerceFieldSuggest} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {
+  executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
 import {CategoryFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {namespaceCommerceFieldSuggestionFacet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
@@ -43,7 +45,7 @@ describe('categoryFieldSuggestions', () => {
     const request = buildMockCommerceFacetRequest({facetId, ...config});
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({request});
     state.categoryFacetSearchSet[
-      namespaceCommerceFieldSuggestionFacet(facetId)
+      getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
     ] = buildMockCategoryFacetSearch({
       initialNumberOfValues: 5,
     });
@@ -75,7 +77,7 @@ describe('categoryFieldSuggestions', () => {
   it('should dispatch an #updateFacetSearch and #executeFieldSuggest action on #updateText', () => {
     fieldSuggestions.updateText('foo');
     expect(updateFacetSearch).toHaveBeenCalledWith({
-      facetId: namespaceCommerceFieldSuggestionFacet(facetId),
+      facetId: getFacetIdWithCommerceFieldSuggestionNamespace(facetId),
       query: 'foo',
       numberOfValues: 5,
     });

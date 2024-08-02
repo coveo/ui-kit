@@ -8,9 +8,11 @@ import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-fac
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
 import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options';
 import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider';
-import {namespaceCommerceFieldSuggestionFacet} from '../../../../facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CategoryFacetValueRequest} from '../../facet-set/interfaces/request';
-import {removeCommerceFieldSuggestionNamespace} from '../regular/commerce-regular-facet-search-request-builder';
+import {
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+  getFacetIdWithoutCommerceFieldSuggestionNamespace,
+} from '../commerce-facet-search-actions';
 import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-request-builder';
 
 describe('#buildCategoryFacetSearchRequest', () => {
@@ -71,7 +73,9 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId: 'a_non_namespaced_facet_id',
     },
     {
-      facetId: namespaceCommerceFieldSuggestionFacet('a_namespaced_facet_id'),
+      facetId: getFacetIdWithCommerceFieldSuggestionNamespace(
+        'a_namespaced_facet_id'
+      ),
     },
   ])('returned object #ignorePaths property', ({facetId}) => {
     beforeEach(() => {
@@ -79,10 +83,11 @@ describe('#buildCategoryFacetSearchRequest', () => {
         options: {...buildMockFacetSearchRequestOptions(), query},
       });
 
-      state.commerceFacetSet[removeCommerceFieldSuggestionNamespace(facetId)] =
-        buildMockCommerceFacetSlice({
-          request: buildMockCommerceFacetRequest({type: 'hierarchical'}),
-        });
+      state.commerceFacetSet[
+        getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId)
+      ] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({type: 'hierarchical'}),
+      });
     });
 
     it('when the facet request has no selected value, is an empty array', () => {
@@ -98,7 +103,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
 
     it('when the facet request has a selected value with no ancestry, is an array with a single array containing the selected value', () => {
       state.commerceFacetSet[
-        removeCommerceFieldSuggestionNamespace(facetId)
+        getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId)
       ].request.values[0] = buildMockCategoryFacetValue({
         state: 'selected',
         value: 'test',
@@ -114,7 +119,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
         [
           (
             state.commerceFacetSet[
-              removeCommerceFieldSuggestionNamespace(facetId)
+              getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId)
             ].request.values[0] as CategoryFacetValueRequest
           ).value,
         ],
@@ -122,7 +127,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     });
 
     it('when the facet request has a selected value with ancestry, is an array with a single array containing the selected value and its ancestors', () => {
-      const nonNamespacedId = removeCommerceFieldSuggestionNamespace(facetId);
+      const nonNamespacedId =
+        getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId);
       state.commerceFacetSet[nonNamespacedId].request.values[0] =
         buildMockCategoryFacetValue({
           value: 'test',
