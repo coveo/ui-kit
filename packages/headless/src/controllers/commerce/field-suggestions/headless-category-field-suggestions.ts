@@ -82,12 +82,12 @@ export function buildCategoryFieldSuggestions(
 
   const {dispatch} = engine;
 
-  const commerceFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
+  const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
     options.facetId
   );
   const facetSearch = buildCategoryFacetSearch(engine, {
     options: {
-      facetId: commerceFacetId,
+      facetId: namespacedFacetId,
       ...options.facetSearch,
       numberOfValues: 10,
     },
@@ -109,7 +109,7 @@ export function buildCategoryFieldSuggestions(
 
   const facetSearchStateSelector = createSelector(
     (state: CommerceEngineState) =>
-      state.categoryFacetSearchSet[commerceFacetId],
+      state.categoryFacetSearchSet[namespacedFacetId],
     (facetSearch) => ({
       isLoading: facetSearch.isLoading,
       moreValuesAvailable: facetSearch.response.moreValuesAvailable,
