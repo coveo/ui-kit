@@ -10,7 +10,16 @@ const meta: Meta = {
   component: 'atomic-timeframe-facet',
   title: 'Atomic/TimeframeFacet',
   id: 'atomic-timeframe-facet',
-
+  argTypes: {
+    'attributes-min': {
+      name: 'min',
+      type: 'string',
+    },
+    'attributes-max': {
+      name: 'max',
+      type: 'string',
+    },
+  },
   render: renderComponent,
   decorators: [decorator],
   parameters,
