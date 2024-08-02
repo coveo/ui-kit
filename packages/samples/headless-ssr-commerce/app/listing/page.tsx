@@ -1,6 +1,6 @@
 import {headers} from 'next/headers';
 import ListingPage from '../_components/listing-page';
-import {ProductListingEngine} from '../_lib/commerce-engine';
+import {listingEngineDefinition} from '../_lib/commerce-engine';
 import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
 /**
@@ -11,10 +11,10 @@ import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 export default async function Listing() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
-  ProductListingEngine.setNavigatorContextProvider(() => navigatorContext);
+  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await ProductListingEngine.fetchStaticState();
+  const staticState = await listingEngineDefinition.fetchStaticState();
 
   return (
     <ListingPage

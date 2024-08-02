@@ -106,11 +106,11 @@ export function defineCommerceEngine<
 >(
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  ProductListingEngine: CommerceEngineDefinition<
+  listingEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.listing
   >;
-  SearchEngine: CommerceEngineDefinition<
+  searchEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.search
   >;
@@ -257,13 +257,13 @@ export function defineCommerceEngine<
       }
     );
   return {
-    ProductListingEngine: {
+    listingEngineDefinition: {
       build: buildFactory(SolutionType.listing),
       fetchStaticState: fetchStaticStateFactory(SolutionType.listing),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.listing),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
-    SearchEngine: {
+    searchEngineDefinition: {
       build: buildFactory(SolutionType.search),
       fetchStaticState: fetchStaticStateFactory(SolutionType.search),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
