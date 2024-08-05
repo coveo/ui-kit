@@ -35,7 +35,6 @@ export const preprocessActionsData = (
     };
   }
 
-  // Sort actions by most recent
   const sortedActions: rawUserAction[] = sortActions(actions);
 
   const mappedUserActions = mapUserActions(sortedActions);
@@ -54,6 +53,7 @@ export const preprocessActionsData = (
   return filteredTimeline;
 };
 
+// Sorting actions by most recent
 export const sortActions = (actions: rawUserAction[]) => {
   const sortedActionsByMostRecent = (a: rawUserAction, b: rawUserAction) =>
     Number(b.time) - Number(a.time);
@@ -126,21 +126,20 @@ export const splitActionsIntoTimelineSessions = (
   };
 
   actions.forEach((action) => {
+    // If the action is part of the same session, we add it to the current session
     if (isPartOfTheSameSession(action, currentSession.end)) {
       currentSession.actions.push(action);
       currentSession.start = action.timestamp;
     } else {
+      // If the action is not part of the same session, we close the current session
       if (currentSessionHasTicketCreation(currentSession, ticketCreationDate)) {
-        console.log('CURRENT SESSION HAS TICKET CREATION');
         returnTimeline.session = currentSession;
         returnTimeline.caseSessionFound = true;
       } else if (
         currentSessionIsBeforeCaseCreation(currentSession, ticketCreationDate)
       ) {
-        // console.log('CURRENT SESSION IS BEFORE CASE CREATION');
         returnTimeline.precedingSessions.push(currentSession);
       } else {
-        // console.log('CURRENT SESSION IS AFTER CASE CREATION');
         returnTimeline.followingSessions.push(currentSession);
       }
       currentSession = {
@@ -152,15 +151,22 @@ export const splitActionsIntoTimelineSessions = (
     }
   });
 
-  // If no case session was found, we insert the session containing the ticket creation action in the timeline
-  if (returnTimeline.session === undefined) {
-    const caseCreationSession: UserSession = {
-      start: ticketCreationDate,
-      end: ticketCreationDate,
-      actions: [buildTicketCreationAction(ticketCreationDate)],
-    };
-    returnTimeline.session = caseCreationSession;
-  }
+  // Inserting ticket creation action in current session
+  const caseCreationSessionActions: UserAction[] | [] =
+    insertTicketCreationActionInSession(
+      returnTimeline.session,
+      ticketCreationDate
+    );
+
+  const caseCreationSession: UserSession = {
+    start:
+      caseCreationSessionActions[caseCreationSessionActions.length - 1]
+        .timestamp,
+    end: caseCreationSessionActions[0].timestamp,
+    actions: caseCreationSessionActions,
+  };
+  returnTimeline.session = caseCreationSession;
+
   return returnTimeline;
 };
 
@@ -179,34 +185,43 @@ const currentSessionHasTicketCreation = (
   currentSession: UserSession,
   ticketCreationDate: string
 ): boolean => {
-  console.log('COMPARISON: ', ticketCreationDate <= currentSession.end);
-
-  if (
-    currentSession.start <= ticketCreationDate &&
+  return currentSession.start <= ticketCreationDate &&
     ticketCreationDate <= currentSession.end
-  ) {
-    return true;
-  }
-  return false;
+    ? true
+    : false;
 };
 
 const currentSessionIsBeforeCaseCreation = (
   currentSession: UserSession,
   ticketCreationDate: string
 ): boolean => {
-  if (currentSession.end < ticketCreationDate) {
-    return true;
-  }
-  return false;
+  return currentSession.end < ticketCreationDate ? true : false;
 };
 
-export const buildTicketCreationAction = (
+// Inserts ticket creation action in the current session at its correct position
+export const insertTicketCreationActionInSession = (
+  currentSession: UserSession | undefined,
   ticketCreationDate: string
-): UserAction => {
-  return {
+): UserAction[] => {
+  const ticketCreationAction: UserAction = {
     actionType: UserActionType.TICKET_CREATION,
     timestamp: ticketCreationDate,
   };
+
+  // If no actions were pushed in the session, we return just the ticket creation action in the session
+  if (currentSession === undefined) {
+    return [ticketCreationAction];
+  }
+
+  let ticketCreationActionExists = false;
+
+  currentSession.actions.forEach((action, index) => {
+    if (!ticketCreationActionExists && action.timestamp < ticketCreationDate) {
+      currentSession.actions.splice(index, 0, ticketCreationAction);
+      ticketCreationActionExists = true;
+    }
+  });
+  return currentSession.actions;
 };
 
 export const filterTimelineActions = (

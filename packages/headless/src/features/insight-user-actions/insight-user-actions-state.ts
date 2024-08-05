@@ -1,6 +1,5 @@
 import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client';
 
-// If ticketcreation date not in a session, we pass preceding/following sessions based on the ticket creation date
 export interface UserActionTimeline {
   precedingSessions: UserSession[];
   session: UserSession | undefined;
@@ -25,7 +24,7 @@ export interface UserAction {
   searchHub?: string;
   document?: {
     title?: string;
-    clickUri?: string; // Will be supported later
+    clickUri?: string;
     uriHash?: string;
     contentIdKey?: string;
     contentIdValue?: string;
