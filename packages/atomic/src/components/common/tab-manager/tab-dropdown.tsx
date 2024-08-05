@@ -11,7 +11,8 @@ export const TabDropdown: FunctionalComponent<TabDropdownProps> = (
   children
 ) => {
   return (
-    <div class="tab-dropdown-area hidden border-b pb-1"
+    <div
+      class="tab-dropdown-area hidden border-b pb-1"
       aria-label="tab-dropdown-area"
     >
       <select
