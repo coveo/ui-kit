@@ -1,12 +1,12 @@
-import {executeCommerceFieldSuggest} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {
+  executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
-import {RegularFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
-import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
 import {
   buildMockCommerceEngine,
@@ -33,16 +33,15 @@ describe('fieldSuggestions', () => {
   let fieldSuggestions: FieldSuggestions;
   let options: RegularFacetOptions;
 
-  function initFacet() {
+  function initFieldSuggestions() {
     engine = buildMockCommerceEngine(state);
     fieldSuggestions = buildFieldSuggestions(engine, options);
   }
 
-  function setFacetRequest(config: Partial<RegularFacetRequest> = {}) {
-    state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
-      request: buildMockCommerceFacetRequest({facetId, ...config}),
-    });
-    state.facetSearchSet[facetId] = buildMockFacetSearch({
+  function setFacetSearchRequest() {
+    state.facetSearchSet[
+      getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
+    ] = buildMockFacetSearch({
       initialNumberOfValues: 5,
     });
   }
@@ -58,9 +57,9 @@ describe('fieldSuggestions', () => {
     };
 
     state = buildMockCommerceState();
-    setFacetRequest();
+    setFacetSearchRequest();
 
-    initFacet();
+    initFieldSuggestions();
   });
 
   it('adds correct reducers to engine', () => {
