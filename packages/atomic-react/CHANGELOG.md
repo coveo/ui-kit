@@ -1,3 +1,9 @@
+# 2.13.0 (2024-07-31)
+
+### Features
+
+- **atomic-commerce:** products-per-page ([#4107](https://github.com/coveo/ui-kit/issues/4107)) ([81e31cf](https://github.com/coveo/ui-kit/commits/81e31cff63c19f19b12babd4b10aa5b2e60c19e6))
+
 # 2.12.0 (2024-07-09)
 
 ### Features

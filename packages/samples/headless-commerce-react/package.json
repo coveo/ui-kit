@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@coveo/headless": "^2.73.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@coveo/headless": "2.75.0",
+    "@testing-library/jest-dom": "6.4.8",
+    "@testing-library/react": "16.0.0",
+    "@testing-library/user-event": "14.5.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-scripts": "5.0.1"
   },
   "scripts": {
