@@ -9,7 +9,7 @@ interface SortLabelProps {
 export const SortLabel: FunctionalComponent<SortLabelProps> = ({id, i18n}) => {
   return (
     <label
-      class="m-2 font-bold text-sm cursor-pointer"
+      class="m-2 cursor-pointer text-sm font-bold"
       part="label"
       htmlFor={id}
     >

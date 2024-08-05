@@ -82,7 +82,7 @@ export class SmartSnippetFeedbackModalCommon {
       <fieldset>
         <legend
           part="reason-title"
-          class="font-bold text-on-background text-lg"
+          class="text-on-background text-lg font-bold"
         >
           {this.props
             .getBindings()
@@ -100,7 +100,7 @@ export class SmartSnippetFeedbackModalCommon {
                 (e.currentTarget as HTMLInputElement | null)?.checked &&
                 this.props.setCurrentAnswer(correspondingAnswer)
               }
-              class="mr-2 w-4 h-4"
+              class="mr-2 h-4 w-4"
               required
             />
             <label part="reason-label" htmlFor={id}>
@@ -121,7 +121,7 @@ export class SmartSnippetFeedbackModalCommon {
       <fieldset>
         <legend
           part="details-title"
-          class="font-bold text-on-background text-lg"
+          class="text-on-background text-lg font-bold"
         >
           {this.props.getBindings().i18n.t('details')}
         </legend>
@@ -129,7 +129,7 @@ export class SmartSnippetFeedbackModalCommon {
           part="details-input"
           name="answer-details"
           ref={(detailsInput) => this.props.setDetailsInputRef(detailsInput)}
-          class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
+          class="border-neutral mt-2 w-full resize-none rounded border p-2 text-base leading-5"
           rows={4}
           required
         ></textarea>
