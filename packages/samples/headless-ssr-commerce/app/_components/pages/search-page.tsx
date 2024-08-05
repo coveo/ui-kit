@@ -3,9 +3,9 @@
 import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 import {
-  listingEngineDefinition,
-  ListingHydratedState,
-  ListingStaticState,
+  SearchHydratedState,
+  SearchStaticState,
+  searchEngineDefinition,
 } from '../../_lib/commerce-engine';
 import {ProductList} from '../product-list';
 import {SearchBox} from '../search-box';
@@ -15,18 +15,18 @@ export default function SearchPage({
   staticState,
   navigatorContext,
 }: {
-  staticState: ListingStaticState;
+  staticState: SearchStaticState;
   navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
-    ListingHydratedState | undefined
+    SearchHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   useEffect(() => {
-    listingEngineDefinition
+    searchEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
       })
