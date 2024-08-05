@@ -9,7 +9,6 @@ import {
 } from '../../_lib/commerce-engine';
 import {Cart} from '../cart';
 import {ProductList} from '../product-list';
-import {SearchBox} from '../search-box';
 import {Summary} from '../summary';
 
 export default function ListingPage({
@@ -42,10 +41,6 @@ export default function ListingPage({
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}
       ></Cart>
-      <SearchBox
-        staticState={staticState.controllers.searchBox.state}
-        controller={hydratedState?.controllers.searchBox}
-      ></SearchBox>
       <ProductList
         staticState={staticState.controllers.productListListing.state}
         controller={hydratedState?.controllers.productListListing}
