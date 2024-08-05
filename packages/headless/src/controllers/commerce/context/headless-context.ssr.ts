@@ -1,11 +1,10 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common';
+import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {Context, buildContext} from './headless-context';
 
 export type {ContextState, Context} from './headless-context';
 
 export interface ContextDefinition
-  extends ControllerDefinitionWithoutProps<CommerceEngine, Context> {}
+  extends SharedControllerDefinitionWithoutProps<Context> {}
 
 /**
  * Defines a `Context` controller instance.
@@ -16,6 +15,8 @@ export interface ContextDefinition
  */
 export function defineContext(): ContextDefinition {
   return {
+    listing: true,
+    search: true,
     build: (engine) => buildContext(engine),
   };
 }
