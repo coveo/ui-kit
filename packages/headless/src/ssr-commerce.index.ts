@@ -91,13 +91,6 @@ export type {
 export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr';
 
 export type {
-  StandaloneSearchBox,
-  StandaloneSearchBoxState,
-  StandaloneSearchBoxProps,
-} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
-export {defineStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
-
-export type {
   ProductListingSummaryState,
   Summary,
 } from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
