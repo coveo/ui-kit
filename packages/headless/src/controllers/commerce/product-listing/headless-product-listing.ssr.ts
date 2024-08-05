@@ -11,9 +11,9 @@ export type {ProductListingState as ProductListState} from './headless-product-l
 export type ProductList = Pick<ProductListing | Search, 'state' | 'subscribe'>;
 
 /**
- * Defines a `ProductListing` controller instance.
+ * Defines a `ProductList` controller instance.
  *
- * @returns The `ProductListing` controller definition.
+ * @returns The `ProductList` controller definition.
  *
  * @internal
  * */
