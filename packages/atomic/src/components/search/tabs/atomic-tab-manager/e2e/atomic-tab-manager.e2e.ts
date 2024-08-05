@@ -24,7 +24,7 @@ test.describe('when viewport is large enough to display all tabs', () => {
   }) => {
     await expect(tabManager.tabDropdown).not.toBeVisible();
 
-    expect(await tabManager.tabButtons().allTextContents()).toEqual([
+    expect(await tabManager.tabButtons()).toHaveText([
       'All',
       'Articles',
       'Documentation',
@@ -180,7 +180,6 @@ test.describe('when viewport is too small to display all buttons', () => {
             await expect(includedFacets[i]).not.toBeVisible();
           }
         });
-
         test('smart snippet', async ({tabManager}) => {
           await expect(tabManager.smartSnippet).not.toBeVisible();
         });
