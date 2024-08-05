@@ -1,18 +1,14 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common';
+import {ensureAtLeastOneSolutionType} from '../../../app/commerce-ssr-engine/common';
 import {
-  ProductListing as ProductListingController,
-  buildProductListing,
-} from './headless-product-listing';
+  ControllerDefinitionOption,
+  SolutionType,
+  SubControllerDefinitionWithoutProps,
+} from '../../../app/commerce-ssr-engine/types/common';
+import {buildSearch, Search} from '../search/headless-search';
+import {ProductListing, buildProductListing} from './headless-product-listing';
 
-export type {ProductListingState} from './headless-product-listing';
-export type ProductListing = Pick<
-  ProductListingController,
-  'state' | 'subscribe'
->;
-
-export interface ProductListDefinition
-  extends ControllerDefinitionWithoutProps<CommerceEngine, ProductListing> {}
+export type {ProductListingState as ProductListState} from './headless-product-listing';
+export type ProductList = Pick<ProductListing | Search, 'state' | 'subscribe'>;
 
 /**
  * Defines a `ProductListing` controller instance.
@@ -21,8 +17,15 @@ export interface ProductListDefinition
  *
  * @internal
  * */
-export function defineProductListing(): ProductListDefinition {
+export function defineProductList<
+  TOptions extends ControllerDefinitionOption | undefined,
+>(options?: TOptions) {
+  ensureAtLeastOneSolutionType(options);
   return {
-    build: (engine) => buildProductListing(engine),
-  };
+    ...options,
+    build: (engine, solutionType) =>
+      solutionType === SolutionType.listing
+        ? (buildProductListing(engine) as ProductList)
+        : (buildSearch(engine) as ProductList),
+  } as SubControllerDefinitionWithoutProps<ProductList, TOptions>;
 }

@@ -1,6 +1,11 @@
 import SearchPage from '@/common/components/generic/search-page';
-import {fetchStaticState} from '@/common/lib/generic/engine';
+import {
+  fetchStaticState,
+  setNavigatorContextProvider,
+} from '@/common/lib/generic/engine';
+import {NextJsNavigatorContext} from '@/common/lib/navigatorContextProvider';
 import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
+import {headers} from 'next/headers';
 
 /**
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
@@ -16,12 +21,21 @@ import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
+  // Convert URL search parameters into a format that Coveo's search engine can understand.
   const {toSearchParameters} = buildSSRSearchParameterSerializer();
   const searchParameters = toSearchParameters(url.searchParams);
+
+  // Defines hard-coded context values to simulate user-specific information.
   const contextValues = {
     ageGroup: '30-45',
     mainInterest: 'sports',
   };
+
+  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  const navigatorContext = new NextJsNavigatorContext(headers());
+  setNavigatorContextProvider(() => navigatorContext);
+
+  // Fetches the static state of the app with initial state (when applicable)
   const staticState = await fetchStaticState({
     controllers: {
       context: {
@@ -34,7 +48,12 @@ export default async function Search(url: {
       },
     },
   });
-  return <SearchPage staticState={staticState}></SearchPage>;
+  return (
+    <SearchPage
+      staticState={staticState}
+      navigatorContext={navigatorContext.marshal}
+    ></SearchPage>
+  );
 }
 
 // A page with search parameters cannot be statically rendered, since its rendered state should look different based on the current search parameters.

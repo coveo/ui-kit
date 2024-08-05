@@ -3,8 +3,13 @@ import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchParameterManager from '@/common/components/react/search-parameter-manager';
-import {fetchStaticState} from '@/common/lib/react/engine';
+import {NextJsNavigatorContext} from '@/common/lib/navigatorContextProvider';
+import {
+  fetchStaticState,
+  setNavigatorContextProvider,
+} from '@/common/lib/react/engine';
 import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
+import {headers} from 'next/headers';
 
 /**
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
@@ -21,13 +26,21 @@ import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
 export default async function Search(url: {
   searchParams: {[key: string]: string | string[] | undefined};
 }) {
+  // Convert URL search parameters into a format that Coveo's search engine can understand.
   const {toSearchParameters} = buildSSRSearchParameterSerializer();
   const searchParameters = toSearchParameters(url.searchParams);
 
+  // Defines hard-coded context values to simulate user-specific information.
   const contextValues = {
     ageGroup: '30-45',
     mainInterest: 'sports',
   };
+
+  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  const navigatorContext = new NextJsNavigatorContext(headers());
+  setNavigatorContextProvider(() => navigatorContext);
+
+  // Fetches the static state of the app with initial state (when applicable)
   const staticState = await fetchStaticState({
     controllers: {
       context: {
@@ -42,7 +55,10 @@ export default async function Search(url: {
   });
 
   return (
-    <SearchPageProvider staticState={staticState}>
+    <SearchPageProvider
+      staticState={staticState}
+      navigatorContext={navigatorContext.marshal}
+    >
       <SearchParameterManager />
       <SearchBox />
       <ResultList />

@@ -1,0 +1,27 @@
+{
+  "name": "@coveo/headless-ssr-commerce-samples",
+  "description": "Examples of framework agnostic @coveo/headless/ssr-commerce utils using Next.js app router",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "nx build",
+    "prod": "next start",
+    "lint": "next lint",
+    "build:next": "next build"
+  },
+  "dependencies": {
+    "@coveo/headless": "^2.74.0",
+    "next": "14.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.12",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "8.57",
+    "eslint-config-next": "14.2.5",
+    "typescript": "5.4.5"
+  }
+}

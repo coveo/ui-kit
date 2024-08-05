@@ -26,16 +26,17 @@ export type {
   InferControllersMapFromDefinition,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-} from './app/ssr-engine/types/common';
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+} from './app/commerce-ssr-engine/types/common';
 export type {Build} from './app/ssr-engine/types/build';
 export type {
   EngineDefinition,
   InferStaticState,
   InferHydratedState,
   InferBuildResult,
-} from './app/ssr-engine/types/core-engine';
+} from './app/commerce-ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {LogLevel} from './app/logger';
 
@@ -64,12 +65,11 @@ export type {
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
 
-// Product Listing
 export type {
-  ProductListing,
-  ProductListingState,
+  ProductList,
+  ProductListState,
 } from './controllers/commerce/product-listing/headless-product-listing.ssr';
-export {defineProductListing} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
 
 // Cart
 export type {CartItem} from './controllers/commerce/context/cart/headless-cart.ts';
