@@ -40,15 +40,16 @@ export default function SearchPage({
       <SearchBox
         staticState={staticState.controllers.searchBox.state}
         controller={hydratedState?.controllers.searchBox}
-      ></SearchBox>
-      <ProductList
-        staticState={staticState.controllers.productListSearch.state}
-        controller={hydratedState?.controllers.productListSearch}
       />
       <Summary
         staticState={staticState.controllers.summarySearch.state}
         controller={hydratedState?.controllers.summarySearch}
         hydratedState={hydratedState}
+      />
+
+      <ProductList
+        staticState={staticState.controllers.productListSearch.state}
+        controller={hydratedState?.controllers.productListSearch}
       />
     </>
   );

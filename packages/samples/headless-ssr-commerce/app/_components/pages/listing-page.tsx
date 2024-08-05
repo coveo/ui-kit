@@ -40,7 +40,7 @@ export default function ListingPage({
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}
-      ></Cart>
+      />
       <ProductList
         staticState={staticState.controllers.productListListing.state}
         controller={hydratedState?.controllers.productListListing}
