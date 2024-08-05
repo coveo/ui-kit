@@ -3,7 +3,6 @@ export function formatCurrency(
   language: string,
   currency: string
 ) {
-  console.log(language, currency);
   return new Intl.NumberFormat(`${language}-${language}`, {
     style: 'currency',
     currency: currency,
