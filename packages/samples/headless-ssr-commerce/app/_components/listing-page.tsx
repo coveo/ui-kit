@@ -37,6 +37,14 @@ export default function ListingPage({
   return (
     <>
       {/* TODO: add UI component here */}
+      <Cart
+        staticState={staticState.controllers.cart.state}
+        controller={hydratedState?.controllers.cart}
+      ></Cart>
+      <SearchBox
+        staticState={staticState.controllers.searchBox.state}
+        controller={hydratedState?.controllers.searchBox}
+      ></SearchBox>
       <ProductList
         staticState={staticState.controllers.productList.state}
         controller={hydratedState?.controllers.productList}
