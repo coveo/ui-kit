@@ -59,8 +59,10 @@ export default {
     },
   },
   controllers: {
-    summary: defineQuerySummary(),
-    productList: defineProductList(),
+    summaryListing: defineQuerySummary({listing: true}),
+    summarySearch: defineQuerySummary({search: true}),
+    productListListing: defineProductList({listing: true}),
+    productListSearch: defineProductList({search: true}),
     cart: defineCart(),
     searchBox: defineSearchBox(),
   },

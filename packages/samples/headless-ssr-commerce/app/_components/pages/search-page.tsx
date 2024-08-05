@@ -6,13 +6,12 @@ import {
   listingEngineDefinition,
   ListingHydratedState,
   ListingStaticState,
-} from '../_lib/commerce-engine';
-import {Cart} from './cart';
-import {ProductList} from './product-list';
-import {SearchBox} from './search-box';
-import {Summary} from './summary';
+} from '../../_lib/commerce-engine';
+import {ProductList} from '../product-list';
+import {SearchBox} from '../search-box';
+import {Summary} from '../summary';
 
-export default function ListingPage({
+export default function SearchPage({
   staticState,
   navigatorContext,
 }: {
@@ -38,21 +37,17 @@ export default function ListingPage({
 
   return (
     <>
-      <Cart
-        staticState={staticState.controllers.cart.state}
-        controller={hydratedState?.controllers.cart}
-      ></Cart>
       <SearchBox
         staticState={staticState.controllers.searchBox.state}
         controller={hydratedState?.controllers.searchBox}
       ></SearchBox>
       <ProductList
-        staticState={staticState.controllers.productList.state}
-        controller={hydratedState?.controllers.productList}
+        staticState={staticState.controllers.productListSearch.state}
+        controller={hydratedState?.controllers.productListSearch}
       />
       <Summary
-        staticState={staticState.controllers.summary.state}
-        controller={hydratedState?.controllers.summary}
+        staticState={staticState.controllers.summarySearch.state}
+        controller={hydratedState?.controllers.summarySearch}
         hydratedState={hydratedState}
       />
     </>
