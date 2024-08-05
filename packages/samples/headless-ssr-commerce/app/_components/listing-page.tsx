@@ -7,7 +7,9 @@ import {
   ListingHydratedState,
   ListingStaticState,
 } from '../_lib/commerce-engine';
+import {Cart} from './cart';
 import {ProductList} from './product-list';
+import {SearchBox} from './search-box';
 import {Summary} from './summary';
 
 export default function ListingPage({
@@ -36,7 +38,6 @@ export default function ListingPage({
 
   return (
     <>
-      {/* TODO: add UI component here */}
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}

@@ -21,7 +21,7 @@ export const ProductList: FunctionComponent<ProductListProps> = ({
   );
 
   return (
-    <ul className="product-list">
+    <ul>
       {state.products.map((product) => (
         <li key={product.ec_product_id}>
           <h3>{product.ec_name}</h3>
