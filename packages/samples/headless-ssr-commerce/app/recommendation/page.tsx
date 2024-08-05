@@ -1,5 +1,5 @@
 import {headers} from 'next/headers';
-import ListingPage from '../_components/listing-page';
+import Recommendation from '../_components/recommendation';
 import {listingEngineDefinition} from '../_lib/commerce-engine';
 import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
@@ -8,7 +8,7 @@ import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
  *
  * The Listing function is the entry point for server-side rendering (SSR).
  */
-export default async function Listing() {
+export default async function RecommendationPage() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
@@ -17,11 +17,10 @@ export default async function Listing() {
   const staticState = await listingEngineDefinition.fetchStaticState();
 
   return (
-    // TODO: remove page suffix since it is a component
-    <ListingPage
+    <Recommendation
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
-    ></ListingPage>
+    ></Recommendation>
   );
 }
 

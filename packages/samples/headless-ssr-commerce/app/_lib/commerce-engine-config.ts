@@ -5,59 +5,42 @@ import {
   CommerceEngine,
   defineProductList,
   defineQuerySummary,
+  getSampleCommerceEngineConfiguration,
+  defineRecommendations,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
   ControllerDefinitionsMap<CommerceEngine, Controller>
 >;
 
+const {context, ...restOfConfiguration} =
+  getSampleCommerceEngineConfiguration();
+
 export default {
   configuration: {
-    accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
-    organizationId: 'barcasportsmcy01fvu',
-    environment: 'dev',
-    analytics: {
-      trackingId: 'sports',
-    },
+    analytics: {trackingId: 'sports-ui-samples', enabled: false},
     context: {
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
+      ...context,
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports.barca.group',
       },
     },
-    cart: {
-      items: [
-        {
-          productId: 'SP01057_00001',
-          quantity: 1,
-          name: 'Kayaker Canoe',
-          price: 800,
-        },
-        {
-          productId: 'SP00081_00001',
-          quantity: 1,
-          name: 'Bamboo Canoe Paddle',
-          price: 120,
-        },
-        {
-          productId: 'SP04236_00005',
-          quantity: 1,
-          name: 'Eco-Brave Rashguard',
-          price: 33,
-        },
-        {
-          productId: 'SP04236_00005',
-          quantity: 1,
-          name: 'Eco-Brave Rashguard',
-          price: 33,
-        },
-      ],
-    },
+    ...restOfConfiguration,
   },
   controllers: {
     summary: defineQuerySummary(),
     productList: defineProductList(),
+    popularViewedRecs: defineRecommendations({
+      options: {
+        slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
+      },
+    }),
+    popularBoughtRecs: defineRecommendations({
+      options: {
+        slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+      },
+    }),
   },
 } satisfies CommerceEngineConfig;
+
+// https://searchuisamples.org.coveo.com/rest/organizations/searchuisamples/commerce/v2/recommendations

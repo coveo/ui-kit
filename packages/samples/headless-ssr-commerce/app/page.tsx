@@ -4,6 +4,9 @@ export default function Home() {
   return (
     <ul>
       <li>
+        <Link href={'/recommendation'}>Recommendations</Link>
+      </li>
+      <li>
         <Link href={'/listing'}>Surfboard Listing Page</Link>
       </li>
       <li>

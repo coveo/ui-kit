@@ -77,6 +77,11 @@ export type {
 } from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 export {defineQuerySummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 
+export type {
+  RecommendationsState,
+  Recommendations,
+} from './controllers/commerce/recommendations/headless-recommendations.ssr';
+export {defineRecommendations} from './controllers/commerce/recommendations/headless-recommendations.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
