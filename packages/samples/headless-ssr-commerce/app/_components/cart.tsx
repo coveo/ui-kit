@@ -2,17 +2,21 @@ import {
   Cart as CartController,
   CartItem,
   CartState,
+  Context as ContextController,
 } from '@coveo/headless/ssr-commerce';
 import {useEffect, useState, FunctionComponent} from 'react';
+import {formatCurrency} from '../_utils/format-currency';
 
 interface CartProps {
   staticState: CartState;
   controller?: CartController;
+  contextController?: ContextController;
 }
 
 export const Cart: FunctionComponent<CartProps> = ({
   staticState,
   controller,
+  contextController,
 }) => {
   const [state, setState] = useState(staticState);
 
@@ -40,6 +44,10 @@ export const Cart: FunctionComponent<CartProps> = ({
     controller?.empty();
   };
 
+  //TODO: server action maybe ?
+  const language = () => contextController?.state.language ?? 'fr';
+  const currency = () => contextController?.state.currency ?? 'cad';
+
   return (
     <div>
       <ul>
@@ -55,12 +63,18 @@ export const Cart: FunctionComponent<CartProps> = ({
             </p>
             <p>
               <span>Price: </span>
-              {/* <span>{formatCurrency(item.price)}</span> */}
+              <span>{formatCurrency(item.price, language(), currency())}</span>
               <span>{item.price}</span>
             </p>
             <p>
               <span>Total: </span>
-              {/* <span>{formatCurrency(item.price * item.quantity)}</span> */}
+              <span>
+                {formatCurrency(
+                  item.price * item.quantity,
+                  language(),
+                  currency()
+                )}
+              </span>
               <span>{item.price * item.quantity}</span>
             </p>
             <button onClick={() => adjustQuantity(item, 1)}>Add one</button>
@@ -73,7 +87,7 @@ export const Cart: FunctionComponent<CartProps> = ({
       </ul>
       <p>
         <span>Total: </span>
-        {/* {formatCurrency(state.totalPrice)} */}
+        {formatCurrency(state.totalPrice, language(), currency())}
         {state.totalPrice}
         <span></span>
       </p>

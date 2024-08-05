@@ -7,6 +7,7 @@ import {
   defineQuerySummary,
   defineCart,
   defineSearchBox,
+  defineContext,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -65,5 +66,6 @@ export default {
     productListSearch: defineProductList({search: true}),
     cart: defineCart(),
     searchBox: defineSearchBox(),
+    context: defineContext(),
   },
 } satisfies CommerceEngineConfig;
