@@ -44,7 +44,6 @@ export const Cart: FunctionComponent<CartProps> = ({
     controller?.empty();
   };
 
-  //TODO: server action maybe ?
   const language = () => staticContextState.language;
   const currency = () => staticContextState.currency;
 
