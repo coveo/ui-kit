@@ -77,7 +77,7 @@ export class AtomicTabManager {
   public render() {
     return (
       <div class="mb-2 overflow-x-auto">
-        <div class="flex flex-row w-full mb-2 border-b tabs-area">
+        <div class="tabs-area mb-2 flex w-full flex-row border-b">
           {this.tabs.map((tab) => (
             <TabButton
               isActive={tab.tabController.state.isActive}

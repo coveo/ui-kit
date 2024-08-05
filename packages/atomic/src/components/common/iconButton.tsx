@@ -13,20 +13,20 @@ export const IconButton: FunctionalComponent<IconButtonProps> = (props) => {
     <div class="relative" part={`${props.partPrefix}-container`}>
       <Button
         {...props}
-        class="p-3 relative w-[2.6rem] h-[2.6rem]"
+        class="relative h-[2.6rem] w-[2.6rem] p-3"
         part={`${props.partPrefix}-button`}
         ref={props.buttonRef}
       >
         <atomic-icon
           icon={props.icon}
-          class="w-4 h-4 shrink-0"
+          class="h-4 w-4 shrink-0"
           part={`${props.partPrefix}-icon`}
         ></atomic-icon>
       </Button>
       {props.badge && (
         <span
           part={`${props.partPrefix}-badge`}
-          class="absolute block h-4 w-4 text-center bg-primary text-on-primary rounded-[100%] text-xs leading-4 -top-2 -right-2"
+          class="bg-primary text-on-primary absolute -right-2 -top-2 block h-4 w-4 rounded-[100%] text-center text-xs leading-4"
         >
           {props.badge}
         </span>

@@ -64,7 +64,7 @@ export class FacetNumberInput {
 
     return (
       <form
-        class="mt-4 px-2 gap-y-0.5"
+        class="mt-4 gap-y-0.5 px-2"
         part="input-form"
         onSubmit={(e) => {
           e.preventDefault();
@@ -122,7 +122,7 @@ export class FacetNumberInput {
           style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class="p-2.5 flex-none truncate"
+          class="flex-none truncate p-2.5"
           ariaLabel={applyAria}
           text={apply}
         ></Button>

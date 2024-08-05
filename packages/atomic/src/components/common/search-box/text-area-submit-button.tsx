@@ -14,11 +14,11 @@ export const TextAreaSubmitButton: FunctionalComponent<Props> = ({
 }) => (
   <div
     part="submit-button-wrapper"
-    class="py-2 flex items-start justify-center items-center mr-2"
+    class="mr-2 flex items-start items-center justify-center py-2"
   >
     <Button
       style="text-primary"
-      class="flex items-center justify-center w-8 h-8 rounded-full shrink-0"
+      class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
       part="submit-button"
       ariaLabel={bindings.i18n.t('search')}
       onClick={() => {
@@ -29,7 +29,7 @@ export const TextAreaSubmitButton: FunctionalComponent<Props> = ({
       <atomic-icon
         part="submit-icon"
         icon={SearchSlimIcon}
-        class="w-4 h-4"
+        class="h-4 w-4"
       ></atomic-icon>
     </Button>
   </div>
