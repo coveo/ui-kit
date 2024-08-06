@@ -1,7 +1,7 @@
 import {
   sortActions,
   filterActions,
-  mapUserActions,
+  buildUserActionFromRawAction,
   isPartOfTheSameSession,
   splitActionsIntoTimelineSessions,
   insertTicketCreationActionInSession,
@@ -277,7 +277,7 @@ describe('insight user actions preprocessing', () => {
     });
   });
 
-  describe('#mapUserActions', () => {
+  describe('#buildUserActionFromRawAction', () => {
     it('should properly map the raw user actions into UserAction objects', async () => {
       const expectedMappedActions = [
         {
@@ -343,7 +343,9 @@ describe('insight user actions preprocessing', () => {
       ];
       const mockSortedActions = sortActions([...fakeActions]);
 
-      const mappedAction = mapUserActions(mockSortedActions.slice(0, 8));
+      const mappedAction = buildUserActionFromRawAction(
+        mockSortedActions.slice(0, 8)
+      );
 
       expect(mappedAction).toEqual(expectedMappedActions);
     });
@@ -351,7 +353,9 @@ describe('insight user actions preprocessing', () => {
 
   describe('#filterAction', () => {
     const mockSortedActions = sortActions([...fakeActions]);
-    const mockMappedActions = mapUserActions(mockSortedActions.slice(0, 8));
+    const mockMappedActions = buildUserActionFromRawAction(
+      mockSortedActions.slice(0, 8)
+    );
     const expectedFilteredActions = [
       {
         actionType: 'VIEW',
@@ -426,7 +430,8 @@ describe('insight user actions preprocessing', () => {
     describe('when it finds a case creation session', () => {
       it('should properly split user actions into sessions and return the timeline including current session', async () => {
         const mockSortedActions = sortActions([...fakeActions]);
-        const mockMappedActions = mapUserActions(mockSortedActions);
+        const mockMappedActions =
+          buildUserActionFromRawAction(mockSortedActions);
         const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
 
         const sessions = splitActionsIntoTimelineSessions(
@@ -457,7 +462,8 @@ describe('insight user actions preprocessing', () => {
       describe('when the ticket creation date comes before all the sessions', () => {
         it('should properly split user actions into sessions and return the timeline including current session timestamp set as the ticket creation date', async () => {
           const mockSortedActions = sortActions([...fakeActions]);
-          const mockMappedActions = mapUserActions(mockSortedActions);
+          const mockMappedActions =
+            buildUserActionFromRawAction(mockSortedActions);
           // Date far back before the first session
           const ticketCreationDate = JSON.stringify(
             createRelativeDate(firstSessionDate, -1000, 0).getTime()
@@ -482,7 +488,8 @@ describe('insight user actions preprocessing', () => {
       describe('when the ticket creation date falls between two sessions', () => {
         it('should properly split user actions into sessions and return the timeline including current session timestamp set as the ticket creation date', async () => {
           const mockSortedActions = sortActions([...fakeActions]);
-          const mockMappedActions = mapUserActions(mockSortedActions);
+          const mockMappedActions =
+            buildUserActionFromRawAction(mockSortedActions);
           const ticketCreationDate = JSON.stringify(
             createRelativeDate(caseCreationDate, 120, 0).getTime()
           );
@@ -632,7 +639,7 @@ describe('insight user actions preprocessing', () => {
     it('should properly filter out the timeline of the actions that are to be excluded', async () => {
       const actionsToExclude = ['CUSTOM'];
       const mockSortedActions = sortActions([...fakeActions]);
-      const mockMappedActions = mapUserActions(mockSortedActions);
+      const mockMappedActions = buildUserActionFromRawAction(mockSortedActions);
       const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
       const sessionsTimeline = splitActionsIntoTimelineSessions(
         mockMappedActions,

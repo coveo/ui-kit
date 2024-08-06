@@ -25,7 +25,6 @@ export const preprocessActionsData = (
   const ticketCreationDate = state.ticketCreationDate;
   const excludedCustomActions = state.excludedCustomActions;
 
-  // If there is no ticket creation date or no actions, we return an empty timeline.
   if (!ticketCreationDate || actions.length === 0) {
     return {
       precedingSessions: [],
@@ -37,14 +36,13 @@ export const preprocessActionsData = (
 
   const sortedActions: rawUserAction[] = sortActions(actions);
 
-  const mappedUserActions = mapUserActions(sortedActions);
+  const mappedUserActions = buildUserActionFromRawAction(sortedActions);
 
   const timeline = splitActionsIntoTimelineSessions(
     mappedUserActions,
     ticketCreationDate
   );
 
-  // Filter out custom actions to be excluded from the timeline
   const filteredTimeline = filterTimelineActions(
     timeline,
     excludedCustomActions
@@ -58,7 +56,7 @@ export const sortActions = (actions: rawUserAction[]) => {
   const sortedActionsByMostRecent = (a: rawUserAction, b: rawUserAction) =>
     Number(b.time) - Number(a.time);
 
-  return [...actions].sort(sortedActionsByMostRecent);
+  return actions.sort(sortedActionsByMostRecent);
 };
 
 export const filterActions = (
@@ -82,7 +80,9 @@ export const filterActions = (
   return filteredActions;
 };
 
-export const mapUserActions = (rawActions: rawUserAction[]): UserAction[] => {
+export const buildUserActionFromRawAction = (
+  rawActions: rawUserAction[]
+): UserAction[] => {
   const mappedUserActions = rawActions.map((rawAction) => {
     const actionData = JSON.parse(rawAction.value);
     return {
