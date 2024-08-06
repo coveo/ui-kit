@@ -1,5 +1,5 @@
 import {
-  ProductListingSummaryState,
+  SummaryState,
   Summary as SummaryController,
 } from '@coveo/headless/ssr-commerce';
 import {useEffect, useState, FunctionComponent} from 'react';
@@ -7,7 +7,7 @@ import {ListingHydratedState} from '../_lib/commerce-engine';
 
 interface SummaryProps {
   hydratedState?: ListingHydratedState;
-  staticState: ProductListingSummaryState;
+  staticState: SummaryState;
   controller?: SummaryController;
 }
 

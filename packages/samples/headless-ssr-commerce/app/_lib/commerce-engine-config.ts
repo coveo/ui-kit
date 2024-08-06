@@ -4,7 +4,8 @@ import {
   CommerceEngineDefinitionOptions,
   CommerceEngine,
   defineProductList,
-  defineQuerySummary,
+  defineSummary,
+  definePagination,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -24,7 +25,7 @@ export default {
       country: 'US',
       currency: 'USD',
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports-dev.barca.group/browse/promotions/accessories/sunglasses',
       },
     },
     cart: {
@@ -57,7 +58,8 @@ export default {
     },
   },
   controllers: {
-    summary: defineQuerySummary(),
+    summary: defineSummary(),
     productList: defineProductList(),
+    pagination: definePagination({options: {pageSize: 9}}),
   },
 } satisfies CommerceEngineConfig;

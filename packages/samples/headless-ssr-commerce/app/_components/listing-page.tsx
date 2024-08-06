@@ -8,6 +8,7 @@ import {
   ListingStaticState,
 } from '../_lib/commerce-engine';
 import {ProductList} from './product-list';
+import {ShowMore} from './show-more';
 import {Summary} from './summary';
 
 export default function ListingPage({
@@ -45,6 +46,10 @@ export default function ListingPage({
         staticState={staticState.controllers.summary.state}
         controller={hydratedState?.controllers.summary}
         hydratedState={hydratedState}
+      />
+      <ShowMore
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
       />
     </>
   );

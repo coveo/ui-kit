@@ -72,10 +72,16 @@ export type {
 export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
 
 export type {
-  ProductListingSummaryState,
+  SummaryState,
   Summary,
 } from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
-export {defineQuerySummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+export {defineSummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+
+export type {
+  PaginationState,
+  Pagination,
+} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+export {definePagination} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 
 // TODO: KIT-3391 - export other SSR commerce controllers
 
