@@ -61,14 +61,13 @@ export const Default: Story = {
   name: 'atomic-tab-manager',
   decorators: [
     (story) => html`
-      ${story()} <<<<<<< HEAD
+      ${story()}
       <div style="display: flex;">
         <atomic-smart-snippet
           tabs-included='["article", "documentation"]'
           style="padding: 10px;"
         ></atomic-smart-snippet>
       </div>
-      ======= >>>>>>> master
       <div style="display: flex; justify-content: flex-start;">
         <atomic-facet field="objecttype" label="Object type"></atomic-facet>
         <atomic-facet
