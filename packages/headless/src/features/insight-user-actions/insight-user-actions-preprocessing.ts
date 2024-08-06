@@ -126,29 +126,19 @@ export const splitActionsIntoTimelineSessions = (
   };
 
   actions.forEach((action) => {
-    // If the action is part of the same session, we add it to the current session
     if (isPartOfTheSameSession(action, currentSession.end)) {
       currentSession.actions.push(action);
       currentSession.start = action.timestamp;
-    } else {
-      // If the action is not part of the same session, we close the current session
-      if (currentSessionHasTicketCreation(currentSession, ticketCreationDate)) {
-        returnTimeline.session = currentSession;
-        returnTimeline.caseSessionFound = true;
-      } else if (
-        currentSessionIsBeforeCaseCreation(currentSession, ticketCreationDate)
-      ) {
-        returnTimeline.precedingSessions.push(currentSession);
-      } else {
-        returnTimeline.followingSessions.push(currentSession);
-      }
-      currentSession = {
-        start: action.timestamp,
-        end: action.timestamp,
-        actions: [],
-      };
-      currentSession.actions.push(action);
+      return;
     }
+
+    handleSessionEnd(currentSession, returnTimeline, ticketCreationDate);
+
+    currentSession = {
+      start: action.timestamp,
+      end: action.timestamp,
+      actions: [action],
+    };
   });
 
   // Inserting ticket creation action in current session
@@ -158,13 +148,9 @@ export const splitActionsIntoTimelineSessions = (
       ticketCreationDate
     );
 
-  const caseCreationSession: UserSession = {
-    start:
-      caseCreationSessionActions[caseCreationSessionActions.length - 1]
-        .timestamp,
-    end: caseCreationSessionActions[0].timestamp,
-    actions: caseCreationSessionActions,
-  };
+  const caseCreationSession = createCaseCreationSession(
+    caseCreationSessionActions
+  );
   returnTimeline.session = caseCreationSession;
 
   return returnTimeline;
@@ -179,6 +165,26 @@ export const isPartOfTheSameSession = (
     Math.abs(Number(action.timestamp) - Number(previousEndDateTime)) <
     MAX_MSEC_IN_SESSION
   );
+};
+
+// Handles the end of a session
+const handleSessionEnd = (
+  currentSession: UserSession,
+  returnTimeline: UserActionTimeline,
+  ticketCreationDate: string
+) => {
+  if (currentSessionHasTicketCreation(currentSession, ticketCreationDate)) {
+    returnTimeline.session = currentSession;
+    returnTimeline.caseSessionFound = true;
+    return;
+  }
+
+  if (currentSessionIsBeforeCaseCreation(currentSession, ticketCreationDate)) {
+    returnTimeline.precedingSessions.push(currentSession);
+    return;
+  }
+
+  returnTimeline.followingSessions.push(currentSession);
 };
 
 const currentSessionHasTicketCreation = (
@@ -222,6 +228,19 @@ export const insertTicketCreationActionInSession = (
     }
   });
   return currentSession.actions;
+};
+
+const createCaseCreationSession = (
+  caseCreationSessionActions: UserAction[] | []
+) => {
+  const caseCreationSession: UserSession = {
+    start:
+      caseCreationSessionActions[caseCreationSessionActions.length - 1]
+        .timestamp,
+    end: caseCreationSessionActions[0].timestamp,
+    actions: caseCreationSessionActions,
+  };
+  return caseCreationSession;
 };
 
 export const filterTimelineActions = (
