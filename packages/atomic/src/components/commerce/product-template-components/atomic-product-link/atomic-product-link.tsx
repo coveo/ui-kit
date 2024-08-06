@@ -15,6 +15,7 @@ import {
   InteractiveProductContext,
   ProductContext,
 } from '../product-template-decorators';
+import {buildStringTemplateFromProduct} from '../product-utils';
 
 /**
  * @internal
@@ -82,7 +83,11 @@ export class AtomicProductLink
   public render() {
     const href = isUndefined(this.hrefTemplate)
       ? this.product.clickUri
-      : 'test';
+      : buildStringTemplateFromProduct(
+          this.hrefTemplate,
+          this.product,
+          this.bindings
+        );
 
     if (!this.interactiveProduct) {
       return;
