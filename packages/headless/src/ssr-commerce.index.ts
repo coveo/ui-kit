@@ -71,22 +71,30 @@ export type {
 } from './controllers/commerce/product-listing/headless-product-listing.ssr';
 export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
 
-export type {CartItem} from './controllers/commerce/context/cart/headless-cart.ts';
 export type {
   Cart,
+  CartInitialState,
+  CartItem,
+  CartProps,
   CartState,
 } from './controllers/commerce/context/cart/headless-cart.ssr';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr';
 
 export type {
   Context,
+  ContextOptions,
+  ContextProps,
   ContextState,
+  View,
 } from './controllers/commerce/context/headless-context.ssr';
 export {defineContext} from './controllers/commerce/context/headless-context.ssr';
 
 export type {
   SearchBox,
+  SearchBoxOptions,
+  SearchBoxProps,
   SearchBoxState,
+  Suggestion,
 } from './controllers/commerce/search-box/headless-search-box.ssr';
 export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr';
 
