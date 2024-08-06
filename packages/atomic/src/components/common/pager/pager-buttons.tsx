@@ -32,7 +32,7 @@ export const PagerPreviousButton: FunctionalComponent<
       ariaLabel={props.i18n.t('previous')}
       style="outline-primary"
       part="previous-button"
-      class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
+      class="flex min-h-[2.5rem] min-w-[2.5rem] items-center justify-center p-1"
     >
       <atomic-icon
         icon={props.icon}
@@ -52,7 +52,7 @@ export const PagerNextButton: FunctionalComponent<
       ariaLabel={props.i18n.t('next')}
       style="outline-primary"
       part="next-button"
-      class="p-1 min-w-[2.5rem] min-h-[2.5rem] flex justify-center items-center"
+      class="flex min-h-[2.5rem] min-w-[2.5rem] items-center justify-center p-1"
     >
       <atomic-icon
         icon={props.icon}
@@ -73,7 +73,7 @@ export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
       style="outline-neutral"
       checked={props.isSelected}
       ariaCurrent={props.isSelected ? 'page' : 'false'}
-      class="btn-page focus-visible:bg-neutral-light p-1 min-w-[2.5rem] min-h-[2.5rem]"
+      class="btn-page focus-visible:bg-neutral-light min-h-[2.5rem] min-w-[2.5rem] p-1"
       part={`page-button${props.isSelected ? ' active-page-button' : ''}`}
     ></RadioButton>
   );

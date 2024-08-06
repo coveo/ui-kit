@@ -22,11 +22,11 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
   let inputRef: HTMLInputElement | undefined;
 
   return (
-    <div class="px-2 mt-3" part="search-wrapper">
+    <div class="mt-3 px-2" part="search-wrapper">
       <div class="relative h-10">
         <input
           part="search-input"
-          class="input-primary w-full h-full px-9 placeholder-neutral-dark text-sm group"
+          class="input-primary placeholder-neutral-dark group h-full w-full px-9 text-sm"
           type="text"
           placeholder={search}
           aria-label={facetSearch}
@@ -34,14 +34,14 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
           onInput={(e) => props.onChange((e.target as HTMLInputElement).value)}
           ref={(ref) => (inputRef = ref)}
         />
-        <div class="search-icon pointer-events-none absolute inline-flex justify-center items-center left-0 w-9 h-full text-on-background">
+        <div class="search-icon text-on-background pointer-events-none absolute left-0 inline-flex h-full w-9 items-center justify-center">
           <atomic-icon part="search-icon" icon={SearchIcon}></atomic-icon>
         </div>
         {props.query !== '' && (
           <Button
             style="text-transparent"
             title={clear}
-            class="search-clear-button absolute inline-flex justify-center items-center right-px w-9 top-px bottom-px"
+            class="search-clear-button absolute bottom-px right-px top-px inline-flex w-9 items-center justify-center"
             onClick={() => {
               props.onClear();
               inputRef!.focus();
