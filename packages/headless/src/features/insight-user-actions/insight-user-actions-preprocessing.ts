@@ -34,12 +34,10 @@ export const preprocessActionsData = (
     };
   }
 
-  const sortedActions: rawUserAction[] = sortActions(actions);
-
-  const mappedUserActions = buildUserActionFromRawAction(sortedActions);
+  const processedRawActions = buildUserActionFromRawAction(actions);
 
   const timeline = splitActionsIntoTimelineSessions(
-    mappedUserActions,
+    processedRawActions,
     ticketCreationDate
   );
 
@@ -51,39 +49,34 @@ export const preprocessActionsData = (
   return filteredTimeline;
 };
 
-// Sorting actions by most recent
-export const sortActions = (actions: rawUserAction[]) => {
-  const sortedActionsByMostRecent = (a: rawUserAction, b: rawUserAction) =>
-    Number(b.time) - Number(a.time);
-
-  return actions.sort(sortedActionsByMostRecent);
-};
-
 export const buildUserActionFromRawAction = (
   rawActions: rawUserAction[]
 ): UserAction[] => {
-  const mappedUserActions = rawActions.map((rawAction) => {
-    const actionData = JSON.parse(rawAction.value);
-    return {
-      actionType: rawAction.name as UserActionType,
-      timestamp: rawAction.time,
-      eventData: {
-        type: actionData.event_type,
-        value: actionData.event_value,
-      },
-      cause: actionData.cause,
-      searchHub: actionData.origin_level_1,
-      document: {
-        title: actionData.title,
-        uriHash: actionData.uri_hash,
-        // eslint-disable-next-line @cspell/spellchecker
-        contentIdKey: actionData.c_contentidkey,
-        // eslint-disable-next-line @cspell/spellchecker
-        contentIdValue: actionData.c_contentidvalue,
-      },
-      query: actionData.query_expression,
-    };
-  });
+  const mappedUserActions = rawActions
+    .map((rawAction) => {
+      const actionData = JSON.parse(rawAction.value);
+      return {
+        actionType: rawAction.name as UserActionType,
+        timestamp: rawAction.time,
+        eventData: {
+          type: actionData.event_type,
+          value: actionData.event_value,
+        },
+        cause: actionData.cause,
+        searchHub: actionData.origin_level_1,
+        document: {
+          title: actionData.title,
+          uriHash: actionData.uri_hash,
+          // eslint-disable-next-line @cspell/spellchecker
+          contentIdKey: actionData.c_contentidkey,
+          // eslint-disable-next-line @cspell/spellchecker
+          contentIdValue: actionData.c_contentidvalue,
+        },
+        query: actionData.query_expression,
+      };
+    })
+    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+
   return mappedUserActions;
 };
 
@@ -117,7 +110,18 @@ export const splitActionsIntoTimelineSessions = (
       return;
     }
 
-    handleSessionEnd(currentSession, returnTimeline, ticketCreationDate);
+    if (sessionHasTicketCreation(currentSession, ticketCreationDate)) {
+      returnTimeline.session = currentSession;
+      returnTimeline.caseSessionFound = true;
+      return;
+    }
+
+    if (sessionIsBeforeCaseCreation(currentSession, ticketCreationDate)) {
+      returnTimeline.precedingSessions.push(currentSession);
+      return;
+    }
+
+    returnTimeline.followingSessions.push(currentSession);
 
     currentSession = {
       start: action.timestamp,
@@ -155,26 +159,6 @@ export const isActionWithin30Minutes = (
     Math.abs(Number(action.timestamp) - Number(previousTimestamp)) <
     THIRTY_MINUTES
   );
-};
-
-// Handles the end of a session
-const handleSessionEnd = (
-  currentSession: UserSession,
-  returnTimeline: UserActionTimeline,
-  ticketCreationDate: string
-) => {
-  if (sessionHasTicketCreation(currentSession, ticketCreationDate)) {
-    returnTimeline.session = currentSession;
-    returnTimeline.caseSessionFound = true;
-    return;
-  }
-
-  if (sessionIsBeforeCaseCreation(currentSession, ticketCreationDate)) {
-    returnTimeline.precedingSessions.push(currentSession);
-    return;
-  }
-
-  returnTimeline.followingSessions.push(currentSession);
 };
 
 const sessionHasTicketCreation = (

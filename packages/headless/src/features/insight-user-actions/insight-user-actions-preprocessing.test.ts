@@ -1,12 +1,11 @@
 import {
-  sortActions,
-  filterActions,
   buildUserActionFromRawAction,
-  isActionWithin30Minutes,
-  splitActionsIntoTimelineSessions,
-  insertTicketCreationActionInSession,
+  filterActions,
   filterTimelineActions,
+  insertTicketCreationActionInSession,
+  isActionWithin30Minutes,
   preprocessActionsData,
+  splitActionsIntoTimelineSessions,
 } from './insight-user-actions-preprocessing';
 import {UserActionType} from './insight-user-actions-state';
 
@@ -22,67 +21,6 @@ const caseCreationDate = new Date('03/31/2022 16:30:00 GMT');
 const secondSessionDate = new Date('04/01/2022 14:14:00 GMT');
 
 const fakeActions = [
-  {
-    time: firstSessionDate.getTime(),
-    name: 'Custom',
-    value: {
-      event_type: 'MySpeedbit App interfaceload',
-      event_value: '',
-      origin_level_1: 'in-product-help',
-    },
-  },
-  {
-    time: createRelativeDate(firstSessionDate, 1, 0).getTime(),
-    name: 'Click',
-    value: {
-      // eslint-disable-next-line @cspell/spellchecker
-      uri_hash: 'ZKoJzryqñ9QlKPlh',
-      origin_level_1: 'in-product-help',
-    },
-  },
-  {
-    time: createRelativeDate(firstSessionDate, 5, 0).getTime(),
-    name: 'Search',
-    value: {
-      query_expression: 'Version 8.124',
-      origin_level_1: 'community-search',
-    },
-  },
-  {
-    time: createRelativeDate(firstSessionDate, 32, 0).getTime(),
-    name: 'Custom',
-    value: {
-      event_type: 'smartSnippetSuggestions',
-      event_value: 'expandSmartSnippetSuggestion',
-      origin_level_1: 'in-product-help',
-    },
-  },
-  {
-    time: createRelativeDate(firstSessionDate, 34, 30).getTime(),
-    name: 'Custom',
-    value: {
-      event_type: 'smartSnippetSuggestions',
-      event_value: 'likeSmartSnippet',
-      origin_level_1: 'in-product-help',
-    },
-  },
-  {
-    time: createRelativeDate(caseCreationDate, -6, 0).getTime(),
-    name: 'Custom',
-    value: {
-      event_type: 'MySpeedbit App interfaceload',
-      event_value: '',
-      origin_level_1: 'in-product-help',
-    },
-  },
-  {
-    time: createRelativeDate(caseCreationDate, -5, 0).getTime(),
-    name: 'Search',
-    value: {
-      query_expression: 'Blaze pair with iPhone not working',
-      origin_level_1: 'in-product-help',
-    },
-  },
   {
     time: createRelativeDate(caseCreationDate, 1, 30).getTime(),
     name: 'Custom',
@@ -148,6 +86,67 @@ const fakeActions = [
     value: {
       content_id_key: 'sftitle',
       content_id_value: 'Speedbit Charge 2 User Manual.pdf',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: firstSessionDate.getTime(),
+    name: 'Custom',
+    value: {
+      event_type: 'MySpeedbit App interfaceload',
+      event_value: '',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: createRelativeDate(firstSessionDate, 1, 0).getTime(),
+    name: 'Click',
+    value: {
+      // eslint-disable-next-line @cspell/spellchecker
+      uri_hash: 'ZKoJzryqñ9QlKPlh',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: createRelativeDate(firstSessionDate, 5, 0).getTime(),
+    name: 'Search',
+    value: {
+      query_expression: 'Version 8.124',
+      origin_level_1: 'community-search',
+    },
+  },
+  {
+    time: createRelativeDate(firstSessionDate, 32, 0).getTime(),
+    name: 'Custom',
+    value: {
+      event_type: 'smartSnippetSuggestions',
+      event_value: 'expandSmartSnippetSuggestion',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: createRelativeDate(firstSessionDate, 34, 30).getTime(),
+    name: 'Custom',
+    value: {
+      event_type: 'smartSnippetSuggestions',
+      event_value: 'likeSmartSnippet',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: createRelativeDate(caseCreationDate, -6, 0).getTime(),
+    name: 'Custom',
+    value: {
+      event_type: 'MySpeedbit App interfaceload',
+      event_value: '',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: createRelativeDate(caseCreationDate, -5, 0).getTime(),
+    name: 'Search',
+    value: {
+      query_expression: 'Blaze pair with iPhone not working',
       origin_level_1: 'in-product-help',
     },
   },
@@ -262,20 +261,9 @@ const expectedTimeline = {
 };
 
 describe('insight user actions preprocessing', () => {
-  describe('#sortActions', () => {
-    it('should properly sort the raw user actions by most recent to least recent', async () => {
-      const mockActions = [...fakeActions];
-      const expectedSortedRawUserActions = mockActions.reverse();
-
-      const sortedRawActions = sortActions(mockActions);
-
-      expect(sortedRawActions).toEqual(expectedSortedRawUserActions);
-    });
-  });
-
   describe('#buildUserActionFromRawAction', () => {
-    it('should properly map the raw user actions into UserAction objects', async () => {
-      const expectedMappedActions = [
+    it('should properly map and sort the raw user actions into UserAction objects', async () => {
+      const expectedMappedAndSortedActions = [
         {
           actionType: 'VIEW',
           timestamp: '1648826040000',
@@ -337,21 +325,17 @@ describe('insight user actions preprocessing', () => {
           document: {},
         },
       ];
-      const mockSortedActions = sortActions([...fakeActions]);
+      const mockRawActions = [...fakeActions].slice(0, 8);
+      const mappedAndSortedActions =
+        buildUserActionFromRawAction(mockRawActions);
 
-      const mappedAction = buildUserActionFromRawAction(
-        mockSortedActions.slice(0, 8)
-      );
-
-      expect(mappedAction).toEqual(expectedMappedActions);
+      expect(mappedAndSortedActions).toEqual(expectedMappedAndSortedActions);
     });
   });
 
   describe('#filterAction', () => {
-    const mockSortedActions = sortActions([...fakeActions]);
-    const mockMappedActions = buildUserActionFromRawAction(
-      mockSortedActions.slice(0, 8)
-    );
+    const mockRawActions = [...fakeActions].slice(0, 8);
+    const mappedAndSortedActions = buildUserActionFromRawAction(mockRawActions);
     const expectedFilteredActions = [
       {
         actionType: 'VIEW',
@@ -397,11 +381,12 @@ describe('insight user actions preprocessing', () => {
         document: {uriHash: 'caCgiG2JPzjZfS7G'},
       },
     ];
+
     it('should properly filter the user actions when action types are passed in the state', async () => {
       const mockExcludedCustomActions = ['CUSTOM'];
 
       const filteredActions = filterActions(
-        mockMappedActions,
+        mappedAndSortedActions,
         mockExcludedCustomActions
       );
 
@@ -413,7 +398,7 @@ describe('insight user actions preprocessing', () => {
       const mockExcludedCustomActions = ['suggestion_click'];
 
       const filteredActions = filterActions(
-        mockMappedActions,
+        mappedAndSortedActions,
         mockExcludedCustomActions
       );
 
@@ -425,16 +410,17 @@ describe('insight user actions preprocessing', () => {
   describe('#splitActionsIntoTimelineSessions', () => {
     describe('when it finds a case creation session', () => {
       it('should properly split user actions into sessions and return the timeline including current session', async () => {
-        const mockSortedActions = sortActions([...fakeActions]);
-        const mockMappedActions =
-          buildUserActionFromRawAction(mockSortedActions);
+        const mockRawActions = [...fakeActions];
+        const mappedAndSortedActions =
+          buildUserActionFromRawAction(mockRawActions);
         const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
 
         const sessions = splitActionsIntoTimelineSessions(
-          mockMappedActions,
+          mappedAndSortedActions,
           ticketCreationDate
         );
 
+        console.log(JSON.stringify(sessions));
         expect(sessions.session?.actions.length).toEqual(6);
         expect(Number(sessions.session?.start)).toBeGreaterThan(
           Number(
@@ -457,16 +443,16 @@ describe('insight user actions preprocessing', () => {
     describe('when it does not find a case creation session', () => {
       describe('when the ticket creation date comes before all the sessions', () => {
         it('should properly split user actions into sessions and return the timeline including current session timestamp set as the ticket creation date', async () => {
-          const mockSortedActions = sortActions([...fakeActions]);
-          const mockMappedActions =
-            buildUserActionFromRawAction(mockSortedActions);
+          const mockRawActions = [...fakeActions].slice(0, 8);
+          const mappedAndSortedActions =
+            buildUserActionFromRawAction(mockRawActions);
           // Date far back before the first session
           const ticketCreationDate = JSON.stringify(
             createRelativeDate(firstSessionDate, -1000, 0).getTime()
           );
 
           const sessions = splitActionsIntoTimelineSessions(
-            mockMappedActions,
+            mappedAndSortedActions,
             ticketCreationDate
           );
 
@@ -483,15 +469,15 @@ describe('insight user actions preprocessing', () => {
 
       describe('when the ticket creation date falls between two sessions', () => {
         it('should properly split user actions into sessions and return the timeline including current session timestamp set as the ticket creation date', async () => {
-          const mockSortedActions = sortActions([...fakeActions]);
-          const mockMappedActions =
-            buildUserActionFromRawAction(mockSortedActions);
+          const mockRawActions = [...fakeActions].slice(0, 8);
+          const mappedAndSortedActions =
+            buildUserActionFromRawAction(mockRawActions);
           const ticketCreationDate = JSON.stringify(
             createRelativeDate(caseCreationDate, 120, 0).getTime()
           );
 
           const sessions = splitActionsIntoTimelineSessions(
-            mockMappedActions,
+            mappedAndSortedActions,
             ticketCreationDate
           );
 
@@ -640,11 +626,12 @@ describe('insight user actions preprocessing', () => {
   describe('#filterTimelineActions', () => {
     it('should properly filter out the timeline of the actions that are to be excluded', async () => {
       const actionsToExclude = ['CUSTOM'];
-      const mockSortedActions = sortActions([...fakeActions]);
-      const mockMappedActions = buildUserActionFromRawAction(mockSortedActions);
+      const mockRawActions = [...fakeActions].slice(0, 8);
+      const mappedAndSortedActions =
+        buildUserActionFromRawAction(mockRawActions);
       const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
       const sessionsTimeline = splitActionsIntoTimelineSessions(
-        mockMappedActions,
+        mappedAndSortedActions,
         ticketCreationDate
       );
 
