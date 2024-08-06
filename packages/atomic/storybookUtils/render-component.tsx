@@ -11,7 +11,11 @@ export const parseSlots = (args: Args, slotsControls: string[]) =>
       : `<template slot="${unfurledSlotName}">${args[slotName]}</template>`;
   })}`;
 
-export const renderComponent = (args: Args, context: StoryContext) => {
+const renderComponentInternal = (
+  args: Args,
+  context: StoryContext,
+  withCodeRoot: boolean
+) => {
   const shadowPartArgs: string[] = [];
   const attributeControls: string[] = [];
   const slotsControls: string[] = [];
@@ -29,7 +33,7 @@ export const renderComponent = (args: Args, context: StoryContext) => {
     }
   }
   return html`
-  <div id="code-root">
+  <div ${withCodeRoot ? 'id="code-root"' : ''}>
     <style>
         ${unsafeStatic(
           shadowPartArgs
@@ -48,4 +52,12 @@ export const renderComponent = (args: Args, context: StoryContext) => {
         ${unsafeStatic(parseSlots(args, slotsControls))}
       </${unsafeStatic(context.componentId)}>
   </div>`;
+};
+
+export const renderComponent = (args: Args, context: StoryContext) => {
+  return renderComponentInternal(args, context, true);
+};
+
+export const renderProductComponent = (args: Args, context: StoryContext) => {
+  return renderComponentInternal(args, context, false);
 };
