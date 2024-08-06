@@ -46,14 +46,14 @@ export class AtomicProductPrice
     return (
       <div class="flex flex-wrap">
         <atomic-product-numeric-field-value
-          class={`truncate break-keep mx-1 ${hasPromotionalPrice && 'text-error'}`}
+          class={`mx-1 truncate break-keep ${hasPromotionalPrice && 'text-error'}`}
           field={hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'}
         >
           <atomic-format-currency currency={currency}></atomic-format-currency>
         </atomic-product-numeric-field-value>
         {hasPromotionalPrice && (
           <atomic-product-numeric-field-value
-            class="truncate break-keep mx-1 text-xl line-through"
+            class="mx-1 truncate break-keep text-xl line-through"
             field="ec_price"
           >
             <atomic-format-currency

@@ -1,3 +1,15 @@
+# 2.75.0 (2024-07-31)
+
+### Bug Fixes
+
+- **deps:** update dependency @reduxjs/toolkit to v2.2.7 j:kit-282 ([#4232](https://github.com/coveo/ui-kit/issues/4232)) ([0d28438](https://github.com/coveo/ui-kit/commits/0d2843805abd8e0305b3349732554e63a3fdde64))
+- **ep:** do not send actionCause w/ breadcrumbResetAll ([#4207](https://github.com/coveo/ui-kit/issues/4207)) ([bcecc55](https://github.com/coveo/ui-kit/commits/bcecc552b433b5da3b9940bae96c725ea731df90))
+- **headless/commerce:** send clientId only when analytics are enabled ([#4217](https://github.com/coveo/ui-kit/issues/4217)) ([323cede](https://github.com/coveo/ui-kit/commits/323cedefc60292ec9193b01e500372ddde1ebcc6))
+
+### Features
+
+- **headless SSR:** define the SSR Commerce Engine ([#4198](https://github.com/coveo/ui-kit/issues/4198)) ([c474a8d](https://github.com/coveo/ui-kit/commits/c474a8d9cb77aeb5b88a992847e5a233adb55123))
+
 # 2.74.0 (2024-07-24)
 
 ### Bug Fixes

@@ -19,7 +19,7 @@ export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
       title={props.title}
       style="text-transparent"
       part="feedback-button"
-      class={`feedback-button p-2 rounded-md ${props.variant} ${
+      class={`feedback-button rounded-md p-2 ${props.variant} ${
         props.active ? 'active' : ''
       }`}
       onClick={props.onClick}

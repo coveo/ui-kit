@@ -264,7 +264,7 @@ export class AtomicInsightSearchBox {
       <div
         id={`${this.id}-popup`}
         part="suggestions-wrapper"
-        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
           this.suggestionManager.hasSuggestions && this.isExpanded
             ? ''
             : 'hidden'
@@ -345,7 +345,7 @@ export class AtomicInsightSearchBox {
         <atomic-icon
           part="submit-icon"
           icon={SearchSlimIcon}
-          class="w-4 h-4 my-auto mr-0 ml-4"
+          class="my-auto ml-4 mr-0 h-4 w-4"
         />
         <SearchTextArea
           textAreaRef={this.textAreaRef}

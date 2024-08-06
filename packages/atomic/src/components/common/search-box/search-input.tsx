@@ -45,13 +45,13 @@ export const SearchInput: FunctionalComponent<Props> = ({
   popup,
   ...defaultInputProps
 }) => (
-  <div class="grow flex items-center">
+  <div class="flex grow items-center">
     <input
       part="input"
       aria-label={ariaLabel}
       placeholder={bindings.i18n.t('search')}
       type="text"
-      class="h-full outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
+      class="text-neutral-dark placeholder-neutral-dark h-full w-0 grow bg-transparent px-4 py-3.5 text-lg outline-none"
       onKeyDown={(e) => {
         onKeyDown?.(e);
       }}
@@ -62,7 +62,7 @@ export const SearchInput: FunctionalComponent<Props> = ({
     {loading && (
       <span
         part="loading"
-        class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"
+        class="loading mr-3 grid h-5 w-5 animate-spin place-items-center rounded-full bg-gradient-to-r"
       ></span>
     )}
     {!loading && value && (
