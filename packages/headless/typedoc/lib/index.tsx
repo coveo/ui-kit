@@ -62,14 +62,16 @@ export function load(app: Application) {
                 }
 
                 // Insert Atomic search box in the header
-                const header = document.querySelector('.tsd-page-toolbar .tsd-toolbar-contents');
-                if (header) {
+                const tsdSearch = document.getElementById('tsd-search');
+                if (tsdSearch) {
+                  tsdSearch.innerHTML = ''; // Clear existing contents
+
                   const searchInterface = document.createElement('atomic-search-interface');
                   const searchBox = document.createElement('atomic-search-box');
                   searchBox.setAttribute('redirection-url', 'https://docs.coveo.com/en/search');
 
                   searchInterface.appendChild(searchBox);
-                  header.insertBefore(searchInterface, header.firstChild);
+                  tsdSearch.appendChild(searchInterface);
 
                   // Initialize the search interface with necessary configurations
                   (async () => {
@@ -82,7 +84,7 @@ export function load(app: Application) {
                       accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93'
                     });
                   })();
-                }
+              }
               });
             `
           }
