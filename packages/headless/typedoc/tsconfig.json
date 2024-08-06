@@ -1,7 +1,8 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../tsconfig.typedoc.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "lib"
   },
-  "include": ["lib/index.ts", "lib/theme.ts"]
+  "include": ["lib/index.tsx", "lib/theme.tsx"]
 }
