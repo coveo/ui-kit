@@ -30,31 +30,65 @@ export function load(app: Application) {
         rel="stylesheet"
         href={event.relativeURL('assets/material-style.css')}
       />
+      <link
+        rel="stylesheet"
+        href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"
+      />
     </>
   ));
 
   app.renderer.hooks.on('body.end', () => (
-    <script>
-      <JSX.Raw
-        html={
-          /* js */ `
-          try {
-            const generateLinkElement = document.querySelector(".tsd-generator a");
-            const link = document.createElement("a");
-            Object.assign(link, {
-              href: "https://github.com/dmnsgn/typedoc-material-theme",
-              target: "_blank",
-              rel: "noreferrer",
-              innerText: "typedoc-material-theme."
-            });
-            generateLinkElement.insertAdjacentElement("afterend", link);
-            generateLinkElement.insertAdjacentText("afterend", " with ");
-          } catch (error) {
+    <>
+      <script
+        type="module"
+        src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
+      ></script>
+      <script>
+        <JSX.Raw
+          html={
+            /* js */ `
+              document.addEventListener('DOMContentLoaded', function () {
+                try {
+                  const generateLinkElement = document.querySelector(".tsd-generator a");
+                  const link = document.createElement("a");
+                  Object.assign(link, {
+                    href: "https://github.com/dmnsgn/typedoc-material-theme",
+                    target: "_blank",
+                    innerText: "typedoc-material-theme."
+                  });
+                  generateLinkElement.insertAdjacentElement("afterend", link);
+                  generateLinkElement.insertAdjacentText("afterend", " with ");
+                } catch (error) {
+                }
+
+                // Insert Atomic search box in the header
+                const header = document.querySelector('.tsd-page-toolbar .tsd-toolbar-contents');
+                if (header) {
+                  const searchInterface = document.createElement('atomic-search-interface');
+                  const searchBox = document.createElement('atomic-search-box');
+                  searchBox.setAttribute('redirection-url', 'https://docs.coveo.com/en/search');
+
+                  searchInterface.appendChild(searchBox);
+                  header.insertBefore(searchInterface, header.firstChild);
+
+                  // Initialize the search interface with necessary configurations
+                  (async () => {
+                    await customElements.whenDefined('atomic-search-interface');
+                    const searchInterfaceElement = document.querySelector('atomic-search-interface');
+
+                    await searchInterfaceElement.initialize({
+                      organizationId: 'coveosearch',
+                      organizationEndpoints: await searchInterfaceElement.getOrganizationEndpoints('coveosearch'),
+                      accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93'
+                    });
+                  })();
+                }
+              });
+            `
           }
-        `
-        }
-      />
-    </script>
+        />
+      </script>
+    </>
   ));
 
   const onRenderEnd = () => {
