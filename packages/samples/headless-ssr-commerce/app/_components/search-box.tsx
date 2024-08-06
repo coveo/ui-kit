@@ -1,17 +1,24 @@
 import {
   SearchBoxState,
   SearchBox as SearchBoxController,
+  RecentQueriesList as RecentQueriesListController,
+  RecentQueriesState,
 } from '@coveo/headless/ssr-commerce';
 import {useEffect, useState, FunctionComponent} from 'react';
+import {RecentQueries} from './recent-queries';
 
 interface SearchBoxProps {
   staticState: SearchBoxState;
   controller?: SearchBoxController;
+  staticStateRecentQueries: RecentQueriesState;
+  recentQueriesController?: RecentQueriesListController;
 }
 
 export const SearchBox: FunctionComponent<SearchBoxProps> = ({
   staticState,
   controller,
+  staticStateRecentQueries,
+  recentQueriesController,
 }) => {
   const [state, setState] = useState(staticState);
 
@@ -45,6 +52,12 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
             </li>
           ))}
         </ul>
+      )}
+      {staticStateRecentQueries.queries.length > 0 && (
+        <RecentQueries
+          staticState={staticStateRecentQueries}
+          controller={recentQueriesController}
+        ></RecentQueries>
       )}
     </div>
   );

@@ -40,6 +40,10 @@ export default function SearchPage({
       <SearchBox
         staticState={staticState.controllers.searchBox.state}
         controller={hydratedState?.controllers.searchBox}
+        staticStateRecentQueries={
+          staticState.controllers.recentQueriesList.state
+        }
+        recentQueriesController={hydratedState?.controllers.recentQueriesList}
       />
       <Summary
         staticState={staticState.controllers.summarySearch.state}

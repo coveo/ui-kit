@@ -104,6 +104,14 @@ export type {
 } from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 export {defineQuerySummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 
+export type {
+  RecentQueriesList,
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesListInitialState,
+  RecentQueriesState,
+} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
+export {defineRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
