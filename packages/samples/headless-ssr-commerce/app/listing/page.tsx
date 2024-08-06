@@ -17,7 +17,7 @@ export default async function Listing() {
   const staticState = await listingEngineDefinition.fetchStaticState();
 
   return (
-    // TODO: remove page suffix since it is a component
+    // TODO: remove page suffix since it is a component!
     <ListingPage
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
