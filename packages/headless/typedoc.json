@@ -15,5 +15,5 @@
   ],
   "projectDocuments": ["./src/docs/usage.md"],
   "gitRevision": "typedoc-POC",
-  "plugin": ["./typedoc/lib/index.mjs"]
+  "plugin": ["./typedoc/dist/index.js"]
 }
