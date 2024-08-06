@@ -485,6 +485,7 @@ function handleFieldSuggestionsFulfilled(
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
     facetRequest.initialNumberOfValues = 10;
+    facetRequest.values = [];
   }
 }
 
