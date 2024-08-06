@@ -23,133 +23,133 @@ const secondSessionDate = new Date('04/01/2022 14:14:00 GMT');
 
 const fakeActions = [
   {
-    T: firstSessionDate.getTime(),
-    N: 'Custom',
-    V: {
+    time: firstSessionDate.getTime(),
+    name: 'Custom',
+    value: {
       event_type: 'MySpeedbit App interfaceload',
       event_value: '',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(firstSessionDate, 1, 0).getTime(),
-    N: 'Click',
+    time: createRelativeDate(firstSessionDate, 1, 0).getTime(),
+    name: 'Click',
     // Title : Getting Started with your New Speedbit Blaze
-    V: {
+    value: {
       // eslint-disable-next-line @cspell/spellchecker
       uri_hash: 'ZKoJzryqñ9QlKPlh',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(firstSessionDate, 5, 0).getTime(),
-    N: 'Search',
-    V: {
+    time: createRelativeDate(firstSessionDate, 5, 0).getTime(),
+    name: 'Search',
+    value: {
       query_expression: 'Version 8.124',
       origin_level_1: 'community-search',
     },
   },
   {
-    T: createRelativeDate(firstSessionDate, 32, 0).getTime(),
-    N: 'Custom',
-    V: {
+    time: createRelativeDate(firstSessionDate, 32, 0).getTime(),
+    name: 'Custom',
+    value: {
       event_type: 'smartSnippetSuggestions',
       event_value: 'expandSmartSnippetSuggestion',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(firstSessionDate, 34, 30).getTime(),
-    N: 'Custom',
-    V: {
+    time: createRelativeDate(firstSessionDate, 34, 30).getTime(),
+    name: 'Custom',
+    value: {
       event_type: 'smartSnippetSuggestions',
       event_value: 'likeSmartSnippet',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(caseCreationDate, -6, 0).getTime(),
-    N: 'Custom',
-    V: {
+    time: createRelativeDate(caseCreationDate, -6, 0).getTime(),
+    name: 'Custom',
+    value: {
       event_type: 'MySpeedbit App interfaceload',
       event_value: '',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(caseCreationDate, -5, 0).getTime(),
-    N: 'Search',
-    V: {
+    time: createRelativeDate(caseCreationDate, -5, 0).getTime(),
+    name: 'Search',
+    value: {
       query_expression: 'Blaze pair with iPhone not working',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(caseCreationDate, 1, 30).getTime(),
-    N: 'Custom',
-    V: {
+    time: createRelativeDate(caseCreationDate, 1, 30).getTime(),
+    name: 'Custom',
+    value: {
       event_type: 'smartSnippetSuggestions',
       event_value: 'expandSmartSnippetSuggestion',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(caseCreationDate, 2, 0).getTime(),
-    N: 'Click',
+    time: createRelativeDate(caseCreationDate, 2, 0).getTime(),
+    name: 'Click',
     // Title : Blaze pair with iPhone not working
-    V: {
+    value: {
       uri_hash: 'caCgiG2JPzjZfS7G',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(caseCreationDate, 5, 0).getTime(),
-    N: 'View',
-    V: {
+    time: createRelativeDate(caseCreationDate, 5, 0).getTime(),
+    name: 'View',
+    value: {
       content_id_key: 'sftitle',
       content_id_value: 'Blaze pair with iPhone not working',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(secondSessionDate, -1, 0).getTime(),
-    N: 'Search',
-    V: {
+    time: createRelativeDate(secondSessionDate, -1, 0).getTime(),
+    name: 'Search',
+    value: {
       query_expression: 'Wireless charging',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(secondSessionDate, 1, 0).getTime(),
-    N: 'Click',
+    time: createRelativeDate(secondSessionDate, 1, 0).getTime(),
+    name: 'Click',
     // Title : Getting Started with Speedbit Charge.pdf
-    V: {
+    value: {
       uri_hash: 'KXñi9EWk38wnb1tt',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(secondSessionDate, 3, 0).getTime(),
-    N: 'Custom',
-    V: {
+    time: createRelativeDate(secondSessionDate, 3, 0).getTime(),
+    name: 'Custom',
+    value: {
       event_type: 'ticket_classification_click',
       event_value: '',
       origin_level_1: 'community-support',
     },
   },
   {
-    T: createRelativeDate(secondSessionDate, 45, 0).getTime(),
-    N: 'Click',
+    time: createRelativeDate(secondSessionDate, 45, 0).getTime(),
+    name: 'Click',
     // Title : Speedbit Charge 2 User Manual.pdf
-    V: {
+    value: {
       uri_hash: 'TtnKwc0Lo2GY9WAi',
       origin_level_1: 'in-product-help',
     },
   },
   {
-    T: createRelativeDate(secondSessionDate, 60, 0).getTime(),
-    N: 'View',
-    V: {
+    time: createRelativeDate(secondSessionDate, 60, 0).getTime(),
+    name: 'View',
+    value: {
       content_id_key: 'sftitle',
       content_id_value: 'Speedbit Charge 2 User Manual.pdf',
       origin_level_1: 'in-product-help',
@@ -158,9 +158,9 @@ const fakeActions = [
 ].map((action) => {
   return {
     ...action,
-    name: action.N.toUpperCase(),
-    value: JSON.stringify(action.V),
-    time: JSON.stringify(action.T),
+    name: action.name.toUpperCase(),
+    value: JSON.stringify(action.value),
+    time: JSON.stringify(action.time),
   };
 });
 

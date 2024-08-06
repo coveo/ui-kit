@@ -185,17 +185,17 @@ const currentSessionHasTicketCreation = (
   currentSession: UserSession,
   ticketCreationDate: string
 ): boolean => {
-  return currentSession.start <= ticketCreationDate &&
+  return (
+    currentSession.start <= ticketCreationDate &&
     ticketCreationDate <= currentSession.end
-    ? true
-    : false;
+  );
 };
 
 const currentSessionIsBeforeCaseCreation = (
   currentSession: UserSession,
   ticketCreationDate: string
 ): boolean => {
-  return currentSession.end < ticketCreationDate ? true : false;
+  return currentSession.end < ticketCreationDate;
 };
 
 // Inserts ticket creation action in the current session at its correct position
