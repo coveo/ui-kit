@@ -4,5 +4,5 @@
     "outDir": "dist",
     "rootDir": "lib"
   },
-  "include": ["lib/index.tsx", "lib/theme.tsx"]
+  "include": ["lib/**/*.tsx", "lib/**/*.ts"]
 }
