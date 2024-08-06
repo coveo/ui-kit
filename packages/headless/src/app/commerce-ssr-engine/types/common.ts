@@ -16,7 +16,7 @@ export type {
 export enum SolutionType {
   search = 'search',
   listing = 'listing',
-  // Recommendation = 'recommendation',
+  recommendation = 'recommendation',
 }
 
 export interface ControllerDefinitionWithoutProps<
@@ -141,6 +141,21 @@ export interface ControllerDefinitionOption {
   search?: boolean;
 }
 
+interface RecommendationOnlyController {
+  /**
+   * @internal
+   */
+  [SolutionType.search]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.listing]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.recommendation]: true;
+}
+
 interface SearchOnlyController {
   /**
    * @internal
@@ -187,6 +202,11 @@ export type ListingOnlyControllerDefinitionWithProps<
   TProps,
 > = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
   ListingOnlyController;
+
+export type RecommendationOnlyControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  RecommendationOnlyController;
 
 export type SharedControllerDefinitionWithoutProps<
   TController extends Controller,

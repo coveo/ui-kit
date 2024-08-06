@@ -6,6 +6,11 @@ import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
+import {
+  defineProductList,
+  defineQuerySummary,
+  defineRecommendations,
+} from '../../ssr-commerce.index';
 import {createWaitForActionMiddleware} from '../../utils/utils';
 import {buildControllerDefinitions} from '../commerce-ssr-engine/common';
 import {
@@ -29,6 +34,7 @@ import {
   CommerceEngineOptions,
   buildCommerceEngine,
 } from './commerce-engine';
+import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration';
 
 /**
  * The SSR commerce engine.
@@ -114,6 +120,10 @@ export function defineCommerceEngine<
     TControllerDefinitions,
     SolutionType.search
   >;
+  recommendationEngineDefinition: CommerceEngineDefinition<
+    TControllerDefinitions,
+    SolutionType.recommendation
+  >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
   type Definition = CommerceEngineDefinition<
@@ -174,6 +184,11 @@ export function defineCommerceEngine<
   ) => FetchStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: FetchStaticStateParameters) => {
+        // TODO: here we have access to the slots we want to build
+        console.log('******* params **************');
+        console.log(params);
+        console.log('*********************');
+
         if (!getOptions().navigatorContextProvider) {
           // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
           console.warn(
@@ -203,6 +218,8 @@ export function defineCommerceEngine<
           } else {
             buildSearch(engine).executeFirstSearch();
           }
+
+          // TODO: based on the slots we want to build, only refresh the espective recommendation controllers
 
           return createStaticState({
             searchAction: await engine.waitForRequestCompletedAction(),
@@ -269,5 +286,79 @@ export function defineCommerceEngine<
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    recommendationEngineDefinition: {
+      build: buildFactory(SolutionType.recommendation),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.recommendation),
+      hydrateStaticState: hydrateStaticStateFactory(
+        SolutionType.recommendation
+      ),
+      setNavigatorContextProvider,
+    } as CommerceEngineDefinition<
+      TControllerDefinitions,
+      SolutionType.recommendation
+    >,
   };
 }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////// D E M O /////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// This playground's purposes is only to ensure the typing works correctly
+
+// Set the engine configuration
+const configuration = {
+  ...getSampleCommerceEngineConfiguration(),
+};
+
+const engineDefinition = defineCommerceEngine({
+  configuration: configuration,
+  controllers: {
+    // Define your controllers here
+    summary: defineQuerySummary(),
+    productList: defineProductList({search: false}),
+    rec1: defineRecommendations({
+      options: {
+        slotId: 'slot-1',
+      },
+    }),
+    recNono: defineRecommendations({
+      options: {
+        slotId: 'xxx--xxx-xxx-xxxx',
+      },
+    }),
+    rec2: defineRecommendations({
+      options: {
+        slotId: 'slot-2',
+      },
+    }),
+  },
+});
+
+export const {
+  listingEngineDefinition,
+  recommendationEngineDefinition,
+  searchEngineDefinition,
+} = engineDefinition;
+
+listingEngineDefinition.fetchStaticState().then((state) => {
+  state.controllers.summary;
+  state.controllers.productList;
+  state.controllers.rec1;
+  state.controllers.rec2;
+});
+
+searchEngineDefinition.fetchStaticState().then((state) => {
+  state.controllers.summary;
+  state.controllers.productList;
+  state.controllers.rec1;
+  state.controllers.rec2;
+});
+
+recommendationEngineDefinition.fetchStaticState().then((state) => {
+  state.controllers.summary;
+  state.controllers.productList;
+  state.controllers.rec1;
+  state.controllers.rec2;
+});

@@ -1,4 +1,6 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {
+  RecommendationOnlyControllerDefinitionWithoutProps,
+} from '../../../app/commerce-ssr-engine/types/common';
 import {RecommendationsState} from '../../../features/commerce/recommendations/recommendations-state';
 import {
   RecommendationsProps,
@@ -9,8 +11,7 @@ import {
 export type {Recommendations, RecommendationsState};
 
 export interface RecommendationsDefinition
-  extends SharedControllerDefinitionWithoutProps<Recommendations> {}
-
+  extends RecommendationOnlyControllerDefinitionWithoutProps<Recommendations> {}
 /**
  * @internal
  * Defines a `Recommendations` controller instance.
@@ -24,6 +25,7 @@ export function defineRecommendations(
   return {
     search: true,
     listing: true,
+    recommendation: true,
     build: (engine) => buildRecommendations(engine, props),
   };
 }
