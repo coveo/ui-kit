@@ -1,4 +1,5 @@
 import {
+  buildInstantProducts,
   buildSearch,
   buildSearchBox,
   Cart,
@@ -25,8 +26,10 @@ export default function Search(props: ISearchProps) {
 
   contextController.setView({url});
   const searchController = buildSearch(engine);
+
+  const searchBoxId = 'search-box';
   const searchBoxController = buildSearchBox(engine, {
-    options: {id: 'search-box', highlightOptions},
+    options: {id: searchBoxId, highlightOptions},
   });
 
   const bindUrlManager = useCallback(() => {
@@ -84,7 +87,13 @@ export default function Search(props: ISearchProps) {
 
   return (
     <div className="SearchPage">
-      <SearchBox controller={searchBoxController} />
+      <SearchBox
+        controller={searchBoxController}
+        instantProductsController={buildInstantProducts(engine, {
+          options: {searchBoxId},
+        })}
+        navigate={navigate}
+      />
       <h2 className="PageTitle">Search</h2>
       <DidYouMean controller={searchController.didYouMean()} />
       <SearchAndListingInterface

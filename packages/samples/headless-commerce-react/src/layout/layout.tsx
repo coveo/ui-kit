@@ -1,5 +1,6 @@
 import {
   buildCart,
+  buildInstantProducts,
   buildStandaloneSearchBox,
   CommerceEngine,
 } from '@coveo/headless/commerce';
@@ -17,6 +18,8 @@ interface ILayoutProps {
 
 export default function Layout(props: ILayoutProps) {
   const {engine, isPending, navigate, children} = props;
+  const standaloneSearchBoxId = 'standalone-search-box';
+
   return (
     <div className="Layout">
       <section className="Header">
@@ -93,9 +96,12 @@ export default function Layout(props: ILayoutProps) {
             controller={buildStandaloneSearchBox(engine, {
               options: {
                 redirectionUrl: '/search',
-                id: 'standalone-search-box',
+                id: standaloneSearchBoxId,
                 highlightOptions,
               },
+            })}
+            instantProductsController={buildInstantProducts(engine, {
+              options: {searchBoxId: standaloneSearchBoxId},
             })}
           />
         )}
