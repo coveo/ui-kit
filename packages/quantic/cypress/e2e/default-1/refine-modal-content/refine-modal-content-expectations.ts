@@ -264,13 +264,15 @@ function refineContentExpectations(selector: RefineContentSelector) {
       selector
         .refineSort()
         .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the Quantic Sort component`);
+        .logDetail(
+          `${should(display)} display the Quantic Sort component in the refine modal`
+        );
     },
 
     refineSortOptionsEqual: (options: {value: string; label: string}[]) => {
       options.forEach((option) => {
         selector
-          .refineSortOptions(option.value)
+          .refineSortOption(option.value)
           .should('exist')
           .should('contain', option.label)
           .logDetail(
@@ -296,7 +298,9 @@ function sortExpectations(selector: SortSelector) {
           .sortOption(option.value)
           .should('exist')
           .should('contain', option.label)
-          .logDetail(`The option's label should be equal to ${option.label}`);
+          .logDetail(
+            `should contain the sort option ${option.label} in the sort component`
+          );
       });
     },
 

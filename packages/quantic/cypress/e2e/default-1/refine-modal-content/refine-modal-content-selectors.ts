@@ -66,7 +66,7 @@ export interface RefineContentSelector extends FacetSelector, SortSelector {
   filtersTitle: () => CypressSelector;
   refineSort: () => CypressSelector;
   refineSortDropdown: () => CypressSelector;
-  refineSortOptions: (value: string) => CypressSelector;
+  refineSortOption: (value: string) => CypressSelector;
 }
 
 export const RefineContentSelectors: RefineContentSelector = {
@@ -79,7 +79,7 @@ export const RefineContentSelectors: RefineContentSelector = {
   refineSort: () => cy.get('c-quantic-refine-modal-content c-quantic-sort'),
   refineSortDropdown: () =>
     RefineContentSelectors.refineSort().find('[data-cy="sort-dropdown"]'),
-  refineSortOptions: (value: string) =>
+  refineSortOption: (value: string) =>
     RefineContentSelectors.refineSortDropdown().find(
       `.slds-listbox__option[data-value="${value}"]`
     ),

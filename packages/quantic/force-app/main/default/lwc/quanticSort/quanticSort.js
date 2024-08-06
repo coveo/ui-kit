@@ -52,6 +52,8 @@ export default class QuanticSort extends LightningElement {
   /** @type {SortState} */
   @track state;
 
+  /** @type {SortOption[]} */
+  defaultSortOptions;
   /** @type {Sort} */
   sort;
   /** @type {SearchStatus} */
@@ -93,6 +95,23 @@ export default class QuanticSort extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
+    this.defaultSortOptions = [
+      {
+        label: this.labels.relevancy,
+        value: this.headless.buildCriterionExpression(this.relevancy),
+        criterion: this.relevancy,
+      },
+      {
+        label: this.labels.newest,
+        value: this.headless.buildCriterionExpression(this.dateDescending),
+        criterion: this.dateDescending,
+      },
+      {
+        label: this.labels.oldest,
+        value: this.headless.buildCriterionExpression(this.dateAscending),
+        criterion: this.dateAscending,
+      },
+    ];
     this.options = this.buildOptions();
     this.sort = this.headless.buildSort(engine, {
       initialState: {
@@ -234,26 +253,6 @@ export default class QuanticSort extends LightningElement {
 
   get hasError() {
     return this.hasInitializationError || !!this.errorMessage;
-  }
-
-  get defaultSortOptions() {
-    return [
-      {
-        label: this.labels.relevancy,
-        value: this.headless.buildCriterionExpression(this.relevancy),
-        criterion: this.relevancy,
-      },
-      {
-        label: this.labels.newest,
-        value: this.headless.buildCriterionExpression(this.dateDescending),
-        criterion: this.dateDescending,
-      },
-      {
-        label: this.labels.oldest,
-        value: this.headless.buildCriterionExpression(this.dateAscending),
-        criterion: this.dateAscending,
-      },
-    ];
   }
 
   /**

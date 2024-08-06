@@ -74,7 +74,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   @api disableDynamicNavigation = false;
 
   /** @type {object} */
-  data;
+  facetData;
   /** @type {object} */
   sortData;
   /** @type {boolean} */
@@ -112,10 +112,10 @@ export default class QuanticRefineModalContent extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
-    this.initializeSortOptions();
+    this.getSortOptionsFromStore();
 
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.initializeFacets()
+      this.getFacetDataFromStore()
     );
     this.unsubscribeBreadcrumbManager = this.breadcrumbManager.subscribe(() =>
       this.updateHasActiveFilters()
@@ -126,9 +126,9 @@ export default class QuanticRefineModalContent extends LightningElement {
    * Initializes all facets registered in the Quantic store.
    * @returns {void}
    */
-  initializeFacets() {
+  getFacetDataFromStore() {
     if (!this.hasFacets) {
-      this.data = getAllFacetsFromStore(this.engineId);
+      this.facetData = getAllFacetsFromStore(this.engineId);
     }
   }
 
@@ -136,7 +136,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    * Initializes all sort options registered in the Quantic store.
    * @returns {void}
    */
-  initializeSortOptions() {
+  getSortOptionsFromStore() {
     this.sortData = getAllSortOptionsFromStore(this.engineId);
     if (this.sortData?.length) {
       this.sortOptionsInitialized = true;
@@ -253,12 +253,12 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @returns {Array<object>}
    */
   get facets() {
-    if (!this.data) {
+    if (!this.facetData) {
       return [];
     }
-    const facetData = Object.keys(this.data).map((facetId) => {
+    const facetData = Object.keys(this.facetData).map((facetId) => {
       /** @type {FacetObject} */
-      const facetObject = this.data[facetId];
+      const facetObject = this.facetData[facetId];
       const selector = this.selectors[facetObject.element.localName];
       return selector ? selector(facetObject) : null;
     });
@@ -296,7 +296,14 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @returns {boolean}
    */
   get hasFacets() {
-    return this.data && !!Object.keys(this.data).length;
+    return this.facetData && !!Object.keys(this.facetData).length;
+  }
+
+  /**
+   * Indicates whether the sort options are available.
+   */
+  get hasSortOptions() {
+    return this.sortData?.length > 0;
   }
 
   /**
