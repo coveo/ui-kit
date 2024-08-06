@@ -4,7 +4,7 @@
   --full-search-background-color: var(--atomic-neutral-dark);
   --full-search-secondary-background-color: #333536;
   &::part(full-search-button) {
-    @apply h-[27px] w-[27px] border-none rounded-none;
+    @apply h-[27px] w-[27px] rounded-none border-none;
     background-color: var(--full-search-background-color);
     clip-path: polygon(0 0, 100% 100%, 100% 0);
   }
@@ -15,6 +15,6 @@
   }
 
   &::part(full-search-icon) {
-    @apply h-[9px] w-[9px] absolute top-[4px] left-[15px];
+    @apply absolute left-[15px] top-[4px] h-[9px] w-[9px];
   }
 }

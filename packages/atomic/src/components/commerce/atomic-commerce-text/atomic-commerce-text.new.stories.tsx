@@ -1,6 +1,6 @@
-import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
 import {within} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 

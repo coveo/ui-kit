@@ -1,8 +1,8 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
+import {wrapInSearchInterface} from '../../../../../storybookUtils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface({
   search: {
@@ -61,13 +61,14 @@ export const Default: Story = {
   name: 'atomic-tab-manager',
   decorators: [
     (story) => html`
-      ${story()}
+      ${story()} <<<<<<< HEAD
       <div style="display: flex;">
         <atomic-smart-snippet
           tabs-included='["article", "documentation"]'
           style="padding: 10px;"
         ></atomic-smart-snippet>
       </div>
+      ======= >>>>>>> master
       <div style="display: flex; justify-content: flex-start;">
         <atomic-facet field="objecttype" label="Object type"></atomic-facet>
         <atomic-facet

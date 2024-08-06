@@ -21,7 +21,7 @@ export const TabButton: FunctionalComponent<TabButtonProps> = (props) => {
     >
       <Button
         style="text-transparent"
-        class={`px-6 pb-1 w-full text-xl ${activeTabTextClass}`}
+        class={`w-full px-6 pb-1 text-xl ${activeTabTextClass}`}
         text={props.label}
         part="tab-button"
         onClick={props.handleClick}

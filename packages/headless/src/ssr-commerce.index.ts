@@ -21,8 +21,6 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
 export type {
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
@@ -38,6 +36,7 @@ export type {
   InferBuildResult,
 } from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {LogLevel} from './app/logger';
 
@@ -65,6 +64,18 @@ export type {
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
 export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
+
+export type {
+  ProductList,
+  ProductListState,
+} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+
+export type {
+  ProductListingSummaryState,
+  Summary,
+} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+export {defineQuerySummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 
 // TODO: KIT-3391 - export other SSR commerce controllers
 

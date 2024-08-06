@@ -81,7 +81,7 @@ export class AtomicTabManager {
         <ul
           role="list"
           aria-label="tab-area"
-          class="flex flex-row w-full mb-2 border-b tab-area"
+          class="tab-area mb-2 flex w-full flex-row border-b"
         >
           {this.tabs.map((tab) => (
             <TabButton

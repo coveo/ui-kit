@@ -11,7 +11,7 @@ export const GeneratedTextContent: FunctionalComponent<
   return (
     <p
       part="generated-text"
-      class={`mb-0 text-on-background whitespace-pre-wrap ${
+      class={`text-on-background mb-0 whitespace-pre-wrap ${
         props.isStreaming ? 'cursor' : ''
       }`}
     >
