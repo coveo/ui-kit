@@ -9,7 +9,7 @@ import {
 const MSEC_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MAX_MINUTES_IN_SESSION = 30;
-const MAX_MSEC_IN_SESSION =
+const THIRTY_MINUTES =
   MAX_MINUTES_IN_SESSION * SECONDS_IN_MINUTE * MSEC_IN_SECOND;
 
 interface rawUserAction {
@@ -59,27 +59,6 @@ export const sortActions = (actions: rawUserAction[]) => {
   return actions.sort(sortedActionsByMostRecent);
 };
 
-export const filterActions = (
-  actions: UserAction[],
-  excludedCustomActions: string[]
-): UserAction[] => {
-  const filteredActions = actions.filter((action) => {
-    let shouldExcludeCustomAction = false;
-    const eventType = action.eventData?.type || '';
-    const eventValue = action.eventData?.value || '';
-
-    if (eventType && eventValue) {
-      shouldExcludeCustomAction =
-        excludedCustomActions.includes(eventType) ||
-        excludedCustomActions.includes(eventValue);
-    }
-    return (
-      action.actionType !== UserActionType.CUSTOM || shouldExcludeCustomAction
-    );
-  });
-  return filteredActions;
-};
-
 export const buildUserActionFromRawAction = (
   rawActions: rawUserAction[]
 ): UserAction[] => {
@@ -108,6 +87,12 @@ export const buildUserActionFromRawAction = (
   return mappedUserActions;
 };
 
+/**
+ * Splits the actions into sessions and build the timeline.
+ * @param actions {UserAction[]} - The actions to split
+ * @param ticketCreationDate {string} - The ticket creation date
+ * @returns {UserActionTimeline}
+ */
 export const splitActionsIntoTimelineSessions = (
   actions: UserAction[],
   ticketCreationDate: string
@@ -126,7 +111,7 @@ export const splitActionsIntoTimelineSessions = (
   };
 
   actions.forEach((action) => {
-    if (isPartOfTheSameSession(action, currentSession.end)) {
+    if (isActionWithin30Minutes(action, currentSession.end)) {
       currentSession.actions.push(action);
       currentSession.start = action.timestamp;
       return;
@@ -156,14 +141,19 @@ export const splitActionsIntoTimelineSessions = (
   return returnTimeline;
 };
 
-// Checks if an action is within 30mins of the previous action
-export const isPartOfTheSameSession = (
+/**
+ * Checks if an action is within 30mins of the previous action.
+ * @param action {UserAction} - The current action
+ * @param previousTimestamp {string} - The timestamp of the previous action
+ * @returns {boolean}
+ */
+export const isActionWithin30Minutes = (
   action: UserAction,
-  previousEndDateTime: string
+  previousTimestamp: string
 ): boolean => {
   return (
-    Math.abs(Number(action.timestamp) - Number(previousEndDateTime)) <
-    MAX_MSEC_IN_SESSION
+    Math.abs(Number(action.timestamp) - Number(previousTimestamp)) <
+    THIRTY_MINUTES
   );
 };
 
@@ -173,13 +163,13 @@ const handleSessionEnd = (
   returnTimeline: UserActionTimeline,
   ticketCreationDate: string
 ) => {
-  if (currentSessionHasTicketCreation(currentSession, ticketCreationDate)) {
+  if (sessionHasTicketCreation(currentSession, ticketCreationDate)) {
     returnTimeline.session = currentSession;
     returnTimeline.caseSessionFound = true;
     return;
   }
 
-  if (currentSessionIsBeforeCaseCreation(currentSession, ticketCreationDate)) {
+  if (sessionIsBeforeCaseCreation(currentSession, ticketCreationDate)) {
     returnTimeline.precedingSessions.push(currentSession);
     return;
   }
@@ -187,7 +177,7 @@ const handleSessionEnd = (
   returnTimeline.followingSessions.push(currentSession);
 };
 
-const currentSessionHasTicketCreation = (
+const sessionHasTicketCreation = (
   currentSession: UserSession,
   ticketCreationDate: string
 ): boolean => {
@@ -197,7 +187,7 @@ const currentSessionHasTicketCreation = (
   );
 };
 
-const currentSessionIsBeforeCaseCreation = (
+const sessionIsBeforeCaseCreation = (
   currentSession: UserSession,
   ticketCreationDate: string
 ): boolean => {
@@ -241,6 +231,27 @@ const createCaseCreationSession = (
     actions: caseCreationSessionActions,
   };
   return caseCreationSession;
+};
+
+export const filterActions = (
+  actions: UserAction[],
+  excludedCustomActions: string[]
+): UserAction[] => {
+  const filteredActions = actions.filter((action) => {
+    let shouldExcludeCustomAction = false;
+    const eventType = action.eventData?.type || '';
+    const eventValue = action.eventData?.value || '';
+
+    if (eventType && eventValue) {
+      shouldExcludeCustomAction =
+        excludedCustomActions.includes(eventType) ||
+        excludedCustomActions.includes(eventValue);
+    }
+    return (
+      action.actionType !== UserActionType.CUSTOM || shouldExcludeCustomAction
+    );
+  });
+  return filteredActions;
 };
 
 export const filterTimelineActions = (

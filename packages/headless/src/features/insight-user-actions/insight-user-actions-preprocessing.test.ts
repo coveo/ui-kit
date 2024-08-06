@@ -2,7 +2,7 @@ import {
   sortActions,
   filterActions,
   buildUserActionFromRawAction,
-  isPartOfTheSameSession,
+  isActionWithin30Minutes,
   splitActionsIntoTimelineSessions,
   insertTicketCreationActionInSession,
   filterTimelineActions,
@@ -34,7 +34,6 @@ const fakeActions = [
   {
     time: createRelativeDate(firstSessionDate, 1, 0).getTime(),
     name: 'Click',
-    // Title : Getting Started with your New Speedbit Blaze
     value: {
       // eslint-disable-next-line @cspell/spellchecker
       uri_hash: 'ZKoJzryqñ9QlKPlh',
@@ -96,7 +95,6 @@ const fakeActions = [
   {
     time: createRelativeDate(caseCreationDate, 2, 0).getTime(),
     name: 'Click',
-    // Title : Blaze pair with iPhone not working
     value: {
       uri_hash: 'caCgiG2JPzjZfS7G',
       origin_level_1: 'in-product-help',
@@ -122,7 +120,6 @@ const fakeActions = [
   {
     time: createRelativeDate(secondSessionDate, 1, 0).getTime(),
     name: 'Click',
-    // Title : Getting Started with Speedbit Charge.pdf
     value: {
       uri_hash: 'KXñi9EWk38wnb1tt',
       origin_level_1: 'in-product-help',
@@ -140,7 +137,6 @@ const fakeActions = [
   {
     time: createRelativeDate(secondSessionDate, 45, 0).getTime(),
     name: 'Click',
-    // Title : Speedbit Charge 2 User Manual.pdf
     value: {
       uri_hash: 'TtnKwc0Lo2GY9WAi',
       origin_level_1: 'in-product-help',
@@ -512,7 +508,7 @@ describe('insight user actions preprocessing', () => {
     });
   });
 
-  describe('#isPartOfTheSameSession', () => {
+  describe('#isActionWithin30Minutes', () => {
     it('should return true if the action is within 30mins of the previous', async () => {
       const action = {
         actionType: 'CLICK' as UserActionType,
@@ -527,7 +523,10 @@ describe('insight user actions preprocessing', () => {
         createRelativeDate(firstSessionDate, 1, 0).getTime()
       );
 
-      const isSameSession = isPartOfTheSameSession(action, previousEndDateTime);
+      const isSameSession = isActionWithin30Minutes(
+        action,
+        previousEndDateTime
+      );
       expect(isSameSession).toEqual(true);
     });
 
@@ -545,7 +544,10 @@ describe('insight user actions preprocessing', () => {
         createRelativeDate(firstSessionDate, 60, 0).getTime()
       );
 
-      const isSameSession = isPartOfTheSameSession(action, previousEndDateTime);
+      const isSameSession = isActionWithin30Minutes(
+        action,
+        previousEndDateTime
+      );
       expect(isSameSession).toEqual(false);
     });
   });
