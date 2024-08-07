@@ -72,7 +72,6 @@ code {
   background-color: var(--quantic-genqa-bg-neutral-light);
   border-color: var(--quantic-genqa-border-neutral);
   border-radius: var(--quantic-genqa-border-radius);
-  text-wrap: nowrap;
   line-height: 1.5rem;
   display: block;
   width: fit-content;
