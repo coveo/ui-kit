@@ -4,6 +4,7 @@ import DocumentIcon from '../../../../images/document.svg';
 import PointIcon from '../../../../images/point.svg';
 import QuickviewIcon from '../../../../images/quickview.svg';
 import SearchIcon from '../../../../images/search.svg';
+import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 import {UserActionType} from '../atomic-insight-user-action-session/atomic-insight-user-actions-session';
@@ -38,9 +39,7 @@ export class AtomicInsightUserAction {
   };
 
   renderActionTimestamp() {
-    const date = new Date(this.timestamp);
-    const hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
+    const {hours, minutes} = parseTimestampToDateDetails(this.timestamp);
 
     const formattedHours = String(hours).padStart(2, '0');
     const formattedMinutes = String(minutes).padStart(2, '0');
