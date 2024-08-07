@@ -6,10 +6,7 @@ import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
-import {
-  createWaitForActionMiddleware,
-  createWaitForActionMiddlewareWithCount,
-} from '../../utils/utils';
+import {createWaitForActionMiddleware} from '../../utils/utils';
 import {buildControllerDefinitions} from '../commerce-ssr-engine/common';
 import {
   ControllerDefinitionsMap,
@@ -59,18 +56,13 @@ function isSearchCompletedAction(action: unknown): action is Action {
   );
 }
 
-function isRecommendationFetchCompletedAction(
-  action: unknown
-): action is Action {
-  return /^commerce\/recommendations\/fetch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
+function noSearchActionRequired(action: unknown): action is Action {
+  return !!action; // TODO: find a better way
 }
 
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
-  options: CommerceEngineOptions,
-  recommendationSlots: string[]
+  options: CommerceEngineOptions
 ): SSRCommerceEngine {
   const middlewares: Middleware[] = [];
   const promises: Promise<Action>[] = [];
@@ -78,7 +70,7 @@ function buildSSRCommerceEngine(
   const actionCheckFunctions = {
     [SolutionType.listing]: isListingFetchCompletedAction,
     [SolutionType.search]: isSearchCompletedAction,
-    [SolutionType.recommendation]: null,
+    [SolutionType.recommendation]: noSearchActionRequired,
   };
 
   // Check if the current solution type has a corresponding action check function
@@ -90,23 +82,10 @@ function buildSSRCommerceEngine(
     promises.push(promise);
   }
 
-  // Always wait for recommendation fetch actions
-  const {middleware, promises: recommendationPromises} =
-    createWaitForActionMiddlewareWithCount(
-      isRecommendationFetchCompletedAction,
-      recommendationSlots.length
-    );
-  middlewares.push(middleware);
-  promises.push(...recommendationPromises);
-
   const commerceEngine = buildCommerceEngine({
     ...options,
     middlewares: [...(options.middlewares ?? []), ...middlewares],
   });
-
-  if (promises.length === 0) {
-    throw 'TODO: there are not search action to perform server side! Handle that case.';
-  }
 
   return {
     ...commerceEngine,
@@ -195,11 +174,7 @@ export function defineCommerceEngine<
         solutionType,
         buildOptions?.extend
           ? await buildOptions.extend(getOptions())
-          : getOptions(),
-        // TODO: add recommendationSlots to the typing
-        buildOptions && 'recommendationSlots' in buildOptions
-          ? (buildOptions.recommendationSlots as string[])
-          : []
+          : getOptions()
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -228,24 +203,6 @@ export function defineCommerceEngine<
           );
         }
         const buildResult = await buildFactory(solutionType)(...params);
-        // TODO: MOVE THIS INTO fromBuildResult SINCE WE DON'T WANT TO REFRESH THE RECOMMENDATIONS HERE
-        // TODO:  find a way to read this option from fetch static state
-
-        const optionsTuple = params[0] as FetchStaticStateParameters[0];
-        const recommendationSlots =
-          optionsTuple && 'recommendationSlots' in optionsTuple
-            ? (optionsTuple.recommendationSlots as string[])
-            : [];
-
-        recommendationSlots.forEach((ctrlName) => {
-          const c =
-            buildResult.controllers[
-              ctrlName as keyof typeof buildResult.controllers
-            ];
-          console.log('>> Refreshing ', ctrlName);
-          // TODO: ensure this is a recommendation controller WITH A BETTER SOLUTION
-          'refresh' in c && typeof c.refresh === 'function' && c.refresh();
-        });
         const staticState = await fetchStaticStateFactory(
           solutionType
         ).fromBuildResult({

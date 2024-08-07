@@ -1,7 +1,5 @@
-import {
-  RecommendationOnlyControllerDefinitionWithoutProps,
-} from '../../../app/commerce-ssr-engine/types/common';
-import {RecommendationsState} from '../../../features/commerce/recommendations/recommendations-state';
+import {RecommendationOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {RecommendationsState} from '../recommendations/headless-recommendations';
 import {
   RecommendationsProps,
   Recommendations,

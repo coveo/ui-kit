@@ -16,15 +16,7 @@ export default async function RecommendationPage() {
   );
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await recommendationEngineDefinition.fetchStaticState({
-    // TODO: would be nice to have inference on the slotIds or controller name
-    recommendationSlots: [
-      // 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
-      // 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
-      'popularViewedRecs',
-      'popularBoughtRecs',
-    ],
-  });
+  const staticState = await recommendationEngineDefinition.fetchStaticState();
 
   return (
     <Recommendation

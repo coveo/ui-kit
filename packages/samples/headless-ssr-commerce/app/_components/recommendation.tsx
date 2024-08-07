@@ -7,7 +7,7 @@ import {
   RecommendationHydratedState,
   recommendationEngineDefinition,
 } from '../_lib/commerce-engine';
-import {ProductList} from './product-list';
+import {Recommendations} from './recommendation-list';
 
 export default function Recommendation({
   staticState,
@@ -29,16 +29,14 @@ export default function Recommendation({
     recommendationEngineDefinition
       .hydrateStaticState({
         searchActions: staticState.searchActions,
-        // TODO: Find a way to pass it from static state
-        recommendationSlots: [
-          // 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
-          // 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
-          'popularViewedRecs',
-          'popularBoughtRecs',
-        ],
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
+
+        // Refreshing recommendations after hydrating the state in the client-side
+        // Recommendation slots are refreshed in the server. This might be a future improvement.
+        controllers.popularBoughtRecs.refresh();
+        controllers.popularViewedRecs.refresh();
       });
   }, [staticState]);
 
@@ -46,12 +44,12 @@ export default function Recommendation({
     <>
       {/* TODO: add UI component here */}
       <h2>{staticState.controllers.popularBoughtRecs.state.headline}</h2>
-      <ProductList
+      <Recommendations
         staticState={staticState.controllers.popularBoughtRecs.state}
         controller={hydratedState?.controllers.popularBoughtRecs}
       />
       <h2>{staticState.controllers.popularViewedRecs.state.headline}</h2>
-      <ProductList
+      <Recommendations
         staticState={staticState.controllers.popularViewedRecs.state}
         controller={hydratedState?.controllers.popularViewedRecs}
       />

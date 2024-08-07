@@ -190,8 +190,7 @@ export type EngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
 > =
   HasKeys<TControllersPropsMap> extends false
-    ? {recommendationSlots?: string[]} // TODO: infer controller names
+    ? {}
     : {
         controllers: TControllersPropsMap;
-        recommendationSlots?: string[]; // TODO: infer controller names
       };
