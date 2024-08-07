@@ -5,20 +5,22 @@ import {
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
-import type * as _ from '../src/components.d.ts';
+import type * as _ from '../../src/components.js';
 
 export const wrapInCommerceInterface = ({
   engineConfig,
   skipFirstSearch,
+  type = 'search',
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstSearch?: boolean;
+  type?: 'search' | 'product-listing';
 }): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-interface data-testid="root-interface">
+    <atomic-commerce-interface type="${type}" data-testid="root-interface">
       ${story()}
     </atomic-commerce-interface>
   `,
