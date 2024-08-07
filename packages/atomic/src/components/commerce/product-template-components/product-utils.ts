@@ -28,7 +28,7 @@ export function buildStringTemplateFromProduct(
 
     if (!newValue) {
       bindings.engine.logger.warn(
-        `${key} used in the href template is undefined for this product: ${product.permanentid} and not found in the window object.`
+        `${key} used in the href template is undefined for this product: ${product.permanentid} and could not be found in the window object.`
       );
       return '';
     }
@@ -37,20 +37,10 @@ export function buildStringTemplateFromProduct(
   });
 }
 
-function readFromObject<T extends object>(
-  object: T,
-  key: string
-): string | undefined {
-  const keys = key.split('.');
-  let current: unknown = object;
-
-  for (const k of keys) {
-    if (current && typeof current === 'object' && k in current) {
-      current = (current as Record<string, unknown>)[k];
-    } else {
-      return undefined;
-    }
+function readFromObject<T>(object: T, key: string): string | undefined {
+  if (object && typeof object === 'object' && key in object) {
+    const value = (object as Record<string, unknown>)[key];
+    return typeof value === 'string' ? value : undefined;
   }
-
-  return typeof current === 'string' ? current : undefined;
+  return undefined;
 }
