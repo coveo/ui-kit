@@ -57,7 +57,7 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
         <RecentQueries
           staticState={staticStateRecentQueries}
           controller={recentQueriesController}
-        ></RecentQueries>
+        />
       )}
     </div>
   );
