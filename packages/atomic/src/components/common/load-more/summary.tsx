@@ -27,7 +27,7 @@ export const LoadMoreSummary: FunctionalComponent<LoadMoreSummaryProps> = ({
 
   return (
     <div
-      class="my-2 text-lg text-neutral-dark"
+      class="text-neutral-dark my-2 text-lg"
       part="showing-results"
       innerHTML={content}
     ></div>
