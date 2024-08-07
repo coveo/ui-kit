@@ -25,6 +25,7 @@ import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+import { UserActionType } from "./components/insight/user-actions/atomic-insight-user-action-session/atomic-insight-user-actions-session";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -55,6 +56,7 @@ export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+export { UserActionType } from "./components/insight/user-actions/atomic-insight-user-action-session/atomic-insight-user-actions-session";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -1570,6 +1572,24 @@ export namespace Components {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
+    }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
+     */
+    interface AtomicInsightUserAction {
+        "actionTitle": string;
+        "origin": string;
+        "timestamp": number;
+        "type": UserActionType;
+    }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        "startDate": number;
+        "userActions": UserActions;
     }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
@@ -4346,6 +4366,26 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
+     */
+    interface HTMLAtomicInsightUserActionElement extends Components.AtomicInsightUserAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionElement: {
+        prototype: HTMLAtomicInsightUserActionElement;
+        new (): HTMLAtomicInsightUserActionElement;
+    };
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     */
+    interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsSessionElement: {
+        prototype: HTMLAtomicInsightUserActionsSessionElement;
+        new (): HTMLAtomicInsightUserActionsSessionElement;
+    };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
     }
@@ -5634,6 +5674,8 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-action": HTMLAtomicInsightUserActionElement;
+        "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -7173,6 +7215,24 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
+    }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
+     */
+    interface AtomicInsightUserAction {
+        "actionTitle": string;
+        "origin"?: string;
+        "timestamp": number;
+        "type": UserActionType;
+    }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        "startDate": number;
+        "userActions"?: UserActions;
     }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
@@ -9086,6 +9146,8 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-action": AtomicInsightUserAction;
+        "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -9458,6 +9520,16 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            /**
+             * @category Insight Panel
+             * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
+             */
+            "atomic-insight-user-action": LocalJSX.AtomicInsightUserAction & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionElement>;
+            /**
+             * @category Insight Panel
+             * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+             */
+            "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
