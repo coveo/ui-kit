@@ -20,13 +20,6 @@ type UserActions = Array<{
 }>;
 
 /**
- * The `QuanticUserActionSession` component displays all the user actions that took place during a specific user session.
- * @category Insight Panel
- * @example
- * <c-quantic-user-action-session actions={actions} start-date={startDate} end-date={endDate} is-active-session></c-quantic-user-action-session>
- */
-
-/**
  * @internal
  * The `AtomicInsightUserActionSession` component displays all the user actions that took place during a specific user session.
  * @category Insight Panel
