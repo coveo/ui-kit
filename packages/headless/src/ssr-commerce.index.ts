@@ -83,6 +83,12 @@ export type {
 } from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 export {definePagination} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 
+export type {
+  SortState,
+  Sort,
+} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+export {defineSort} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion

@@ -20,7 +20,7 @@ import {
   PaginationProps,
   PaginationState,
 } from '../pagination/headless-core-commerce-pagination';
-import {Sort, SortProps} from '../sort/headless-core-commerce-sort';
+import {Sort, SortProps, SortState} from '../sort/headless-core-commerce-sort';
 import {
   UrlManager,
   UrlManagerProps,
@@ -78,6 +78,8 @@ export function defineUrlManager<
         : buildSearch(engine).urlManager(props),
   } as SubControllerDefinitionWithProps<UrlManager, TOptions, UrlManagerProps>;
 }
+
+export type {Sort, SortState};
 
 export function defineSort<
   TOptions extends ControllerDefinitionOption | undefined,
