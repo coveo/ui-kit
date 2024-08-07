@@ -149,6 +149,23 @@ export type {
   RedirectionTriggerDefinition,
 } from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
 export {defineRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
+
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxState,
+  StandaloneSearchBoxDefinition,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+export {defineStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+
+export type {
+  InstantProducts,
+  InstantProductsOptions,
+  InstantProductsState,
+  InstantProductsProps,
+  InstantProductsDefinition,
+} from './controllers/commerce/instant-products/headless-instant-products.ssr';
+export {defineInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
