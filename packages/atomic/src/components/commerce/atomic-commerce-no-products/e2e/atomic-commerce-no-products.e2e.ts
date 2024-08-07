@@ -3,7 +3,7 @@ import {test, expect} from './fixture';
 
 test.describe('when there are results', () => {
   test.beforeEach(async ({noProducts}) => {
-    noProducts.load({story: 'with-results'});
+    await noProducts.load({story: 'with-results'});
   });
 
   test('should have aria live before first query', async ({noProducts}) => {
