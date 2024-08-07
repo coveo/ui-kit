@@ -1,34 +1,58 @@
-import {Pagination, PaginationState} from '@coveo/headless/ssr-commerce';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {
+  Pagination as HeadlessPagination,
+  PaginationState,
+  Summary,
+} from '@coveo/headless/ssr-commerce';
+import {useEffect, useState} from 'react';
 
-interface ShowMoreProps {
+interface IShowMoreProps {
   staticState: PaginationState;
-  controller?: Pagination;
+  summaryController?: Summary;
+  controller?: HeadlessPagination;
 }
 
-export const ShowMore: FunctionComponent<ShowMoreProps> = ({
-  staticState,
-  controller,
-}: ShowMoreProps) => {
+export default function ShowMore(props: IShowMoreProps) {
+  const {controller, summaryController, staticState} = props;
+
   const [state, setState] = useState(staticState);
+  const [summaryState, setSummaryState] = useState(
+    props.summaryController?.state
+  );
 
   useEffect(() => {
-    console.log('in use effect!');
-    controller?.subscribe?.(() => {
-      console.log('in subscribe callback');
-      setState(controller.state);
-    });
-  });
+    controller?.subscribe(() => setState(controller.state));
+  }, [controller]);
+
+  useEffect(() => {
+    summaryController?.subscribe(() =>
+      setSummaryState(summaryController.state)
+    );
+  }, [summaryController]);
+
+  const handleFetchMore = () => {
+    controller?.fetchMoreProducts();
+  };
+
+  const isDisabled = () => {
+    return (
+      !controller ||
+      summaryState?.lastProduct === summaryState?.totalNumberOfProducts
+    );
+  };
 
   return (
     <>
       <div>
-        Page {state.page + 1} of {state.totalPages} (showing {state.pageSize}{' '}
-        products per page)
+        Displaying {summaryState?.lastProduct ?? state.pageSize} out of{' '}
+        {state.totalEntries} products
       </div>
-      <button disabled={!controller} onClick={controller?.fetchMoreProducts}>
+      <button
+        className="ShowMore"
+        disabled={isDisabled()}
+        onClick={() => handleFetchMore()}
+      >
         Show more
       </button>
     </>
   );
-};
+}
