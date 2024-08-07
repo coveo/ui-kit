@@ -105,7 +105,7 @@ export interface EngineStaticState<
   TSearchAction extends AnyAction,
   TControllers extends ControllerStaticStateMap,
 > {
-  searchAction: TSearchAction;
+  searchActions: TSearchAction[];
   controllers: TControllers;
 }
 
@@ -190,7 +190,8 @@ export type EngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
 > =
   HasKeys<TControllersPropsMap> extends false
-    ? {}
+    ? {recommendationSlots?: string[]} // TODO: infer controller names
     : {
         controllers: TControllersPropsMap;
+        recommendationSlots?: string[]; // TODO: infer controller names
       };

@@ -25,6 +25,7 @@ export type EngineDefinitionOptions<
    * The controllers to initialize with the search engine.
    */
   controllers?: TControllers;
+  recommendationSlots?: TControllers; // TODO: try to merge both controllers and recommendationSlots
 };
 
 export interface EngineDefinition<

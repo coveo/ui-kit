@@ -14,7 +14,10 @@ export default async function Listing() {
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const staticState = await (listingEngineDefinition.fetchStaticState as any)({
+    recommendationSlots: ['slot-1', 'slot-2'],
+  });
 
   return (
     // TODO: remove page suffix since it is a component!

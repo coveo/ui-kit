@@ -1,17 +1,15 @@
 /**
  * Utility functions to be used for Commerce Server Side Rendering.
  */
-import {Action, AnyAction, UnknownAction} from '@reduxjs/toolkit';
+import {Action, AnyAction, Middleware, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {
-  defineProductList,
-  defineQuerySummary,
-  defineRecommendations,
-} from '../../ssr-commerce.index';
-import {createWaitForActionMiddleware} from '../../utils/utils';
+  createWaitForActionMiddleware,
+  createWaitForActionMiddlewareWithCount,
+} from '../../utils/utils';
 import {buildControllerDefinitions} from '../commerce-ssr-engine/common';
 import {
   ControllerDefinitionsMap,
@@ -34,7 +32,6 @@ import {
   CommerceEngineOptions,
   buildCommerceEngine,
 } from './commerce-engine';
-import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration';
 
 /**
  * The SSR commerce engine.
@@ -43,7 +40,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
   /**
    * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
    */
-  waitForRequestCompletedAction(): Promise<Action>;
+  waitForRequestCompletedAction(): Promise<Action[]>;
 }
 
 export type CommerceEngineDefinitionOptions<
@@ -62,19 +59,55 @@ function isSearchCompletedAction(action: unknown): action is Action {
   );
 }
 
+function isRecommendationFetchCompletedAction(
+  action: unknown
+): action is Action {
+  return /^commerce\/recommendations\/fetch\/(fulfilled|rejected)$/.test(
+    (action as UnknownAction).type
+  );
+}
+
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
-  options: CommerceEngineOptions
+  options: CommerceEngineOptions,
+  recommendationSlots: string[]
 ): SSRCommerceEngine {
-  const {middleware, promise} = createWaitForActionMiddleware(
-    solutionType === SolutionType.listing
-      ? isListingFetchCompletedAction
-      : isSearchCompletedAction
-  );
+  const middlewares: Middleware[] = [];
+  const promises: Promise<Action>[] = [];
+
+  const actionCheckFunctions = {
+    [SolutionType.listing]: isListingFetchCompletedAction,
+    [SolutionType.search]: isSearchCompletedAction,
+    [SolutionType.recommendation]: null,
+  };
+
+  // Check if the current solution type has a corresponding action check function
+  const actionCheckFunction = actionCheckFunctions[solutionType];
+  if (actionCheckFunction) {
+    const {middleware, promise} =
+      createWaitForActionMiddleware(actionCheckFunction);
+    middlewares.push(middleware);
+    promises.push(promise);
+  }
+
+  // Always wait for recommendation fetch actions
+  const {middleware, promises: recommendationPromises} =
+    createWaitForActionMiddlewareWithCount(
+      isRecommendationFetchCompletedAction,
+      recommendationSlots.length
+    );
+  middlewares.push(middleware);
+  promises.push(...recommendationPromises);
+
   const commerceEngine = buildCommerceEngine({
     ...options,
-    middlewares: [...(options.middlewares ?? []), middleware],
+    middlewares: [...(options.middlewares ?? []), ...middlewares],
   });
+
+  if (promises.length === 0) {
+    throw 'TODO: there are not search action to perform server side! Handle that case.';
+  }
+
   return {
     ...commerceEngine,
 
@@ -83,7 +116,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return promise;
+      return Promise.all(promises);
     },
   };
 }
@@ -162,7 +195,11 @@ export function defineCommerceEngine<
         solutionType,
         buildOptions?.extend
           ? await buildOptions.extend(getOptions())
-          : getOptions()
+          : getOptions(),
+        // TODO: add recommendationSlots to the typing
+        buildOptions && 'recommendationSlots' in buildOptions
+          ? (buildOptions.recommendationSlots as string[])
+          : []
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -184,11 +221,6 @@ export function defineCommerceEngine<
   ) => FetchStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: FetchStaticStateParameters) => {
-        // TODO: here we have access to the slots we want to build
-        console.log('******* params **************');
-        console.log(params);
-        console.log('*********************');
-
         if (!getOptions().navigatorContextProvider) {
           // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
           console.warn(
@@ -196,11 +228,30 @@ export function defineCommerceEngine<
           );
         }
         const buildResult = await buildFactory(solutionType)(...params);
+        // TODO: MOVE THIS INTO fromBuildResult SINCE WE DON'T WANT TO REFRESH THE RECOMMENDATIONS HERE
+        // TODO:  find a way to read this option from fetch static state
+
+        const optionsTuple = params[0] as FetchStaticStateParameters[0];
+        const recommendationSlots =
+          optionsTuple && 'recommendationSlots' in optionsTuple
+            ? (optionsTuple.recommendationSlots as string[])
+            : [];
+
+        recommendationSlots.forEach((ctrlName) => {
+          const c =
+            buildResult.controllers[
+              ctrlName as keyof typeof buildResult.controllers
+            ];
+          console.log('>> Refreshing ', ctrlName);
+          // TODO: ensure this is a recommendation controller WITH A BETTER SOLUTION
+          'refresh' in c && typeof c.refresh === 'function' && c.refresh();
+        });
         const staticState = await fetchStaticStateFactory(
           solutionType
         ).fromBuildResult({
           buildResult,
         });
+
         return staticState;
       },
       {
@@ -215,14 +266,14 @@ export function defineCommerceEngine<
 
           if (solutionType === SolutionType.listing) {
             buildProductListing(engine).executeFirstRequest();
-          } else {
+          } else if (solutionType === SolutionType.search) {
             buildSearch(engine).executeFirstSearch();
           }
 
-          // TODO: based on the slots we want to build, only refresh the espective recommendation controllers
+          const searchActions = await engine.waitForRequestCompletedAction();
 
           return createStaticState({
-            searchAction: await engine.waitForRequestCompletedAction(),
+            searchActions,
             controllers,
           }) as EngineStaticState<
             AnyAction,
@@ -253,7 +304,7 @@ export function defineCommerceEngine<
           solutionType
         ).fromBuildResult({
           buildResult,
-          searchAction: params[0]!.searchAction,
+          searchActions: params[0]!.searchActions,
         });
         return staticState;
       },
@@ -264,10 +315,10 @@ export function defineCommerceEngine<
           const [
             {
               buildResult: {engine, controllers},
-              searchAction,
+              searchActions,
             },
           ] = params;
-          engine.dispatch(searchAction);
+          searchActions.forEach((action) => engine.dispatch(action));
           await engine.waitForRequestCompletedAction();
           return {engine, controllers};
         },
@@ -299,66 +350,3 @@ export function defineCommerceEngine<
     >,
   };
 }
-
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////// D E M O /////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-// This playground's purposes is only to ensure the typing works correctly
-
-// Set the engine configuration
-const configuration = {
-  ...getSampleCommerceEngineConfiguration(),
-};
-
-const engineDefinition = defineCommerceEngine({
-  configuration: configuration,
-  controllers: {
-    // Define your controllers here
-    summary: defineQuerySummary(),
-    productList: defineProductList({search: false}),
-    rec1: defineRecommendations({
-      options: {
-        slotId: 'slot-1',
-      },
-    }),
-    recNono: defineRecommendations({
-      options: {
-        slotId: 'xxx--xxx-xxx-xxxx',
-      },
-    }),
-    rec2: defineRecommendations({
-      options: {
-        slotId: 'slot-2',
-      },
-    }),
-  },
-});
-
-export const {
-  listingEngineDefinition,
-  recommendationEngineDefinition,
-  searchEngineDefinition,
-} = engineDefinition;
-
-listingEngineDefinition.fetchStaticState().then((state) => {
-  state.controllers.summary;
-  state.controllers.productList;
-  state.controllers.rec1;
-  state.controllers.rec2;
-});
-
-searchEngineDefinition.fetchStaticState().then((state) => {
-  state.controllers.summary;
-  state.controllers.productList;
-  state.controllers.rec1;
-  state.controllers.rec2;
-});
-
-recommendationEngineDefinition.fetchStaticState().then((state) => {
-  state.controllers.summary;
-  state.controllers.productList;
-  state.controllers.rec1;
-  state.controllers.rec2;
-});

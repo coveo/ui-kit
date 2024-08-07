@@ -30,9 +30,16 @@ export default {
   controllers: {
     summary: defineQuerySummary(),
     productList: defineProductList(),
+    // },
+    // recommendationSlots: {
     popularViewedRecs: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
+      },
+    }),
+    doNotRefresh: defineRecommendations({
+      options: {
+        slotId: 'xxx--xxx-xxx-xxxx',
       },
     }),
     popularBoughtRecs: defineRecommendations({

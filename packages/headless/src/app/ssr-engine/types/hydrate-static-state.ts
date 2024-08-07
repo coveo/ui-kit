@@ -10,7 +10,7 @@ import {
 import {FromBuildResult} from './from-build-result';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
-  searchAction: TSearchAction;
+  searchActions: TSearchAction[];
 }
 
 export type HydrateStaticState<

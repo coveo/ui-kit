@@ -160,3 +160,28 @@ export function createWaitForActionMiddleware<TAction extends Action>(
 
   return {promise, middleware};
 }
+
+export function createWaitForActionMiddlewareWithCount<TAction extends Action>(
+  isDesiredAction: (action: unknown) => action is TAction,
+  count: number
+): {promises: Promise<TAction>[]; middleware: Middleware} {
+  const deferredArray: {
+    promise: Promise<TAction>;
+    resolve: (value: TAction) => void;
+  }[] = new Array(count).fill(null).map(() => createDeferredPromise<TAction>());
+
+  let index = 0;
+
+  const middleware: Middleware = () => (next) => (action) => {
+    next(action);
+    if (isDesiredAction(action)) {
+      // TODO: ensure we stay inbound of the array
+      deferredArray[index++].resolve(action);
+    }
+  };
+
+  return {
+    promises: deferredArray.map((element) => element.promise),
+    middleware,
+  };
+}

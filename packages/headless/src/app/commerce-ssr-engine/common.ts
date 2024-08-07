@@ -67,7 +67,12 @@ export function buildControllerDefinitions<
       definition['listing'] === false &&
       solutionType === SolutionType['listing'];
 
-    if (searchDisabled || listingDisabled) {
+    const recommendationEnabled =
+      'recommendation' in definition &&
+      definition['recommendation'] === true &&
+      solutionType === SolutionType['recommendation'];
+
+    if (searchDisabled || listingDisabled || !recommendationEnabled) {
       return null;
     }
 

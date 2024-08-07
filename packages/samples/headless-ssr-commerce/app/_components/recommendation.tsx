@@ -3,31 +3,39 @@
 import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 import {
-  listingEngineDefinition,
-  ListingHydratedState,
-  ListingStaticState,
+  RecommendationStaticState,
+  RecommendationHydratedState,
+  recommendationEngineDefinition,
 } from '../_lib/commerce-engine';
 import {ProductList} from './product-list';
-import {Summary} from './summary';
 
 export default function Recommendation({
   staticState,
   navigatorContext,
 }: {
-  staticState: ListingStaticState;
+  staticState: RecommendationStaticState;
   navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
-    ListingHydratedState | undefined
+    RecommendationHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  recommendationEngineDefinition.setNavigatorContextProvider(
+    () => navigatorContext
+  );
 
   useEffect(() => {
-    listingEngineDefinition
+    recommendationEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
+        // TODO: Find a way to pass it from static state
+        recommendationSlots: [
+          // 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
+          // 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+          'popularViewedRecs',
+          'popularBoughtRecs',
+        ],
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
@@ -37,21 +45,21 @@ export default function Recommendation({
   return (
     <>
       {/* TODO: add UI component here */}
-      <h2>popular_bought</h2>
+      <h2>{staticState.controllers.popularBoughtRecs.state.headline}</h2>
       <ProductList
         staticState={staticState.controllers.popularBoughtRecs.state}
         controller={hydratedState?.controllers.popularBoughtRecs}
       />
-      <h2>popular_viewed</h2>
+      <h2>{staticState.controllers.popularViewedRecs.state.headline}</h2>
       <ProductList
         staticState={staticState.controllers.popularViewedRecs.state}
         controller={hydratedState?.controllers.popularViewedRecs}
       />
-      <Summary
+      {/* <Summary
         staticState={staticState.controllers.summary.state}
         controller={hydratedState?.controllers.summary}
         hydratedState={hydratedState}
-      />
+      /> */}
     </>
   );
 }
