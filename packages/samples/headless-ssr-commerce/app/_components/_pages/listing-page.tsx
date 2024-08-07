@@ -41,6 +41,14 @@ export default function ListingPage({
       <StandaloneSearchBox
         staticState={staticState.controllers.standaloneSearchBox.state}
         controller={hydratedState?.controllers.standaloneSearchBox}
+        staticStateRecentQueries={
+          staticState.controllers.recentQueriesList.state
+        }
+        recentQueriesController={hydratedState?.controllers.recentQueriesList}
+        staticStateInstantProducts={
+          staticState.controllers.instantProducts.state
+        }
+        instantProductsController={hydratedState?.controllers.instantProducts}
       />
       <Summary
         staticState={staticState.controllers.summaryListing.state}

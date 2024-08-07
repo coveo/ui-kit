@@ -1,18 +1,35 @@
 import {
   StandaloneSearchBoxState,
   StandaloneSearchBox as StandaloneSearchBoxController,
+  RecentQueriesState,
+  InstantProductsState,
+  RecentQueriesList as RecentQueriesListController,
+  InstantProducts as InstantProductsController,
 } from '@coveo/headless/ssr-commerce';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState, FunctionComponent} from 'react';
+import {InstantProducts} from './instant-product';
+import {RecentQueries} from './recent-queries';
 
 interface StandaloneSearchBoxProps {
   staticState: StandaloneSearchBoxState;
   controller?: StandaloneSearchBoxController;
+  staticStateRecentQueries: RecentQueriesState;
+  recentQueriesController?: RecentQueriesListController;
+  staticStateInstantProducts: InstantProductsState;
+  instantProductsController?: InstantProductsController;
 }
 
 export const StandaloneSearchBox: FunctionComponent<
   StandaloneSearchBoxProps
-> = ({staticState, controller}) => {
+> = ({
+  staticState,
+  controller,
+  staticStateRecentQueries,
+  recentQueriesController,
+  staticStateInstantProducts,
+  instantProductsController,
+}) => {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -24,15 +41,21 @@ export const StandaloneSearchBox: FunctionComponent<
   useEffect(() => {
     if (state.redirectTo === '/search') {
       const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
-      router.push(url);
+      router.push(url, {scroll: false});
       controller?.afterRedirection();
     }
   }, [state.redirectTo, state.value, router, controller]);
+
+  const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    controller?.updateText(e.target.value);
+    instantProductsController?.updateQuery(e.target.value);
+  };
+
   return (
     <div>
       <input
         value={state.value}
-        onChange={(e) => controller?.updateText(e.target.value)}
+        onChange={(e) => onSearchBoxInputChange(e)}
       ></input>
       {state.value !== '' && (
         <span>
@@ -41,18 +64,32 @@ export const StandaloneSearchBox: FunctionComponent<
       )}
       <button onClick={() => controller?.submit()}>Search</button>
       {state.suggestions.length > 0 && (
-        <ul>
-          {state.suggestions.map((suggestion, index) => (
-            <li key={index}>
-              <button
-                onClick={() =>
-                  controller?.selectSuggestion(suggestion.rawValue)
-                }
-                dangerouslySetInnerHTML={{__html: suggestion.highlightedValue}}
-              ></button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul>
+            {state.suggestions.map((suggestion, index) => (
+              <li key={index}>
+                <button
+                  onClick={() =>
+                    controller?.selectSuggestion(suggestion.rawValue)
+                  }
+                  dangerouslySetInnerHTML={{
+                    __html: suggestion.highlightedValue,
+                  }}
+                ></button>
+              </li>
+            ))}
+          </ul>
+          <InstantProducts
+            staticState={staticStateInstantProducts}
+            controller={instantProductsController}
+          />
+        </>
+      )}
+      {staticStateRecentQueries.queries.length > 0 && (
+        <RecentQueries
+          staticState={staticStateRecentQueries}
+          controller={recentQueriesController}
+        />
       )}
     </div>
   );
