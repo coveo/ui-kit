@@ -30,11 +30,11 @@ export class AtomicInsightUserAction {
   @Prop({mutable: true}) public origin: string = '';
 
   icons = {
-    search: SearchIcon,
-    click: DocumentIcon,
-    view: QuickviewIcon,
-    custom: PointIcon,
-    caseCreation: BookmarkIcon,
+    SEARCH: SearchIcon,
+    CLICK: DocumentIcon,
+    VIEW: QuickviewIcon,
+    CUSTOM: PointIcon,
+    TICKET_CREATION: BookmarkIcon,
   };
 
   renderActionTimestamp() {
@@ -50,7 +50,7 @@ export class AtomicInsightUserAction {
 
   renderIcon() {
     const iconClasses = ['w-3', 'h-3'];
-    if (['click', 'view'].includes(this.type)) {
+    if (['CLICK', 'VIEW'].includes(this.type)) {
       iconClasses.push('text-primary');
     }
 
@@ -63,7 +63,7 @@ export class AtomicInsightUserAction {
   }
 
   renderActionTitle() {
-    if (this.type === 'caseCreation') {
+    if (this.type === 'TICKET_CREATION') {
       return (
         <div class="font-semibold">
           {this.bindings.i18n.t('ticket-created')}
@@ -72,7 +72,7 @@ export class AtomicInsightUserAction {
     }
 
     const actionTitleClasses = [];
-    if (['click', 'view'].includes(this.type)) {
+    if (['CLICK', 'VIEW'].includes(this.type)) {
       actionTitleClasses.push('text-primary');
     }
 

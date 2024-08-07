@@ -6,11 +6,11 @@ import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 export type UserActionType =
-  | 'search'
-  | 'click'
-  | 'caseCreation'
-  | 'view'
-  | 'custom';
+  | 'SEARCH'
+  | 'CLICK'
+  | 'TICKET_CREATION'
+  | 'VIEW'
+  | 'CUSTOM';
 
 type UserActions = Array<{
   type: UserActionType;
@@ -58,7 +58,7 @@ export class AtomicInsightUserActionsSession {
 
   setCaseCreationIndex() {
     this.caseCreationIndex = this.userActions.findIndex(
-      (action) => action.type === 'caseCreation'
+      (action) => action.type === 'TICKET_CREATION'
     );
   }
 
