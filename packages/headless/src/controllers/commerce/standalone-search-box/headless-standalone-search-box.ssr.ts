@@ -5,10 +5,8 @@ import {
   buildStandaloneSearchBox,
 } from './headless-standalone-search-box';
 
-export type {
-  StandaloneSearchBoxOptions,
-  StandaloneSearchBoxState,
-} from '../../standalone-search-box/headless-standalone-search-box';
+export type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options';
+export type {StandaloneSearchBoxState} from './headless-standalone-search-box';
 export type {StandaloneSearchBox, StandaloneSearchBoxProps};
 
 export interface StandaloneSearchBoxDefinition

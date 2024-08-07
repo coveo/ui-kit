@@ -9,6 +9,7 @@ import {
 } from '../../_lib/commerce-engine';
 import {Cart} from '../cart';
 import {ProductList} from '../product-list';
+import {StandaloneSearchBox} from '../standalone-search-box';
 import {Summary} from '../summary';
 
 export default function ListingPage({
@@ -37,6 +38,10 @@ export default function ListingPage({
 
   return (
     <>
+      <StandaloneSearchBox
+        staticState={staticState.controllers.standaloneSearchBox.state}
+        controller={hydratedState?.controllers.standaloneSearchBox}
+      />
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}

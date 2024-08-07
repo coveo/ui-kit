@@ -12,6 +12,8 @@ import {
   defineNotifyTrigger,
   defineQueryTrigger,
   defineRedirectionTrigger,
+  defineStandaloneSearchBox,
+  defineInstantProducts,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -74,5 +76,12 @@ export default {
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
     redirectionTrigger: defineRedirectionTrigger(),
+    // is this for listing + seaerch or really only listing ?
+    standaloneSearchBox: defineStandaloneSearchBox({
+      options: {redirectionUrl: '/search'},
+    }),
+    // do i need instant products for each search box?
+    instantProducts: defineInstantProducts({options: {}}),
+    // state of url manager ? standalone search box not working ?
   },
 } satisfies CommerceEngineConfig;
