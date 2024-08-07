@@ -96,7 +96,6 @@ export const Cart: FunctionComponent<CartProps> = ({
       <button disabled={isCartEmpty()} onClick={emptyCart}>
         Empty cart
       </button>
-      <hr></hr>
     </div>
   );
 };

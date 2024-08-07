@@ -42,6 +42,11 @@ export default function ListingPage({
         staticState={staticState.controllers.standaloneSearchBox.state}
         controller={hydratedState?.controllers.standaloneSearchBox}
       />
+      <Summary
+        staticState={staticState.controllers.summaryListing.state}
+        controller={hydratedState?.controllers.summaryListing}
+        hydratedState={hydratedState}
+      />
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}
@@ -50,11 +55,6 @@ export default function ListingPage({
       <ProductList
         staticState={staticState.controllers.productListListing.state}
         controller={hydratedState?.controllers.productListListing}
-      />
-      <Summary
-        staticState={staticState.controllers.summaryListing.state}
-        controller={hydratedState?.controllers.summaryListing}
-        hydratedState={hydratedState}
       />
     </>
   );
