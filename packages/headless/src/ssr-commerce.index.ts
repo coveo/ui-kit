@@ -77,6 +77,7 @@ export type {
   CartItem,
   CartProps,
   CartState,
+  CartDefinition,
 } from './controllers/commerce/context/cart/headless-cart.ssr';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr';
 
@@ -86,6 +87,7 @@ export type {
   ContextProps,
   ContextState,
   View,
+  ContextDefinition,
 } from './controllers/commerce/context/headless-context.ssr';
 export {defineContext} from './controllers/commerce/context/headless-context.ssr';
 
@@ -95,6 +97,7 @@ export type {
   SearchBoxProps,
   SearchBoxState,
   Suggestion,
+  SearchBoxDefinition,
 } from './controllers/commerce/search-box/headless-search-box.ssr';
 export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr';
 
@@ -110,6 +113,7 @@ export type {
   RecentQueriesListProps,
   RecentQueriesListInitialState,
   RecentQueriesState,
+  RecentQueriesListDefinition,
 } from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
 export {defineRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
 
@@ -124,6 +128,27 @@ export type {
   FieldSuggestionsGeneratorDefinition,
 } from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr';
 export {defineFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr';
+
+export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+  NotifyTriggerDefinition,
+} from './controllers/commerce/triggers/headless-notify-trigger.ssr';
+export {defineNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger.ssr';
+
+export type {
+  QueryTrigger,
+  QueryTriggerState,
+  QueryTriggerDefinition,
+} from './controllers/commerce/triggers/headless-query-trigger.ssr';
+export {defineQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.ssr';
+
+export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+  RedirectionTriggerDefinition,
+} from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
+export {defineRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
