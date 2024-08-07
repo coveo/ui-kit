@@ -1,15 +1,15 @@
 interface AtomicSearchInterfaceElement extends HTMLElement {
   initialize(config: {
     organizationId: string;
-    organizationEndpoints: organizationEndpoints;
+    organizationEndpoints: OrganizationEndpoints;
     accessToken: string;
   }): Promise<void>;
   getOrganizationEndpoints(
     organizationId: string
-  ): Promise<organizationEndpoints>;
+  ): Promise<OrganizationEndpoints>;
 }
 
-interface organizationEndpoints {
+interface OrganizationEndpoints {
   platform: string;
   analytics: string;
   search: string;
