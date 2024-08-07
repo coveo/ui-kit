@@ -1,48 +1,50 @@
 import {
-  SummaryState,
-  Summary as SummaryController,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState, FunctionComponent} from 'react';
-import {ListingHydratedState} from '../_lib/commerce-engine';
+  Summary as HeadlessSummary,
+  SearchSummaryState,
+  ProductListingSummaryState,
+  RecommendationsSummaryState,
+} from '@coveo/headless/commerce';
+import {useEffect, useState} from 'react';
 
-interface SummaryProps {
-  hydratedState?: ListingHydratedState;
-  staticState: SummaryState;
-  controller?: SummaryController;
+interface ISummaryProps {
+  controller?: HeadlessSummary;
+  staticState:
+    | SearchSummaryState
+    | ProductListingSummaryState
+    | RecommendationsSummaryState;
 }
 
-export const Summary: FunctionComponent<SummaryProps> = ({
-  staticState,
-  hydratedState,
-  controller,
-}: SummaryProps) => {
+export default function Summary(props: ISummaryProps) {
+  const {controller, staticState} = props;
+
   const [state, setState] = useState(staticState);
 
-  useEffect(
-    () => controller?.subscribe?.(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => {
+    controller?.subscribe(() => setState(controller.state));
+  }, [controller]);
 
-  return (
-    <>
-      <div>
-        Hydrated:{' '}
-        <input
-          id="hydrated-indicator"
-          type="checkbox"
-          disabled
-          checked={!!hydratedState}
-        />
-      </div>
-      <span id="hydrated-msg">
-        Rendered page with {state.totalNumberOfProducts} results
+  const getQuerySummary = () => {
+    if (!('query' in state)) {
+      return null;
+    }
+
+    return (
+      <>
+        for <b>{state.query}</b>
+      </>
+    );
+  };
+
+  const renderSummary = () => {
+    const {firstProduct, lastProduct, totalNumberOfProducts} = state;
+    return (
+      <span>
+        Showing results {firstProduct} - {lastProduct} of{' '}
+        {totalNumberOfProducts}
+        {getQuerySummary()}
       </span>
-      <div>
-        Rendered on{' '}
-        <span id="timestamp" suppressHydrationWarning>
-          {new Date().toISOString()}
-        </span>
-      </div>
-    </>
-  );
-};
+    );
+  };
+
+  return <div className="Summary">{renderSummary()}</div>;
+}
