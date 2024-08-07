@@ -112,6 +112,18 @@ export type {
   RecentQueriesState,
 } from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
 export {defineRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
+
+export type {
+  FieldSuggestions,
+  FieldSuggestionsState,
+  CategoryFieldSuggestions,
+  CategoryFieldSuggestionsState,
+  FieldSuggestionsFacet,
+  GeneratedFieldSuggestionsControllers,
+  FieldSuggestionsGenerator,
+  FieldSuggestionsGeneratorDefinition,
+} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr';
+export {defineFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
