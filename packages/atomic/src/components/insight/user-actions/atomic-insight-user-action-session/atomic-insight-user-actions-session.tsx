@@ -1,5 +1,5 @@
 import {Component, h, Prop, Watch, State} from '@stencil/core';
-import New from '../../../../images/new.svg';
+import Bookmark from '../../../../images/bookmark.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
@@ -95,15 +95,8 @@ export class AtomicInsightUserActionsSession {
     const formatedStartDate = `${dayOfWeek}. ${month} ${day}, ${year}`;
     return (
       <div class="flex items-center px-2 pb-3">
-        <div
-          class="flex-one mr-2 flex h-5 w-5 items-center justify-center rounded-full"
-          style={{backgroundColor: 'orange'}}
-        >
-          <atomic-icon
-            icon={New}
-            class="h-3 w-3"
-            style={{color: 'white'}}
-          ></atomic-icon>
+        <div class="flex-one mr-2 flex h-5 w-5 items-center justify-center rounded-full">
+          <atomic-icon icon={Bookmark} class="h-3 w-3"></atomic-icon>
         </div>
 
         <div class="flex-1 font-semibold">{formatedStartDate}</div>
