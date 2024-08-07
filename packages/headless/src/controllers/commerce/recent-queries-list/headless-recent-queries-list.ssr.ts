@@ -1,4 +1,4 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   RecentQueriesList,
   RecentQueriesListProps,
@@ -13,7 +13,7 @@ export type {
 export type {RecentQueriesList, RecentQueriesListProps};
 
 export interface RecentQueriesListDefinition
-  extends SearchOnlyControllerDefinitionWithoutProps<RecentQueriesList> {}
+  extends SharedControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
  * Defines a `RecentQueriesList` controller instance.
@@ -28,6 +28,7 @@ export function defineRecentQueriesList(
 ): RecentQueriesListDefinition {
   return {
     search: true,
+    listing: true,
     build: (engine) => buildRecentQueriesList(engine, props),
   };
 }
