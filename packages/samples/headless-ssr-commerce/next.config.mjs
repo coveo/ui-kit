@@ -5,7 +5,7 @@ const nextConfig = {
       {
         source: '/',
         destination: '/search',
-        permanent: true, // Set to false if you want a temporary redirect
+        permanent: true,
       },
     ];
   },
