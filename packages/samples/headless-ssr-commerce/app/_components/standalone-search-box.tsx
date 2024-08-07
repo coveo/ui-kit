@@ -23,9 +23,8 @@ export const StandaloneSearchBox: FunctionComponent<
 
   useEffect(() => {
     if (state.redirectTo === '/search') {
-      //    TODO: when url manager is ready
-      //    const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
-      router.push(state.redirectTo);
+      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
+      router.push(url);
       controller?.afterRedirection();
     }
   }, [state.redirectTo, state.value, router, controller]);
