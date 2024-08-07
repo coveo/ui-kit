@@ -74,6 +74,10 @@ code {
   border-radius: var(--quantic-genqa-border-radius);
   text-wrap: nowrap;
   line-height: 1.5rem;
+  display: block;
+  width: fit-content;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 pre {
