@@ -88,7 +88,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
         <hr part="header-ruler" class="border-neutral"></hr>
         <div
           part="body-wrapper"
-          class="overflow-auto grow flex flex-col w-full scrollbar"
+          class="scrollbar flex w-full grow flex-col overflow-auto"
         >
           <div part="body" class="w-full">
             <slot name="body"></slot>
@@ -97,7 +97,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
         {this.displayFooterSlot && (
           <footer
             part="footer-wrapper"
-            class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
+            class="border-neutral bg-background z-10 flex w-full flex-col items-center border-t"
           >
             <div part="footer">
               <slot name="footer"></slot>

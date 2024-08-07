@@ -23,7 +23,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
         style="outline-bg-neutral"
         part={`value-box${props.isSelected ? ' value-box-selected' : ''}`}
         onClick={() => props.onClick()}
-        class={`value-box box-border w-full h-full items-center p-2 group ${
+        class={`value-box group box-border h-full w-full items-center p-2 ${
           props.isSelected ? 'selected' : ''
         }`}
         ariaPressed={props.isSelected.toString()}
@@ -34,7 +34,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
         <span
           title={count}
           part="value-count"
-          class="value-box-count text-neutral-dark truncate w-full text-sm mt-1"
+          class="value-box-count text-neutral-dark mt-1 w-full truncate text-sm"
         >
           {props.i18n.t('between-parentheses', {
             text: compactCount,

@@ -13,7 +13,7 @@ export const QueryErrorDescription: FunctionalComponent<
   QueryErrorDescriptionProps
 > = ({errorType, i18n, url, organizationId}) => {
   return (
-    <p part="description" class="text-lg text-neutral-dark mt-2.5">
+    <p part="description" class="text-neutral-dark mt-2.5 text-lg">
       {getErrorDescriptionFromErrorType(i18n, organizationId, url, errorType)}
     </p>
   );

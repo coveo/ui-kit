@@ -98,14 +98,14 @@ export class TabPopover implements InitializableComponent {
           title={label}
           part="value-label"
           class={
-            'truncate mr-1.5 group-hover:text-primary-light group-focus:text-primary'
+            'group-hover:text-primary-light group-focus:text-primary mr-1.5 truncate'
           }
         >
           {label}
         </span>
         <atomic-icon
           part="arrow-icon"
-          class={`w-2 ml-auto group-hover:text-primary-light group-focus:text-primary ${
+          class={`group-hover:text-primary-light group-focus:text-primary ml-auto w-2 ${
             this.isOpen ? 'rotate-180' : ''
           }`}
           icon={ArrowBottomIcon}
@@ -118,7 +118,7 @@ export class TabPopover implements InitializableComponent {
     return (
       <div
         part="backdrop"
-        class="fixed left-0 top-0 right-0 bottom-0 z-[9998] bg-transparent cursor-pointer"
+        class="fixed bottom-0 left-0 right-0 top-0 z-[9998] cursor-pointer bg-transparent"
         onClick={() => this.togglePopover()}
       ></div>
     );
@@ -132,7 +132,7 @@ export class TabPopover implements InitializableComponent {
           id={this.popoverId}
           ref={(el) => (this.popupRef = el!)}
           part="overflow-tabs"
-          class={`absolute py-2 bg-background border-neutral border rounded-lg shadow-lg ${
+          class={`bg-background border-neutral absolute rounded-lg border py-2 shadow-lg ${
             this.isOpen ? 'flex' : 'hidden'
           }`}
         >

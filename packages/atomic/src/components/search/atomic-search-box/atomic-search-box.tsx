@@ -574,7 +574,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
           this.shouldShowSuggestions ? '' : 'hidden'
         }`}
         role="application"
@@ -649,7 +649,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       <textarea
         aria-hidden
         part="textarea-spacer"
-        class="invisible text-lg py-3.5 px-4 w-full"
+        class="invisible w-full px-4 py-3.5 text-lg"
         rows={1}
       ></textarea>
     );

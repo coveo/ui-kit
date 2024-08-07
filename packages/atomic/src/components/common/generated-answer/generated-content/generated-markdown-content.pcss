@@ -20,7 +20,7 @@
   [part='answer-heading-4'],
   [part='answer-heading-5'],
   [part='answer-heading-6'] {
-    @apply mt-4 mb-2;
+    @apply mb-2 mt-4;
     font-weight: var(--atomic-font-bold);
   }
 
@@ -41,15 +41,15 @@
   }
 
   [part='answer-ordered-list'] {
-    @apply list-decimal ps-8 mb-2;
+    @apply mb-2 list-decimal ps-8;
   }
 
   [part='answer-unordered-list'] {
-    @apply list-disc ps-8 mb-2;
+    @apply mb-2 list-disc ps-8;
   }
 
   [part='answer-inline-code'] {
-    @apply px-1 py-0.5 border border-solid;
+    @apply border border-solid px-1 py-0.5;
     color: var(--atomic-inline-code);
     font-size: var(--atomic-text-sm);
     background-color: var(--atomic-neutral-light);
@@ -58,7 +58,7 @@
   }
 
   [part='answer-code-block'] {
-    @apply border border-solid p-2 my-4 overflow-auto max-h-96;
+    @apply my-4 max-h-96 overflow-auto border border-solid p-2;
     background-color: var(--atomic-neutral-light);
     border-color: var(--atomic-neutral);
     border-radius: var(--atomic-border-radius-md);
@@ -73,12 +73,12 @@
   }
 
   [part='answer-table-container'] {
-    @apply mb-6 inline-block border border-solid overflow-auto max-h-96;
+    @apply mb-6 inline-block max-h-96 overflow-auto border border-solid;
     border-color: var(--atomic-neutral-dim);
     border-radius: var(--atomic-border-radius-md);
 
     [part='answer-table-header'] {
-      @apply top-0 sticky;
+      @apply sticky top-0;
     }
   }
 

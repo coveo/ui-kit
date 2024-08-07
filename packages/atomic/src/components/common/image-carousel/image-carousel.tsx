@@ -63,7 +63,7 @@ export const ImageCarousel: FunctionalComponent<
   }
   return (
     <Fragment>
-      <div class="relative flex items-center justify-center w-full min-w-full">
+      <div class="relative flex w-full min-w-full items-center justify-center">
         {renderPreviousButton()}
         {children}
         {renderNextButton()}

@@ -140,16 +140,14 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     const Content = () => (
       <article
         part="container"
-        class={`flex flex-col justify-between bg-background text-on-background
-          ${this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'}
-          ${this.wasEverOpened ? '' : 'invisible'}`}
+        class={`bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'} ${this.wasEverOpened ? '' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
         ref={(ref) => (this.animatableContainer = ref)}
       >
         <header part="header-wrapper" class="flex flex-col items-center">
           <div
             part="header"
-            class="flex justify-between text-xl w-full max-w-lg"
+            class="flex w-full max-w-lg justify-between text-xl"
             id={this.headerId}
           >
             <slot name="header"></slot>
@@ -158,7 +156,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
         <hr part="header-ruler" class="border-neutral"></hr>
         <div
           part="body-wrapper"
-          class="overflow-auto grow flex flex-col items-center w-full"
+          class="flex w-full grow flex-col items-center overflow-auto"
         >
           <div
             part="body"
@@ -176,7 +174,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
         </div>
         <footer
           part="footer-wrapper"
-          class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
+          class="border-neutral bg-background z-10 flex w-full flex-col items-center border-t"
         >
           <div part="footer" class="w-full max-w-lg">
             <slot name="footer"></slot>
@@ -189,10 +187,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       <Host class={this.getClasses().join(' ')}>
         <div
           part="backdrop"
-          class={`
-            ${this.boundary === 'page' ? 'fixed' : 'absolute'}
-            left-0 top-0 right-0 bottom-0 z-[9999]
-          `}
+          class={` ${this.boundary === 'page' ? 'fixed' : 'absolute'} bottom-0 left-0 right-0 top-0 z-[9999]`}
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
           <atomic-focus-trap

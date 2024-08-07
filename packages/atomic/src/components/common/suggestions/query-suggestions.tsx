@@ -47,7 +47,7 @@ export const QuerySuggestionIcon: FunctionalComponent<
     <atomic-icon
       part="query-suggestion-icon"
       icon={icon}
-      class="w-4 h-4 mr-2 shrink-0"
+      class="mr-2 h-4 w-4 shrink-0"
     ></atomic-icon>
   );
 };
@@ -64,14 +64,14 @@ export const QuerySuggestionText: FunctionalComponent<
     return (
       <span
         part="query-suggestion-text"
-        class="break-all line-clamp-2"
+        class="line-clamp-2 break-all"
         innerHTML={suggestion.highlightedValue}
       ></span>
     );
   }
 
   return (
-    <span part="query-suggestion-text" class="break-all line-clamp-2">
+    <span part="query-suggestion-text" class="line-clamp-2 break-all">
       {suggestion.rawValue}
     </span>
   );

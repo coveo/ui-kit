@@ -1,3 +1,9 @@
+## 2.54.1 (2024-07-31)
+
+### Bug Fixes
+
+- **ep:** do not send actionCause w/ breadcrumbResetAll ([#4207](https://github.com/coveo/ui-kit/issues/4207)) ([bcecc55](https://github.com/coveo/ui-kit/commits/bcecc552b433b5da3b9940bae96c725ea731df90))
+
 # 2.54.0 (2024-07-24)
 
 ### Bug Fixes

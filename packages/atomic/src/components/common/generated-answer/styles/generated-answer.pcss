@@ -43,7 +43,7 @@
   }
 
   .feedback-buttons {
-    @apply relative top-0 right-0;
+    @apply relative right-0 top-0;
   }
 }
 
@@ -97,14 +97,14 @@
 
 [part='generated-container'] {
   &.answer-collapsed {
-    @apply max-h-64 overflow-hidden relative content-[''];
+    @apply relative max-h-64 overflow-hidden content-[''];
 
     .feedback-buttons {
       @apply hidden;
     }
   }
   &.answer-collapsed:before {
-    @apply h-full w-full absolute top-0 left-0 content-[''];
+    @apply absolute left-0 top-0 h-full w-full content-[''];
     background: linear-gradient(transparent 11.25rem, var(--atomic-background));
   }
 }

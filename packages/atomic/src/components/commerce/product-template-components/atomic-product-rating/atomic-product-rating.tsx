@@ -119,7 +119,7 @@ export class AtomicProductRating
         ></Rating>
 
         {this.ratingDetails !== null && (
-          <span class="pl-1 text-neutral-dark rating-details">
+          <span class="text-neutral-dark rating-details pl-1">
             ({this.ratingDetails})
           </span>
         )}

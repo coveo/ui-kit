@@ -298,7 +298,10 @@ export type {
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
-export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export type {
+  FieldSuggestionsGenerator,
+  GeneratedFieldSuggestionsControllers,
+} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 

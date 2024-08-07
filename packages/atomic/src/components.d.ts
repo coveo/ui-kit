@@ -177,6 +177,14 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
@@ -260,6 +268,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -854,6 +870,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -1806,6 +1830,14 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
+        /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
@@ -2042,7 +2074,11 @@ export namespace Components {
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
-     * @alpha 
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicProductTemplate {
         /**
@@ -2175,6 +2211,14 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -2230,6 +2274,14 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -3179,6 +3231,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
@@ -3313,6 +3373,9 @@ export namespace Components {
          */
         "name": string;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
@@ -3412,6 +3475,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria": RangeFacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -4646,7 +4717,11 @@ declare global {
         new (): HTMLAtomicProductSectionVisualElement;
     };
     /**
-     * @alpha 
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
@@ -5444,6 +5519,9 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    /**
+     * @alpha 
+     */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
     var HTMLAtomicTabManagerElement: {
@@ -5804,6 +5882,14 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
@@ -5887,6 +5973,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -6443,6 +6537,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -7345,6 +7447,14 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
@@ -7570,7 +7680,11 @@ declare namespace LocalJSX {
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
-     * @alpha 
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicProductTemplate {
         /**
@@ -7700,6 +7814,14 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -7755,6 +7877,14 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -8644,6 +8774,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
@@ -8791,6 +8929,9 @@ declare namespace LocalJSX {
          */
         "name": string;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
@@ -8890,6 +9031,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria"?: RangeFacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -9447,7 +9596,11 @@ declare module "@stencil/core" {
             "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
             "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
             /**
-             * @alpha 
+             * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+             * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
@@ -9822,6 +9975,9 @@ declare module "@stencil/core" {
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            /**
+             * @alpha 
+             */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.

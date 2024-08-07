@@ -12,6 +12,7 @@ import {defineSearchEngine} from './search-engine.js';
 
 describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
+  const mockedNavigatorContextProvider = jest.fn();
   const sampleConfig = {
     ...getSampleSearchEngineConfiguration(),
     analytics: {enabled: false}, // TODO: KIT-2585 Remove after analytics SSR support is added
@@ -34,6 +35,7 @@ describe('Headless react SSR utils', () => {
       controllers,
       StaticStateProvider,
       HydratedStateProvider,
+      setNavigatorContextProvider,
       ...rest
     } = defineSearchEngine({
       configuration: sampleConfig,
@@ -46,6 +48,7 @@ describe('Headless react SSR utils', () => {
       useEngine,
       StaticStateProvider,
       HydratedStateProvider,
+      setNavigatorContextProvider,
     ].forEach((returnValue) => expect(typeof returnValue).toBe('function'));
 
     expect(controllers).toEqual({});
@@ -81,6 +84,7 @@ describe('Headless react SSR utils', () => {
       StaticStateProvider,
       HydratedStateProvider,
       controllers,
+      setNavigatorContextProvider,
       useEngine,
     } = engineDefinition;
 
@@ -131,6 +135,7 @@ describe('Headless react SSR utils', () => {
     });
 
     test('should render with StaticStateProvider', async () => {
+      setNavigatorContextProvider(mockedNavigatorContextProvider);
       const staticState = await fetchStaticState();
       render(
         <StaticStateProvider controllers={staticState.controllers}>
@@ -142,6 +147,7 @@ describe('Headless react SSR utils', () => {
     });
 
     test('should hydrate results with HydratedStateProvider', async () => {
+      setNavigatorContextProvider(mockedNavigatorContextProvider);
       const staticState = await fetchStaticState();
       const {engine, controllers} = await hydrateStaticState(staticState);
 
@@ -159,6 +165,7 @@ describe('Headless react SSR utils', () => {
       let hydratedState: InferHydratedState<typeof engineDefinition>;
 
       beforeEach(async () => {
+        setNavigatorContextProvider(mockedNavigatorContextProvider);
         staticState = await fetchStaticState();
         hydratedState = await hydrateStaticState(staticState);
       });

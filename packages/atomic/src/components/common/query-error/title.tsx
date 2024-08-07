@@ -14,7 +14,7 @@ export const QueryErrorTitle: FunctionalComponent<QueryErrorTitleProps> = ({
   organizationId,
 }) => {
   return (
-    <p part="title" class="text-2xl text-on-background mt-8">
+    <p part="title" class="text-on-background mt-8 text-2xl">
       {getErrorTitleFromErrorType(i18n, organizationId, errorType)}
     </p>
   );

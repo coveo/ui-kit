@@ -74,7 +74,7 @@ export class AtomicResultBadge {
       <atomic-icon
         part="result-badge-icon"
         icon={this.icon!}
-        class="w-3 h-3 fill-current"
+        class="h-3 w-3 fill-current"
       ></atomic-icon>
     );
   }
@@ -97,7 +97,7 @@ export class AtomicResultBadge {
     return (
       <div
         part="result-badge-element"
-        class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full"
+        class="bg-neutral-light text-neutral-dark inline-flex h-full place-items-center space-x-1.5 rounded-full px-3 text-xs"
       >
         {this.icon && this.renderIcon()}
         {this.renderText()}

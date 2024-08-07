@@ -32,7 +32,8 @@ export type StateNeededByAnswerAPI = {
   DebugSection &
   GeneratedAnswerSection;
 
-interface GeneratedAnswerStream {
+export interface GeneratedAnswerStream {
+  answerId?: string;
   answerStyle?: GeneratedAnswerStyle;
   contentFormat?: GeneratedContentFormat;
   answer?: string;
@@ -196,6 +197,14 @@ export const answerApi = answerSlice.injectEndpoints({
               'Accept-Encoding': '*',
             },
             fetch,
+            onopen: async (res) => {
+              const answerId = res.headers.get('x-answer-id');
+              if (answerId) {
+                updateCachedData((draft) => {
+                  draft.answerId = answerId;
+                });
+              }
+            },
             onmessage: (event) => {
               updateCachedData((draft) => {
                 updateCacheWithEvent(event, draft);

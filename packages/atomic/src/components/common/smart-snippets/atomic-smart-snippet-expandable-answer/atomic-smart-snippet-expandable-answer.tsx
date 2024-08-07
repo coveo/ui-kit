@@ -134,13 +134,13 @@ export class AtomicSmartSnippetExpandableAnswer {
         onClick={() =>
           this.isExpanded ? this.collapse.emit() : this.expand.emit()
         }
-        class="text-primary hover:underline mb-4"
+        class="text-primary mb-4 hover:underline"
         part={this.isExpanded ? 'show-less-button' : 'show-more-button'}
       >
         {this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}
         <atomic-icon
           icon={ArrowDown}
-          class="w-3 ml-2 align-baseline"
+          class="ml-2 w-3 align-baseline"
         ></atomic-icon>
       </button>
     );

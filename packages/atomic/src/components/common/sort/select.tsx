@@ -24,7 +24,7 @@ export const SortSelect: FunctionalComponent<SortSelectProps> = (
       </select>
       <div
         part="select-separator"
-        class="w-10 absolute pointer-events-none top-px bottom-px right-0 border-l border-neutral flex justify-center items-center"
+        class="border-neutral pointer-events-none absolute bottom-px right-0 top-px flex w-10 items-center justify-center border-l"
       >
         <atomic-icon class="w-2.5" icon={ArrowBottomIcon}></atomic-icon>
       </div>

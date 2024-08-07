@@ -154,9 +154,9 @@ describe.skip('commerce', () => {
     expect(generator.fieldSuggestions).toHaveLength(3);
 
     for (const controller of generator.fieldSuggestions) {
-      await waitForNextStateChange(engine, {
+      await waitForNextStateChange(controller, {
         action: () => controller.updateText('can'),
-        expectedSubscriberCalls: 3,
+        expectedSubscriberCalls: 2,
       });
     }
 
@@ -169,7 +169,7 @@ describe.skip('commerce', () => {
     await search(box, 'acc');
 
     for (const controller of generator.fieldSuggestions) {
-      await waitForNextStateChange(engine, {
+      await waitForNextStateChange(controller, {
         action: () => controller.updateText('acc'),
         expectedSubscriberCalls: 3,
       });

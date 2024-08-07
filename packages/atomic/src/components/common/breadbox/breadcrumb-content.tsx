@@ -37,7 +37,7 @@ export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
       </span>
       <atomic-icon
         part="breadcrumb-clear"
-        class="w-2.5 h-2.5 ml-2 mt-px"
+        class="ml-2 mt-px h-2.5 w-2.5"
         icon={CloseIcon}
       ></atomic-icon>
     </Fragment>

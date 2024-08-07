@@ -37,7 +37,7 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   );
 
   return (
-    <div class="p-4 border-r border-neutral h-full">
+    <div class="border-neutral h-full border-r p-4">
       {minimized && minimizeButton}
       <div class="flex items-center justify-between">
         <div class="flex items-center">
@@ -94,7 +94,7 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
     ></Checkbox>
     {!minimized && (
       <label
-        class="font-bold cursor-pointer whitespace-nowrap"
+        class="cursor-pointer whitespace-nowrap font-bold"
         htmlFor="atomic-quickview-sidebar-highlight-keywords"
       >
         {i18n.t('keywords-highlight')}
@@ -122,22 +122,22 @@ const Keywords: FunctionalComponent<
         return (
           <div
             key={keyword.text}
-            class="flex items-center justify-between gap-x-2 my-4 w-100"
+            class="w-100 my-4 flex items-center justify-between gap-x-2"
           >
             <div
-              class={`flex grow items-center bg-background border border-neutral rounded-lg overflow-x-auto ${
+              class={`bg-background border-neutral flex grow items-center overflow-x-auto rounded-lg border ${
                 !wordIsEnabled ? 'pointer-events-none opacity-50' : ''
               }`}
             >
               <div
-                class="flex items-center grow p-4 border-r"
+                class="flex grow items-center border-r p-4"
                 aria-hidden="true"
               >
                 <div
-                  class="w-5 h-5 flex-none mr-2"
+                  class="mr-2 h-5 w-5 flex-none"
                   style={{backgroundColor: keyword.color}}
                 ></div>
-                <div class="grow mr-2 whitespace-nowrap">{keyword.text}</div>
+                <div class="mr-2 grow whitespace-nowrap">{keyword.text}</div>
                 <div class="flex-none">
                   (
                   {new Intl.NumberFormat(i18n.language, {

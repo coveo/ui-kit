@@ -15,7 +15,7 @@
   button,
   input,
   select {
-    @apply font-sans font-normal text-base;
+    @apply font-sans text-base font-normal;
   }
 
   :host(.atomic-hidden) {
@@ -25,11 +25,11 @@
 
 @layer components {
   .link {
-    @apply text-primary hover:text-primary-light hover:underline focus-visible:text-primary-light focus-visible:underline;
+    @apply text-primary hover:text-primary-light focus-visible:text-primary-light hover:underline focus-visible:underline;
   }
 
   .input-primary {
-    @apply border border-neutral bg-background rounded hover:border-primary-light focus-visible:border-primary no-outline focus-visible:ring-2 focus-visible:ring-ring-primary;
+    @apply border-neutral bg-background hover:border-primary-light focus-visible:border-primary no-outline focus-visible:ring-ring-primary rounded border focus-visible:ring-2;
   }
 
   .btn-radio {
@@ -40,23 +40,23 @@
   }
 
   .btn-primary {
-    @apply rounded bg-primary text-on-primary hover:bg-primary-light focus-visible:bg-primary-light no-outline focus-visible:ring-2 focus-visible:ring-ring-primary disabled:cursor-not-allowed disabled:bg-disabled;
+    @apply bg-primary text-on-primary hover:bg-primary-light focus-visible:bg-primary-light no-outline focus-visible:ring-ring-primary disabled:bg-disabled rounded focus-visible:ring-2 disabled:cursor-not-allowed;
   }
 
   .btn-outline-primary {
-    @apply rounded border border-neutral hover:border-primary-light focus-visible:border-primary bg-background text-primary hover:text-primary-light focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-ring-primary no-outline disabled:border-neutral disabled:text-neutral disabled:cursor-not-allowed;
+    @apply border-neutral hover:border-primary-light focus-visible:border-primary bg-background text-primary hover:text-primary-light focus-visible:text-primary focus-visible:ring-ring-primary no-outline disabled:border-neutral disabled:text-neutral rounded border focus-visible:ring-2 disabled:cursor-not-allowed;
   }
 
   .btn-text-primary {
-    @apply rounded bg-background text-primary hover:bg-neutral-light focus-visible:bg-neutral-light no-outline;
+    @apply bg-background text-primary hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded;
   }
 
   .btn-outline-neutral {
-    @apply rounded border border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral rounded border focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-outline-error {
-    @apply rounded border border-neutral hover:border-error focus-visible:border-error bg-background text-on-background hover:text-error focus-visible:text-error focus-visible:ring-2 focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply border-neutral hover:border-error focus-visible:border-error bg-background text-on-background hover:text-error focus-visible:text-error focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral rounded border focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-outline-bg-neutral {
@@ -68,7 +68,7 @@
   }
 
   .btn-text-neutral {
-    @apply rounded bg-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline text-on-background focus-visible:text-primary hover:text-primary;
+    @apply bg-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline text-on-background focus-visible:text-primary hover:text-primary rounded;
   }
 
   .btn-text-transparent {
@@ -76,7 +76,7 @@
   }
 
   .btn-square-neutral {
-    @apply border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline;
+    @apply border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline border;
   }
 
   .btn-pill {
@@ -84,10 +84,10 @@
   }
 
   .btn-page {
-    @apply grid place-items-center text-lg border-0 hover:border focus-visible:border;
+    @apply grid place-items-center border-0 text-lg hover:border focus-visible:border;
 
     &.selected {
-      @apply font-bold border-2 border-primary;
+      @apply border-primary border-2 font-bold;
     }
   }
 }

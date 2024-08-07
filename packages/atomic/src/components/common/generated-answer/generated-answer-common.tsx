@@ -376,7 +376,7 @@ export class GeneratedAnswerCommon {
     return (
       <div
         part="is-generating"
-        class="hidden text-primary font-light text-base"
+        class="text-primary hidden text-base font-light"
       >
         {i18n.t('generating-answer')}...
       </div>
@@ -396,11 +396,11 @@ export class GeneratedAnswerCommon {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
           >
             {i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex h-9 items-center ml-auto">
+          <div class="ml-auto flex h-9 items-center">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -442,7 +442,7 @@ export class GeneratedAnswerCommon {
         ) : null}
 
         {!this.hasRetryableError && this.isAnswerVisible && (
-          <div part="generated-answer-footer" class="flex justify-end mt-6">
+          <div part="generated-answer-footer" class="mt-6 flex justify-end">
             {this.renderGeneratingAnswerLabel()}
             {this.renderShowButton()}
             {this.renderDisclaimer()}

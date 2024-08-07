@@ -5,6 +5,7 @@
     "negativeBuildOutputs": ["!{projectRoot}/projects/atomic-angular/dist"]
   },
   "targets": {
+    "release:phase1": {},
     "cached:build": {
       "outputs": ["{projectRoot}/projects/atomic-angular/dist"],
       "dependsOn": ["^build"],

@@ -4,6 +4,7 @@ import {
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
+import 'core-js/actual/set';
 import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
 import {isResultSectionNode} from '../../common/layout/sections';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
@@ -151,6 +152,18 @@ export function makeMatchConditions(
 ): ProductTemplateCondition[] {
   const conditions: ProductTemplateCondition[] = [];
   for (const field in mustMatch) {
+    if (mustNotMatch[field]) {
+      const mustNotMatchValues = new Set(mustNotMatch[field]);
+      const mustMatchValues = new Set(mustMatch[field]);
+      const commonValues = mustMatchValues.intersection(mustNotMatchValues);
+      if (commonValues.size > 0) {
+        console.error(
+          `Conflicting match conditions for field ${field}, the template will be ignored.`,
+          commonValues
+        );
+        return [() => false];
+      }
+    }
     conditions.push(
       ProductTemplatesHelpers.fieldMustMatch(field, mustMatch[field])
     );

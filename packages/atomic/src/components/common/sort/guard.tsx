@@ -18,7 +18,7 @@ export const SortGuard: FunctionalComponent<SortGuardProps> = (
       <div
         part="placeholder"
         aria-hidden
-        class="rounded h-6 my-2 w-44 bg-neutral animate-pulse"
+        class="bg-neutral my-2 h-6 w-44 animate-pulse rounded"
       ></div>
     );
   }

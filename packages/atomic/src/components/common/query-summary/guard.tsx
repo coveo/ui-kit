@@ -18,7 +18,7 @@ export const QuerySummaryGuard: FunctionalComponent<QuerySummaryGuardProps> = (
       <div
         part="placeholder"
         aria-hidden="true"
-        class="h-6 my-2 w-60 bg-neutral rounded animate-pulse"
+        class="bg-neutral my-2 h-6 w-60 animate-pulse rounded"
       ></div>
     );
   }

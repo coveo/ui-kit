@@ -23,7 +23,7 @@ export const LoadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
       style="primary"
       text={i18n.t(label || 'load-more-results')}
       part="load-more-results-button"
-      class="font-bold my-2 p-3"
+      class="my-2 p-3 font-bold"
       onClick={() => onClick()}
     ></Button>
   );

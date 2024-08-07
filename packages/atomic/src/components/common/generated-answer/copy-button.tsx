@@ -15,7 +15,7 @@ export const CopyButton: FunctionalComponent<CopyButtonProps> = (props) => {
       title={props.title}
       part="copy-button"
       style={'text-transparent'}
-      class={`p-2 rounded-md ${props.isCopied ? 'copied' : ''} ${
+      class={`rounded-md p-2 ${props.isCopied ? 'copied' : ''} ${
         props.error ? 'error' : ''
       }`}
       onClick={props.onClick}
