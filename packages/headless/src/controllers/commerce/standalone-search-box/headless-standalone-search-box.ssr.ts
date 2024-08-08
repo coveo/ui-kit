@@ -13,7 +13,7 @@ export interface StandaloneSearchBoxDefinition
   extends SharedControllerDefinitionWithoutProps<StandaloneSearchBox> {}
 
 /**
- * Defines a `StandaloneSearchBox` controller instance.
+ * Defines the `StandaloneSearchBox` controller for the purpose of server-side rendering.
  *
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns The `StandaloneSearchBox` controller definition.

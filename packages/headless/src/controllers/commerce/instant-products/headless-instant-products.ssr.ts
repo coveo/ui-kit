@@ -15,7 +15,7 @@ export interface InstantProductsDefinition
   extends SharedControllerDefinitionWithoutProps<InstantProducts> {}
 
 /**
- * Defines an `InstantProducts` controller instance.
+ * Defines the `InstantProducts` controller for the purpose of server-side rendering.
  *
  * @returns The `InstantProducts` controller definition.
  *
