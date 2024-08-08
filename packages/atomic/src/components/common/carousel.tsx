@@ -53,13 +53,13 @@ export const Carousel: FunctionalComponent<
 
   function renderIndicators() {
     return (
-      <ul part="indicators" class="flex gap-2 justify-center mt-6">
+      <ul part="indicators" class="mt-6 flex justify-center gap-2">
         {Array.from({length: props.numberOfPages}, (_, index) => {
           const isActive = index === props.currentPage % props.numberOfPages;
           return (
             <li
               part={`indicator ${isActive ? 'active-indicator' : ''}`}
-              class={`rounded-md h-1 w-12 ${
+              class={`h-1 w-12 rounded-md ${
                 isActive ? 'bg-primary' : 'bg-neutral'
               } `}
             ></li>

@@ -26,7 +26,7 @@ test.describe('after searching for kayak', () => {
 
 test.describe('when search yields no products', () => {
   test.beforeEach(async ({querySummary, page}) => {
-    querySummary.noProducts();
+    await querySummary.noProducts();
     await querySummary.load({story: 'default '});
     await page.waitForLoadState('networkidle');
   });
@@ -50,7 +50,7 @@ test.describe('when search yields multiple products', () => {
 
 test.describe('when a query yield a single product', () => {
   test.beforeEach(async ({querySummary, searchBox, page}) => {
-    page.route('**/commerce/v2/search', async (route) => {
+    await page.route('**/commerce/v2/search', async (route) => {
       const response = await route.fetch();
       const body = await response.json();
       body.products = [body.products[0]];
