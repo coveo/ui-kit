@@ -57,14 +57,14 @@ export default function SearchPage({
         recentQueriesController={hydratedState?.controllers.recentQueriesList}
       />
       <Summary
-        staticState={staticState.controllers.summarySearch.state}
-        controller={hydratedState?.controllers.summarySearch}
+        staticState={staticState.controllers.summary.state}
+        controller={hydratedState?.controllers.summary}
         hydratedState={hydratedState}
       />
 
       <ProductList
-        staticState={staticState.controllers.productListSearch.state}
-        controller={hydratedState?.controllers.productListSearch}
+        staticState={staticState.controllers.productList.state}
+        controller={hydratedState?.controllers.productList}
       />
       <NotifyTrigger
         staticState={staticState.controllers.notifyTrigger.state}

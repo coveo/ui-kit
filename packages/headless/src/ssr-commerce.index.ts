@@ -68,8 +68,8 @@ export type {RegularFacet} from './controllers/commerce/core/facets/regular/head
 export type {
   ProductList,
   ProductListState,
-} from './controllers/commerce/product-listing/headless-product-listing.ssr';
-export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+} from './controllers/commerce/product-list-ssr/headless-product-list.ssr';
+export {defineProductList} from './controllers/commerce/product-list-ssr/headless-product-list.ssr';
 
 export type {
   Cart,
