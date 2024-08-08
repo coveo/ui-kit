@@ -30,8 +30,6 @@ export default {
   controllers: {
     summary: defineQuerySummary(),
     productList: defineProductList(),
-    // },
-    // recommendationSlots: {
     popularViewedRecs: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
@@ -49,5 +47,3 @@ export default {
     }),
   },
 } satisfies CommerceEngineConfig;
-
-// https://searchuisamples.org.coveo.com/rest/organizations/searchuisamples/commerce/v2/recommendations

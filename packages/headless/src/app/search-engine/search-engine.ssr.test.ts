@@ -210,7 +210,7 @@ describe('SSR', () => {
           const buildResult = await fetchBuildResultWithNewNumberOfResults();
           const hydratedState = await hydrateStaticState.fromBuildResult({
             buildResult: buildResult,
-            searchActions: staticState.searchActions,
+            searchAction: staticState.searchAction,
           });
           expect(getResultsCount(staticState)).toBe(defaultNumberOfResults);
           expect(getResultsCount(hydratedState)).toBe(

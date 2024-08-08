@@ -166,8 +166,7 @@ export function defineSearchEngine<
 
         engine.executeFirstSearch();
         return createStaticState({
-          searchActions:
-            (await engine.waitForSearchCompletedAction()) as unknown as AnyAction[], // TODO: remove any
+          searchAction: await engine.waitForSearchCompletedAction(),
           controllers,
         }) as EngineStaticState<
           AnyAction,
@@ -188,7 +187,7 @@ export function defineSearchEngine<
       const buildResult = await build(...(params as BuildParameters));
       const staticState = await hydrateStaticState.fromBuildResult({
         buildResult,
-        searchActions: params[0]!.searchActions,
+        searchAction: params[0]!.searchAction,
       });
       return staticState;
     },
@@ -199,10 +198,10 @@ export function defineSearchEngine<
         const [
           {
             buildResult: {engine, controllers},
-            searchActions,
+            searchAction,
           },
         ] = params;
-        engine.dispatch(searchActions as unknown as AnyAction); // TODO: remove any
+        engine.dispatch(searchAction);
         await engine.waitForSearchCompletedAction();
         return {engine, controllers};
       },

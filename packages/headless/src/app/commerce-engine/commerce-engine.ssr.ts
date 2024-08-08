@@ -1,7 +1,7 @@
 /**
  * Utility functions to be used for Commerce Server Side Rendering.
  */
-import {Action, AnyAction, Middleware, UnknownAction} from '@reduxjs/toolkit';
+import {Action, AnyAction, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
@@ -37,7 +37,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
   /**
    * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
    */
-  waitForRequestCompletedAction(): Promise<Action[]>;
+  waitForRequestCompletedAction(): Promise<Action>;
 }
 
 export type CommerceEngineDefinitionOptions<
@@ -64,27 +64,25 @@ function buildSSRCommerceEngine(
   solutionType: SolutionType,
   options: CommerceEngineOptions
 ): SSRCommerceEngine {
-  const middlewares: Middleware[] = [];
-  const promises: Promise<Action>[] = [];
+  let waiter: ReturnType<typeof createWaitForActionMiddleware>;
 
-  const actionCheckFunctions = {
-    [SolutionType.listing]: isListingFetchCompletedAction,
-    [SolutionType.search]: isSearchCompletedAction,
-    [SolutionType.recommendation]: noSearchActionRequired,
-  };
-
-  // Check if the current solution type has a corresponding action check function
-  const actionCheckFunction = actionCheckFunctions[solutionType];
-  if (actionCheckFunction) {
-    const {middleware, promise} =
-      createWaitForActionMiddleware(actionCheckFunction);
-    middlewares.push(middleware);
-    promises.push(promise);
+  switch (solutionType) {
+    case SolutionType.listing:
+      waiter = createWaitForActionMiddleware(isListingFetchCompletedAction);
+      break;
+    case SolutionType.search:
+      waiter = createWaitForActionMiddleware(isSearchCompletedAction);
+      break;
+    default:
+      waiter = createWaitForActionMiddleware(noSearchActionRequired);
   }
 
   const commerceEngine = buildCommerceEngine({
     ...options,
-    middlewares: [...(options.middlewares ?? []), ...middlewares],
+    middlewares: [
+      ...(options.middlewares ?? []),
+      ...(waiter.middleware ? [waiter.middleware] : waiter.middleware),
+    ],
   });
 
   return {
@@ -95,7 +93,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return Promise.all(promises);
+      return waiter.promise;
     },
   };
 }
@@ -227,10 +225,10 @@ export function defineCommerceEngine<
             buildSearch(engine).executeFirstSearch();
           }
 
-          const searchActions = await engine.waitForRequestCompletedAction();
+          const searchAction = await engine.waitForRequestCompletedAction();
 
           return createStaticState({
-            searchActions,
+            searchAction,
             controllers,
           }) as EngineStaticState<
             AnyAction,
@@ -261,7 +259,7 @@ export function defineCommerceEngine<
           solutionType
         ).fromBuildResult({
           buildResult,
-          searchActions: params[0]!.searchActions,
+          searchAction: params[0]!.searchAction,
         });
         return staticState;
       },
@@ -272,10 +270,10 @@ export function defineCommerceEngine<
           const [
             {
               buildResult: {engine, controllers},
-              searchActions,
+              searchAction,
             },
           ] = params;
-          searchActions.forEach((action) => engine.dispatch(action));
+          engine.dispatch(searchAction);
           await engine.waitForRequestCompletedAction();
           return {engine, controllers};
         },
