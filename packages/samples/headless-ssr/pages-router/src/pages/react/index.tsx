@@ -3,18 +3,26 @@ import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchSearchParameterManager from '@/common/components/react/search-parameter-manager';
-import {NextJsNavigatorContext} from '@/common/lib/navigatorContextProvider';
 import {
   SearchStaticState,
   fetchStaticState,
   setNavigatorContextProvider,
 } from '@/common/lib/react/engine';
-import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
-import {headers} from 'next/headers';
+import {
+  NavigatorContext,
+  buildSSRSearchParameterSerializer,
+} from '@coveo/headless-react/ssr';
+import {GetServerSidePropsContext} from 'next';
+import {NextJsPagesRouterNavigatorContext} from '../../navigatorContextProvider';
 
-export async function getServerSideProps(context: {
-  query: {[key: string]: string | string[] | undefined};
-}) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  const navigatorContext = new NextJsPagesRouterNavigatorContext(
+    context.req.headers
+  );
+  setNavigatorContextProvider(() => navigatorContext);
+  const marshal = navigatorContext.marshal;
+
   const {toSearchParameters} = buildSSRSearchParameterSerializer();
   const searchParameters = toSearchParameters(context.query);
 
@@ -27,24 +35,19 @@ export async function getServerSideProps(context: {
       },
     },
   });
-  return {props: {staticState}};
+
+  return {props: {staticState, marshal}};
 }
 
 interface StaticStateProps {
   staticState: SearchStaticState;
+  marshal: NavigatorContext;
 }
 
 // Entry point SSR function
-export default function Search({staticState}: StaticStateProps) {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
-  setNavigatorContextProvider(() => navigatorContext);
-
+export default function Search({staticState, marshal}: StaticStateProps) {
   return (
-    <SearchPageProvider
-      navigatorContext={navigatorContext.marshal}
-      staticState={staticState}
-    >
+    <SearchPageProvider navigatorContext={marshal} staticState={staticState}>
       <SearchSearchParameterManager />
       <SearchBox />
       <ResultList />
