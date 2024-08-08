@@ -123,19 +123,20 @@ export class AtomicSortDropdown implements InitializableComponent {
     );
     option && this.sort.sortBy(option.criteria);
   }
-
   public componentShouldUpdate(): void {
     if (
-      !this.options
-        .map((option) => option.expression)
-        .includes(this.sortState.sortCriteria)
+      this.options.some(
+        (option) => option.expression === this.sortState.sortCriteria
+      )
     ) {
-      const action = loadSortCriteriaActions(
-        this.bindings.engine
-      ).updateSortCriterion(this.options[0].criteria);
-
-      this.bindings.engine.dispatch(action);
+      return;
     }
+
+    const action = loadSortCriteriaActions(
+      this.bindings.engine
+    ).updateSortCriterion(this.options[0].criteria);
+
+    this.bindings.engine.dispatch(action);
   }
 
   public render() {
