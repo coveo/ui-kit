@@ -106,7 +106,9 @@ export const StandaloneSearchBox: FunctionComponent<
                 <li key={index}>
                   <button
                     onMouseEnter={() =>
-                      controller?.updateText(suggestion.rawValue)
+                      instantProductsController?.updateQuery(
+                        suggestion.rawValue
+                      )
                     }
                     onClick={() =>
                       controller?.selectSuggestion(suggestion.rawValue)
