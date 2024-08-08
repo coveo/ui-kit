@@ -99,6 +99,17 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .logDetail(`The view results should contain "${label}"`);
     },
 
+    displaySort: (display: boolean) => {
+      selector
+        .sort()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(
+          `${should(
+            display
+          )} display the sort component inside the refine modal content`
+        );
+    },
+
     displayFacetManager: (display = true) => {
       selector
         .facetManager()

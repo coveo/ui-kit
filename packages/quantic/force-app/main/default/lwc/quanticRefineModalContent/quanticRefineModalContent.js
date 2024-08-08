@@ -33,7 +33,7 @@ import enabledDynamicNavigationTemplate from './templates/dynamicNavigation.html
  */
 
 /**
- * @typedef {Object} SortOptionObject
+ * @typedef {Object} SortOption
  * @property {string} label
  * @property {string} value
  * @property {SortCriterion} criterion
@@ -79,8 +79,6 @@ export default class QuanticRefineModalContent extends LightningElement {
   sortData;
   /** @type {boolean} */
   hasActiveFilters = false;
-  /** @type {boolean} */
-  sortOptionsInitialized = false;
   /** @type {AnyHeadless} */
   headless;
   /** @type {object} */
@@ -138,9 +136,6 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   getSortOptionsFromStore() {
     this.sortData = getAllSortOptionsFromStore(this.engineId);
-    if (this.sortData?.length) {
-      this.sortOptionsInitialized = true;
-    }
   }
 
   /**
@@ -268,10 +263,10 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   /**
    * Returns sort option data.
-   * @returns {Array<SortOptionObject>}
+   * @returns {Array<SortOption>}
    */
   get sortOptions() {
-    return this.sortData || [];
+    return this.hasSortOptions ? this.sortData : [];
   }
 
   get shouldDisplayFiltersTitle() {
@@ -301,6 +296,7 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   /**
    * Indicates whether the sort options are available.
+   * @returns {boolean}
    */
   get hasSortOptions() {
     return this.sortData?.length > 0;
