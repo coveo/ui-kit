@@ -11,14 +11,13 @@ export function shouldDisplayOnCurrentTab(
   excludeTabs: string[],
   activeTab: string
 ) {
-  if (!activeTab) {
+  if (excludeTabs.includes(activeTab)) {
+    return false;
+  }
+
+  if (includeTabs.length === 0 || includeTabs.includes(activeTab)) {
     return true;
   }
 
-  const isIncluded =
-    includeTabs.length === 0 || includeTabs.includes(activeTab);
-  const isNotExcluded =
-    excludeTabs.length === 0 || !excludeTabs.includes(activeTab);
-
-  return isIncluded && isNotExcluded;
+  return !activeTab;
 }
