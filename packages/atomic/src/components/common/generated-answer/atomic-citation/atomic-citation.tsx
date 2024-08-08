@@ -158,7 +158,7 @@ export class AtomicCitation {
           onFocus={this.openPopover}
           onBlur={this.closePopover}
         >
-          <span class="citation-title truncate mx-1">
+          <span class="citation-title mx-1 truncate">
             {this.citation.title}
           </span>
         </LinkWithItemAnalytics>
