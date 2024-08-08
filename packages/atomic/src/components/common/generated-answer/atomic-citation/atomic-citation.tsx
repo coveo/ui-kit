@@ -117,16 +117,16 @@ export class AtomicCitation {
     return (
       <div
         part="citation-popover"
-        class={`rounded-md border border-neutral p-4 shadow z-10 bg-background ${
+        class={`border-neutral bg-background z-10 rounded-md border p-4 shadow ${
           this.isOpen ? 'desktop-only:flex' : 'hidden'
-        } flex-col gap-3 mobile-only:hidden`}
+        } mobile-only:hidden flex-col gap-3`}
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
       >
-        <div class="truncate text-neutral-dark text-sm">
+        <div class="text-neutral-dark truncate text-sm">
           {this.citation.uri}
         </div>
-        <Heading level={0} class="font-bold text-md">
+        <Heading level={0} class="text-md font-bold">
           {this.citation.title}
         </Heading>
         <p class="text-on-background text-sm">{this.getTruncatedText()}</p>
@@ -144,7 +144,7 @@ export class AtomicCitation {
           target="_blank"
           rel="noopener"
           aria-haspopup="dialog"
-          className="flex items-center p-1 bg-background btn-outline-primary border rounded-full border-neutral text-on-background"
+          className="bg-background btn-outline-primary border-neutral text-on-background flex items-center rounded-full border p-1"
           onSelect={() => this.interactiveCitation.select()}
           onBeginDelayedSelect={() =>
             this.interactiveCitation.beginDelayedSelect()
@@ -160,11 +160,11 @@ export class AtomicCitation {
         >
           <div
             part="citation-index"
-            class="rounded-full font-medium flex items-center text-bg-primary shrink-0"
+            class="text-bg-primary flex shrink-0 items-center rounded-full font-medium"
           >
             <div class="mx-auto">{this.index + 1}</div>
           </div>
-          <span class="citation-title truncate mx-1">
+          <span class="citation-title mx-1 truncate">
             {this.citation.title}
           </span>
         </LinkWithItemAnalytics>

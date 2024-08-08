@@ -13,13 +13,13 @@ export const RefineModalSortSection: FunctionalComponent<
     <Fragment>
       <h1
         part="section-title section-sort-title"
-        class="text-2xl font-bold truncate mb-3"
+        class="mb-3 truncate text-2xl font-bold"
       >
         {i18n.t('sort')}
       </h1>
       <div part="select-wrapper" class="relative">
         <select
-          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
+          class="btn-outline-neutral w-full grow cursor-pointer appearance-none rounded-lg px-6 py-5 text-lg font-bold"
           part="select"
           aria-label={i18n.t('sort-by')}
           onChange={onSelect}
@@ -28,12 +28,12 @@ export const RefineModalSortSection: FunctionalComponent<
         </select>
         <div
           part="select-icon-wrapper"
-          class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
+          class="pointer-events-none absolute bottom-0 right-0 top-0 flex items-center justify-center pr-6"
         >
           <atomic-icon
             part="select-icon"
             icon={SortIcon}
-            class="w-6 h-6"
+            class="h-6 w-6"
           ></atomic-icon>
         </div>
       </div>
