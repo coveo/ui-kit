@@ -1124,7 +1124,7 @@ describe('quantic-generated-answer', () => {
               const firstTestCitation = {
                 id: 'some-id-1',
                 title: 'Some Title 1',
-                uri: 'https://www.coveo.com',
+                uri: 'https://www.coveo1.com',
                 permanentid: 'some-permanent-id-1',
                 clickUri: exampleLinkUrl,
                 text: 'example text 1',
@@ -1132,7 +1132,7 @@ describe('quantic-generated-answer', () => {
               const secondTestCitation = {
                 id: 'some-id-2',
                 title: 'Some Title 2',
-                uri: 'https://www.coveo.com',
+                uri: 'https://www.coveo2.com',
                 permanentid: 'some-permanent-id-2',
                 clickUri: exampleLinkUrl,
                 text: 'example text 2',
