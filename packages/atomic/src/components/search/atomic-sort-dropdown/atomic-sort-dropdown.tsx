@@ -134,7 +134,7 @@ export class AtomicSortDropdown implements InitializableComponent {
 
     const action = loadSortCriteriaActions(
       this.bindings.engine
-    ).updateSortCriterion(this.options[0].criteria);
+    ).updateSortCriterion(this.options[0]?.criteria);
 
     this.bindings.engine.dispatch(action);
   }
