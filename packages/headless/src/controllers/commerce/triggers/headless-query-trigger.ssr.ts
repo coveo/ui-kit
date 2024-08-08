@@ -8,7 +8,7 @@ export interface QueryTriggerDefinition
   extends SharedControllerDefinitionWithoutProps<QueryTrigger> {}
 
 /**
- * Defines a `NotifyTrigger` controller instance.
+ * Defines the `NotifyTrigger` controller for the purpose of server-side rendering.
  *
  * @returns The `NotifyTrigger` controller definition.
  *

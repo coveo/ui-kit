@@ -16,7 +16,7 @@ export interface RecentQueriesListDefinition
   extends SharedControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
- * Defines a `RecentQueriesList` controller instance.
+ * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.
  *
  * @param props - The configuration `RecentQueriesList` properties.
  * @returns The `RecentQueriesList` controller definition.

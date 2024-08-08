@@ -20,7 +20,7 @@ export interface FieldSuggestionsGeneratorDefinition
   extends SharedControllerDefinitionWithoutProps<FieldSuggestionsGenerator> {}
 
 /**
- * Defines a `FieldSuggestionsGenerator` controller instance.
+ * Defines the `FieldSuggestionsGenerator` controller for the purpose of server-side rendering.
  *
  * @returns The `FieldSuggestionsGenerator` controller definition.
  *
