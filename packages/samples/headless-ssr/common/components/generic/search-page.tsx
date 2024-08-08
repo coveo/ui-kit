@@ -1,11 +1,13 @@
 'use client';
 
+import {NavigatorContext} from '@coveo/headless/ssr';
 import {useEffect, useState} from 'react';
 import {useSyncSearchParameterManager} from '../../hooks/generic/search-parameter-manager';
 import {
   SearchStaticState,
   SearchHydratedState,
   hydrateStaticState,
+  setNavigatorContextProvider,
 } from '../../lib/generic/engine';
 import {HydrationMetadata} from '../common/hydration-metadata';
 import {Facet} from './facet';
@@ -14,12 +16,17 @@ import {SearchBox} from './search-box';
 
 export default function SearchPage({
   staticState,
+  navigatorContext,
 }: {
   staticState: SearchStaticState;
+  navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
     SearchHydratedState | undefined
   >(undefined);
+
+  // Setting the navigator context provider also in client-side before hydrating the application
+  setNavigatorContextProvider(() => navigatorContext);
 
   useEffect(() => {
     const {searchParameterManager, context} = staticState.controllers;

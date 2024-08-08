@@ -1,3 +1,9 @@
+# 1.1.0 (2024-08-07)
+
+### Features
+
+- **headless SSR:** support navigator context in both Engine and fetch/hydrate functions ([#4231](https://github.com/coveo/ui-kit/issues/4231)) ([99bbef1](https://github.com/coveo/ui-kit/commits/99bbef1e52cde79e06b1b5f7815d2a6fba7d474b))
+
 ## 1.0.21 (2024-07-31)
 
 ## 1.0.9 (2024-06-06)

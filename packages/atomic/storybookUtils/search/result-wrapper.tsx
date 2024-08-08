@@ -2,7 +2,7 @@ import {SearchEngineConfiguration} from '@coveo/headless';
 import {Decorator} from '@storybook/web-components';
 import {html, render} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import type * as _ from '../src/components.js';
+import type * as _ from '../../src/components.js';
 
 interface Request extends RequestInit {
   url: string;

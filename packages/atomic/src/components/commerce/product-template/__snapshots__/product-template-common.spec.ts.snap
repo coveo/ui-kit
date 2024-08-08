@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`makeMatchConditions should log a warning and return an always-false callback 1`] = `"() => false"`;
+
+exports[`makeMatchConditions should log a warning and return an always-false callback 2`] = `
+[
+  "Conflicting match conditions for field field, the template will be ignored.",
+  Set {
+    "value",
+  },
+]
+`;

@@ -34,8 +34,7 @@ test.describe('when search returns an error', () => {
   test('should render a show more info button that displays error information on click', async ({
     queryError,
   }) => {
-    await expect(queryError.moreInfoButton).toBeVisible();
-    queryError.moreInfoButton.click();
+    await queryError.moreInfoButton.click();
     await expect(queryError.moreInfoMessage).toBeVisible();
     await expect(queryError.moreInfoMessage).toContainText(
       'message": "Something very weird just happened"'

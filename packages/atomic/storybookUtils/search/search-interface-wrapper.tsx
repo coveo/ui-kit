@@ -5,7 +5,7 @@ import {
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
-import type * as _ from '../src/components.d.ts';
+import type * as _ from '../../src/components';
 
 export const wrapInSearchInterface = (
   config?: Partial<SearchEngineConfiguration>,

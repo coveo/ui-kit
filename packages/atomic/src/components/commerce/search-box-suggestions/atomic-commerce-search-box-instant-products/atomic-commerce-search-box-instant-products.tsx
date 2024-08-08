@@ -39,6 +39,7 @@ export type AriaLabelGenerator = (
  *
  * This component is not supported on mobile.
  *
+ * @slot default - The default slot where the instant products are rendered.
  * @internal
  */
 @Component({

@@ -9,7 +9,6 @@ test.describe('default', () => {
 
   test.describe('when selecting a start date', () => {
     test.beforeEach(async ({facet}) => {
-      await facet.facetInputStart.click();
       await facet.facetInputStart.fill('2021-01-01');
     });
 
@@ -23,7 +22,6 @@ test.describe('default', () => {
 
   test.describe('when selecting an end date', () => {
     test.beforeEach(async ({facet}) => {
-      await facet.facetInputEnd.click();
       await facet.facetInputEnd.fill('2021-01-01');
     });
 
@@ -37,9 +35,7 @@ test.describe('default', () => {
 
   test.describe('when selecting a start date and an end date', () => {
     test.beforeEach(async ({facet}) => {
-      await facet.facetInputStart.click();
       await facet.facetInputStart.fill('2021-01-01');
-      await facet.facetInputEnd.click();
       await facet.facetInputEnd.fill('2021-01-31');
     });
 
@@ -98,7 +94,6 @@ test.describe('with min and max values', () => {
 
   test.describe('when selecting a start date', () => {
     test.beforeEach(async ({facet}) => {
-      await facet.facetInputStart.click();
       await facet.facetInputStart.fill('2021-01-01');
     });
 
@@ -112,7 +107,6 @@ test.describe('with min and max values', () => {
 
   test.describe('when selecting an end date', () => {
     test.beforeEach(async ({facet}) => {
-      await facet.facetInputEnd.click();
       await facet.facetInputEnd.fill('2021-01-01');
     });
 
@@ -126,16 +120,13 @@ test.describe('with min and max values', () => {
 
   test.describe('when selecting a start date and an end date', () => {
     test.beforeEach(async ({facet}) => {
-      await facet.facetInputStart.click();
       await facet.facetInputStart.fill('2021-01-01');
-      await facet.facetInputEnd.click();
       await facet.facetInputEnd.fill('2021-01-31');
     });
 
     test.describe('when clicking the apply button', () => {
       test.beforeEach(async ({facet}) => {
         await facet.facetApplyButton.click();
-        await facet.facetClearFilter.waitFor({state: 'visible'});
       });
 
       test.describe('when clicking the clear filter button', () => {
