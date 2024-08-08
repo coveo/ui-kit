@@ -3,6 +3,7 @@ import {
   CartItem,
   CartState,
   ContextState,
+  Context as ContextController,
 } from '@coveo/headless/ssr-commerce';
 import {useEffect, useState, FunctionComponent} from 'react';
 import {formatCurrency} from '../_utils/format-currency';
@@ -11,18 +12,27 @@ interface CartProps {
   staticState: CartState;
   controller?: CartController;
   staticContextState: ContextState;
+  contextController?: ContextController;
 }
 
 export const Cart: FunctionComponent<CartProps> = ({
   staticState,
   controller,
   staticContextState,
+  contextController,
 }) => {
   const [state, setState] = useState(staticState);
-
   useEffect(
     () => controller?.subscribe(() => setState({...controller.state})),
     [controller]
+  );
+  const [contextState, setContextState] = useState(staticContextState);
+  useEffect(
+    () =>
+      contextController?.subscribe(() =>
+        setContextState({...contextController.state})
+      ),
+    [contextController]
   );
 
   const adjustQuantity = (item: CartItem, delta: number) => {
@@ -44,8 +54,8 @@ export const Cart: FunctionComponent<CartProps> = ({
     controller?.empty();
   };
 
-  const language = () => staticContextState.language;
-  const currency = () => staticContextState.currency;
+  const language = () => contextState.language;
+  const currency = () => contextState.currency;
 
   return (
     <div>
