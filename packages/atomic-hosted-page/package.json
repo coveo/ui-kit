@@ -37,6 +37,6 @@
   "devDependencies": {
     "@coveo/release": "1.0.0",
     "@playwright/test": "1.45.3",
-    "@types/node": "20.14.12"
+    "@types/node": "22.1.0"
   }
 }
