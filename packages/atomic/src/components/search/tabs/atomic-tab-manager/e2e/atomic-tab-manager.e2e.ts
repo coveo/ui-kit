@@ -83,14 +83,23 @@ test.describe('AtomicTabManager', () => {
       ]);
     });
 
-    test.describe('when selecting previous tab', () => {
-      test.beforeEach(async ({tabManager, facets}) => {
-        await tabManager.tabButtons('All').click();
-        await facets.getFacetValue.first().waitFor({state: 'visible'});
+    test.describe('when clicking on tab button', () => {
+      test.beforeEach(async ({tabManager}) => {
+        await tabManager.tabButtons('Articles').click();
+      });
+
+      test('should change active tab', async ({tabManager}) => {
+        await expect(tabManager.activeTab).toHaveText('Articles');
       });
 
       test.describe('should change other component visibility', async () => {
         test('facets', async ({tabManager}) => {
+          await tabManager.excludedFacet.last().waitFor({state: 'hidden'});
+          const includedFacets = await tabManager.includedFacet.all();
+          for (let i = 0; i < includedFacets.length; i++) {
+            await expect(includedFacets[i]).toBeVisible();
+          }
+
           const excludedFacets = await tabManager.excludedFacet.all();
           for (let i = 0; i < excludedFacets.length; i++) {
             await expect(excludedFacets[i]).not.toBeVisible();
@@ -98,38 +107,74 @@ test.describe('AtomicTabManager', () => {
         });
 
         test('smart snippet', async ({tabManager}) => {
-          await expect(tabManager.smartSnippet).not.toBeVisible();
+          await expect(tabManager.smartSnippet).toBeVisible();
         });
 
         test('sort dropdown', async ({tabManager}) => {
           await tabManager.sortDropdown.waitFor({state: 'visible'});
 
           await expect(tabManager.sortDropdownOptions).toHaveText([
-            'Name descending',
-            'Name ascending',
+            'Most Recent',
+            'Least Recent',
             'Relevance',
           ]);
         });
       });
-    });
 
-    test.describe('when resizing viewport', () => {
-      test.beforeEach(async ({page}) => {
-        await page.setViewportSize({width: 300, height: 500});
+      test.describe('when selecting previous tab', () => {
+        test.beforeEach(async ({tabManager, facets}) => {
+          await tabManager.tabButtons('All').click();
+          await facets.getFacetValue.first().waitFor({state: 'visible'});
+        });
+
+        test.describe('should change other component visibility', async () => {
+          test('facets', async ({tabManager}) => {
+            const excludedFacets = await tabManager.excludedFacet.all();
+            for (let i = 0; i < excludedFacets.length; i++) {
+              await expect(excludedFacets[i]).toBeVisible();
+            }
+
+            const includedFacets = await tabManager.includedFacet.all();
+            for (let i = 0; i < includedFacets.length; i++) {
+              await expect(includedFacets[i]).not.toBeVisible();
+            }
+          });
+
+          test('smart snippet', async ({tabManager}) => {
+            await expect(tabManager.smartSnippet).not.toBeVisible();
+          });
+
+          test('sort dropdown', async ({tabManager}) => {
+            await tabManager.refineModalButton.click();
+            await tabManager.refineModalHeader.waitFor({state: 'visible'});
+
+            await expect(tabManager.refineModalSortDropdownOptions).toHaveText([
+              'Name descending',
+              'Name ascending',
+              'Relevance',
+            ]);
+          });
+        });
       });
 
-      test('should display tabs dropdown', async ({tabManager}) => {
-        await expect(tabManager.tabDropdown).toBeVisible();
-      });
+      test.describe('when resizing viewport', () => {
+        test.beforeEach(async ({page}) => {
+          await page.setViewportSize({width: 300, height: 500});
+        });
 
-      test('should hide tabs area', async ({tabManager}) => {
-        await expect(tabManager.tabArea).not.toBeVisible();
-      });
+        test('should display tabs dropdown', async ({tabManager}) => {
+          await expect(tabManager.tabDropdown).toBeVisible();
+        });
 
-      test('should have the active tab selected in the dropdown', async ({
-        tabManager,
-      }) => {
-        await expect(tabManager.tabDropdown).toHaveValue('article');
+        test('should hide tabs area', async ({tabManager}) => {
+          await expect(tabManager.tabArea).not.toBeVisible();
+        });
+
+        test('should have the active tab selected in the dropdown', async ({
+          tabManager,
+        }) => {
+          await expect(tabManager.tabDropdown).toHaveValue('article');
+        });
       });
     });
   });
