@@ -32,19 +32,19 @@ export class AtomicResultTablePlaceholder {
           <tr>
             <th>
               <div
-                class={`h-8 mt-2 ${placeholderClasses}`}
+                class={`mt-2 h-8 ${placeholderClasses}`}
                 style={{width: '14.5rem'}}
               ></div>
             </th>
             <th>
               <div
-                class={`h-8 mt-2 ${placeholderClasses}`}
+                class={`mt-2 h-8 ${placeholderClasses}`}
                 style={{width: '9.75rem'}}
               ></div>
             </th>
             <th>
               <div
-                class={`h-8 mt-2 ${placeholderClasses}`}
+                class={`mt-2 h-8 ${placeholderClasses}`}
                 style={{width: '6.5rem'}}
               ></div>
             </th>
@@ -55,11 +55,11 @@ export class AtomicResultTablePlaceholder {
             <tr>
               <td>
                 <div
-                  class={`h-8 mb-6 ${placeholderClasses}`}
+                  class={`mb-6 h-8 ${placeholderClasses}`}
                   style={{width: '22.875rem'}}
                 ></div>
                 <div
-                  class={`h-5 mb-2 ${placeholderClasses}`}
+                  class={`mb-2 h-5 ${placeholderClasses}`}
                   style={{width: '23.75rem'}}
                 ></div>
                 <div
@@ -69,13 +69,13 @@ export class AtomicResultTablePlaceholder {
               </td>
               <td>
                 <div
-                  class={`h-5 mt-1.5 ${placeholderClasses}`}
+                  class={`mt-1.5 h-5 ${placeholderClasses}`}
                   style={{width: '11rem'}}
                 ></div>
               </td>
               <td>
                 <div
-                  class={`h-5 mt-1.5 ${placeholderClasses}`}
+                  class={`mt-1.5 h-5 ${placeholderClasses}`}
                   style={{width: '4.875rem'}}
                 ></div>
               </td>

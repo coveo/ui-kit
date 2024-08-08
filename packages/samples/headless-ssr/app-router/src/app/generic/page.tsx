@@ -3,9 +3,9 @@ import {
   fetchStaticState,
   setNavigatorContextProvider,
 } from '@/common/lib/generic/engine';
-import {NextJsNavigatorContext} from '@/common/lib/navigatorContextProvider';
 import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 import {headers} from 'next/headers';
+import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
 
 /**
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
@@ -32,7 +32,8 @@ export default async function Search(url: {
   };
 
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
+  const navigatorContext = new NextJsAppRouterNavigatorContext(headers());
+
   setNavigatorContextProvider(() => navigatorContext);
 
   // Fetches the static state of the app with initial state (when applicable)

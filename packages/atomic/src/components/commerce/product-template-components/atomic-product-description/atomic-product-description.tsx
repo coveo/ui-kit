@@ -128,7 +128,7 @@ export class AtomicProductDescription
       >
         <atomic-icon
           icon={PlusIcon}
-          class="w-2 ml-1 align-baseline"
+          class="ml-1 w-2 align-baseline"
         ></atomic-icon>{' '}
         {this.bindings.i18n.t('show-more')}
       </Button>

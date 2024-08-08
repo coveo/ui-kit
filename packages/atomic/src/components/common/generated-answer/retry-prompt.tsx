@@ -9,9 +9,9 @@ interface RetryPromptProps {
 
 export const RetryPrompt: FunctionalComponent<RetryPromptProps> = (props) => (
   <div part="retry-container" class="mt-4">
-    <div class="mx-auto text-center text-neutral-dark">{props.message}</div>
+    <div class="text-neutral-dark mx-auto text-center">{props.message}</div>
     <Button
-      class="block px-4 py-2 mt-4 mx-auto"
+      class="mx-auto mt-4 block px-4 py-2"
       style="outline-primary"
       onClick={props.onClick}
     >
