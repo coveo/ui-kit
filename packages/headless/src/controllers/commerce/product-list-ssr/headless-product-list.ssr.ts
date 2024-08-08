@@ -14,7 +14,7 @@ export type {ProductListingState as ProductListState} from '../product-listing/h
 export type ProductList = Pick<ProductListing | Search, 'state' | 'subscribe'>;
 
 /**
- * Defines a `ProductList` controller instance.
+ * Defines the `ProductList` controller for the purpose of server-side rendering.
  *
  * @returns The `ProductList` controller definition.
  *
