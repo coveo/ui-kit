@@ -63,12 +63,22 @@ export const StandaloneSearchBox: FunctionComponent<
         </span>
       )}
       <button onClick={() => controller?.submit()}>Search</button>
+      {staticStateRecentQueries.queries.length > 0 && (
+        <RecentQueries
+          staticState={staticStateRecentQueries}
+          controller={recentQueriesController}
+          instantProductsController={instantProductsController}
+        />
+      )}
       {state.suggestions.length > 0 && (
         <>
           <ul>
             {state.suggestions.map((suggestion, index) => (
               <li key={index}>
                 <button
+                  onMouseEnter={() =>
+                    controller?.updateText(suggestion.rawValue)
+                  }
                   onClick={() =>
                     controller?.selectSuggestion(suggestion.rawValue)
                   }
@@ -84,12 +94,6 @@ export const StandaloneSearchBox: FunctionComponent<
             controller={instantProductsController}
           />
         </>
-      )}
-      {staticStateRecentQueries.queries.length > 0 && (
-        <RecentQueries
-          staticState={staticStateRecentQueries}
-          controller={recentQueriesController}
-        />
       )}
     </div>
   );
