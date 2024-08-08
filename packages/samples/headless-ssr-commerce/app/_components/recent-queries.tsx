@@ -18,14 +18,15 @@ export const RecentQueries: FunctionComponent<RecentQueriesProps> = ({
 }) => {
   const [state, setState] = useState(staticState);
 
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => {
+    controller?.subscribe(() => setState({...controller.state}));
+    localStorage.setItem('coveo-recent-queries', JSON.stringify(state.queries));
+  }, [controller, state.queries]);
 
   return (
     <div>
       <ul>
+        Recent Queries :
         {state.queries.map((query, index) => (
           <li key={index}>
             {query}

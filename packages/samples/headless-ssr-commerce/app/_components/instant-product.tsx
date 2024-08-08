@@ -22,7 +22,6 @@ export const InstantProducts: FunctionComponent<InstantProductsProps> = ({
   useEffect(
     () =>
       controller?.subscribe(() => {
-        console.log(controller.state);
         setState({...controller.state});
       }),
     [controller]
@@ -45,6 +44,7 @@ export const InstantProducts: FunctionComponent<InstantProductsProps> = ({
 
   return (
     <ul>
+      Instant Products :
       {state.products.map((product, index) => (
         <li key={index}>
           <button onClick={() => clickProduct(product)}>

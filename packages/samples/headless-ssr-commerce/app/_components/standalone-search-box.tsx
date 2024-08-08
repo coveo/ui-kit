@@ -31,11 +31,24 @@ export const StandaloneSearchBox: FunctionComponent<
   instantProductsController,
 }) => {
   const [state, setState] = useState(staticState);
-
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
+  const [recentQueriesState, setRecentQueriesState] = useState(
+    staticStateRecentQueries
   );
+  const [instantProductsState, setInstantProductsState] = useState(
+    staticStateInstantProducts
+  );
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
+
+  useEffect(() => {
+    controller?.subscribe(() => setState({...controller.state}));
+    recentQueriesController?.subscribe(() =>
+      setRecentQueriesState({...recentQueriesController.state})
+    );
+    instantProductsController?.subscribe(() =>
+      setInstantProductsState({...instantProductsController.state})
+    );
+  }, [controller, instantProductsController, recentQueriesController]);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,8 +60,19 @@ export const StandaloneSearchBox: FunctionComponent<
   }, [state.redirectTo, state.value, router, controller]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsSelectingSuggestion(true);
     controller?.updateText(e.target.value);
     instantProductsController?.updateQuery(e.target.value);
+  };
+
+  const handleFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleBlur = () => {
+    if (!isSelectingSuggestion) {
+      setIsInputFocused(false);
+    }
   };
 
   return (
@@ -56,6 +80,8 @@ export const StandaloneSearchBox: FunctionComponent<
       <input
         value={state.value}
         onChange={(e) => onSearchBoxInputChange(e)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       ></input>
       {state.value !== '' && (
         <span>
@@ -63,16 +89,55 @@ export const StandaloneSearchBox: FunctionComponent<
         </span>
       )}
       <button onClick={() => controller?.submit()}>Search</button>
-      {staticStateRecentQueries.queries.length > 0 && (
-        <RecentQueries
-          staticState={staticStateRecentQueries}
-          controller={recentQueriesController}
-          instantProductsController={instantProductsController}
-        />
-      )}
-      {state.suggestions.length > 0 && (
+
+      {isInputFocused && (
         <>
+          {recentQueriesState.queries.length > 0 && (
+            <RecentQueries
+              staticState={staticStateRecentQueries}
+              controller={recentQueriesController}
+              instantProductsController={instantProductsController}
+            />
+          )}
+          {state.suggestions.length > 0 && (
+            <ul>
+              Suggestions :
+              {state.suggestions.map((suggestion, index) => (
+                <li key={index}>
+                  <button
+                    onMouseEnter={() =>
+                      controller?.updateText(suggestion.rawValue)
+                    }
+                    onClick={() =>
+                      controller?.selectSuggestion(suggestion.rawValue)
+                    }
+                    dangerouslySetInnerHTML={{
+                      __html: suggestion.highlightedValue,
+                    }}
+                  ></button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {instantProductsState.products.length > 0 && (
+            <InstantProducts
+              staticState={staticStateInstantProducts}
+              controller={instantProductsController}
+            />
+          )}
+        </>
+      )}
+      {/* {state.suggestions.length > 0 && (
+        <>
+          {staticStateRecentQueries.queries.length > 0 && (
+            <RecentQueries
+              staticState={staticStateRecentQueries}
+              controller={recentQueriesController}
+              instantProductsController={instantProductsController}
+            />
+          )}
           <ul>
+            Suggestions :
             {state.suggestions.map((suggestion, index) => (
               <li key={index}>
                 <button
@@ -94,7 +159,7 @@ export const StandaloneSearchBox: FunctionComponent<
             controller={instantProductsController}
           />
         </>
-      )}
+      )} */}
     </div>
   );
 };
