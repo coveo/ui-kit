@@ -26,7 +26,9 @@ export const ProductList: FunctionComponent<ProductListProps> = ({
 
   const onProductClick = (product: Product) => {
     controller?.interactiveProduct({options: {product}}).select();
-    router.push(`/products/${product.ec_product_id}`);
+    router.push(
+      `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
+    );
   };
 
   return (
