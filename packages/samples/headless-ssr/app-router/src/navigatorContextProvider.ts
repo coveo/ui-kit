@@ -1,13 +1,13 @@
-import {NavigatorContext} from '@coveo/headless/ssr-commerce';
+import {NavigatorContext} from '@coveo/headless/ssr';
 import type {ReadonlyHeaders} from 'next/dist/server/web/spec-extension/adapters/headers';
 
 /**
- * Provides navigation context for Coveo within Next.js applications.
+ * Provides navigation context for Coveo within Next.js App Router applications.
  * This class is essential for returning the client ID, user agent, and referrer information.
  *
  * Prior to constructing and hydrating the application's static state, instantiate a navigator context to avoid warnings
  */
-export class NextJsNavigatorContext implements NavigatorContext {
+export class NextJsAppRouterNavigatorContext implements NavigatorContext {
   constructor(private headers: ReadonlyHeaders) {}
 
   get referrer() {
