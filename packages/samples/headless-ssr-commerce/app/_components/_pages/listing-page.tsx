@@ -51,8 +51,8 @@ export default function ListingPage({
         instantProductsController={hydratedState?.controllers.instantProducts}
       />
       <Summary
-        staticState={staticState.controllers.summaryListing.state}
-        controller={hydratedState?.controllers.summaryListing}
+        staticState={staticState.controllers.summary.state}
+        controller={hydratedState?.controllers.summary}
         hydratedState={hydratedState}
       />
       <Cart
@@ -61,8 +61,8 @@ export default function ListingPage({
         staticContextState={staticState.controllers.context.state}
       />
       <ProductList
-        staticState={staticState.controllers.productListListing.state}
-        controller={hydratedState?.controllers.productListListing}
+        staticState={staticState.controllers.productList.state}
+        controller={hydratedState?.controllers.productList}
       />
     </>
   );
