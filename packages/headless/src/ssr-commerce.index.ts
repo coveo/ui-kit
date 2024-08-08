@@ -89,6 +89,9 @@ export type {
 } from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 export {defineSort} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
 
+export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion

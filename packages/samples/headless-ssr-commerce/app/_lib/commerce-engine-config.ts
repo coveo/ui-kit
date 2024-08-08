@@ -7,6 +7,7 @@ import {
   defineSummary,
   definePagination,
   defineSort,
+  defineProductView,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -63,5 +64,6 @@ export default {
     productList: defineProductList(),
     pagination: definePagination({options: {pageSize: 9}}),
     sort: defineSort(),
+    productView: defineProductView(),
   },
 } satisfies CommerceEngineConfig;
