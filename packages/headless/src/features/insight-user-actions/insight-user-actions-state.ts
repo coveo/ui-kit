@@ -2,8 +2,9 @@ import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-a
 
 export interface UserActionTimeline {
   precedingSessions: UserSession[];
-  session: UserSession;
+  session: UserSession | undefined;
   followingSessions: UserSession[];
+  caseSessionFound: boolean;
 }
 
 export interface UserSession {
@@ -15,15 +16,15 @@ export interface UserSession {
 export interface UserAction {
   actionType: UserActionType;
   timestamp: string;
-  eventData: {
-    type: string;
+  eventData?: {
+    type?: string;
     value?: string;
   };
   cause?: string;
   searchHub?: string;
   document?: {
-    title: string;
-    clickUri: string;
+    title?: string;
+    clickUri?: string;
     uriHash?: string;
     contentIdKey?: string;
     contentIdValue?: string;
@@ -36,6 +37,7 @@ export enum UserActionType {
   CLICK = 'CLICK',
   VIEW = 'VIEW',
   CUSTOM = 'CUSTOM',
+  TICKET_CREATION = 'TICKET_CREATION',
 }
 
 export interface UserActionsState {
