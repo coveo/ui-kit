@@ -1,9 +1,9 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {
-  ControllerStaticStateMap,
   ControllersMap,
   ControllersPropsMap,
+  ControllerStaticStateMap,
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
   OptionsTuple,

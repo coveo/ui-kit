@@ -1,7 +1,7 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {UnknownAction} from '@reduxjs/toolkit';
+import {AnyAction, UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
@@ -13,7 +13,9 @@ import {
 } from '../ssr-engine/common';
 import {
   ControllerDefinitionsMap,
+  EngineStaticState,
   InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitions,
 } from '../ssr-engine/types/common';
 import {
   EngineDefinition,
@@ -166,7 +168,10 @@ export function defineSearchEngine<
         return createStaticState({
           searchAction: await engine.waitForSearchCompletedAction(),
           controllers,
-        });
+        }) as EngineStaticState<
+          AnyAction,
+          InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+        >;
       },
     }
   );

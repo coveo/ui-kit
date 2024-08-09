@@ -2,6 +2,14 @@ import {AnyAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 
+export type HasKey<T, K extends PropertyKey> = T extends unknown
+  ? K extends keyof T
+    ? T[K] extends never
+      ? never
+      : true
+    : never
+  : never;
+
 export type HasKeys<TObject> = TObject extends {}
   ? keyof TObject extends never
     ? false
