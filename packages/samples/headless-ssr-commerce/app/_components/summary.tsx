@@ -14,7 +14,7 @@ interface ISummaryProps {
     | RecommendationsSummaryState;
 }
 
-export default function ProductListingSummary(props: ISummaryProps) {
+export default function Summary(props: ISummaryProps) {
   const {controller, staticState} = props;
 
   const [state, setState] = useState(staticState);
