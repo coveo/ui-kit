@@ -208,7 +208,7 @@ export function defineCommerceEngine<
             searchAction: await engine.waitForRequestCompletedAction(),
             controllers,
           }) as EngineStaticState<
-      UnknownAction,
+            UnknownAction,
             InferControllerStaticStateMapFromDefinitionsWithSolutionType<
               TControllerDefinitions,
               SolutionType
