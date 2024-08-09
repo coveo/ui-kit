@@ -18,6 +18,7 @@ import {
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 
 export interface SortDropdownOption {
+  tabs: {included: string[] | string; excluded: string[] | string};
   expression: string;
   criteria: SortCriterion[];
   label: string;

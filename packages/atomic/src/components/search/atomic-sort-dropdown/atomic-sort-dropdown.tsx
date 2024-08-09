@@ -7,6 +7,10 @@ import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
+  loadSortCriteriaActions,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
 import {
@@ -14,6 +18,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {randomID} from '../../../utils/utils';
 import {SortContainer} from '../../common/sort/container';
 import {SortGuard} from '../../common/sort/guard';
@@ -50,6 +55,10 @@ export class AtomicSortDropdown implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   public initialize() {
@@ -60,6 +69,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         criterion: this.bindings.store.state.sortOptions[0]?.criteria,
       },
     });
+    this.tabManager = buildTabManager(this.bindings.engine);
   }
 
   private buildOptions() {
@@ -76,22 +86,34 @@ export class AtomicSortDropdown implements InitializableComponent {
 
     this.bindings.store.set(
       'sortOptions',
-      sortExpressionElements.map(({expression, label}) => {
-        new Schema({
-          label: new StringValue({emptyAllowed: false, required: true}),
-        }).validate({label});
+      sortExpressionElements.map(
+        ({expression, label, tabsIncluded, tabsExcluded}) => {
+          new Schema({
+            label: new StringValue({emptyAllowed: false, required: true}),
+          }).validate({label});
 
-        return {
-          criteria: parseCriterionExpression(expression),
-          expression,
-          label,
-        };
-      })
+          return {
+            tabs: {
+              included: tabsIncluded,
+              excluded: tabsExcluded,
+            },
+            criteria: parseCriterionExpression(expression),
+            expression,
+            label,
+          };
+        }
+      )
     );
   }
 
   private get options() {
-    return this.bindings.store.state.sortOptions;
+    return this.bindings.store.state.sortOptions.filter(({tabs}) =>
+      shouldDisplayOnCurrentTab(
+        [...tabs.included],
+        [...tabs.excluded],
+        this.tabManagerState?.activeTab
+      )
+    );
   }
 
   private select(e: Event) {
@@ -100,6 +122,21 @@ export class AtomicSortDropdown implements InitializableComponent {
       (option) => option.expression === select.value
     );
     option && this.sort.sortBy(option.criteria);
+  }
+  public componentShouldUpdate(): void {
+    if (
+      this.options.some(
+        (option) => option.expression === this.sortState.sortCriteria
+      )
+    ) {
+      return;
+    }
+
+    const action = loadSortCriteriaActions(
+      this.bindings.engine
+    ).updateSortCriterion(this.options[0]?.criteria);
+
+    this.bindings.engine.dispatch(action);
   }
 
   public render() {
