@@ -47,10 +47,8 @@ export default function ProductPage(props: IProductPageProps) {
   }, [controller, productId, name, price]);
 
   return (
-    <>
-      <div>
-        Product: {name} ({productId}) - {price}
-      </div>
-    </>
+    <p>
+      {name} ({productId}) - ${price}
+    </p>
   );
 }
