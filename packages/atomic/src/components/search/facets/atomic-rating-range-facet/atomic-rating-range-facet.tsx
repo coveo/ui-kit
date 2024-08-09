@@ -353,7 +353,7 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
     return (
       <span
         part="value-label"
-        class={`ml-1 flex items-center truncate group-focus:text-primary group-hover:text-primary ${
+        class={`group-focus:text-primary group-hover:text-primary ml-1 flex items-center truncate ${
           facetValue.state === 'selected' ? 'font-bold' : ''
         }`}
       >

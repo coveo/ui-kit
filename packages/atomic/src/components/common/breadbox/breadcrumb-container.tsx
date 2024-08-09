@@ -10,8 +10,8 @@ export const BreadcrumbContainer: FunctionalComponent<
   BreadcrumbContainerProps
 > = (props, children) => {
   return (
-    <div part="container" class="flex text-sm text-on-background">
-      <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
+    <div part="container" class="text-on-background flex text-sm">
+      <span part="label" class="py-[0.625rem] pl-0 pr-2 font-bold">
         {props.i18n.t('with-colon', {
           text: props.i18n.t('filters'),
         })}
@@ -20,7 +20,7 @@ export const BreadcrumbContainer: FunctionalComponent<
         <ul
           part="breadcrumb-list"
           class={`flex gap-1 ${
-            props.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
+            props.isCollapsed ? 'absolute w-full flex-nowrap' : 'flex-wrap'
           }`}
         >
           {children}

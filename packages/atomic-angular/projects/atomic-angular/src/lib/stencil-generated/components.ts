@@ -2111,14 +2111,14 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle'],
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;
@@ -2202,14 +2202,14 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 
 @ProxyCmp({
-  inputs: ['expression', 'label']
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['expression', 'label'],
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSortExpression {
   protected el: HTMLElement;
@@ -2221,6 +2221,28 @@ export class AtomicSortExpression {
 
 
 export declare interface AtomicSortExpression extends Components.AtomicSortExpression {}
+
+
+@ProxyCmp({
+  inputs: ['clearFiltersOnTabChange']
+})
+@Component({
+  selector: 'atomic-tab-manager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['clearFiltersOnTabChange'],
+})
+export class AtomicTabManager {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicTabManager extends Components.AtomicTabManager {}
 
 
 @ProxyCmp({
