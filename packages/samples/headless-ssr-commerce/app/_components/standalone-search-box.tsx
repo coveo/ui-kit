@@ -127,39 +127,6 @@ export default function StandaloneSearchBox({
           )}
         </>
       )}
-      {/* {state.suggestions.length > 0 && (
-        <>
-          {staticStateRecentQueries.queries.length > 0 && (
-            <RecentQueries
-              staticState={staticStateRecentQueries}
-              controller={recentQueriesController}
-              instantProductsController={instantProductsController}
-            />
-          )}
-          <ul>
-            Suggestions :
-            {state.suggestions.map((suggestion, index) => (
-              <li key={index}>
-                <button
-                  onMouseEnter={() =>
-                    controller?.updateText(suggestion.rawValue)
-                  }
-                  onClick={() =>
-                    controller?.selectSuggestion(suggestion.rawValue)
-                  }
-                  dangerouslySetInnerHTML={{
-                    __html: suggestion.highlightedValue,
-                  }}
-                ></button>
-              </li>
-            ))}
-          </ul>
-          <InstantProducts
-            staticState={staticStateInstantProducts}
-            controller={instantProductsController}
-          />
-        </>
-      )} */}
     </div>
   );
 }
