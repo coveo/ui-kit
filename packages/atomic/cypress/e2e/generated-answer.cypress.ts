@@ -93,6 +93,7 @@ describe('Generated Answer Test Suites', () => {
         mockStreamResponse(streamId, testMessagePayload);
         setupGeneratedAnswerWithoutFirstIntercept(streamId, {
           'answer-style': answerStyle.value,
+          'with-rephrase-buttons': true,
         });
       });
 
@@ -344,7 +345,9 @@ describe('Generated Answer Test Suites', () => {
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
-          setupGeneratedAnswer(streamId);
+          setupGeneratedAnswer(streamId, {
+            'with-rephrase-buttons': true,
+          });
           cy.wait(getStreamInterceptAlias(streamId));
         });
 

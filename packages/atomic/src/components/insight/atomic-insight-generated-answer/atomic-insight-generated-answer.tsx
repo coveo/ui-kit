@@ -118,6 +118,12 @@ export class AtomicInsightGeneratedAnswer
    */
   @Prop() collapsible?: boolean;
 
+  /**
+   * Whether to render the rephrase buttons that lets the user rephrase the answer.
+   * @default false
+   */
+  @Prop() withRephraseButtons?: boolean;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -130,6 +136,7 @@ export class AtomicInsightGeneratedAnswer
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      withRephraseButtons: this.withRephraseButtons,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,

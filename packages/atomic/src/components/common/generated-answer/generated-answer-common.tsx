@@ -28,6 +28,7 @@ interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
   withToggle?: boolean;
   collapsible?: boolean;
+  withRephraseButtons?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -311,12 +312,14 @@ export class GeneratedAnswerCommon {
   }
 
   private renderRephraseButtons() {
-    const {getGeneratedAnswerState, getBindings} = this.props;
+    const {getGeneratedAnswerState, getBindings, withRephraseButtons} =
+      this.props;
     const {i18n} = getBindings();
     const {isStreaming, responseFormat} = getGeneratedAnswerState() ?? {};
     const {answerStyle} = responseFormat ?? {};
+    const canRender = withRephraseButtons && !isStreaming;
 
-    if (isStreaming) {
+    if (!canRender) {
       return null;
     }
     return (
