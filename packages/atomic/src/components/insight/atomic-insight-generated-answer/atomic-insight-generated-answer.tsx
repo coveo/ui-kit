@@ -60,7 +60,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
- * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-insight-generated-answer',
