@@ -9,6 +9,7 @@ import {
 } from '../../_lib/commerce-engine';
 import ProductList from '../product-list';
 import SearchBox from '../search-box';
+import ShowMore from '../show-more';
 import Summary from '../summary';
 import Triggers from '../triggers/triggers';
 
@@ -64,10 +65,19 @@ export default function SearchPage({
         staticState={staticState.controllers.summary.state}
         controller={hydratedState?.controllers.summary}
       />
-
       <ProductList
         staticState={staticState.controllers.productList.state}
         controller={hydratedState?.controllers.productList}
+      />
+      {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+      {/* <Pagination
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
+      ></Pagination> */}
+      <ShowMore
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
+        summaryController={hydratedState?.controllers.summary}
       />
     </>
   );
