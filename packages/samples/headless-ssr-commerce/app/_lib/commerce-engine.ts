@@ -11,15 +11,13 @@ export const {listingEngineDefinition, searchEngineDefinition} =
   engineDefinition;
 
 export type ListingStaticState = InferStaticState<
-  typeof searchEngineDefinition
+  typeof listingEngineDefinition
 >;
 export type ListingHydratedState = InferHydratedState<
-  typeof searchEngineDefinition
+  typeof listingEngineDefinition
 >;
 
-export type SearchStaticState = InferStaticState<
-  typeof listingEngineDefinition
->;
+export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
 export type SearchHydratedState = InferHydratedState<
-  typeof listingEngineDefinition
+  typeof searchEngineDefinition
 >;

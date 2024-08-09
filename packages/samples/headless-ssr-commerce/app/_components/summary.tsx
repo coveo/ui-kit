@@ -1,48 +1,58 @@
 import {
+  Summary as HeadlessSummary,
   ProductListingSummaryState,
-  Summary as SummaryController,
+  SearchSummaryState,
+  RecommendationsSummaryState,
 } from '@coveo/headless/ssr-commerce';
-import {useEffect, useState, FunctionComponent} from 'react';
-import {ListingHydratedState} from '../_lib/commerce-engine';
+import {useEffect, useState} from 'react';
 
-interface SummaryProps {
-  hydratedState?: ListingHydratedState;
-  staticState: ProductListingSummaryState;
-  controller?: SummaryController;
+interface ISummaryProps {
+  controller?: HeadlessSummary;
+  staticState:
+    | ProductListingSummaryState
+    | SearchSummaryState
+    | RecommendationsSummaryState;
 }
 
-export const Summary: FunctionComponent<SummaryProps> = ({
-  staticState,
-  hydratedState,
-  controller,
-}: SummaryProps) => {
+export default function Summary(props: ISummaryProps) {
+  const {controller, staticState} = props;
+
   const [state, setState] = useState(staticState);
 
-  useEffect(
-    () => controller?.subscribe?.(() => setState({...controller.state})),
-    [controller]
-  );
+  useEffect(() => {
+    controller?.subscribe(() => setState(controller.state));
+  }, [controller]);
 
-  return (
-    <>
-      <div>
-        Hydrated:{' '}
-        <input
-          id="hydrated-indicator"
-          type="checkbox"
-          disabled
-          checked={!!hydratedState}
-        />
-      </div>
-      <span id="hydrated-msg">
-        Rendered page with {state.totalNumberOfProducts} results
+  const renderBaseSummary = () => {
+    const {firstProduct, lastProduct, totalNumberOfProducts} = state;
+    return (
+      <span>
+        Showing results {firstProduct} - {lastProduct} of{' '}
+        {totalNumberOfProducts}
       </span>
-      <div>
-        Rendered on{' '}
-        <span id="timestamp" suppressHydrationWarning>
-          {new Date().toISOString()}
-        </span>
-      </div>
-    </>
-  );
-};
+    );
+  };
+
+  const renderQuerySummary = () => {
+    if (!('query' in state)) {
+      return null;
+    }
+
+    return (
+      <span>
+        for <b>{state.query}</b>
+      </span>
+    );
+  };
+
+  const renderSummary = () => {
+    return (
+      <p>
+        {renderBaseSummary()}
+        {renderQuerySummary()}
+      </p>
+    );
+  };
+
+  return <div className="Summary">{renderSummary()}</div>;
+}

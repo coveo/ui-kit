@@ -38,6 +38,8 @@ export const searchSerializer: Serializer<CommerceSearchParameters> = {
   deserialize,
 };
 
+// TODO KIT-3462: add/export commerce SSR parameter serializer
+
 export const productListingSerializer = {
   serialize,
   deserialize,
