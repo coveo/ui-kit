@@ -55,6 +55,10 @@ export default function SearchPage({
           staticState.controllers.recentQueriesList.state
         }
         recentQueriesController={hydratedState?.controllers.recentQueriesList}
+        staticStateInstantProducts={
+          staticState.controllers.instantProducts.state
+        }
+        instantProductsController={hydratedState?.controllers.instantProducts}
       />
       <Summary
         staticState={staticState.controllers.summary.state}

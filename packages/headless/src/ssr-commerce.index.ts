@@ -68,8 +68,8 @@ export type {RegularFacet} from './controllers/commerce/core/facets/regular/head
 export type {
   ProductList,
   ProductListState,
-} from './controllers/commerce/product-list-ssr/headless-product-list.ssr';
-export {defineProductList} from './controllers/commerce/product-list-ssr/headless-product-list.ssr';
+} from './controllers/commerce/product-listing/headless-product-listing.ssr';
+export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
 
 export type {
   Cart,
@@ -149,6 +149,23 @@ export type {
   RedirectionTriggerDefinition,
 } from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
 export {defineRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
+
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxState,
+  StandaloneSearchBoxDefinition,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+export {defineStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+
+export type {
+  InstantProducts,
+  InstantProductsOptions,
+  InstantProductsState,
+  InstantProductsProps,
+  InstantProductsDefinition,
+} from './controllers/commerce/instant-products/headless-instant-products.ssr';
+export {defineInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion

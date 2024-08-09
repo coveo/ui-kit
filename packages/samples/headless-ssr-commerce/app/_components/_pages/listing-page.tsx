@@ -9,6 +9,7 @@ import {
 } from '../../_lib/commerce-engine';
 import {Cart} from '../cart';
 import {ProductList} from '../product-list';
+import {StandaloneSearchBox} from '../standalone-search-box';
 import {Summary} from '../summary';
 
 export default function ListingPage({
@@ -37,6 +38,23 @@ export default function ListingPage({
 
   return (
     <>
+      <StandaloneSearchBox
+        staticState={staticState.controllers.standaloneSearchBox.state}
+        controller={hydratedState?.controllers.standaloneSearchBox}
+        staticStateRecentQueries={
+          staticState.controllers.recentQueriesList.state
+        }
+        recentQueriesController={hydratedState?.controllers.recentQueriesList}
+        staticStateInstantProducts={
+          staticState.controllers.instantProducts.state
+        }
+        instantProductsController={hydratedState?.controllers.instantProducts}
+      />
+      <Summary
+        staticState={staticState.controllers.summary.state}
+        controller={hydratedState?.controllers.summary}
+        hydratedState={hydratedState}
+      />
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}
@@ -45,11 +63,6 @@ export default function ListingPage({
       <ProductList
         staticState={staticState.controllers.productList.state}
         controller={hydratedState?.controllers.productList}
-      />
-      <Summary
-        staticState={staticState.controllers.summary.state}
-        controller={hydratedState?.controllers.summary}
-        hydratedState={hydratedState}
       />
     </>
   );

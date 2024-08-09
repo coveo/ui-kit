@@ -12,6 +12,8 @@ import {
   defineNotifyTrigger,
   defineQueryTrigger,
   defineRedirectionTrigger,
+  defineStandaloneSearchBox,
+  defineInstantProducts,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -72,5 +74,9 @@ export default {
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
     redirectionTrigger: defineRedirectionTrigger(),
+    standaloneSearchBox: defineStandaloneSearchBox({
+      options: {redirectionUrl: '/search'},
+    }),
+    instantProducts: defineInstantProducts({options: {}}),
   },
 } satisfies CommerceEngineConfig;

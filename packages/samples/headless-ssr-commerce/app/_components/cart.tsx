@@ -26,7 +26,6 @@ export const Cart: FunctionComponent<CartProps> = ({
     () => controller?.subscribe(() => setState({...controller.state})),
     [controller]
   );
-
   const [contextState, setContextState] = useState(staticContextState);
   useEffect(
     () =>
@@ -107,7 +106,6 @@ export const Cart: FunctionComponent<CartProps> = ({
       <button disabled={isCartEmpty()} onClick={emptyCart}>
         Empty cart
       </button>
-      <hr></hr>
     </div>
   );
 };

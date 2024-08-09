@@ -18,7 +18,7 @@ export interface SearchBoxDefinition
   extends SearchOnlyControllerDefinitionWithoutProps<SearchBox> {}
 
 /**
- * Defines the `SearchBox` controller for the purpose of server-side rendering.
+ * Defines a `SearchBox` controller instance.
  *
  * @returns The `SearchBox` controller definition.
  *
