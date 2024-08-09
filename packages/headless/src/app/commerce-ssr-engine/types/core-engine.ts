@@ -22,7 +22,7 @@ export type EngineDefinitionOptions<
   >,
 > = TOptions & {
   /**
-   * The controllers to initialize with the search engine.
+   * The controllers to initialize with the commerce engine.
    */
   controllers?: TControllers;
 };
