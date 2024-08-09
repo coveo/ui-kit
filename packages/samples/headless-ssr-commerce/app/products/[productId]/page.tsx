@@ -1,4 +1,4 @@
-import ProductPage from '@/app/_components/product-page';
+import ProductPage from '@/app/_components/pages/product-page';
 import {searchEngineDefinition} from '@/app/_lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/app/_lib/navigatorContextProvider';
 import {headers} from 'next/headers';

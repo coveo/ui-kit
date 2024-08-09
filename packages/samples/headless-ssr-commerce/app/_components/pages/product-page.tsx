@@ -1,13 +1,13 @@
 'use client';
 
+import {
+  SearchHydratedState,
+  SearchStaticState,
+  searchEngineDefinition,
+} from '@/app/_lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
-import {
-  searchEngineDefinition,
-  SearchHydratedState,
-  SearchStaticState,
-} from '../_lib/commerce-engine';
 
 interface IProductPageProps {
   staticState: SearchStaticState;

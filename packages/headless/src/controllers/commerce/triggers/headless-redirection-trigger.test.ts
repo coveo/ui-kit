@@ -6,7 +6,7 @@ import {
   buildMockCommerceEngine,
 } from '../../../test/mock-engine-v2';
 import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger';
-import {buildRedirectionTrigger} from './headless-commerce-redirection-trigger';
+import {buildRedirectionTrigger} from './headless-redirection-trigger';
 
 describe('RedirectionTrigger', () => {
   let engine: MockedCommerceEngine;

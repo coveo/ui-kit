@@ -14,10 +14,9 @@ export type ProductList = Pick<
 >;
 
 /**
- * Defines a `ProductListing` controller instance.
+ * Defines a `ProductList` controller instance.
  *
- * @param props - The configurable `ProductListing` properties.
- * @returns The `ProductListing` controller definition.
+ * @returns The `ProductList` controller definition.
  *
  * @internal
  * */
