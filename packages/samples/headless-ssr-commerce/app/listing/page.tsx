@@ -1,5 +1,5 @@
 import {headers} from 'next/headers';
-import ListingPage from '../_components/_pages/listing-page';
+import ListingPage from '../_components/pages/listing-page';
 import {listingEngineDefinition} from '../_lib/commerce-engine';
 import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
