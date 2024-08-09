@@ -8,7 +8,7 @@ export interface CartDefinition
   extends SharedControllerDefinitionWithoutProps<Cart> {}
 
 /**
- * Defines the `Cart` controller for the purpose of server-side rendering.
+ * Defines a `Cart` controller instance.
  *
  * @returns The `Cart` controller definition.
  *

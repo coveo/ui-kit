@@ -8,6 +8,12 @@ import {
   defineCart,
   defineSearchBox,
   defineContext,
+  defineRecentQueriesList,
+  defineNotifyTrigger,
+  defineQueryTrigger,
+  defineRedirectionTrigger,
+  defineStandaloneSearchBox,
+  defineInstantProducts,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -16,18 +22,17 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
 
 export default {
   configuration: {
-    accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
-    organizationId: 'barcasportsmcy01fvu',
-    environment: 'dev',
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationId: 'searchuisamples',
     analytics: {
-      trackingId: 'sports',
+      trackingId: 'sports-ui-samples',
     },
     context: {
       language: 'en',
       country: 'US',
       currency: 'USD',
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports.barca.group',
       },
     },
     cart: {
@@ -65,5 +70,13 @@ export default {
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),
+    recentQueriesList: defineRecentQueriesList(),
+    notifyTrigger: defineNotifyTrigger(),
+    queryTrigger: defineQueryTrigger(),
+    redirectionTrigger: defineRedirectionTrigger(),
+    standaloneSearchBox: defineStandaloneSearchBox({
+      options: {redirectionUrl: '/search'},
+    }),
+    instantProducts: defineInstantProducts({options: {}}),
   },
 } satisfies CommerceEngineConfig;

@@ -1,25 +1,28 @@
 import {
-  SearchBoxState,
-  SearchBox as SearchBoxController,
-  RecentQueriesList as RecentQueriesListController,
+  StandaloneSearchBoxState,
+  StandaloneSearchBox as StandaloneSearchBoxController,
   RecentQueriesState,
   InstantProductsState,
+  RecentQueriesList as RecentQueriesListController,
   InstantProducts as InstantProductsController,
 } from '@coveo/headless/ssr-commerce';
+import {useRouter} from 'next/navigation';
 import {useEffect, useState, FunctionComponent} from 'react';
 import {InstantProducts} from './instant-product';
 import {RecentQueries} from './recent-queries';
 
-interface SearchBoxProps {
-  staticState: SearchBoxState;
-  controller?: SearchBoxController;
+interface StandaloneSearchBoxProps {
+  staticState: StandaloneSearchBoxState;
+  controller?: StandaloneSearchBoxController;
   staticStateRecentQueries: RecentQueriesState;
   recentQueriesController?: RecentQueriesListController;
   staticStateInstantProducts: InstantProductsState;
   instantProductsController?: InstantProductsController;
 }
 
-export const SearchBox: FunctionComponent<SearchBoxProps> = ({
+export const StandaloneSearchBox: FunctionComponent<
+  StandaloneSearchBoxProps
+> = ({
   staticState,
   controller,
   staticStateRecentQueries,
@@ -46,6 +49,15 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
       setInstantProductsState({...instantProductsController.state})
     );
   }, [controller, instantProductsController, recentQueriesController]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.redirectTo === '/search') {
+      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
+      router.push(url, {scroll: false});
+      controller?.afterRedirection();
+    }
+  }, [state.redirectTo, state.value, router, controller]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
@@ -76,7 +88,7 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
           <button onClick={controller?.clear}>X</button>
         </span>
       )}
-      <button onClick={controller?.submit}>Search</button>
+      <button onClick={() => controller?.submit()}>Search</button>
 
       {isInputFocused && (
         <>
@@ -132,7 +144,7 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
               <li key={index}>
                 <button
                   onMouseEnter={() =>
-                    instantProductsController?.updateQuery(suggestion.rawValue)
+                    controller?.updateText(suggestion.rawValue)
                   }
                   onClick={() =>
                     controller?.selectSuggestion(suggestion.rawValue)

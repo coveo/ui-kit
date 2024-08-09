@@ -1,5 +1,5 @@
 import {headers} from 'next/headers';
-import SearchPage from '../_components/pages/search-page';
+import SearchPage from '../_components/_pages/search-page';
 import {searchEngineDefinition} from '../_lib/commerce-engine';
 import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 

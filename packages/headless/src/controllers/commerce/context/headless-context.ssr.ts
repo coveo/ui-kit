@@ -14,7 +14,7 @@ export interface ContextDefinition
   extends SharedControllerDefinitionWithoutProps<Context> {}
 
 /**
- * Defines the `Context` controller for the purpose of server-side rendering.
+ * Defines a `Context` controller instance.
  *
  * @returns The `Context` controller definition.
  *

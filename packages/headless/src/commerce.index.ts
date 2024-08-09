@@ -208,13 +208,13 @@ export type {
 } from './controllers/commerce/search-box/headless-search-box';
 
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
-export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 export type {
+  RecentQueriesList,
   RecentQueriesListOptions,
   RecentQueriesListProps,
   RecentQueriesListInitialState,
   RecentQueriesState,
-} from './controllers/recent-queries-list/headless-recent-queries-list.ts';
+} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
@@ -275,20 +275,20 @@ export type {
   NotifyTrigger,
   NotifyTriggerState,
 } from './controllers/core/triggers/headless-core-notify-trigger';
-export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
+export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger';
 
 export type {
   RedirectionTrigger,
   RedirectionTriggerState,
 } from './controllers/core/triggers/headless-core-redirection-trigger';
 
-export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
+export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger';
 
 export type {
   QueryTrigger,
   QueryTriggerState,
 } from './controllers/core/triggers/headless-core-query-trigger';
-export {buildQueryTrigger} from './controllers/commerce/triggers/headless-commerce-query-trigger';
+export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger';
 
 export type {
   FieldSuggestions,
