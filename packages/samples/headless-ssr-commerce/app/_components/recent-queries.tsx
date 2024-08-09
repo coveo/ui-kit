@@ -20,8 +20,7 @@ export default function RecentQueries({
 
   useEffect(() => {
     controller?.subscribe(() => setState({...controller.state}));
-    localStorage.setItem('coveo-recent-queries', JSON.stringify(state.queries));
-  }, [controller, state.queries]);
+  }, [controller]);
 
   return (
     <div>
