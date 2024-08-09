@@ -5,10 +5,19 @@ import {
   SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common';
 import {buildProductListing} from '../../product-listing/headless-product-listing';
+import {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary';
+import {RecommendationsSummaryState} from '../../recommendations/summary/headless-recommendations-summary';
 import {buildSearch} from '../../search/headless-search';
+import {SearchSummaryState} from '../../search/summary/headless-search-summary';
 import {Summary, SummaryState} from './headless-core-summary';
 
-export type {Summary, SummaryState};
+export type {
+  Summary,
+  ProductListingSummaryState,
+  RecommendationsSummaryState,
+  SearchSummaryState,
+  SummaryState,
+};
 
 export function defineSummary<
   TOptions extends ControllerDefinitionOption | undefined,

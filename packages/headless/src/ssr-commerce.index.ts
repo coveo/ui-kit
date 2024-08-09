@@ -123,8 +123,11 @@ export type {
 export {defineSort} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr';
 
 export type {
-  SummaryState,
   Summary,
+  ProductListingSummaryState,
+  RecommendationsSummaryState,
+  SearchSummaryState,
+  SummaryState,
 } from './controllers/commerce/core/summary/headless-core-summary.ssr';
 export {defineSummary} from './controllers/commerce/core/summary/headless-core-summary.ssr';
 
@@ -244,7 +247,7 @@ export {
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser';
-export type {Template} from './features/templates/templates-manager.ts';
+export type {Template} from './features/templates/templates-manager';
 export type {
   ProductTemplate,
   ProductTemplateCondition,
