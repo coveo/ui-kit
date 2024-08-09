@@ -1,4 +1,4 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
@@ -39,7 +39,7 @@ export interface EngineDefinition<
   fetchStaticState: FetchStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    AnyAction,
+    UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<
       TControllers,
       TSolutionType
@@ -52,7 +52,7 @@ export interface EngineDefinition<
   hydrateStaticState: HydrateStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    AnyAction,
+    UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
