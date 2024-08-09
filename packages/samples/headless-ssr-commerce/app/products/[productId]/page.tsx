@@ -16,13 +16,16 @@ export default async function ProductDescriptionPage({
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await searchEngineDefinition.fetchStaticState();
   return (
-    <Suspense>
-      <ProductPage
-        staticState={staticState}
-        navigatorContext={navigatorContext.marshal}
-        productId={params.productId}
-      />
-    </Suspense>
+    <>
+      <h2>Product description page</h2>
+      <Suspense fallback={<p>Loading...</p>}>
+        <ProductPage
+          staticState={staticState}
+          navigatorContext={navigatorContext.marshal}
+          productId={params.productId}
+        />
+      </Suspense>
+    </>
   );
 }
 
