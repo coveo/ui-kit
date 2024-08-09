@@ -16,10 +16,11 @@ import {TabDropdownOption} from '../../../common/tab-manager/tab-dropdown-option
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * @internal
+ * @alpha
  *
  * @part button-container - The container for the tab button.
  * @part button - The tab button.
+ * @slot default
  */
 @Component({
   tag: 'atomic-tab-manager',
@@ -77,7 +78,11 @@ export class AtomicTabManager {
   public render() {
     return (
       <div class="mb-2 overflow-x-auto">
-        <div class="tabs-area mb-2 flex w-full flex-row border-b">
+        <ul
+          role="list"
+          aria-label="tab-area"
+          class="tab-area mb-2 flex w-full flex-row border-b"
+        >
           {this.tabs.map((tab) => (
             <TabButton
               isActive={tab.tabController.state.isActive}
@@ -89,7 +94,7 @@ export class AtomicTabManager {
               }}
             ></TabButton>
           ))}
-        </div>
+        </ul>
         <TabDropdown
           tabs={this.tabs}
           activeTab={this.tabManagerState.activeTab}
