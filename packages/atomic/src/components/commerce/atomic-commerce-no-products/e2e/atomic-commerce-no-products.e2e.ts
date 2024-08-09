@@ -6,8 +6,8 @@ test.describe('when there are results', () => {
     await noProducts.load({story: 'with-results'});
   });
 
-  test('should not be visible', async ({noProducts}) => {
-    await expect(noProducts.ariaLive()).not.toBeVisible();
+  test('should have aria live before first query', async ({noProducts}) => {
+    await expect(noProducts.ariaLive()).toBeVisible();
   });
 
   test.describe('after executing a search query that yields no results', () => {

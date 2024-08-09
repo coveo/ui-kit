@@ -1,10 +1,24 @@
 import SearchPage from '@/common/components/generic/search-page';
-import {SearchStaticState, fetchStaticState} from '@/common/lib/generic/engine';
-import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
+import {
+  SearchStaticState,
+  fetchStaticState,
+  setNavigatorContextProvider,
+} from '@/common/lib/generic/engine';
+import {
+  NavigatorContext,
+  buildSSRSearchParameterSerializer,
+} from '@coveo/headless/ssr';
+import {GetServerSidePropsContext} from 'next';
+import {NextJsPagesRouterNavigatorContext} from '../../navigatorContextProvider';
 
-export async function getServerSideProps(context: {
-  query: {[key: string]: string | string[] | undefined};
-}) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
+  const navigatorContext = new NextJsPagesRouterNavigatorContext(
+    context.req.headers
+  );
+  setNavigatorContextProvider(() => navigatorContext);
+  const marshal = navigatorContext.marshal;
+
   const {toSearchParameters} = buildSSRSearchParameterSerializer();
   const searchParameters = toSearchParameters(context.query);
 
@@ -17,14 +31,21 @@ export async function getServerSideProps(context: {
       },
     },
   });
-  return {props: {staticState}};
+
+  return {props: {staticState, marshal}};
 }
 
 interface StaticStateProps {
   staticState: SearchStaticState;
+  marshal: NavigatorContext;
 }
 
 // Entry point SSR function
-export default function Search({staticState}: StaticStateProps) {
-  return <SearchPage staticState={staticState}></SearchPage>;
+export default function Search({staticState, marshal}: StaticStateProps) {
+  return (
+    <SearchPage
+      navigatorContext={marshal}
+      staticState={staticState}
+    ></SearchPage>
+  );
 }
