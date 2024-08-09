@@ -117,7 +117,7 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
-          repo: ui-kit-prs
+          repositories: 'ui-kit-prs'
       - uses: ./.github/actions/publish-pr-review-site
         if: ${{ always() && github.event_name == 'pull_request'}}
         with:
@@ -334,6 +334,7 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
@@ -368,6 +369,7 @@ jobs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'
