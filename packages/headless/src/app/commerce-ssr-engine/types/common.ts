@@ -160,6 +160,9 @@ interface SharedController {
    * @internal
    */
   [SolutionType.search]: true;
+  /**
+   * @internal
+   */
   [SolutionType.listing]: true;
 }
 
