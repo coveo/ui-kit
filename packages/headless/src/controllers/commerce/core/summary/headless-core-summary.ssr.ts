@@ -1,29 +1,29 @@
+import {SSRCommerceEngine} from '../../../../app/commerce-engine/commerce-engine.ssr';
 import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common';
 import {
   ControllerDefinitionOption,
+  DefinedSolutionTypes,
   SolutionType,
   SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common';
-import type {Summary} from '../../core/summary/headless-core-summary';
 import {buildProductListing} from '../../product-listing/headless-product-listing';
-import type {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary';
 import {buildSearch} from '../../search/headless-search';
-import {SearchSummaryState} from '../../search/summary/headless-search-summary';
+import {Summary, SummaryState} from './headless-core-summary';
 
-export type {ProductListingSummaryState, Summary};
+export type {Summary, SummaryState};
 
-export function defineQuerySummary<
+export function defineSummary<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
     ...options,
-    build: (engine, solutionType) =>
+    build: (
+      engine: SSRCommerceEngine,
+      solutionType: DefinedSolutionTypes<typeof options>
+    ) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
-  } as SubControllerDefinitionWithoutProps<
-    Summary<ProductListingSummaryState & SearchSummaryState>, // TODO: fix conditional typing to return the appropriate type based on current solution type
-    TOptions
-  >;
+  } as SubControllerDefinitionWithoutProps<Summary, TOptions>;
 }

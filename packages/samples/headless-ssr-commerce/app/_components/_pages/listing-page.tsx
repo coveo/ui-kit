@@ -8,9 +8,11 @@ import {
   ListingStaticState,
 } from '../../_lib/commerce-engine';
 import {Cart} from '../cart';
+import Pagination from '../pagination';
 import {ProductList} from '../product-list';
+import Sort from '../sort';
 import {StandaloneSearchBox} from '../standalone-search-box';
-import {Summary} from '../summary';
+import Summary from '../summary';
 
 export default function ListingPage({
   staticState,
@@ -53,8 +55,11 @@ export default function ListingPage({
       <Summary
         staticState={staticState.controllers.summary.state}
         controller={hydratedState?.controllers.summary}
-        hydratedState={hydratedState}
       />
+      <Sort
+        staticState={staticState.controllers.sort.state}
+        controller={hydratedState?.controllers.sort}
+      ></Sort>
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}
@@ -64,6 +69,16 @@ export default function ListingPage({
         staticState={staticState.controllers.productList.state}
         controller={hydratedState?.controllers.productList}
       />
+      {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+      <Pagination
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
+      ></Pagination>
+      {/* <ShowMore
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
+        summaryController={hydratedState?.controllers.summary}
+      /> */}
     </>
   );
 }

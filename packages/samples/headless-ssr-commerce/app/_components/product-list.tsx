@@ -1,7 +1,9 @@
 import {
+  Product,
   ProductList as ProductListingController,
   ProductListState,
 } from '@coveo/headless/ssr-commerce';
+import {useRouter} from 'next/navigation';
 import {useEffect, useState, FunctionComponent} from 'react';
 
 interface ProductListProps {
@@ -15,16 +17,30 @@ export const ProductList: FunctionComponent<ProductListProps> = ({
 }) => {
   const [state, setState] = useState(staticState);
 
+  const router = useRouter();
+
   useEffect(
     () => controller?.subscribe(() => setState({...controller.state})),
     [controller]
   );
 
+  const onProductClick = (product: Product) => {
+    controller?.interactiveProduct({options: {product}}).select();
+    router.push(
+      `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
+    );
+  };
+
   return (
     <ul>
       {state.products.map((product) => (
         <li key={product.ec_product_id}>
-          <h3>{product.ec_name}</h3>
+          <button
+            disabled={!controller}
+            onClick={() => onProductClick(product)}
+          >
+            {product.ec_name}
+          </button>
         </li>
       ))}
     </ul>
