@@ -35,13 +35,16 @@ import {
 } from '../../../utils/highlight';
 import {randomID} from '../../../utils/utils';
 import {validateOptions} from '../../../utils/validate-payload';
-import {buildController} from '../../controller/headless-controller';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {
   getSuggestions,
   SearchBoxState,
-  SearchBox as CoreSearchBox,
   Suggestion,
 } from '../../core/search-box/headless-core-search-box';
+import {SearchBox as CoreSearchBox} from '../../core/search-box/headless-core-search-box';
 import {
   defaultSearchBoxOptions,
   SearchBoxOptions,
@@ -67,12 +70,41 @@ export interface SearchBoxProps {
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI component
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
-export type SearchBox = Omit<CoreSearchBox, 'submit'> & {
+export interface SearchBox extends Controller {
+  /**
+   * Updates the search box text value and shows the suggestions for that value.
+   *
+   * @param value - The string value to update the search box with.
+   */
+  updateText(value: string): void;
+
+  /**
+   * Clears the search box text and the suggestions.
+   */
+  clear(): void;
+
+  /**
+   * Shows the suggestions for the current search box value.
+   */
+  showSuggestions(): void;
+
+  /**
+   * Selects a suggestion and calls `submit`.
+   *
+   * @param value - The string value of the suggestion to select
+   */
+  selectSuggestion(value: string): void;
+
+  /**
+   * The state of the `SearchBox` controller.
+   */
+  state: SearchBoxState;
+
   /**
    * Triggers a commerce search query.
    */
   submit(): void;
-};
+}
 
 /**
  * Creates a `SearchBox` controller instance.
@@ -166,7 +198,7 @@ export function buildSearchBox(
         isLoadingSuggestions,
       };
     },
-  };
+  } satisfies Omit<CoreSearchBox, 'submit'> & {submit(): void};
 }
 
 function loadSearchBoxReducers(

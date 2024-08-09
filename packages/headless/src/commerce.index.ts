@@ -200,6 +200,8 @@ export type {CategoryFacetSearchResult} from './api/search/facet-search/category
 
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box';
 export type {
+  Delimiters,
+  SuggestionHighlightingOptions,
   SearchBox,
   SearchBoxState,
   SearchBoxProps,
