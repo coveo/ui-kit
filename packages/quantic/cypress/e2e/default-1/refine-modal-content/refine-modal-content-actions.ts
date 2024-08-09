@@ -3,7 +3,7 @@ import {
   RefineContentSelectors,
 } from './refine-modal-content-selectors';
 
-function defineContentActions(selector: RefineContentSelector) {
+function refineContentActions(selector: RefineContentSelector) {
   return {
     clickClearAllFilters: () => {
       selector
@@ -43,9 +43,27 @@ function defineContentActions(selector: RefineContentSelector) {
           'when clicking the first option of the duplicated timeframe facet'
         );
     },
+    openRefineModalSortDropdown: () => {
+      selector
+        .refineSortDropdown()
+        .click()
+        .logAction('when opening the sort dropdown in the refine modal');
+    },
+  };
+}
+
+function sortActions(selector: RefineContentSelector) {
+  return {
+    openSortDropdown: () => {
+      selector
+        .sortDropdown()
+        .click()
+        .logAction('when opening the sort dropdown');
+    },
   };
 }
 
 export const RefineContentActions = {
-  ...defineContentActions(RefineContentSelectors),
+  ...refineContentActions(RefineContentSelectors),
+  ...sortActions(RefineContentSelectors),
 };

@@ -8,7 +8,7 @@ function sortActions(selector: SortSelector) {
 
     selectOption: (value: string) => {
       selector.combobox().click();
-      selector.option(value).click();
+      selector.sortOption(value).click();
     },
   };
 }
