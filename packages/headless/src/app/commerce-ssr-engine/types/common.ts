@@ -22,10 +22,6 @@ export enum SolutionType {
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
-  TSolutionType extends
-    | SolutionType
-    | SolutionType.search
-    | SolutionType.listing,
 > {
   /**
    * Creates an instance of the given controller.
@@ -34,17 +30,13 @@ export interface ControllerDefinitionWithoutProps<
    * @param solutionType - The type of solution for which the controller should be built (e.g. search or listing). This option only applies to sub-controllers.
    * @returns The created controller instance.
    */
-  build(engine: TEngine, solutionType?: TSolutionType): TController;
+  build(engine: TEngine, solutionType?: SolutionType): TController;
 }
 
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
   TProps,
-  TSolutionType extends
-    | SolutionType
-    | SolutionType.search
-    | SolutionType.listing,
 > {
   /**
    * Creates an instance of the given controller.
@@ -57,7 +49,7 @@ export interface ControllerDefinitionWithProps<
   buildWithProps(
     engine: TEngine,
     props: TProps,
-    solutionType?: TSolutionType
+    solutionType?: SolutionType
   ): TController;
 }
 
@@ -65,8 +57,8 @@ export type ControllerDefinition<
   TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
 > =
-  | ControllerDefinitionWithoutProps<TEngine, TController, SolutionType>
-  | ControllerDefinitionWithProps<TEngine, TController, unknown, SolutionType>;
+  | ControllerDefinitionWithoutProps<TEngine, TController>
+  | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
 export interface ControllerDefinitionsMap<
   TEngine extends CoreEngine | CoreEngineNext,
@@ -84,14 +76,12 @@ export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinitionWithProps<
     CoreEngine | CoreEngineNext,
     Controller,
-    infer Props,
-    SolutionType
+    infer Props
   >
     ? Props
     : TController extends ControllerDefinitionWithoutProps<
           CoreEngine | CoreEngineNext,
-          Controller,
-          SolutionType
+          Controller
         >
       ? {}
       : unknown;
@@ -151,114 +141,60 @@ export interface ControllerDefinitionOption {
   search?: boolean;
 }
 
-export interface SearchOnlyController<TController> {
+interface SearchOnlyController {
   /**
    * @internal
    */
   [SolutionType.search]: true;
-  /**
-   * Creates an instance of the given controller.
-   *
-   * @param engine - The search engine.
-   * @param solutionType - The type of solution for which the controller should be built (e.g. search or listing).
-   * @returns The created controller instance.
-   */
-  build(engine: CommerceEngine, solutionType: SolutionType.search): TController;
 }
 
-export interface ListingOnlyController<TController extends Controller> {
+interface ListingOnlyController {
   /**
    * @internal
    */
   [SolutionType.listing]: true;
-  /**
-   * Creates an instance of the given controller.
-   *
-   * @param engine - The search engine.
-   * @param solutionType - The type of solution for which the controller should be built (e.g. search or listing).
-   * @returns The created controller instance.
-   */
-  build(
-    engine: CommerceEngine,
-    solutionType: SolutionType.listing
-  ): TController;
 }
 
-export interface SharedController<TController extends Controller> {
+interface SharedController {
   /**
    * @internal
    */
   [SolutionType.search]: true;
   [SolutionType.listing]: true;
-  /**
-   * Creates an instance of the given controller.
-   *
-   * @param engine - The search engine.
-   * @param solutionType - The type of solution for which the controller should be built (e.g. search or listing).
-   * @returns The created controller instance.
-   */
-  build(engine: CommerceEngine, solutionType: SolutionType): TController;
 }
 
 export type SearchOnlyControllerDefinitionWithoutProps<
   TController extends Controller,
-> = ControllerDefinitionWithoutProps<
-  CommerceEngine,
-  TController,
-  SolutionType.search
-> &
-  SearchOnlyController<TController>;
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  SearchOnlyController;
 
 export type SearchOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
-> = ControllerDefinitionWithProps<
-  CommerceEngine,
-  TController,
-  TProps,
-  SolutionType.search
-> &
-  SearchOnlyController<TController>;
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  SearchOnlyController;
 
 export type ListingOnlyControllerDefinitionWithoutProps<
   TController extends Controller,
-> = ControllerDefinitionWithoutProps<
-  CommerceEngine,
-  TController,
-  SolutionType.listing
-> &
-  ListingOnlyController<TController>;
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  ListingOnlyController;
 
 export type ListingOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
-> = ControllerDefinitionWithProps<
-  CommerceEngine,
-  TController,
-  TProps,
-  SolutionType.listing
-> &
-  ListingOnlyController<TController>;
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  ListingOnlyController;
 
 export type SharedControllerDefinitionWithoutProps<
   TController extends Controller,
-> = ControllerDefinitionWithoutProps<
-  CommerceEngine,
-  TController,
-  SolutionType
-> &
-  SharedController<TController>;
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  SharedController;
 
 export type SharedControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
-> = ControllerDefinitionWithProps<
-  CommerceEngine,
-  TController,
-  TProps,
-  SolutionType
-> &
-  SharedController<TController>;
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  SharedController;
 
 export type SubControllerDefinitionWithoutProps<
   TController extends Controller,
@@ -283,18 +219,6 @@ export type SubControllerDefinitionWithProps<
     ? ListingOnlyControllerDefinitionWithProps<TController, TProps>
     : TDefinition extends {listing?: false; search?: true}
       ? SearchOnlyControllerDefinitionWithProps<TController, TProps>
-      : TDefinition extends {listing: false; search: false}
-        ? InvalidControllerDefinition
-        : never;
-
-export type DefinedSolutionTypes<
-  TDefinition extends ControllerDefinitionOption | undefined,
-> = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SolutionType
-  : TDefinition extends {listing?: true; search?: false}
-    ? SolutionType.listing
-    : TDefinition extends {listing?: false; search?: true}
-      ? SolutionType.search
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
