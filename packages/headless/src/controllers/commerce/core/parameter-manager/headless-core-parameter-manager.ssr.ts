@@ -1,8 +1,6 @@
-import {SSRCommerceEngine} from '../../../../app/commerce-engine/commerce-engine.ssr';
 import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common';
 import {
   ControllerDefinitionOption,
-  DefinedSolutionTypes,
   SolutionType,
   SubControllerDefinitionWithProps,
 } from '../../../../app/commerce-ssr-engine/types/common';
@@ -41,11 +39,7 @@ export function defineParameterManager<
   ensureAtLeastOneSolutionType(options);
   return {
     ...options,
-    buildWithProps: (
-      engine: SSRCommerceEngine,
-      props: ParameterManagerProps<MappedParameterTypes<typeof options>>,
-      solutionType: DefinedSolutionTypes<typeof options>
-    ) => {
+    buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {
         if (!loadCommerceResultListParameterReducers(engine)) {
           throw loadReducerError;

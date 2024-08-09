@@ -1,8 +1,6 @@
-import {SSRCommerceEngine} from '../../../../app/commerce-engine/commerce-engine.ssr';
 import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common';
 import {
   ControllerDefinitionOption,
-  DefinedSolutionTypes,
   SolutionType,
   SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common';
@@ -18,10 +16,7 @@ export function defineSort<
   ensureAtLeastOneSolutionType(options);
   return {
     ...options,
-    build: (
-      engine: SSRCommerceEngine,
-      solutionType: DefinedSolutionTypes<typeof options>
-    ) =>
+    build: (engine, solutionType) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).sort(props)
         : buildSearch(engine).sort(props),
