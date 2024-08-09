@@ -155,7 +155,7 @@ export {
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser';
-export type {Template} from './features/templates/templates-manager.ts';
+export type {Template} from './features/templates/templates-manager';
 export type {
   ProductTemplate,
   ProductTemplateCondition,
