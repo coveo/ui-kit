@@ -26,6 +26,17 @@ export const setItemsPayloadDefinition = new ArrayValue({
   }),
 });
 
+export const cartActionPayloadDefinition = new RecordValue({
+  values: {
+    action: requiredNonEmptyString,
+    currency: requiredNonEmptyString,
+    quantity: new NumberValue({required: true, min: 0}),
+    productId: requiredNonEmptyString,
+    name: requiredNonEmptyString,
+    price: new NumberValue({required: true, min: 0}),
+  },
+});
+
 export const cartDefinition = {
   items: setItemsPayloadDefinition,
 };
