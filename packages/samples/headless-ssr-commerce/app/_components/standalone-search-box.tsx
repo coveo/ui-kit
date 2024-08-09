@@ -7,9 +7,9 @@ import {
   InstantProducts as InstantProductsController,
 } from '@coveo/headless/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useEffect, useState, FunctionComponent} from 'react';
-import {InstantProducts} from './instant-product';
-import {RecentQueries} from './recent-queries';
+import {useEffect, useState} from 'react';
+import InstantProducts from './instant-product';
+import RecentQueries from './recent-queries';
 
 interface StandaloneSearchBoxProps {
   staticState: StandaloneSearchBoxState;
@@ -20,16 +20,14 @@ interface StandaloneSearchBoxProps {
   instantProductsController?: InstantProductsController;
 }
 
-export const StandaloneSearchBox: FunctionComponent<
-  StandaloneSearchBoxProps
-> = ({
+export default function StandaloneSearchBox({
   staticState,
   controller,
   staticStateRecentQueries,
   recentQueriesController,
   staticStateInstantProducts,
   instantProductsController,
-}) => {
+}: StandaloneSearchBoxProps) {
   const [state, setState] = useState(staticState);
   const [recentQueriesState, setRecentQueriesState] = useState(
     staticStateRecentQueries
@@ -164,4 +162,4 @@ export const StandaloneSearchBox: FunctionComponent<
       )} */}
     </div>
   );
-};
+}

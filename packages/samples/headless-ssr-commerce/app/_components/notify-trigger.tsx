@@ -2,7 +2,7 @@ import {
   NotifyTrigger as NotifyTriggerController,
   NotifyTriggerState,
 } from '@coveo/headless/commerce';
-import {FunctionComponent, useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 interface NotifyTriggerProps {
   controller?: NotifyTriggerController;
@@ -10,10 +10,10 @@ interface NotifyTriggerProps {
 }
 
 // The notify trigger query example in the searchuisamples org is 'notify me'.
-export const NotifyTrigger: FunctionComponent<NotifyTriggerProps> = ({
+export default function NotifyTrigger({
   controller,
   staticState,
-}) => {
+}: NotifyTriggerProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -32,4 +32,4 @@ export const NotifyTrigger: FunctionComponent<NotifyTriggerProps> = ({
   }, [notify]);
 
   return null;
-};
+}

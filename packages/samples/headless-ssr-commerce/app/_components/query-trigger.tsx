@@ -2,7 +2,7 @@ import {
   QueryTrigger as QueryTriggerController,
   QueryTriggerState,
 } from '@coveo/headless/commerce';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface QueryTriggerProps {
   controller?: QueryTriggerController;
@@ -10,10 +10,10 @@ interface QueryTriggerProps {
 }
 
 // The query trigger query example in the searchuisamples org is 'query me'.
-export const QueryTrigger: FunctionComponent<QueryTriggerProps> = ({
+export default function QueryTrigger({
   controller,
   staticState,
-}) => {
+}: QueryTriggerProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -29,4 +29,4 @@ export const QueryTrigger: FunctionComponent<QueryTriggerProps> = ({
     );
   }
   return null;
-};
+}

@@ -5,7 +5,7 @@ import {
   ContextState,
   Context as ContextController,
 } from '@coveo/headless/ssr-commerce';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {useEffect, useState} from 'react';
 import {formatCurrency} from '../_utils/format-currency';
 
 interface CartProps {
@@ -15,12 +15,12 @@ interface CartProps {
   contextController?: ContextController;
 }
 
-export const Cart: FunctionComponent<CartProps> = ({
+export default function Cart({
   staticState,
   controller,
   staticContextState,
   contextController,
-}) => {
+}: CartProps) {
   const [state, setState] = useState(staticState);
   useEffect(
     () => controller?.subscribe(() => setState({...controller.state})),
@@ -108,4 +108,4 @@ export const Cart: FunctionComponent<CartProps> = ({
       </button>
     </div>
   );
-};
+}

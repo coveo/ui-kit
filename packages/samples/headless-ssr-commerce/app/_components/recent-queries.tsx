@@ -3,7 +3,7 @@ import {
   RecentQueriesList as RecentQueriesController,
   InstantProducts as InstantProductsController,
 } from '@coveo/headless/ssr-commerce';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface RecentQueriesProps {
   staticState: RecentQueriesState;
@@ -11,11 +11,11 @@ interface RecentQueriesProps {
   instantProductsController?: InstantProductsController;
 }
 
-export const RecentQueries: FunctionComponent<RecentQueriesProps> = ({
+export default function RecentQueries({
   staticState,
   controller,
   instantProductsController,
-}) => {
+}: RecentQueriesProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(() => {
@@ -40,4 +40,4 @@ export const RecentQueries: FunctionComponent<RecentQueriesProps> = ({
       </ul>
     </div>
   );
-};
+}

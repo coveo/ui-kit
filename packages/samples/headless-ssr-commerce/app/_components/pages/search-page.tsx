@@ -7,12 +7,12 @@ import {
   SearchStaticState,
   searchEngineDefinition,
 } from '../../_lib/commerce-engine';
-import {NotifyTrigger} from '../notify-trigger';
-import {ProductList} from '../product-list';
-import {QueryTrigger} from '../query-trigger';
-import {RedirectionTrigger} from '../redirection-trigger';
-import {SearchBox} from '../search-box';
-import {Summary} from '../summary';
+import NotifyTrigger from '../notify-trigger';
+import ProductList from '../product-list';
+import QueryTrigger from '../query-trigger';
+import RedirectionTrigger from '../redirection-trigger';
+import SearchBox from '../search-box';
+import Summary from '../summary';
 
 export default function SearchPage({
   staticState,
@@ -63,7 +63,6 @@ export default function SearchPage({
       <Summary
         staticState={staticState.controllers.summary.state}
         controller={hydratedState?.controllers.summary}
-        hydratedState={hydratedState}
       />
 
       <ProductList

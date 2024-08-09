@@ -7,11 +7,11 @@ import {
   ListingHydratedState,
   ListingStaticState,
 } from '../../_lib/commerce-engine';
-import {Cart} from '../cart';
+import Cart from '../cart';
 import Pagination from '../pagination';
-import {ProductList} from '../product-list';
+import ProductList from '../product-list';
 import Sort from '../sort';
-import {StandaloneSearchBox} from '../standalone-search-box';
+import StandaloneSearchBox from '../standalone-search-box';
 import Summary from '../summary';
 
 export default function ListingPage({

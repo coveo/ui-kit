@@ -6,9 +6,9 @@ import {
   InstantProductsState,
   InstantProducts as InstantProductsController,
 } from '@coveo/headless/ssr-commerce';
-import {useEffect, useState, FunctionComponent} from 'react';
-import {InstantProducts} from './instant-product';
-import {RecentQueries} from './recent-queries';
+import {useEffect, useState} from 'react';
+import InstantProducts from './instant-product';
+import RecentQueries from './recent-queries';
 
 interface SearchBoxProps {
   staticState: SearchBoxState;
@@ -19,14 +19,14 @@ interface SearchBoxProps {
   instantProductsController?: InstantProductsController;
 }
 
-export const SearchBox: FunctionComponent<SearchBoxProps> = ({
+export default function SearchBox({
   staticState,
   controller,
   staticStateRecentQueries,
   recentQueriesController,
   staticStateInstantProducts,
   instantProductsController,
-}) => {
+}: SearchBoxProps) {
   const [state, setState] = useState(staticState);
   const [recentQueriesState, setRecentQueriesState] = useState(
     staticStateRecentQueries
@@ -152,4 +152,4 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
       )} */}
     </div>
   );
-};
+}

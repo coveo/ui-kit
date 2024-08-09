@@ -4,17 +4,17 @@ import {
   ProductListState,
 } from '@coveo/headless/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {useEffect, useState} from 'react';
 
 interface ProductListProps {
   staticState: ProductListState;
   controller?: ProductListingController;
 }
 
-export const ProductList: FunctionComponent<ProductListProps> = ({
+export default function ProductList({
   staticState,
   controller,
-}) => {
+}: ProductListProps) {
   const [state, setState] = useState(staticState);
 
   const router = useRouter();
@@ -45,4 +45,4 @@ export const ProductList: FunctionComponent<ProductListProps> = ({
       ))}
     </ul>
   );
-};
+}

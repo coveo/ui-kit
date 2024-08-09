@@ -2,7 +2,7 @@ import {
   RedirectionTrigger as RedirectionTriggerController,
   RedirectionTriggerState,
 } from '@coveo/headless/commerce';
-import {FunctionComponent, useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 interface RedirectionTriggerProps {
   controller?: RedirectionTriggerController;
@@ -10,10 +10,10 @@ interface RedirectionTriggerProps {
 }
 
 // The redirection trigger query example in the searchuisamples org is 'redirect me'.
-export const RedirectionTrigger: FunctionComponent<RedirectionTriggerProps> = ({
+export default function RedirectionTrigger({
   controller,
   staticState,
-}) => {
+}: RedirectionTriggerProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -32,4 +32,4 @@ export const RedirectionTrigger: FunctionComponent<RedirectionTriggerProps> = ({
   }, [redirect]);
 
   return null;
-};
+}

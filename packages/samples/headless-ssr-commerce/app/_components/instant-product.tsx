@@ -4,17 +4,17 @@ import {
   Product,
 } from '@coveo/headless/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface InstantProductsProps {
   staticState: InstantProductsState;
   controller?: InstantProductsController;
 }
 
-export const InstantProducts: FunctionComponent<InstantProductsProps> = ({
+export default function InstantProducts({
   staticState,
   controller,
-}) => {
+}: InstantProductsProps) {
   const router = useRouter();
 
   const [state, setState] = useState(staticState);
@@ -54,4 +54,4 @@ export const InstantProducts: FunctionComponent<InstantProductsProps> = ({
       ))}
     </ul>
   );
-};
+}
