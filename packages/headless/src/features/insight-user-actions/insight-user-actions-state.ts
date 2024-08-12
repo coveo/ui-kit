@@ -4,7 +4,6 @@ export interface UserActionTimeline {
   precedingSessions: UserSession[];
   session: UserSession | undefined;
   followingSessions: UserSession[];
-  caseSessionFound: boolean;
 }
 
 export interface UserSession {
@@ -23,7 +22,7 @@ export interface UserAction {
   cause?: string;
   searchHub?: string;
   document?: {
-    title?: string;
+    title: string;
     clickUri?: string;
     uriHash?: string;
     contentIdKey?: string;
