@@ -100,13 +100,8 @@ const subscribeToSearchRequest = (
       return;
     }
     if (JSON.stringify(triggerParams) === JSON.stringify(lastTriggerParams)) {
-      // engine.dispatch(resetAnswer());
       return;
     }
-    // if (lastTriggerParams && JSON.stringify(triggerParams) !== JSON.stringify(lastTriggerParams)) {
-    //   lastTriggerParams = triggerParams;
-    //   engine.dispatch(resetAnswer());
-    // }
     lastTriggerParams = triggerParams;
     engine.dispatch(resetAnswer());
     engine.dispatch(fetchAnswer(state));
