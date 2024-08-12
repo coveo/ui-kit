@@ -172,7 +172,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     nextApiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',
-    originLevel3: 'default',
+    originLevel3: '',
     anonymous: false,
     deviceId: '',
     userDisplayName: '',
