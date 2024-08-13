@@ -372,26 +372,40 @@ describe('insight user actions preprocessing', () => {
       );
     });
 
-    it('should log a warning in the console if a rawUserAction cannot be parsed', () => {
-      const invalidRawUserAction = {
-        name: 'Custom',
-        value: '{ "key": "value",,,, }',
-        time: '2023-10-01T12:00:00Z',
-      };
+    describe('when a rawUserAction cannot be parsed', () => {
+      let consoleWarnSpy: jest.SpyInstance;
 
-      const consoleWarnSpy = jest
-        .spyOn(console, 'warn')
-        .mockImplementation(
-          () =>
-            'Some user actions could not be parsed. Please check the raw user actions data.'
+      beforeAll(() => {
+        consoleWarnSpy = jest
+          .spyOn(console, 'warn')
+          .mockImplementation(
+            () =>
+              'Some user actions could not be parsed. Please check the raw user actions data.'
+          );
+      });
+
+      afterAll(() => {
+        consoleWarnSpy.mockRestore();
+      });
+
+      it('should log a warning in the console and ignore that value', () => {
+        const invalidRawUserAction = {
+          name: 'Custom',
+          value: '{ "key": "value",,,, }',
+          time: '2023-10-01T12:00:00Z',
+        };
+
+        const mappedAndSortedActions = mapAndSortActionsByMostRecent([
+          invalidRawUserAction,
+        ]);
+
+        expect(mappedAndSortedActions.length).toEqual(0);
+        expect(mappedAndSortedActions).toEqual([]);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          'Some user actions could not be parsed. Please check the raw user actions data.'
         );
-
-      mapAndSortActionsByMostRecent([invalidRawUserAction]);
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'Some user actions could not be parsed. Please check the raw user actions data.'
-      );
-
-      consoleWarnSpy.mockRestore();
+      });
     });
   });
 
@@ -399,28 +413,170 @@ describe('insight user actions preprocessing', () => {
     describe('when it finds a case creation session', () => {
       it('should properly split user actions into sessions and return the timeline including current session', async () => {
         const mockRawActions = [...fakeActions];
+        const expectedTimeline = {
+          precedingSessions: [
+            {
+              start: 1648544100000,
+              end: 1648545870000,
+              actions: [
+                {
+                  actionType: 'CUSTOM',
+                  timestamp: 1648545870000,
+                  eventData: {
+                    type: 'smartSnippetSuggestions',
+                    value: 'likeSmartSnippet',
+                  },
+                  searchHub: 'in-product-help',
+                  document: {},
+                },
+                {
+                  actionType: 'CUSTOM',
+                  timestamp: 1648545720000,
+                  eventData: {
+                    type: 'smartSnippetSuggestions',
+                    value: 'expandSmartSnippetSuggestion',
+                  },
+                  searchHub: 'in-product-help',
+                  document: {},
+                },
+                {
+                  actionType: 'SEARCH',
+                  timestamp: 1648544100000,
+                  eventData: {},
+                  searchHub: 'community-search',
+                  document: {},
+                  query: 'Version 8.124',
+                },
+              ],
+            },
+          ],
+          session: {
+            start: 1648743840000,
+            end: 1648744500000,
+            actions: [
+              {
+                actionType: 'VIEW',
+                timestamp: 1648744500000,
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {},
+              },
+              {
+                actionType: 'CLICK',
+                timestamp: 1648744320000,
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {
+                  title: 'title',
+                  uriHash: 'caCgiG2JPzjZfS7G',
+                },
+              },
+              {
+                actionType: 'CUSTOM',
+                timestamp: 1648744290000,
+                eventData: {
+                  type: 'smartSnippetSuggestions',
+                  value: 'expandSmartSnippetSuggestion',
+                },
+                searchHub: 'in-product-help',
+                document: {},
+              },
+              {
+                actionType: 'TICKET_CREATION',
+                timestamp: 1648744200000,
+                eventData: {},
+              },
+              {
+                actionType: 'SEARCH',
+                timestamp: 1648743900000,
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {},
+                query: 'Blaze pair with iPhone not working',
+              },
+              {
+                actionType: 'CUSTOM',
+                timestamp: 1648743840000,
+                eventData: {
+                  type: 'MySpeedbit App interfaceload',
+                  value: '',
+                },
+                searchHub: 'in-product-help',
+                document: {},
+              },
+            ],
+          },
+          followingSessions: [
+            {
+              start: 1648825140000,
+              end: 1648826040000,
+              actions: [
+                {
+                  actionType: 'VIEW',
+                  timestamp: 1648826040000,
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {},
+                },
+                {
+                  actionType: 'CLICK',
+                  timestamp: 1648825140000,
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    title: 'title',
+                    uriHash: 'TtnKwc0Lo2GY9WAi',
+                  },
+                },
+              ],
+            },
+            {
+              start: 1648822380000,
+              end: 1648822620000,
+              actions: [
+                {
+                  actionType: 'CUSTOM',
+                  timestamp: 1648822620000,
+                  eventData: {
+                    type: 'useless_event',
+                    value: '',
+                  },
+                  searchHub: 'community-support',
+                  document: {},
+                },
+                {
+                  actionType: 'CLICK',
+                  timestamp: 1648822500000,
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    title: 'title',
+                    uriHash: 'KXñi9EWk38wnb1tt',
+                  },
+                },
+                {
+                  actionType: 'SEARCH',
+                  timestamp: 1648822380000,
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {},
+                  query: '',
+                },
+              ],
+            },
+          ],
+        };
+
         const mappedAndSortedActions =
           mapAndSortActionsByMostRecent(mockRawActions);
         const ticketCreationDate = caseCreationDate.getTime();
 
-        const sessions = splitActionsIntoTimelineSessions(
+        const timeline = splitActionsIntoTimelineSessions(
           mappedAndSortedActions,
           ticketCreationDate
         );
 
-        expect(sessions.session?.actions.length).toEqual(6);
-        expect(sessions.session?.start).toBeGreaterThan(
-          sessions.precedingSessions[sessions.precedingSessions.length - 1].end
-        );
-        expect(sessions.session?.end).toBeLessThan(
-          sessions.followingSessions[0].start
-        );
-
-        expect(sessions.precedingSessions.length).toEqual(1);
-        expect(sessions.precedingSessions[0].actions.length).toEqual(3);
-
-        expect(sessions.followingSessions.length).toEqual(2);
-        expect(sessions.followingSessions[0].actions.length).toEqual(2);
+        expect(timeline).toEqual(expectedTimeline);
       });
     });
 
@@ -428,6 +584,80 @@ describe('insight user actions preprocessing', () => {
       describe('when the ticket creation date comes before all the sessions', () => {
         it('should return the timeline with the ticket creation date set as the current session timestamp and following sessions', async () => {
           const mockRawActions = [...fakeActions].slice(0, 8);
+          const expectedTimeline = {
+            precedingSessions: [],
+            session: {
+              start: 1648483800000,
+              end: 1648483800000,
+              actions: [
+                {
+                  actionType: 'TICKET_CREATION',
+                  timestamp: 1648483800000,
+                  eventData: {},
+                },
+              ],
+            },
+            followingSessions: [
+              {
+                start: 1648825140000,
+                end: 1648826040000,
+                actions: [
+                  {
+                    actionType: 'VIEW',
+                    timestamp: 1648826040000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {},
+                  },
+                  {
+                    actionType: 'CLICK',
+                    timestamp: 1648825140000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {
+                      title: 'title',
+                      uriHash: 'TtnKwc0Lo2GY9WAi',
+                    },
+                  },
+                ],
+              },
+              {
+                start: 1648822380000,
+                end: 1648822620000,
+                actions: [
+                  {
+                    actionType: 'CUSTOM',
+                    timestamp: 1648822620000,
+                    eventData: {
+                      type: 'useless_event',
+                      value: '',
+                    },
+                    searchHub: 'community-support',
+                    document: {},
+                  },
+                  {
+                    actionType: 'CLICK',
+                    timestamp: 1648822500000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {
+                      title: 'title',
+                      uriHash: 'KXñi9EWk38wnb1tt',
+                    },
+                  },
+                  {
+                    actionType: 'SEARCH',
+                    timestamp: 1648822380000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {},
+                    query: '',
+                  },
+                ],
+              },
+            ],
+          };
+
           const mappedAndSortedActions =
             mapAndSortActionsByMostRecent(mockRawActions);
           // Date far back before the first session
@@ -437,25 +667,92 @@ describe('insight user actions preprocessing', () => {
             0
           ).getTime();
 
-          const sessions = splitActionsIntoTimelineSessions(
+          const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
             ticketCreationDate
           );
 
-          expect(sessions.session?.actions.length).toEqual(1);
-          expect(sessions.session?.actions[0].actionType).toEqual(
-            UserActionType.TICKET_CREATION
-          );
-          expect(sessions.session?.actions[0].timestamp).toEqual(
-            ticketCreationDate
-          );
-          expect(sessions).toEqual(sessions);
+          expect(timeline).toEqual(expectedTimeline);
         });
       });
 
       describe('when the ticket creation date comes after all the sessions', () => {
         it('should return the timeline with the ticket creation date set as the current session timestamp and preceding sessions', async () => {
           const mockRawActions = [...fakeActions].slice(0, 8);
+          const expectedTimeline = {
+            precedingSessions: [
+              {
+                start: 1648825140000,
+                end: 1648826040000,
+                actions: [
+                  {
+                    actionType: 'VIEW',
+                    timestamp: 1648826040000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {},
+                  },
+                  {
+                    actionType: 'CLICK',
+                    timestamp: 1648825140000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {
+                      title: 'title',
+                      uriHash: 'TtnKwc0Lo2GY9WAi',
+                    },
+                  },
+                ],
+              },
+              {
+                start: 1648822380000,
+                end: 1648822620000,
+                actions: [
+                  {
+                    actionType: 'CUSTOM',
+                    timestamp: 1648822620000,
+                    eventData: {
+                      type: 'useless_event',
+                      value: '',
+                    },
+                    searchHub: 'community-support',
+                    document: {},
+                  },
+                  {
+                    actionType: 'CLICK',
+                    timestamp: 1648822500000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {
+                      title: 'title',
+                      uriHash: 'KXñi9EWk38wnb1tt',
+                    },
+                  },
+                  {
+                    actionType: 'SEARCH',
+                    timestamp: 1648822380000,
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {},
+                    query: '',
+                  },
+                ],
+              },
+            ],
+            session: {
+              start: 1648843800000,
+              end: 1648843800000,
+              actions: [
+                {
+                  actionType: 'TICKET_CREATION',
+                  timestamp: 1648843800000,
+                  eventData: {},
+                },
+              ],
+            },
+            followingSessions: [],
+          };
+
           const mappedAndSortedActions =
             mapAndSortActionsByMostRecent(mockRawActions);
           // Date far back before the first session
@@ -465,19 +762,12 @@ describe('insight user actions preprocessing', () => {
             0
           ).getTime();
 
-          const sessions = splitActionsIntoTimelineSessions(
+          const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
             ticketCreationDate
           );
 
-          expect(sessions.session?.actions.length).toEqual(1);
-          expect(sessions.session?.actions[0].actionType).toEqual(
-            UserActionType.TICKET_CREATION
-          );
-          expect(sessions.session?.actions[0].timestamp).toEqual(
-            ticketCreationDate
-          );
-          expect(sessions).toEqual(sessions);
+          expect(timeline).toEqual(expectedTimeline);
         });
       });
 
@@ -504,14 +794,13 @@ describe('insight user actions preprocessing', () => {
           expect(sessions.session?.actions[0].timestamp).toEqual(
             ticketCreationDate
           );
-          expect(sessions).toEqual(sessions);
         });
       });
     });
   });
 
   describe('#isActionWithinSessionThreshold', () => {
-    it('should return true if the action is within the session inactivity threshold of the previous', async () => {
+    it('should return true if the action is within the session inactivity threshold of the latest session action', async () => {
       const action = {
         actionType: 'CLICK' as UserActionType,
         timestamp: firstSessionDate.getTime(),
@@ -562,6 +851,62 @@ describe('insight user actions preprocessing', () => {
     it('should properly filter out the timeline of the actions that are to be excluded and of empty searches', async () => {
       const actionsToExclude = ['useless_event'];
       const mockRawActions = [...fakeActions].slice(0, 8);
+      const expectedFilteredTimeline = {
+        precedingSessions: [],
+        session: {
+          start: 1648744200000,
+          end: 1648744200000,
+          actions: [
+            {
+              actionType: 'TICKET_CREATION',
+              timestamp: 1648744200000,
+              eventData: {},
+            },
+          ],
+        },
+        followingSessions: [
+          {
+            start: 1648825140000,
+            end: 1648826040000,
+            actions: [
+              {
+                actionType: 'VIEW',
+                timestamp: 1648826040000,
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {},
+              },
+              {
+                actionType: 'CLICK',
+                timestamp: 1648825140000,
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {
+                  title: 'title',
+                  uriHash: 'TtnKwc0Lo2GY9WAi',
+                },
+              },
+            ],
+          },
+          {
+            start: 1648822380000,
+            end: 1648822620000,
+            actions: [
+              {
+                actionType: 'CLICK',
+                timestamp: 1648822500000,
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {
+                  title: 'title',
+                  uriHash: 'KXñi9EWk38wnb1tt',
+                },
+              },
+            ],
+          },
+        ],
+      };
+
       const mappedAndSortedActions =
         mapAndSortActionsByMostRecent(mockRawActions);
       const ticketCreationDate = caseCreationDate.getTime();
@@ -575,31 +920,7 @@ describe('insight user actions preprocessing', () => {
         actionsToExclude
       );
 
-      // Checks that no sessions in each section of the timeline contains any of the actions to exclude
-      actionsToExclude.forEach((actionType) => {
-        filteredTimeline.precedingSessions.forEach((session) => {
-          expect(
-            session.actions.every((action) => action.actionType !== actionType)
-          ).toEqual(true);
-          expect(
-            session.actions.every((action) => action.query !== '')
-          ).toEqual(true);
-        });
-
-        filteredTimeline.followingSessions.forEach((session) => {
-          expect(
-            session.actions.every((action) => action.actionType !== actionType)
-          ).toEqual(true);
-          expect(
-            session.actions.every((action) => action.query !== '')
-          ).toEqual(true);
-        });
-
-        filteredTimeline.session?.actions.forEach((action) => {
-          expect(action.actionType !== actionType).toEqual(true);
-          expect(action.query !== '').toEqual(true);
-        });
-      });
+      expect(filteredTimeline).toEqual(expectedFilteredTimeline);
     });
   });
 
@@ -625,10 +946,10 @@ describe('insight user actions preprocessing', () => {
 
     describe('when the ticket creation date is provided', () => {
       it('should return a timeline with the case creation session', () => {
-        const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
+        const ticketCreationDate = caseCreationDate.getTime();
         const mockState = {
           excludedCustomActions: ['useless_event'],
-          ticketCreationDate: ticketCreationDate,
+          ticketCreationDate: new Date(ticketCreationDate).toISOString(),
           loading: false,
         };
         const preprocessedTimeline = preprocessActionsData(
@@ -637,15 +958,6 @@ describe('insight user actions preprocessing', () => {
         );
 
         expect(preprocessedTimeline).toEqual(expectedTimeline);
-        expect(preprocessedTimeline.precedingSessions.length).toEqual(
-          expectedTimeline.precedingSessions.length
-        );
-        expect(preprocessedTimeline.followingSessions.length).toEqual(
-          expectedTimeline.followingSessions.length
-        );
-        expect(preprocessedTimeline.session?.actions.length).toEqual(
-          expectedTimeline.session?.actions.length
-        );
       });
     });
   });

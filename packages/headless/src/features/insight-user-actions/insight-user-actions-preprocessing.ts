@@ -36,10 +36,7 @@ export const preprocessActionsData = (
   state: UserActionsState,
   actions: Array<RawUserAction>
 ): UserActionTimeline => {
-  const ticketCreationDate = Number(state.ticketCreationDate);
-  const excludedCustomActions = state.excludedCustomActions;
-
-  if (!ticketCreationDate || actions.length === 0) {
+  if (!state.ticketCreationDate || actions.length === 0) {
     return {
       precedingSessions: [],
       session: undefined,
@@ -47,11 +44,15 @@ export const preprocessActionsData = (
     };
   }
 
+  const ticketCreationdate = new Date(state.ticketCreationDate);
+  const ticketCreationTimestamp = ticketCreationdate.getTime();
+  const excludedCustomActions = state.excludedCustomActions;
+
   const mappedAndSortedActions = mapAndSortActionsByMostRecent(actions);
 
   const timeline = splitActionsIntoTimelineSessions(
     mappedAndSortedActions,
-    ticketCreationDate
+    ticketCreationTimestamp
   );
 
   const filteredTimeline = filterTimelineActions(
@@ -156,9 +157,15 @@ const isTimestampInRange = (
  */
 const insertCaseCreationActionInCurrentSession = (
   currentSession: UserSession,
-  caseCreationAction: UserAction
+  ticketCreationDate: number
 ) => {
   let caseCreationActionInserted = false;
+  const caseCreationAction: UserAction = {
+    actionType: UserActionType.TICKET_CREATION,
+    timestamp: ticketCreationDate,
+    eventData: {},
+  };
+
   currentSession.actions.forEach((action, index) => {
     if (caseCreationActionInserted) {
       return;
@@ -204,7 +211,7 @@ const insertSessionInTimeline = (
 /**
  * Divides actions into sessions and organizes them in the timeline based on the ticket creation date. This function does the following:
  * 1) Iterates over the actions and groups them into sessions based on the session inactivity threshold.
- * 2) Inserts the case creation action in the current session if it is part of the session or as the current session if it is not part of any session.
+ * 2) Inserts the case creation action in the current session.
  * 3) Inserts the session in the timeline at the right location.
  * 4) Returns the timeline with the current session, 2 preceding sessions and 2 following sessions.
  * @param actions {UserAction[]} - The actions to split
@@ -227,12 +234,6 @@ export const splitActionsIntoTimelineSessions = (
     actions: [],
   };
 
-  const caseCreationAction: UserAction = {
-    actionType: UserActionType.TICKET_CREATION,
-    timestamp: ticketCreationDate,
-    eventData: {},
-  };
-
   actions.forEach((action) => {
     if (isActionWithinSessionThreshold(action, currentSession.end)) {
       currentSession.actions.push(action);
@@ -249,7 +250,7 @@ export const splitActionsIntoTimelineSessions = (
     if (isCaseCreationIsPartOfCurrentSession) {
       insertCaseCreationActionInCurrentSession(
         currentSession,
-        caseCreationAction
+        ticketCreationDate
       );
     }
 
@@ -267,7 +268,13 @@ export const splitActionsIntoTimelineSessions = (
     returnTimeline.session = {
       start: ticketCreationDate,
       end: ticketCreationDate,
-      actions: [caseCreationAction],
+      actions: [
+        {
+          actionType: UserActionType.TICKET_CREATION,
+          timestamp: ticketCreationDate,
+          eventData: {},
+        },
+      ],
     };
   }
 
