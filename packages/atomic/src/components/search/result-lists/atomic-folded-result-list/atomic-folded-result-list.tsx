@@ -8,6 +8,9 @@ import {
   ResultListProps,
   FoldedCollection,
   buildInteractiveResult,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -24,8 +27,11 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {ArrayProp} from '../../../../utils/props-utils';
+import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {Hidden} from '../../../common/hidden';
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
@@ -74,6 +80,10 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @BindStateToController('resultsPerPage')
   @State()
   public resultsPerPageState!: ResultsPerPageState;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
@@ -86,6 +96,31 @@ export class AtomicFoldedResultList implements InitializableComponent {
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'icon';
+  /**
+   * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet>
+   * ```
+   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list>
+   * ```
+   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
   /**
    * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
    *
@@ -182,6 +217,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+    this.tabManager = buildTabManager(this.bindings.engine);
   }
 
   private initFolding(
@@ -200,7 +236,28 @@ export class AtomicFoldedResultList implements InitializableComponent {
     });
   }
 
+  componentDidLoad() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+    }
+  }
+
   public render() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState.activeTab
+      )
+    ) {
+      return <Hidden></Hidden>;
+    }
     this.itemListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
