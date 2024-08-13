@@ -36,7 +36,10 @@ export class AtomicExternal {
     );
   }
 
-  @Prop({mutable: true}) boundInterface?: AtomicInterface;
+  /**
+   * Represents the bound interface for the AtomicExternal component.
+   */
+  boundInterface?: AtomicInterface;
 
   get #interface() {
     if (!this.boundInterface) {
