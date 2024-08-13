@@ -25,7 +25,7 @@ export interface RawUserAction {
  * - The sessions are then stored in the timeline object either as preceding, following or the current session.
  * - The timeline is then filtered to exclude custom actions passed in the state and empty search queries.
  * Note: The filtering is done at the end for the following reasons:
- * 1) To avoid filtering out actions that are would otherwise break a session into two if they are excluded when in reality its part of one session.
+ * 1) To avoid filtering out actions that would otherwise break a session into two if they are excluded when in reality its part of one session.
  * 2) Filtering at the end does make us iterate over more actions for sorting and mapping, but the number of actions to filter at the end
  * is fewer since the timeline consists of 5 sessions.
  * @param state {UserActionsState} - The state of the user actions
@@ -107,7 +107,7 @@ export const mapAndSortActionsByMostRecent = (
     }, [] as UserAction[])
     .sort(
       (firstAction, secondAction) =>
-        Number(secondAction.timestamp) - Number(firstAction.timestamp)
+        secondAction.timestamp - firstAction.timestamp
     );
 
   if (parsingError) {
@@ -120,17 +120,17 @@ export const mapAndSortActionsByMostRecent = (
 };
 
 /**
- * Checks whether an action is within the same session as the previous action based on the specified session inactivity threshold.
+ * Checks whether an action is within the same session as the latest action based on the specified session inactivity threshold.
  * @param action {UserAction} - The current action
- * @param previousTimestamp {number} - The timestamp of the previous action
+ * @param latestTimestampInSession {number} - The timestamp of the latest action in the session
  * @returns {boolean}
  */
 export const isActionWithinSessionThreshold = (
   action: UserAction,
-  previousTimestamp: number
+  latestTimestampInSession: number
 ): boolean => {
   return (
-    Math.abs(Number(action.timestamp) - Number(previousTimestamp)) <
+    Math.abs(action.timestamp - latestTimestampInSession) <
     SESSION_INACTIVITY_THRESHOLD
   );
 };
@@ -160,6 +160,10 @@ const insertCaseCreationActionInCurrentSession = (
 ) => {
   let caseCreationActionInserted = false;
   currentSession.actions.forEach((action, index) => {
+    if (caseCreationActionInserted) {
+      return;
+    }
+
     if (
       action.timestamp <= caseCreationAction.timestamp &&
       !caseCreationActionInserted
