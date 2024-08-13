@@ -59,7 +59,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
- * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-generated-answer',
@@ -116,6 +115,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() collapsible?: boolean;
 
   /**
+   * Whether to render the rephrase buttons that lets the user rephrase the answer.
+   * @default false
+   */
+  @Prop() withRephraseButtons?: boolean;
+
+  /**
    * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
    */
@@ -133,6 +138,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      withRephraseButtons: this.withRephraseButtons,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
