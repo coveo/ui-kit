@@ -75,6 +75,8 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   /** @type {object} */
   facetData;
+  /** @type {boolean} */
+  isSortComponentReady;
   /** @type {object} */
   sortData;
   /** @type {boolean} */
@@ -136,6 +138,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   getSortOptionsFromStore() {
     this.sortData = getAllSortOptionsFromStore(this.engineId);
+    this.isSortComponentReady = true;
   }
 
   /**
@@ -266,7 +269,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @returns {Array<SortOption>}
    */
   get sortOptions() {
-    return this.hasSortOptions ? this.sortData : [];
+    return this.isSortComponentReady ? this.sortData : [];
   }
 
   get shouldDisplayFiltersTitle() {
@@ -292,14 +295,6 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   get hasFacets() {
     return this.facetData && !!Object.keys(this.facetData).length;
-  }
-
-  /**
-   * Indicates whether the sort options are available.
-   * @returns {boolean}
-   */
-  get hasSortOptions() {
-    return this.sortData?.length > 0;
   }
 
   /**

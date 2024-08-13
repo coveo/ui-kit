@@ -1,5 +1,5 @@
 import {Interception} from 'cypress/types/net-stubbing';
-import {InterceptAliases} from '../../../page-objects/search';
+import {getQueryAlias, InterceptAliases} from '../../../page-objects/search';
 import {useCaseEnum} from '../../../page-objects/use-case';
 import {
   completeSearchRequest,
@@ -45,12 +45,7 @@ function sortExpectations(selector: SortSelector) {
       value: string,
       useCase: useCaseEnum
     ) => {
-      const interceptAliasToUse =
-        useCase === useCaseEnum.search
-          ? InterceptAliases.Search
-          : InterceptAliases.Insight;
-
-      cy.get<Interception>(interceptAliasToUse)
+      cy.get<Interception>(getQueryAlias(useCase))
         .then((interception) => {
           const body = interception.request.body;
           expect(body.sortCriteria).to.equal(value);

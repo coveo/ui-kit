@@ -6,7 +6,7 @@
   <template lwc:else>
     <template if:false={hideSort}>
       <div class="slds-var-m-bottom_small slds-clearfix">
-        <template lwc:if={hasSortOptions}>
+        <template lwc:if={isSortComponentReady}>
           <c-quantic-sort class="slds-float_left" engine-id={engineId}>
             <template for:each={sortOptions} for:item="sortOption">
               <c-quantic-sort-option
