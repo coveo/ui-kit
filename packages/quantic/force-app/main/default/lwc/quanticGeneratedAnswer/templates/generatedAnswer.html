@@ -7,7 +7,7 @@
           >{labels.generatedAnswerForYou}</span
         >
         <div class="generated-answer__header-actions slds-grid">
-          <template lwc:if={shouldDisplayActions}>
+          <template lwc:if={shouldDisplayFeedback}>
             <div class="slds-grid flex-one slds-grid_align-end">
               <c-quantic-feedback
                 state={feedbackState}
@@ -67,7 +67,7 @@
                   ></c-quantic-source-citations>
                 </div>
               </template>
-              <template lwc:if={shouldDisplayActions}>
+              <template lwc:if={shouldDisplayRephraseButtons}>
                 <div class={rephraseButtonsCssClass}>
                   <c-quantic-generated-answer-rephrase-buttons
                     data-cy="generated-answer__rephrase-buttons"
