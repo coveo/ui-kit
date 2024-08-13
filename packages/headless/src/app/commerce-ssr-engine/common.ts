@@ -57,17 +57,17 @@ export function buildControllerDefinitions<
 > {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
     // TODO: find a way to make it dynamic
-    const searchDisabled =
+    const unavailableInSearchSolutionType =
       'search' in definition &&
       definition['search'] === false &&
       solutionType === SolutionType['search'];
 
-    const listingDisabled =
+    const unavailableInListingSolutionType =
       'listing' in definition &&
       definition['listing'] === false &&
       solutionType === SolutionType['listing'];
 
-    if (searchDisabled || listingDisabled) {
+    if (unavailableInSearchSolutionType || unavailableInListingSolutionType) {
       return null;
     }
 

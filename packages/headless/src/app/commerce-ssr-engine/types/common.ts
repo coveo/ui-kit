@@ -130,12 +130,12 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
 
 export interface ControllerDefinitionOption {
   /**
-   * Whether the controller is used in a product listing context.
+   * Whether the controller will be used in a product listing context.
    * @defaultValue true
    */
   listing?: boolean;
   /**
-   * Whether the controller is used in a search page context.
+   * Whether the controller will be used in a search page context.
    * @defaultValue true
    */
   search?: boolean;
