@@ -110,7 +110,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
   ignoreNextEnterKeyPress = false;
   /** @type {string} */
   ariaActiveDescendant;
+  /** @type {boolean} */
   inputIsFocused = false;
+  /** @type {string} */
+  _inputValue = '';
 
   connectedCallback() {
     this.addEventListener(
@@ -127,9 +130,14 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   renderedCallback() {
-    if (this.input.value !== this.inputValue) {
-      this.input.value = this.inputValue;
+    if (this._inputValue !== this.inputValue) {
+      this._inputValue = this.inputValue;
+      this.setDisplayedInputValue(this.inputValue);
     }
+  }
+
+  setDisplayedInputValue(value) {
+    this.input.value = value;
   }
 
   /**
@@ -168,6 +176,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * Sends the "quantic__submitSearch" event.
    */
   sendSubmitSearchEvent() {
+    if (this._inputValue !== this.input.value) {
+      this.sendInputValueChangeEvent(this.input.value);
+    }
+
     this.dispatchEvent(
       new CustomEvent('quantic__submitsearch', {
         bubbles: true,
@@ -234,6 +246,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
     // eslint-disable-next-line default-case
     switch (event.key) {
       case keys.ESC:
+        event.preventDefault();
         this.input.removeAttribute('aria-activedescendant');
         this.input.blur();
         break;
@@ -246,7 +259,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
         event.preventDefault();
         const {id, value} = this.suggestionListElement.selectionUp();
         if (value) {
-          this.input.value = value;
+          this.setDisplayedInputValue(value);
         }
         this.ariaActiveDescendant = id;
         this.input.setAttribute(
@@ -260,7 +273,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
         event.preventDefault();
         const {id, value} = this.suggestionListElement.selectionDown();
         if (value) {
-          this.input.value = value;
+          this.setDisplayedInputValue(value);
         }
         this.ariaActiveDescendant = id;
         this.input.setAttribute(
