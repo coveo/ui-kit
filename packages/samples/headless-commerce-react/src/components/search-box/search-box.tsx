@@ -1,8 +1,9 @@
 import {
   SearchBox as HeadlessSearchBox,
   InstantProducts as HeadlessInstantProducts,
+  Suggestion,
 } from '@coveo/headless/commerce';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import InstantProducts from '../instant-products/instant-products';
 
 interface ISearchBoxProps {
@@ -15,71 +16,153 @@ export default function SearchBox(props: ISearchBoxProps) {
   const {controller, instantProductsController, navigate} = props;
 
   const [state, setState] = useState(controller.state);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    controller.state.value && controller.clear();
-    controller.subscribe(() => setState(controller.state));
+    controller.subscribe(() => setState({...controller.state}));
   }, [controller]);
 
+  const focusSearchBoxInput = () => {
+    searchInputRef.current!.focus();
+  };
+
+  const hideDropdown = () => {
+    setIsDropdownVisible(false);
+  };
+
+  const showDropdown = () => {
+    setIsDropdownVisible(true);
+  };
+
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === '') {
+      hideDropdown();
+      controller.clear();
+      return;
+    }
+
     controller.updateText(e.target.value);
     instantProductsController.updateQuery(e.target.value);
+    controller.showSuggestions();
+    showDropdown();
+  };
+
+  const onSearchBoxInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    switch (e.key) {
+      case 'Escape':
+        if (isDropdownVisible) {
+          hideDropdown();
+          break;
+        }
+        if (state.value !== '') {
+          controller.clear();
+          instantProductsController.updateQuery(state.value);
+          break;
+        }
+        break;
+      case 'Enter':
+        hideDropdown();
+        controller.submit();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onClickSearchBoxClear = () => {
+    focusSearchBoxInput();
+    hideDropdown();
+    controller.clear();
+    instantProductsController.updateQuery(state.value);
+  };
+
+  const onClickSearchBoxSubmit = () => {
+    controller.submit();
+    focusSearchBoxInput();
+    hideDropdown();
+  };
+
+  const onFocusSuggestion = (suggestion: Suggestion) => {
+    instantProductsController.updateQuery(suggestion.rawValue);
+  };
+
+  const onSelectSuggestion = (suggestion: Suggestion) => {
+    controller.selectSuggestion(suggestion.rawValue);
+    hideDropdown();
+  };
+
+  const renderDropdown = () => {
+    return (
+      <div className="SearchBoxDropdown row">
+        {state.suggestions.length > 0 && (
+          <div className="QuerySuggestion column small">
+            <p>Query suggestions</p>
+            <ul>
+              {state.suggestions.map((suggestion) => (
+                <li
+                  key={`${suggestion.rawValue}-suggestion`}
+                  className="QuerySuggestion"
+                >
+                  <button
+                    onMouseOver={() => onFocusSuggestion(suggestion)}
+                    onFocus={() => onFocusSuggestion(suggestion)}
+                    onClick={() => onSelectSuggestion(suggestion)}
+                    dangerouslySetInnerHTML={{
+                      __html: suggestion.highlightedValue,
+                    }}
+                  ></button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="InstantProducts column">
+          <InstantProducts
+            controller={instantProductsController}
+            navigate={navigate}
+          />
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div className="Searchbox">
+    <search className="Searchbox">
       <input
         className="SearchBoxInput"
+        onChange={onSearchBoxInputChange}
+        onKeyDown={onSearchBoxInputKeyDown}
+        ref={searchInputRef}
         value={state.value}
-        onChange={(e) => onSearchBoxInputChange(e)}
       ></input>
-      {state.value !== '' && (
-        <span className="SearchBoxClear">
-          <button onClick={controller.clear}>X</button>
-        </span>
-      )}
-      <button onClick={controller.submit}>Search</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Query suggestions</th>
-            <th>Instant products</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              {state.suggestions.length > 0 && (
-                <ul className="QuerySuggestions">
-                  {state.suggestions.map((suggestion, index) => (
-                    <li key={index} className="QuerySuggestion">
-                      <button
-                        onMouseEnter={() =>
-                          instantProductsController.updateQuery(
-                            suggestion.rawValue
-                          )
-                        }
-                        onClick={() =>
-                          controller.selectSuggestion(suggestion.rawValue)
-                        }
-                        dangerouslySetInnerHTML={{
-                          __html: suggestion.highlightedValue,
-                        }}
-                      ></button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </td>
-            <td>
-              <InstantProducts
-                controller={instantProductsController}
-                navigate={navigate}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <button
+        aria-label="Clear query"
+        className="SearchBoxClear"
+        disabled={
+          state.isLoadingSuggestions || state.isLoading || state.value === ''
+        }
+        onClick={onClickSearchBoxClear}
+        title="Clear query"
+        type="reset"
+      >
+        X
+      </button>
+      <button
+        arial-label="Submit query"
+        className="SearchBoxSubmit"
+        disabled={state.isLoading}
+        onClick={onClickSearchBoxSubmit}
+        title="Submit query"
+        type="submit"
+      >
+        Search
+      </button>
+      {isDropdownVisible && renderDropdown()}
+    </search>
   );
 }
