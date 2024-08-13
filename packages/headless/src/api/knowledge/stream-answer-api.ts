@@ -149,7 +149,7 @@ const updateCacheWithEvent = (
       }
       break;
     case 'genqa.endOfStreamType':
-      if (parsedPayload.answerGenerated) {
+      if (draft.answer?.length || parsedPayload.answerGenerated) {
         handleEndOfStream(draft, parsedPayload);
       }
       break;
@@ -236,9 +236,7 @@ const constructAnswerQueryParams = (state: StateNeededByAnswerAPI) => {
     q,
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
-        responseFormat: {
-          answerStyle: state.generatedAnswer.responseFormat.answerStyle,
-        },
+        responseFormat: state.generatedAnswer.responseFormat,
         citationsFieldToInclude,
       },
     },
