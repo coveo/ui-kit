@@ -7,14 +7,14 @@ export interface UserActionTimeline {
 }
 
 export interface UserSession {
-  start: string;
-  end: string;
+  start: number;
+  end: number;
   actions: UserAction[];
 }
 
 export interface UserAction {
   actionType: UserActionType;
-  timestamp: string;
+  timestamp: number;
   eventData?: {
     type?: string;
     value?: string;

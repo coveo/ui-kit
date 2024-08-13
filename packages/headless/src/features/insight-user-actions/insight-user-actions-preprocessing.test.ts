@@ -164,12 +164,12 @@ const fakeActions = [
 const expectedTimeline = {
   precedingSessions: [
     {
-      start: '1648544100000',
-      end: '1648545870000',
+      start: 1648544100000,
+      end: 1648545870000,
       actions: [
         {
           actionType: 'CUSTOM',
-          timestamp: '1648545870000',
+          timestamp: 1648545870000,
           eventData: {
             type: 'smartSnippetSuggestions',
             value: 'likeSmartSnippet',
@@ -179,7 +179,7 @@ const expectedTimeline = {
         },
         {
           actionType: 'CUSTOM',
-          timestamp: '1648545720000',
+          timestamp: 1648545720000,
           eventData: {
             type: 'smartSnippetSuggestions',
             value: 'expandSmartSnippetSuggestion',
@@ -189,7 +189,7 @@ const expectedTimeline = {
         },
         {
           actionType: 'SEARCH',
-          timestamp: '1648544100000',
+          timestamp: 1648544100000,
           eventData: {},
           searchHub: 'community-search',
           document: {},
@@ -199,19 +199,19 @@ const expectedTimeline = {
     },
   ],
   session: {
-    start: '1648743840000',
-    end: '1648744500000',
+    start: 1648743840000,
+    end: 1648744500000,
     actions: [
       {
         actionType: 'VIEW',
-        timestamp: '1648744500000',
+        timestamp: 1648744500000,
         eventData: {},
         searchHub: 'in-product-help',
         document: {},
       },
       {
         actionType: 'CLICK',
-        timestamp: '1648744320000',
+        timestamp: 1648744320000,
         eventData: {},
         searchHub: 'in-product-help',
         document: {
@@ -221,7 +221,7 @@ const expectedTimeline = {
       },
       {
         actionType: 'CUSTOM',
-        timestamp: '1648744290000',
+        timestamp: 1648744290000,
         eventData: {
           type: 'smartSnippetSuggestions',
           value: 'expandSmartSnippetSuggestion',
@@ -231,12 +231,12 @@ const expectedTimeline = {
       },
       {
         actionType: 'TICKET_CREATION',
-        timestamp: '1648744200000',
+        timestamp: 1648744200000,
         eventData: {},
       },
       {
         actionType: 'SEARCH',
-        timestamp: '1648743900000',
+        timestamp: 1648743900000,
         eventData: {},
         searchHub: 'in-product-help',
         document: {},
@@ -244,7 +244,7 @@ const expectedTimeline = {
       },
       {
         actionType: 'CUSTOM',
-        timestamp: '1648743840000',
+        timestamp: 1648743840000,
         eventData: {
           type: 'MySpeedbit App interfaceload',
           value: '',
@@ -256,19 +256,19 @@ const expectedTimeline = {
   },
   followingSessions: [
     {
-      start: '1648825140000',
-      end: '1648826040000',
+      start: 1648825140000,
+      end: 1648826040000,
       actions: [
         {
           actionType: 'VIEW',
-          timestamp: '1648826040000',
+          timestamp: 1648826040000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {},
         },
         {
           actionType: 'CLICK',
-          timestamp: '1648825140000',
+          timestamp: 1648825140000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {
@@ -279,12 +279,12 @@ const expectedTimeline = {
       ],
     },
     {
-      start: '1648822380000',
-      end: '1648822620000',
+      start: 1648822380000,
+      end: 1648822620000,
       actions: [
         {
           actionType: 'CLICK',
-          timestamp: '1648822500000',
+          timestamp: 1648822500000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {
@@ -303,35 +303,35 @@ describe('insight user actions preprocessing', () => {
       const expectedMappedAndSortedActions = [
         {
           actionType: 'VIEW',
-          timestamp: '1648826040000',
+          timestamp: 1648826040000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {},
         },
         {
           actionType: 'CLICK',
-          timestamp: '1648825140000',
+          timestamp: 1648825140000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {title: 'title', uriHash: 'TtnKwc0Lo2GY9WAi'},
         },
         {
           actionType: 'CUSTOM',
-          timestamp: '1648822620000',
+          timestamp: 1648822620000,
           eventData: {type: 'useless_event', value: ''},
           searchHub: 'community-support',
           document: {},
         },
         {
           actionType: 'CLICK',
-          timestamp: '1648822500000',
+          timestamp: 1648822500000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {title: 'title', uriHash: 'KXñi9EWk38wnb1tt'},
         },
         {
           actionType: 'SEARCH',
-          timestamp: '1648822380000',
+          timestamp: 1648822380000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {},
@@ -339,21 +339,21 @@ describe('insight user actions preprocessing', () => {
         },
         {
           actionType: 'VIEW',
-          timestamp: '1648744500000',
+          timestamp: 1648744500000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {},
         },
         {
           actionType: 'CLICK',
-          timestamp: '1648744320000',
+          timestamp: 1648744320000,
           eventData: {},
           searchHub: 'in-product-help',
           document: {title: 'title', uriHash: 'caCgiG2JPzjZfS7G'},
         },
         {
           actionType: 'CUSTOM',
-          timestamp: '1648744290000',
+          timestamp: 1648744290000,
           eventData: {
             type: 'smartSnippetSuggestions',
             value: 'expandSmartSnippetSuggestion',
@@ -367,8 +367,8 @@ describe('insight user actions preprocessing', () => {
         mapAndSortActionsByMostRecent(mockRawActions);
 
       expect(mappedAndSortedActions).toEqual(expectedMappedAndSortedActions);
-      expect(Number(mappedAndSortedActions[0].timestamp)).toBeGreaterThan(
-        Number(mappedAndSortedActions[1].timestamp)
+      expect(mappedAndSortedActions[0].timestamp).toBeGreaterThan(
+        mappedAndSortedActions[1].timestamp
       );
     });
 
@@ -401,7 +401,7 @@ describe('insight user actions preprocessing', () => {
         const mockRawActions = [...fakeActions];
         const mappedAndSortedActions =
           mapAndSortActionsByMostRecent(mockRawActions);
-        const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
+        const ticketCreationDate = caseCreationDate.getTime();
 
         const sessions = splitActionsIntoTimelineSessions(
           mappedAndSortedActions,
@@ -409,14 +409,11 @@ describe('insight user actions preprocessing', () => {
         );
 
         expect(sessions.session?.actions.length).toEqual(6);
-        expect(Number(sessions.session?.start)).toBeGreaterThan(
-          Number(
-            sessions.precedingSessions[sessions.precedingSessions.length - 1]
-              .end
-          )
+        expect(sessions.session?.start).toBeGreaterThan(
+          sessions.precedingSessions[sessions.precedingSessions.length - 1].end
         );
-        expect(Number(sessions.session?.end)).toBeLessThan(
-          Number(sessions.followingSessions[0].start)
+        expect(sessions.session?.end).toBeLessThan(
+          sessions.followingSessions[0].start
         );
 
         expect(sessions.precedingSessions.length).toEqual(1);
@@ -434,9 +431,11 @@ describe('insight user actions preprocessing', () => {
           const mappedAndSortedActions =
             mapAndSortActionsByMostRecent(mockRawActions);
           // Date far back before the first session
-          const ticketCreationDate = JSON.stringify(
-            createRelativeDate(firstSessionDate, -1000, 0).getTime()
-          );
+          const ticketCreationDate = createRelativeDate(
+            firstSessionDate,
+            -1000,
+            0
+          ).getTime();
 
           const sessions = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
@@ -460,9 +459,11 @@ describe('insight user actions preprocessing', () => {
           const mappedAndSortedActions =
             mapAndSortActionsByMostRecent(mockRawActions);
           // Date far back before the first session
-          const ticketCreationDate = JSON.stringify(
-            createRelativeDate(firstSessionDate, 5000, 0).getTime()
-          );
+          const ticketCreationDate = createRelativeDate(
+            firstSessionDate,
+            5000,
+            0
+          ).getTime();
 
           const sessions = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
@@ -485,9 +486,11 @@ describe('insight user actions preprocessing', () => {
           const mockRawActions = [...fakeActions].slice(0, 8);
           const mappedAndSortedActions =
             mapAndSortActionsByMostRecent(mockRawActions);
-          const ticketCreationDate = JSON.stringify(
-            createRelativeDate(caseCreationDate, 120, 0).getTime()
-          );
+          const ticketCreationDate = createRelativeDate(
+            caseCreationDate,
+            120,
+            0
+          ).getTime();
 
           const sessions = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
@@ -511,16 +514,18 @@ describe('insight user actions preprocessing', () => {
     it('should return true if the action is within the session inactivity threshold of the previous', async () => {
       const action = {
         actionType: 'CLICK' as UserActionType,
-        timestamp: firstSessionDate.getTime().toString(),
+        timestamp: firstSessionDate.getTime(),
         eventData: {},
         searchHub: 'in-product-help',
         document: {title: 'title', uriHash: 'TtnKwc0Lo2GY9WAi'},
       };
 
       // Added 1 min to action timestamp, so it is within 30 mins of the previous action
-      const previousEndDateTime = JSON.stringify(
-        createRelativeDate(firstSessionDate, 1, 0).getTime()
-      );
+      const previousEndDateTime = createRelativeDate(
+        firstSessionDate,
+        1,
+        0
+      ).getTime();
 
       const isSameSession = isActionWithinSessionThreshold(
         action,
@@ -532,16 +537,18 @@ describe('insight user actions preprocessing', () => {
     it('should return false if the action is not within 30mins of the previous', async () => {
       const action = {
         actionType: 'CLICK' as UserActionType,
-        timestamp: firstSessionDate.getTime().toString(),
+        timestamp: firstSessionDate.getTime(),
         eventData: {},
         searchHub: 'in-product-help',
         document: {title: 'title', uriHash: 'TtnKwc0Lo2GY9WAi'},
       };
 
       // Added 1 hour to action timestamp, so it is not within 30 mins of the previous action
-      const previousEndDateTime = JSON.stringify(
-        createRelativeDate(firstSessionDate, 60, 0).getTime()
-      );
+      const previousEndDateTime = createRelativeDate(
+        firstSessionDate,
+        60,
+        0
+      ).getTime();
 
       const isSameSession = isActionWithinSessionThreshold(
         action,
@@ -557,7 +564,7 @@ describe('insight user actions preprocessing', () => {
       const mockRawActions = [...fakeActions].slice(0, 8);
       const mappedAndSortedActions =
         mapAndSortActionsByMostRecent(mockRawActions);
-      const ticketCreationDate = JSON.stringify(caseCreationDate.getTime());
+      const ticketCreationDate = caseCreationDate.getTime();
       const sessionsTimeline = splitActionsIntoTimelineSessions(
         mappedAndSortedActions,
         ticketCreationDate

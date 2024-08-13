@@ -6,9 +6,9 @@ import {
   UserSession,
 } from './insight-user-actions-state';
 
-const SECONDS = 1000;
-const MINUTES = SECONDS * 60;
-const SESSION_INACTIVITY_THRESHOLD = 30 * MINUTES;
+const SECOND = 1000;
+const MINUTE = SECOND * 60;
+const SESSION_INACTIVITY_THRESHOLD = 30 * MINUTE;
 const NUMBER_OF_PRECEDING_SESSIONS = 2;
 const NUMBER_OF_FOLLOWING_SESSIONS = 2;
 
@@ -36,7 +36,7 @@ export const preprocessActionsData = (
   state: UserActionsState,
   actions: Array<RawUserAction>
 ): UserActionTimeline => {
-  const ticketCreationDate = state.ticketCreationDate;
+  const ticketCreationDate = Number(state.ticketCreationDate);
   const excludedCustomActions = state.excludedCustomActions;
 
   if (!ticketCreationDate || actions.length === 0) {
@@ -66,7 +66,7 @@ const mapRawActionToUserAction = (rawAction: RawUserAction): UserAction => {
   const actionData = JSON.parse(rawAction.value);
   return {
     actionType: rawAction.name as UserActionType,
-    timestamp: rawAction.time,
+    timestamp: Number(rawAction.time),
     eventData: {
       type: actionData.event_type,
       value: actionData.event_value,
@@ -122,12 +122,12 @@ export const mapAndSortActionsByMostRecent = (
 /**
  * Checks whether an action is within the same session as the previous action based on the specified session inactivity threshold.
  * @param action {UserAction} - The current action
- * @param previousTimestamp {string} - The timestamp of the previous action
+ * @param previousTimestamp {number} - The timestamp of the previous action
  * @returns {boolean}
  */
 export const isActionWithinSessionThreshold = (
   action: UserAction,
-  previousTimestamp: string
+  previousTimestamp: number
 ): boolean => {
   return (
     Math.abs(Number(action.timestamp) - Number(previousTimestamp)) <
@@ -137,18 +137,16 @@ export const isActionWithinSessionThreshold = (
 
 /**
  * Checks if the timestamp is within a specified range.
- * @param timestamp {string} - The timestamp to check
+ * @param timestamp {number} - The timestamp to check
  * @param startTimestamp {number} - The start timestamp
  * @param endTimestamp {number} - The end timestamp
  * @returns {boolean}
  */
 const isTimestampInRange = (
-  timestamp: string,
-  startTimestamp: string,
-  endTimestamp: string
-): boolean =>
-  Number(timestamp) >= Number(startTimestamp) &&
-  Number(timestamp) <= Number(endTimestamp);
+  timestamp: number,
+  startTimestamp: number,
+  endTimestamp: number
+): boolean => timestamp >= startTimestamp && timestamp <= endTimestamp;
 
 /**
  * Inserts the case creation action at the right index in the current session actions array.
@@ -175,27 +173,27 @@ const insertCaseCreationActionInCurrentSession = (
 /**
  * Inserts the session in the timeline at the right location.
  * @param currentSession {UserSession} - The current session
- * @param ticketCreationDate {string} - The ticket creation date
+ * @param ticketCreationDate {number} - The ticket creation date
  * @param timeline {UserActionTimeline} - The timeline
  * @returns {void}
  */
 const insertSessionInTimeline = (
-  currentSession: UserSession,
-  ticketCreationDate: string,
+  session: UserSession,
+  ticketCreationDate: number,
   timeline: UserActionTimeline
 ) => {
   const currentSessionIsCaseCreationSession = isTimestampInRange(
     ticketCreationDate,
-    currentSession.start,
-    currentSession.end
+    session.start,
+    session.end
   );
 
   if (currentSessionIsCaseCreationSession) {
-    timeline.session = currentSession;
-  } else if (ticketCreationDate < currentSession.start) {
-    timeline.followingSessions.push(currentSession);
+    timeline.session = session;
+  } else if (ticketCreationDate < session.start) {
+    timeline.followingSessions.push(session);
   } else {
-    timeline.precedingSessions.push(currentSession);
+    timeline.precedingSessions.push(session);
   }
 };
 
@@ -211,7 +209,7 @@ const insertSessionInTimeline = (
  */
 export const splitActionsIntoTimelineSessions = (
   actions: UserAction[],
-  ticketCreationDate: string
+  ticketCreationDate: number
 ): UserActionTimeline => {
   const returnTimeline: UserActionTimeline = {
     precedingSessions: [],
