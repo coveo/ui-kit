@@ -42,7 +42,7 @@ export const Default: Story = {
 };
 
 export const WithAtomicExternals: Story = {
-  name: 'atomic-refine-toggle',
+  name: 'With multiple atomic-external',
   decorators: [
     (story) => html`
       <atomic-search-interface id="foo" data-testid="root-interface">
