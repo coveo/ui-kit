@@ -203,30 +203,38 @@ export const WithResultList: Story = {
       <!--<atomic-sort-dropdown></atomic-sort-dropdown>-->
     </atomic-layout-section>
     <atomic-layout-section section="products">
-      <atomic-result-list tabs-included='["all"]' display="list" density="compact" image-size="small">
+      <atomic-result-list tabs-included='["article"]' display="list" density="compact" image-size="small" data-testid="included-result-list">
         <atomic-result-template>
+
           <template>
+
             <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
             <atomic-result-section-visual>
 
               <img src="https://picsum.photos/350" class="thumbnail" />
             </atomic-result-section-visual>
             <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-            <atomic-result-section-excerpt><atomic-result-text
+            <atomic-result-section-excerpt>
+              "included result list"
+            <atomic-result-text
                 field="excerpt"></atomic-result-text></atomic-result-section-excerpt>
           </template>
         </atomic-result-template>
       </atomic-result-list>
-       <atomic-result-list tabs-excluded='["all"]' display="grid" density="normal" image-size="icon">
+       <atomic-result-list tabs-excluded='["article"]' display="grid" density="normal" image-size="icon" data-testid="excluded-result-list">
+
         <atomic-result-template>
           <template>
+
             <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
             <atomic-result-section-visual>
 
               <img src="https://picsum.photos/400" class="thumbnail" />
             </atomic-result-section-visual>
             <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-            <atomic-result-section-excerpt><atomic-result-text
+            <atomic-result-section-excerpt>
+            "excluded result list"
+            <atomic-result-text
                 field="excerpt"></atomic-result-text></atomic-result-section-excerpt>
           </template>
         </atomic-result-template>
