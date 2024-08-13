@@ -7,6 +7,9 @@ import {
   buildResultsPerPage,
   buildInteractiveResult,
   Result,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Method, h} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
@@ -15,8 +18,11 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {ArrayProp} from '../../../../utils/props-utils';
+import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {Hidden} from '../../../common/hidden';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
   DisplayTableData,
@@ -82,7 +88,11 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultsPerPage')
   @State()
   private resultsPerPageState!: ResultsPerPageState;
-  @State() private resultTemplateRegistered = false;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
+  @State() private resultTemplateRegistered = true;
   @State() public error!: Error;
   @State() private templateHasError = false;
 
@@ -107,6 +117,32 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop({reflect: true, mutable: true})
   public imageSize: ItemDisplayImageSize = 'icon';
+
+  /**
+   * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet>
+   * ```
+   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list>
+   * ```
+   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -135,6 +171,7 @@ export class AtomicResultList implements InitializableComponent {
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     this.itemTemplateProvider = new ItemTemplateProvider({
@@ -164,7 +201,28 @@ export class AtomicResultList implements InitializableComponent {
     });
   }
 
+  componentDidLoad() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+    }
+  }
+
   public render() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState.activeTab
+      )
+    ) {
+      return <Hidden></Hidden>;
+    }
     this.resultListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 

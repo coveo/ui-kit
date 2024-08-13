@@ -1498,7 +1498,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -1506,7 +1506,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicResultList {
   protected el: HTMLElement;
