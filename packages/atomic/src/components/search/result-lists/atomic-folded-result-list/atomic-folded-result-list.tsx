@@ -97,26 +97,26 @@ export class AtomicFoldedResultList implements InitializableComponent {
    */
   @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'icon';
   /**
-   * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
-   *  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet>
+   *  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet>
    * ```
-   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+   * If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
   public tabsIncluded: string[] | string = '[]';
 
   /**
-   * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.
+   * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
-   *  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list>
+   *  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list>
    * ```
-   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+   * If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
