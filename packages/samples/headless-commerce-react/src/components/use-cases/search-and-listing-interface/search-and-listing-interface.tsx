@@ -7,7 +7,6 @@ import {useState, useEffect} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager';
 import FacetGenerator from '../../facets/facet-generator/facet-generator';
 import ProductList from '../../product-list/product-list';
-import ProductsPerPage from '../../products-per-page/products-per-page';
 import ShowMore from '../../show-more/show-more';
 import Sort from '../../sort/sort';
 import Summary from '../../summary/summary';
@@ -38,27 +37,23 @@ export default function SearchAndListingInterface(
 
   return (
     <div className="SearchAndListingInterface row">
-      <div className="row">
-        <Sort controller={searchOrListingController.sort()} />
-        <Summary controller={searchOrListingController.summary()} />
-      </div>
-      <div className="column small">
+      <div className="column">
         <FacetGenerator
           controller={searchOrListingController.facetGenerator()}
         />
       </div>
-      <div className="column medium">
+      <div className="column">
         <BreadcrumbManager
           controller={searchOrListingController.breadcrumbManager()}
         />
-
+        <Sort controller={searchOrListingController.sort()} />
+        <Summary controller={searchOrListingController.summary()} />
         <ProductList
           products={searchOrListingState.products}
           controllerBuilder={searchOrListingController.interactiveProduct}
           cartController={cartController}
           navigate={navigate}
         ></ProductList>
-        <ProductsPerPage controller={searchOrListingController.pagination()} />
         <ShowMore controller={searchOrListingController.pagination()} />
         {/*<Pagination controller={controller.pagination()} />*/}
       </div>
