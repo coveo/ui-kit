@@ -671,14 +671,14 @@ export declare interface AtomicFrequentlyBoughtTogether extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['answerStyle', 'collapsible', 'withToggle']
+  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerStyle', 'collapsible', 'withToggle'],
+  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -2111,14 +2111,14 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle'],
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;
@@ -2202,14 +2202,14 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 
 @ProxyCmp({
-  inputs: ['expression', 'label']
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['expression', 'label'],
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSortExpression {
   protected el: HTMLElement;

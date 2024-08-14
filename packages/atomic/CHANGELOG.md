@@ -1,3 +1,15 @@
+## 2.76.1 (2024-08-07)
+
+# 2.76.0 (2024-08-07)
+
+### Bug Fixes
+
+- **atomic:** clear min/max for atomic-timeframe-facet when clearing filters ([#4240](https://github.com/coveo/ui-kit/issues/4240)) ([d97b04d](https://github.com/coveo/ui-kit/commits/d97b04de97e3b0fb45943249e330054179ff892a))
+
+### Features
+
+- **atomic:** add tab-manager support for facet components ([#4210](https://github.com/coveo/ui-kit/issues/4210)) ([600ee80](https://github.com/coveo/ui-kit/commits/600ee803edd1ae2e87c5aa75524fbd0bab96ca96))
+
 # 2.75.0 (2024-07-31)
 
 ### Features

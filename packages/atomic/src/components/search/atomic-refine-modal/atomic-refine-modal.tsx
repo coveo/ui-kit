@@ -13,6 +13,9 @@ import {
   SearchStatus,
   FacetManager,
   buildFacetManager,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {
@@ -21,6 +24,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {sortByDocumentPosition} from '../../../utils/utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
 import {
@@ -96,6 +100,10 @@ export class AtomicRefineModal implements InitializableComponent {
   @State()
   public facetManagerState!: FacetManagerState;
   @State() @BindStateToController('sort') public sortState!: SortState;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   @Prop({mutable: true}) openButton?: HTMLElement;
@@ -127,6 +135,7 @@ export class AtomicRefineModal implements InitializableComponent {
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.watchEnabled(this.isOpen);
   }
 
@@ -261,7 +270,16 @@ export class AtomicRefineModal implements InitializableComponent {
     option && this.sort.sortBy(option.criteria);
   }
 
-  private buildOption({expression, criteria, label}: SortDropdownOption) {
+  private buildOption({expression, criteria, label, tabs}: SortDropdownOption) {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...tabs.included],
+        [...tabs.excluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      return;
+    }
     return (
       <option value={expression} selected={this.sort.isSortedBy(criteria)}>
         {this.bindings.i18n.t(label)}
