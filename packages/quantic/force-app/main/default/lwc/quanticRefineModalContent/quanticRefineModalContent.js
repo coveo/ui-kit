@@ -276,7 +276,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    * Whether custom sort options are found in the store.
    * @returns {boolean}
    */
-  get hasCustomSortOptions() {
+  get hasSortOptions() {
     return this.sortData.length > 0;
   }
 
