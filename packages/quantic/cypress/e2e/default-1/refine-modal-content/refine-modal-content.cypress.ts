@@ -144,7 +144,7 @@ describe('quantic-refine-content', () => {
 
   describe('when using custom sort options', () => {
     it('should render the same custom sort options in the sort component and in the refine modal', () => {
-      visitRefineContent({});
+      visitRefineContent();
       Expect.sortCriteriaInSearchRequest(defaultCustomOptionValue);
 
       scope(
