@@ -20,7 +20,6 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-refine-toggle',
   decorators: [
-    decorator,
     (story) => html`
       ${story()}
       <div style="display:none;">
@@ -38,6 +37,7 @@ export const Default: Story = {
         ></atomic-facet>
       </div>
     `,
+    decorator,
   ],
 };
 
