@@ -8,7 +8,7 @@ import {
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
-const SESSION_INACTIVITY_THRESHOLD = 30 * MINUTE;
+const SESSION_INACTIVITY_THRESHOLD_IN_MS = 30 * MINUTE;
 const NUMBER_OF_PRECEDING_SESSIONS = 2;
 const NUMBER_OF_FOLLOWING_SESSIONS = 2;
 
@@ -22,12 +22,9 @@ export interface RawUserAction {
  * Preprocesses the raw user actions data from the API into a user actions timeline with the following steps:
  * - The data is first sorted by most recent and mapped into user actions.
  * - The actions are then split into sessions based on the ticket creation date.
- * - The sessions are then stored in the timeline object either as preceding, following or the current session.
- * - The timeline is then filtered to exclude custom actions passed in the state and empty search queries.
- * Note: The filtering is done at the end for the following reasons:
- * 1) To avoid filtering out actions that would otherwise break a session into two if they are excluded when in reality its part of one session.
- * 2) Filtering at the end does make us iterate over more actions for sorting and mapping, but the number of actions to filter at the end
- * is fewer since the timeline consists of 5 sessions.
+ * - The sessions are then stored in the timeline object either as preceding, following or the case creation session.
+ * - The timeline is then filtered to exclude custom actions passed in the state `excludedCustomActions` and empty search queries.
+ * Note: The filtering is done at the end to avoid filtering out actions that would lead to incorrectly split a session into two by creating a gap.
  * @param state {UserActionsState} - The state of the user actions
  * @param actions {rawUserAction[]} - The raw user actions array to preprocess
  * @returns {UserActionTimeline}
@@ -132,7 +129,7 @@ export const isActionWithinSessionThreshold = (
 ): boolean => {
   return (
     Math.abs(action.timestamp - latestTimestampInSession) <
-    SESSION_INACTIVITY_THRESHOLD
+    SESSION_INACTIVITY_THRESHOLD_IN_MS
   );
 };
 
@@ -150,38 +147,6 @@ const isTimestampInRange = (
 ): boolean => timestamp >= startTimestamp && timestamp <= endTimestamp;
 
 /**
- * Inserts the case creation action at the right index in the current session actions array.
- * @param currentSession {UserSession} - The current session
- * @param caseCreationAction {UserAction} - The case creation action
- * @returns {void}
- */
-const insertCaseCreationActionInCurrentSession = (
-  currentSession: UserSession,
-  ticketCreationDate: number
-) => {
-  let caseCreationActionInserted = false;
-  const caseCreationAction: UserAction = {
-    actionType: UserActionType.TICKET_CREATION,
-    timestamp: ticketCreationDate,
-    eventData: {},
-  };
-
-  currentSession.actions.forEach((action, index) => {
-    if (caseCreationActionInserted) {
-      return;
-    }
-
-    if (
-      action.timestamp <= caseCreationAction.timestamp &&
-      !caseCreationActionInserted
-    ) {
-      currentSession.actions.splice(index, 0, caseCreationAction);
-      caseCreationActionInserted = true;
-    }
-  });
-};
-
-/**
  * Inserts the session in the timeline at the right location.
  * @param currentSession {UserSession} - The current session
  * @param ticketCreationDate {number} - The ticket creation date
@@ -193,18 +158,15 @@ const insertSessionInTimeline = (
   ticketCreationDate: number,
   timeline: UserActionTimeline
 ) => {
-  const currentSessionIsCaseCreationSession = isTimestampInRange(
-    ticketCreationDate,
-    session.start,
-    session.end
-  );
-
-  if (currentSessionIsCaseCreationSession) {
-    timeline.session = session;
-  } else if (ticketCreationDate < session.start) {
+  if (ticketCreationDate < session.start) {
     timeline.followingSessions.push(session);
-  } else {
+  } else if (
+    ticketCreationDate >
+    session.end + SESSION_INACTIVITY_THRESHOLD_IN_MS
+  ) {
     timeline.precedingSessions.push(session);
+  } else {
+    timeline.session = session;
   }
 };
 
@@ -235,23 +197,44 @@ export const splitActionsIntoTimelineSessions = (
   };
 
   actions.forEach((action) => {
+    const currentSessionEndPlusThreshold =
+      currentSession.end + SESSION_INACTIVITY_THRESHOLD_IN_MS;
+    console.log('action: ' + action.actionType);
     if (isActionWithinSessionThreshold(action, currentSession.end)) {
       currentSession.actions.push(action);
       currentSession.start = action.timestamp;
       return;
     }
-
+    console.log(JSON.stringify(currentSession));
+    console.log('new session created ?');
+    // We check if the case creation is within the current session or within the inactivity threshold after the end of the session.
     const isCaseCreationIsPartOfCurrentSession = isTimestampInRange(
       ticketCreationDate,
       currentSession.start,
-      currentSession.end
+      currentSessionEndPlusThreshold
     );
 
     if (isCaseCreationIsPartOfCurrentSession) {
-      insertCaseCreationActionInCurrentSession(
-        currentSession,
-        ticketCreationDate
-      );
+      let caseCreationActionInserted = false;
+      const caseCreationAction: UserAction = {
+        actionType: UserActionType.TICKET_CREATION,
+        timestamp: ticketCreationDate,
+        eventData: {},
+      };
+
+      currentSession.actions.forEach((action, index) => {
+        if (caseCreationActionInserted) {
+          return;
+        }
+
+        if (
+          action.timestamp <= caseCreationAction.timestamp &&
+          !caseCreationActionInserted
+        ) {
+          currentSession.actions.splice(index, 0, caseCreationAction);
+          caseCreationActionInserted = true;
+        }
+      });
     }
 
     insertSessionInTimeline(currentSession, ticketCreationDate, returnTimeline);
@@ -285,8 +268,7 @@ export const splitActionsIntoTimelineSessions = (
     ),
     session: returnTimeline.session,
     followingSessions: returnTimeline.followingSessions.slice(
-      returnTimeline.followingSessions.length - NUMBER_OF_FOLLOWING_SESSIONS,
-      returnTimeline.followingSessions.length
+      returnTimeline.followingSessions.length - NUMBER_OF_FOLLOWING_SESSIONS
     ),
   };
 };
@@ -312,7 +294,7 @@ const shouldExcludeAction = (
 };
 
 /**
- * Filters the timeline actions to exclude custom actions and empty searches.
+ * Filters the timeline actions to exclude custom actions where the type or value is included in the excludedCustomActions and also empty searches.
  * @param timeline {UserActionTimeline}
  * @param actionsToExclude {string[]}
  * @returns {UserActionTimeline}
