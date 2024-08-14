@@ -76,7 +76,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   /** @type {object} */
   facetData;
   /** @type {boolean} */
-  isSortComponentReady;
+  isSortComponentReady = false;
   /** @type {object} */
   sortData;
   /** @type {boolean} */
@@ -270,6 +270,14 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   get sortOptions() {
     return this.isSortComponentReady ? this.sortData : [];
+  }
+
+  /**
+   * Whether custom sort options are found in the store.
+   * @returns {boolean}
+   */
+  get hasCustomSortOptions() {
+    return this.sortData.length > 0;
   }
 
   get shouldDisplayFiltersTitle() {
