@@ -104,8 +104,7 @@ const fakeActions = [
     name: 'Click',
     value: {
       title: 'title',
-      // eslint-disable-next-line @cspell/spellchecker
-      uri_hash: 'ZKoJzryqñ9QlKPlh',
+      uri_hash: 'someHash',
       origin_level_1: 'in-product-help',
     },
   },
@@ -628,7 +627,7 @@ describe('insight user actions preprocessing', () => {
             mappedAndSortedActions,
             ticketCreationDate
           );
-
+          console.log(JSON.stringify(timeline));
           expect(timeline).toEqual(expectedTimeline);
         });
       });
