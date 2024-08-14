@@ -61,7 +61,6 @@ export const Default: Story = {
   name: 'atomic-tab-manager',
   decorators: [
     (story) => html`
-
       <atomic-search-layout>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
