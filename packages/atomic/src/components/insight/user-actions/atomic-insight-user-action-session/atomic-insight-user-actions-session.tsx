@@ -1,9 +1,10 @@
 import {Component, h, Prop, Watch, State} from '@stencil/core';
-import Bookmark from '../../../../images/bookmark.svg';
+import Flag from '../../../../images/flag.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import {AtomicInsightUserAction} from '../atomic-insight-user-action/atomic-insight-user-action';
 
 export type UserActionType =
   | 'SEARCH'
@@ -12,19 +13,19 @@ export type UserActionType =
   | 'VIEW'
   | 'CUSTOM';
 
-type UserActions = Array<{
+export type UserAction = {
   type: UserActionType;
   origin: string;
   timestamp: number;
   actionTitle: string;
-}>;
+};
 
 /**
  * @internal
  * The `AtomicInsightUserActionSession` component displays all the user actions that took place during a specific user session.
  * @category Insight Panel
  * @example
- * <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+ * <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
  */
 @Component({
   tag: 'atomic-insight-user-actions-session',
@@ -35,18 +36,18 @@ export class AtomicInsightUserActionsSession {
   @InitializeBindings() public bindings!: InsightBindings;
   @State() public error!: Error;
 
-  @Prop({mutable: true}) public startDate!: number;
-  @Prop({mutable: true}) public userActions: UserActions = [];
+  @Prop({mutable: true}) public startTimestamp!: number;
+  @Prop({mutable: true}) public userActions: Array<UserAction> = [];
+  @Prop({mutable: true}) public isActiveSession = false;
 
   private caseCreationIndex = -1;
-  private userActionsToDisplay: UserActions = [];
-  private userActionsAfterCaseCreation: UserActions = [];
-  private showMoreActionsButtonShouldBeVisible = false;
-  @State() actionsAfterCaseCreationShouldBeVisible = false;
+  private userActionsToDisplay: Array<UserAction> = [];
+  private userActionsAfterCaseCreation: Array<UserAction> = [];
+  private isShowMoreActionsButtonVisible = false;
+  @State() areActionsAfterCaseCreationVisible = false;
 
   connectedCallback() {
-    this.setUserActionsToDisplay();
-    this.extractUserActionsAfterCaseCreation();
+    this.prepareUserActionsToDisplay();
   }
 
   setCaseCreationIndex() {
@@ -56,26 +57,16 @@ export class AtomicInsightUserActionsSession {
   }
 
   @Watch('userActions')
-  setUserActionsToDisplay() {
+  prepareUserActionsToDisplay() {
     this.setCaseCreationIndex();
 
-    if (this.caseCreationIndex === -1) {
+    if (!this.isActiveSession || this.caseCreationIndex === -1) {
       this.userActionsToDisplay = this.userActions;
-    } else {
-      this.userActionsToDisplay = this.userActions.slice(
-        this.caseCreationIndex,
-        this.userActions.length
-      );
-    }
-  }
-
-  @Watch('userActions')
-  extractUserActionsAfterCaseCreation() {
-    this.setCaseCreationIndex();
-
-    if (this.caseCreationIndex === -1) {
       this.userActionsAfterCaseCreation = [];
     } else {
+      this.userActionsToDisplay = this.userActions.slice(
+        this.caseCreationIndex
+      );
       this.userActionsAfterCaseCreation = this.userActions.slice(
         0,
         this.caseCreationIndex
@@ -84,36 +75,39 @@ export class AtomicInsightUserActionsSession {
   }
 
   showActionsAfterCaseCreation() {
-    this.actionsAfterCaseCreationShouldBeVisible = true;
+    this.areActionsAfterCaseCreationVisible = true;
   }
 
   renderSessionStartDate() {
     const {year, month, dayOfWeek, day} = parseTimestampToDateDetails(
-      this.startDate
+      this.startTimestamp
     );
 
     const formatedStartDate = `${dayOfWeek}. ${month} ${day}, ${year}`;
     return (
       <div class="flex items-center px-2 pb-3">
-        <div class="flex-one mr-2 flex h-5 w-5 items-center justify-center rounded-full">
-          <atomic-icon icon={Bookmark} class="h-3 w-3"></atomic-icon>
-        </div>
+        {this.isActiveSession ? (
+          <div class="flex-one session-start-icon__container mr-2 flex h-5 w-5 items-center justify-center rounded-full">
+            <atomic-icon icon={Flag} class="h-3 w-3"></atomic-icon>
+          </div>
+        ) : null}
 
         <div class="flex-1 font-semibold">{formatedStartDate}</div>
       </div>
     );
   }
 
-  renderActions(actions: UserActions) {
+  renderActions(actions: Array<UserAction>) {
     return (
       <ol class="px-3">
         {actions?.map(({actionTitle, origin, type, timestamp}) => (
-          <atomic-insight-user-action
+          <AtomicInsightUserAction
             actionTitle={actionTitle}
             origin={origin}
             type={type}
             timestamp={timestamp}
-          ></atomic-insight-user-action>
+            bindings={this.bindings}
+          ></AtomicInsightUserAction>
         ))}
       </ol>
     );
@@ -144,18 +138,18 @@ export class AtomicInsightUserActionsSession {
   }
 
   public render() {
-    this.showMoreActionsButtonShouldBeVisible =
-      !this.actionsAfterCaseCreationShouldBeVisible &&
+    this.isShowMoreActionsButtonVisible =
+      !this.areActionsAfterCaseCreationVisible &&
       !!this.userActionsAfterCaseCreation.length;
 
     return (
       <div>
         {this.renderSessionStartDate()}
 
-        {this.actionsAfterCaseCreationShouldBeVisible &&
+        {this.areActionsAfterCaseCreationVisible &&
           this.renderActions(this.userActionsAfterCaseCreation)}
 
-        {this.showMoreActionsButtonShouldBeVisible &&
+        {this.isShowMoreActionsButtonVisible &&
           this.renderShowMoreActionsButton()}
 
         {this.renderActions(this.userActionsToDisplay)}
