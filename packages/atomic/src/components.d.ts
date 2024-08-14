@@ -802,6 +802,9 @@ export namespace Components {
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
      */
     interface AtomicExternal {
+        /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
         "boundInterface"?: AtomicInterface;
         /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
@@ -6443,6 +6446,9 @@ declare namespace LocalJSX {
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
      */
     interface AtomicExternal {
+        /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
         "boundInterface"?: AtomicInterface;
         /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
