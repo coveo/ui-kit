@@ -80,6 +80,7 @@ describe('generated answer slice', () => {
       const newCitations = [
         buildMockCitation({
           id: 'some-other-id',
+          uri: 'my-uri',
         }),
       ];
       const finalState = generatedAnswerReducer(
@@ -94,6 +95,30 @@ describe('generated answer slice', () => {
         ...existingCitations,
         ...newCitations,
       ]);
+    });
+
+    it('Shows only citations that have different Uris', () => {
+      const existingCitations = [
+        buildMockCitation({
+          id: 'current-id',
+          uri: 'my-uri',
+        }),
+      ];
+      const newCitations = [
+        buildMockCitation({
+          id: 'some-other-id',
+          uri: 'my-uri',
+        }),
+      ];
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          citations: existingCitations,
+        },
+        updateCitations({citations: newCitations})
+      );
+
+      expect(finalState.citations).toEqual([...newCitations]);
     });
   });
 

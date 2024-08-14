@@ -1,3 +1,27 @@
+# 2.77.0 (2024-08-14)
+
+### Bug Fixes
+
+- **answerStream:** handle end of stream ([#4270](https://github.com/coveo/ui-kit/issues/4270)) ([5e1b49a](https://github.com/coveo/ui-kit/commits/5e1b49aee5e77532a109dc1abeb3f6b0de421ca1))
+- **headless:** fix answer state using the new pattern ([#4271](https://github.com/coveo/ui-kit/issues/4271)) ([d1bcc53](https://github.com/coveo/ui-kit/commits/d1bcc5373a54a413b58ceba54269fa0aa18125a8))
+
+### Features
+
+- **genqa:** filter citations that points to same document ([#4250](https://github.com/coveo/ui-kit/issues/4250)) ([7f04f73](https://github.com/coveo/ui-kit/commits/7f04f7349ad2f25a7100d7d537686a3a06a25188))
+- **headless SSR:** add NavigatorContext in SSR sample ([#4238](https://github.com/coveo/ui-kit/issues/4238)) ([47d9624](https://github.com/coveo/ui-kit/commits/47d9624c7392b1bae3e3eee7580be2596e0b41bd))
+
+# 2.76.0 (2024-08-07)
+
+### Bug Fixes
+
+- **commerce:** fix field suggestions state update ([#4245](https://github.com/coveo/ui-kit/issues/4245)) ([e8ebb09](https://github.com/coveo/ui-kit/commits/e8ebb095978794b625caec8aed3e985646513469))
+- **commerce:** namespace field suggestions to prevent clash with facet search ([#4247](https://github.com/coveo/ui-kit/issues/4247)) ([a26184e](https://github.com/coveo/ui-kit/commits/a26184e4a4c17015b20f6e9271cbb8faf960b06a))
+
+### Features
+
+- **answerApi:** evaluations ([#4239](https://github.com/coveo/ui-kit/issues/4239)) ([e680640](https://github.com/coveo/ui-kit/commits/e6806409501be9ea272f5781c834f69bcd4e5431))
+- **headless SSR:** support navigator context in both Engine and fetch/hydrate functions ([#4231](https://github.com/coveo/ui-kit/issues/4231)) ([99bbef1](https://github.com/coveo/ui-kit/commits/99bbef1e52cde79e06b1b5f7815d2a6fba7d474b))
+
 # 2.75.0 (2024-07-31)
 
 ### Bug Fixes

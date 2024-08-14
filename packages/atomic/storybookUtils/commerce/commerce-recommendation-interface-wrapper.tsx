@@ -6,7 +6,7 @@ import {
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
-import type * as _ from '../src/components.d.ts';
+import type * as _ from '../../src/components.js';
 
 export const wrapInCommerceRecommendationInterface = (
   engineConfig?: Partial<CommerceEngineConfiguration>

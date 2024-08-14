@@ -13,6 +13,7 @@ import {
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   resetAnswer,
+  sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedbackV2} from '../../../features/generated-answer/generated-answer-analytics-actions';
@@ -102,6 +103,7 @@ const subscribeToSearchRequest = (
       return;
     }
     lastTriggerParams = triggerParams;
+    engine.dispatch(resetAnswer());
     engine.dispatch(fetchAnswer(state));
   };
   engine.subscribe(strictListener);
@@ -172,6 +174,7 @@ export function buildAnswerApiGeneratedAnswer(
         answerApiState: selectAnswer(engine.state).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
+      engine.dispatch(sendGeneratedAnswerFeedback());
     },
   };
 }
