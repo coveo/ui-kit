@@ -20,6 +20,7 @@ import {
   Listen,
   Method,
   h,
+  Watch,
 } from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
@@ -236,14 +237,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
     });
   }
 
-  componentDidLoad() {
-    if (
-      !shouldDisplayOnCurrentTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab
-      )
-    ) {
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
       this.bindings.store.unsetLoadingFlag(this.loadingFlag);
     }
   }

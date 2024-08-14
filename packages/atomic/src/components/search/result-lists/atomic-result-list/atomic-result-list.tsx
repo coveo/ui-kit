@@ -11,7 +11,7 @@ import {
   TabManagerState,
   buildTabManager,
 } from '@coveo/headless';
-import {Component, Element, State, Prop, Method, h} from '@stencil/core';
+import {Component, Element, State, Prop, Method, h, Watch} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -201,14 +201,12 @@ export class AtomicResultList implements InitializableComponent {
     });
   }
 
-  componentDidLoad() {
-    if (
-      !shouldDisplayOnCurrentTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab
-      )
-    ) {
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
       this.bindings.store.unsetLoadingFlag(this.loadingFlag);
     }
   }
