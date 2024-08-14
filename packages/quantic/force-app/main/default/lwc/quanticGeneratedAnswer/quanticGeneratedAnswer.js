@@ -460,7 +460,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     );
   }
 
-  get shouldDisplayFeedback() {
+  get shouldDisplayActions() {
     return this.isVisible && !this.isStreaming && !this.isAnswerCollapsed;
   }
 

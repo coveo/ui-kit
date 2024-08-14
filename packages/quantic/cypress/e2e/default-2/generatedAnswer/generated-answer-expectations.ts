@@ -201,17 +201,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    citationNumberContains: (index: number, value: string) => {
-      selector
-        .citationIndex(index)
-        .then((element) => {
-          expect(element.get(0).innerText).to.equal(value);
-        })
-        .log(
-          `the citation at the index ${index} should contain the number "${value}"`
-        );
-    },
-
     citationLinkContains: (index: number, value: string) => {
       selector
         .citationLink(index)
