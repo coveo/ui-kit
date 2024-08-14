@@ -72,7 +72,7 @@ test.describe('AtomicTabManager', () => {
 
       test('result list', async ({tabManager}) => {
         await expect(tabManager.excludedResultList).toBeVisible();
-        await expect(tabManager.includedResultList).not.toBeVisible();
+        await expect(tabManager.includedResultList).toBeHidden();
       });
     });
 
@@ -127,7 +127,7 @@ test.describe('AtomicTabManager', () => {
 
         test('result list', async ({tabManager}) => {
           await expect(tabManager.includedResultList).toBeVisible();
-          await expect(tabManager.excludedResultList).not.toBeVisible();
+          await expect(tabManager.excludedResultList).toBeHidden();
         });
       });
 
@@ -166,7 +166,7 @@ test.describe('AtomicTabManager', () => {
 
           test('result list', async ({tabManager}) => {
             await expect(tabManager.excludedResultList).toBeVisible();
-            await expect(tabManager.includedResultList).not.toBeVisible();
+            await expect(tabManager.includedResultList).toBeHidden();
           });
         });
       });
@@ -263,7 +263,7 @@ test.describe('AtomicTabManager', () => {
 
         test('result list', async ({tabManager}) => {
           await expect(tabManager.includedResultList).toBeVisible();
-          await expect(tabManager.excludedResultList).not.toBeVisible();
+          await expect(tabManager.excludedResultList).toBeHidden();
         });
       });
 
@@ -305,7 +305,7 @@ test.describe('AtomicTabManager', () => {
 
           test('result list', async ({tabManager}) => {
             await expect(tabManager.excludedResultList).toBeVisible();
-            await expect(tabManager.includedResultList).not.toBeVisible();
+            await expect(tabManager.includedResultList).toBeHidden();
           });
         });
       });

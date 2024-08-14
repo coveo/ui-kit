@@ -61,6 +61,7 @@ export const Default: Story = {
   name: 'atomic-tab-manager',
   decorators: [
     (story) => html`
+
       <atomic-search-layout>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
@@ -181,69 +182,6 @@ export const Default: Story = {
           <atomic-layout-section section="pagination"></atomic-layout-section>
         </atomic-layout-section>
       </atomic-search-layout>
-    `,
-  ],
-};
-
-export const WithResultList: Story = {
-  decorators: [
-    (story) => html`
-      ${story()}
-     <atomic-result-layout>
-  <atomic-layout-section section="search">
-    <atomic-search-box></atomic-search-box>
-  </atomic-layout-section>
-  <atomic-layout-section section="facets">
-    <atomic-facets></atomic-facets>
-  </atomic-layout-section>
-  <atomic-layout-section section="main">
-    <atomic-layout-section section="status">
-      <atomic-breadbox></atomic-breadbox>
-      <atomic-query-summary></atomic-query-summary>
-      <!--<atomic-sort-dropdown></atomic-sort-dropdown>-->
-    </atomic-layout-section>
-    <atomic-layout-section section="products">
-      <atomic-result-list tabs-included='["article"]' display="list" density="compact" image-size="small" data-testid="included-result-list">
-        <atomic-result-template>
-
-          <template>
-
-            <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
-            <atomic-result-section-visual>
-
-              <img src="https://picsum.photos/350" class="thumbnail" />
-            </atomic-result-section-visual>
-            <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-            <atomic-result-section-excerpt>
-              "included result list"
-            <atomic-result-text
-                field="excerpt"></atomic-result-text></atomic-result-section-excerpt>
-          </template>
-        </atomic-result-template>
-      </atomic-result-list>
-       <atomic-result-list tabs-excluded='["article"]' display="grid" density="normal" image-size="icon" data-testid="excluded-result-list">
-
-        <atomic-result-template>
-          <template>
-
-            <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
-            <atomic-result-section-visual>
-
-              <img src="https://picsum.photos/400" class="thumbnail" />
-            </atomic-result-section-visual>
-            <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-            <atomic-result-section-excerpt>
-            "excluded result list"
-            <atomic-result-text
-                field="excerpt"></atomic-result-text></atomic-result-section-excerpt>
-          </template>
-        </atomic-result-template>
-      </atomic-result-list>
-      <atomic-query-error></atomic-commerce-query-error>
-    </atomic-layout-section>
-    <atomic-layout-section section="pagination"></atomic-layout-section>
-  </atomic-layout-section>
-</atomic-result-layout>
     `,
   ],
 };
