@@ -147,38 +147,6 @@ const isTimestampInRange = (
 ): boolean => timestamp >= startTimestamp && timestamp <= endTimestamp;
 
 /**
- * Inserts the case creation action at the right index in the current session actions array.
- * @param currentSession {UserSession} - The current session
- * @param caseCreationAction {UserAction} - The case creation action
- * @returns {void}
- */
-const insertCaseCreationActionInCurrentSession = (
-  currentSession: UserSession,
-  ticketCreationDate: number
-) => {
-  let caseCreationActionInserted = false;
-  const caseCreationAction: UserAction = {
-    actionType: UserActionType.TICKET_CREATION,
-    timestamp: ticketCreationDate,
-    eventData: {},
-  };
-
-  currentSession.actions.forEach((action, index) => {
-    if (caseCreationActionInserted) {
-      return;
-    }
-
-    if (
-      action.timestamp <= caseCreationAction.timestamp &&
-      !caseCreationActionInserted
-    ) {
-      currentSession.actions.splice(index, 0, caseCreationAction);
-      caseCreationActionInserted = true;
-    }
-  });
-};
-
-/**
  * Inserts the session in the timeline at the right location.
  * @param currentSession {UserSession} - The current session
  * @param ticketCreationDate {number} - The ticket creation date
@@ -190,15 +158,7 @@ const insertSessionInTimeline = (
   ticketCreationDate: number,
   timeline: UserActionTimeline
 ) => {
-  const currentSessionIsCaseCreationSession = isTimestampInRange(
-    ticketCreationDate,
-    session.start,
-    session.end
-  );
-
-  if (currentSessionIsCaseCreationSession) {
-    timeline.session = session;
-  } else if (ticketCreationDate < session.start) {
+  if (ticketCreationDate < session.start) {
     timeline.followingSessions.push(session);
   } else {
     timeline.precedingSessions.push(session);
@@ -241,17 +201,38 @@ export const splitActionsIntoTimelineSessions = (
     const isCaseCreationIsPartOfCurrentSession = isTimestampInRange(
       ticketCreationDate,
       currentSession.start,
-      currentSession.end
+      currentSession.end + SESSION_INACTIVITY_THRESHOLD_IN_MS
     );
 
     if (isCaseCreationIsPartOfCurrentSession) {
-      insertCaseCreationActionInCurrentSession(
+      let caseCreationActionInserted = false;
+      const caseCreationAction: UserAction = {
+        actionType: UserActionType.TICKET_CREATION,
+        timestamp: ticketCreationDate,
+        eventData: {},
+      };
+
+      currentSession.actions.forEach((action, index) => {
+        if (caseCreationActionInserted) {
+          return;
+        }
+
+        if (
+          action.timestamp <= caseCreationAction.timestamp &&
+          !caseCreationActionInserted
+        ) {
+          currentSession.actions.splice(index, 0, caseCreationAction);
+          caseCreationActionInserted = true;
+        }
+      });
+      returnTimeline.session = currentSession;
+    } else {
+      insertSessionInTimeline(
         currentSession,
-        ticketCreationDate
+        ticketCreationDate,
+        returnTimeline
       );
     }
-
-    insertSessionInTimeline(currentSession, ticketCreationDate, returnTimeline);
 
     currentSession = {
       start: action.timestamp,
@@ -259,6 +240,9 @@ export const splitActionsIntoTimelineSessions = (
       actions: [action],
     };
   });
+
+  // We add the last session to the timeline.
+  insertSessionInTimeline(currentSession, ticketCreationDate, returnTimeline);
 
   // If the case creation action was not part of any session added to the timeline.
   if (returnTimeline.session === undefined) {
@@ -275,6 +259,7 @@ export const splitActionsIntoTimelineSessions = (
     };
   }
 
+  // We return the current session and the 2 preceding and following sessions in the timeline.
   return {
     precedingSessions: returnTimeline.precedingSessions.slice(
       0,
