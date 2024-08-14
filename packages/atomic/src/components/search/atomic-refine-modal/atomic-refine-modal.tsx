@@ -16,6 +16,7 @@ import {
   TabManager,
   TabManagerState,
   buildTabManager,
+  loadSortCriteriaActions,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {
@@ -268,6 +269,22 @@ export class AtomicRefineModal implements InitializableComponent {
       (option) => option.expression === select.value
     );
     option && this.sort.sortBy(option.criteria);
+  }
+
+  public componentShouldUpdate(): void {
+    if (
+      this.options.some(
+        (option) => option.expression === this.sortState.sortCriteria
+      )
+    ) {
+      return;
+    }
+
+    const action = loadSortCriteriaActions(
+      this.bindings.engine
+    ).updateSortCriterion(this.options[0]?.criteria);
+
+    this.bindings.engine.dispatch(action);
   }
 
   private buildOption({expression, criteria, label, tabs}: SortDropdownOption) {
