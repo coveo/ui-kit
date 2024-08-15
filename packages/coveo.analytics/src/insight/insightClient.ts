@@ -688,8 +688,11 @@ export class CoveoInsightClient {
         );
     }
 
-    public logTriggerNotify(metadata: TriggerNotifyMetadata) {
-        return this.logCustomEvent(SearchPageEvents.triggerNotify, metadata);
+    public logTriggerNotify(triggerNotifyMetadata: TriggerNotifyMetadata, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.triggerNotify,
+            metadata ? {...generateMetadataToSend(metadata, false), ...triggerNotifyMetadata} : triggerNotifyMetadata
+        );
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {

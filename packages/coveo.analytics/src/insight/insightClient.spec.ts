@@ -653,6 +653,14 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(InsightEvents.createArticle, exampleCreateArticleMetadata);
         });
 
+        it('should send proper payload for #logTriggerNotify', async () => {
+            const exampleTriggerNotifyMetadata = {
+                notifications: ['foo', 'bar'],
+            };
+            await client.logTriggerNotify(exampleTriggerNotifyMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, exampleTriggerNotifyMetadata);
+        });
+
         it('should send proper payload for #generatedAnswerFeedbackSubmitV2', async () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
@@ -1490,11 +1498,15 @@ describe('InsightClient', () => {
         });
 
         it('should send proper payload for #logTriggerNotify', async () => {
-            const meta = {
+            const exampleTriggerNotifyMetadata = {
                 notifications: ['foo', 'bar'],
             };
-            await client.logTriggerNotify(meta);
-            expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, meta);
+            const expectedMetadata = {
+                ...exampleTriggerNotifyMetadata,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logTriggerNotify(exampleTriggerNotifyMetadata, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, expectedMetadata);
         });
     });
 
