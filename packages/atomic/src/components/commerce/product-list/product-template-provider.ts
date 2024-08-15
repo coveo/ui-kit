@@ -21,8 +21,13 @@ function defaultTemplate() {
   template.innerHTML = markup.trim();
   content.appendChild(template.content);
 
+  const linkContent = document.createDocumentFragment();
+  const linkTemplate = document.createElement('template');
+  linkTemplate.innerHTML = '<atomic-product-link></atomic-product-link>';
+  linkContent.appendChild(linkTemplate.content);
   return {
     content,
+    linkContent,
     conditions: [],
   };
 }

@@ -214,6 +214,7 @@ export class AtomicResultList implements InitializableComponent {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(result),
+      linkContent: this.itemTemplateProvider.getLinkTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,

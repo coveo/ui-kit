@@ -14,4 +14,8 @@ export class ItemTemplateProvider extends TemplateProvider<Result> {
   public getTemplateContent(result: AnyItem) {
     return super.getTemplateContent(extractUnfoldedItem(result));
   }
+
+  public getLinkTemplateContent(result: AnyItem) {
+    return super.getLinkTemplateContent(extractUnfoldedItem(result));
+  }
 }

@@ -17,20 +17,32 @@ function defaultTemplate() {
   const content = document.createDocumentFragment();
   const linkEl = document.createElement('atomic-result-link');
   content.appendChild(linkEl);
+  const linkContent = document.createDocumentFragment();
+  linkContent.appendChild(document.createElement('atomic-result-link'));
   return {
     content,
+    linkContent,
     conditions: [],
   };
 }
 
 export class TemplateProvider<ItemType> {
-  private templateManager: TemplatesManager<ItemType, DocumentFragment>;
+  private templateManager: TemplatesManager<
+    ItemType,
+    DocumentFragment,
+    DocumentFragment
+  >;
 
   constructor(
     private props: TemplateProviderProps<ItemType>,
-    private buildManager: () => TemplatesManager<ItemType, DocumentFragment>,
+    private buildManager: () => TemplatesManager<
+      ItemType,
+      DocumentFragment,
+      DocumentFragment
+    >,
     private makeDefaultTemplate: () => Template<
       ItemType,
+      DocumentFragment,
       DocumentFragment
     > = defaultTemplate
   ) {
@@ -56,6 +68,7 @@ export class TemplateProvider<ItemType> {
     ).concat(
       customTemplates.filter((template) => template) as Template<
         ItemType,
+        DocumentFragment,
         DocumentFragment
       >[]
     );
@@ -66,6 +79,10 @@ export class TemplateProvider<ItemType> {
 
   public getTemplateContent(item: ItemType) {
     return this.templateManager.selectTemplate(item)!;
+  }
+
+  public getLinkTemplateContent(item: ItemType) {
+    return this.templateManager.selectLinkTemplate(item)!;
   }
 
   public get templatesRegistered() {

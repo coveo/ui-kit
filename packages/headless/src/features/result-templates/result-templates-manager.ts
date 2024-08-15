@@ -13,7 +13,10 @@ import {
 export type ResultTemplate<Content = unknown> = Template<Result, Content>;
 export type ResultTemplateCondition = TemplateCondition<Result>;
 
-export interface ResultTemplatesManager<Content = unknown> {
+export interface ResultTemplatesManager<
+  Content = unknown,
+  LinkContent = unknown,
+> {
   /**
    * Registers any number of result templates in the manager.
    * @param templates (...ResultTemplate<Content>) A list of templates to register.
@@ -26,6 +29,7 @@ export interface ResultTemplatesManager<Content = unknown> {
    * @returns (Content) The selected template's content, or null if no template's conditions are satisfied.
    */
   selectTemplate(result: Result): Content | null;
+  selectLinkTemplate(result: Result): LinkContent | null;
 }
 
 /**
@@ -33,15 +37,21 @@ export interface ResultTemplatesManager<Content = unknown> {
  * @param engine (HeadlessEngine) The `HeadlessEngine` instance of your application.
  * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
  */
-export function buildResultTemplatesManager<Content = unknown>(
+export function buildResultTemplatesManager<
+  Content = unknown,
+  LinkContent = unknown,
+>(
   engine: CoreEngine | CoreEngineNext
-): ResultTemplatesManager<Content> {
+): ResultTemplatesManager<Content, LinkContent> {
   if (!loadResultTemplatesManagerReducers(engine)) {
     throw loadReducerError;
   }
 
-  const {registerTemplates: coreRegisterTemplates, selectTemplate} =
-    buildTemplatesManager<Result, Content>();
+  const {
+    registerTemplates: coreRegisterTemplates,
+    selectTemplate,
+    selectLinkTemplate,
+  } = buildTemplatesManager<Result, Content, LinkContent>();
   return {
     registerTemplates: (...newTemplates: Template<Result, Content>[]) => {
       coreRegisterTemplates(...newTemplates);
@@ -52,6 +62,7 @@ export function buildResultTemplatesManager<Content = unknown>(
       engine.dispatch(registerFieldsToInclude(fields));
     },
     selectTemplate,
+    selectLinkTemplate,
   };
 }
 

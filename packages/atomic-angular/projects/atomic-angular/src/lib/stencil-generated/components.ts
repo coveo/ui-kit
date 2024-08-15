@@ -1279,14 +1279,14 @@ export declare interface AtomicRelevanceInspector extends Components.AtomicRelev
 
 
 @ProxyCmp({
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation'],
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation'],
 })
 export class AtomicResult {
   protected el: HTMLElement;

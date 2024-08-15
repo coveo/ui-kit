@@ -62,6 +62,11 @@ export class AtomicResult {
   @Prop() content?: ParentNode;
 
   /**
+   * The result link to use when the result is clicked in a grid layout.
+   */
+  @Prop() linkContent?: ParentNode;
+
+  /**
    * How results should be displayed.
    */
   @Prop() display: ItemDisplayLayout = 'list';
@@ -130,6 +135,18 @@ export class AtomicResult {
     });
   }
 
+  @Listen('click')
+  public handleClick(event: MouseEvent) {
+    if (this.stopPropagation) {
+      event.stopPropagation();
+    }
+    this.host
+      .shadowRoot!.querySelector<HTMLAtomicResultLinkElement>(
+        '.link-container > atomic-result-link a'
+      )
+      ?.click();
+  }
+
   public connectedCallback() {
     this.layout = new ItemLayout(
       this.content!.children,
@@ -145,6 +162,12 @@ export class AtomicResult {
 
   private getContentHTML() {
     return Array.from(this.content!.children)
+      .map((child) => child.outerHTML)
+      .join('');
+  }
+
+  private getLinkHTML() {
+    return Array.from(this.linkContent!.children)
       .map((child) => child.outerHTML)
       .join('');
   }
@@ -169,7 +192,6 @@ export class AtomicResult {
       );
     }
     return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
         <div
           class={`result-root ${this.layout
@@ -178,6 +200,7 @@ export class AtomicResult {
             .join(' ')}`}
           innerHTML={this.getContentHTML()}
         ></div>
+        <div class="link-container" innerHTML={this.getLinkHTML()}></div>
       </Host>
     );
   }

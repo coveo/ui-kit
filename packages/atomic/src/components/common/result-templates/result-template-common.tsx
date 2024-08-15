@@ -79,7 +79,9 @@ export class ResultTemplateCommon {
       return;
     }
 
-    const template = host.querySelector('template');
+    const template = host.querySelector<HTMLTemplateElement>(
+      'template:not([slot])'
+    );
     if (!template) {
       setError(
         new Error(
@@ -126,6 +128,7 @@ export class ResultTemplateCommon {
     return {
       conditions: conditions.concat(this.matchConditions),
       content: getTemplateElement(this.host).content!,
+      linkContent: getLinkTemplateElement(this.host).content!,
       priority: 1,
     };
   }
@@ -143,7 +146,20 @@ export class ResultTemplateCommon {
 }
 
 function getTemplateElement(host: HTMLElement) {
-  return host.querySelector('template')!;
+  return host.querySelector<HTMLTemplateElement>('template:not([slot])')!;
+}
+
+function getDefaultLinkTemplateElement() {
+  const linkTemplate = document.createElement('template');
+  linkTemplate.innerHTML = '<atomic-result-link></atomic-result-link>';
+  return linkTemplate;
+}
+
+function getLinkTemplateElement(host: HTMLElement) {
+  return (
+    host.querySelector<HTMLTemplateElement>('template[slot="link"]') ??
+    getDefaultLinkTemplateElement()
+  );
 }
 
 export function makeMatchConditions(
