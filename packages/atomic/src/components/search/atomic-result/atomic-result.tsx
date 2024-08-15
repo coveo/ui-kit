@@ -102,6 +102,7 @@ export class AtomicResult {
   @Prop() renderingFunction: ItemRenderingFunction;
 
   private resultRootRef?: HTMLElement;
+  private linkContainerRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
 
   @Listen('atomic/resolveResult')
@@ -188,6 +189,10 @@ export class AtomicResult {
             class="result-root"
             ref={(ref) => (this.resultRootRef = ref)}
           ></div>
+          <div
+            class="link-container"
+            ref={(ref) => (this.linkContainerRef = ref)}
+          ></div>
         </Host>
       );
     }
@@ -216,7 +221,8 @@ export class AtomicResult {
     if (this.shouldExecuteRenderFunction()) {
       const customRenderOutputAsString = this.renderingFunction!(
         this.result,
-        this.resultRootRef!
+        this.resultRootRef!,
+        this.linkContainerRef!
       );
 
       this.resultRootRef!.className += ` ${this.layout
