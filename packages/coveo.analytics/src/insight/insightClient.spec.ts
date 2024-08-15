@@ -1488,6 +1488,14 @@ describe('InsightClient', () => {
             await client.logCreateArticle(exampleCreateArticleMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(InsightEvents.createArticle, expectedMetadata);
         });
+
+        it('should send proper payload for #logTriggerNotify', async () => {
+            const meta = {
+                notifications: ['foo', 'bar'],
+            };
+            await client.logTriggerNotify(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, meta);
+        });
     });
 
     it('should enable analytics tracking by default', () => {
