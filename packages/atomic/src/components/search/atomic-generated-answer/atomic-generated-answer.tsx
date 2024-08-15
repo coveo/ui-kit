@@ -6,8 +6,11 @@ import {
   GeneratedAnswer,
   GeneratedAnswerState,
   buildInteractiveCitation,
+  buildTabManager,
+  TabManagerState,
+  TabManager,
 } from '@coveo/headless';
-import {Component, Element, State, Prop, Watch} from '@stencil/core';
+import {Component, Element, State, Prop, Watch, h} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {
@@ -15,7 +18,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {ArrayProp} from '../../../utils/props-utils';
+import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
+import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -75,6 +81,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   private searchStatusState!: SearchStatusState;
 
+  public tabManager!: TabManager;
+
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
+
   @State()
   public error!: Error;
 
@@ -104,6 +116,32 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() answerConfigurationId?: string;
 
+  /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -112,6 +150,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private maxCollapsedHeight = 250;
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
       host: this.host,
       withToggle: this.withToggle,
@@ -150,6 +196,16 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
       this.resizeObserver.observe(this.host);
     }
+    this.tabManager = buildTabManager(this.bindings.engine);
+  }
+
+  public testFunctionDisable() {
+    console.log(this.generatedAnswer.state);
+    this.generatedAnswer.disable();
+    console.log(this.generatedAnswer.state);
+  }
+  public testFunctionEnable() {
+    this.generatedAnswer.enable();
   }
 
   @Watch('generatedAnswerState')
@@ -253,7 +309,36 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
   }
 
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
+      if (
+        !shouldDisplayOnCurrentTab(
+          [...this.tabsIncluded],
+          [...this.tabsExcluded],
+          this.tabManagerState?.activeTab
+        )
+      ) {
+        this.generatedAnswer.disable();
+      } else {
+        this.generatedAnswer.enable();
+      }
+    }
+  }
+
   public render() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      return <Hidden />;
+    }
     return this.generatedAnswerCommon.render();
   }
 }
