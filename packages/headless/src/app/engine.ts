@@ -270,7 +270,7 @@ export function buildEngine<
     engine.dispatch(updateAnalyticsConfiguration(analyticsPayload));
   }
 
-  return engine;
+  return engina;
 }
 
 function buildCoreEngine<
