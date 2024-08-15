@@ -397,6 +397,7 @@ jobs:
           fi
   is-valid:
     name: 'Confirm build is valid'
+    if: ${{ always() }}
     needs:
       - 'is-valid-pr'
       - 'is-valid-merge-queue'
