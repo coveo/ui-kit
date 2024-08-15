@@ -15,6 +15,7 @@ import {
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  setIsEnabled,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
@@ -88,6 +89,14 @@ export interface GeneratedAnswer extends Controller {
    * Collapses the generated answer.
    */
   collapse(): void;
+  /**
+   * Enables the generated answer.
+   */
+  enable(): void;
+  /**
+   * Disables the generated answer.
+   */
+  disable(): void;
   /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
@@ -255,6 +264,18 @@ export function buildCoreGeneratedAnswer(
       if (this.state.expanded) {
         dispatch(collapseGeneratedAnswer());
         dispatch(analyticsClient.logGeneratedAnswerCollapse());
+      }
+    },
+
+    enable() {
+      if (!this.state.isEnabled) {
+        dispatch(setIsEnabled(true));
+      }
+    },
+
+    disable() {
+      if (this.state.isEnabled) {
+        dispatch(setIsEnabled(false));
       }
     },
 

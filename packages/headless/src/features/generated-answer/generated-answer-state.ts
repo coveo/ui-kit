@@ -19,6 +19,10 @@ export interface GeneratedAnswerState {
    */
   isStreaming: boolean;
   /**
+   * Determines if the generated answer is enabled.
+   */
+  isEnabled: boolean;
+  /**
    * The generated answer.
    */
   answer?: string;
@@ -82,6 +86,7 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     id: '',
     isVisible: true,
+    isEnabled: true,
     isLoading: false,
     isStreaming: false,
     citations: [],

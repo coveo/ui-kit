@@ -22,6 +22,7 @@ import {
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
   updateAnswerConfigurationId,
+  setIsEnabled,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -31,6 +32,9 @@ export const generatedAnswerReducer = createReducer(
     builder
       .addCase(setIsVisible, (state, {payload}) => {
         state.isVisible = payload;
+      })
+      .addCase(setIsEnabled, (state, {payload}) => {
+        state.isEnabled = payload;
       })
       .addCase(setId, (state, {payload}) => {
         state.id = payload.id;
