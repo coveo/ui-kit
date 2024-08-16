@@ -270,12 +270,14 @@ export function buildCoreGeneratedAnswer(
     enable() {
       if (!this.state.isEnabled) {
         dispatch(setIsEnabled(true));
+        dispatch(analyticsClient.logGeneratedAnswerExpand());
       }
     },
 
     disable() {
       if (this.state.isEnabled) {
         dispatch(setIsEnabled(false));
+        dispatch(analyticsClient.logGeneratedAnswerCollapse());
       }
     },
 
