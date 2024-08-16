@@ -302,7 +302,7 @@ export class AtomicCommerceSearchBox
         this.suggestionBindings
       );
     });
-    return true;
+    this.searchBoxSuggestionEventsQueue = [];
   }
 
   @Watch('redirectionUrl')
