@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
-import {selectManualRange} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
+import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {
   toggleExcludeNumericFacetValue,
@@ -24,12 +25,16 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-export type NumericFacetState = CoreCommerceFacetState<NumericFacetValue> & {
+export type NumericFacetState = Omit<
+  CoreCommerceFacetState<NumericFacetValue>,
+  'type'
+> & {
   /**
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
   manualRange?: NumericRangeRequest;
+  type: 'numericalRange';
 };
 
 type NumericFacetDomain = {
@@ -114,27 +119,12 @@ export function buildCommerceNumericFacet(
 
     get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
-      const manualRange = selectManualRange(
-        facetId,
-        engine[stateKey].manualNumericFacetSet
+
+      return getNumericFacetState(
+        coreController.state,
+        response?.type === 'numericalRange' ? response : undefined,
+        manualNumericFacetSelector(engine[stateKey], facetId)
       );
-
-      if (response?.type === 'numericalRange' && response.domain) {
-        const {min, max} = response.domain;
-        return {
-          ...coreController.state,
-          domain: {
-            min,
-            max,
-          },
-          manualRange,
-        };
-      }
-
-      return {
-        ...coreController.state,
-        manualRange,
-      };
     },
 
     type: 'numericalRange',
@@ -147,3 +137,22 @@ function loadCommerceNumericFacetReducers(
   engine.addReducers({manualNumericFacetSet});
   return true;
 }
+
+export const getNumericFacetState = (
+  coreState: CoreCommerceFacetState<NumericFacetValue>,
+  facetResponseSelector: NumericFacetResponse | undefined,
+  manualFacetRangeSelector: NumericRangeRequest | undefined
+): NumericFacetState => {
+  const response =
+    facetResponseSelector?.type === 'numericalRange'
+      ? facetResponseSelector
+      : undefined;
+  return {
+    ...coreState,
+    ...(response?.domain && {
+      domain: response.domain,
+    }),
+    ...(manualFacetRangeSelector && {manualRange: manualFacetRangeSelector}),
+    type: 'numericalRange',
+  };
+};
