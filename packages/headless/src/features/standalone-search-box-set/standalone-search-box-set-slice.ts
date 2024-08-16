@@ -5,6 +5,7 @@ import {
   resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions';
 import {
   getStandaloneSearchBoxSetInitialState,
@@ -33,6 +34,13 @@ export const standaloneSearchBoxSetReducer = createReducer(
             searchBox.defaultRedirectionUrl
           );
           return;
+        }
+      })
+      .addCase(updateStandaloneSearchBoxRedirectionUrl, (state, action) => {
+        const {id, redirectionUrl} = action.payload;
+        const searchBox = state[id];
+        if (searchBox) {
+          searchBox.defaultRedirectionUrl = redirectionUrl;
         }
       })
       .addCase(fetchRedirectUrl.pending, (state, action) => {

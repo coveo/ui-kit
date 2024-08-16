@@ -205,15 +205,33 @@ export class AtomicCommerceSearchBox
   protected suggestionsAriaMessage!: string;
   public disconnectedCallback = () => {};
 
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
+
   public initialize() {
-    this.id = randomID('atomic-commerce-search-box-');
+    this.id ??= randomID('atomic-commerce-search-box-');
 
-    let shouldReinitialize = false;
-    if (this.searchBox) {
-      this.disconnectedCallback();
-      shouldReinitialize = true;
+    this.initializeSearchboxController();
+    !this.suggestionManager && this.initializeSuggestionManager();
+  }
+
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
     }
+  }
 
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
@@ -224,8 +242,6 @@ export class AtomicCommerceSearchBox
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager(shouldReinitialize);
   }
 
   public componentWillUpdate() {
@@ -293,14 +309,10 @@ export class AtomicCommerceSearchBox
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
-  private initializeSuggestionManager(shouldReinitialize: boolean) {
-    if (!shouldReinitialize && this.suggestionManager) {
-      return;
-    }
-
+  private initializeSuggestionManager() {
     this.suggestionManager = new SuggestionManager({
       getNumberOfSuggestionsToDisplay: () => this.numberOfQueries,
       updateQuery: (query) => this.searchBox.updateText(query),
@@ -311,7 +323,6 @@ export class AtomicCommerceSearchBox
       getLogger: () => this.bindings.engine.logger,
     });
     this.suggestionManager.initializeSuggestions(this.suggestionBindings);
-    shouldReinitialize && this.registerSearchboxSuggestionEvents();
   }
 
   private get suggestionBindings(): SearchBoxSuggestionsBindings<
@@ -335,8 +346,8 @@ export class AtomicCommerceSearchBox
     return {
       ...this.bindings,
       id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
+      isStandalone: () => !!this.redirectionUrl,
+      searchBoxController: () => this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearFilters: this.clearFilters,
     };

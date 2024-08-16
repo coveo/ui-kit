@@ -361,8 +361,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     return {
       ...this.bindings,
       id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
+      isStandalone: () => !!this.redirectionUrl,
+      searchBoxController: () => this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearFilters: this.clearFilters,
     };

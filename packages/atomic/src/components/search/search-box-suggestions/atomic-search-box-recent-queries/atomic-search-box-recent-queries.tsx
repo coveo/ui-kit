@@ -121,7 +121,7 @@ export class AtomicSearchBoxRecentQueries {
       return [];
     }
 
-    const query = this.bindings.searchBoxController.state.value;
+    const query = this.bindings.searchBoxController().state.value;
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
@@ -155,7 +155,7 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private renderItem(value: string): SearchBoxSuggestionElement {
-    const query = this.bindings.searchBoxController.state.value;
+    const query = this.bindings.searchBoxController().state.value;
     const partialItem = getPartialRecentQueryElement(value, this.bindings.i18n);
     return {
       ...partialItem,
@@ -167,9 +167,9 @@ export class AtomicSearchBoxRecentQueries {
       ),
 
       onSelect: () => {
-        if (this.bindings.isStandalone) {
-          this.bindings.searchBoxController.updateText(value);
-          this.bindings.searchBoxController.submit();
+        if (this.bindings.isStandalone()) {
+          this.bindings.searchBoxController().updateText(value);
+          this.bindings.searchBoxController().submit();
           return;
         }
 

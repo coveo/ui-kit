@@ -3,6 +3,7 @@ import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions';
 import {
   getCommerceStandaloneSearchBoxSetInitialState,
@@ -17,6 +18,15 @@ export const commerceStandaloneSearchBoxSetReducer = createReducer(
         const {id, redirectionUrl} = action.payload;
 
         if (id in state) {
+          return;
+        }
+
+        state[id] = buildStandaloneSearchBoxEntry(redirectionUrl);
+      })
+      .addCase(updateStandaloneSearchBoxRedirectionUrl, (state, action) => {
+        const {id, redirectionUrl} = action.payload;
+
+        if (!(id in state)) {
           return;
         }
 

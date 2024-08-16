@@ -45,6 +45,15 @@ export const registerStandaloneSearchBox = createAction(
     })
 );
 
+export const updateStandaloneSearchBoxRedirectionUrl = createAction(
+  'standaloneSearchBox/updateRedirectionUrl',
+  (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      redirectionUrl: requiredNonEmptyString,
+    })
+);
+
 export interface ResetStandaloneSearchBoxActionCreatorPayload {
   /**
    * The standalone search box id.
