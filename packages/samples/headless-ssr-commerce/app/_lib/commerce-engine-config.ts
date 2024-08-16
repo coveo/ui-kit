@@ -9,7 +9,8 @@ import {
   defineSort,
   defineProductView,
   getSampleCommerceEngineConfiguration,
-  defineDidYouMean, //defineParameterManager,
+  defineDidYouMean,
+  defineFacetGenerator, //defineParameterManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -36,5 +37,6 @@ export default {
     productView: defineProductView(),
     didYouMean: defineDidYouMean(), // TODO KIT-3463: implement did you mean in sample
     //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
+    facetGenerator: defineFacetGenerator(),
   },
 } satisfies CommerceEngineConfig;

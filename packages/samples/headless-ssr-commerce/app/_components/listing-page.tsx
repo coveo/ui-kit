@@ -7,6 +7,7 @@ import {
   ListingHydratedState,
   ListingStaticState,
 } from '../_lib/commerce-engine';
+import FacetGenerator from './facets/facet-generator';
 import Pagination from './pagination';
 import {ProductList} from './product-list';
 // import ShowMore from './show-more';
@@ -39,6 +40,10 @@ export default function ListingPage({
 
   return (
     <>
+      <FacetGenerator
+        staticState={staticState.controllers.facetGenerator.state}
+        controller={hydratedState?.controllers.facetGenerator}
+      />
       <Summary
         staticState={staticState.controllers.summary.state}
         controller={hydratedState?.controllers.summary}
