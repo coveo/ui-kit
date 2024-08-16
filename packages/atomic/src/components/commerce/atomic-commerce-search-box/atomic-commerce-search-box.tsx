@@ -215,7 +215,7 @@ export class AtomicCommerceSearchBox
     this.id ??= randomID('atomic-commerce-search-box-');
 
     this.initializeSearchboxController();
-    !this.suggestionManager && this.initializeSuggestionManager();
+    this.initializeSuggestionManager();
   }
 
   private updateRedirectionUrl() {
@@ -294,7 +294,7 @@ export class AtomicCommerceSearchBox
     this.suggestionManager.forceUpdate();
   }
 
-  public registerSearchboxSuggestionEvents() {
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -313,6 +313,10 @@ export class AtomicCommerceSearchBox
   }
 
   private initializeSuggestionManager() {
+    if (this.suggestionManager) {
+      return;
+    }
+
     this.suggestionManager = new SuggestionManager({
       getNumberOfSuggestionsToDisplay: () => this.numberOfQueries,
       updateQuery: (query) => this.searchBox.updateText(query),

@@ -38,10 +38,12 @@ export const standaloneSearchBoxSetReducer = createReducer(
       })
       .addCase(updateStandaloneSearchBoxRedirectionUrl, (state, action) => {
         const {id, redirectionUrl} = action.payload;
-        const searchBox = state[id];
-        if (searchBox) {
-          searchBox.defaultRedirectionUrl = redirectionUrl;
+
+        if (!(id in state)) {
+          return;
         }
+
+        state[id] = buildStandaloneSearchBoxEntry(redirectionUrl);
       })
       .addCase(fetchRedirectUrl.pending, (state, action) => {
         const searchBox = state[action.meta.arg.id];

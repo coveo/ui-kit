@@ -237,16 +237,33 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
 
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
+
   public initialize() {
-    this.id = randomID('atomic-search-box-');
+    this.id ??= randomID('atomic-commerce-search-box-');
 
-    if (!this.textarea) {
-      this.bindings.engine.logger.warn(
-        'As of Atomic version 3.0.0, the searchbox will be enabled as a text area by default. To remove this warning, set textarea="true" on the search box.',
-        this.host
-      );
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
+  }
+
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
     }
+  }
 
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
@@ -257,8 +274,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -307,7 +322,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
-  public componentWillRender() {
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -317,10 +332,13 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     this.searchBoxSuggestionEventsQueue = [];
   }
 
+  public componentDidLoad() {
+    this.registerSearchboxSuggestionEvents();
+  }
+
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.disconnectedCallback();
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
   private initializeSuggestionManager() {
