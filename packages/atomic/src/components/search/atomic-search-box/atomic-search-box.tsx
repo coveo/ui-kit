@@ -236,7 +236,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
-  private hasRegisterSuggestions: boolean = false;
 
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
@@ -332,11 +331,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       );
     });
     this.searchBoxSuggestionEventsQueue = [];
-  }
-
-  public componentDidLoad() {
-    this.registerSearchboxSuggestionEvents();
-    this.hasRegisterSuggestions = true;
   }
 
   @Watch('redirectionUrl')
@@ -734,6 +728,9 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>
@@ -762,13 +759,12 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             />
             {this.renderSuggestions()}
           </SearchBoxWrapper>,
-          this.hasRegisterSuggestions &&
-            !this.suggestionManager.suggestions.length && (
-              <slot>
-                <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-                <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-              </slot>
-            ),
+          !this.suggestionManager.suggestions.length && (
+            <slot>
+              <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+              <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+            </slot>
+          ),
         ]}
       </Host>
     );

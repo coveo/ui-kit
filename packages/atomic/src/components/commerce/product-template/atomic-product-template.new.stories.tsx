@@ -94,7 +94,7 @@ export const InASearchBoxInstantProducts: Story = {
     commerceInterfaceDecorator,
   ],
   play: async (context) => {
-    initializeCommerceInterface(context);
+    await initializeCommerceInterface(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await step('Click Searchbox', async () => {

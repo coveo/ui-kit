@@ -204,7 +204,6 @@ export class AtomicCommerceSearchBox
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
   public disconnectedCallback = () => {};
-  private hasRegisterSuggestions: boolean = false;
 
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
@@ -303,11 +302,7 @@ export class AtomicCommerceSearchBox
         this.suggestionBindings
       );
     });
-  }
-
-  public componentDidLoad() {
-    this.registerSearchboxSuggestionEvents();
-    this.hasRegisterSuggestions = true;
+    return true;
   }
 
   @Watch('redirectionUrl')
@@ -704,6 +699,9 @@ export class AtomicCommerceSearchBox
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>
@@ -732,13 +730,12 @@ export class AtomicCommerceSearchBox
             />
             {this.renderSuggestions()}
           </SearchBoxWrapper>,
-          this.hasRegisterSuggestions &&
-            !this.suggestionManager.suggestions.length && (
-              <slot>
-                <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-                <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-              </slot>
-            ),
+          !this.suggestionManager.suggestions.length && (
+            <slot>
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+            </slot>
+          ),
         ]}
       </Host>
     );
