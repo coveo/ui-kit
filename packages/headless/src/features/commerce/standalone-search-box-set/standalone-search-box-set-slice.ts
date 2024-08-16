@@ -15,9 +15,9 @@ export const commerceStandaloneSearchBoxSetReducer = createReducer(
   (builder) =>
     builder
       .addCase(registerStandaloneSearchBox, (state, action) => {
-        const {id, redirectionUrl} = action.payload;
+        const {id, redirectionUrl, overwrite} = action.payload;
 
-        if (id in state) {
+        if (!overwrite && id in state) {
           return;
         }
 
@@ -25,12 +25,13 @@ export const commerceStandaloneSearchBoxSetReducer = createReducer(
       })
       .addCase(updateStandaloneSearchBoxRedirectionUrl, (state, action) => {
         const {id, redirectionUrl} = action.payload;
+        const searchBox = state[id];
 
-        if (!(id in state)) {
+        if (!searchBox) {
           return;
         }
 
-        state[id] = buildStandaloneSearchBoxEntry(redirectionUrl);
+        searchBox.defaultRedirectionUrl = redirectionUrl;
       })
       .addCase(resetStandaloneSearchBox, (state, action) => {
         const {id} = action.payload;

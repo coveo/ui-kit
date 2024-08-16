@@ -83,6 +83,7 @@ export function buildStandaloneSearchBox(
     id,
     highlightOptions: {...props.options.highlightOptions},
     ...defaultSearchBoxOptions,
+    ...{overwrite: false},
     ...props.options,
   };
 
@@ -95,7 +96,11 @@ export function buildStandaloneSearchBox(
 
   const searchBox = buildSearchBox(engine, {options});
   dispatch(
-    registerStandaloneSearchBox({id, redirectionUrl: options.redirectionUrl})
+    registerStandaloneSearchBox({
+      id,
+      redirectionUrl: options.redirectionUrl,
+      overwrite: options.overwrite,
+    })
   );
 
   return {

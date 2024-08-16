@@ -237,6 +237,7 @@ export class AtomicCommerceSearchBox
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {

@@ -269,6 +269,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {

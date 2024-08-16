@@ -17,9 +17,9 @@ export const standaloneSearchBoxSetReducer = createReducer(
   (builder) =>
     builder
       .addCase(registerStandaloneSearchBox, (state, action) => {
-        const {id, redirectionUrl} = action.payload;
+        const {id, redirectionUrl, overwrite} = action.payload;
 
-        if (id in state) {
+        if (!overwrite && id in state) {
           return;
         }
 
