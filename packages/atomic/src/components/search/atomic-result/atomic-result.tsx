@@ -168,7 +168,7 @@ export class AtomicResult {
   }
 
   private getLinkHTML() {
-    return Array.from(this.linkContent!.children)
+    return Array.from(this.linkContent?.children ?? [])
       .map((child) => child.outerHTML)
       .join('');
   }
