@@ -1,9 +1,12 @@
+import {createSelector} from '@reduxjs/toolkit';
 import {CommerceFacetSetSection} from '../../../../state/state-sections';
-import {AnyFacetResponse} from './interfaces/response';
+import {AnyFacetRequest} from './interfaces/request';
 
-export function isFacetResponse(
-  state: CommerceFacetSetSection,
-  response: AnyFacetResponse | undefined
-): response is AnyFacetResponse {
-  return !!response && response.facetId in state.commerceFacetSet;
-}
+export const facetRequestSelector = createSelector(
+  (state: CommerceFacetSetSection, facetId: string) => ({
+    facetRequestSelector: state.commerceFacetSet[facetId],
+  }),
+  ({facetRequestSelector}): AnyFacetRequest | undefined => {
+    return facetRequestSelector?.request;
+  }
+);
