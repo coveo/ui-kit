@@ -1923,6 +1923,10 @@ export namespace Components {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -7544,6 +7548,10 @@ declare namespace LocalJSX {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.

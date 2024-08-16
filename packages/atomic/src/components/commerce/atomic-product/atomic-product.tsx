@@ -63,6 +63,11 @@ export class AtomicProduct {
   @Prop() content?: ParentNode;
 
   /**
+   * The product link to use when the product is clicked in a grid layout.
+   */
+  @Prop() linkContent?: ParentNode;
+
+  /**
    * How products should be displayed.
    */
   @Prop() display: ItemDisplayLayout = 'list';
@@ -98,6 +103,7 @@ export class AtomicProduct {
   @Prop() renderingFunction: ItemRenderingFunction;
 
   private productRootRef?: HTMLElement;
+  private linkContainerRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
 
   @Listen('atomic/resolveResult')
@@ -152,6 +158,12 @@ export class AtomicProduct {
       .join('');
   }
 
+  private getLinkHTML() {
+    return Array.from(this.linkContent?.children ?? [])
+      .map((child) => child.outerHTML)
+      .join('');
+  }
+
   private shouldExecuteRenderFunction() {
     return (
       this.isCustomRenderFunctionMode &&
@@ -168,11 +180,14 @@ export class AtomicProduct {
             class="result-root"
             ref={(ref) => (this.productRootRef = ref)}
           ></div>
+          <div
+            class="link-container"
+            ref={(ref) => (this.linkContainerRef = ref)}
+          ></div>
         </Host>
       );
     }
     return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
         <div
           class={`result-root ${this.layout
@@ -181,6 +196,7 @@ export class AtomicProduct {
             .join(' ')}`}
           innerHTML={this.getContentHTML()}
         ></div>
+        <div class="link-container" innerHTML={this.getLinkHTML()}></div>
       </Host>
     );
   }
@@ -196,7 +212,8 @@ export class AtomicProduct {
     if (this.shouldExecuteRenderFunction()) {
       const customRenderOutputAsString = this.renderingFunction!(
         this.product,
-        this.productRootRef!
+        this.productRootRef!,
+        this.linkContainerRef!
       );
 
       this.productRootRef!.className += ` ${this.layout
