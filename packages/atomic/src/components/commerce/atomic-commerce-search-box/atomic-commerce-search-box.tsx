@@ -203,9 +203,16 @@ export class AtomicCommerceSearchBox
 
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
+  public disconnectedCallback = () => {};
 
   public initialize() {
     this.id = randomID('atomic-commerce-search-box-');
+
+    let shouldReinitialize = false;
+    if (this.searchBox) {
+      this.disconnectedCallback();
+      shouldReinitialize = true;
+    }
 
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
@@ -218,7 +225,7 @@ export class AtomicCommerceSearchBox
           options: this.searchBoxOptions,
         });
 
-    this.initializeSuggestionManager();
+    this.initializeSuggestionManager(shouldReinitialize);
   }
 
   public componentWillUpdate() {
@@ -271,14 +278,17 @@ export class AtomicCommerceSearchBox
     this.suggestionManager.forceUpdate();
   }
 
-  public componentWillRender() {
+  public registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
         this.suggestionBindings
       );
     });
-    this.searchBoxSuggestionEventsQueue = [];
+  }
+
+  public componentDidLoad() {
+    this.registerSearchboxSuggestionEvents();
   }
 
   @Watch('redirectionUrl')
@@ -286,8 +296,8 @@ export class AtomicCommerceSearchBox
     this.initialize();
   }
 
-  private initializeSuggestionManager() {
-    if (this.suggestionManager) {
+  private initializeSuggestionManager(shouldReinitialize: boolean) {
+    if (!shouldReinitialize && this.suggestionManager) {
       return;
     }
 
@@ -301,6 +311,7 @@ export class AtomicCommerceSearchBox
       getLogger: () => this.bindings.engine.logger,
     });
     this.suggestionManager.initializeSuggestions(this.suggestionBindings);
+    shouldReinitialize && this.registerSearchboxSuggestionEvents();
   }
 
   private get suggestionBindings(): SearchBoxSuggestionsBindings<

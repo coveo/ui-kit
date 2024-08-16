@@ -289,6 +289,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
+  public disconnectedCallback: () => void = () => {};
+
   @Listen('atomic/searchBoxSuggestion/register')
   public registerSuggestions(
     event: CustomEvent<
@@ -317,6 +319,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
+    this.disconnectedCallback();
     this.initialize();
   }
 
