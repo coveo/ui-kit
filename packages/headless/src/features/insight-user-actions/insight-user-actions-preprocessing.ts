@@ -276,7 +276,7 @@ const shouldExcludeAction = (
   action: UserAction,
   excludedCustomActions: string[]
 ): boolean => {
-  if (action.actionType === UserActionType.SEARCH && action.query === '') {
+  if (action.actionType === UserActionType.SEARCH && !action.query) {
     return true;
   }
 
