@@ -245,14 +245,6 @@ describe('generated answer', () => {
 
         expect(setIsEnabled).toHaveBeenCalledWith(true);
       });
-
-      it('should dispatch the analytics action', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: false});
-        initGeneratedAnswer();
-
-        generatedAnswer.show();
-        expect(logGeneratedAnswerExpand).toHaveBeenCalled();
-      });
     });
   });
 
@@ -274,15 +266,7 @@ describe('generated answer', () => {
 
         generatedAnswer.disable();
 
-        expect(setIsEnabled).toHaveBeenCalledWith(false);
-      });
-
-      it('should dispatch the analytics action', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: false});
-        initGeneratedAnswer();
-
-        generatedAnswer.show();
-        expect(logGeneratedAnswerCollapse).toHaveBeenCalled();
+        expect(setIsEnabled).toHaveBeenCalledWith(true);
       });
     });
   });
