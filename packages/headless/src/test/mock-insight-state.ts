@@ -60,7 +60,7 @@ export function buildMockInsightState(
     folding: getFoldingInitialState(),
     generatedAnswer: getGeneratedAnswerInitialState(),
     context: getContextInitialState(),
-    insightUserAction: getInsightUserActionsInitialState(),
+    insightUserActions: getInsightUserActionsInitialState(),
     ...config,
   };
 }
