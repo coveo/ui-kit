@@ -19,6 +19,7 @@ import {
     SmartSnippetFeedbackReason,
     SmartSnippetLinkMeta,
     SmartSnippetSuggestionMeta,
+    TriggerNotifyMetadata,
 } from '../searchPage/searchPageEvents';
 import {
     ExpandToFullUIMetadata,
@@ -684,6 +685,13 @@ export class CoveoInsightClient {
         return this.logCustomEvent(
             SearchPageEvents.showLessFoldedResults,
             metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logTriggerNotify(triggerNotifyMetadata: TriggerNotifyMetadata, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.triggerNotify,
+            metadata ? {...generateMetadataToSend(metadata, false), ...triggerNotifyMetadata} : triggerNotifyMetadata
         );
     }
 
