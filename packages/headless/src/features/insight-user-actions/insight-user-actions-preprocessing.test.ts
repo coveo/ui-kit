@@ -1,6 +1,5 @@
 import {
   mapAndSortActionsByMostRecent,
-  filterTimelineActions,
   isActionWithinSessionThreshold,
   preprocessActionsData,
   splitActionsIntoTimelineSessions,
@@ -17,6 +16,8 @@ const createRelativeDate = (date: Date, minutes: number, seconds: number) => {
 const firstSessionDate = new Date('03/29/2022 08:50:00 GMT');
 const caseCreationDate = new Date('03/31/2022 16:30:00 GMT');
 const secondSessionDate = new Date('04/01/2022 14:14:00 GMT');
+
+const actionsToExclude = ['useless_event'];
 
 const fakeActions = [
   {
@@ -605,16 +606,6 @@ describe('insight user actions preprocessing', () => {
                 end: 1648822620000,
                 actions: [
                   {
-                    actionType: 'CUSTOM',
-                    timestamp: 1648822620000,
-                    eventData: {
-                      type: 'useless_event',
-                      value: '',
-                    },
-                    searchHub: 'community-support',
-                    document: {},
-                  },
-                  {
                     actionType: 'CLICK',
                     timestamp: 1648822500000,
                     eventData: {},
@@ -623,14 +614,6 @@ describe('insight user actions preprocessing', () => {
                       title: 'title',
                       uriHash: 'KXñi9EWk38wnb1tt',
                     },
-                  },
-                  {
-                    actionType: 'SEARCH',
-                    timestamp: 1648822380000,
-                    eventData: {},
-                    searchHub: 'in-product-help',
-                    document: {},
-                    query: '',
                   },
                 ],
               },
@@ -643,8 +626,10 @@ describe('insight user actions preprocessing', () => {
 
           const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
-            ticketCreationDate
+            ticketCreationDate,
+            actionsToExclude
           );
+
           expect(timeline).toEqual(expectedTimeline);
         });
       });
@@ -758,14 +743,6 @@ describe('insight user actions preprocessing', () => {
                   eventData: {},
                 },
                 {
-                  actionType: 'SEARCH',
-                  timestamp: 1648743300000,
-                  eventData: {},
-                  searchHub: 'in-product-help',
-                  document: {},
-                  query: '',
-                },
-                {
                   actionType: 'VIEW',
                   timestamp: 1648741800000,
                   eventData: {},
@@ -782,16 +759,6 @@ describe('insight user actions preprocessing', () => {
                 start: 1648822500000,
                 end: 1648822620000,
                 actions: [
-                  {
-                    actionType: 'CUSTOM',
-                    timestamp: 1648822620000,
-                    eventData: {
-                      type: 'useless_event',
-                      value: '',
-                    },
-                    searchHub: 'community-support',
-                    document: {},
-                  },
                   {
                     actionType: 'CLICK',
                     timestamp: 1648822500000,
@@ -812,7 +779,8 @@ describe('insight user actions preprocessing', () => {
 
           const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
-            ticketCreationDate
+            ticketCreationDate,
+            actionsToExclude
           );
 
           expect(timeline).toEqual(expectedTimeline);
@@ -843,16 +811,6 @@ describe('insight user actions preprocessing', () => {
                 end: 1648822620000,
                 actions: [
                   {
-                    actionType: 'CUSTOM',
-                    timestamp: 1648822620000,
-                    eventData: {
-                      type: 'useless_event',
-                      value: '',
-                    },
-                    searchHub: 'community-support',
-                    document: {},
-                  },
-                  {
                     actionType: 'CLICK',
                     timestamp: 1648822500000,
                     eventData: {},
@@ -861,14 +819,6 @@ describe('insight user actions preprocessing', () => {
                       title: 'title',
                       uriHash: 'KXñi9EWk38wnb1tt',
                     },
-                  },
-                  {
-                    actionType: 'SEARCH',
-                    timestamp: 1648822380000,
-                    eventData: {},
-                    searchHub: 'in-product-help',
-                    document: {},
-                    query: '',
                   },
                 ],
               },
@@ -921,7 +871,8 @@ describe('insight user actions preprocessing', () => {
 
           const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
-            ticketCreationDate
+            ticketCreationDate,
+            actionsToExclude
           );
           expect(timeline).toEqual(expectedTimeline);
         });
@@ -963,16 +914,6 @@ describe('insight user actions preprocessing', () => {
                 end: 1648822620000,
                 actions: [
                   {
-                    actionType: 'CUSTOM',
-                    timestamp: 1648822620000,
-                    eventData: {
-                      type: 'useless_event',
-                      value: '',
-                    },
-                    searchHub: 'community-support',
-                    document: {},
-                  },
-                  {
                     actionType: 'CLICK',
                     timestamp: 1648822500000,
                     eventData: {},
@@ -981,14 +922,6 @@ describe('insight user actions preprocessing', () => {
                       title: 'title',
                       uriHash: 'KXñi9EWk38wnb1tt',
                     },
-                  },
-                  {
-                    actionType: 'SEARCH',
-                    timestamp: 1648822380000,
-                    eventData: {},
-                    searchHub: 'in-product-help',
-                    document: {},
-                    query: '',
                   },
                 ],
               },
@@ -1018,7 +951,8 @@ describe('insight user actions preprocessing', () => {
 
           const timeline = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
-            ticketCreationDate
+            ticketCreationDate,
+            actionsToExclude
           );
 
           expect(timeline).toEqual(expectedTimeline);
@@ -1038,7 +972,8 @@ describe('insight user actions preprocessing', () => {
 
           const sessions = splitActionsIntoTimelineSessions(
             mappedAndSortedActions,
-            ticketCreationDate
+            ticketCreationDate,
+            actionsToExclude
           );
 
           expect(sessions.session?.actions.length).toEqual(1);
@@ -1101,96 +1036,6 @@ describe('insight user actions preprocessing', () => {
     });
   });
 
-  describe('#filterTimelineActions', () => {
-    it('should properly filter out the timeline of the actions that are to be excluded and of empty searches', async () => {
-      const actionsToExclude = ['useless_event'];
-      const mockRawActions = [...fakeActions].slice(0, 8);
-      const expectedFilteredTimeline = {
-        precedingSessions: [],
-        session: {
-          start: 1648744200000,
-          end: 1648744200000,
-          actions: [
-            {
-              actionType: 'TICKET_CREATION',
-              timestamp: 1648744200000,
-              eventData: {},
-            },
-          ],
-        },
-        followingSessions: [
-          {
-            start: 1648822380000,
-            end: 1648822620000,
-            actions: [
-              {
-                actionType: 'CLICK',
-                timestamp: 1648822500000,
-                eventData: {},
-                searchHub: 'in-product-help',
-                document: {
-                  title: 'title',
-                  uriHash: 'KXñi9EWk38wnb1tt',
-                },
-              },
-            ],
-          },
-          {
-            start: 1648744290000,
-            end: 1648744500000,
-            actions: [
-              {
-                actionType: 'VIEW',
-                timestamp: 1648744500000,
-                eventData: {},
-                searchHub: 'in-product-help',
-                document: {
-                  contentIdKey: 'sftitle',
-                  contentIdValue: 'Blaze pair with iPhone not working',
-                },
-              },
-              {
-                actionType: 'CLICK',
-                timestamp: 1648744320000,
-                eventData: {},
-                searchHub: 'in-product-help',
-                document: {
-                  title: 'title',
-                  uriHash: 'caCgiG2JPzjZfS7G',
-                },
-              },
-              {
-                actionType: 'CUSTOM',
-                timestamp: 1648744290000,
-                eventData: {
-                  type: 'smartSnippetSuggestions',
-                  value: 'expandSmartSnippetSuggestion',
-                },
-                searchHub: 'in-product-help',
-                document: {},
-              },
-            ],
-          },
-        ],
-      };
-
-      const mappedAndSortedActions =
-        mapAndSortActionsByMostRecent(mockRawActions);
-      const ticketCreationDate = caseCreationDate.getTime();
-      const sessionsTimeline = splitActionsIntoTimelineSessions(
-        mappedAndSortedActions,
-        ticketCreationDate
-      );
-
-      const filteredTimeline = filterTimelineActions(
-        sessionsTimeline,
-        actionsToExclude
-      );
-
-      expect(filteredTimeline).toEqual(expectedFilteredTimeline);
-    });
-  });
-
   describe('#preprocessActionsData', () => {
     describe('when ticket creation date is not provided', () => {
       it('should return an empty timeline', async () => {
@@ -1200,7 +1045,7 @@ describe('insight user actions preprocessing', () => {
           followingSessions: [],
         };
         const mockState = {
-          excludedCustomActions: ['CUSTOM'],
+          excludedCustomActions: ['useless_event'],
           ticketCreationDate: undefined,
           loading: false,
         };

@@ -33,7 +33,7 @@ export const preprocessActionsData = (
   state: UserActionsState,
   actions: Array<RawUserAction>
 ): UserActionTimeline => {
-  if (!state.ticketCreationDate || actions.length === 0) {
+  if (!state.ticketCreationDate || actions?.length === 0) {
     return {
       precedingSessions: [],
       session: undefined,
@@ -49,15 +49,11 @@ export const preprocessActionsData = (
 
   const timeline = splitActionsIntoTimelineSessions(
     mappedAndSortedActions,
-    ticketCreationTimestamp
-  );
-
-  const filteredTimeline = filterTimelineActions(
-    timeline,
+    ticketCreationTimestamp,
     excludedCustomActions
   );
 
-  return filteredTimeline;
+  return timeline;
 };
 
 const mapRawActionToUserAction = (rawAction: RawUserAction): UserAction => {
@@ -166,19 +162,42 @@ const insertSessionInTimeline = (
   }
 };
 
+const shouldExcludeAction = (
+  action: UserAction,
+  excludedCustomActions: string[]
+): boolean => {
+  if (action.actionType === UserActionType.SEARCH && !action.query) {
+    return true;
+  }
+
+  if (action.actionType === UserActionType.CUSTOM) {
+    const eventType = action.eventData?.type || '';
+    const eventValue = action.eventData?.value || '';
+
+    return (
+      excludedCustomActions.includes(eventType) ||
+      excludedCustomActions.includes(eventValue)
+    );
+  }
+  return false;
+};
+
 /**
  * Divides actions into sessions and organizes them in the timeline based on the ticket creation date. This function does the following:
  * 1) Iterates over the actions and groups them into sessions based on the session inactivity threshold.
  * 2) Inserts the case creation action in the current session.
- * 3) Inserts the session in the timeline at the right location.
- * 4) Returns the timeline with the current session, 2 preceding sessions and 2 following sessions.
+ * 3) Filters the actions in the current session to exclude custom actions where the type or value is included in the excludedCustomActions and also empty searches.
+ * 4) Inserts the session in the timeline at the right location.
+ * 5) Returns the timeline with the current session, 2 preceding sessions and 2 following sessions.
  * @param actions {UserAction[]} - The actions to split
  * @param ticketCreationDate {string} - The ticket creation date
+ * @param actionsToExclude {string[]}
  * @returns {UserActionTimeline} - The timeline of user actions (current session and 2 preceding and following sessions)
  */
 export const splitActionsIntoTimelineSessions = (
   actions: UserAction[],
-  ticketCreationDate: number
+  ticketCreationDate: number,
+  actionsToExclude: string[]
 ): UserActionTimeline => {
   const returnTimeline: UserActionTimeline = {
     precedingSessions: [],
@@ -198,11 +217,15 @@ export const splitActionsIntoTimelineSessions = (
       currentSession.start = action.timestamp;
       return;
     }
-    // We check if the case creation is within the current session or within the inactivity threshold after the end of the session.
+
     const isCaseCreationIsPartOfCurrentSession = isTimestampInRange(
       ticketCreationDate,
       currentSession.start,
       currentSession.end + SESSION_INACTIVITY_THRESHOLD_IN_MS
+    );
+
+    currentSession.actions = currentSession.actions.filter(
+      (action) => !shouldExcludeAction(action, actionsToExclude)
     );
 
     if (isCaseCreationIsPartOfCurrentSession) {
@@ -260,7 +283,6 @@ export const splitActionsIntoTimelineSessions = (
     };
   }
 
-  // We return the current session and the 2 preceding and following sessions in the timeline.
   return {
     precedingSessions: returnTimeline.precedingSessions.slice(
       0,
@@ -271,70 +293,4 @@ export const splitActionsIntoTimelineSessions = (
       returnTimeline.followingSessions.length - NUMBER_OF_FOLLOWING_SESSIONS
     ),
   };
-};
-
-const shouldExcludeAction = (
-  action: UserAction,
-  excludedCustomActions: string[]
-): boolean => {
-  if (action.actionType === UserActionType.SEARCH && !action.query) {
-    return true;
-  }
-
-  if (action.actionType === UserActionType.CUSTOM) {
-    const eventType = action.eventData?.type || '';
-    const eventValue = action.eventData?.value || '';
-
-    return (
-      excludedCustomActions.includes(eventType) ||
-      excludedCustomActions.includes(eventValue)
-    );
-  }
-  return false;
-};
-
-/**
- * Filters the timeline actions to exclude custom actions where the type or value is included in the excludedCustomActions and also empty searches.
- * @param timeline {UserActionTimeline}
- * @param actionsToExclude {string[]}
- * @returns {UserActionTimeline}
- */
-export const filterTimelineActions = (
-  timeline: UserActionTimeline,
-  actionsToExclude: string[]
-): UserActionTimeline => {
-  const filteredPrecedingSessions = timeline.precedingSessions.map(
-    (session) => {
-      const {start, end} = session;
-      const filteredActions = session.actions.filter(
-        (action) => !shouldExcludeAction(action, actionsToExclude)
-      );
-      return {start, end, actions: filteredActions};
-    }
-  );
-
-  const filteredFollowingSessions = timeline.followingSessions.map(
-    (session) => {
-      const {start, end} = session;
-      const filteredActions = session.actions.filter(
-        (action) => !shouldExcludeAction(action, actionsToExclude)
-      );
-      return {start, end, actions: filteredActions};
-    }
-  );
-
-  if (timeline.session) {
-    const {start, end, actions} = timeline.session;
-    const filteredActions = actions.filter(
-      (action) => !shouldExcludeAction(action, actionsToExclude)
-    );
-    timeline.session = {start, end, actions: filteredActions};
-  }
-
-  const filteredTimeline = {
-    precedingSessions: filteredPrecedingSessions,
-    session: timeline.session,
-    followingSessions: filteredFollowingSessions,
-  };
-  return filteredTimeline;
 };
