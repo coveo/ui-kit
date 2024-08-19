@@ -1,4 +1,5 @@
 import {Component, h, Prop, Watch, State} from '@stencil/core';
+import {UserAction} from '../..';
 import Flag from '../../../../images/flag.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
@@ -12,13 +13,6 @@ export type UserActionType =
   | 'TICKET_CREATION'
   | 'VIEW'
   | 'CUSTOM';
-
-export type UserAction = {
-  type: UserActionType;
-  origin: string;
-  timestamp: number;
-  actionTitle: string;
-};
 
 /**
  * @internal
@@ -36,40 +30,38 @@ export class AtomicInsightUserActionsSession {
   @InitializeBindings() public bindings!: InsightBindings;
   @State() public error!: Error;
 
-  @Prop({mutable: true}) public startTimestamp!: number;
-  @Prop({mutable: true}) public userActions: Array<UserAction> = [];
-  @Prop({mutable: true}) public isActiveSession = false;
+  /**
+   * The start time of the session as a Unix timestamp.
+   */
+  @Prop() public startTimestamp!: number;
+  /**
+   * The list of user actions performed during the session.
+   */
+  @Prop() public userActions!: Array<UserAction>;
 
-  private caseCreationIndex = -1;
   private userActionsToDisplay: Array<UserAction> = [];
   private userActionsAfterCaseCreation: Array<UserAction> = [];
-  private isShowMoreActionsButtonVisible = false;
   @State() areActionsAfterCaseCreationVisible = false;
 
   connectedCallback() {
     this.prepareUserActionsToDisplay();
   }
 
-  setCaseCreationIndex() {
-    this.caseCreationIndex = this.userActions.findIndex(
-      (action) => action.type === 'TICKET_CREATION'
-    );
-  }
-
   @Watch('userActions')
   prepareUserActionsToDisplay() {
-    this.setCaseCreationIndex();
+    const caseCreationIndex = this.userActions.findIndex(
+      ({actionType}) => actionType === 'TICKET_CREATION'
+    );
+    const isCaseCreationSession = caseCreationIndex !== -1;
 
-    if (!this.isActiveSession || this.caseCreationIndex === -1) {
+    if (!isCaseCreationSession) {
       this.userActionsToDisplay = this.userActions;
       this.userActionsAfterCaseCreation = [];
     } else {
-      this.userActionsToDisplay = this.userActions.slice(
-        this.caseCreationIndex
-      );
+      this.userActionsToDisplay = this.userActions.slice(caseCreationIndex);
       this.userActionsAfterCaseCreation = this.userActions.slice(
         0,
-        this.caseCreationIndex
+        caseCreationIndex
       );
     }
   }
@@ -79,6 +71,11 @@ export class AtomicInsightUserActionsSession {
   }
 
   renderSessionStartDate() {
+    const caseCreationIndex = this.userActions.findIndex(
+      ({actionType}) => actionType === 'TICKET_CREATION'
+    );
+    const isCaseCreationSession = caseCreationIndex !== -1;
+
     const {year, month, dayOfWeek, day} = parseTimestampToDateDetails(
       this.startTimestamp
     );
@@ -86,8 +83,8 @@ export class AtomicInsightUserActionsSession {
     const formatedStartDate = `${dayOfWeek}. ${month} ${day}, ${year}`;
     return (
       <div class="flex items-center px-2 pb-3">
-        {this.isActiveSession ? (
-          <div class="flex-one session-start-icon__container mr-2 flex h-5 w-5 items-center justify-center rounded-full">
+        {isCaseCreationSession ? (
+          <div class="session-start-icon__container mr-2 flex h-5 w-5 items-center justify-center rounded-full">
             <atomic-icon icon={Flag} class="h-3 w-3"></atomic-icon>
           </div>
         ) : null}
@@ -100,12 +97,9 @@ export class AtomicInsightUserActionsSession {
   renderActions(actions: Array<UserAction>) {
     return (
       <ol class="px-3">
-        {actions?.map(({actionTitle, origin, type, timestamp}) => (
+        {actions?.map((action) => (
           <AtomicInsightUserAction
-            actionTitle={actionTitle}
-            origin={origin}
-            type={type}
-            timestamp={timestamp}
+            action={action}
             bindings={this.bindings}
           ></AtomicInsightUserAction>
         ))}
@@ -138,7 +132,7 @@ export class AtomicInsightUserActionsSession {
   }
 
   public render() {
-    this.isShowMoreActionsButtonVisible =
+    const isShowMoreActionsButtonVisible =
       !this.areActionsAfterCaseCreationVisible &&
       !!this.userActionsAfterCaseCreation.length;
 
@@ -149,8 +143,7 @@ export class AtomicInsightUserActionsSession {
         {this.areActionsAfterCaseCreationVisible &&
           this.renderActions(this.userActionsAfterCaseCreation)}
 
-        {this.isShowMoreActionsButtonVisible &&
-          this.renderShowMoreActionsButton()}
+        {isShowMoreActionsButtonVisible && this.renderShowMoreActionsButton()}
 
         {this.renderActions(this.userActionsToDisplay)}
       </div>

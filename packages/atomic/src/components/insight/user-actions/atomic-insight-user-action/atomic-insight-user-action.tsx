@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {UserAction} from '../..';
 import BookmarkIcon from '../../../../images/bookmark.svg';
 import DocumentIcon from '../../../../images/document.svg';
 import PointIcon from '../../../../images/point.svg';
@@ -6,29 +7,25 @@ import QuickviewIcon from '../../../../images/quickview.svg';
 import SearchIcon from '../../../../images/search.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
-import {UserActionType} from '../atomic-insight-user-action-session/atomic-insight-user-actions-session';
+
+const icons = {
+  SEARCH: SearchIcon,
+  CLICK: DocumentIcon,
+  VIEW: QuickviewIcon,
+  CUSTOM: PointIcon,
+  TICKET_CREATION: BookmarkIcon,
+};
 
 interface AtomicInsightUserAction {
-  type: UserActionType;
-  timestamp: number;
-  actionTitle: string;
-  origin: string;
+  action: UserAction;
   bindings: InsightBindings;
 }
 
 export const AtomicInsightUserAction: FunctionalComponent<
   AtomicInsightUserAction
-> = ({type, timestamp, actionTitle, origin, bindings}) => {
-  const icons = {
-    SEARCH: SearchIcon,
-    CLICK: DocumentIcon,
-    VIEW: QuickviewIcon,
-    CUSTOM: PointIcon,
-    TICKET_CREATION: BookmarkIcon,
-  };
-
+> = ({bindings, action}) => {
   const renderActionTimestamp = () => {
-    const {hours, minutes} = parseTimestampToDateDetails(timestamp);
+    const {hours, minutes} = parseTimestampToDateDetails(action.timestamp);
 
     const formattedHours = String(hours).padStart(2, '0');
     const formattedMinutes = String(minutes).padStart(2, '0');
@@ -38,31 +35,44 @@ export const AtomicInsightUserAction: FunctionalComponent<
 
   const renderIcon = () => {
     const iconClasses = ['w-3', 'h-3'];
-    if (['CLICK', 'VIEW'].includes(type)) {
+    if (['CLICK', 'VIEW'].includes(action.actionType)) {
       iconClasses.push('text-primary');
     }
 
     return (
       <atomic-icon
-        icon={icons[type]}
+        icon={icons[action.actionType]}
         class={iconClasses.join(' ')}
       ></atomic-icon>
     );
   };
 
   const renderActionTitle = () => {
-    if (type === 'TICKET_CREATION') {
+    if (action.actionType === 'TICKET_CREATION') {
       return (
-        <div class="font-semibold">{bindings.i18n.t('ticket-created')}</div>
+        <div class="font-semibold text-xs">{bindings.i18n.t('ticket-created')}</div>
       );
+    } else if (action.actionType === 'CUSTOM') {
+      return (
+        <div class="font-semibold text-xs">
+          {action.eventData?.value ?? action.eventData?.type}
+        </div>
+      );
+    } else if (action.actionType === 'SEARCH') {
+      return <div class="font-semibold text-xs">{action.query}</div>;
+    } else if (action.actionType === 'VIEW') {
+      return (
+        <a
+          href={action.document?.contentIdValue}
+          class="text-primary font-semibold text-xs"
+          target="_blank"
+        >
+          {action.document?.title}
+        </a>
+      );
+    } else if (action.actionType === 'CLICK') {
+      return <div class="font-semibol text-xs">{action.document?.title}</div>;
     }
-
-    const actionTitleClasses = [];
-    if (['CLICK', 'VIEW'].includes(type)) {
-      actionTitleClasses.push('text-primary');
-    }
-
-    return <div class={actionTitleClasses.join(' ')}>{actionTitle}</div>;
   };
 
   return (
@@ -75,9 +85,9 @@ export const AtomicInsightUserAction: FunctionalComponent<
       </div>
       <div class="flex-1">
         {renderActionTitle()}
-        <div class="text-neutral-dark flex text-xs">
+        <div class="text-neutral-dark flex py-2 text-xxs">
           <div>{renderActionTimestamp()}</div>
-          <div class="px-2">{origin}</div>
+          <div class="px-2">{action.searchHub}</div>
         </div>
       </div>
     </div>
