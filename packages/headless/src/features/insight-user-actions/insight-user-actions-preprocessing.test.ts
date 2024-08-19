@@ -232,7 +232,10 @@ const expectedTimeline = {
         timestamp: 1648744500000,
         eventData: {},
         searchHub: 'in-product-help',
-        document: {},
+        document: {
+          contentIdKey: 'sftitle',
+          contentIdValue: 'Blaze pair with iPhone not working',
+        },
       },
       {
         actionType: 'CLICK',
@@ -289,7 +292,10 @@ const expectedTimeline = {
           timestamp: 1648826040000,
           eventData: {},
           searchHub: 'in-product-help',
-          document: {},
+          document: {
+            contentIdKey: 'sftitle',
+            contentIdValue: 'Speedbit Charge 2 User Manual.pdf',
+          },
         },
         {
           actionType: 'CLICK',
@@ -331,7 +337,10 @@ describe('insight user actions preprocessing', () => {
           timestamp: 1648826040000,
           eventData: {},
           searchHub: 'in-product-help',
-          document: {},
+          document: {
+            contentIdKey: 'sftitle',
+            contentIdValue: 'Speedbit Charge 2 User Manual.pdf',
+          },
         },
         {
           actionType: 'CLICK',
@@ -367,7 +376,10 @@ describe('insight user actions preprocessing', () => {
           timestamp: 1648744500000,
           eventData: {},
           searchHub: 'in-product-help',
-          document: {},
+          document: {
+            contentIdKey: 'sftitle',
+            contentIdValue: 'Blaze pair with iPhone not working',
+          },
         },
         {
           actionType: 'CLICK',
@@ -511,7 +523,10 @@ describe('insight user actions preprocessing', () => {
                   timestamp: 1648744500000,
                   eventData: {},
                   searchHub: 'in-product-help',
-                  document: {},
+                  document: {
+                    contentIdKey: 'sftitle',
+                    contentIdValue: 'Blaze pair with iPhone not working',
+                  },
                 },
                 {
                   actionType: 'CLICK',
@@ -568,7 +583,10 @@ describe('insight user actions preprocessing', () => {
                     timestamp: 1648826040000,
                     eventData: {},
                     searchHub: 'in-product-help',
-                    document: {},
+                    document: {
+                      contentIdKey: 'sftitle',
+                      contentIdValue: 'Speedbit Charge 2 User Manual.pdf',
+                    },
                   },
                   {
                     actionType: 'CLICK',
@@ -627,7 +645,6 @@ describe('insight user actions preprocessing', () => {
             mappedAndSortedActions,
             ticketCreationDate
           );
-          console.log(JSON.stringify(timeline));
           expect(timeline).toEqual(expectedTimeline);
         });
       });
@@ -753,7 +770,10 @@ describe('insight user actions preprocessing', () => {
                   timestamp: 1648741800000,
                   eventData: {},
                   searchHub: 'in-product-help',
-                  document: {},
+                  document: {
+                    contentIdKey: 'sftitle',
+                    contentIdValue: 'Blaze pair with iPhone not working',
+                  },
                 },
               ],
             },
@@ -861,7 +881,10 @@ describe('insight user actions preprocessing', () => {
                     timestamp: 1648744500000,
                     eventData: {},
                     searchHub: 'in-product-help',
-                    document: {},
+                    document: {
+                      contentIdKey: 'sftitle',
+                      contentIdValue: 'Blaze pair with iPhone not working',
+                    },
                   },
                   {
                     actionType: 'CLICK',
@@ -918,7 +941,10 @@ describe('insight user actions preprocessing', () => {
                     timestamp: 1648826040000,
                     eventData: {},
                     searchHub: 'in-product-help',
-                    document: {},
+                    document: {
+                      contentIdKey: 'sftitle',
+                      contentIdValue: 'Speedbit Charge 2 User Manual.pdf',
+                    },
                   },
                   {
                     actionType: 'CLICK',
@@ -1118,7 +1144,10 @@ describe('insight user actions preprocessing', () => {
                 timestamp: 1648744500000,
                 eventData: {},
                 searchHub: 'in-product-help',
-                document: {},
+                document: {
+                  contentIdKey: 'sftitle',
+                  contentIdValue: 'Blaze pair with iPhone not working',
+                },
               },
               {
                 actionType: 'CLICK',

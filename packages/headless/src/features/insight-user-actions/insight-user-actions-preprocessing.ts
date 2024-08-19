@@ -75,9 +75,10 @@ const mapRawActionToUserAction = (rawAction: RawUserAction): UserAction => {
       title: actionData.title,
       uriHash: actionData.uri_hash,
       // eslint-disable-next-line @cspell/spellchecker
-      contentIdKey: actionData.c_contentidkey,
-      // eslint-disable-next-line @cspell/spellchecker
-      contentIdValue: actionData.c_contentidvalue,
+      contentIdKey: actionData.content_id_key || actionData.c_contentidkey,
+      contentIdValue:
+        // eslint-disable-next-line @cspell/spellchecker
+        actionData.content_id_value || actionData.c_contentidvalue,
     },
     query: actionData.query_expression,
   };
