@@ -1,3 +1,15 @@
+# 2.55.0 (2024-08-14)
+
+### Bug Fixes
+
+- **quantic:** fix issue with persisting search box suggestion value on blur ([#4279](https://github.com/coveo/ui-kit/issues/4279)) ([c4e2c7c](https://github.com/coveo/ui-kit/commits/c4e2c7c6a4a36d67499f67a858ea2b9e233e1c5f))
+- **quantic:** Issue with overflowing code markdown in generated answer ([#4263](https://github.com/coveo/ui-kit/issues/4263)) ([aab5a7f](https://github.com/coveo/ui-kit/commits/aab5a7f33524fc3526a83060a3b913eccf34ac69))
+- **quantic:** styling issue fixed with quantic facet search component ([#4265](https://github.com/coveo/ui-kit/issues/4265)) ([b94476d](https://github.com/coveo/ui-kit/commits/b94476dd746c87ffd0e9340e66d1703fb7728e7a))
+
+### Features
+
+- **genqa:** filter citations that points to same document ([#4250](https://github.com/coveo/ui-kit/issues/4250)) ([7f04f73](https://github.com/coveo/ui-kit/commits/7f04f7349ad2f25a7100d7d537686a3a06a25188))
+
 ## 2.54.1 (2024-07-31)
 
 ### Bug Fixes
