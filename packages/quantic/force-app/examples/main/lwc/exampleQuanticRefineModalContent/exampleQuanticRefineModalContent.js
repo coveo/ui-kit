@@ -24,6 +24,33 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
     },
   ];
 
+  sortOptions = [
+    {
+      label: 'Date ascending',
+      value: 'date ascending',
+      criterion: {
+        by: 'date',
+        order: 'ascending',
+      },
+    },
+    {
+      label: 'Views Descending',
+      value: '@ytviewcount descending',
+      criterion: {
+        by: 'field',
+        field: 'ytviewcount',
+        order: 'descending',
+      },
+    },
+    {
+      label: 'NO SORT',
+      value: 'nosort',
+      criterion: {
+        by: 'nosort',
+      },
+    },
+  ];
+
   formattingFunction = (item) => `${item.start} - ${item.end}`;
 
   handleTryItNow(evt) {

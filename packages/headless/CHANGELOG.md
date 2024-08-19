@@ -1,3 +1,15 @@
+# 2.77.0 (2024-08-14)
+
+### Bug Fixes
+
+- **answerStream:** handle end of stream ([#4270](https://github.com/coveo/ui-kit/issues/4270)) ([5e1b49a](https://github.com/coveo/ui-kit/commits/5e1b49aee5e77532a109dc1abeb3f6b0de421ca1))
+- **headless:** fix answer state using the new pattern ([#4271](https://github.com/coveo/ui-kit/issues/4271)) ([d1bcc53](https://github.com/coveo/ui-kit/commits/d1bcc5373a54a413b58ceba54269fa0aa18125a8))
+
+### Features
+
+- **genqa:** filter citations that points to same document ([#4250](https://github.com/coveo/ui-kit/issues/4250)) ([7f04f73](https://github.com/coveo/ui-kit/commits/7f04f7349ad2f25a7100d7d537686a3a06a25188))
+- **headless SSR:** add NavigatorContext in SSR sample ([#4238](https://github.com/coveo/ui-kit/issues/4238)) ([47d9624](https://github.com/coveo/ui-kit/commits/47d9624c7392b1bae3e3eee7580be2596e0b41bd))
+
 # 2.76.0 (2024-08-07)
 
 ### Bug Fixes

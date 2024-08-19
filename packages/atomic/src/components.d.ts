@@ -16,6 +16,7 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+import { AtomicInterface } from "./utils/initialization-utils";
 import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -46,6 +47,7 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+export { AtomicInterface } from "./utils/initialization-utils";
 export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -800,6 +802,10 @@ export namespace Components {
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
      */
     interface AtomicExternal {
+        /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
         /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
@@ -6466,6 +6472,10 @@ declare namespace LocalJSX {
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
      */
     interface AtomicExternal {
+        /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
         /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
