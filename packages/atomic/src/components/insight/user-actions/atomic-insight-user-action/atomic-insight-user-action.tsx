@@ -50,28 +50,30 @@ export const AtomicInsightUserAction: FunctionalComponent<
   const renderActionTitle = () => {
     if (action.actionType === 'TICKET_CREATION') {
       return (
-        <div class="font-semibold text-xs">{bindings.i18n.t('ticket-created')}</div>
+        <div class="text-xs font-semibold">
+          {bindings.i18n.t('ticket-created')}
+        </div>
       );
     } else if (action.actionType === 'CUSTOM') {
       return (
-        <div class="font-semibold text-xs">
+        <div class="text-xs font-semibold">
           {action.eventData?.value ?? action.eventData?.type}
         </div>
       );
     } else if (action.actionType === 'SEARCH') {
-      return <div class="font-semibold text-xs">{action.query}</div>;
+      return <div class="text-xs font-semibold">{action.query}</div>;
     } else if (action.actionType === 'VIEW') {
       return (
         <a
           href={action.document?.contentIdValue}
-          class="text-primary font-semibold text-xs"
+          class="text-primary text-xs font-semibold"
           target="_blank"
         >
           {action.document?.title}
         </a>
       );
     } else if (action.actionType === 'CLICK') {
-      return <div class="font-semibol text-xs">{action.document?.title}</div>;
+      return <div class="text-xs font-semibold">{action.document?.title}</div>;
     }
   };
 
@@ -85,7 +87,7 @@ export const AtomicInsightUserAction: FunctionalComponent<
       </div>
       <div class="flex-1">
         {renderActionTitle()}
-        <div class="text-neutral-dark flex py-2 text-xxs">
+        <div class="text-neutral-dark text-xxs flex py-2 font-light">
           <div>{renderActionTimestamp()}</div>
           <div class="px-2">{action.searchHub}</div>
         </div>

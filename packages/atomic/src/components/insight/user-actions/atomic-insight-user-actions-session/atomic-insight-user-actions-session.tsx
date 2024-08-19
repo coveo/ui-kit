@@ -110,7 +110,7 @@ export class AtomicInsightUserActionsSession {
   renderShowMoreActionsButton() {
     return (
       <div class="px-3 pb-3">
-        <div class="flex">
+        <div class="flex items-center">
           <div class="flex-none pr-2">
             <div class="flex justify-center py-1">
               <atomic-icon icon={ThreeDotsIcon} class="h-3 w-3"></atomic-icon>
@@ -119,7 +119,7 @@ export class AtomicInsightUserActionsSession {
           <div class="flex-1">
             <button
               onClick={this.showActionsAfterCaseCreation.bind(this)}
-              class="btn-text-primary flex items-center"
+              class="btn-text-primary flex items-center text-xs font-light"
             >
               {this.bindings.i18n.t('more-actions-in-session', {
                 count: this.userActionsAfterCaseCreation.length,
