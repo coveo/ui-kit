@@ -266,7 +266,7 @@ describe('generated answer', () => {
 
         generatedAnswer.disable();
 
-        expect(setIsEnabled).toHaveBeenCalledWith(true);
+        expect(setIsEnabled).toHaveBeenCalledWith(false);
       });
     });
   });
