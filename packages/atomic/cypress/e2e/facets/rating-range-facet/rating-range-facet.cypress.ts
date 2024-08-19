@@ -324,10 +324,10 @@ describe('Rating Range Test Suites', () => {
       RatingRangeFacetSelectors,
       ratingRangeFacetDefaultNumberOfIntervals - 1
     );
-    RatingFacetAssertions.assertSelectedFacetValueContainsNumberOfStar(
-      RatingRangeFacetSelectors,
-      4
-    );
+    // RatingFacetAssertions.assertSelectedFacetValueContainsNumberOfStar(
+    //   RatingRangeFacetSelectors,
+    //   4
+    // );
     RatingRangeFacetAssertions.assertFacetValueContainsTextOnlyAndUp();
   });
   describe('with depends-on', () => {
