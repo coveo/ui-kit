@@ -35,8 +35,7 @@ import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 import {doNotTrack} from '../donottrack';
-import {NullStorage} from '../storage';
-import {isObject} from './utils';
+import {isObject, truncateUrl} from './utils';
 
 export const Version = 'v15';
 
@@ -651,11 +650,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return rest;
     }
 
-    private limit(input: string, length: number): string | undefined | null {
-        if (typeof input !== 'string') {
-            return input;
-        }
-        return input.substring(0, length);
+    private limit<T>(input: T, length: number): T {
+        return typeof input === 'string' ? (truncateUrl(input, length) as T) : input;
     }
 
     private get baseUrl(): string {

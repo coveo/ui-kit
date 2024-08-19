@@ -15,7 +15,6 @@ import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
 import * as doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 import {CoveoLinkParam} from '../plugins/link';
-import {NoopAnalytics} from './noopAnalytics';
 
 const aVisitorId = '123';
 jest.mock('uuid', () => ({
@@ -281,7 +280,9 @@ describe('Analytics', () => {
 
     describe('should truncate the maxlength for URL parameters at 128 characters for ua events', () => {
         const desiredMax: number = 128;
-        const longUrl: string = 'http://coveo.com/?q=' + 'a'.repeat(desiredMax);
+        // Craft the URL so the truncation point falls in the %20 sequence
+        const longUrl: string = 'http://coveo.com/?q=' + 'a'.repeat(desiredMax - 22) + '%20b';
+        const expectedTruncatedLength = longUrl.lastIndexOf('%', desiredMax);
         expect(longUrl.length).toBeGreaterThan(desiredMax);
         async function testEventType(type: EventType, url: string) {
             mockFetchRequestForEventType(type);
@@ -290,8 +291,10 @@ describe('Analytics', () => {
                 originLevel3: url,
             });
             const [body] = getParsedBodyCalls();
-            if (type == EventType.view) expect(body.location.length).toBeLessThanOrEqual(desiredMax);
-            expect(body.originLevel3.length).toBeLessThanOrEqual(desiredMax);
+            if (type == EventType.view) {
+                expect(body.location).toHaveLength(expectedTruncatedLength);
+            }
+            expect(body.originLevel3).toHaveLength(expectedTruncatedLength);
         }
         it('for view events', () => testEventType(EventType.view, longUrl));
         it('for click events', () => testEventType(EventType.click, longUrl));
