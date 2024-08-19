@@ -34,7 +34,7 @@ export function parseTimestampToDateDetails(timestamp: number) {
     'December',
   ];
 
-  const date = new Date(Number(timestamp) * 1000);
+  const date = new Date(timestamp);
 
   const dayOfWeek = daysOfWeek[date.getUTCDay()];
   const month = months[date.getUTCMonth()];
