@@ -145,20 +145,23 @@ export class AtomicCommerceProductList
       this.summary = this.search.summary();
     }
 
-    this.productTemplateProvider = new ProductTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-template')
-      ),
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
+    this.productTemplateProvider = new ProductTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-product-template')
+        ),
+        getResultTemplateRegistered: () => this.resultTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.resultTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-    });
+      this.gridCellLinkTarget
+    );
 
     this.productListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -280,7 +283,6 @@ export class AtomicCommerceProductList
             title: product.ec_name ?? 'temp',
           }}
           {...propsForAtomicProduct.interactiveProduct}
-          gridTarget={this.gridCellLinkTarget}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }

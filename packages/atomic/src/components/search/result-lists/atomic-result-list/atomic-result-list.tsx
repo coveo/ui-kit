@@ -137,21 +137,24 @@ export class AtomicResultList implements InitializableComponent {
     }
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.itemTemplateProvider = new ItemTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
-      ),
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
+    this.itemTemplateProvider = new ItemTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-result-template')
+        ),
+        getResultTemplateRegistered: () => this.resultTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.resultTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
+        bindings: this.bindings,
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-      bindings: this.bindings,
-    });
+      this.gridCellLinkTarget
+    );
 
     this.resultListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -241,7 +244,6 @@ export class AtomicResultList implements InitializableComponent {
       return (
         <DisplayGrid
           item={result}
-          gridTarget={this.gridCellLinkTarget}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
             element && this.resultListCommon.setNewResultRef(element, i)

@@ -173,20 +173,23 @@ export class AtomicCommerceRecommendationList
 
     this.recommendations.refresh();
 
-    this.productTemplateProvider = new ProductTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-template')
-      ),
-      getResultTemplateRegistered: () => this.productTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.productTemplateRegistered = value;
+    this.productTemplateProvider = new ProductTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-product-template')
+        ),
+        getResultTemplateRegistered: () => this.productTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.productTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-    });
+      this.gridCellLinkTarget
+    );
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -349,7 +352,6 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
-        gridTarget={this.gridCellLinkTarget}
         select={() => {
           this.logWarningIfNeeded(interactiveProduct.warningMessage);
           interactiveProduct.select();

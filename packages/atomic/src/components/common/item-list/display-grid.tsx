@@ -1,5 +1,4 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {ItemTarget} from '../layout/display-options';
 
 export interface DisplayGridProps {
   item: {clickUri: string; title: string};
@@ -7,7 +6,6 @@ export interface DisplayGridProps {
   select: () => void;
   beginDelayedSelect: () => void;
   cancelPendingSelect: () => void;
-  gridTarget?: ItemTarget;
 }
 
 export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (

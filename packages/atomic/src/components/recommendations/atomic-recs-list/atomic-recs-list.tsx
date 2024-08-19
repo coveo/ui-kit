@@ -176,21 +176,24 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       },
     });
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-recs-result-template')
-      ),
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
+    this.itemTemplateProvider = new ItemTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-recs-result-template')
+        ),
+        getResultTemplateRegistered: () => this.resultTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.resultTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
+        bindings: this.bindings,
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-      bindings: this.bindings,
-    });
+      this.gridCellLinkTarget
+    );
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -357,7 +360,6 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     return (
       <DisplayGrid
         item={recommendation}
-        gridTarget={this.gridCellLinkTarget}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)
