@@ -344,4 +344,8 @@ export enum SearchPageEvents {
    * Identifies the custom event that gets logged when the user clicks the create article button.
    */
   createArticle = 'createArticle',
+  /**
+   * Identifies the custom event that gets logged when the user clicks the open user actions button.
+   */
+  openUserActions = 'openUserActions',
 }
