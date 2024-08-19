@@ -89,9 +89,9 @@ describe('Color Facet Test Suites', () => {
 
         beforeEach(setupSelectSearchResult);
         describe('verify rendering', () => {
-          ColorFacetAssertions.assertNumberOfSelectedBoxValues(2);
+          ColorFacetAssertions.assertNumberOfSelectedBoxValues(1);
           ColorFacetAssertions.assertNumberOfIdleBoxValues(
-            colorFacetDefaultNumberOfValues - 2
+            colorFacetDefaultNumberOfValues - 1
           );
           CommonFacetAssertions.assertSearchInputEmpty(ColorFacetSelectors);
         });
