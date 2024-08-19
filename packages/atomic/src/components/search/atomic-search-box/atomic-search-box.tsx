@@ -244,7 +244,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-commerce-search-box-');
+    this.id ??= randomID('atomic-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
@@ -305,7 +305,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
-  public disconnectedCallback: () => void = () => {};
+  public disconnectedCallback = () => {};
 
   @Listen('atomic/searchBoxSuggestion/register')
   public registerSuggestions(
