@@ -49,7 +49,7 @@ interface SubscribeStateManager {
   ) => Unsubscribe;
 }
 
-const subscribeStateManager: SubscribeStateManager = {
+export const subscribeStateManager: SubscribeStateManager = {
   engines: {},
 
   setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => {

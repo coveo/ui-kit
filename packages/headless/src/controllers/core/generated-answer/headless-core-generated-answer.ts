@@ -135,6 +135,10 @@ export interface GeneratedAnswerPropsInitialState {
      */
     isVisible?: boolean;
     /**
+     * Sets the component enabled state on load.
+     */
+    isEnabled?: boolean;
+    /**
      * The initial formatting options applied to generated answers when the controller first loads.
      */
     responseFormat?: GeneratedResponseFormat;
