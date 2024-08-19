@@ -33,6 +33,13 @@ export type {
   CommerceSearchParameters,
 };
 
+/**
+ * Defines a `ParameterManager` controller instance.
+ *
+ * @returns The `ParameterManager` controller definition.
+ *
+ * @internal
+ */
 export function defineParameterManager<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {

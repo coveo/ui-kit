@@ -19,6 +19,13 @@ export type {
   SummaryState,
 };
 
+/**
+ * Defines a `Summary` controller instance.
+ *
+ * @returns The `Summary` controller definition.
+ *
+ * @internal
+ */
 export function defineSummary<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {
