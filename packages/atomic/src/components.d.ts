@@ -479,6 +479,9 @@ export namespace Components {
          */
         "previousButtonIcon": string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -491,6 +494,7 @@ export namespace Components {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -593,6 +597,7 @@ export namespace Components {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -1638,6 +1643,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget1;
         /**
@@ -2377,6 +2383,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2731,6 +2738,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -3816,6 +3824,9 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceProductListElement: {
@@ -6181,6 +6192,9 @@ declare namespace LocalJSX {
          */
         "previousButtonIcon"?: string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -6193,6 +6207,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -6281,6 +6296,7 @@ declare namespace LocalJSX {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -7278,6 +7294,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget1;
         /**
@@ -7974,6 +7991,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -8308,6 +8326,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -9360,6 +9379,9 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            /**
+             * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+             */
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.

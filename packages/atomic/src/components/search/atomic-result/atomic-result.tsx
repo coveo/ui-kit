@@ -142,8 +142,8 @@ export class AtomicResult {
       event.stopPropagation();
     }
     this.host
-      .shadowRoot!.querySelector<HTMLAtomicResultLinkElement>(
-        '.link-container > atomic-result-link a'
+      .shadowRoot!.querySelector<HTMLAnchorElement>(
+        '.link-container > atomic-result-link a:not([slot])'
       )
       ?.click();
   }

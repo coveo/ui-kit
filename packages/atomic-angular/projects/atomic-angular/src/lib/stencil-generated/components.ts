@@ -275,6 +275,29 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
 
 
 @ProxyCmp({
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'numberOfPlaceholders'],
+  methods: ['setRenderFunction']
+})
+@Component({
+  selector: 'atomic-commerce-product-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'numberOfPlaceholders'],
+})
+export class AtomicCommerceProductList {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceProductList extends Components.AtomicCommerceProductList {}
+
+
+@ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
 })
 @Component({

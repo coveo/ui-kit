@@ -164,6 +164,18 @@ export class AtomicProduct {
       .join('');
   }
 
+  @Listen('click')
+  public handleClick(event: MouseEvent) {
+    if (this.stopPropagation) {
+      event.stopPropagation();
+    }
+    this.host
+      .shadowRoot!.querySelector<HTMLAnchorElement>(
+        '.link-container > atomic-product-link a:not([slot])'
+      )
+      ?.click();
+  }
+
   private shouldExecuteRenderFunction() {
     return (
       this.isCustomRenderFunctionMode &&

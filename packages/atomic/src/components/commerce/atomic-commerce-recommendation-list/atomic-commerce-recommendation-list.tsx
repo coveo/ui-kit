@@ -101,6 +101,7 @@ export class AtomicCommerceRecommendationList
    * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link.
    * This property is ignored unless the `display` property is set to `grid`.
    * @defaultValue `_self`
+   * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**

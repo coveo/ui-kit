@@ -6,6 +6,7 @@ import {
 import {h} from '@stencil/core';
 import 'core-js/actual/set';
 import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
+import {ItemTarget} from '../../common/layout/display-options';
 import {isResultSectionNode} from '../../common/layout/sections';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 
@@ -47,6 +48,7 @@ function groupNodesByType(nodes: NodeList) {
 export class ProductTemplateCommon {
   private host: HTMLDivElement;
   public matchConditions: ProductTemplateCondition[] = [];
+  private gridCellLinkTarget?: ItemTarget;
 
   constructor({
     host,
@@ -78,6 +80,14 @@ export class ProductTemplateCommon {
         )
       );
       return;
+    }
+
+    if (
+      host.parentElement?.attributes.getNamedItem('display')?.value === 'grid'
+    ) {
+      this.gridCellLinkTarget = host.parentElement?.attributes.getNamedItem(
+        'grid-cell-link-target'
+      )?.value as ItemTarget;
     }
 
     const template = host.querySelector('template');
@@ -127,7 +137,7 @@ export class ProductTemplateCommon {
     return {
       conditions: conditions.concat(this.matchConditions),
       content: getTemplateElement(this.host).content!,
-      linkContent: getLinkTemplateElement(this.host).content!,
+      linkContent: this.getLinkTemplateElement(this.host).content!,
       priority: 1,
     };
   }
@@ -142,23 +152,22 @@ export class ProductTemplateCommon {
       );
     }
   }
+  getDefaultLinkTemplateElement() {
+    const linkTemplate = document.createElement('template');
+    linkTemplate.innerHTML = `<atomic-product-link>${this.gridCellLinkTarget ? `<a slot="attributes" target="${this.gridCellLinkTarget}"></a>` : ''}</atomic-product-link>`;
+    return linkTemplate;
+  }
+
+  getLinkTemplateElement(host: HTMLElement) {
+    return (
+      host.querySelector<HTMLTemplateElement>('template[slot="link"]') ??
+      this.getDefaultLinkTemplateElement()
+    );
+  }
 }
 
 function getTemplateElement(host: HTMLElement) {
   return host.querySelector<HTMLTemplateElement>('template:not([slot])')!;
-}
-
-function getDefaultLinkTemplateElement() {
-  const linkTemplate = document.createElement('template');
-  linkTemplate.innerHTML = '<atomic-result-link></atomic-result-link>';
-  return linkTemplate;
-}
-
-function getLinkTemplateElement(host: HTMLElement) {
-  return (
-    host.querySelector<HTMLTemplateElement>('template[slot="link"]') ??
-    getDefaultLinkTemplateElement()
-  );
 }
 
 export function makeMatchConditions(

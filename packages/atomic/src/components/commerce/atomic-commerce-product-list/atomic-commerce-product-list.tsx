@@ -51,7 +51,7 @@ import {ProductTemplateProvider} from '../product-list/product-template-provider
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-commerce-product-list` component is responsible for displaying products.
  */
 @Component({
@@ -111,6 +111,7 @@ export class AtomicCommerceProductList
    * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
+   * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
 
@@ -259,6 +260,7 @@ export class AtomicCommerceProductList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
+      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
