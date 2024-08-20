@@ -127,10 +127,25 @@ export function buildSearchAPIGeneratedAnswer(
   const controller = buildCoreGeneratedAnswer(engine, analyticsClient, props);
   const getState = () => engine.state;
 
+  if (
+    engine.state.generatedAnswer.id &&
+    !subscribeStateManager.engines[engine.state.generatedAnswer.id]
+  ) {
+    subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
+      abortController: undefined,
+      lastRequestId: engine.state.search.requestId,
+      lastStreamId:
+        engine.state.search.extendedResults.generativeQuestionAnsweringId ?? '',
+    };
+  }
+
   if (!engine.state.generatedAnswer.id) {
     const genQaEngineId = randomID('genQA-', 12);
     engine.dispatch(setId({id: genQaEngineId}));
-    subscribeStateManager.engines[genQaEngineId] = {
+  }
+
+  if (!subscribeStateManager.engines[engine.state.generatedAnswer.id]) {
+    subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
       abortController: undefined,
       lastRequestId: '',
       lastStreamId: '',
