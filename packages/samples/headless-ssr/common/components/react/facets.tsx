@@ -1,10 +1,31 @@
 'use client';
 
-import {useAuthorFacet} from '../../lib/react/engine';
+import {useEffect, useRef} from 'react';
+import {useAuthorFacet, useTabManager} from '../../lib/react/engine';
 import FacetCommon from '../common/facet';
 
 export const AuthorFacet = () => {
   const {state, methods} = useAuthorFacet();
+  const {state: tabManagerState} = useTabManager();
+  const prevEnabledRef = useRef(state.enabled);
+
+  useEffect(() => {
+    const isActiveTabAllOrVideos =
+      tabManagerState?.activeTab === 'all' ||
+      tabManagerState?.activeTab === 'videos';
+
+    if (isActiveTabAllOrVideos && !state.enabled) {
+      methods?.enable();
+    } else if (!isActiveTabAllOrVideos && state.enabled) {
+      methods?.disable();
+    }
+
+    prevEnabledRef.current = state.enabled;
+  }, [tabManagerState?.activeTab, methods, state]);
+
+  if (state.enabled === false) {
+    return;
+  }
 
   return (
     <FacetCommon
