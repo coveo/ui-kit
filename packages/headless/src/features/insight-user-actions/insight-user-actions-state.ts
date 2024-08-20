@@ -2,7 +2,7 @@ import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-a
 
 export interface UserActionTimeline {
   precedingSessions: UserSession[];
-  session: UserSession | undefined;
+  session?: UserSession;
   followingSessions: UserSession[];
 }
 

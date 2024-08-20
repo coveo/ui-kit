@@ -229,26 +229,26 @@ export const splitActionsIntoTimelineSessions = (
     );
 
     if (isCaseCreationIsPartOfCurrentSession) {
-      let caseCreationActionInserted = false;
       const caseCreationAction: UserAction = {
         actionType: UserActionType.TICKET_CREATION,
         timestamp: ticketCreationDate,
         eventData: {},
       };
 
-      currentSession.actions.forEach((action, index) => {
-        if (caseCreationActionInserted) {
-          return;
+      const caseCreationActionIndex = currentSession.actions.findIndex(
+        (action) => {
+          return action.timestamp <= caseCreationAction.timestamp;
         }
+      );
 
-        if (
-          action.timestamp <= caseCreationAction.timestamp &&
-          !caseCreationActionInserted
-        ) {
-          currentSession.actions.splice(index, 0, caseCreationAction);
-          caseCreationActionInserted = true;
-        }
-      });
+      if (caseCreationActionIndex !== -1) {
+        currentSession.actions.splice(
+          caseCreationActionIndex,
+          0,
+          caseCreationAction
+        );
+      }
+
       returnTimeline.session = currentSession;
     } else {
       insertSessionInTimeline(

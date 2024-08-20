@@ -161,181 +161,13 @@ const fakeActions = [
   };
 });
 
-const expectedTimeline = {
-  precedingSessions: [
-    {
-      start: 1648544100000,
-      end: 1648545870000,
-      actions: [
-        {
-          actionType: 'CUSTOM',
-          timestamp: 1648545870000,
-          eventData: {
-            type: 'smartSnippetSuggestions',
-            value: 'likeSmartSnippet',
-          },
-          searchHub: 'in-product-help',
-          document: {},
-        },
-        {
-          actionType: 'CUSTOM',
-          timestamp: 1648545720000,
-          eventData: {
-            type: 'smartSnippetSuggestions',
-            value: 'expandSmartSnippetSuggestion',
-          },
-          searchHub: 'in-product-help',
-          document: {},
-        },
-        {
-          actionType: 'SEARCH',
-          timestamp: 1648544100000,
-          eventData: {},
-          searchHub: 'community-search',
-          document: {},
-          query: 'Version 8.124',
-        },
-      ],
-    },
-    {
-      start: 1648543800000,
-      end: 1648543860000,
-      actions: [
-        {
-          actionType: 'CLICK',
-          timestamp: 1648543860000,
-          eventData: {},
-          searchHub: 'in-product-help',
-          document: {
-            title: 'title',
-            uriHash: 'someHash',
-          },
-        },
-        {
-          actionType: 'CUSTOM',
-          timestamp: 1648543800000,
-          eventData: {
-            type: 'MySpeedbit App interfaceload',
-            value: '',
-          },
-          searchHub: 'in-product-help',
-          document: {},
-        },
-      ],
-    },
-  ],
-  session: {
-    start: 1648743840000,
-    end: 1648744500000,
-    actions: [
-      {
-        actionType: 'VIEW',
-        timestamp: 1648744500000,
-        eventData: {},
-        searchHub: 'in-product-help',
-        document: {
-          contentIdKey: 'sftitle',
-          contentIdValue: 'Blaze pair with iPhone not working',
-        },
-      },
-      {
-        actionType: 'CLICK',
-        timestamp: 1648744320000,
-        eventData: {},
-        searchHub: 'in-product-help',
-        document: {
-          title: 'title',
-          uriHash: 'caCgiG2JPzjZfS7G',
-        },
-      },
-      {
-        actionType: 'CUSTOM',
-        timestamp: 1648744290000,
-        eventData: {
-          type: 'smartSnippetSuggestions',
-          value: 'expandSmartSnippetSuggestion',
-        },
-        searchHub: 'in-product-help',
-        document: {},
-      },
-      {
-        actionType: 'TICKET_CREATION',
-        timestamp: 1648744200000,
-        eventData: {},
-      },
-      {
-        actionType: 'SEARCH',
-        timestamp: 1648743900000,
-        eventData: {},
-        searchHub: 'in-product-help',
-        document: {},
-        query: 'Blaze pair with iPhone not working',
-      },
-      {
-        actionType: 'CUSTOM',
-        timestamp: 1648743840000,
-        eventData: {
-          type: 'MySpeedbit App interfaceload',
-          value: '',
-        },
-        searchHub: 'in-product-help',
-        document: {},
-      },
-    ],
-  },
-  followingSessions: [
-    {
-      start: 1648825140000,
-      end: 1648826040000,
-      actions: [
-        {
-          actionType: 'VIEW',
-          timestamp: 1648826040000,
-          eventData: {},
-          searchHub: 'in-product-help',
-          document: {
-            contentIdKey: 'sftitle',
-            contentIdValue: 'Speedbit Charge 2 User Manual.pdf',
-          },
-        },
-        {
-          actionType: 'CLICK',
-          timestamp: 1648825140000,
-          eventData: {},
-          searchHub: 'in-product-help',
-          document: {
-            title: 'title',
-            uriHash: 'TtnKwc0Lo2GY9WAi',
-          },
-        },
-      ],
-    },
-    {
-      start: 1648822380000,
-      end: 1648822620000,
-      actions: [
-        {
-          actionType: 'CLICK',
-          timestamp: 1648822500000,
-          eventData: {},
-          searchHub: 'in-product-help',
-          document: {
-            title: 'title',
-            uriHash: 'KXñi9EWk38wnb1tt',
-          },
-        },
-      ],
-    },
-  ],
-};
-
 describe('insight user actions preprocessing', () => {
   describe('#mapAndSortActionsByMostRecent', () => {
     it('should properly map and sort the raw user actions into UserAction objects', async () => {
       const expectedMappedAndSortedActions = [
         {
           actionType: 'VIEW',
-          timestamp: 1648826040000,
+          timestamp: new Date('Fri Apr 01 2022 15:14:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {
@@ -345,28 +177,28 @@ describe('insight user actions preprocessing', () => {
         },
         {
           actionType: 'CLICK',
-          timestamp: 1648825140000,
+          timestamp: new Date('Fri Apr 01 2022 14:59:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {title: 'title', uriHash: 'TtnKwc0Lo2GY9WAi'},
         },
         {
           actionType: 'CUSTOM',
-          timestamp: 1648822620000,
+          timestamp: new Date('Fri Apr 01 2022 14:17:00 GMT').valueOf(),
           eventData: {type: 'useless_event', value: ''},
           searchHub: 'community-support',
           document: {},
         },
         {
           actionType: 'CLICK',
-          timestamp: 1648822500000,
+          timestamp: new Date('Fri Apr 01 2022 14:15:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {title: 'title', uriHash: 'KXñi9EWk38wnb1tt'},
         },
         {
           actionType: 'SEARCH',
-          timestamp: 1648822380000,
+          timestamp: new Date('Fri Apr 01 2022 14:13:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {},
@@ -374,7 +206,7 @@ describe('insight user actions preprocessing', () => {
         },
         {
           actionType: 'VIEW',
-          timestamp: 1648744500000,
+          timestamp: new Date('Thu Mar 31 2022 16:35:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {
@@ -384,14 +216,14 @@ describe('insight user actions preprocessing', () => {
         },
         {
           actionType: 'CLICK',
-          timestamp: 1648744320000,
+          timestamp: new Date('Thu Mar 31 2022 16:32:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {title: 'title', uriHash: 'caCgiG2JPzjZfS7G'},
         },
         {
           actionType: 'CUSTOM',
-          timestamp: 1648744290000,
+          timestamp: new Date('Thu Mar 31 2022 16:31:30 GMT').valueOf(),
           eventData: {
             type: 'smartSnippetSuggestions',
             value: 'expandSmartSnippetSuggestion',
@@ -413,25 +245,14 @@ describe('insight user actions preprocessing', () => {
     describe('when a rawUserAction cannot be parsed', () => {
       let consoleWarnSpy: jest.SpyInstance;
 
-      beforeAll(() => {
-        consoleWarnSpy = jest
-          .spyOn(console, 'warn')
-          .mockImplementation(
-            () =>
-              'Some user actions could not be parsed. Please check the raw user actions data.'
-          );
-      });
-
-      afterAll(() => {
-        consoleWarnSpy.mockRestore();
-      });
-
       it('should log a warning in the console and ignore that value', () => {
         const invalidRawUserAction = {
           name: 'Custom',
           value: '{ "key": "value",,,, }',
           time: '2023-10-01T12:00:00Z',
         };
+
+        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
         const mappedAndSortedActions = mapAndSortActionsByMostRecent([
           invalidRawUserAction,
@@ -440,9 +261,9 @@ describe('insight user actions preprocessing', () => {
         expect(mappedAndSortedActions.length).toEqual(0);
         expect(mappedAndSortedActions).toEqual([]);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'Some user actions could not be parsed. Please check the raw user actions data.'
-        );
+        expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+
+        consoleWarnSpy.mockRestore();
       });
     });
   });
@@ -455,12 +276,14 @@ describe('insight user actions preprocessing', () => {
           const expectedTimeline = {
             precedingSessions: [
               {
-                start: 1648544100000,
-                end: 1648545870000,
+                start: new Date('Tue Mar 29 2022 8:55:00 GMT').valueOf(),
+                end: new Date('Tue Mar 29 2022 9:24:30 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CUSTOM',
-                    timestamp: 1648545870000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 9:24:30 GMT'
+                    ).valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'likeSmartSnippet',
@@ -470,7 +293,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CUSTOM',
-                    timestamp: 1648545720000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 9:22:00 GMT'
+                    ).valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'expandSmartSnippetSuggestion',
@@ -480,7 +305,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'SEARCH',
-                    timestamp: 1648544100000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 8:55:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'community-search',
                     document: {},
@@ -489,12 +316,14 @@ describe('insight user actions preprocessing', () => {
                 ],
               },
               {
-                start: 1648543800000,
-                end: 1648543860000,
+                start: new Date('Tue Mar 29 2022 8:50:00 GMT').valueOf(),
+                end: new Date('Tue Mar 29 2022 8:51:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648543860000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 8:51:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -504,7 +333,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CUSTOM',
-                    timestamp: 1648543800000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 8:50:00 GMT'
+                    ).valueOf(),
                     eventData: {
                       type: 'MySpeedbit App interfaceload',
                       value: '',
@@ -516,12 +347,12 @@ describe('insight user actions preprocessing', () => {
               },
             ],
             session: {
-              start: 1648743840000,
-              end: 1648744500000,
+              start: new Date('Thu Mar 31 2022 16:24:00 GMT').valueOf(),
+              end: new Date('Thu Mar 31 2022 16:35:00 GMT').valueOf(),
               actions: [
                 {
                   actionType: 'VIEW',
-                  timestamp: 1648744500000,
+                  timestamp: new Date('Thu Mar 31 2022 16:35:00 GMT').valueOf(),
                   eventData: {},
                   searchHub: 'in-product-help',
                   document: {
@@ -531,7 +362,7 @@ describe('insight user actions preprocessing', () => {
                 },
                 {
                   actionType: 'CLICK',
-                  timestamp: 1648744320000,
+                  timestamp: new Date('Thu Mar 31 2022 16:32:00 GMT').valueOf(),
                   eventData: {},
                   searchHub: 'in-product-help',
                   document: {
@@ -541,7 +372,7 @@ describe('insight user actions preprocessing', () => {
                 },
                 {
                   actionType: 'CUSTOM',
-                  timestamp: 1648744290000,
+                  timestamp: new Date('Thu Mar 31 2022 16:31:30 GMT').valueOf(),
                   eventData: {
                     type: 'smartSnippetSuggestions',
                     value: 'expandSmartSnippetSuggestion',
@@ -551,12 +382,12 @@ describe('insight user actions preprocessing', () => {
                 },
                 {
                   actionType: 'TICKET_CREATION',
-                  timestamp: 1648744200000,
+                  timestamp: new Date('Thu Mar 31 2022 16:30:00 GMT').valueOf(),
                   eventData: {},
                 },
                 {
                   actionType: 'SEARCH',
-                  timestamp: 1648743900000,
+                  timestamp: new Date('Thu Mar 31 2022 16:25:00 GMT').valueOf(),
                   eventData: {},
                   searchHub: 'in-product-help',
                   document: {},
@@ -564,7 +395,7 @@ describe('insight user actions preprocessing', () => {
                 },
                 {
                   actionType: 'CUSTOM',
-                  timestamp: 1648743840000,
+                  timestamp: new Date('Thu Mar 31 2022 16:24:00 GMT').valueOf(),
                   eventData: {
                     type: 'MySpeedbit App interfaceload',
                     value: '',
@@ -576,12 +407,14 @@ describe('insight user actions preprocessing', () => {
             },
             followingSessions: [
               {
-                start: 1648825140000,
-                end: 1648826040000,
+                start: new Date('Fri Apr 1 2022 14:59:00 GMT').valueOf(),
+                end: new Date('Fri Apr 1 2022 15:14:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'VIEW',
-                    timestamp: 1648826040000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 15:14:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -591,7 +424,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648825140000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 14:59:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -602,12 +437,14 @@ describe('insight user actions preprocessing', () => {
                 ],
               },
               {
-                start: 1648822380000,
-                end: 1648822620000,
+                start: new Date('Fri Apr 1 2022 14:13:00 GMT').valueOf(),
+                end: new Date('Fri Apr 1 2022 14:17:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648822500000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 14:15:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -707,12 +544,14 @@ describe('insight user actions preprocessing', () => {
           const expectedTimeline = {
             precedingSessions: [
               {
-                start: 1648545930000,
-                end: 1648546500000,
+                start: new Date('Tue Mar 29 2022 9:25:30 GMT').valueOf(),
+                end: new Date('Tue Mar 29 2022 9:35:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648546500000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 9:35:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -722,7 +561,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CUSTOM',
-                    timestamp: 1648545930000,
+                    timestamp: new Date(
+                      'Tue Mar 29 2022 9:25:30 GMT'
+                    ).valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'expandSmartSnippetSuggestion',
@@ -734,17 +575,17 @@ describe('insight user actions preprocessing', () => {
               },
             ],
             session: {
-              start: 1648741800000,
-              end: 1648743300000,
+              start: new Date('Thu Mar 31 2022 15:50:00 GMT').valueOf(),
+              end: new Date('Thu Mar 31 2022 16:15:00 GMT').valueOf(),
               actions: [
                 {
                   actionType: 'TICKET_CREATION',
-                  timestamp: 1648744200000,
+                  timestamp: new Date('Thu Mar 31 2022 16:30:00 GMT').valueOf(),
                   eventData: {},
                 },
                 {
                   actionType: 'VIEW',
-                  timestamp: 1648741800000,
+                  timestamp: new Date('Thu Mar 31 2022 15:50:00 GMT').valueOf(),
                   eventData: {},
                   searchHub: 'in-product-help',
                   document: {
@@ -756,12 +597,14 @@ describe('insight user actions preprocessing', () => {
             },
             followingSessions: [
               {
-                start: 1648822500000,
-                end: 1648822620000,
+                start: new Date('Fri Apr 1 2022 14:15:00 GMT').valueOf(),
+                end: new Date('Fri Apr 1 2022 14:17:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648822500000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 14:15:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -795,24 +638,26 @@ describe('insight user actions preprocessing', () => {
           const expectedTimeline = {
             precedingSessions: [],
             session: {
-              start: 1648483800000,
-              end: 1648483800000,
+              start: new Date('Mon Mar 28 2022 16:10:00 GMT').valueOf(),
+              end: new Date('Mon Mar 28 2022 16:10:00 GMT').valueOf(),
               actions: [
                 {
                   actionType: 'TICKET_CREATION',
-                  timestamp: 1648483800000,
+                  timestamp: new Date('Mon Mar 28 2022 16:10:00 GMT').valueOf(),
                   eventData: {},
                 },
               ],
             },
             followingSessions: [
               {
-                start: 1648822380000,
-                end: 1648822620000,
+                start: new Date('Fri Apr 1 2022 14:13:00 GMT').valueOf(),
+                end: new Date('Fri Apr 1 2022 14:17:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648822500000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 14:15:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -823,12 +668,14 @@ describe('insight user actions preprocessing', () => {
                 ],
               },
               {
-                start: 1648744290000,
-                end: 1648744500000,
+                start: new Date('Thu Mar 31 2022 16:31:30 GMT').valueOf(),
+                end: new Date('Thu Mar 31 2022 16:35:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'VIEW',
-                    timestamp: 1648744500000,
+                    timestamp: new Date(
+                      'Thu Mar 31 2022 16:35:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -838,7 +685,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648744320000,
+                    timestamp: new Date(
+                      'Thu Mar 31 2022 16:32:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -848,7 +697,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CUSTOM',
-                    timestamp: 1648744290000,
+                    timestamp: new Date(
+                      'Thu Mar 31 2022 16:31:30 GMT'
+                    ).valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
                       value: 'expandSmartSnippetSuggestion',
@@ -884,12 +735,14 @@ describe('insight user actions preprocessing', () => {
           const expectedTimeline = {
             precedingSessions: [
               {
-                start: 1648825140000,
-                end: 1648826040000,
+                start: new Date('Fri Apr 1 2022 14:59:00 GMT').valueOf(),
+                end: new Date('Fri Apr 1 2022 15:14:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'VIEW',
-                    timestamp: 1648826040000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 15:14:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -899,7 +752,9 @@ describe('insight user actions preprocessing', () => {
                   },
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648825140000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 14:59:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -910,12 +765,14 @@ describe('insight user actions preprocessing', () => {
                 ],
               },
               {
-                start: 1648822380000,
-                end: 1648822620000,
+                start: new Date('Fri Apr 1 2022 14:13:00 GMT').valueOf(),
+                end: new Date('Fri Apr 1 2022 14:17:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
-                    timestamp: 1648822500000,
+                    timestamp: new Date(
+                      'Fri Apr 1 2022 14:15:00 GMT'
+                    ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
                     document: {
@@ -927,12 +784,12 @@ describe('insight user actions preprocessing', () => {
               },
             ],
             session: {
-              start: 1648843800000,
-              end: 1648843800000,
+              start: new Date('Fri Apr 1 2022 20:10:00 GMT').valueOf(),
+              end: new Date('Fri Apr 1 2022 20:10:00 GMT').valueOf(),
               actions: [
                 {
                   actionType: 'TICKET_CREATION',
-                  timestamp: 1648843800000,
+                  timestamp: new Date('Fri Apr 1 2022 20:10:00 GMT').valueOf(),
                   eventData: {},
                 },
               ],
@@ -1012,7 +869,7 @@ describe('insight user actions preprocessing', () => {
       expect(isSameSession).toEqual(true);
     });
 
-    it('should return false if the action is not within 30mins of the previous', async () => {
+    it('should return false if the action is not within the session inactivity threshold', async () => {
       const action = {
         actionType: 'CLICK' as UserActionType,
         timestamp: firstSessionDate.getTime(),
@@ -1063,6 +920,173 @@ describe('insight user actions preprocessing', () => {
           excludedCustomActions: ['useless_event'],
           ticketCreationDate: new Date(ticketCreationDate).toISOString(),
           loading: false,
+        };
+        const expectedTimeline = {
+          precedingSessions: [
+            {
+              start: new Date('Tue Mar 29 2022 8:55:00 GMT').valueOf(),
+              end: new Date('Tue Mar 29 2022 9:24:30 GMT').valueOf(),
+              actions: [
+                {
+                  actionType: 'CUSTOM',
+                  timestamp: new Date('Tue Mar 29 2022 9:24:30 GMT').valueOf(),
+                  eventData: {
+                    type: 'smartSnippetSuggestions',
+                    value: 'likeSmartSnippet',
+                  },
+                  searchHub: 'in-product-help',
+                  document: {},
+                },
+                {
+                  actionType: 'CUSTOM',
+                  timestamp: new Date('Tue Mar 29 2022 9:22:00 GMT').valueOf(),
+                  eventData: {
+                    type: 'smartSnippetSuggestions',
+                    value: 'expandSmartSnippetSuggestion',
+                  },
+                  searchHub: 'in-product-help',
+                  document: {},
+                },
+                {
+                  actionType: 'SEARCH',
+                  timestamp: new Date('Tue Mar 29 2022 8:55:00 GMT').valueOf(),
+                  eventData: {},
+                  searchHub: 'community-search',
+                  document: {},
+                  query: 'Version 8.124',
+                },
+              ],
+            },
+            {
+              start: new Date('Tue Mar 29 2022 8:50:00 GMT').valueOf(),
+              end: new Date('Tue Mar 29 2022 8:51:00 GMT').valueOf(),
+              actions: [
+                {
+                  actionType: 'CLICK',
+                  timestamp: new Date('Tue Mar 29 2022 8:51:00 GMT').valueOf(),
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    title: 'title',
+                    uriHash: 'someHash',
+                  },
+                },
+                {
+                  actionType: 'CUSTOM',
+                  timestamp: new Date('Tue Mar 29 2022 8:50:00 GMT').valueOf(),
+                  eventData: {
+                    type: 'MySpeedbit App interfaceload',
+                    value: '',
+                  },
+                  searchHub: 'in-product-help',
+                  document: {},
+                },
+              ],
+            },
+          ],
+          session: {
+            start: new Date('Thu Mar 31 2022 16:24:00 GMT').valueOf(),
+            end: new Date('Thu Mar 31 2022 16:35:00 GMT').valueOf(),
+            actions: [
+              {
+                actionType: 'VIEW',
+                timestamp: new Date('Thu Mar 31 2022 16:35:00 GMT').valueOf(),
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {
+                  contentIdKey: 'sftitle',
+                  contentIdValue: 'Blaze pair with iPhone not working',
+                },
+              },
+              {
+                actionType: 'CLICK',
+                timestamp: new Date('Thu Mar 31 2022 16:32:00 GMT').valueOf(),
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {
+                  title: 'title',
+                  uriHash: 'caCgiG2JPzjZfS7G',
+                },
+              },
+              {
+                actionType: 'CUSTOM',
+                timestamp: new Date('Thu Mar 31 2022 16:31:30 GMT').valueOf(),
+                eventData: {
+                  type: 'smartSnippetSuggestions',
+                  value: 'expandSmartSnippetSuggestion',
+                },
+                searchHub: 'in-product-help',
+                document: {},
+              },
+              {
+                actionType: 'TICKET_CREATION',
+                timestamp: new Date('Thu Mar 31 2022 16:30:00 GMT').valueOf(),
+                eventData: {},
+              },
+              {
+                actionType: 'SEARCH',
+                timestamp: new Date('Thu Mar 31 2022 16:25:00 GMT').valueOf(),
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {},
+                query: 'Blaze pair with iPhone not working',
+              },
+              {
+                actionType: 'CUSTOM',
+                timestamp: new Date('Thu Mar 31 2022 16:24:00 GMT').valueOf(),
+                eventData: {
+                  type: 'MySpeedbit App interfaceload',
+                  value: '',
+                },
+                searchHub: 'in-product-help',
+                document: {},
+              },
+            ],
+          },
+          followingSessions: [
+            {
+              start: new Date('Fri Apr 1 2022 14:59:00 GMT').valueOf(),
+              end: new Date('Fri Apr 1 2022 15:14:00 GMT').valueOf(),
+              actions: [
+                {
+                  actionType: 'VIEW',
+                  timestamp: new Date('Fri Apr 1 2022 15:14:00 GMT').valueOf(),
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    contentIdKey: 'sftitle',
+                    contentIdValue: 'Speedbit Charge 2 User Manual.pdf',
+                  },
+                },
+                {
+                  actionType: 'CLICK',
+                  timestamp: new Date('Fri Apr 1 2022 14:59:00 GMT').valueOf(),
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    title: 'title',
+                    uriHash: 'TtnKwc0Lo2GY9WAi',
+                  },
+                },
+              ],
+            },
+            {
+              start: new Date('Fri Apr 1 2022 14:13:00 GMT').valueOf(),
+              end: new Date('Fri Apr 1 2022 14:17:00 GMT').valueOf(),
+              actions: [
+                {
+                  actionType: 'CLICK',
+                  timestamp: new Date('Fri Apr 1 2022 14:15:00 GMT').valueOf(),
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    title: 'title',
+                    uriHash: 'KXñi9EWk38wnb1tt',
+                  },
+                },
+              ],
+            },
+          ],
         };
         const preprocessedTimeline = preprocessActionsData(
           mockState,
