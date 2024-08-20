@@ -5,7 +5,10 @@ import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
 import {interfaceLoad} from '../../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
-import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
+import {
+  setInsightConfiguration,
+  updateInsightSearchConfiguration,
+} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {executeSearch} from '../../features/insight-search/insight-search-actions';
@@ -28,9 +31,13 @@ import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   InsightEngineConfiguration,
   insightEngineConfigurationSchema,
+  InsightEngineSearchConfigurationOptions,
 } from './insight-engine-configuration';
 
-export type {InsightEngineConfiguration};
+export type {
+  InsightEngineConfiguration,
+  InsightEngineSearchConfigurationOptions,
+};
 
 const insightEngineReducers = {
   insightConfiguration,
@@ -99,13 +106,17 @@ export function buildInsightEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {insightId} = options.configuration;
+  const {insightId, search} = options.configuration;
 
   engine.dispatch(
     setInsightConfiguration({
       insightId,
     })
   );
+
+  if (search) {
+    engine.dispatch(updateInsightSearchConfiguration(search));
+  }
 
   return {
     ...engine,

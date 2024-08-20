@@ -3,6 +3,7 @@ export {
   LogLevel as InsightLogLevel,
   InsightEngine,
   InsightEngineConfiguration,
+  InsightEngineSearchConfigurationOptions,
   buildInsightEngine,
   ResultList as InsightResultList,
   ResultListState as InsightResultListState,
