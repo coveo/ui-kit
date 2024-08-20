@@ -468,6 +468,16 @@ describe('insight user actions preprocessing', () => {
           );
 
           expect(timeline).toEqual(expectedTimeline);
+          expect(timeline.session).not.toBeUndefined();
+          expect(timeline.followingSessions.length).toEqual(
+            expectedTimeline.followingSessions.length
+          );
+          expect(timeline.precedingSessions.length).toEqual(
+            expectedTimeline.precedingSessions.length
+          );
+          expect(timeline.session?.actions[3].actionType).toEqual(
+            UserActionType.TICKET_CREATION
+          );
         });
       });
 
@@ -627,6 +637,16 @@ describe('insight user actions preprocessing', () => {
           );
 
           expect(timeline).toEqual(expectedTimeline);
+          expect(timeline.session).not.toBeUndefined();
+          expect(timeline.followingSessions.length).toEqual(
+            expectedTimeline.followingSessions.length
+          );
+          expect(timeline.precedingSessions.length).toEqual(
+            expectedTimeline.precedingSessions.length
+          );
+          expect(timeline.session?.actions[0].actionType).toEqual(
+            UserActionType.TICKET_CREATION
+          );
         });
       });
     });
@@ -725,7 +745,17 @@ describe('insight user actions preprocessing', () => {
             ticketCreationDate,
             actionsToExclude
           );
+
           expect(timeline).toEqual(expectedTimeline);
+          expect(timeline.session).not.toBeUndefined();
+          expect(timeline.session?.actions.length).toEqual(1);
+          expect(timeline.followingSessions.length).toEqual(
+            expectedTimeline.followingSessions.length
+          );
+          expect(timeline.precedingSessions.length).toEqual(0);
+          expect(timeline.session?.actions[0].actionType).toEqual(
+            UserActionType.TICKET_CREATION
+          );
         });
       });
 
@@ -813,12 +843,21 @@ describe('insight user actions preprocessing', () => {
           );
 
           expect(timeline).toEqual(expectedTimeline);
+          expect(timeline.session).not.toBeUndefined();
+          expect(timeline.session?.actions.length).toEqual(1);
+          expect(timeline.followingSessions.length).toEqual(0);
+          expect(timeline.precedingSessions.length).toEqual(
+            expectedTimeline.precedingSessions.length
+          );
+          expect(timeline.session?.actions[0].actionType).toEqual(
+            UserActionType.TICKET_CREATION
+          );
         });
       });
 
       describe('when the ticket creation date falls between two sessions', () => {
         it('should return the timeline including current session timestamp set as the ticket creation date', async () => {
-          const mockRawActions = [...fakeActions].slice(0, 8);
+          const mockRawActions = [...fakeActions];
           const mappedAndSortedActions =
             mapAndSortActionsByMostRecent(mockRawActions);
           const ticketCreationDate = createRelativeDate(
@@ -910,6 +949,9 @@ describe('insight user actions preprocessing', () => {
         const timeline = preprocessActionsData(mockState, fakeActions);
 
         expect(timeline).toEqual(expectedTimeline);
+        expect(timeline.session).toBeUndefined();
+        expect(timeline.followingSessions.length).toEqual(0);
+        expect(timeline.precedingSessions.length).toEqual(0);
       });
     });
 
@@ -1094,6 +1136,16 @@ describe('insight user actions preprocessing', () => {
         );
 
         expect(preprocessedTimeline).toEqual(expectedTimeline);
+        expect(preprocessedTimeline.session).not.toBeUndefined();
+        expect(preprocessedTimeline.precedingSessions.length).toEqual(
+          expectedTimeline.precedingSessions.length
+        );
+        expect(preprocessedTimeline.followingSessions.length).toEqual(
+          expectedTimeline.followingSessions.length
+        );
+        expect(preprocessedTimeline.session?.actions[3].actionType).toEqual(
+          UserActionType.TICKET_CREATION
+        );
       });
     });
   });
