@@ -58,6 +58,10 @@ export default function SearchPage({
 
   return (
     <>
+      <SearchBox
+        staticState={staticState.controllers.searchBox.state}
+        controller={hydratedState?.controllers.searchBox}
+      />
       <TabManager
         staticState={staticState.controllers.tabManager.state}
         controller={hydratedState?.controllers.tabManager}
@@ -84,10 +88,6 @@ export default function SearchPage({
           tabLabel={'Videos'}
         ></Tab>
       </TabManager>
-      <SearchBox
-        staticState={staticState.controllers.searchBox.state}
-        controller={hydratedState?.controllers.searchBox}
-      />
       <Facet
         title="Author"
         staticState={staticState.controllers.authorFacet.state}
