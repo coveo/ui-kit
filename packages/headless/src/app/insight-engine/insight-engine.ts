@@ -5,10 +5,8 @@ import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
 import {interfaceLoad} from '../../features/analytics/analytics-actions';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
-import {
-  setInsightConfiguration,
-  updateInsightSearchConfiguration,
-} from '../../features/insight-configuration/insight-configuration-actions';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {executeSearch} from '../../features/insight-search/insight-search-actions';
@@ -115,7 +113,7 @@ export function buildInsightEngine(
   );
 
   if (search) {
-    engine.dispatch(updateInsightSearchConfiguration(search));
+    engine.dispatch(updateSearchConfiguration(search));
   }
 
   return {

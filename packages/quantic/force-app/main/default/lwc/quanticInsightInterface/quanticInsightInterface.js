@@ -1,7 +1,6 @@
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHeadlessConfiguration';
 import LOCALE from '@salesforce/i18n/locale';
-import TIMEZONE from '@salesforce/i18n/timeZone';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -70,7 +69,6 @@ export default class QuanticInsightInterface extends LightningElement {
                     insightId: this.insightId,
                     search: {
                       locale: LOCALE,
-                      timezone: TIMEZONE,
                     },
                   },
                 };
