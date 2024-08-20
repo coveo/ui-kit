@@ -157,9 +157,12 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   trackingId?: string;
   /**
-   * Specifies the analytics mode to use.
-   * By default, `legacy`.
-   * @internal
+   * Specifies the analytics client to use.
+   * - `legacy`: The legacy analytics client, refers to the Coveo Analytics.js library.
+   * - `next`: The next analytics client, refers to the Coveo Event Protocol with the Relay library.
+   *
+   * Starting in 3.0, the default value will changes to `next`.
+   * @default 'legacy'
    */
   analyticsMode?: 'legacy' | 'next';
   /**
