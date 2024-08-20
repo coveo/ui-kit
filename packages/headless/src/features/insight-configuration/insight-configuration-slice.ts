@@ -4,8 +4,9 @@ import {getInsightConfigurationInitialState} from './insight-configuration-state
 
 export const insightConfigurationReducer = createReducer(
   getInsightConfigurationInitialState(),
-  (builder) =>
+  (builder) => {
     builder.addCase(setInsightConfiguration, (state, action) => {
       state.insightId = action.payload.insightId;
-    })
+    });
+  }
 );

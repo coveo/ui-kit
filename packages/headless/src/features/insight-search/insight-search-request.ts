@@ -21,7 +21,6 @@ export const buildInsightBaseRequest = async (
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {
   const cq = buildConstantQuery(state);
   const facets = getAllFacets(state);
-  console.log('buildInsightBaseRequest', state.configuration.search.locale);
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,

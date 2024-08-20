@@ -14,7 +14,5 @@ export interface SetInsightConfigurationActionCreatorPayload {
 export const setInsightConfiguration = createAction(
   'insightConfiguration/set',
   (payload: SetInsightConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {
-      insightId: requiredNonEmptyString,
-    })
+    validatePayload(payload, {insightId: requiredNonEmptyString})
 );
