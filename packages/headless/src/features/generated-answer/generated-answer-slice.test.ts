@@ -261,6 +261,15 @@ describe('generated answer slice', () => {
       expect(finalState.responseFormat).toEqual(responseFormat);
     });
   });
+  it('should not reset the configuration id', () => {
+    const state = {
+      ...baseState,
+      answerConfigurationId: 'some-id',
+    };
+
+    const finalState = generatedAnswerReducer(state, resetAnswer());
+    expect(finalState.answerConfigurationId).toBe('some-id');
+  });
 
   test.each(generatedContentFormat)(
     '#setAnswerContentFormat should set the "%i" content format in the state',

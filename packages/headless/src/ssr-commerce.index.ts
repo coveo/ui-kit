@@ -26,15 +26,15 @@ export type {
   InferControllersMapFromDefinition,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-} from './app/ssr-engine/types/common';
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+} from './app/commerce-ssr-engine/types/common';
 export type {Build} from './app/ssr-engine/types/build';
 export type {
   EngineDefinition,
   InferStaticState,
   InferHydratedState,
   InferBuildResult,
-} from './app/ssr-engine/types/core-engine';
+} from './app/commerce-ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
 export type {NavigatorContext} from './app/navigatorContextProvider';
 

@@ -13,7 +13,9 @@ import {
 } from '../ssr-engine/common';
 import {
   ControllerDefinitionsMap,
+  EngineStaticState,
   InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitions,
 } from '../ssr-engine/types/common';
 import {
   EngineDefinition,
@@ -166,7 +168,10 @@ export function defineSearchEngine<
         return createStaticState({
           searchAction: await engine.waitForSearchCompletedAction(),
           controllers,
-        });
+        }) as EngineStaticState<
+          UnknownAction,
+          InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+        >;
       },
     }
   );
