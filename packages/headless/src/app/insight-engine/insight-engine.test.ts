@@ -23,7 +23,12 @@ describe('buildInsightEngine', () => {
 
   beforeEach(() => {
     options = {
-      configuration: getSampleInsightEngineConfiguration(),
+      configuration: {
+        ...getSampleInsightEngineConfiguration(),
+        search: {
+          locale: 'en-US',
+        },
+      },
       loggerOptions: {level: 'silent'},
     };
 
@@ -39,6 +44,10 @@ describe('buildInsightEngine', () => {
     expect(engine.state.insightConfiguration?.insightId).toEqual(
       options.configuration.insightId
     );
+  });
+
+  it('sets the locale correctly', () => {
+    expect(engine.state.insightConfiguration?.search?.locale).toEqual('en-US');
   });
 
   it('exposes an #executeFirstSearch method', () => {

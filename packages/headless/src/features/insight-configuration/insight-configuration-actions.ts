@@ -1,18 +1,8 @@
-import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-
-const optionalNonEmptyString = new StringValue({
-  required: false,
-  emptyAllowed: false,
-});
-
-export const searchConfigurationPayloadDefinition = {
-  locale: optionalNonEmptyString,
-};
 
 export interface SetInsightConfigurationActionCreatorPayload {
   /**

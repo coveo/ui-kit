@@ -1,6 +1,8 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {searchConfigurationPayloadDefinition} from '../../features/insight-configuration/insight-configuration-actions';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {
+  nonEmptyString,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
@@ -50,6 +52,8 @@ export const insightEngineConfigurationSchema =
       options: {
         required: false,
       },
-      values: searchConfigurationPayloadDefinition,
+      values: {
+        locale: nonEmptyString,
+      },
     }),
   });

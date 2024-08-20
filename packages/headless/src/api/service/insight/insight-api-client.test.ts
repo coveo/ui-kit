@@ -14,6 +14,7 @@ describe('insight api client', () => {
     insightId: 'some insight id',
   };
   const exampleUserId = 'John Doe';
+  const defaultLocale = 'en-US';
 
   let client: InsightAPIClient;
 
@@ -109,6 +110,7 @@ describe('insight api client', () => {
           cq: queryRequest.cq,
           tab: queryRequest.tab,
           context: queryRequest.context,
+          locale: defaultLocale,
         },
       });
     });
