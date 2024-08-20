@@ -36,7 +36,7 @@ export default function Tab({
     <TabCommon
       state={state}
       methods={methods}
-      tabManager={tabManager as TabManager}
+      activeTab={tabManager.state.activeTab}
       tabName={tabName}
       tabLabel={tabLabel}
     />

@@ -28,7 +28,7 @@ export const Tab: FunctionComponent<TabProps> = ({
     <TabCommon
       state={state}
       methods={controller}
-      tabManager={tabManager}
+      activeTab={tabManager?.state.activeTab ?? ''}
       tabName={tabName}
       tabLabel={tabLabel}
     />

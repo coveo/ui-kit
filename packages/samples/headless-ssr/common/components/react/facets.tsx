@@ -7,7 +7,6 @@ import FacetCommon from '../common/facet';
 export const AuthorFacet = () => {
   const {state, methods} = useAuthorFacet();
   const {state: tabManagerState} = useTabManager();
-  const prevEnabledRef = useRef(state.enabled);
 
   useEffect(() => {
     const isActiveTabAllOrVideos =
@@ -19,9 +18,7 @@ export const AuthorFacet = () => {
     } else if (!isActiveTabAllOrVideos && state.enabled) {
       methods?.disable();
     }
-
-    prevEnabledRef.current = state.enabled;
-  }, [tabManagerState?.activeTab, methods, state]);
+  }, [tabManagerState?.activeTab, methods, state.enabled]);
 
   if (state.enabled === false) {
     return;

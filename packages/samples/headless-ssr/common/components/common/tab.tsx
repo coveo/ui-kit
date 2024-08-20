@@ -3,7 +3,7 @@ import {Tab, TabManager, TabState} from '@coveo/headless/ssr';
 interface TabCommonProps {
   state: TabState;
   methods: Omit<Tab, 'state' | 'subscribe'> | undefined;
-  tabManager?: TabManager;
+  activeTab: string;
   tabName: string;
   tabLabel: string;
 }
@@ -11,12 +11,12 @@ interface TabCommonProps {
 export default function TabCommon({
   state,
   methods,
-  tabManager,
+  activeTab,
   tabName,
   tabLabel,
 }: TabCommonProps) {
   function handleClickTab() {
-    if (tabManager?.state.activeTab !== tabName) methods?.select();
+    if (activeTab !== tabName) methods?.select();
   }
 
   return (
