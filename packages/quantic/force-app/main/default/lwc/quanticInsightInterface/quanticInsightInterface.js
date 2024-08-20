@@ -57,40 +57,32 @@ export default class QuanticInsightInterface extends LightningElement {
   }
 
   connectedCallback() {
-    loadDependencies(this, HeadlessBundleNames.insight)
-      .then(() => {
-        if (!getHeadlessBindings(this.engineId)?.engine) {
-          getHeadlessConfiguration()
-            .then((data) => {
-              if (data) {
-                this.engineOptions = {
-                  configuration: {
-                    ...JSON.parse(data),
-                    insightId: this.insightId,
-                    search: {
-                      locale: LOCALE,
-                    },
-                  },
-                };
-                setEngineOptions(
-                  this.engineOptions,
-                  CoveoHeadlessInsight.buildInsightEngine,
-                  this.engineId,
-                  this,
-                  CoveoHeadlessInsight
-                );
-                this.input.setAttribute('is-initialized', 'true');
-                setInitializedCallback(this.initialize, this.engineId);
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    loadDependencies(this, HeadlessBundleNames.insight).then(() => {
+      if (!getHeadlessBindings(this.engineId)?.engine) {
+        getHeadlessConfiguration().then((data) => {
+          if (data) {
+            this.engineOptions = {
+              configuration: {
+                ...JSON.parse(data),
+                insightId: this.insightId,
+                search: {
+                  locale: LOCALE,
+                },
+              },
+            };
+            setEngineOptions(
+              this.engineOptions,
+              CoveoHeadlessInsight.buildInsightEngine,
+              this.engineId,
+              this,
+              CoveoHeadlessInsight
+            );
+            this.input.setAttribute('is-initialized', 'true');
+            setInitializedCallback(this.initialize, this.engineId);
+          }
+        });
+      }
+    });
   }
 
   renderedCallback() {
