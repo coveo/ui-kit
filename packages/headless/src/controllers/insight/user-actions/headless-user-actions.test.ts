@@ -50,7 +50,7 @@ describe('UserActions', () => {
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
-      insightuserActions: insightUserActionsReducer,
+      insightUserActions: insightUserActionsReducer,
     });
   });
 
