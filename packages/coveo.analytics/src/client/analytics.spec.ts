@@ -278,8 +278,8 @@ describe('Analytics', () => {
         });
     });
 
-    describe('should truncate the maxlength for URL parameters at 128 characters for ua events', () => {
-        const desiredMax: number = 128;
+    describe('should truncate the maxlength for URL parameters at 1024 characters for ua events', () => {
+        const desiredMax: number = 1024;
         // Craft the URL so the truncation point falls in the %20 sequence
         const longUrl: string = 'http://coveo.com/?q=' + 'a'.repeat(desiredMax - 22) + '%20b';
         const expectedTruncatedLength = longUrl.lastIndexOf('%', desiredMax);

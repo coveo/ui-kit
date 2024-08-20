@@ -606,10 +606,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             eventType == EventType.search ||
             eventType == EventType.custom
         ) {
-            rest.originLevel3 = this.limit(rest.originLevel3, 128);
+            rest.originLevel3 = this.limit(rest.originLevel3, 1024);
         }
         if (eventType == EventType.view) {
-            rest.location = this.limit(rest.location, 128);
+            rest.location = this.limit(rest.location, 1024);
         }
         if (eventType == 'pageview' || eventType == 'event') {
             rest.referrer = this.limit(rest.referrer, 2048);
