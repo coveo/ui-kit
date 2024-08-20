@@ -1,100 +1,95 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {FunctionalComponent, h} from '@stencil/core';
+import {UserAction} from '../..';
 import BookmarkIcon from '../../../../images/bookmark.svg';
 import DocumentIcon from '../../../../images/document.svg';
 import PointIcon from '../../../../images/point.svg';
 import QuickviewIcon from '../../../../images/quickview.svg';
 import SearchIcon from '../../../../images/search.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
-import {UserActionType} from '../atomic-insight-user-action-session/atomic-insight-user-actions-session';
 
-/**
- * @internal
- * The `AtomicInsightUserAction` component displays a single user action event in the user action timeline.
- * @category Insight Panel
- * @example
- * <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
- */
-@Component({
-  tag: 'atomic-insight-user-action',
-  styleUrl: 'atomic-insight-user-action.pcss',
-  shadow: true,
-})
-export class AtomicInsightUserAction {
-  @InitializeBindings() public bindings!: InsightBindings;
-  @State() public error!: Error;
+const icons = {
+  SEARCH: SearchIcon,
+  CLICK: DocumentIcon,
+  VIEW: QuickviewIcon,
+  CUSTOM: PointIcon,
+  TICKET_CREATION: BookmarkIcon,
+};
 
-  @Prop({mutable: true}) public type!: UserActionType;
-  @Prop({mutable: true}) public actionTitle!: string;
-  @Prop({mutable: true}) public timestamp!: number;
-  @Prop({mutable: true}) public origin: string = '';
+interface AtomicInsightUserAction {
+  action: UserAction;
+  bindings: InsightBindings;
+}
 
-  icons = {
-    SEARCH: SearchIcon,
-    CLICK: DocumentIcon,
-    VIEW: QuickviewIcon,
-    CUSTOM: PointIcon,
-    TICKET_CREATION: BookmarkIcon,
-  };
-
-  renderActionTimestamp() {
-    const {hours, minutes} = parseTimestampToDateDetails(this.timestamp);
+export const AtomicInsightUserAction: FunctionalComponent<
+  AtomicInsightUserAction
+> = ({bindings, action}) => {
+  const renderActionTimestamp = () => {
+    const {hours, minutes} = parseTimestampToDateDetails(action.timestamp);
 
     const formattedHours = String(hours).padStart(2, '0');
     const formattedMinutes = String(minutes).padStart(2, '0');
 
     return `${formattedHours}:${formattedMinutes}`;
-  }
+  };
 
-  renderIcon() {
+  const renderIcon = () => {
     const iconClasses = ['w-3', 'h-3'];
-    if (['CLICK', 'VIEW'].includes(this.type)) {
+    if (['CLICK', 'VIEW'].includes(action.actionType)) {
       iconClasses.push('text-primary');
     }
 
     return (
       <atomic-icon
-        icon={this.icons[this.type]}
+        icon={icons[action.actionType]}
         class={iconClasses.join(' ')}
       ></atomic-icon>
     );
-  }
+  };
 
-  renderActionTitle() {
-    if (this.type === 'TICKET_CREATION') {
+  const renderActionTitle = () => {
+    if (action.actionType === 'TICKET_CREATION') {
       return (
-        <div class="font-semibold">
-          {this.bindings.i18n.t('ticket-created')}
+        <div class="font-semibold text-xs">{bindings.i18n.t('ticket-created')}</div>
+      );
+    } else if (action.actionType === 'CUSTOM') {
+      return (
+        <div class="font-semibold text-xs">
+          {action.eventData?.value ?? action.eventData?.type}
         </div>
       );
+    } else if (action.actionType === 'SEARCH') {
+      return <div class="font-semibold text-xs">{action.query}</div>;
+    } else if (action.actionType === 'VIEW') {
+      return (
+        <a
+          href={action.document?.contentIdValue}
+          class="text-primary font-semibold text-xs"
+          target="_blank"
+        >
+          {action.document?.title}
+        </a>
+      );
+    } else if (action.actionType === 'CLICK') {
+      return <div class="font-semibold text-xs">{action.document?.title}</div>;
     }
+  };
 
-    const actionTitleClasses = [];
-    if (['CLICK', 'VIEW'].includes(this.type)) {
-      actionTitleClasses.push('text-primary');
-    }
-
-    return <div class={actionTitleClasses.join(' ')}>{this.actionTitle}</div>;
-  }
-
-  public render() {
-    return (
-      <div class="flex">
-        <div class="flex-none pr-2">
-          <div class="flex justify-center py-1">{this.renderIcon()}</div>
-          <div class="flex justify-center py-1">
-            <div class="user-action__separator h-7 w-0.5 rounded"></div>
-          </div>
-        </div>
-        <div class="flex-1">
-          {this.renderActionTitle()}
-          <div class="text-neutral-dark flex text-xs">
-            <div>{this.renderActionTimestamp()}</div>
-            <div class="px-2">{this.origin}</div>
-          </div>
+  return (
+    <div class="flex">
+      <div class="flex-none pr-2">
+        <div class="flex justify-center py-1">{renderIcon()}</div>
+        <div class="flex justify-center py-1">
+          <div class="user-action__separator h-7 w-0.5 rounded"></div>
         </div>
       </div>
-    );
-  }
-}
+      <div class="flex-1">
+        {renderActionTitle()}
+        <div class="text-neutral-dark flex py-2 text-xxs font-light">
+          <div>{renderActionTimestamp()}</div>
+          <div class="px-2">{action.searchHub}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
