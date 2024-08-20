@@ -14,6 +14,7 @@ export class AtomicInsightHistoryToggle {
   @Prop({mutable: true}) public clickCallback: () => void = () => {};
 
   @Prop({mutable: true}) public tooltip = '';
+  @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
 
   public render() {
     return (
@@ -24,6 +25,7 @@ export class AtomicInsightHistoryToggle {
         ariaLabel="history"
         onClick={this.clickCallback}
         title={this.tooltip}
+        buttonRef={this.buttonRef}
       />
     );
   }
