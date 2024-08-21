@@ -97,7 +97,7 @@ function loadCommerceSearchParameterReducers(
   return true;
 }
 
-function loadCommerceResultListParameterReducers(
+function loadCommerceProductListingParameterReducers(
   engine: CoreEngineNext
 ): engine is CoreEngineNext<ParameterManager<ProductListingParameters>> {
   loadCommerceCommonParameterReducers(engine);
