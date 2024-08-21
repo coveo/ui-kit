@@ -1,7 +1,14 @@
 import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
-import {Context, buildContext} from './headless-context';
+import {
+  Context,
+  buildContext,
+  ContextProps,
+  ContextOptions,
+  View,
+} from './headless-context';
 
-export type {ContextState, Context} from './headless-context';
+export type {ContextState, Context, ContextProps} from './headless-context';
+export type {View, ContextOptions};
 
 export interface ContextDefinition
   extends SharedControllerDefinitionWithoutProps<Context> {}
@@ -13,10 +20,10 @@ export interface ContextDefinition
  *
  * @internal
  */
-export function defineContext(): ContextDefinition {
+export function defineContext(props: ContextProps = {}): ContextDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine) => buildContext(engine),
+    build: (engine) => buildContext(engine, props),
   };
 }

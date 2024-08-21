@@ -1,7 +1,7 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import {wrapInResult} from '@coveo/atomic/storybookUtils/result-wrapper';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+import {wrapInResult} from '@coveo/atomic/storybookUtils/search/result-wrapper';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult();

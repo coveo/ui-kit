@@ -813,6 +813,10 @@
     <name>quantic_GeneratedAnswerShowLess</name>
   </customLabels>
   <customLabels>
+    <label>La configuration des options de tri personnalisées est invalide.</label>
+    <name>quantic_InvalidCustomSortConfiguration</name>
+  </customLabels>
+  <customLabels>
     <label>Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée.</label>
     <name>quantic_SearchFieldWithSuggestions</name>
   </customLabels>

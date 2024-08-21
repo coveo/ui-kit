@@ -7,9 +7,12 @@ import {
   ListingHydratedState,
   ListingStaticState,
 } from '../../_lib/commerce-engine';
-import {Cart} from '../cart';
-import {ProductList} from '../product-list';
-import {Summary} from '../summary';
+import Cart from '../cart';
+import Pagination from '../pagination';
+import ProductList from '../product-list';
+import Sort from '../sort';
+import StandaloneSearchBox from '../standalone-search-box';
+import Summary from '../summary';
 
 export default function ListingPage({
   staticState,
@@ -37,20 +40,45 @@ export default function ListingPage({
 
   return (
     <>
+      <StandaloneSearchBox
+        staticState={staticState.controllers.standaloneSearchBox.state}
+        controller={hydratedState?.controllers.standaloneSearchBox}
+        staticStateRecentQueries={
+          staticState.controllers.recentQueriesList.state
+        }
+        recentQueriesController={hydratedState?.controllers.recentQueriesList}
+        staticStateInstantProducts={
+          staticState.controllers.instantProducts.state
+        }
+        instantProductsController={hydratedState?.controllers.instantProducts}
+      />
+      <Summary
+        staticState={staticState.controllers.summary.state}
+        controller={hydratedState?.controllers.summary}
+      />
+      <Sort
+        staticState={staticState.controllers.sort.state}
+        controller={hydratedState?.controllers.sort}
+      ></Sort>
       <Cart
         staticState={staticState.controllers.cart.state}
         controller={hydratedState?.controllers.cart}
         staticContextState={staticState.controllers.context.state}
       />
       <ProductList
-        staticState={staticState.controllers.productListListing.state}
-        controller={hydratedState?.controllers.productListListing}
+        staticState={staticState.controllers.productList.state}
+        controller={hydratedState?.controllers.productList}
       />
-      <Summary
-        staticState={staticState.controllers.summaryListing.state}
-        controller={hydratedState?.controllers.summaryListing}
-        hydratedState={hydratedState}
-      />
+      {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+      <Pagination
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
+      ></Pagination>
+      {/* <ShowMore
+        staticState={staticState.controllers.pagination.state}
+        controller={hydratedState?.controllers.pagination}
+        summaryController={hydratedState?.controllers.summary}
+      /> */}
     </>
   );
 }

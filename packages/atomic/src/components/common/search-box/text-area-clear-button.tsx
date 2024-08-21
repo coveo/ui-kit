@@ -16,12 +16,12 @@ export const TextAreaClearButton: FunctionalComponent<Props> = ({
 }) => (
   <div
     part="clear-button-wrapper"
-    class="py-2 flex items-start justify-center items-center ml-2"
+    class="ml-2 flex items-start items-center justify-center py-2"
   >
     <Button
       style="text-transparent"
       part="clear-button"
-      class="flex items-center justify-center w-8 h-8 text-neutral-dark shrink-0"
+      class="text-neutral-dark flex h-8 w-8 shrink-0 items-center justify-center"
       onClick={() => {
         onClick?.();
         inputRef?.focus();
@@ -32,7 +32,7 @@ export const TextAreaClearButton: FunctionalComponent<Props> = ({
       <atomic-icon
         part="clear-icon"
         icon={ClearSlim}
-        class="w-4 h-4"
+        class="h-4 w-4"
       ></atomic-icon>
     </Button>
   </div>

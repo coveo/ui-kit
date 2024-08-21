@@ -11,9 +11,9 @@ export const LoadMoreProgressBar: FunctionalComponent<
   const percentage = (from / to) * 100;
   const width = `${Math.ceil(percentage)}%`;
   return (
-    <div part="progress-bar" class="relative w-72 h-1 my-2 rounded bg-neutral">
+    <div part="progress-bar" class="bg-neutral relative my-2 h-1 w-72 rounded">
       <div
-        class="progress-bar absolute h-full left-0 top-0 z-1 overflow-hidden rounded bg-gradient-to-r"
+        class="progress-bar z-1 absolute left-0 top-0 h-full overflow-hidden rounded bg-gradient-to-r"
         style={{width}}
       ></div>
     </div>

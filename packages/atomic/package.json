@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.75.0",
+  "version": "2.77.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -50,8 +50,8 @@
     "@coveo/bueno": "0.46.1",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
-    "@stencil/core": "4.19.2",
     "@stencil/store": "2.0.16",
+    "core-js": "3.37.1",
     "dayjs": "1.11.12",
     "dompurify": "3.1.6",
     "escape-html": "1.0.3",
@@ -66,7 +66,7 @@
     "@axe-core/playwright": "4.9.1",
     "@babel/core": "7.24.9",
     "@coveo/atomic": "file:.",
-    "@coveo/headless": "2.75.0",
+    "@coveo/headless": "2.79.0",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.3",
     "@fullhuman/postcss-purgecss": "6.0.0",
@@ -79,6 +79,7 @@
     "@rollup/plugin-replace": "5.0.7",
     "@stencil-community/postcss": "2.2.0",
     "@stencil/angular-output-target": "0.8.4",
+    "@stencil/core": "4.20.0",
     "@stencil/react-output-target": "0.5.3",
     "@storybook/addon-a11y": "8.1.11",
     "@storybook/addon-essentials": "8.1.11",
@@ -96,6 +97,7 @@
     "@swc-node/register": "~1.10.0",
     "@swc/core": "~1.7.0",
     "@swc/helpers": "~0.5.2",
+    "@types/core-js": "2.5.8",
     "@types/dompurify": "3.0.5",
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
@@ -132,13 +134,13 @@
     "tailwindcss": "3.4.7",
     "ts-node": "10.9.2",
     "tslib": "^2.3.0",
-    "typescript": "5.4.5",
+    "typescript": "5.5.4",
     "vite": "5.3.5",
     "vite-plugin-cem": "0.8.1",
     "wait-on": "7.2.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.75.0"
+    "@coveo/headless": "2.79.0"
   },
   "license": "Apache-2.0",
   "engines": {

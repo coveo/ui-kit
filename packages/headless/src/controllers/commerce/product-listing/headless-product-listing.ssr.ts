@@ -8,7 +8,10 @@ import {buildSearch, Search} from '../search/headless-search';
 import {ProductListing, buildProductListing} from './headless-product-listing';
 
 export type {ProductListingState as ProductListState} from './headless-product-listing';
-export type ProductList = Pick<ProductListing | Search, 'state' | 'subscribe'>;
+export type ProductList = Pick<
+  ProductListing | Search,
+  'state' | 'subscribe' | 'interactiveProduct'
+>;
 
 /**
  * Defines a `ProductList` controller instance.

@@ -1,8 +1,8 @@
 import {SharedControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common';
-import {Cart, buildCart} from './headless-cart';
+import {Cart, buildCart, CartProps, CartInitialState} from './headless-cart';
 
-export type {CartState, CartItem} from './headless-cart';
-export type {Cart};
+export type {CartState, CartItem, CartProps} from './headless-cart';
+export type {Cart, CartInitialState};
 
 export interface CartDefinition
   extends SharedControllerDefinitionWithoutProps<Cart> {}
@@ -14,10 +14,10 @@ export interface CartDefinition
  *
  * @internal
  */
-export function defineCart(): CartDefinition {
+export function defineCart(props: CartProps = {}): CartDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine) => buildCart(engine),
+    build: (engine) => buildCart(engine, props),
   };
 }

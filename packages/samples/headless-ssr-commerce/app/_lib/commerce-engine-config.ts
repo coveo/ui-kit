@@ -4,10 +4,21 @@ import {
   CommerceEngineDefinitionOptions,
   CommerceEngine,
   defineProductList,
-  defineQuerySummary,
   defineCart,
   defineSearchBox,
   defineContext,
+  defineRecentQueriesList,
+  defineNotifyTrigger,
+  defineQueryTrigger,
+  defineRedirectionTrigger,
+  defineStandaloneSearchBox,
+  defineInstantProducts,
+  defineSummary,
+  definePagination,
+  defineSort,
+  defineProductView,
+  getSampleCommerceEngineConfiguration,
+  defineDidYouMean, //defineParameterManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -16,56 +27,34 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
 
 export default {
   configuration: {
-    accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
-    organizationId: 'barcasportsmcy01fvu',
-    environment: 'dev',
-    analytics: {
-      trackingId: 'sports',
-    },
+    ...getSampleCommerceEngineConfiguration(),
     context: {
       language: 'en',
       country: 'US',
       currency: 'USD',
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
       },
-    },
-    cart: {
-      items: [
-        {
-          productId: 'SP01057_00001',
-          quantity: 1,
-          name: 'Kayaker Canoe',
-          price: 800,
-        },
-        {
-          productId: 'SP00081_00001',
-          quantity: 1,
-          name: 'Bamboo Canoe Paddle',
-          price: 120,
-        },
-        {
-          productId: 'SP04236_00005',
-          quantity: 1,
-          name: 'Eco-Brave Rashguard',
-          price: 33,
-        },
-        {
-          productId: 'SP04236_00005',
-          quantity: 1,
-          name: 'Eco-Brave Rashguard',
-          price: 33,
-        },
-      ],
     },
   },
   controllers: {
-    summaryListing: defineQuerySummary({listing: true}),
-    summarySearch: defineQuerySummary({search: true}),
-    productListListing: defineProductList({listing: true}),
-    productListSearch: defineProductList({search: true}),
+    summary: defineSummary(),
+    productList: defineProductList(),
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),
+    recentQueriesList: defineRecentQueriesList(),
+    notifyTrigger: defineNotifyTrigger(),
+    queryTrigger: defineQueryTrigger(),
+    redirectionTrigger: defineRedirectionTrigger(),
+    standaloneSearchBox: defineStandaloneSearchBox({
+      options: {redirectionUrl: '/search'},
+    }),
+    instantProducts: defineInstantProducts({options: {}}),
+    pagination: definePagination({options: {pageSize: 9}}),
+    sort: defineSort(),
+    productView: defineProductView(),
+    didYouMean: defineDidYouMean(), // TODO KIT-3463: implement did you mean in sample
+    //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
   },
 } satisfies CommerceEngineConfig;
