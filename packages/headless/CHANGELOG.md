@@ -1,3 +1,9 @@
+# 2.79.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
 # 2.78.0 (2024-08-20)
 
 ### Bug Fixes
