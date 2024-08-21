@@ -17,7 +17,7 @@ export interface ProductViewDefinition
  *
  * This controller is stateless and does not implement a `subscribe` method,
  * making it simpler but different from other controllers in the system.
- * Its sole purpose is to log an `ec_productView` event.
+ * Its sole purpose is to log an `ec.productView` event.
  *
  * @returns The `ProductView` controller definition.
  *
