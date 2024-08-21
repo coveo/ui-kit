@@ -33,6 +33,13 @@ export type {
   CommerceSearchParameters,
 };
 
+/**
+ * Defines a `ParameterManager` controller instance.
+ *
+ * @returns The `ParameterManager` controller definition.
+ *
+ * @internal
+ */
 export function defineParameterManager<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {
@@ -41,7 +48,7 @@ export function defineParameterManager<
     ...options,
     buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {
-        if (!loadCommerceResultListParameterReducers(engine)) {
+        if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
         return buildProductListing(engine).parameterManager(props);
@@ -90,7 +97,7 @@ function loadCommerceSearchParameterReducers(
   return true;
 }
 
-function loadCommerceResultListParameterReducers(
+function loadCommerceProductListingParameterReducers(
   engine: CoreEngineNext
 ): engine is CoreEngineNext<ParameterManager<ProductListingParameters>> {
   loadCommerceCommonParameterReducers(engine);

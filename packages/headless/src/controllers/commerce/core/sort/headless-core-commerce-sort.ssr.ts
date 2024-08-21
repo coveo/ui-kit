@@ -10,6 +10,14 @@ import {Sort, SortProps, SortState} from './headless-core-commerce-sort';
 
 export type {Sort, SortProps, SortState};
 
+/**
+ * Defines a `Sort` controller instance.
+ *
+ * @param props - The configurable `Sort` properties.
+ * @returns The `Sort` controller definition.
+ *
+ * @internal
+ */
 export function defineSort<
   TOptions extends ControllerDefinitionOption | undefined,
 >(props?: SortProps, options?: TOptions) {
