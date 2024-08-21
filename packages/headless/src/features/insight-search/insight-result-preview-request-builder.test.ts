@@ -14,6 +14,7 @@ describe('ResultPreviewRequestBuilder', () => {
   const testOrgId = 'someOrgId';
   const testConfigId = 'some-insight-id-123';
   const expectedUrl = `https://platform.cloud.coveo.com/rest/organizations/${testOrgId}/insight/v1/configs/${testConfigId}`;
+  const defaultLocale = 'en-US';
 
   beforeEach(() => {
     state = {
@@ -25,6 +26,9 @@ describe('ResultPreviewRequestBuilder', () => {
       query: getQueryInitialState(),
       insightConfiguration: {
         insightId: testConfigId,
+        search: {
+          locale: defaultLocale,
+        },
       },
     };
     options = {
