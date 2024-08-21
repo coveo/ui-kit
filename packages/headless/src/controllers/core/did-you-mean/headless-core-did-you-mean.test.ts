@@ -3,6 +3,7 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
+  setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
@@ -64,6 +65,15 @@ describe('did you mean', () => {
 
     dym.applyCorrection();
     expect(applyDidYouMeanCorrection).toHaveBeenCalledWith('bar');
+  });
+
+  it('should allow to update the query correction mode', () => {
+    const initialState = createMockState();
+    initialState.didYouMean.queryCorrectionMode = 'legacy';
+    initDidYouMean({}, initialState);
+    dym.updateQueryCorrectionMode('next');
+
+    expect(engine.dispatch).toHaveBeenCalledWith(setCorrectionMode('next'));
   });
 
   it('should dispatch disableAutomaticQueryCorrection at initialization when specified', () => {

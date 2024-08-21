@@ -6,7 +6,7 @@ import {
   buildQueryTrigger,
   QueryTriggerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Watch} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -68,6 +68,11 @@ export class AtomicDidYouMean implements InitializableComponent {
    */
   @Prop({reflect: true})
   public queryCorrectionMode: 'legacy' | 'next' = 'legacy';
+
+  @Watch('queryCorrectionMode')
+  public updateIconAssetsPath() {
+    this.didYouMean.updateQueryCorrectionMode(this.queryCorrectionMode);
+  }
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine, {
