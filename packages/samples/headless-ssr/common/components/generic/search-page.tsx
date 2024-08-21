@@ -9,7 +9,6 @@ import {
   hydrateStaticState,
   setNavigatorContextProvider,
 } from '../../lib/generic/engine';
-import {StaticStateProvider} from '../../lib/react/engine';
 import {HydrationMetadata} from '../common/hydration-metadata';
 import {Facet} from './facet';
 import {ResultList} from './result-list';
@@ -92,6 +91,7 @@ export default function SearchPage({
         title="Author"
         staticState={staticState.controllers.authorFacet.state}
         controller={hydratedState?.controllers.authorFacet}
+        tabManager={hydratedState?.controllers.tabManager}
       />
       <ResultList
         staticState={staticState.controllers.resultList.state}
