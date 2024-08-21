@@ -1,3 +1,20 @@
+# 2.79.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
+# 2.78.0 (2024-08-20)
+
+### Bug Fixes
+
+- **answerApi:** search context trigger new request ([#4293](https://github.com/coveo/ui-kit/issues/4293)) ([49b33a6](https://github.com/coveo/ui-kit/commits/49b33a66d55f1823029e51c58ce72e696fb56f01))
+- **rga:** state reset keep configid ([#4286](https://github.com/coveo/ui-kit/issues/4286)) ([a822cea](https://github.com/coveo/ui-kit/commits/a822ceab6f6fd9866a261c73248f0d580eb8b05d))
+
+### Features
+
+- **headless SSR:** support both search and listing solution types ([#4249](https://github.com/coveo/ui-kit/issues/4249)) ([dcd35d8](https://github.com/coveo/ui-kit/commits/dcd35d87e674a7d95e72800ae5b5dfc56d8ddcb8))
+
 # 2.77.0 (2024-08-14)
 
 ### Bug Fixes
