@@ -1,5 +1,6 @@
 import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
+import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   AtomicCommonStore,
@@ -63,8 +64,10 @@ export class AtomicResult {
 
   /**
    * The result link to use when the result is clicked in a grid layout.
+   *
+   * @default - An `atomic-result-link` without any customization.
    */
-  @Prop() linkContent?: ParentNode;
+  @Prop() linkContent: ParentNode = new DocumentFragment();
 
   /**
    * How results should be displayed.
@@ -162,15 +165,11 @@ export class AtomicResult {
   }
 
   private getContentHTML() {
-    return Array.from(this.content!.children)
-      .map((child) => child.outerHTML)
-      .join('');
+    return parentNodeToString(this.content!);
   }
 
   private getLinkHTML() {
-    return Array.from(this.linkContent?.children ?? [])
-      .map((child) => child.outerHTML)
-      .join('');
+    return parentNodeToString(this.linkContent);
   }
 
   private shouldExecuteRenderFunction() {

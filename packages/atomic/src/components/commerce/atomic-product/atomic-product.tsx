@@ -1,5 +1,6 @@
 import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
+import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   AtomicCommonStore,
@@ -64,8 +65,10 @@ export class AtomicProduct {
 
   /**
    * The product link to use when the product is clicked in a grid layout.
+   *
+   * @default - An `atomic-result-link` without any customization.
    */
-  @Prop() linkContent?: ParentNode;
+  @Prop() linkContent: ParentNode = new DocumentFragment();
 
   /**
    * How products should be displayed.
@@ -153,15 +156,11 @@ export class AtomicProduct {
   }
 
   private getContentHTML() {
-    return Array.from(this.content!.children)
-      .map((child) => child.outerHTML)
-      .join('');
+    return parentNodeToString(this.content!);
   }
 
   private getLinkHTML() {
-    return Array.from(this.linkContent?.children ?? [])
-      .map((child) => child.outerHTML)
-      .join('');
+    return parentNodeToString(this.linkContent ?? new HTMLElement());
   }
 
   @Listen('click')

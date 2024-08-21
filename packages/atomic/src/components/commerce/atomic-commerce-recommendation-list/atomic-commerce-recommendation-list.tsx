@@ -323,6 +323,7 @@ export class AtomicCommerceRecommendationList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
+      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       display: this.display,
