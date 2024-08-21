@@ -47,7 +47,7 @@ describe('buildInsightEngine', () => {
   });
 
   it('sets the locale correctly', () => {
-    expect(engine.state.insightConfiguration?.search?.locale).toEqual('en-US');
+    expect(engine.state.configuration?.search?.locale).toEqual('en-US');
   });
 
   it('exposes an #executeFirstSearch method', () => {
