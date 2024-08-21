@@ -131,19 +131,6 @@ export const isActionWithinSessionThreshold = (
 };
 
 /**
- * Checks if the timestamp is within a specified range.
- * @param timestamp {number} - The timestamp to check
- * @param startTimestamp {number} - The start timestamp
- * @param endTimestamp {number} - The end timestamp
- * @returns {boolean}
- */
-const isTimestampInRange = (
-  timestamp: number,
-  startTimestamp: number,
-  endTimestamp: number
-): boolean => timestamp >= startTimestamp && timestamp <= endTimestamp;
-
-/**
  * Inserts the session in the timeline at the right location.
  * @param currentSession {UserSession} - The current session
  * @param ticketCreationDate {number} - The ticket creation date
@@ -155,13 +142,41 @@ const insertSessionInTimeline = (
   ticketCreationDate: number,
   timeline: UserActionTimeline
 ) => {
-  if (ticketCreationDate < session.start) {
+  if (
+    ticketCreationDate >= session.start &&
+    ticketCreationDate <= session.end + SESSION_INACTIVITY_THRESHOLD_IN_MS
+  ) {
+    const ticketCreationAction: UserAction = {
+      actionType: UserActionType.TICKET_CREATION,
+      timestamp: ticketCreationDate,
+      eventData: {},
+    };
+
+    const ticketCreationActionIndex = session.actions.findIndex((action) => {
+      return action.timestamp <= ticketCreationAction.timestamp;
+    });
+
+    if (ticketCreationActionIndex !== -1) {
+      session.actions.splice(
+        ticketCreationActionIndex,
+        0,
+        ticketCreationAction
+      );
+    }
+    timeline.session = session;
+  } else if (ticketCreationDate < session.start) {
     timeline.followingSessions.push(session);
   } else {
     timeline.precedingSessions.push(session);
   }
 };
 
+/**
+ * Checks whether the action should be excluded from the session based on the excluded custom actions and empty searches.
+ * @param action {UserAction} - The action to check
+ * @param excludedCustomActions {string[]} - The custom actions to exclude
+ * @returns {boolean}
+ */
 const shouldExcludeAction = (
   action: UserAction,
   excludedCustomActions: string[]
@@ -218,45 +233,11 @@ export const splitActionsIntoTimelineSessions = (
       return;
     }
 
-    const isCaseCreationIsPartOfCurrentSession = isTimestampInRange(
-      ticketCreationDate,
-      currentSession.start,
-      currentSession.end + SESSION_INACTIVITY_THRESHOLD_IN_MS
-    );
-
     currentSession.actions = currentSession.actions.filter(
       (action) => !shouldExcludeAction(action, actionsToExclude)
     );
 
-    if (isCaseCreationIsPartOfCurrentSession) {
-      const caseCreationAction: UserAction = {
-        actionType: UserActionType.TICKET_CREATION,
-        timestamp: ticketCreationDate,
-        eventData: {},
-      };
-
-      const caseCreationActionIndex = currentSession.actions.findIndex(
-        (action) => {
-          return action.timestamp <= caseCreationAction.timestamp;
-        }
-      );
-
-      if (caseCreationActionIndex !== -1) {
-        currentSession.actions.splice(
-          caseCreationActionIndex,
-          0,
-          caseCreationAction
-        );
-      }
-
-      returnTimeline.session = currentSession;
-    } else {
-      insertSessionInTimeline(
-        currentSession,
-        ticketCreationDate,
-        returnTimeline
-      );
-    }
+    insertSessionInTimeline(currentSession, ticketCreationDate, returnTimeline);
 
     currentSession = {
       start: action.timestamp,
