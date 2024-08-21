@@ -1937,8 +1937,9 @@ export namespace Components {
         "interactiveProduct": InteractiveProduct;
         /**
           * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
          */
-        "linkContent"?: ParentNode;
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -2557,8 +2558,9 @@ export namespace Components {
         "interactiveResult": InteractiveResult;
         /**
           * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
          */
-        "linkContent"?: ParentNode;
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -7573,6 +7575,7 @@ declare namespace LocalJSX {
         "interactiveProduct": InteractiveProduct;
         /**
           * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
          */
         "linkContent"?: ParentNode;
         "loadingFlag"?: string;
@@ -8149,6 +8152,7 @@ declare namespace LocalJSX {
         "interactiveResult": InteractiveResult;
         /**
           * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
          */
         "linkContent"?: ParentNode;
         "loadingFlag"?: string;
