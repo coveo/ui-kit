@@ -4,8 +4,12 @@ import {
   CommerceEngineDefinitionOptions,
   CommerceEngine,
   defineProductList,
+  defineSummary,
+  definePagination,
+  defineSort,
+  defineProductView,
   getSampleCommerceEngineConfiguration,
-  defineQuerySummary,
+  defineDidYouMean, //defineParameterManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -15,9 +19,22 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
 export default {
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
+    context: {
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
+      view: {
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+      },
+    },
   },
   controllers: {
-    summary: defineQuerySummary(),
+    summary: defineSummary(),
     productList: defineProductList(),
+    pagination: definePagination({options: {pageSize: 9}}),
+    sort: defineSort(),
+    productView: defineProductView(),
+    didYouMean: defineDidYouMean(), // TODO KIT-3463: implement did you mean in sample
+    //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
   },
 } satisfies CommerceEngineConfig;

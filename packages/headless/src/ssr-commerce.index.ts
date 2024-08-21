@@ -53,17 +53,28 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller';
 
-export type {CategoryFacet} from './controllers/commerce/core/facets/category/headless-commerce-category-facet';
 export type {
-  DateFacet,
-  DateFacetState,
-} from './controllers/commerce/core/facets/date/headless-commerce-date-facet';
-export type {RegularFacetValue} from './controllers/commerce/core/facets/headless-core-commerce-facet';
+  DidYouMean,
+  DidYouMeanState,
+} from './controllers/commerce/search/did-you-mean/headless-did-you-mean.ssr';
+export {defineDidYouMean} from './controllers/commerce/search/did-you-mean/headless-did-you-mean.ssr';
+
 export type {
-  NumericFacet,
-  NumericFacetState,
-} from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet';
-export type {RegularFacet} from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet';
+  Pagination,
+  PaginationProps,
+  PaginationState,
+} from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr';
+export {definePagination} from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr';
+
+export type {
+  ParameterManager,
+  ParameterManagerProps,
+  ParameterManagerState,
+  Parameters,
+  ProductListingParameters,
+  CommerceSearchParameters,
+} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager.ssr';
+export {defineParameterManager} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager.ssr';
 
 export type {
   ProductList,
@@ -71,11 +82,24 @@ export type {
 } from './controllers/commerce/product-listing/headless-product-listing.ssr';
 export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr';
 
+export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+
 export type {
-  ProductListingSummaryState,
+  Sort,
+  SortProps,
+  SortState,
+} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr';
+export {defineSort} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr';
+
+export type {
   Summary,
-} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
-export {defineQuerySummary} from './controllers/commerce/core/sub-controller/headless-sub-controller.ssr';
+  ProductListingSummaryState,
+  RecommendationsSummaryState,
+  SearchSummaryState,
+  SummaryState,
+} from './controllers/commerce/core/summary/headless-core-summary.ssr';
+export {defineSummary} from './controllers/commerce/core/summary/headless-core-summary.ssr';
 
 // TODO: KIT-3391 - export other SSR commerce controllers
 
@@ -109,7 +133,7 @@ export {buildResultTemplatesManager} from './features/result-templates/result-te
 //#endregion
 
 // Types & Helpers
-export {buildSSRSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer.ssr';
+// TODO KIT-3462: add export commerce SSR parameter serializer
 export type {
   BaseProduct,
   Product,
@@ -134,7 +158,7 @@ export {
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser';
-export type {Template} from './features/templates/templates-manager.ts';
+export type {Template} from './features/templates/templates-manager';
 export type {
   ProductTemplate,
   ProductTemplateCondition,
