@@ -6,6 +6,10 @@ export class AtomicFacetPageObject extends BasePageObject<'atomic-facet'> {
     super(page, 'atomic-facet');
   }
 
+  get expandButtons() {
+    return this.page.getByRole('button', {name: /Expand the \w* facet/});
+  }
+
   get getFacetSearch() {
     return this.page.getByLabel('Search');
   }

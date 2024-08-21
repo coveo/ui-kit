@@ -1,7 +1,7 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {AnyAction, UnknownAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
@@ -169,7 +169,7 @@ export function defineSearchEngine<
           searchAction: await engine.waitForSearchCompletedAction(),
           controllers,
         }) as EngineStaticState<
-          AnyAction,
+          UnknownAction,
           InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
         >;
       },

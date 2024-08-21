@@ -1,5 +1,10 @@
-import {InterceptAliases} from '../../../page-objects/search';
-import {completeSearchRequest} from '../../common-expectations';
+import {Interception} from 'cypress/types/net-stubbing';
+import {getQueryAlias, InterceptAliases} from '../../../page-objects/search';
+import {useCaseEnum} from '../../../page-objects/use-case';
+import {
+  completeSearchRequest,
+  ComponentErrorExpectations,
+} from '../../common-expectations';
 import {SortSelector, SortSelectors} from './sort-selectors';
 
 function sortExpectations(selector: SortSelector) {
@@ -15,9 +20,13 @@ function sortExpectations(selector: SortSelector) {
       selector.listbox().should(display ? 'exist' : 'not.exist');
     },
 
-    containsOptions: (values: string[]) => {
-      values.forEach((value) => {
-        selector.option(value).should('exist');
+    sortOptionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector
+          .sortOption(option.value)
+          .should('exist')
+          .should('contain', option.label)
+          .logDetail(`${option} label should be equal to ${option.label}`);
       });
     },
 
@@ -25,17 +34,25 @@ function sortExpectations(selector: SortSelector) {
       selector.label().should('contain', label);
     },
 
-    optionsEqual: (options: {value: string; label: string}[]) => {
-      options.forEach((option) => {
-        selector.option(option.value).should('contain', option.label);
-      });
-    },
-
     sortCriteriaInSearchRequest: (
       body: Record<string, unknown>,
       value: string
     ) => {
       expect(body.sortCriteria).to.equal(value);
+    },
+
+    sortCriteriaInInitialSearchRequest: (
+      value: string,
+      useCase: useCaseEnum
+    ) => {
+      cy.get<Interception>(getQueryAlias(useCase))
+        .then((interception) => {
+          const body = interception.request.body;
+          expect(body.sortCriteria).to.equal(value);
+        })
+        .logDetail(
+          'should have the correct sort criteria in the search request'
+        );
     },
 
     logSortResults: (value: string) => {
@@ -52,5 +69,6 @@ function sortExpectations(selector: SortSelector) {
 
 export const SortExpectations = {
   ...sortExpectations(SortSelectors),
+  ...ComponentErrorExpectations(SortSelectors),
   completeSearchRequest,
 };

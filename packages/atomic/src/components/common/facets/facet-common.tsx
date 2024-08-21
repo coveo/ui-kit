@@ -106,19 +106,16 @@ export function getAutomaticFacetGenerator(
   );
 }
 
-const get2DMatrix = (xSize: number, ySize: number = 0) =>
-  new Array(xSize).fill(null).map(() => new Array(ySize));
-
-function findIndiceOfParent(
+function findFacetParent(
   facet: BaseFacetElement,
   parents: (HTMLElement | null)[]
 ) {
   for (let i = 0; i < parents.length; i++) {
     if (parents[i]?.contains(facet)) {
-      return i;
+      return parents[i];
     }
   }
-  return parents.length;
+  return null;
 }
 
 /**
@@ -131,11 +128,13 @@ function findIndiceOfParent(
 export function triageFacetsByParents(
   facets: BaseFacetElement[],
   ...parents: (HTMLElement | null)[]
-) {
-  const sortedFacets: BaseFacetElement[][] = get2DMatrix(parents.length + 1);
+): Map<HTMLElement | null, BaseFacetElement[]> {
+  const sortedFacets: Map<HTMLElement | null, BaseFacetElement[]> = new Map(
+    parents.concat([null]).map((parent) => [parent, []])
+  );
   for (const facet of facets) {
-    const indice = findIndiceOfParent(facet, parents);
-    sortedFacets[indice].push(facet);
+    const parent = findFacetParent(facet, parents);
+    sortedFacets.get(parent)!.push(facet);
   }
   return sortedFacets;
 }
