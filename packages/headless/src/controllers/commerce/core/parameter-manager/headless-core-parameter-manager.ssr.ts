@@ -48,7 +48,7 @@ export function defineParameterManager<
     ...options,
     buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {
-        if (!loadCommerceResultListParameterReducers(engine)) {
+        if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
         return buildProductListing(engine).parameterManager(props);
