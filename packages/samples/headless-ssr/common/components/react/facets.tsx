@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import {useAuthorFacet, useTabManager} from '../../lib/react/engine';
 import FacetCommon from '../common/facet';
 
