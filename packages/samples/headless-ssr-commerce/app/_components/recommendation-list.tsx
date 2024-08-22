@@ -22,14 +22,7 @@ export const Recommendations: FunctionComponent<RecommendationsProps> = ({
 
   return (
     <>
-      <button
-        onClick={() => {
-          controller?.refresh();
-        }}
-      >
-        {' '}
-        Refresh{' '}
-      </button>
+      <h3>{state.headline}</h3>
       <ul className="product-list">
         {state.products.map((product) => (
           <li key={product.ec_product_id}>
@@ -37,6 +30,7 @@ export const Recommendations: FunctionComponent<RecommendationsProps> = ({
           </li>
         ))}
       </ul>
+      <br />
     </>
   );
 };

@@ -1,7 +1,7 @@
 /**
  * Utility functions to be used for Commerce Server Side Rendering.
  */
-import {Action, AnyAction, UnknownAction} from '@reduxjs/toolkit';
+import {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
@@ -231,7 +231,7 @@ export function defineCommerceEngine<
             searchAction,
             controllers,
           }) as EngineStaticState<
-            AnyAction,
+            UnknownAction,
             InferControllerStaticStateMapFromDefinitionsWithSolutionType<
               TControllerDefinitions,
               SolutionType
