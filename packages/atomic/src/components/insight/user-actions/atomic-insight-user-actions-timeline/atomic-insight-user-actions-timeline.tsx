@@ -17,6 +17,7 @@ import {MagnifyingGlass} from '../../../common/no-items/magnifying-glass';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
+ * @internal
  * This component displays all the actions performed by a user around the time they created a case.
  * The actions are grouped into multiple sessions, including the session during which the case was created,
  * the sessions preceding the case creation, and the sessions following the case creation.
@@ -59,16 +60,16 @@ export class AtomicInsightUserActionsTimeline
     this.userActions.fetchUserActions(this.userId);
   }
 
-  @State() followingSessionsShouldBeVisible = false;
-  @State() precedingShouldBeVisible = false;
+  @State() followingSessionsAreVisible = false;
+  @State() precedingSessionsAreVisible = false;
 
   private toggleFollowingSessions() {
-    this.followingSessionsShouldBeVisible =
-      !this.followingSessionsShouldBeVisible;
+    this.followingSessionsAreVisible =
+      !this.followingSessionsAreVisible;
   }
 
   private togglePrecedingSessions() {
-    this.precedingShouldBeVisible = !this.precedingShouldBeVisible;
+    this.precedingSessionsAreVisible = !this.precedingSessionsAreVisible;
   }
 
   private renderSessions(
@@ -99,7 +100,7 @@ export class AtomicInsightUserActionsTimeline
           onClick={this.toggleFollowingSessions.bind(this)}
           class="btn-text-primary flex items-center p-2"
           data-testid={
-            this.followingSessionsShouldBeVisible
+            this.followingSessionsAreVisible
               ? 'hide-following-sessions'
               : 'show-following-sessions'
           }
@@ -107,14 +108,14 @@ export class AtomicInsightUserActionsTimeline
           <atomic-icon
             class="mr-1.5 h-3 w-3"
             icon={
-              this.followingSessionsShouldBeVisible
+              this.followingSessionsAreVisible
                 ? ArrowDownIcon
                 : ArrowUpIcon
             }
           ></atomic-icon>
-          {this.followingSessionsShouldBeVisible
-            ? 'Hide following sessions'
-            : 'Show following sessions'}
+          {this.followingSessionsAreVisible
+            ? this.bindings.i18n.t('hide-following-sessions')
+            : this.bindings.i18n.t('show-following-sessions')}
         </button>
       </div>
     );
@@ -127,18 +128,18 @@ export class AtomicInsightUserActionsTimeline
           onClick={this.togglePrecedingSessions.bind(this)}
           class="btn-text-primary flex items-center p-2"
           data-testid={
-            this.precedingShouldBeVisible
+            this.precedingSessionsAreVisible
               ? 'hide-preceding-sessions'
               : 'show-preceding-sessions'
           }
         >
           <atomic-icon
             class="mr-1.5 h-3 w-3"
-            icon={this.precedingShouldBeVisible ? ArrowUpIcon : ArrowDownIcon}
+            icon={this.precedingSessionsAreVisible ? ArrowUpIcon : ArrowDownIcon}
           ></atomic-icon>
-          {this.precedingShouldBeVisible
-            ? 'Hide preceding sessions'
-            : 'Show preceding sessions'}
+          {this.precedingSessionsAreVisible
+            ? this.bindings.i18n.t('hide-preceding-sessions')
+            : this.bindings.i18n.t('show-preceding-sessions')}
         </button>
       </div>
     );
@@ -151,7 +152,7 @@ export class AtomicInsightUserActionsTimeline
     return [
       this.renderToggleFollowingSessionsButton(),
       <div class="separator mx-1 rounded"></div>,
-      this.followingSessionsShouldBeVisible
+      this.followingSessionsAreVisible
         ? this.renderSessions(
             this.userActionsState.timeline?.followingSessions,
             () => <div class="separator mx-1 mt-4 rounded"></div>,
@@ -167,7 +168,7 @@ export class AtomicInsightUserActionsTimeline
     }
     return [
       <div class="separator mx-1 mt-4 rounded"></div>,
-      this.precedingShouldBeVisible
+      this.precedingSessionsAreVisible
         ? this.renderSessions(
             this.userActionsState.timeline?.precedingSessions,
             () => <div class="separator mx-1 mt-4 rounded"></div>,
