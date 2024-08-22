@@ -64,8 +64,7 @@ export class AtomicInsightUserActionsTimeline
   @State() precedingSessionsAreVisible = false;
 
   private toggleFollowingSessions() {
-    this.followingSessionsAreVisible =
-      !this.followingSessionsAreVisible;
+    this.followingSessionsAreVisible = !this.followingSessionsAreVisible;
   }
 
   private togglePrecedingSessions() {
@@ -108,9 +107,7 @@ export class AtomicInsightUserActionsTimeline
           <atomic-icon
             class="mr-1.5 h-3 w-3"
             icon={
-              this.followingSessionsAreVisible
-                ? ArrowDownIcon
-                : ArrowUpIcon
+              this.followingSessionsAreVisible ? ArrowDownIcon : ArrowUpIcon
             }
           ></atomic-icon>
           {this.followingSessionsAreVisible
@@ -135,7 +132,9 @@ export class AtomicInsightUserActionsTimeline
         >
           <atomic-icon
             class="mr-1.5 h-3 w-3"
-            icon={this.precedingSessionsAreVisible ? ArrowUpIcon : ArrowDownIcon}
+            icon={
+              this.precedingSessionsAreVisible ? ArrowUpIcon : ArrowDownIcon
+            }
           ></atomic-icon>
           {this.precedingSessionsAreVisible
             ? this.bindings.i18n.t('hide-preceding-sessions')
