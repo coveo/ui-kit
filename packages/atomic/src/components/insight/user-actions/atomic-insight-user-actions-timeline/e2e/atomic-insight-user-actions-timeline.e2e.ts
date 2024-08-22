@@ -160,7 +160,7 @@ test.describe('default', () => {
 
   test.describe('when an error occurs while fetching user actions', () => {
     test.beforeEach(async ({userActionsTimeline, page}) => {
-      await userActionsTimeline.mockUserActionsError(page);
+     await userActionsTimeline.mockUserActionsError(page);
       await userActionsTimeline.load();
     });
 

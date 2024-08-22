@@ -50,7 +50,7 @@ export const AtomicInsightUserAction: FunctionalComponent<
   const renderActionTitle = () => {
     if (action.actionType === 'TICKET_CREATION') {
       return (
-        <div class="font-semibold text-xs">{bindings.i18n.t('ticket-created')}</div>
+        <div class="font-semibold text-xs ticket-creation-action__text">{bindings.i18n.t('ticket-created')}</div>
       );
     } else if (action.actionType === 'CUSTOM') {
       return (
