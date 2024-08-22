@@ -1003,7 +1003,6 @@ describe('insight user actions preprocessing', () => {
           mockState,
           fakeActions
         );
-        console.log(JSON.stringify(preprocessedTimeline));
 
         expect(preprocessedTimeline).toEqual(expectedTimeline);
         expect(preprocessedTimeline.session).not.toBeUndefined();
