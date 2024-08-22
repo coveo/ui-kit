@@ -131,19 +131,50 @@ export const isActionWithinSessionThreshold = (
 };
 
 /**
+ * Updates the session start and end if the ticket creation action is within the threshold of the session start or end.
+ * @param ticketCreationDate {number} - The ticket creation date
+ * @param session {UserSession} - The session to update
+ * @returns {void}
+ */
+export const updateSessionStartAndEndTimestamps = (
+  ticketCreationDate: number,
+  session: UserSession
+): void => {
+  const ticketCreationActionIndexIsWithinThresholdBeforeStart =
+    ticketCreationDate >= session.start - SESSION_INACTIVITY_THRESHOLD_IN_MS &&
+    ticketCreationDate <= session.start;
+
+  const ticketCreationActionIndexIsWithinThresholdAfterEnd =
+    ticketCreationDate <= session.end + SESSION_INACTIVITY_THRESHOLD_IN_MS &&
+    ticketCreationDate >= session.end;
+
+  if (ticketCreationActionIndexIsWithinThresholdBeforeStart) {
+    session.start = ticketCreationDate;
+  }
+
+  if (ticketCreationActionIndexIsWithinThresholdAfterEnd) {
+    session.end = ticketCreationDate;
+  }
+};
+
+/**
  * Inserts the session in the timeline at the right location.
  * @param currentSession {UserSession} - The current session
  * @param ticketCreationDate {number} - The ticket creation date
  * @param timeline {UserActionTimeline} - The timeline
  * @returns {void}
  */
-const insertSessionInTimeline = (
+export const insertSessionInTimeline = (
   session: UserSession,
   ticketCreationDate: number,
   timeline: UserActionTimeline
 ) => {
+  if (session.actions.length === 0) {
+    return;
+  }
+
   if (
-    ticketCreationDate >= session.start &&
+    ticketCreationDate >= session.start - SESSION_INACTIVITY_THRESHOLD_IN_MS &&
     ticketCreationDate <= session.end + SESSION_INACTIVITY_THRESHOLD_IN_MS
   ) {
     const ticketCreationAction: UserAction = {
@@ -152,17 +183,18 @@ const insertSessionInTimeline = (
       eventData: {},
     };
 
-    const ticketCreationActionIndex = session.actions.findIndex((action) => {
+    let ticketCreationActionIndex = session.actions.findIndex((action) => {
       return action.timestamp <= ticketCreationAction.timestamp;
     });
 
-    if (ticketCreationActionIndex !== -1) {
-      session.actions.splice(
-        ticketCreationActionIndex,
-        0,
-        ticketCreationAction
-      );
+    if (ticketCreationActionIndex === -1) {
+      ticketCreationActionIndex = session.actions.length;
     }
+
+    session.actions.splice(ticketCreationActionIndex, 0, ticketCreationAction);
+
+    updateSessionStartAndEndTimestamps(ticketCreationDate, session);
+
     timeline.session = session;
   } else if (ticketCreationDate < session.start) {
     timeline.followingSessions.push(session);
@@ -177,7 +209,7 @@ const insertSessionInTimeline = (
  * @param excludedCustomActions {string[]} - The custom actions to exclude
  * @returns {boolean}
  */
-const shouldExcludeAction = (
+export const shouldExcludeAction = (
   action: UserAction,
   excludedCustomActions: string[]
 ): boolean => {
@@ -246,7 +278,10 @@ export const splitActionsIntoTimelineSessions = (
     };
   });
 
-  // We add the last session to the timeline.
+  // We filter and add the last session to the timeline.
+  currentSession.actions = currentSession.actions.filter(
+    (action) => !shouldExcludeAction(action, actionsToExclude)
+  );
   insertSessionInTimeline(currentSession, ticketCreationDate, returnTimeline);
 
   // If the case creation action was not part of any session added to the timeline.
