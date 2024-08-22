@@ -70,7 +70,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   public queryCorrectionMode: 'legacy' | 'next' = 'legacy';
 
   @Watch('queryCorrectionMode')
-  public updateIconAssetsPath() {
+  public updateQueryCorrectionMode() {
     this.didYouMean.updateQueryCorrectionMode(this.queryCorrectionMode);
   }
 
