@@ -22,26 +22,32 @@ const exportparts =
 export class AtomicInsightUserActionsModal
   implements InitializableComponent<InsightBindings>
 {
-  @InitializeBindings() public bindings!: InsightBindings;
   @Element() public host!: HTMLElement;
-
+  @InitializeBindings() public bindings!: InsightBindings;
   @State()
   public error!: Error;
-
   @State()
   public interfaceDimensions?: DOMRect;
 
   @Prop({mutable: true}) openButton?: HTMLElement;
-
   @Prop({reflect: true, mutable: true}) isOpen = false;
+  /**
+   * The ID of the user whose actions are being displayed.
+   */
+  @Prop() public userId!: string;
+  /**
+   * The date and time when the case was created..
+   */
+  @Prop() public ticketCreationDate!: string;
+
+  public componentDidLoad() {
+    this.host.style.display = '';
+  }
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
     if (isOpen) {
       this.onAnimationFrame();
-      this.host.style.display = '';
-    } else {
-      this.host.style.display = 'none';
     }
   }
 
@@ -75,15 +81,15 @@ export class AtomicInsightUserActionsModal
     const renderHeader = () => {
       return (
         <div slot="header" class="contents">
-          <div part="title" class="truncate">
-            {/* {props.title}  */} User actions
+          <div part="title" class="truncate font-light">
+          {this.bindings.i18n.t('user-actions')}
           </div>
           <Button
             style="text-transparent"
             class="grid place-items-center"
             part="close-button"
             onClick={() => (this.isOpen = false)}
-            // ariaLabel={props.i18n.t('close')}
+            ariaLabel={this.bindings.i18n.t('close')}
           >
             <atomic-icon
               part="close-icon"
@@ -103,8 +109,8 @@ export class AtomicInsightUserActionsModal
           class="adjust-for-scroll-bar flex w-full flex-col px-2"
         >
           <atomic-insight-user-actions-timeline
-            userId="EXAMPLE_USER"
-            ticketCreationDate="2023-11-17T13:40:00Z"
+            userId={this.userId}
+            ticketCreationDate={this.ticketCreationDate}
             class="flex-1"
           ></atomic-insight-user-actions-timeline>
         </aside>
@@ -128,7 +134,6 @@ export class AtomicInsightUserActionsModal
           source={this.openButton}
           container={this.host}
           close={() => (this.isOpen = false)}
-          onAnimationEnded={() => {}}
           exportparts={exportparts}
           scope={this.bindings.interfaceElement}
         >
@@ -137,9 +142,5 @@ export class AtomicInsightUserActionsModal
         </atomic-modal>
       </Host>
     );
-  }
-
-  public componentDidLoad() {
-    this.host.style.display = 'none';
   }
 }

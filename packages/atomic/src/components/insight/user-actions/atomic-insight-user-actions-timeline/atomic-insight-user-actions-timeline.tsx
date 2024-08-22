@@ -45,11 +45,11 @@ export class AtomicInsightUserActionsTimeline
   /**
    * The ID of the user whose actions are being displayed.
    */
-  @Prop({reflect: false}) public userId!: string;
+  @Prop() public userId!: string;
   /**
    * The date and time when the case was created..
    */
-  @Prop({reflect: false}) public ticketCreationDate!: string;
+  @Prop() public ticketCreationDate!: string;
 
   public initialize() {
     this.userActions = buildUserActions(this.bindings.engine, {
@@ -200,11 +200,10 @@ export class AtomicInsightUserActionsTimeline
         <NoItemsContainer>
           <MagnifyingGlass />
           <div class="my-2 max-w-full text-center text-2xl font-light">
-            No user actions available
+            {this.bindings.i18n.t('no-user-actions-available')}
           </div>
           <div class="text-neutral-dark my-2 text-center text-lg">
-            There are no user actions associated with the userid or the case is
-            too old to detect related actions.
+            {this.bindings.i18n.t('no-user-actions-associated-with-params')}
           </div>
         </NoItemsContainer>
       </div>
