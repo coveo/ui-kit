@@ -1,9 +1,9 @@
 import {
   playExecuteFirstSearch,
   wrapInCommerceInterface,
-} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
 import {CommerceEngineConfiguration} from '@coveo/headless/dist/definitions/commerce.index';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit-html/static.js';

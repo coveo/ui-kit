@@ -1,4 +1,4 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 
@@ -102,7 +102,7 @@ export interface EngineDefinitionBuildResult<
 }
 
 export interface EngineStaticState<
-  TSearchAction extends AnyAction,
+  TSearchAction extends UnknownAction,
   TControllers extends ControllerStaticStateMap,
 > {
   searchAction: TSearchAction;

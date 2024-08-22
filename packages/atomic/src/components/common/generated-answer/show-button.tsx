@@ -17,14 +17,14 @@ export const ShowButton: FunctionalComponent<ShowButtonProps> = (props) => (
     class="hidden items-center hover:bg-transparent"
     onClick={() => props.onClick()}
   >
-    <div class="font-light text-base">
+    <div class="text-base font-light">
       {props.isCollapsed
         ? props.i18n.t('show-more')
         : props.i18n.t('show-less')}
     </div>
     <atomic-icon
       part="answer-show-icon"
-      class="w-3.5 ml-2"
+      class="ml-2 w-3.5"
       icon={props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
     ></atomic-icon>
   </Button>

@@ -30,7 +30,7 @@ export interface SearchMappings {
   dateFacetValueMap: Record<string, Record<string, string>>;
 }
 
-const initialSearchMappings: () => SearchMappings = () => ({
+export const initialSearchMappings: () => SearchMappings = () => ({
   dateFacetValueMap: {},
 });
 
@@ -54,7 +54,7 @@ function mapDateRangeRequest(
   return {...value, start, end};
 }
 
-function mapFacetRequest(
+export function mapFacetRequest(
   facetRequest: AnyFacetRequest,
   mappings: SearchMappings
 ) {

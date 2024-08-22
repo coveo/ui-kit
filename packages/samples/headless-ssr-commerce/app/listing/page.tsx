@@ -14,14 +14,9 @@ export default async function Listing() {
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   // Fetches the static state of the app with initial state (when applicable)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const staticState = await listingEngineDefinition.fetchStaticState();
-  console.log('*********************');
-  console.log(staticState.controllers);
-  console.log('*********************');
 
   return (
-    // TODO: remove page suffix since it is a component!
     <ListingPage
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}

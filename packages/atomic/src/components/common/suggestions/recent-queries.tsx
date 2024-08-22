@@ -57,7 +57,7 @@ export const RecentQueryIcon: FunctionalComponent<RecentQueryIconProps> = ({
     <atomic-icon
       part="recent-query-icon"
       icon={icon}
-      class="w-4 h-4 mr-2 shrink-0"
+      class="mr-2 h-4 w-4 shrink-0"
     ></atomic-icon>
   );
 };
@@ -73,7 +73,7 @@ export const RecentQueryText: FunctionalComponent<RecentQueryTextProps> = ({
 }) => {
   if (query === '') {
     return (
-      <span part="recent-query-text" class="break-all line-clamp-2">
+      <span part="recent-query-text" class="line-clamp-2 break-all">
         {value}
       </span>
     );
@@ -81,7 +81,7 @@ export const RecentQueryText: FunctionalComponent<RecentQueryTextProps> = ({
   return (
     <span
       part="recent-query-text"
-      class="break-all line-clamp-2"
+      class="line-clamp-2 break-all"
       innerHTML={HighlightUtils.highlightString({
         content: value,
         openingDelimiter:
@@ -106,7 +106,7 @@ export const RecentQueryClear: FunctionalComponent<RecentQueryClearProps> = ({
   i18n,
 }) => {
   return (
-    <div part="recent-query-title-content" class="flex justify-between w-full">
+    <div part="recent-query-title-content" class="flex w-full justify-between">
       <span class="font-bold" part="recent-query-title">
         {i18n.t('recent-searches')}
       </span>

@@ -5,6 +5,6 @@ export const MagnifyingGlass: FunctionalComponent = () => (
   <atomic-icon
     part="icon"
     icon={MagnifyingGlassIcon}
-    class="my-6 flex flex-col items-center w-1/2 max-w-lg"
+    class="my-6 flex w-1/2 max-w-lg flex-col items-center"
   ></atomic-icon>
 );

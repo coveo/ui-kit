@@ -487,7 +487,7 @@ export class AtomicColorFacet implements InitializableComponent {
           >
             <div
               part={`value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value`}
-              class="w-full h-12 mb-2 rounded-md value-box-color bg-neutral-dark"
+              class="value-box-color bg-neutral-dark mb-2 h-12 w-full rounded-md"
             ></div>
             <FacetValueLabelHighlight
               displayValue={displayValue}

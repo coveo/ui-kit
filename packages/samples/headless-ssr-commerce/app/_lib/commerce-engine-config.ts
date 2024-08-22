@@ -4,31 +4,42 @@ import {
   CommerceEngineDefinitionOptions,
   CommerceEngine,
   defineProductList,
-  defineQuerySummary,
+  defineCart,
+  defineSearchBox,
+  defineContext,
+  defineRecentQueriesList,
+  defineNotifyTrigger,
+  defineQueryTrigger,
+  defineRedirectionTrigger,
+  defineStandaloneSearchBox,
+  defineInstantProducts,
+  defineSummary,
+  definePagination,
+  defineSort,
+  defineProductView,
   getSampleCommerceEngineConfiguration,
-  defineRecommendations,
+  defineDidYouMean,
+  defineRecommendations, //defineParameterManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
   ControllerDefinitionsMap<CommerceEngine, Controller>
 >;
 
-const {context, ...restOfConfiguration} =
-  getSampleCommerceEngineConfiguration();
-
 export default {
   configuration: {
-    analytics: {trackingId: 'sports-ui-samples', enabled: false},
+    ...getSampleCommerceEngineConfiguration(),
     context: {
-      ...context,
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
       view: {
-        url: 'https://sports.barca.group',
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
       },
     },
-    ...restOfConfiguration,
   },
   controllers: {
-    summary: defineQuerySummary(),
+    summary: defineSummary(),
     productList: defineProductList(),
     popularViewedRecs: defineRecommendations({
       options: {
@@ -45,5 +56,21 @@ export default {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     }),
+    cart: defineCart(),
+    searchBox: defineSearchBox(),
+    context: defineContext(),
+    recentQueriesList: defineRecentQueriesList(),
+    notifyTrigger: defineNotifyTrigger(),
+    queryTrigger: defineQueryTrigger(),
+    redirectionTrigger: defineRedirectionTrigger(),
+    standaloneSearchBox: defineStandaloneSearchBox({
+      options: {redirectionUrl: '/search'},
+    }),
+    instantProducts: defineInstantProducts({options: {}}),
+    pagination: definePagination({options: {pageSize: 9}}),
+    sort: defineSort(),
+    productView: defineProductView(),
+    didYouMean: defineDidYouMean(), // TODO KIT-3463: implement did you mean in sample
+    //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
   },
 } satisfies CommerceEngineConfig;

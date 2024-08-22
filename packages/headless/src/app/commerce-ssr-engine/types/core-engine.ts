@@ -1,4 +1,4 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
@@ -22,10 +22,9 @@ export type EngineDefinitionOptions<
   >,
 > = TOptions & {
   /**
-   * The controllers to initialize with the search engine.
+   * The controllers to initialize with the commerce engine.
    */
   controllers?: TControllers;
-  recommendationSlots?: TControllers; // TODO: try to merge both controllers and recommendationSlots
 };
 
 export interface EngineDefinition<
@@ -40,7 +39,7 @@ export interface EngineDefinition<
   fetchStaticState: FetchStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    AnyAction,
+    UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<
       TControllers,
       TSolutionType
@@ -53,7 +52,7 @@ export interface EngineDefinition<
   hydrateStaticState: HydrateStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    AnyAction,
+    UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**

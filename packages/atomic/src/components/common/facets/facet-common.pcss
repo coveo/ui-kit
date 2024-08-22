@@ -1,7 +1,7 @@
 @import '../../../global/global.pcss';
 
 .value-count {
-  @apply ml-1.5 text-neutral-dark;
+  @apply text-neutral-dark ml-1.5;
 
   [part='value-exclude-button'] + & {
     @apply mr-2;
@@ -20,7 +20,7 @@
   }
 
   &::part(values) {
-    @apply max-h-96 overflow-y-auto mt-0;
+    @apply mt-0 max-h-96 overflow-y-auto;
   }
 
   &::part(search-wrapper) {

@@ -305,7 +305,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="w-48 h-8 rounded bg-neutral animate-pulse"
+          class="bg-neutral h-8 w-48 animate-pulse rounded"
         ></div>
       );
     }
@@ -317,7 +317,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     return (
       <div
         part="segmented-container"
-        class="flex items-center h-10 whitespace-nowrap"
+        class="flex h-10 items-center whitespace-nowrap"
       >
         {this.renderLabel()}
         {this.renderValues()}

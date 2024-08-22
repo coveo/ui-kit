@@ -1,7 +1,7 @@
 @import '../../../global/global.pcss';
 
 atomic-insight-result-action-bar {
-  @apply flex absolute invisible right-6 top-[-1rem];
+  @apply invisible absolute right-6 top-[-1rem] flex;
 
   > atomic-insight-result-action:not(:last-child) {
     button {
@@ -13,7 +13,7 @@ atomic-insight-result-action-bar {
   }
   > atomic-insight-result-action:not(:first-child) {
     button {
-      @apply rounded-tl-none rounded-bl-none;
+      @apply rounded-bl-none rounded-tl-none;
     }
   }
 }
