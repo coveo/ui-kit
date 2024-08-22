@@ -1,4 +1,4 @@
-import {RecommendationOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {RecommendationsState} from '../recommendations/headless-recommendations';
 import {
   RecommendationsProps,
@@ -9,7 +9,7 @@ import {
 export type {Recommendations, RecommendationsState};
 
 export interface RecommendationsDefinition
-  extends RecommendationOnlyControllerDefinitionWithoutProps<Recommendations> {}
+  extends UniversalControllerDefinitionWithoutProps<Recommendations> {}
 /**
  * @internal
  * Defines a `Recommendations` controller instance.

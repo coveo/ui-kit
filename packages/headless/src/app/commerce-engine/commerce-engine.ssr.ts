@@ -64,24 +64,32 @@ function buildSSRCommerceEngine(
   solutionType: SolutionType,
   options: CommerceEngineOptions
 ): SSRCommerceEngine {
-  let waiter: ReturnType<typeof createWaitForActionMiddleware>;
+  let actionCompletionMiddleware: ReturnType<
+    typeof createWaitForActionMiddleware
+  >;
 
   switch (solutionType) {
     case SolutionType.listing:
-      waiter = createWaitForActionMiddleware(isListingFetchCompletedAction);
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        isListingFetchCompletedAction
+      );
       break;
     case SolutionType.search:
-      waiter = createWaitForActionMiddleware(isSearchCompletedAction);
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        isSearchCompletedAction
+      );
       break;
     default:
-      waiter = createWaitForActionMiddleware(noSearchActionRequired);
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        noSearchActionRequired
+      );
   }
 
   const commerceEngine = buildCommerceEngine({
     ...options,
     middlewares: [
       ...(options.middlewares ?? []),
-      ...(waiter.middleware ? [waiter.middleware] : waiter.middleware),
+      actionCompletionMiddleware.middleware,
     ],
   });
 
@@ -93,7 +101,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return waiter.promise;
+      return actionCompletionMiddleware.promise;
     },
   };
 }
@@ -206,7 +214,6 @@ export function defineCommerceEngine<
         ).fromBuildResult({
           buildResult,
         });
-
         return staticState;
       },
       {

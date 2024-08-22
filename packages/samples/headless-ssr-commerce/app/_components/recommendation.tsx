@@ -33,8 +33,8 @@ export default function Recommendation({
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
 
-        // Refreshing recommendations after hydrating the state in the client-side
-        // Recommendation slots are refreshed in the server. This might be a future improvement.
+        // Refreshing recommendations in the browser after hydrating the state in the client-side
+        // Recommendation refresh in the server is not supported yet.
         controllers.popularBoughtRecs.refresh();
         controllers.popularViewedRecs.refresh();
       });
@@ -42,22 +42,14 @@ export default function Recommendation({
 
   return (
     <>
-      {/* TODO: add UI component here */}
-      <h2>{staticState.controllers.popularBoughtRecs.state.headline}</h2>
       <Recommendations
         staticState={staticState.controllers.popularBoughtRecs.state}
         controller={hydratedState?.controllers.popularBoughtRecs}
       />
-      <h2>{staticState.controllers.popularViewedRecs.state.headline}</h2>
       <Recommendations
         staticState={staticState.controllers.popularViewedRecs.state}
         controller={hydratedState?.controllers.popularViewedRecs}
       />
-      {/* <Summary
-        staticState={staticState.controllers.summary.state}
-        controller={hydratedState?.controllers.summary}
-        hydratedState={hydratedState}
-      /> */}
     </>
   );
 }

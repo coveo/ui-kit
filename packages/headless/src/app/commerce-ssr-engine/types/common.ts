@@ -141,7 +141,7 @@ export interface ControllerDefinitionOption {
   search?: boolean;
 }
 
-interface RecommendationOnlyController {
+interface UniversalController {
   /**
    * @internal
    */
@@ -170,7 +170,7 @@ interface ListingOnlyController {
   [SolutionType.listing]: true;
 }
 
-interface SharedController {
+interface SearchAndListingController {
   /**
    * @internal
    */
@@ -203,27 +203,27 @@ export type ListingOnlyControllerDefinitionWithProps<
 > = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
   ListingOnlyController;
 
-export type RecommendationOnlyControllerDefinitionWithoutProps<
+export type UniversalControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
-  RecommendationOnlyController;
+  UniversalController;
 
-export type SharedControllerDefinitionWithoutProps<
+export type SearchAndListingControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
-  SharedController;
+  SearchAndListingController;
 
-export type SharedControllerDefinitionWithProps<
+export type SearchAndListingControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
-  SharedController;
+  SearchAndListingController;
 
 export type SubControllerDefinitionWithoutProps<
   TController extends Controller,
   TDefinition extends ControllerDefinitionOption | undefined,
 > = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SharedControllerDefinitionWithoutProps<TController>
+  ? SearchAndListingControllerDefinitionWithoutProps<TController>
   : TDefinition extends {listing?: true; search?: false}
     ? ListingOnlyControllerDefinitionWithoutProps<TController>
     : TDefinition extends {listing?: false; search?: true}
@@ -237,7 +237,7 @@ export type SubControllerDefinitionWithProps<
   TDefinition extends ControllerDefinitionOption | undefined,
   TProps,
 > = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SharedControllerDefinitionWithProps<TController, TProps>
+  ? SearchAndListingControllerDefinitionWithProps<TController, TProps>
   : TDefinition extends {listing?: true; search?: false}
     ? ListingOnlyControllerDefinitionWithProps<TController, TProps>
     : TDefinition extends {listing?: false; search?: true}

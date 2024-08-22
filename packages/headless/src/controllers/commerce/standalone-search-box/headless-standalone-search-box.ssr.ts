@@ -1,4 +1,4 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box';
 import {
   StandaloneSearchBox,
@@ -10,7 +10,7 @@ export type {StandaloneSearchBoxState} from './headless-standalone-search-box';
 export type {StandaloneSearchBox, StandaloneSearchBoxProps};
 
 export interface StandaloneSearchBoxDefinition
-  extends SharedControllerDefinitionWithoutProps<StandaloneSearchBox> {}
+  extends SearchAndListingControllerDefinitionWithoutProps<StandaloneSearchBox> {}
 
 /**
  * Defines the `StandaloneSearchBox` controller for the purpose of server-side rendering.

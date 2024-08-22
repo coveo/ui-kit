@@ -1,11 +1,11 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common';
 import {Cart, buildCart, CartProps, CartInitialState} from './headless-cart';
 
 export type {CartState, CartItem, CartProps} from './headless-cart';
 export type {Cart, CartInitialState};
 
 export interface CartDefinition
-  extends SharedControllerDefinitionWithoutProps<Cart> {}
+  extends SearchAndListingControllerDefinitionWithoutProps<Cart> {}
 
 /**
  * Defines a `Cart` controller instance.

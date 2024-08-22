@@ -1,4 +1,4 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   Context,
   buildContext,
@@ -11,7 +11,7 @@ export type {ContextState, Context, ContextProps} from './headless-context';
 export type {View, ContextOptions};
 
 export interface ContextDefinition
-  extends SharedControllerDefinitionWithoutProps<Context> {}
+  extends SearchAndListingControllerDefinitionWithoutProps<Context> {}
 
 /**
  * Defines a `Context` controller instance.

@@ -1,23 +1,24 @@
 'use client';
 
 import {
-  SearchHydratedState,
-  SearchStaticState,
-  searchEngineDefinition,
+  recommendationEngineDefinition,
+  RecommendationHydratedState,
+  RecommendationStaticState,
 } from '@/app/_lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
+import {Recommendations} from '../recommendation-list';
 
 interface IProductPageProps {
-  staticState: SearchStaticState;
+  staticState: RecommendationStaticState;
   navigatorContext: NavigatorContext;
   productId: string;
 }
 
 export default function ProductPage(props: IProductPageProps) {
   const [hydratedState, setHydratedState] = useState<
-    SearchHydratedState | undefined
+    RecommendationHydratedState | undefined
   >(undefined);
 
   const {staticState, navigatorContext, productId} = props;
@@ -28,27 +29,40 @@ export default function ProductPage(props: IProductPageProps) {
   const name = searchParams.get('name') ?? productId;
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  recommendationEngineDefinition.setNavigatorContextProvider(
+    () => navigatorContext
+  );
 
   useEffect(() => {
-    searchEngineDefinition
+    recommendationEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
+
+        // Refreshing recommendations in the browser after hydrating the state in the client-side
+        // Recommendation refresh in the server is not supported yet.
+        controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
-  const controller = hydratedState?.controllers.productView;
+  const viewController = hydratedState?.controllers.productView;
 
   useEffect(() => {
-    controller?.view({name, productId, price});
-  }, [controller, productId, name, price]);
+    viewController?.view({name, productId, price});
+  }, [viewController, productId, name, price]);
 
   return (
-    <p>
-      {name} ({productId}) - ${price}
-    </p>
+    <>
+      <p>
+        {name} ({productId}) - ${price}
+      </p>
+      <br />
+      <Recommendations
+        staticState={staticState.controllers.popularBoughtRecs.state}
+        controller={hydratedState?.controllers.popularBoughtRecs}
+      />
+    </>
   );
 }
