@@ -4,6 +4,7 @@ import {
   ArrayValue,
   StringValue,
   NumberValue,
+  RecordValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
@@ -27,6 +28,10 @@ export interface RegisterCategoryFacetActionCreatorPayload {
    * The field whose values you want to display in the facet.
    * */
   field: string;
+
+  tabs?: {included?: string[]; excluded?: string[]};
+
+  activeTab?: string;
 
   /**
    * The base path shared by all values for the facet.
@@ -87,6 +92,16 @@ export interface RegisterCategoryFacetActionCreatorPayload {
 const categoryFacetPayloadDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
+  activeTab: new StringValue({required: false}),
   delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),

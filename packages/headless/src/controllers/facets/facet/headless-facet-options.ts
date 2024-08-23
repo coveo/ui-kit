@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   FacetResultsMustMatch,
   facetResultsMustMatch,
@@ -34,6 +34,8 @@ export interface FacetOptions {
    * Facet search options.
    */
   facetSearch?: FacetSearchOptions;
+
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
@@ -133,6 +135,15 @@ export interface FacetSearchOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   filterFacetCount,
   injectionDepth,
   numberOfValues,

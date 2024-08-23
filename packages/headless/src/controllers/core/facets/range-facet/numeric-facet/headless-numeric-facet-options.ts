@@ -45,6 +45,8 @@ export interface NumericFacetOptions {
    */
   field: string;
 
+  tabs?: {included?: string[]; excluded?: string[]};
+
   /**
    * Whether the index should automatically create range values.
    *
@@ -129,6 +131,15 @@ export const numericFacetOptionsSchema = new Schema<
   Required<NumericFacetOptions>
 >({
   facetId,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   field,
   generateAutomaticRanges,
   filterFacetCount,

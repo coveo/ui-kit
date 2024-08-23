@@ -122,48 +122,63 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
     facets: {
       ytviewcount_input_range: {
         enabled: true,
+        tabs: {},
       },
       ytviewcount: {
         enabled: false,
+        tabs: {},
       },
       ytviewcount_input: {
         enabled: true,
+        tabs: {},
       },
       sncost: {
         enabled: true,
+        tabs: {},
       },
       ytlikecount: {
         enabled: false,
+        tabs: {},
       },
       geographicalhierarchy: {
         enabled: true,
+        tabs: {},
       },
       filetype: {
         enabled: true,
+        tabs: {},
       },
       author: {
         enabled: true,
+        tabs: {},
       },
       source: {
         enabled: true,
+        tabs: {},
       },
       year: {
         enabled: true,
+        tabs: {},
       },
       snrating_range: {
         enabled: true,
+        tabs: {},
       },
       snrating: {
         enabled: true,
+        tabs: {},
       },
       date: {
         enabled: true,
+        tabs: {},
       },
       date_input_range: {
         enabled: true,
+        tabs: {},
       },
       date_input: {
         enabled: true,
+        tabs: {},
       },
     },
   },

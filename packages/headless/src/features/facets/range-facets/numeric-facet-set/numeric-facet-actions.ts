@@ -4,6 +4,7 @@ import {
   BooleanValue,
   Value,
   ArrayValue,
+  StringValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
@@ -33,6 +34,10 @@ export interface RegisterNumericFacetActionCreatorPayload {
    * The field whose values you want to display in the facet.
    */
   field: string;
+
+  tabs?: {included?: string[]; excluded?: string[]};
+
+  activeTab?: string;
 
   /**
    * Whether the index should automatically create range values.
@@ -104,6 +109,16 @@ const numericFacetRequestDefinition = {
 const numericFacetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
+  activeTab: new StringValue({required: false}),
   currentValues: new ArrayValue({
     required: false,
     each: new RecordValue({values: numericFacetRequestDefinition}),

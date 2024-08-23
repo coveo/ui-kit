@@ -37,6 +37,8 @@ export interface DateFacetOptions {
    */
   field: string;
 
+  tabs?: {included?: string[]; excluded?: string[]};
+
   /**
    * Whether the index should automatically create range values.
    *
@@ -113,6 +115,15 @@ const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
 export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
   facetId,
   field,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   generateAutomaticRanges,
   filterFacetCount,
   injectionDepth,

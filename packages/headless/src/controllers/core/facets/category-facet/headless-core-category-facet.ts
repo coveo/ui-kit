@@ -29,6 +29,7 @@ import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
 import {searchReducer as search} from '../../../../features/search/search-slice';
+import {selectActiveTab} from '../../../../features/tab-set/tab-set-selectors';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
@@ -303,11 +304,15 @@ export function buildCoreCategoryFacet(
   const {dispatch} = engine;
 
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const registrationOptions = {
     ...defaultCategoryFacetOptions,
     ...omit('facetSearch', props.options),
     field: props.options.field,
     facetId,
+    tabs,
+    activeTab,
   };
   const options: Required<CategoryFacetOptions> = {
     facetSearch: {...defaultFacetSearchOptions, ...props.options.facetSearch},
