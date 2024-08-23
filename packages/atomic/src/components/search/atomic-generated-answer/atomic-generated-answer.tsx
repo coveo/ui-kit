@@ -199,15 +199,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.tabManager = buildTabManager(this.bindings.engine);
   }
 
-  public testFunctionDisable() {
-    console.log(this.generatedAnswer.state);
-    this.generatedAnswer.disable();
-    console.log(this.generatedAnswer.state);
-  }
-  public testFunctionEnable() {
-    this.generatedAnswer.enable();
-  }
-
   @Watch('generatedAnswerState')
   public updateAnswerCollapsed(
     newState: GeneratedAnswerState,
