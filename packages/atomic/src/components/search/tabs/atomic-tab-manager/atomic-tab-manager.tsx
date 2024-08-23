@@ -64,7 +64,7 @@ export class AtomicTabManager {
           id: tabElement.name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
-        initialState: {isActive: index === 0 ? true : false},
+        initialState: {isActive: index === 0},
       });
 
       this.tabs.push({
