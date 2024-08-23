@@ -57,7 +57,7 @@ function isSearchCompletedAction(action: unknown): action is Action {
 }
 
 function noSearchActionRequired(action: unknown): action is Action {
-  return !!action; // TODO: find a better way
+  return true;
 }
 
 function buildSSRCommerceEngine(
