@@ -99,6 +99,8 @@ describe('numeric filter', () => {
   it('registers a numeric facet with the passed options', () => {
     expect(registerNumericFacet).toHaveBeenCalledWith({
       facetId,
+      activeTab: '',
+      tabs: {},
       generateAutomaticRanges: false,
       currentValues: initialState?.range
         ? [{...initialState.range, endInclusive: true, state: 'selected'}]
