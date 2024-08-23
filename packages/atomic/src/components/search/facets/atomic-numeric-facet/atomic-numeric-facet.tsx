@@ -264,7 +264,6 @@ export class AtomicNumericFacet implements InitializableComponent {
   private initializeTabManager() {
     this.tabManager = buildTabManager(this.bindings.engine);
   }
-
   private initializeFacetForInput() {
     if (!this.withInput) {
       return;

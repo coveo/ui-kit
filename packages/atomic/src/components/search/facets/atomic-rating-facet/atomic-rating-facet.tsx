@@ -270,7 +270,6 @@ export class AtomicRatingFacet implements InitializableComponent {
     }
     this.dependenciesManager?.stopWatching();
   }
-
   private get isHidden() {
     return (
       this.searchStatusState.hasError ||

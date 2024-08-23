@@ -57,14 +57,14 @@ export class AtomicTabManager {
       return;
     }
 
-    tabElements.forEach((tabElement, index) => {
+    tabElements.forEach((tabElement) => {
       const tabController = buildTab(this.bindings.engine, {
         options: {
           expression: tabElement.expression,
           id: tabElement.name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
-        initialState: {isActive: index === 0},
+        initialState: {isActive: false},
       });
 
       this.tabs.push({
