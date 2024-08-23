@@ -4,6 +4,7 @@ import {logSearchEvent} from '../analytics/analytics-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
 import {executeSearch} from '../search/search-actions';
+import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {updateFacetOptions} from './facet-options-actions';
 import {facetOptionsReducer} from './facet-options-slice';
 import {
@@ -39,6 +40,62 @@ describe('facet options slice', () => {
 
       expect(finalState.freezeFacetOrder).toBe(true);
     });
+  });
+
+  it('should update facet enabled state on updateActiveTab', () => {
+    const initialState = getFacetOptionsInitialState();
+    initialState.facets = {
+      facetNotIncluded: {
+        enabled: true,
+        tabs: {
+          included: ['tab1'],
+          excluded: [],
+        },
+      },
+      facetIncluded: {
+        enabled: false,
+        tabs: {
+          included: ['tab2'],
+          excluded: [],
+        },
+      },
+      facetNotExcluded: {
+        enabled: true,
+        tabs: {
+          included: [],
+          excluded: ['tab1'],
+        },
+      },
+      facetExcluded: {
+        enabled: true,
+        tabs: {
+          included: [],
+          excluded: ['tab2'],
+        },
+      },
+      facetNotExcludedNotIncluded: {
+        enabled: true,
+        tabs: {
+          included: ['tab1'],
+          excluded: ['tab1'],
+        },
+      },
+      facetExcludedAndIncluded: {
+        enabled: true,
+        tabs: {
+          included: ['tab2'],
+          excluded: ['tab2'],
+        },
+      },
+    };
+    const action = updateActiveTab('tab2');
+    const finalState = facetOptionsReducer(initialState, action);
+    expect(finalState.facets.facetNotIncluded.enabled).toBe(false);
+    expect(finalState.facets.facetIncluded.enabled).toBe(true);
+    expect(finalState.facets.facetNotExcluded.enabled).toBe(true);
+    expect(finalState.facets.facetExcluded.enabled).toBe(false);
+    expect(finalState.facets.facetNotExcludedNotIncluded.enabled).toBe(false);
+    expect(finalState.facets.facetExcludedAndIncluded.enabled).toBe(false);
   });
 
   it('#executeSearch.fulfilled sets #freezeFacetOrder to false', () => {

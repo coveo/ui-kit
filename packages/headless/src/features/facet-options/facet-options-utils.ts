@@ -10,7 +10,10 @@ export const isFacetIncludedOnTab = (
     return false;
   }
 
-  if (!facetTabs.included || facetTabs.included.includes(activeTab)) {
+  if (
+    facetTabs.included &&
+    (facetTabs.included.length === 0 || facetTabs.included.includes(activeTab))
+  ) {
     return true;
   }
 
