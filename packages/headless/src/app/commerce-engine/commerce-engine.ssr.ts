@@ -56,7 +56,7 @@ function isSearchCompletedAction(action: unknown): action is Action {
   );
 }
 
-function noSearchActionRequired(action: unknown): action is Action {
+function noSearchActionRequired(_action: unknown): _action is Action {
   return true;
 }
 

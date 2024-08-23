@@ -1,5 +1,5 @@
 import {headers} from 'next/headers';
-import Recommendation from '../_components/recommendation';
+import Recommendation from '../_components/pages/recommendation';
 import {recommendationEngineDefinition} from '../_lib/commerce-engine';
 import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 

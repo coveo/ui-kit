@@ -6,8 +6,8 @@ import {
   RecommendationStaticState,
   RecommendationHydratedState,
   recommendationEngineDefinition,
-} from '../_lib/commerce-engine';
-import {Recommendations} from './recommendation-list';
+} from '../../_lib/commerce-engine';
+import {Recommendations} from '../recommendation-list';
 
 export default function Recommendation({
   staticState,
