@@ -29,6 +29,12 @@ export interface ResultTemplatesManager<
    * @returns (Content) The selected template's content, or null if no template's conditions are satisfied.
    */
   selectTemplate(result: Result): Content | null;
+  /**
+   * Selects the highest priority link template for which the given result satisfies all conditions.
+   * In the case where satisfied templates have equal priority, the template that was registered first is returned.
+   * @param result (Result) The result for which to select a template.
+   * @returns (Content) The selected template's content, or null if no template's conditions are satisfied.
+   */
   selectLinkTemplate(result: Result): LinkContent | null;
 }
 

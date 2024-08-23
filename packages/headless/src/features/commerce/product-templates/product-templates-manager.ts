@@ -24,6 +24,12 @@ export interface ProductTemplatesManager<
    * @returns (Content) The content of the selected template, or null if no template can be selected for the given product.
    */
   selectTemplate: (product: Product) => Content | null;
+  /**
+   * Selects the highest priority link template for which the given product satisfies all conditions.
+   * In the case where satisfied templates have equal priority, the template that was registered first is returned.
+   * @param product (Product) The product for which to select a template.
+   * @returns (Content) The content of the selected template, or null if no template can be selected for the given product.
+   */
   selectLinkTemplate: (product: Product) => LinkContent | null;
 }
 
