@@ -35,7 +35,9 @@ export const facetOptionsReducer = createReducer(
         for (const facetId in state.facets) {
           const facet = state.facets[facetId];
 
-          facet.enabled = isFacetIncludedOnTab(facet.tabs, action.payload);
+          if (Object.keys({...facet.tabs}).length > 0) {
+            facet.enabled = isFacetIncludedOnTab(facet.tabs, action.payload);
+          }
         }
       })
       .addCase(

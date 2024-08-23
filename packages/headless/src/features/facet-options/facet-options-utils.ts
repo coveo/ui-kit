@@ -2,7 +2,11 @@ export const isFacetIncludedOnTab = (
   facetTabs: {excluded?: string[]; included?: string[]} | undefined,
   activeTab: string | undefined
 ) => {
-  if (!facetTabs || !activeTab) {
+  if (
+    ({...facetTabs} && Object.keys({...facetTabs}).length === 0) ||
+    !activeTab ||
+    !facetTabs
+  ) {
     return true;
   }
 
