@@ -37,6 +37,9 @@ export interface DateFacetOptions {
    */
   field: string;
 
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
   tabs?: {included?: string[]; excluded?: string[]};
 
   /**

@@ -35,8 +35,14 @@ export interface RegisterNumericFacetActionCreatorPayload {
    */
   field: string;
 
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
   tabs?: {included?: string[]; excluded?: string[]};
 
+  /**
+   * The currently active tab.
+   */
   activeTab?: string;
 
   /**

@@ -41,7 +41,11 @@ export interface NumericFilterOptions {
    */
   field: string;
 
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
   tabs?: {included?: string[]; excluded?: string[]};
+
   /**
    * A unique identifier for the controller.
    * By default, a unique random ID is generated.

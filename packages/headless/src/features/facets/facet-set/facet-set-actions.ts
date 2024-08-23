@@ -29,9 +29,16 @@ export interface RegisterFacetActionCreatorPayload {
    * */
   field: string;
 
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
   tabs?: {included?: string[]; excluded?: string[]};
 
+  /**
+   * The currently active tab.
+   */
   activeTab?: string;
+
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *

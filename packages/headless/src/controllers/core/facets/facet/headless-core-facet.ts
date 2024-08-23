@@ -210,7 +210,10 @@ export interface CoreFacetState {
 
   /** Whether the facet is enabled and its values are used to filter search results. */
   enabled: boolean;
+
+  /** The tabs on which the facet should be enabled or disabled. */
   tabs?: {included?: string[]; excluded?: string[]};
+
   /**
    * The name to display if this field is used by the Facet Generator in your interface.
    * See [Change Facet Generator options](https://docs.coveo.com/en/n9sd0159#change-facet-generator-options).
