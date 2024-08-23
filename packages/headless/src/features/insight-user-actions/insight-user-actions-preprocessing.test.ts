@@ -5,7 +5,6 @@ import {
   splitActionsIntoTimelineSessions,
   shouldExcludeAction,
   insertSessionInTimeline,
-  updateSessionStartAndEndTimestamps,
 } from './insight-user-actions-preprocessing';
 import {
   UserActionTimeline,
@@ -350,64 +349,6 @@ describe('insight user actions preprocessing', () => {
         expect(mockTimeline.followingSessions.length).toEqual(0);
         expect(mockTimeline.precedingSessions.length).toEqual(0);
       });
-    });
-  });
-
-  describe('#updateSessionStartAndEndTimestamps', () => {
-    it('should update the session start if the ticket creation date is within the threshold before the session start', () => {
-      const session: UserSession = {
-        start: new Date('Fri Apr 1 2022 14:15:00 GMT').valueOf(),
-        end: new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf(),
-        actions: [],
-      };
-      const ticketCreationDate = new Date(
-        'Fri Apr 1 2022 14:00:00 GMT'
-      ).valueOf();
-
-      updateSessionStartAndEndTimestamps(ticketCreationDate, session);
-
-      expect(session.start).toBe(ticketCreationDate);
-      expect(session.end).toBe(
-        new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf()
-      );
-    });
-
-    it('should update the session end if the ticket creation date is within the threshold after the session end', () => {
-      const session: UserSession = {
-        start: new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf(),
-        end: new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf(),
-        actions: [],
-      };
-      const ticketCreationDate = new Date(
-        'Fri Apr 1 2022 14:45:00 GMT'
-      ).valueOf();
-
-      updateSessionStartAndEndTimestamps(ticketCreationDate, session);
-
-      expect(session.start).toBe(
-        new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf()
-      );
-      expect(session.end).toBe(ticketCreationDate);
-    });
-
-    it('should not update the session start or end if the ticket creation date is outside the threshold', () => {
-      const session: UserSession = {
-        start: new Date('Fri Apr 1 2022 14:15:00 GMT').valueOf(),
-        end: new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf(),
-        actions: [],
-      };
-      const ticketCreationDate = new Date(
-        'Fri Apr 1 2022 15:30:00 GMT'
-      ).valueOf();
-
-      updateSessionStartAndEndTimestamps(ticketCreationDate, session);
-
-      expect(session.start).toBe(
-        new Date('Fri Apr 1 2022 14:15:00 GMT').valueOf()
-      );
-      expect(session.end).toBe(
-        new Date('Fri Apr 1 2022 14:30:00 GMT').valueOf()
-      );
     });
   });
 

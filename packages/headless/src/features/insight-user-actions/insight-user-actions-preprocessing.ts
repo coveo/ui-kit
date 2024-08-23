@@ -131,33 +131,6 @@ export const isActionWithinSessionThreshold = (
 };
 
 /**
- * Updates the session start and end if the ticket creation action is within the threshold of the session start or end.
- * @param ticketCreationDate {number} - The ticket creation date
- * @param session {UserSession} - The session to update
- * @returns {void}
- */
-export const updateSessionStartAndEndTimestamps = (
-  ticketCreationDate: number,
-  session: UserSession
-): void => {
-  const ticketCreationActionIndexIsWithinThresholdBeforeStart =
-    ticketCreationDate >= session.start - SESSION_INACTIVITY_THRESHOLD_IN_MS &&
-    ticketCreationDate <= session.start;
-
-  const ticketCreationActionIndexIsWithinThresholdAfterEnd =
-    ticketCreationDate <= session.end + SESSION_INACTIVITY_THRESHOLD_IN_MS &&
-    ticketCreationDate >= session.end;
-
-  if (ticketCreationActionIndexIsWithinThresholdBeforeStart) {
-    session.start = ticketCreationDate;
-  }
-
-  if (ticketCreationActionIndexIsWithinThresholdAfterEnd) {
-    session.end = ticketCreationDate;
-  }
-};
-
-/**
  * Inserts the session in the timeline at the right location.
  * @param currentSession {UserSession} - The current session
  * @param ticketCreationDate {number} - The ticket creation date
@@ -169,7 +142,7 @@ export const insertSessionInTimeline = (
   ticketCreationDate: number,
   timeline: UserActionTimeline
 ) => {
-  if (session.actions.length === 0) {
+  if (!session.actions?.length) {
     return;
   }
 
@@ -189,12 +162,12 @@ export const insertSessionInTimeline = (
 
     if (ticketCreationActionIndex === -1) {
       ticketCreationActionIndex = session.actions.length;
+      session.start = ticketCreationDate;
+    } else if (ticketCreationActionIndex === 0) {
+      session.end = ticketCreationDate;
     }
 
     session.actions.splice(ticketCreationActionIndex, 0, ticketCreationAction);
-
-    updateSessionStartAndEndTimestamps(ticketCreationDate, session);
-
     timeline.session = session;
   } else if (ticketCreationDate < session.start) {
     timeline.followingSessions.push(session);
