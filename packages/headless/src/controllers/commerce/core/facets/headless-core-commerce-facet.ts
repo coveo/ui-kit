@@ -286,7 +286,6 @@ export function buildCoreCommerceFacet<
 
       return {
         facetId,
-        tabs: {},
         type: response?.type ?? 'regular',
         field: response?.field ?? '',
         displayName: response?.displayName ?? '',
