@@ -107,19 +107,19 @@ export class AtomicInsightGeneratedAnswer
 
   /**
    * Whether to render a toggle button that lets the user hide or show the answer.
-   * @default false
+   * @defaultValue false
    */
   @Prop() withToggle?: boolean;
 
   /**
    * Whether to allow the answer to be collapsed when the text is taller than 250px.
-   * @default false
+   * @defaultValue false
    */
   @Prop() collapsible?: boolean;
 
   /**
    * Whether to render the rephrase buttons that lets the user rephrase the answer.
-   * @default false
+   * @defaultValue false
    */
   @Prop() withRephraseButtons?: boolean;
 
