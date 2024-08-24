@@ -6,13 +6,14 @@ import {
   listingEngineDefinition,
   ListingHydratedState,
   ListingStaticState,
-} from '../_lib/commerce-engine';
-import FacetGenerator from './facets/facet-generator';
-import Pagination from './pagination';
-import {ProductList} from './product-list';
-// import ShowMore from './show-more';
-import Sort from './sort';
-import Summary from './summary';
+} from '../../_lib/commerce-engine';
+import Cart from '../cart';
+import FacetGenerator from '../facets/facet-generator';
+import Pagination from '../pagination';
+import ProductList from '../product-list';
+import Sort from '../sort';
+import StandaloneSearchBox from '../standalone-search-box';
+import Summary from '../summary';
 
 export default function ListingPage({
   staticState,
@@ -40,6 +41,18 @@ export default function ListingPage({
 
   return (
     <>
+      <StandaloneSearchBox
+        staticState={staticState.controllers.standaloneSearchBox.state}
+        controller={hydratedState?.controllers.standaloneSearchBox}
+        staticStateRecentQueries={
+          staticState.controllers.recentQueriesList.state
+        }
+        recentQueriesController={hydratedState?.controllers.recentQueriesList}
+        staticStateInstantProducts={
+          staticState.controllers.instantProducts.state
+        }
+        instantProductsController={hydratedState?.controllers.instantProducts}
+      />
       <FacetGenerator
         staticState={staticState.controllers.facetGenerator.state}
         controller={hydratedState?.controllers.facetGenerator}
@@ -52,6 +65,11 @@ export default function ListingPage({
         staticState={staticState.controllers.sort.state}
         controller={hydratedState?.controllers.sort}
       ></Sort>
+      <Cart
+        staticState={staticState.controllers.cart.state}
+        controller={hydratedState?.controllers.cart}
+        staticContextState={staticState.controllers.context.state}
+      />
       <ProductList
         staticState={staticState.controllers.productList.state}
         controller={hydratedState?.controllers.productList}

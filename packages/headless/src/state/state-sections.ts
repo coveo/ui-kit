@@ -505,11 +505,11 @@ export interface GeneratedAnswerSection {
   generatedAnswer: GeneratedAnswerState;
 }
 
-export interface InsightUserActionSection {
+export interface InsightUserActionsSection {
   /**
-   * The insight user action state.
+   * The insight user actions state.
    */
-  insightUserAction: UserActionsState;
+  insightUserActions: UserActionsState;
 }
 
 export interface ManualRangeSection {

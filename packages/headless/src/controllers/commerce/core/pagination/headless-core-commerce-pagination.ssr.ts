@@ -14,6 +14,14 @@ import {
 
 export type {Pagination, PaginationProps, PaginationState};
 
+/**
+ * Defines a `Pagination` controller instance.
+ *
+ * @param props - The configurable `Pagination` properties.
+ * @returns The `Pagination` controller definition.
+ *
+ * @internal
+ */
 export function definePagination<
   TOptions extends ControllerDefinitionOption | undefined,
 >(props?: PaginationProps, options?: TOptions) {

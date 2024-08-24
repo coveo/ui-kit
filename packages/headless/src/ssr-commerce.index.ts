@@ -104,6 +104,36 @@ export type {ProductView} from './controllers/commerce/product-view/headless-pro
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
 
 export type {
+  Cart,
+  CartInitialState,
+  CartItem,
+  CartProps,
+  CartState,
+  CartDefinition,
+} from './controllers/commerce/context/cart/headless-cart.ssr';
+export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr';
+
+export type {
+  Context,
+  ContextOptions,
+  ContextProps,
+  ContextState,
+  View,
+  ContextDefinition,
+} from './controllers/commerce/context/headless-context.ssr';
+export {defineContext} from './controllers/commerce/context/headless-context.ssr';
+
+export type {
+  SearchBox,
+  SearchBoxOptions,
+  SearchBoxProps,
+  SearchBoxState,
+  Suggestion,
+  SearchBoxDefinition,
+} from './controllers/commerce/search-box/headless-search-box.ssr';
+export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr';
+
+export type {
   Sort,
   SortProps,
   SortState,
@@ -119,6 +149,65 @@ export type {
 } from './controllers/commerce/core/summary/headless-core-summary.ssr';
 export {defineSummary} from './controllers/commerce/core/summary/headless-core-summary.ssr';
 
+export type {
+  RecentQueriesList,
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesListInitialState,
+  RecentQueriesState,
+  RecentQueriesListDefinition,
+} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
+export {defineRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr';
+
+export type {
+  FieldSuggestions,
+  FieldSuggestionsState,
+  CategoryFieldSuggestions,
+  CategoryFieldSuggestionsState,
+  FieldSuggestionsFacet,
+  GeneratedFieldSuggestionsControllers,
+  FieldSuggestionsGenerator,
+  FieldSuggestionsGeneratorDefinition,
+} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr';
+export {defineFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr';
+
+export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+  NotifyTriggerDefinition,
+} from './controllers/commerce/triggers/headless-notify-trigger.ssr';
+export {defineNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger.ssr';
+
+export type {
+  QueryTrigger,
+  QueryTriggerState,
+  QueryTriggerDefinition,
+} from './controllers/commerce/triggers/headless-query-trigger.ssr';
+export {defineQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.ssr';
+
+export type {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+  RedirectionTriggerDefinition,
+} from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
+export {defineRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.ssr';
+
+export type {
+  StandaloneSearchBox,
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxState,
+  StandaloneSearchBoxDefinition,
+} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+export {defineStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr';
+
+export type {
+  InstantProducts,
+  InstantProductsOptions,
+  InstantProductsState,
+  InstantProductsProps,
+  InstantProductsDefinition,
+} from './controllers/commerce/instant-products/headless-instant-products.ssr';
+export {defineInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.ssr';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion

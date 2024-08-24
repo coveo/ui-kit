@@ -87,6 +87,9 @@ export const generatedAnswerReducer = createReducer(
       .addCase(resetAnswer, (state) => {
         return {
           ...getGeneratedAnswerInitialState(),
+          ...(state.answerConfigurationId
+            ? {answerConfigurationId: state.answerConfigurationId}
+            : {}),
           responseFormat: state.responseFormat,
           fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
           isVisible: state.isVisible,

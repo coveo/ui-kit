@@ -13,7 +13,11 @@ export interface ProductViewDefinition
   extends SharedControllerDefinitionWithoutProps<ProductView> {}
 
 /**
- * Defines a `ProductView` controller.
+ * Defines a `ProductView` controller instance.
+ *
+ * This controller is stateless and does not implement a `subscribe` method,
+ * making it simpler but different from other controllers in the system.
+ * Its sole purpose is to log an `ec.productView` event.
  *
  * @returns The `ProductView` controller definition.
  *
