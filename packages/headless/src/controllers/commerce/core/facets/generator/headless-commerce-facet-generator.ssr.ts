@@ -9,7 +9,10 @@ import {
 } from '../../../../../app/commerce-ssr-engine/types/common';
 import {stateKey} from '../../../../../app/state-key';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector';
-import {RegularFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {
+  AnyFacetResponse,
+  RegularFacetValue,
+} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector';
@@ -171,6 +174,15 @@ export function buildFacetGenerator(
       ? listingIsFacetLoadingResponseSelector(getEngineState())
       : searchIsFacetLoadingResponseSelector(getEngineState());
 
+  const createFacetState = (facetResponseSelector: AnyFacetResponse) => {
+    const facetId = facetResponseSelector.facetId;
+    return getCoreFacetState(
+      facetRequestSelector(getEngineState(), facetId),
+      facetResponseSelector,
+      isFacetLoadingResponseSelector
+    );
+  };
+
   const baseController =
     solutionType === SolutionType.listing
       ? buildProductListing(engine).facetGenerator()
@@ -194,7 +206,7 @@ export function buildFacetGenerator(
 
     get state() {
       const facetResponseSelectors = baseController.state
-        .map((facetId) => getFacetResponseSelector(facetId))
+        .map(getFacetResponseSelector)
         .filter((selector) => selector !== undefined);
 
       return facetResponseSelectors.map((selector) => {
@@ -203,39 +215,23 @@ export function buildFacetGenerator(
         switch (facetResponseSelector.type) {
           case 'hierarchical':
             return getCategoryFacetState(
-              getCoreFacetState(
-                facetRequestSelector(getEngineState(), facetId),
-                facetResponseSelector,
-                isFacetLoadingResponseSelector
-              ),
+              createFacetState(facetResponseSelector) as CategoryFacetState,
               categoryFacetSearchStateSelector(getEngineState(), facetId)
             );
           case 'dateRange':
             return getDateFacetState(
-              getCoreFacetState(
-                facetRequestSelector(getEngineState(), facetId),
-                facetResponseSelector,
-                isFacetLoadingResponseSelector
-              )
+              createFacetState(facetResponseSelector) as DateFacetState
             );
 
           case 'numericalRange':
             return getNumericFacetState(
-              getCoreFacetState(
-                facetRequestSelector(getEngineState(), facetId),
-                facetResponseSelector,
-                isFacetLoadingResponseSelector
-              ),
+              createFacetState(facetResponseSelector) as NumericFacetState,
               facetResponseSelector,
               manualNumericFacetSelector(getEngineState(), facetId)
             );
           case 'regular':
             return getRegularFacetState(
-              getCoreFacetState(
-                facetRequestSelector(getEngineState(), facetId),
-                facetResponseSelector,
-                isFacetLoadingResponseSelector
-              ),
+              createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
             );
         }
