@@ -21,7 +21,7 @@ import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-int
  * @internal
  * This component displays all the actions performed by a user around the time they created a case.
  * The actions are grouped into multiple sessions, including the session during which the case was created,
- * the sessions preceding the case creation, and the sessions following the case creation.
+ * the sessions preceding the case creation and the sessions following the case creation.
  *
  * @component
  * @example
@@ -49,7 +49,7 @@ export class AtomicInsightUserActionsTimeline
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created..
+   * The date and time when the case was created.
    */
   @Prop() public ticketCreationDate!: string;
 
