@@ -36,6 +36,7 @@ const selectors = {
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
   suggestionOption: '[data-cy="suggestions-option"]',
+  suggestionOptionText: '.suggestion-option__text',
   clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
 };
 
@@ -219,6 +220,18 @@ describe('c-quantic-search-box-input', () => {
               );
             expect(suggestionsListItems).not.toBeNull();
             expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsLength = mockSuggestions.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(suggestionsLength);
+            expect(suggestionOptionLabels[suggestionsLength - 1].title).toEqual(
+              mockSuggestions[suggestionsLength - 1].value
+            );
           });
         });
 
@@ -259,6 +272,22 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionsListItems.length).toEqual(
               mockSuggestions.length + exampleRecentQueries.length
             );
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsAndRecentQueriesLength =
+              mockSuggestions.length + exampleRecentQueries.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(
+              suggestionsAndRecentQueriesLength
+            );
+            expect(
+              suggestionOptionLabels[suggestionsAndRecentQueriesLength - 1]
+                .title
+            ).toEqual(mockSuggestions[mockSuggestions.length - 1].value);
           });
 
           describe('when pressing the DOWN to select a suggestion', () => {
