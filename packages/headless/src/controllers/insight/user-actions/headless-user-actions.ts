@@ -1,5 +1,6 @@
 import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {logOpenUserActions} from '../../../features/insight-search/insight-analytics-actions';
 import {
   fetchUserActions,
   registerUserActions,
@@ -16,7 +17,11 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 
-export type {UserActionsState} from '../../../features/insight-user-actions/insight-user-actions-state';
+export type {
+  UserActionsState,
+  UserAction,
+  UserSession,
+} from '../../../features/insight-user-actions/insight-user-actions-state';
 
 export interface UserActionsProps {
   /**
@@ -47,6 +52,10 @@ export interface UserActions extends Controller {
    */
   fetchUserActions(userId: string): void;
   /**
+   * Log the opening of the user actions.
+   */
+  logOpenUserActions(): void;
+  /**
    * The state of the UserActions controller.
    */
   state: UserActionsState;
@@ -75,6 +84,10 @@ export function buildUserActions(
 
     fetchUserActions(userId: string) {
       dispatch(fetchUserActions(userId));
+    },
+
+    logOpenUserActions() {
+      dispatch(logOpenUserActions());
     },
   };
 }

@@ -331,6 +331,8 @@ export type {
   UserActionsProps,
   UserActionsOptions,
   UserActions,
+  UserAction,
+  UserSession,
 } from './controllers/insight/user-actions/headless-user-actions';
 export {buildUserActions} from './controllers/insight/user-actions/headless-user-actions';
 
