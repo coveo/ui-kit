@@ -25,9 +25,20 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   get includedFacet() {
     return this.page.getByLabel(/^included-facet$/);
   }
+  get excludedModalFacet() {
+    return this.page
+      .locator('atomic-refine-modal')
+      .getByLabel(/^excluded-facet$/);
+  }
+
+  get includedModalFacet() {
+    return this.page
+      .locator('atomic-refine-modal')
+      .getByLabel(/^included-facet$/);
+  }
 
   get smartSnippet() {
-    return this.page.locator('atomic-smart-snippet [part="smart-snippet"]');
+    return this.page.getByText('Creating an In-Product Experience (IPX)');
   }
 
   get sortDropdown() {
