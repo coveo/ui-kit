@@ -62,17 +62,15 @@ test.describe('default', () => {
 
     test.only('should display the case creation session', async ({
       userActionsTimeline,
-      page,
     }) => {
       await expect(userActionsTimeline.activeSession).toBeVisible();
-      await page.waitForTimeout(35000);
     });
 
     test('should display the show following sessions button', async ({
       userActionsTimeline,
     }) => {
       await expect(
-        userActionsTimeline.showFollowingSessionsbutton
+        userActionsTimeline.showFollowingSessionsButton
       ).toBeVisible();
     });
 
@@ -80,7 +78,7 @@ test.describe('default', () => {
       userActionsTimeline,
     }) => {
       await expect(
-        userActionsTimeline.showPrecedingSessionsbutton
+        userActionsTimeline.showPrecedingSessionsButton
       ).toBeVisible();
     });
 
@@ -102,8 +100,8 @@ test.describe('default', () => {
       }) => {
         const expectedFollowingSessionsCount = 2;
 
-        await userActionsTimeline.showFollowingSessionsbutton.click();
-        await userActionsTimeline.hideFollowingSessionsbutton.waitFor({
+        await userActionsTimeline.showFollowingSessionsButton.click();
+        await userActionsTimeline.hideFollowingSessionsButton.waitFor({
           state: 'visible',
         });
 
@@ -111,8 +109,8 @@ test.describe('default', () => {
           expectedFollowingSessionsCount
         );
 
-        await userActionsTimeline.hideFollowingSessionsbutton.click();
-        await userActionsTimeline.showFollowingSessionsbutton.waitFor({
+        await userActionsTimeline.hideFollowingSessionsButton.click();
+        await userActionsTimeline.showFollowingSessionsButton.waitFor({
           state: 'visible',
         });
 
@@ -126,8 +124,8 @@ test.describe('default', () => {
       }) => {
         const expectedPrecedingSessionsCount = 2;
 
-        await userActionsTimeline.showPrecedingSessionsbutton.click();
-        await userActionsTimeline.hidePrecedingSessionsbutton.waitFor({
+        await userActionsTimeline.showPrecedingSessionsButton.click();
+        await userActionsTimeline.hidePrecedingSessionsButton.waitFor({
           state: 'visible',
         });
 
@@ -135,8 +133,8 @@ test.describe('default', () => {
           expectedPrecedingSessionsCount
         );
 
-        await userActionsTimeline.hidePrecedingSessionsbutton.click();
-        await userActionsTimeline.showPrecedingSessionsbutton.waitFor({
+        await userActionsTimeline.hidePrecedingSessionsButton.click();
+        await userActionsTimeline.showPrecedingSessionsButton.waitFor({
           state: 'visible',
         });
 
@@ -160,7 +158,7 @@ test.describe('default', () => {
 
   test.describe('when an error occurs while fetching user actions', () => {
     test.beforeEach(async ({userActionsTimeline, page}) => {
-     await userActionsTimeline.mockUserActionsError(page);
+      await userActionsTimeline.mockUserActionsError(page);
       await userActionsTimeline.load();
     });
 

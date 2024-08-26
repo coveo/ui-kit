@@ -22,6 +22,5 @@ export const Default: Story = {
   name: 'atomic-insight-user-actions-timeline',
   play: async (context) => {
     await play(context);
-    // await playExecuteFirstSearch(context);
   },
 };

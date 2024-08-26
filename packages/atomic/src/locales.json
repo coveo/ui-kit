@@ -8424,5 +8424,32 @@
     "zh": "显示以下会议",
     "zh-CN": "显示以下会议",
     "zh-TW": "顯示以下會議"
+  },
+  "empty-search": {
+    "en": "Empty search",
+    "fr": "Recherche vide",
+    "cs": "Prázdné vyhledávání",
+    "da": "Tom søgning",
+    "de": "Leere Suche",
+    "el": "Κενή αναζήτηση",
+    "es": "Búsqueda vacía",
+    "fi": "Tyhjä haku",
+    "hu": "Üres keresés",
+    "id": "Pencarian kosong",
+    "it": "Ricerca vuota",
+    "ja": "空の検索",
+    "ko": "빈 검색",
+    "nl": "Lege zoekopdracht",
+    "no": "Tom søk",
+    "pl": "Puste wyszukiwanie",
+    "pt": "Pesquisa vazia",
+    "pt-BR": "Pesquisa vazia",
+    "ru": "Пустой поиск",
+    "sv": "Tom sökning",
+    "th": "การค้นหาที่ว่างเปล่า",
+    "tr": "Boş arama",
+    "zh": "空的搜索",
+    "zh-CN": "空的搜索",
+    "zh-TW": "空的搜索"
   }
 }
