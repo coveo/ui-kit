@@ -26,18 +26,6 @@ export const Facet: FunctionComponent<FacetProps> = ({
     [controller]
   );
 
-  useEffect(() => {
-    const isActiveTabAllOrVideos =
-      tabManager?.state.activeTab === 'all' ||
-      tabManager?.state.activeTab === 'videos';
-
-    if (isActiveTabAllOrVideos && !state.enabled) {
-      controller?.enable();
-    } else if (!isActiveTabAllOrVideos && state.enabled) {
-      controller?.disable();
-    }
-  }, [state.enabled, tabManager?.state.activeTab, controller]);
-
   if (state.enabled === false) {
     return;
   }

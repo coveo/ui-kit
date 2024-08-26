@@ -39,7 +39,13 @@ export const config = {
     tabVideos: defineTab({
       options: {id: 'videos', expression: '@filetype=YouTubeVideo'},
     }),
-    authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
+    authorFacet: defineFacet({
+      options: {
+        facetId: 'author-1',
+        field: 'author',
+        tabs: {included: ['all', 'videos']},
+      },
+    }),
     searchParameterManager: defineSearchParameterManager(),
   },
 } satisfies SearchEngineDefinitionOptions<
