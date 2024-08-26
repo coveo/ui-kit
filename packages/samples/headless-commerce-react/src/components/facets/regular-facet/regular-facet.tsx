@@ -1,5 +1,8 @@
-import {RegularFacet as HeadlessRegularFacet} from '@coveo/headless/commerce';
-import {useEffect, useState} from 'react';
+import {
+  RegularFacet as HeadlessRegularFacet,
+  RegularFacetValue,
+} from '@coveo/headless/commerce';
+import {useEffect, useRef, useState} from 'react';
 
 interface IRegularFacetProps {
   controller: HeadlessRegularFacet;
@@ -9,26 +12,134 @@ export default function RegularFacet(props: IRegularFacetProps) {
   const {controller} = props;
 
   const [state, setState] = useState(controller.state);
+  const [showFacetSearchResults, setShowFacetSearchResults] = useState(false);
+
+  const facetSearchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     controller.subscribe(() => setState(controller.state));
   }, [controller]);
 
-  const renderFacetValues = () => {
+  const focusFacetSearchInput = (): void => {
+    facetSearchInputRef.current!.focus();
+  };
+
+  const onChangeFacetSearchInput = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    if (e.target.value === '') {
+      setShowFacetSearchResults(false);
+      controller.facetSearch.clear();
+      return;
+    }
+
+    controller.facetSearch.updateText(e.target.value);
+    controller.facetSearch.search();
+    setShowFacetSearchResults(true);
+  };
+
+  const highlightFacetSearchResult = (displayValue: string): string => {
+    const query = state.facetSearch.query;
+    const regex = new RegExp(query, 'gi');
+    return displayValue.replace(regex, (match) => `<mark>${match}</mark>`);
+  };
+
+  // TODO: export BaseFacetSearchResult type from @coveo/headless/commerce
+  const onClickFacetSearchResult = (value: {
+    displayValue: string;
+    rawValue: string;
+    count: number;
+  }): void => {
+    controller.facetSearch.select(value);
+    controller.facetSearch.clear();
+    setShowFacetSearchResults(false);
+    focusFacetSearchInput();
+  };
+
+  const onClickFacetSearchClear = (): void => {
+    setShowFacetSearchResults(false);
+    controller.facetSearch.clear();
+    focusFacetSearchInput();
+  };
+
+  const onClickClearSelectedFacetValues = (): void => {
+    controller.deselectAll();
+    focusFacetSearchInput();
+  };
+
+  const onClickFacetValue = (facetValue: RegularFacetValue): void => {
+    controller.toggleSelect(facetValue);
+    focusFacetSearchInput();
+  };
+
+  const renderFacetSearchControls = () => {
     return (
-      <ul className="FacetValues">
-        {state.values.map((value) => (
-          <li className="FacetValue" key={value.value}>
+      <search className="FacetSearch">
+        <label className="FacetSearchLabel" htmlFor="facetSearchInput">
+          Search:{' '}
+        </label>
+        <input
+          aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
+          className="FacetSearchInput"
+          id="facetSearchInput"
+          onChange={onChangeFacetSearchInput}
+          ref={facetSearchInputRef}
+          value={state.facetSearch.query}
+        ></input>
+        <button
+          aria-label="Clear facet search query"
+          className="FacetSearchClear"
+          disabled={
+            controller.state.facetSearch.query === '' ||
+            state.facetSearch.isLoading
+          }
+          onClick={onClickFacetSearchClear}
+          title="Clear facet search query"
+          type="reset"
+        >
+          X
+        </button>
+        {state.facetSearch.isLoading && (
+          <span className="FacetSearchLoading">
+            {' '}
+            Facet search is loading...
+          </span>
+        )}
+      </search>
+    );
+  };
+
+  const renderFacetSearchResults = () => {
+    return state.facetSearch.values.length === 0 ? (
+      <span className="FacetSearchNoResults">
+        No results for <strong>{state.facetSearch.query}</strong>
+      </span>
+    ) : (
+      <ul className="FacetSearchResults">
+        {state.facetSearch.values.map((value) => (
+          <li
+            className="FacetSearchResult"
+            key={value.rawValue}
+            onClick={() => onClickFacetSearchResult(value)}
+            style={{width: 'fit-content'}}
+          >
             <input
-              className="FacetValueCheckbox"
+              aria-label={`Select facet search result ${value.displayValue}`}
+              className="FacetSearchResultCheckbox"
+              id={value.rawValue}
               type="checkbox"
-              checked={value.state !== 'idle'}
-              onChange={() => controller.toggleSelect(value)}
             ></input>
-            <label className="FacetValueName">{value.value}</label>
-            <span className="FacetValueNumberOfResults">
+            <label className="FacetSearchResultLabel" htmlFor={value.rawValue}>
+              <span
+                className="FacetSearchResultName"
+                dangerouslySetInnerHTML={{
+                  __html: highlightFacetSearchResult(value.displayValue),
+                }}
+              ></span>
+            </label>
+            <span className="FacetSearchResultNumberOfProducts">
               {' '}
-              ({value.numberOfResults})
+              ({value.count})
             </span>
           </li>
         ))}
@@ -36,31 +147,75 @@ export default function RegularFacet(props: IRegularFacetProps) {
     );
   };
 
+  const renderFacetValues = () => {
+    return (
+      <div className="FacetValuesControls">
+        <button
+          aria-label="Clear selected facet values"
+          className="FacetClearSelected"
+          disabled={state.isLoading || !state.hasActiveValues}
+          onClick={onClickClearSelectedFacetValues}
+          title="Clear selected facet values"
+          type="reset"
+        >
+          X
+        </button>
+        {state.isLoading && (
+          <span className="FacetLoading"> Facet is loading...</span>
+        )}
+        <ul className="FacetValues">
+          {state.values.map((value) => (
+            <li className="FacetValue" key={value.value}>
+              <input
+                aria-label={`${value.state === 'idle' ? 'Select' : 'Deselect'} facet value '${value.value}'`}
+                className="FacetValueCheckbox"
+                disabled={state.isLoading}
+                id={value.value}
+                checked={value.state !== 'idle'}
+                onClick={() => onClickFacetValue(value)}
+                type="checkbox"
+              ></input>
+              <label className="FacetValueLabel" htmlFor={value.value}>
+                <span className="FacetValueName">{value.value}</span>
+                <span className="FacetValueNumberOfProducts">
+                  {' '}
+                  ({value.numberOfResults})
+                </span>
+              </label>
+            </li>
+          ))}
+        </ul>
+        <button
+          aria-label="Show more facet values"
+          className="FacetShowMore"
+          disabled={state.isLoading || !state.canShowMoreValues}
+          onClick={controller.showMoreValues}
+          title="Show more facet values"
+        >
+          +
+        </button>
+        <button
+          aria-label="Show less facet values"
+          className="FacetShowLess"
+          disabled={state.isLoading || !state.canShowLessValues}
+          onClick={controller.showLessValues}
+          title="Show less facet values"
+        >
+          -
+        </button>
+      </div>
+    );
+  };
+
   return (
-    <li className="RegularFacet">
-      <h3 className="FacetDisplayName">{state.displayName ?? state.facetId}</h3>
-      <button
-        className="FacetClear"
-        disabled={!state.hasActiveValues}
-        onClick={controller.deselectAll}
-      >
-        Clear
-      </button>
-      {renderFacetValues()}
-      <button
-        className="FacetShowMore"
-        disabled={!state.canShowMoreValues}
-        onClick={controller.showMoreValues}
-      >
-        Show more
-      </button>
-      <button
-        className="FacetShowLess"
-        disabled={!state.canShowLessValues}
-        onClick={controller.showLessValues}
-      >
-        Show less
-      </button>
-    </li>
+    <fieldset className="RegularFacet">
+      <legend className="FacetDisplayName">
+        {state.displayName ?? state.facetId}
+      </legend>
+      {renderFacetSearchControls()}
+      {showFacetSearchResults
+        ? renderFacetSearchResults()
+        : renderFacetValues()}
+    </fieldset>
   );
 }
