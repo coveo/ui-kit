@@ -40,6 +40,14 @@ export class FacetDateInput {
     this.start = range ? parseDate(range.start).toDate() : undefined;
     this.end = range ? parseDate(range.end).toDate() : undefined;
   }
+  public componentDidUpdate() {
+    if (!this.startRef.value && !this.endRef.value) {
+      this.startRef.min = this.min || this.formattedDateValue('1401-01-01');
+      this.endRef.max = this.max || '';
+      this.startRef.max = this.max || '';
+      this.endRef.min = this.min || '';
+    }
+  }
 
   private apply() {
     if (!this.startRef.validity.valid || !this.endRef.validity.valid) {
@@ -87,7 +95,7 @@ export class FacetDateInput {
 
     return (
       <form
-        class="grid gap-2 grid-cols-min-1fr mt-4 px-2"
+        class="grid-cols-min-1fr mt-4 grid gap-2 px-2"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();
@@ -138,7 +146,7 @@ export class FacetDateInput {
           placeholder={placeholder}
           pattern={pattern}
           required
-          min={this.min || this.formattedDateValue(this.start)}
+          min={this.formattedDateValue(this.start) || this.min}
           max={this.max}
           value={this.formattedDateValue(range?.end)}
           onInput={(e) =>
@@ -151,7 +159,7 @@ export class FacetDateInput {
           style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class="p-2.5 col-span-2 truncate"
+          class="col-span-2 truncate p-2.5"
           ariaLabel={applyAria}
           text={apply}
         ></Button>

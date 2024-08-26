@@ -12,28 +12,28 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "17.3.11",
-    "@angular/common": "17.3.11",
-    "@angular/compiler": "17.3.11",
-    "@angular/core": "17.3.11",
-    "@angular/forms": "17.3.11",
-    "@angular/platform-browser": "17.3.11",
-    "@angular/platform-browser-dynamic": "17.3.11",
-    "@angular/router": "17.3.11",
-    "@coveo/atomic": "2.73.0",
+    "@angular/animations": "17.3.12",
+    "@angular/common": "17.3.12",
+    "@angular/compiler": "17.3.12",
+    "@angular/core": "17.3.12",
+    "@angular/forms": "17.3.12",
+    "@angular/platform-browser": "17.3.12",
+    "@angular/platform-browser-dynamic": "17.3.12",
+    "@angular/router": "17.3.12",
+    "@coveo/atomic": "2.77.2",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.73.0"
+    "@coveo/headless": "2.79.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "17.3.8",
     "@angular/cli": "17.3.8",
-    "@angular/compiler-cli": "17.3.11",
-    "@coveo/headless": "2.73.0",
+    "@angular/compiler-cli": "17.3.12",
+    "@coveo/headless": "2.79.0",
     "@types/jasmine": "5.1.4",
-    "@types/node": "20.12.12",
-    "jasmine-core": "5.1.2",
+    "@types/node": "20.14.12",
+    "jasmine-core": "5.2.0",
     "karma": "6.4.3",
     "karma-chrome-launcher": "3.2.0",
     "karma-coverage": "2.2.1",
@@ -41,6 +41,6 @@
     "karma-jasmine-html-reporter": "2.1.0",
     "ncp": "2.0.0",
     "ng-packagr": "17.3.0",
-    "typescript": "5.3.3"
+    "typescript": "5.4.5"
   }
 }

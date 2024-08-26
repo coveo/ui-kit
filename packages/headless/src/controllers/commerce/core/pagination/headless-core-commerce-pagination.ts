@@ -22,7 +22,7 @@ import {
 import {FetchProductsActionCreator} from '../common';
 
 /**
- * The `Pagination` controller is responsible for navigating between pages of results in a commerce interface.
+ * The `Pagination` sub-controller is responsible for navigating between pages of results in a commerce interface.
  *
  * @group Sub-controllers
  * @category Pagination
@@ -58,7 +58,7 @@ export interface Pagination extends Controller {
   fetchMoreProducts(): void;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Pagination` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Pagination` sub-controller.
    */
   state: PaginationState;
 }
@@ -114,10 +114,10 @@ const optionsSchema = new Schema({
 
 /**
  * @internal
- * Creates a `Pagination` controller instance.
+ * Creates a `Pagination` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `Pagination` controller properties.
+ * @param props - The configurable `Pagination` sub-controller properties.
  * @returns A `Pagination` controller instance.
  *
  * @group Sub-controllers

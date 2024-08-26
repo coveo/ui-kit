@@ -12,6 +12,9 @@ import {
   Breadcrumb,
   CategoryFacetValue,
   BreadcrumbValue,
+  Context,
+  ContextState,
+  buildContext,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -30,7 +33,10 @@ import {BreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {BreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
 import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
-import {defaultNumberFormatter} from '../../common/formats/format-common';
+import {
+  defaultCurrencyFormatter,
+  defaultNumberFormatter,
+} from '../../common/formats/format-common';
 import {Hidden} from '../../common/hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
@@ -78,6 +84,9 @@ export class AtomicCommerceBreadbox
 
   @Element() private host!: HTMLElement;
 
+  public context!: Context;
+  @BindStateToController('context') contextState!: ContextState;
+
   public searchOrListing!: Search | ProductListing;
 
   @BindStateToController('breadcrumbManager')
@@ -116,6 +125,8 @@ export class AtomicCommerceBreadbox
     } else {
       this.searchOrListing = buildSearch(this.bindings.engine);
     }
+
+    this.context = buildContext(this.bindings.engine);
 
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 
@@ -237,6 +248,13 @@ export class AtomicCommerceBreadbox
     );
   }
 
+  private getNumberFormatter(field: string) {
+    if (field === 'ec_price' || field === 'ec_promo_price') {
+      return defaultCurrencyFormatter(this.contextState.currency);
+    }
+    return defaultNumberFormatter;
+  }
+
   private valueForFacetType = (
     type: string,
     field: string,
@@ -251,7 +269,7 @@ export class AtomicCommerceBreadbox
             i18n: this.bindings.i18n,
             field: field,
             manualRanges: [],
-            formatter: defaultNumberFormatter,
+            formatter: this.getNumberFormatter(field),
           }),
         ];
       case 'dateRange':

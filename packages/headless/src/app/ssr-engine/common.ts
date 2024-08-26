@@ -1,4 +1,4 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers/controller/headless-controller';
 import {clone, mapObject} from '../../utils/utils';
 import {CoreEngine, CoreEngineNext} from '../engine';
@@ -57,23 +57,20 @@ export function buildControllerDefinitions<
   ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
-export function createStaticState<
-  TSearchAction extends AnyAction,
-  TControllers extends ControllersMap,
->({
+export function createStaticState<TSearchAction extends UnknownAction>({
   searchAction,
   controllers,
 }: {
   searchAction: TSearchAction;
-  controllers: TControllers;
+  controllers: ControllersMap;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromControllers<TControllers>
+  InferControllerStaticStateMapFromControllers<ControllersMap>
 > {
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromControllers<TControllers>,
+    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
     searchAction: clone(searchAction),
   };
 }

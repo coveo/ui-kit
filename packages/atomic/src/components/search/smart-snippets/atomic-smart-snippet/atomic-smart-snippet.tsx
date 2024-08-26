@@ -1,16 +1,22 @@
 import {
   buildSmartSnippet,
+  buildTabManager,
   InlineLink,
   SmartSnippet,
   SmartSnippetState,
+  TabManager,
+  TabManagerState,
 } from '@coveo/headless';
-import {Component, Prop, State, Element, Listen} from '@stencil/core';
+import {Component, Prop, State, Element, Listen, h} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
+import {ArrayProp} from '../../../../utils/props-utils';
+import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
+import {Hidden} from '../../../common/hidden';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -65,6 +71,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @BindStateToController('smartSnippet')
   @State()
   public smartSnippetState!: SmartSnippetState;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   public error!: Error;
   @Element() public host!: HTMLElement;
   private id = randomID();
@@ -99,6 +109,32 @@ export class AtomicSmartSnippet implements InitializableComponent {
    * ```
    */
   @Prop({reflect: true}) snippetStyle?: string;
+
+  /**
+   * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet>
+   * ```
+   * If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet>
+   * ```
+   * If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
 
   @State() feedbackSent = false;
 
@@ -150,6 +186,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.bindings.store.waitUntilAppLoaded(() =>
       this.smartSnippetCommon.hideDuringRender(false)
     );
+    this.tabManager = buildTabManager(this.bindings.engine);
   }
 
   private setModalRef(ref: HTMLElement) {
@@ -173,6 +210,15 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public render() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      return <Hidden></Hidden>;
+    }
     return this.smartSnippetCommon.render();
   }
 }

@@ -50,6 +50,7 @@ export interface FacetGenerator extends Controller {
 
   /**
    * The facet sub-controllers created by the facet generator.
+   * Array of [RegularFacet](./regular-facet), [DateRangeFacet](./date-range-facet), [NumericFacet](./numeric-facet), and [CategoryFacet](./category-facet).
    */
   facets: GeneratedFacetControllers;
 

@@ -1,4 +1,4 @@
-// eslint-disable-next-line node/no-extraneous-import
+// eslint-disable-next-line n/no-extraneous-import
 import {backOff} from 'exponential-backoff';
 import * as fs from 'fs';
 import * as path from 'path';

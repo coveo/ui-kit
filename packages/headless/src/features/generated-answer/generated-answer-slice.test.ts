@@ -80,6 +80,7 @@ describe('generated answer slice', () => {
       const newCitations = [
         buildMockCitation({
           id: 'some-other-id',
+          uri: 'my-uri',
         }),
       ];
       const finalState = generatedAnswerReducer(
@@ -94,6 +95,30 @@ describe('generated answer slice', () => {
         ...existingCitations,
         ...newCitations,
       ]);
+    });
+
+    it('Shows only citations that have different Uris', () => {
+      const existingCitations = [
+        buildMockCitation({
+          id: 'current-id',
+          uri: 'my-uri',
+        }),
+      ];
+      const newCitations = [
+        buildMockCitation({
+          id: 'some-other-id',
+          uri: 'my-uri',
+        }),
+      ];
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          citations: existingCitations,
+        },
+        updateCitations({citations: newCitations})
+      );
+
+      expect(finalState.citations).toEqual([...newCitations]);
     });
   });
 
@@ -235,6 +260,15 @@ describe('generated answer slice', () => {
 
       expect(finalState.responseFormat).toEqual(responseFormat);
     });
+  });
+  it('should not reset the configuration id', () => {
+    const state = {
+      ...baseState,
+      answerConfigurationId: 'some-id',
+    };
+
+    const finalState = generatedAnswerReducer(state, resetAnswer());
+    expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
   test.each(generatedContentFormat)(
