@@ -23,7 +23,7 @@ export interface InitializationOptions {
    *
    * For example: `https://orgid.admin.org.coveo.com`
    *
-   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
+   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/v2/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
    *
    * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
    */

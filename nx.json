@@ -129,7 +129,7 @@
       ]
     }
   },
-  "defaultBase": "master",
+  "defaultBase": "v2",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "useInferencePlugins": false
 }

@@ -16,7 +16,7 @@ import {
  * @ProductContext() private product!: Product;
  * ```
  *
- * For more information and examples, view the [Utilities section](https://github.com/coveo/ui-kit/tree/master/packages/atomic#utilities) of the Coveo Atomic README.
+ * For more information and examples, view the [Utilities section](https://github.com/coveo/ui-kit/tree/v2/packages/atomic#utilities) of the Coveo Atomic README.
  */
 export function ProductContext(opts: {folded: boolean} = {folded: false}) {
   return ItemContext({parentName: 'atomic-product', folded: opts.folded});

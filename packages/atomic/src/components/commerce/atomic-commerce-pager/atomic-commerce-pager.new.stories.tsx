@@ -33,9 +33,9 @@ export const CustomIcon: Story = {
   tags: ['commerce'],
   args: {
     'attributes-previous-button-icon':
-      'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
+      'https://raw.githubusercontent.com/coveo/ui-kit/v2/packages/atomic/src/images/arrow-top-rounded.svg',
     'attributes-next-button-icon':
-      'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
+      'https://raw.githubusercontent.com/coveo/ui-kit/v2/packages/atomic/src/images/arrow-top-rounded.svg',
   },
   play: async (context) => {
     await play(context);
