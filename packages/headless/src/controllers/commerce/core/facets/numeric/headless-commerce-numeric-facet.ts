@@ -150,7 +150,10 @@ export const getNumericFacetState = (
   return {
     ...coreState,
     ...(response?.domain && {
-      domain: response.domain,
+      domain: {
+        min: response.domain.min,
+        max: response.domain.max,
+      },
     }),
     ...(manualFacetRangeSelector && {manualRange: manualFacetRangeSelector}),
     type: 'numericalRange',
