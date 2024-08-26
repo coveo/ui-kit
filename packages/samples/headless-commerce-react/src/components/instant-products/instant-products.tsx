@@ -39,23 +39,26 @@ export default function InstantProducts(props: IInstantProductProps) {
 
   return (
     <div className="InstantProducts">
-      {state.products.length === 0 && (
-        <span>
+      {state.products.length === 0 ? (
+        <p className="NoInstantProducts">
           No instant products for query <b>{state.query}</b>
-        </span>
+        </p>
+      ) : (
+        <>
+          <p>
+            Instant products for query <b>{state.query}</b>
+          </p>
+          <ul className="InstantProducts">
+            {state.products.map((product, index) => (
+              <li className="Product" key={index}>
+                <button onClick={() => onClickProduct(product)}>
+                  {product.ec_name} ({product.ec_product_id})
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
-      <p>
-        Instant products for query <b>{state.query}</b>
-      </p>
-      <ul className="InstantProducts">
-        {state.products.map((product, index) => (
-          <li className="Product" key={index}>
-            <button onClick={() => onClickProduct(product)}>
-              {product.ec_name} ({product.ec_product_id})
-            </button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
