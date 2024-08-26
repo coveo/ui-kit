@@ -24,22 +24,6 @@ declare global {
 
 export function insertLinkAndSearchBox() {
   document.addEventListener('DOMContentLoaded', () => {
-    try {
-      const generateLinkElement = document.querySelector('.tsd-generator a');
-      const link = document.createElement('a');
-      Object.assign(link, {
-        href: 'https://github.com/dmnsgn/typedoc-material-theme',
-        target: '_blank',
-        innerText: 'typedoc-material-theme.',
-      });
-      if (generateLinkElement) {
-        generateLinkElement.insertAdjacentElement('afterend', link);
-        generateLinkElement.insertAdjacentText('afterend', ' with ');
-      }
-    } catch (error) {
-      /* empty */
-    }
-
     // Insert Atomic search box in the header
     const tsdSearch = document.getElementById('tsd-search');
     if (tsdSearch) {
