@@ -19,10 +19,8 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
-import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
-import {Hidden} from '../../../common/hidden';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
   DisplayTableData,
@@ -44,6 +42,7 @@ import {
   ItemTarget,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
+import {TabGuard} from '../../../common/tab-manager/tab-guard';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -212,46 +211,43 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public render() {
-    if (
-      !shouldDisplayOnCurrentTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState.activeTab
-      )
-    ) {
-      return <Hidden></Hidden>;
-    }
     this.resultListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
     return (
-      <ItemListGuard
-        hasError={this.resultListState.hasError}
-        hasTemplate={this.resultTemplateRegistered}
-        templateHasError={this.itemTemplateProvider.hasError}
-        firstRequestExecuted={this.resultListState.firstSearchExecuted}
-        hasItems={this.resultListState.hasResults}
+      <TabGuard
+        tabsIncluded={this.tabsIncluded}
+        tabsExcluded={this.tabsExcluded}
+        activeTab={this.tabManagerState.activeTab}
       >
-        <DisplayWrapper display={this.display} listClasses={listClasses}>
-          <ResultsPlaceholdersGuard
-            density={this.density}
-            display={this.display}
-            imageSize={this.imageSize}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
-            numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
-          ></ResultsPlaceholdersGuard>
-          <ItemDisplayGuard
-            firstRequestExecuted={this.resultListState.firstSearchExecuted}
-            hasItems={this.resultListState.hasResults}
-          >
-            {this.display === 'table'
-              ? this.renderAsTable()
-              : this.display === 'grid'
-                ? this.renderAsGrid()
-                : this.renderAsList()}
-          </ItemDisplayGuard>
-        </DisplayWrapper>
-      </ItemListGuard>
+        <ItemListGuard
+          hasError={this.resultListState.hasError}
+          hasTemplate={this.resultTemplateRegistered}
+          templateHasError={this.itemTemplateProvider.hasError}
+          firstRequestExecuted={this.resultListState.firstSearchExecuted}
+          hasItems={this.resultListState.hasResults}
+        >
+          <DisplayWrapper display={this.display} listClasses={listClasses}>
+            <ResultsPlaceholdersGuard
+              density={this.density}
+              display={this.display}
+              imageSize={this.imageSize}
+              displayPlaceholders={!this.bindings.store.isAppLoaded()}
+              numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
+            ></ResultsPlaceholdersGuard>
+            <ItemDisplayGuard
+              firstRequestExecuted={this.resultListState.firstSearchExecuted}
+              hasItems={this.resultListState.hasResults}
+            >
+              {this.display === 'table'
+                ? this.renderAsTable()
+                : this.display === 'grid'
+                  ? this.renderAsGrid()
+                  : this.renderAsList()}
+            </ItemDisplayGuard>
+          </DisplayWrapper>
+        </ItemListGuard>
+      </TabGuard>
     );
   }
 
