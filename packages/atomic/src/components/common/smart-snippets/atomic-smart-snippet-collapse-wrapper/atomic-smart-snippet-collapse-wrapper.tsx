@@ -66,13 +66,13 @@ export class AtomicSmartSnippetCollapseWrapper {
     return (
       <button
         onClick={() => (this.isExpanded = !this.isExpanded)}
-        class="text-primary hover:underline mb-4"
+        class="text-primary mb-4 hover:underline"
         part={this.isExpanded ? 'show-less-button' : 'show-more-button'}
       >
         {this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}
         <atomic-icon
           icon={ArrowDown}
-          class="w-3 ml-2 align-baseline"
+          class="ml-2 w-3 align-baseline"
         ></atomic-icon>
       </button>
     );

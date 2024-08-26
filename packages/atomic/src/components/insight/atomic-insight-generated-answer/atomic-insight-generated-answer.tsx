@@ -60,7 +60,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
- * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-insight-generated-answer',
@@ -118,6 +117,12 @@ export class AtomicInsightGeneratedAnswer
    */
   @Prop() collapsible?: boolean;
 
+  /**
+   * Whether to render the rephrase buttons that lets the user rephrase the answer.
+   * @default false
+   */
+  @Prop() withRephraseButtons?: boolean;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -130,6 +135,7 @@ export class AtomicInsightGeneratedAnswer
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      withRephraseButtons: this.withRephraseButtons,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,

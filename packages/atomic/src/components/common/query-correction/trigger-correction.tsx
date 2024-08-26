@@ -17,7 +17,7 @@ export const TriggerCorrection: FunctionalComponent<TriggerCorrectionProps> = ({
   return (
     <Fragment>
       <p
-        class="text-on-background leading-6 text-lg"
+        class="text-on-background text-lg leading-6"
         part="showing-results-for"
       >
         <LocalizedString
@@ -27,7 +27,7 @@ export const TriggerCorrection: FunctionalComponent<TriggerCorrectionProps> = ({
         />
       </p>
       <p
-        class="text-on-background leading-5 text-base"
+        class="text-on-background text-base leading-5"
         part="search-instead-for"
       >
         <LocalizedString
