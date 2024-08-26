@@ -42,6 +42,7 @@ export * from './features/attached-results/attached-results-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
 export * from './features/question-answering/question-answering-actions-loader';
 export * from './features/folding/folding-actions-loader';
+export * from './features/insight-user-actions/insight-user-actions-loader';
 
 // Controllers
 export type {
@@ -324,6 +325,15 @@ export type {
 } from './controllers/insight/generated-answer/headless-insight-interactive-citation';
 export {buildInteractiveCitation} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
 export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
+
+export type {
+  UserActionsState,
+  UserActionsProps,
+  UserActionsOptions,
+  UserActions,
+} from './controllers/insight/user-actions/headless-user-actions';
+export {buildUserActions} from './controllers/insight/user-actions/headless-user-actions';
+
 // Features
 export type {
   ResultTemplate,
