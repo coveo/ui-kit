@@ -132,7 +132,7 @@ export default function SearchBox(props: ISearchBoxProps) {
   };
 
   return (
-    <search className="Searchbox">
+    <div className="Searchbox">
       <input
         className="SearchBoxInput"
         onChange={onSearchBoxInputChange}
@@ -163,6 +163,6 @@ export default function SearchBox(props: ISearchBoxProps) {
         Search
       </button>
       {isDropdownVisible && renderDropdown()}
-    </search>
+    </div>
   );
 }

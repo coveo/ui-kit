@@ -72,7 +72,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
 
   const renderFacetSearchControls = () => {
     return (
-      <search className="FacetSearch">
+      <div className="FacetSearch">
         <label className="FacetSearchLabel" htmlFor="facetSearchInput">
           Search:{' '}
         </label>
@@ -100,7 +100,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
             Facet search is loading...
           </span>
         )}
-      </search>
+      </div>
     );
   };
 

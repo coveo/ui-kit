@@ -70,7 +70,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
 
   const renderFacetSearchControls = () => {
     return (
-      <search className="FacetSearch">
+      <div className="FacetSearch">
         <label className="FacetSearchLabel" htmlFor="facetSearchInput">
           Search:{' '}
         </label>
@@ -98,7 +98,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
             Facet search is loading...
           </span>
         )}
-      </search>
+      </div>
     );
   };
 
