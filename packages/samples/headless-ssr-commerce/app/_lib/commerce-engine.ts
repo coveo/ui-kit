@@ -7,8 +7,17 @@ import engineConfig from './commerce-engine-config';
 
 const engineDefinition = defineCommerceEngine(engineConfig);
 
-// TODO: only supporting Listing static state for now (KIT-3394)
-export type ListingStaticState = InferStaticState<typeof engineDefinition>;
-export type ListingHydratedState = InferHydratedState<typeof engineDefinition>;
+export const {listingEngineDefinition, searchEngineDefinition} =
+  engineDefinition;
 
-export const {fetchStaticState, hydrateStaticState} = engineDefinition;
+export type ListingStaticState = InferStaticState<
+  typeof listingEngineDefinition
+>;
+export type ListingHydratedState = InferHydratedState<
+  typeof listingEngineDefinition
+>;
+
+export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+export type SearchHydratedState = InferHydratedState<
+  typeof searchEngineDefinition
+>;
