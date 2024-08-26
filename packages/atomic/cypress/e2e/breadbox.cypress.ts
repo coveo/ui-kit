@@ -271,7 +271,7 @@ describe('Breadbox Test Suites', () => {
   });
 
   describe('when excluding from a standard facet', () => {
-    const selectionIndex = 2;
+    const selectionIndex = 1;
 
     function setupFacetWithMultipleExcludedValues() {
       new TestFixture()
