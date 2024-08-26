@@ -34,12 +34,12 @@ export const purchase = createAction('commerce/cart/purchase');
 
 export type PurchasePayload = Transaction;
 
-export const emitPurchase = createAsyncThunk<
+export const emitPurchaseEvent = createAsyncThunk<
   void,
   PurchasePayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
 >(
-  'commerce/cart/emit/purchase',
+  'commerce/cart/emit/purchaseEvent',
   async (payload: PurchasePayload, {extra, getState}) => {
     const relayPayload = getECPurchasePayload(payload, getState());
     const {relay} = extra;
@@ -50,12 +50,12 @@ export const emitPurchase = createAsyncThunk<
 
 export type CartActionPayload = CartActionDetails;
 
-export const emitCartAction = createAsyncThunk<
+export const emitCartActionEvent = createAsyncThunk<
   void,
   CartActionPayload,
   AsyncThunkCommerceOptions<CommerceEngineState>
 >(
-  'commerce/cart/emit/cartAction',
+  'commerce/cart/emit/cartActionEvent',
   async (payload: CartActionPayload, {extra, getState}) => {
     const relayPayload = getECCartActionPayload(payload, getState());
     const {relay} = extra;

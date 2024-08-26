@@ -2,8 +2,8 @@ import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {
   CartActionPayload,
-  emitCartAction,
-  emitPurchase,
+  emitCartActionEvent,
+  emitPurchaseEvent,
   purchase,
   setItems,
   updateItemQuantity,
@@ -211,7 +211,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     purchase(transaction: Transaction) {
-      dispatch(emitPurchase(transaction));
+      dispatch(emitPurchaseEvent(transaction));
       dispatch(purchase());
     },
 
@@ -224,7 +224,9 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
 
       if (isNewQuantityDifferent(item, prevItem)) {
-        dispatch(emitCartAction(createEcCartActionPayload(item, prevItem)));
+        dispatch(
+          emitCartActionEvent(createEcCartActionPayload(item, prevItem))
+        );
       }
 
       dispatch(updateItemQuantity(item));

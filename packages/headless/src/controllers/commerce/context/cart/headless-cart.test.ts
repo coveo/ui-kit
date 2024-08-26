@@ -1,6 +1,6 @@
 import {
-  emitCartAction,
-  emitPurchase,
+  emitCartActionEvent,
+  emitPurchaseEvent,
   purchase,
   setItems,
   updateItemQuantity,
@@ -123,11 +123,11 @@ describe('headless commerce cart', () => {
 
     it('dispatches #emitPurchase with the transaction payload', () => {
       jest.mocked(itemsSelector).mockReturnValue([]);
-      const mockedEmitPurchase = jest.mocked(emitPurchase);
+      const mockedEmitPurchaseEvent = jest.mocked(emitPurchaseEvent);
       const transaction = {id: 'transaction-id', revenue: 0};
       cart.purchase(transaction);
 
-      expect(mockedEmitPurchase).toHaveBeenCalledWith(transaction);
+      expect(mockedEmitPurchaseEvent).toHaveBeenCalledWith(transaction);
     });
 
     it('dispatches #purchase', () => {
@@ -176,9 +176,9 @@ describe('headless commerce cart', () => {
       action: 'add' | 'remove',
       quantity: number | undefined = undefined
     ) => {
-      const mockedEmitCartAction = jest.mocked(emitCartAction);
-      expect(mockedEmitCartAction).toHaveBeenCalledTimes(1);
-      expect(mockedEmitCartAction).toHaveBeenCalledWith(
+      const mockedEmitCartActionEvent = jest.mocked(emitCartActionEvent);
+      expect(mockedEmitCartActionEvent).toHaveBeenCalledTimes(1);
+      expect(mockedEmitCartActionEvent).toHaveBeenCalledWith(
         getExpectedCartActionPayload(action, quantity)
       );
     };
@@ -227,7 +227,7 @@ describe('headless commerce cart', () => {
 
     it('dispatches #updateItemQuantity but does not dispatch #emitCartAction when the item.quantity = cartItem.quantity but item != cartItem', () => {
       const mockedUpdateItem = jest.mocked(updateItemQuantity);
-      const mockedEmitCartAction = jest.mocked(emitCartAction);
+      const mockedEmitCartActionEvent = jest.mocked(emitCartActionEvent);
       jest
         .mocked(itemSelector)
         .mockReturnValue({...productWithQuantity(3), name: 'bap'});
@@ -235,7 +235,7 @@ describe('headless commerce cart', () => {
       cart.updateItemQuantity(productWithQuantity(3));
 
       expect(mockedUpdateItem).toHaveBeenCalledTimes(1);
-      expect(mockedEmitCartAction).toHaveBeenCalledTimes(0);
+      expect(mockedEmitCartActionEvent).toHaveBeenCalledTimes(0);
     });
 
     it('dispatches #emitCartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => {

@@ -9,8 +9,8 @@ import {
   PurchasePayload,
   SetItemsPayload,
   UpdateItemQuantityPayload,
-  emitCartAction,
-  emitPurchase,
+  emitCartActionEvent,
+  emitPurchaseEvent,
   purchase,
   setItems,
   updateItemQuantity,
@@ -36,7 +36,7 @@ export interface CartActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  emitPurchase(
+  emitPurchaseEvent(
     payload: PurchasePayload
   ): AsyncThunkAction<
     void,
@@ -69,7 +69,7 @@ export interface CartActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  emitCartAction(
+  emitCartActionEvent(
     payload: CartActionPayload
   ): AsyncThunkAction<
     void,
@@ -99,8 +99,8 @@ export interface CartActionCreators {
 export function loadCartActions(engine: CommerceEngine): CartActionCreators {
   engine.addReducers({cart});
   return {
-    emitPurchase,
-    emitCartAction,
+    emitPurchaseEvent,
+    emitCartActionEvent,
     purchase,
     setItems,
     updateItemQuantity,
