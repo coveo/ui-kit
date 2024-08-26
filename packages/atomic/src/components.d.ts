@@ -617,6 +617,10 @@ export namespace Components {
          */
         "previousPage": () => Promise<void>;
         /**
+          * The unique identifier of the product to use for seeded recommendations.
+         */
+        "productId"?: string;
+        /**
           * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
          */
         "productsPerPage"?: number;
@@ -6325,6 +6329,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed on the recommended products.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The unique identifier of the product to use for seeded recommendations.
+         */
+        "productId"?: string;
         /**
           * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
          */
