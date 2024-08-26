@@ -99,6 +99,7 @@ export default function NumericFacet(props: INumericFacetProps) {
         <input
           aria-label="Manual range start"
           className="ManualRangeStartInput"
+          disabled={state.isLoading}
           id="manualRangeStart"
           ref={manualRangeStartInputRef}
           type="number"
@@ -111,6 +112,7 @@ export default function NumericFacet(props: INumericFacetProps) {
         <input
           aria-label="Manual range end"
           className="ManualRangeEndInput"
+          disabled={state.isLoading}
           id="manualRangeEnd"
           type="number"
           value={currentManualRange.end}
@@ -119,9 +121,8 @@ export default function NumericFacet(props: INumericFacetProps) {
         <button
           aria-label="Select manual range"
           className="ManualRangeSelect"
-          disabled={invalidRange}
+          disabled={state.isLoading || invalidRange}
           onClick={onClickManualRangeSelect}
-          title="Select manual range"
           type="submit"
         >
           ✓
@@ -138,7 +139,6 @@ export default function NumericFacet(props: INumericFacetProps) {
           className="FacetClear"
           disabled={state.isLoading || !state.hasActiveValues}
           onClick={onClickClearSelectedFacetValues}
-          title="Clear selected facet values"
           type="reset"
         >
           X
@@ -151,6 +151,7 @@ export default function NumericFacet(props: INumericFacetProps) {
               <li className="FacetValue" key={index}>
                 <input
                   className="FacetValueCheckbox"
+                  disabled={state.isLoading}
                   id={checkboxId}
                   type="checkbox"
                   checked={value.state !== 'idle'}
@@ -174,7 +175,6 @@ export default function NumericFacet(props: INumericFacetProps) {
           className="FacetShowMore"
           disabled={state.isLoading || !state.canShowMoreValues}
           onClick={controller.showMoreValues}
-          title="Show more facet values"
         >
           +
         </button>
@@ -183,7 +183,6 @@ export default function NumericFacet(props: INumericFacetProps) {
           className="FacetShowLess"
           disabled={state.isLoading || !state.canShowLessValues}
           onClick={controller.showLessValues}
-          title="Show less facet values"
         >
           -
         </button>

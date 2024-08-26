@@ -1,5 +1,6 @@
 import {
   RegularFacet as HeadlessRegularFacet,
+  RegularFacetSearchResult,
   RegularFacetValue,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
@@ -44,12 +45,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
     return displayValue.replace(regex, (match) => `<mark>${match}</mark>`);
   };
 
-  // TODO: export BaseFacetSearchResult type from @coveo/headless/commerce
-  const onClickFacetSearchResult = (value: {
-    displayValue: string;
-    rawValue: string;
-    count: number;
-  }): void => {
+  const onClickFacetSearchResult = (value: RegularFacetSearchResult): void => {
     controller.facetSearch.select(value);
     controller.facetSearch.clear();
     setShowFacetSearchResults(false);
@@ -81,6 +77,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
         <input
           aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
           className="FacetSearchInput"
+          disabled={state.isLoading}
           id="facetSearchInput"
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
@@ -89,12 +86,8 @@ export default function RegularFacet(props: IRegularFacetProps) {
         <button
           aria-label="Clear facet search query"
           className="FacetSearchClear"
-          disabled={
-            controller.state.facetSearch.query === '' ||
-            state.facetSearch.isLoading
-          }
+          disabled={state.isLoading || state.facetSearch.query === ''}
           onClick={onClickFacetSearchClear}
-          title="Clear facet search query"
           type="reset"
         >
           X
@@ -126,6 +119,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
             <input
               aria-label={`Select facet search result ${value.displayValue}`}
               className="FacetSearchResultCheckbox"
+              disabled={state.isLoading}
               id={value.rawValue}
               type="checkbox"
             ></input>
@@ -155,7 +149,6 @@ export default function RegularFacet(props: IRegularFacetProps) {
           className="FacetClearSelected"
           disabled={state.isLoading || !state.hasActiveValues}
           onClick={onClickClearSelectedFacetValues}
-          title="Clear selected facet values"
           type="reset"
         >
           X
@@ -190,7 +183,6 @@ export default function RegularFacet(props: IRegularFacetProps) {
           className="FacetShowMore"
           disabled={state.isLoading || !state.canShowMoreValues}
           onClick={controller.showMoreValues}
-          title="Show more facet values"
         >
           +
         </button>
@@ -199,7 +191,6 @@ export default function RegularFacet(props: IRegularFacetProps) {
           className="FacetShowLess"
           disabled={state.isLoading || !state.canShowLessValues}
           onClick={controller.showLessValues}
-          title="Show less facet values"
         >
           -
         </button>

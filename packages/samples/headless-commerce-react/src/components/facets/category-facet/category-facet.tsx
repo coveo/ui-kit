@@ -58,7 +58,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
     focusFacetSearchInput();
   };
 
-  const onClickClearSelectedFacetValues = (): void => {
+  const onClickClearSelectedFacetValue = (): void => {
     controller.deselectAll();
     focusFacetSearchInput();
   };
@@ -79,6 +79,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         <input
           aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
           className="FacetSearchInput"
+          disabled={state.isLoading}
           id="facetSearchInput"
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
@@ -87,12 +88,8 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         <button
           aria-label="Clear facet search query"
           className="FacetSearchClear"
-          disabled={
-            controller.state.facetSearch.query === '' ||
-            state.facetSearch.isLoading
-          }
+          disabled={state.isLoading || state.facetSearch.query === ''}
           onClick={onClickClearFacetSearch}
-          title="Clear facet search query"
           type="reset"
         >
           X
@@ -124,6 +121,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
             <input
               aria-label={`Select facet search result '${value.displayValue}' in category '${value.path.join(' / ')}'`}
               className="FacetSearchResultCheckbox"
+              disabled={state.isLoading}
               id={value.rawValue}
               type="checkbox"
             ></input>
@@ -171,6 +169,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
               <input
                 checked={controller.isValueSelected(ancestryValue)}
                 className="FacetValueCheckbox"
+                disabled={state.isLoading}
                 id={checkboxId}
                 onChange={() => toggleSelectFacetValue(ancestryValue)}
                 type="checkbox"
@@ -194,6 +193,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
                   <input
                     checked={false}
                     className="FacetValueCheckbox"
+                    disabled={state.isLoading}
                     id={checkboxId}
                     type="checkbox"
                     onChange={() => toggleSelectFacetValue(child)}
@@ -228,6 +228,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
                 className="FacetValueCheckbox"
                 type="checkbox"
                 checked={false}
+                disabled={state.isLoading}
                 onChange={() => toggleSelectFacetValue(root)}
               ></input>
               <label className="FacetValueName">{root.value}</label>
@@ -246,11 +247,10 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
     return (
       <div className="FacetValues">
         <button
-          aria-label="Clear selected facet values"
+          aria-label="Clear selected facet value"
           className="FacetClear"
           disabled={state.isLoading || !state.hasActiveValues}
-          onClick={onClickClearSelectedFacetValues}
-          title="Clear selected facet values"
+          onClick={onClickClearSelectedFacetValue}
           type="reset"
         >
           X
@@ -262,7 +262,6 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
           className="FacetShowMore"
           disabled={state.isLoading || !state.canShowMoreValues}
           onClick={controller.showMoreValues}
-          title="Show more facet values"
         >
           +
         </button>
@@ -271,7 +270,6 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
           className="FacetShowLess"
           disabled={state.isLoading || !state.canShowLessValues}
           onClick={controller.showLessValues}
-          title="Show less facet values"
         >
           -
         </button>
