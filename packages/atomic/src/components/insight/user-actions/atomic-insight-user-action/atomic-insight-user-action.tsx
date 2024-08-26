@@ -34,15 +34,12 @@ export const AtomicInsightUserAction: FunctionalComponent<
   };
 
   const renderIcon = () => {
-    const iconClasses = ['w-3', 'h-3'];
-    if (['CLICK', 'VIEW'].includes(action.actionType)) {
-      iconClasses.push('text-primary');
-    }
+    const iconClasses = `w-3 h-3 ${['CLICK', 'VIEW'].includes(action.actionType) ? 'text-primary' : ''}`;
 
     return (
       <atomic-icon
         icon={icons[action.actionType]}
-        class={iconClasses.join(' ')}
+        class={iconClasses}
       ></atomic-icon>
     );
   };
@@ -50,7 +47,7 @@ export const AtomicInsightUserAction: FunctionalComponent<
   const renderActionTitle = () => {
     if (action.actionType === 'TICKET_CREATION') {
       return (
-        <div class="text-xs font-semibold">
+        <div class="ticket-creation-action__text text-xs font-semibold">
           {bindings.i18n.t('ticket-created')}
         </div>
       );
@@ -61,7 +58,11 @@ export const AtomicInsightUserAction: FunctionalComponent<
         </div>
       );
     } else if (action.actionType === 'SEARCH') {
-      return <div class="text-xs font-semibold">{action.query}</div>;
+      return (
+        <div class="text-xs font-semibold">
+          {action.query || bindings.i18n.t('empty-search')}
+        </div>
+      );
     } else if (action.actionType === 'VIEW') {
       return (
         <a

@@ -4,6 +4,7 @@ import Flag from '../../../../images/flag.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {Button} from '../../../common/button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 import {AtomicInsightUserAction} from '../atomic-insight-user-action/atomic-insight-user-action';
 
@@ -108,24 +109,25 @@ export class AtomicInsightUserActionsSession {
   }
 
   renderShowMoreActionsButton() {
+    const btnClasses = 'flex items-center p-1 max-w-full';
+    const label = this.bindings.i18n.t('more-actions-in-session', {
+      count: this.userActionsAfterCaseCreation.length,
+    });
     return (
-      <div class="px-3 pb-3">
-        <div class="flex items-center">
-          <div class="flex-none pr-2">
-            <div class="flex justify-center py-1">
-              <atomic-icon icon={ThreeDotsIcon} class="h-3 w-3"></atomic-icon>
-            </div>
-          </div>
-          <div class="flex-1">
-            <button
-              onClick={this.showActionsAfterCaseCreation.bind(this)}
-              class="btn-text-primary flex items-center text-xs font-light"
-            >
-              {this.bindings.i18n.t('more-actions-in-session', {
-                count: this.userActionsAfterCaseCreation.length,
-              })}
-            </button>
-          </div>
+      <div class="flex items-center px-3 pb-3">
+        <div class="flex justify-center pr-2">
+          <atomic-icon icon={ThreeDotsIcon} class="h-3 w-3"></atomic-icon>
+        </div>
+        <div class="flex-1">
+          <Button
+            style="text-primary"
+            part="show-more-actions-button"
+            class={btnClasses}
+            ariaLabel={label}
+            onClick={this.showActionsAfterCaseCreation.bind(this)}
+          >
+            <span class="truncate text-xs font-light">{label}</span>
+          </Button>
         </div>
       </div>
     );
