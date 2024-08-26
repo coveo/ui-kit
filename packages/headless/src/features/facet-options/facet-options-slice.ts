@@ -15,6 +15,7 @@ import {
 import {
   getFacetOptionsSliceInitialState,
   getFacetOptionsInitialState,
+  FacetOptionsState,
 } from './facet-options-state';
 import {isFacetIncludedOnTab} from './facet-options-utils';
 
@@ -47,46 +48,22 @@ export const facetOptionsReducer = createReducer(
       .addCase(registerCategoryFacet, (state, action) => {
         const {facetId, tabs, activeTab} = action.payload;
 
-        const newFacetState = {
-          ...getFacetOptionsSliceInitialState(),
-          tabs: tabs ?? {},
-          enabled: isFacetIncludedOnTab(tabs, activeTab),
-        };
-
-        state.facets[facetId] = newFacetState;
+        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
       })
       .addCase(registerFacet, (state, action) => {
         const {facetId, tabs, activeTab} = action.payload;
 
-        const newFacetState = {
-          ...getFacetOptionsSliceInitialState(),
-          tabs: tabs ?? {},
-          enabled: isFacetIncludedOnTab(tabs, activeTab),
-        };
-
-        state.facets[facetId] = newFacetState;
+        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
       })
       .addCase(registerDateFacet, (state, action) => {
         const {facetId, tabs, activeTab} = action.payload;
 
-        const newFacetState = {
-          ...getFacetOptionsSliceInitialState(),
-          tabs: tabs ?? {},
-          enabled: isFacetIncludedOnTab(tabs, activeTab),
-        };
-
-        state.facets[facetId] = newFacetState;
+        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
       })
       .addCase(registerNumericFacet, (state, action) => {
         const {facetId, tabs, activeTab} = action.payload;
 
-        const newFacetState = {
-          ...getFacetOptionsSliceInitialState(),
-          tabs: tabs ?? {},
-          enabled: isFacetIncludedOnTab(tabs, activeTab),
-        };
-
-        state.facets[facetId] = newFacetState;
+        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
       })
       .addCase(enableFacet, (state, action) => {
         state.facets[action.payload].enabled = true;
@@ -114,3 +91,18 @@ export const facetOptionsReducer = createReducer(
       });
   }
 );
+
+function handleRegisterFacetTabs(
+  tabs: {included?: string[]; excluded?: string[]} | undefined,
+  activeTab: string | undefined,
+  state: FacetOptionsState,
+  facetId: string
+) {
+  const newFacetState = {
+    ...getFacetOptionsSliceInitialState(),
+    tabs: tabs ?? {},
+    enabled: isFacetIncludedOnTab(tabs, activeTab),
+  };
+
+  state.facets[facetId] = newFacetState;
+}
