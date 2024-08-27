@@ -4,6 +4,8 @@ on:
   merge_group:
 env:
   CYPRESS_VERIFY_TIMEOUT: 60000
+concurrency:
+  group: ci
 jobs:
   report-size:
     if: github.event_name == 'pull_request'
