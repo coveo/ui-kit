@@ -1,13 +1,13 @@
 :root {
   /* Light */
-  --light-color-background: #f2f4f8;
-  --light-color-background-secondary: #eff0f1;
+  --light-color-background: #fff;
+  --light-color-background-secondary: #333357;
   --light-color-warning-text: #222;
   --light-color-background-warning: #e6e600;
   --light-color-icon-background: var(--light-color-background);
   --light-color-accent: #c5c7c9;
   --light-color-active-menu-item: var(--light-color-accent);
-  --light-color-text: #222;
+  --light-color-text: ##282829;
   --light-color-text-aside: #6e6e6e;
   --light-color-link: #1f70c2;
   --light-color-focus-outline: #3584e4;
@@ -174,6 +174,9 @@ html {
 
 body {
   margin: 0;
+  font:
+    100 1em/1.625 'canada-type-gibson',
+    sans-serif;
 }
 
 :root[data-theme='light'] {
@@ -692,6 +695,9 @@ input[type='checkbox']:checked ~ svg .tsd-checkbox-checkmark {
   .tsd-index-panel .tsd-index-list {
     grid-template-columns: repeat(1, 1fr);
   }
+  #tsd-search {
+    display: none;
+  }
 }
 .tsd-index-panel .tsd-index-list li {
   -webkit-page-break-inside: avoid;
@@ -904,6 +910,7 @@ a.tsd-index-link {
 
 #tsd-search {
   transition: background-color 0.2s;
+  width: 27rem;
 }
 #tsd-search .title {
   position: relative;
@@ -1095,6 +1102,7 @@ ul.tsd-type-parameter-list h5 {
   top: 0;
   left: 0;
   width: 100%;
+  height: 5.5rem;
   color: var(--color-text);
   background: var(--color-background-secondary);
   border-bottom: 1px var(--color-accent) solid;
@@ -1113,8 +1121,9 @@ ul.tsd-type-parameter-list h5 {
 .tsd-page-toolbar .tsd-toolbar-contents {
   display: flex;
   justify-content: space-between;
-  height: 2.5rem;
+  /* height: 2.5rem; */
   margin: 0 auto;
+  padding: 1.25rem;
 }
 .tsd-page-toolbar .table-cell {
   position: relative;
@@ -1122,12 +1131,17 @@ ul.tsd-type-parameter-list h5 {
   line-height: 40px;
 }
 .tsd-page-toolbar .table-cell:first-child {
-  width: 100%;
+  width: inherit;
+  min-width: 11rem;
 }
 .tsd-page-toolbar .tsd-toolbar-icon {
   box-sizing: border-box;
   line-height: 0;
   padding: 12px 0;
+}
+
+#tsd-widgets {
+  padding-left: 0.5rem;
 }
 
 .tsd-widget {
@@ -1168,6 +1182,11 @@ input[type='checkbox']:checked + .tsd-widget:before {
 
 img {
   max-width: 100%;
+}
+
+.coveo-logo img {
+  height: 3rem;
+  min-height: 3rem;
 }
 
 .tsd-anchor-icon {
