@@ -13,5 +13,8 @@
   "dependencies": {
     "@coveo/atomic": "2.77.2",
     "tslib": "2.6.3"
+  },
+  "engines": {
+    "node": ">=20.0.0 <22.0.0"
   }
 }
