@@ -44,7 +44,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
  * @slot default - The default slot where the result templates are inserted.
- *
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
@@ -99,6 +98,7 @@ export class AtomicResultList implements InitializableComponent {
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
+   * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
 
@@ -137,21 +137,24 @@ export class AtomicResultList implements InitializableComponent {
     }
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.itemTemplateProvider = new ItemTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
-      ),
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
+    this.itemTemplateProvider = new ItemTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-result-template')
+        ),
+        getResultTemplateRegistered: () => this.resultTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.resultTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
+        bindings: this.bindings,
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-      bindings: this.bindings,
-    });
+      this.gridCellLinkTarget
+    );
 
     this.resultListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -214,6 +217,7 @@ export class AtomicResultList implements InitializableComponent {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(result),
+      linkContent: this.itemTemplateProvider.getLinkTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -240,7 +244,6 @@ export class AtomicResultList implements InitializableComponent {
       return (
         <DisplayGrid
           item={result}
-          gridTarget={this.gridCellLinkTarget}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
             element && this.resultListCommon.setNewResultRef(element, i)
