@@ -33,7 +33,7 @@ export function insertSearchBox() {
       const logoDiv = document.createElement('div');
       logoDiv.classList.add('coveo-logo');
       const logoImg = document.createElement('img');
-      logoImg.src = 'assets/coveo-docs-logo.svg'; // Update the path as needed
+      logoImg.src = '../assets/coveo-docs-logo.svg';
       logoImg.alt = 'Coveo Docs Logo';
 
       logoDiv.appendChild(logoImg);
