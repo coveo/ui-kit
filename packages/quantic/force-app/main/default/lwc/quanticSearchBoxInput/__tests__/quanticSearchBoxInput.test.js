@@ -36,7 +36,7 @@ const selectors = {
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
   suggestionOption: '[data-cy="suggestions-option"]',
-  suggestionOptionText: '.suggestion-option__text',
+  suggestionOptionText: '[data-cy="suggestions-option-text"]',
   clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
 };
 
@@ -284,10 +284,11 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionOptionLabels.length).toEqual(
               suggestionsAndRecentQueriesLength
             );
-            expect(
-              suggestionOptionLabels[suggestionsAndRecentQueriesLength - 1]
-                .title
-            ).toEqual(mockSuggestions[mockSuggestions.length - 1].value);
+            mockSuggestions.forEach((suggestion, idx) => {
+              expect(suggestionOptionLabels[idx].title).toEqual(
+                suggestion.value
+              );
+            });
           });
 
           describe('when pressing the DOWN to select a suggestion', () => {
