@@ -1,7 +1,7 @@
 import {cpSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-// eslint-disable-next-line n/no-extraneous-import
+// eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent} from 'typedoc';
 import {insertSearchBox} from './scripts.js';
 
