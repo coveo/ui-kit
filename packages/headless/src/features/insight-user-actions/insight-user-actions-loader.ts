@@ -10,6 +10,7 @@ import {
   FetchUserActionsThunkReturn,
 } from './insight-user-actions-actions';
 
+export type {RegisterUserActionsPayload};
 export interface InsightUserActionsActionCreators {
   /**
    * Registers the user actions.
