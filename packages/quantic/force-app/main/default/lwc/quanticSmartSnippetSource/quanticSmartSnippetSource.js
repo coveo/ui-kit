@@ -153,6 +153,9 @@ export default class QuanticSmartSnippetSource extends NavigationMixin(
     return this.labels.opensInBrowserTab;
   }
 
+  /**
+   * Returns the href value for the link.
+   */
   get hrefValue() {
     if (this.isSalesforceLink) {
       return this.salesforceRecordUrl;
