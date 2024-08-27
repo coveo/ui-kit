@@ -53,11 +53,5 @@ export function load(app: Application) {
     });
   };
 
-  // @ts-expect-error: Support for 0.25.x
-  if (typeof app.listenTo === 'function') {
-    // @ts-expect-error: Support for 0.25.x
-    app.listenTo(app.renderer, RendererEvent.END, onRenderEnd);
-  } else {
-    app.renderer.on(RendererEvent.END, onRenderEnd);
-  }
+  app.renderer.on(RendererEvent.END, onRenderEnd);
 }
