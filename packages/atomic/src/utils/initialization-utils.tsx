@@ -1,3 +1,4 @@
+import type {CoreEngine} from '@coveo/headless';
 import {
   ComponentInterface,
   getElement,
@@ -24,20 +25,20 @@ const initializableElements = [
   'atomic-recs-interface',
   'atomic-search-interface',
   'atomic-commerce-interface',
+  'atomic-commerce-recommendation-interface',
   'atomic-relevance-inspector',
   'atomic-insight-interface',
-  'atomic-commerce-interface',
   'atomic-external',
 ];
 
 /**
- * Retrieves `Bindings` on a configured parent search interface.
- * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
- * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
+ * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
+ * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
+ * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
  */
-export function initializeBindings<SpecificBindings extends AnyBindings>(
-  element: Element
-) {
+export function initializeBindings<
+  SpecificBindings extends AnyBindings = Bindings,
+>(element: Element) {
   return new Promise<SpecificBindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
@@ -324,3 +325,6 @@ export function DeferUntilRender() {
 }
 
 export type I18nState = Record<string, (variables?: TOptions) => string>;
+export type AtomicInterface = HTMLElement & {
+  engine?: CoreEngine;
+};

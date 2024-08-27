@@ -1,6 +1,7 @@
 @import '../../../../global/global.pcss';
 @import '../../../../global/mixins.pcss';
 @import './generated-text.pcss';
+@import '../generated-content/generated-markdown-content.pcss';
 @import './feedback-buttons.pcss';
 @import './rephrase-buttons.pcss';
 @import './typing-indicator.pcss';
@@ -42,7 +43,13 @@
   }
 
   .feedback-buttons {
-    @apply relative top-0 right-0;
+    @apply relative right-0 top-0;
+  }
+}
+
+@define-mixin mobile-generated-answer-footer-layout {
+  & {
+    @apply flex-col gap-1;
   }
 }
 
@@ -56,8 +63,7 @@
   container-type: inline-size;
 }
 
-.footer,
-[part='generated-answer-footer'] {
+.footer {
   @apply flex;
 
   .source-citations {
@@ -68,13 +74,51 @@
     @apply ml-auto;
   }
 
-  @container (max-width: 600px) {
+  @container (max-width: 37.5rem) {
     @mixin mobile-footer-layout;
   }
   @screen mobile-only {
     @mixin mobile-footer-layout;
   }
-  @container (max-width: 400px) {
+  @container (max-width: 25rem) {
     @mixin mobile-footer-xs-layout;
+  }
+}
+
+[part='generated-answer-footer'] {
+  @container (max-width: 37.5rem) {
+    @mixin mobile-generated-answer-footer-layout;
+  }
+
+  @screen mobile-only {
+    @mixin mobile-generated-answer-footer-layout;
+  }
+}
+
+[part='generated-container'] {
+  &.answer-collapsed {
+    @apply relative max-h-64 overflow-hidden content-[''];
+
+    .feedback-buttons {
+      @apply hidden;
+    }
+  }
+  &.answer-collapsed:before {
+    @apply absolute left-0 top-0 h-full w-full content-[''];
+    background: linear-gradient(transparent 11.25rem, var(--atomic-background));
+  }
+}
+
+.is-collapsible {
+  @apply justify-between;
+
+  [part='answer-show-button'] {
+    @apply flex;
+  }
+}
+
+.generating-label-visible {
+  [part='is-generating'] {
+    @apply flex;
   }
 }

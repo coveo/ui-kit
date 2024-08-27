@@ -11,7 +11,10 @@ import {
 } from './commerce-api-error-response';
 import {buildRequest, CommerceAPIRequest} from './common/request';
 import {CommerceSuccessResponse} from './common/response';
-import {CommerceFacetSearchRequest} from './facet-search/facet-search-request';
+import {
+  CommerceFacetSearchRequest,
+  FacetSearchType,
+} from './facet-search/facet-search-request';
 import {
   CommerceRecommendationsRequest,
   buildRecommendationsRequest,
@@ -23,10 +26,12 @@ import {
 } from './search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response';
 import {CommerceSearchRequest} from './search/request';
+import {SearchCommerceSuccessResponse} from './search/response';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(
-    req: CommerceFacetSearchRequest
+    req: CommerceFacetSearchRequest,
+    facetSearchOrigin: string
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
 }
 
@@ -69,6 +74,20 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
+  async search(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
   async getRecommendations(
     req: CommerceRecommendationsRequest
   ): Promise<CommerceAPIResponse<RecommendationsCommerceSuccessResponse>> {
@@ -78,10 +97,10 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  async search(
+  async productSuggestions(
     req: CommerceSearchRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
-    const requestOptions = buildRequest(req, 'search');
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search/productSuggest');
     return this.query({
       ...requestOptions,
       requestParams: {
@@ -107,15 +126,33 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   }
 
   async facetSearch(
-    req: CommerceFacetSearchRequest
+    req: CommerceFacetSearchRequest,
+    type: FacetSearchType
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
     const requestOptions = buildRequest(req, 'facet');
     return this.query<SpecificFacetSearchResponse>({
       ...requestOptions,
+      url: `${requestOptions.url}?type=${type}`,
       requestParams: {
         ...requestOptions.requestParams,
         facetId: req?.facetId,
         facetQuery: req?.facetQuery,
+        query: req?.query,
+      },
+      ...this.options,
+    });
+  }
+
+  // eslint-disable-next-line @cspell/spellchecker
+  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+  async plan(
+    req: CommerceSearchRequest
+  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    const requestOptions = buildRequest(req, 'search');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
         query: req?.query,
       },
       ...this.options,

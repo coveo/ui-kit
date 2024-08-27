@@ -1,12 +1,15 @@
 import {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request';
+import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import {buildCommerceAPIRequest} from '../../../common/actions';
+import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions';
 import {StateNeededForRegularFacetSearch} from './commerce-regular-facet-search-state';
 
-export const buildFacetSearchRequest = async (
+export const buildFacetSearchRequest = (
   facetId: string,
   state: StateNeededForRegularFacetSearch,
-  isFieldSuggestionsRequest: boolean
-): Promise<CommerceFacetSearchRequest> => {
+  isFieldSuggestionsRequest: boolean,
+  navigatorContext: NavigatorContext
+): CommerceFacetSearchRequest => {
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
   const query = state.commerceQuery?.query;
@@ -22,13 +25,13 @@ export const buildFacetSearchRequest = async (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = await buildCommerceAPIRequest(state);
+  } = buildCommerceAPIRequest(state, navigatorContext);
 
   return {
     url,
     accessToken,
     organizationId,
-    facetId,
+    facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
     facetQuery,
     trackingId,
     language,
@@ -36,6 +39,7 @@ export const buildFacetSearchRequest = async (
     currency,
     clientId,
     context,
-    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query}),
+    query,
+    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query: ''}),
   };
 };

@@ -1,16 +1,18 @@
 import {AnyFacetResponse} from '../../../features/commerce/facets/facet-set/interfaces/response';
+import {Trigger} from '../../common/trigger';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../../search/search-api-error-response';
 import {Pagination} from './pagination';
-import {Product} from './product';
+import {BaseProduct} from './product';
 import {Sort} from './sort';
 
 export interface BaseCommerceSuccessResponse {
   responseId: string;
-  products: Product[];
+  products: BaseProduct[];
   pagination: Pagination;
+  triggers: Trigger[];
 }
 
 export interface CommerceSuccessResponse extends BaseCommerceSuccessResponse {

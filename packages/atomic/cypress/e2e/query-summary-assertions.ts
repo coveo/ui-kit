@@ -2,7 +2,7 @@ import {QuerySummarySelectors} from './query-summary-selectors';
 
 export function assertEmpty() {
   it('query summary should be empty', () => {
-    QuerySummarySelectors.container().should('be.empty');
+    QuerySummarySelectors.host().should('be.empty');
   });
 }
 

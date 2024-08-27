@@ -15,13 +15,13 @@ import {SearchParameters} from './search-parameter-actions';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
-export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
+export const facetSearchParamRegex = /^(f|fExcluded|cf|nf|df|sf|af|mnf)-(.+)$/;
 export type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
 
 type FacetSearchParameters = keyof Pick<
   SearchParameters,
-  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df'
+  'f' | 'fExcluded' | 'cf' | 'sf' | 'af' | 'nf' | 'df' | 'mnf'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
@@ -34,6 +34,7 @@ const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
   af: true,
   nf: true,
   df: true,
+  mnf: true,
 };
 
 export const delimiter = '&';
@@ -69,13 +70,14 @@ export function isValidBasicKey(
 
 export function isRangeFacetKey(
   key: string
-): key is Extract<FacetKey, 'nf' | 'df'> {
+): key is Extract<FacetKey, 'nf' | 'df' | 'mnf'> {
   const supportedRangeFacetParameters: Pick<
     typeof supportedFacetParameters,
-    'df' | 'nf'
+    'df' | 'nf' | 'mnf'
   > = {
     nf: true,
     df: true,
+    mnf: true,
   };
   const isRangeFacet = key in supportedRangeFacetParameters;
   return keyHasObjectValue(key) && isRangeFacet;
@@ -94,7 +96,7 @@ export const serialize =
       .join(delimiter);
   };
 
-function serializePair(pair: [string, unknown]) {
+export function serializePair(pair: [string, unknown]) {
   const [key, val] = pair;
 
   if (!isValidKey(key)) {
@@ -139,7 +141,7 @@ export function isRangeFacetObject(
   return allEntriesAreValid(obj, isRangeValue);
 }
 
-function isObject(obj: unknown): obj is object {
+export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
 }
 
@@ -155,7 +157,7 @@ function allEntriesAreValid(
   return invalidEntries.length === 0;
 }
 
-function serializeFacets(key: string, facets: Record<string, string[]>) {
+export function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(
       ([facetId, values]) =>
@@ -166,7 +168,7 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
     .join(delimiter);
 }
 
-function serializeRangeFacets(
+export function serializeRangeFacets(
   key: string,
   facets: Record<string, RangeValueRequest[]>
 ) {
@@ -212,7 +214,7 @@ export function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-function preprocessObjectPairs(pair: string[]) {
+export function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
   const result = facetSearchParamRegex.exec(key);
 
@@ -230,7 +232,7 @@ function preprocessObjectPairs(pair: string[]) {
 }
 
 function processObjectValues(key: string, values: string[]) {
-  if (key === 'nf') {
+  if (key === 'nf' || key === 'mnf') {
     return buildNumericRanges(values);
   }
 
@@ -334,7 +336,7 @@ export function cast<K extends SearchParameterKey>(
   return [key, decode ? decodeURIComponent(value) : value];
 }
 
-function castUnknownObject(value: string) {
+export function castUnknownObject(value: string) {
   const jsonParsed: UnknownObject = JSON.parse(value);
   const ret: UnknownObject = {};
   Object.entries(jsonParsed).forEach((entry) => {

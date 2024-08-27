@@ -1,4 +1,4 @@
-import {isRedirectTrigger} from '../trigger';
+import {isRedirectTrigger} from '../../common/trigger';
 import {PlanResponseSuccess} from './plan-response';
 
 /**

@@ -46,11 +46,99 @@
         "script": "validate:definitions"
       }
     },
+    "release:phase1": {},
     "build": {
-      "dependsOn": ["cached:build:stencil", "validate:definitions"],
+      "dependsOn": [
+        "cached:build:stencil",
+        "validate:definitions",
+        "build-storybook"
+      ],
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"
+    },
+    "create-generated-folder": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node ./scripts/create-generated-folder.mjs"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:locales": {
+      "dependsOn": ["create-generated-folder"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node ./scripts/split-locales.mjs",
+          "node ./scripts/copy-dayjs-locales.mjs"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    },
+    "list-assets": {
+      "dependsOn": ["cached:build:stencil"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node ./scripts/list-assets.mjs"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev": {
+      "dependsOn": ["storybook", "stencil:dev", "cem:dev"],
+      "executor": "nx:noop"
+    },
+    "stencil:dev": {
+      "dependsOn": ["^build", "build:locales"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "cem:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cem analyze --watch",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "cem:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cem analyze",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "wait-on:dist": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "wait-on dist/atomic"
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["wait-on:dist"],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "npx storybook dev -p 4400"
+      }
+    },
+    "build-storybook": {
+      "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist-storybook"],
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "npx storybook build -o dist-storybook"
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "test-storybook -c packages/atomic/.storybook --url=http://localhost:4400"
+      }
     }
   }
 }

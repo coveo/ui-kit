@@ -7,6 +7,35 @@ interface EventMetadata {
   config: {trackingId: string};
 }
 
+async function validateEventWithEventAPI(request: {
+  url: string;
+  body: unknown;
+}) {
+  const validateUrl = request.url.replace('/v1', '/v1/validate');
+  const response = await fetch(validateUrl, {
+    method: 'post',
+    body: JSON.stringify(request.body),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const parsedResponse = (await response.json())[0];
+
+  parsedResponse?.errors?.forEach(
+    (error: {message: string; type: string; path: string}) => {
+      Cypress.log({
+        name: 'Event protocol validation',
+        displayName: '❌❌❌ EP validation ❌❌❌',
+        message: error.message,
+        consoleProps: () => error,
+      });
+    }
+  );
+  expect(parsedResponse).to.have.property('valid', true);
+}
+
 function validateSubmitFeedbackEvent(
   interception: Interception,
   expectedEvent: Qna.SubmitFeedback,
@@ -40,6 +69,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           `should emit the Qna.AnswerAction event with action "${expectedEvent.action}"`
@@ -62,6 +93,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the Qna.CitationHover event');
     },
@@ -83,6 +116,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the Qna.CitationClick event');
     },
@@ -98,6 +133,8 @@ function nextAnalyticsExpectations() {
             expectedEvent,
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the Qna.SubmitFeedback event for the like action'
@@ -115,6 +152,8 @@ function nextAnalyticsExpectations() {
             expectedEvent,
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the Qna.SubmitFeedback event for the dislike action'
@@ -132,9 +171,35 @@ function nextAnalyticsExpectations() {
             expectedEvent,
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the Qna.SubmitFeedback event for the feedback reason submission'
+        );
+    },
+
+    emitQnaSubmitRgaFeedbackEvent: (
+      expectedEvent: Qna.SubmitRgaFeedback,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Qna.SubmitRgaFeedback)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
+          expect(eventBody.feedback).to.deep.equal(expectedEvent.feedback);
+
+          expect(eventMeta).to.have.property('type', 'Qna.SubmitRgaFeedback');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail(
+          'should emit the Qna.SubmitRgaFeedback event for submitting rga feedback'
         );
     },
 
@@ -164,6 +229,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
     },
@@ -190,6 +257,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
     },
@@ -214,6 +283,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
     },
@@ -241,6 +312,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the CaseAssist.DocumentSuggestionFeedback event'
@@ -275,6 +348,8 @@ function nextAnalyticsExpectations() {
             'trackingId',
             expectedTrackingId
           );
+
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail(
           'should emit the CaseAssist.DocumentSuggestionFeedback event'

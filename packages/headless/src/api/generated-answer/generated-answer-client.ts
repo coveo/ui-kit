@@ -132,6 +132,9 @@ export class GeneratedAnswerAPIClient {
           }
         },
         onmessage: (event) => {
+          if (abortController?.signal.aborted) {
+            return;
+          }
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             timeoutStateManager.remove(timeout!);
@@ -152,6 +155,9 @@ export class GeneratedAnswerAPIClient {
           }
         },
         onerror: (err) => {
+          if (abortController?.signal.aborted) {
+            return;
+          }
           timeoutStateManager.remove(timeout!);
           if (err instanceof FatalError) {
             abortController?.abort();

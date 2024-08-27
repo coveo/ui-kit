@@ -1,7 +1,8 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
-import {CoreEngine} from '../../engine';
+import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
+import {NavigatorContextProvider} from '../../navigatorContextProvider';
 import {Build} from './build';
 import {
   ControllerDefinitionsMap,
@@ -14,7 +15,10 @@ import {HydrateStaticState} from './hydrate-static-state';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
 > = TOptions & {
   /**
    * The controllers to initialize with the search engine.
@@ -23,7 +27,7 @@ export type EngineDefinitionOptions<
 };
 
 export interface EngineDefinition<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
 > {
@@ -46,6 +50,15 @@ export interface EngineDefinition<
     AnyAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+  /**
+   * Sets the navigator context provider.
+   * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
+   *
+   * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
+   */
+  setNavigatorContextProvider: (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => void;
   /**
    * Builds an engine and its controllers from an engine definition.
    */

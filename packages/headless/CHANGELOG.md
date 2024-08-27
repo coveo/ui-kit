@@ -1,3 +1,211 @@
+# 2.79.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
+# 2.78.0 (2024-08-20)
+
+### Bug Fixes
+
+- **answerApi:** search context trigger new request ([#4293](https://github.com/coveo/ui-kit/issues/4293)) ([49b33a6](https://github.com/coveo/ui-kit/commits/49b33a66d55f1823029e51c58ce72e696fb56f01))
+- **rga:** state reset keep configid ([#4286](https://github.com/coveo/ui-kit/issues/4286)) ([a822cea](https://github.com/coveo/ui-kit/commits/a822ceab6f6fd9866a261c73248f0d580eb8b05d))
+
+### Features
+
+- **headless SSR:** support both search and listing solution types ([#4249](https://github.com/coveo/ui-kit/issues/4249)) ([dcd35d8](https://github.com/coveo/ui-kit/commits/dcd35d87e674a7d95e72800ae5b5dfc56d8ddcb8))
+
+# 2.77.0 (2024-08-14)
+
+### Bug Fixes
+
+- **answerStream:** handle end of stream ([#4270](https://github.com/coveo/ui-kit/issues/4270)) ([5e1b49a](https://github.com/coveo/ui-kit/commits/5e1b49aee5e77532a109dc1abeb3f6b0de421ca1))
+- **headless:** fix answer state using the new pattern ([#4271](https://github.com/coveo/ui-kit/issues/4271)) ([d1bcc53](https://github.com/coveo/ui-kit/commits/d1bcc5373a54a413b58ceba54269fa0aa18125a8))
+
+### Features
+
+- **genqa:** filter citations that points to same document ([#4250](https://github.com/coveo/ui-kit/issues/4250)) ([7f04f73](https://github.com/coveo/ui-kit/commits/7f04f7349ad2f25a7100d7d537686a3a06a25188))
+- **headless SSR:** add NavigatorContext in SSR sample ([#4238](https://github.com/coveo/ui-kit/issues/4238)) ([47d9624](https://github.com/coveo/ui-kit/commits/47d9624c7392b1bae3e3eee7580be2596e0b41bd))
+
+# 2.76.0 (2024-08-07)
+
+### Bug Fixes
+
+- **commerce:** fix field suggestions state update ([#4245](https://github.com/coveo/ui-kit/issues/4245)) ([e8ebb09](https://github.com/coveo/ui-kit/commits/e8ebb095978794b625caec8aed3e985646513469))
+- **commerce:** namespace field suggestions to prevent clash with facet search ([#4247](https://github.com/coveo/ui-kit/issues/4247)) ([a26184e](https://github.com/coveo/ui-kit/commits/a26184e4a4c17015b20f6e9271cbb8faf960b06a))
+
+### Features
+
+- **answerApi:** evaluations ([#4239](https://github.com/coveo/ui-kit/issues/4239)) ([e680640](https://github.com/coveo/ui-kit/commits/e6806409501be9ea272f5781c834f69bcd4e5431))
+- **headless SSR:** support navigator context in both Engine and fetch/hydrate functions ([#4231](https://github.com/coveo/ui-kit/issues/4231)) ([99bbef1](https://github.com/coveo/ui-kit/commits/99bbef1e52cde79e06b1b5f7815d2a6fba7d474b))
+
+# 2.75.0 (2024-07-31)
+
+### Bug Fixes
+
+- **deps:** update dependency @reduxjs/toolkit to v2.2.7 j:kit-282 ([#4232](https://github.com/coveo/ui-kit/issues/4232)) ([0d28438](https://github.com/coveo/ui-kit/commits/0d2843805abd8e0305b3349732554e63a3fdde64))
+- **ep:** do not send actionCause w/ breadcrumbResetAll ([#4207](https://github.com/coveo/ui-kit/issues/4207)) ([bcecc55](https://github.com/coveo/ui-kit/commits/bcecc552b433b5da3b9940bae96c725ea731df90))
+- **headless/commerce:** send clientId only when analytics are enabled ([#4217](https://github.com/coveo/ui-kit/issues/4217)) ([323cede](https://github.com/coveo/ui-kit/commits/323cedefc60292ec9193b01e500372ddde1ebcc6))
+
+### Features
+
+- **headless SSR:** define the SSR Commerce Engine ([#4198](https://github.com/coveo/ui-kit/issues/4198)) ([c474a8d](https://github.com/coveo/ui-kit/commits/c474a8d9cb77aeb5b88a992847e5a233adb55123))
+
+# 2.74.0 (2024-07-24)
+
+### Bug Fixes
+
+- **commerce:** properly memoize suggestions controllers ([#4184](https://github.com/coveo/ui-kit/issues/4184)) ([b5d226b](https://github.com/coveo/ui-kit/commits/b5d226b1c6ccd31053934f586964504d43a54ebd))
+- **ep:** camelCase causes ([#4204](https://github.com/coveo/ui-kit/issues/4204)) ([ed89da4](https://github.com/coveo/ui-kit/commits/ed89da4b7081649b7ab048943e520b05b64085b4))
+- **ep:** do not send actionCause w/ recentQueriesClick ([#4206](https://github.com/coveo/ui-kit/issues/4206)) ([a47697e](https://github.com/coveo/ui-kit/commits/a47697e50bfa5c943343f69f22b101de1e6f77ed))
+- **ep:** remove actionCause for fetchFacetValues ([#4205](https://github.com/coveo/ui-kit/issues/4205)) ([2989ff7](https://github.com/coveo/ui-kit/commits/2989ff77bf63de949dcbaf4859c8d2b3a1c94d60))
+- **headless:** ensure facet value from URL are always considered for auto-facets ([#4200](https://github.com/coveo/ui-kit/issues/4200)) ([40ebf94](https://github.com/coveo/ui-kit/commits/40ebf94bb6f189d17bb0d9a37e51d270907060ba))
+
+### Features
+
+- answerapi-generated-answer ([#4157](https://github.com/coveo/ui-kit/issues/4157)) ([aafe3fe](https://github.com/coveo/ui-kit/commits/aafe3fed4a9ba3962a3edd73288a59ed1ecb5b1e))
+- **headless:** add tab manager controller ([#4195](https://github.com/coveo/ui-kit/issues/4195)) ([0eddd7f](https://github.com/coveo/ui-kit/commits/0eddd7fe48c63b2e96e3d035adf32c1af36decbc))
+- **headless:** creation of the new headless insight user actions controller ([#4192](https://github.com/coveo/ui-kit/issues/4192)) ([b52953e](https://github.com/coveo/ui-kit/commits/b52953e2053ba7fd4b9fe4bec35000075fc95af5))
+
+# 2.73.0 (2024-07-17)
+
+### Bug Fixes
+
+- add atomic version in the analytics initial config for Headless ([#4171](https://github.com/coveo/ui-kit/issues/4171)) ([a72c3ac](https://github.com/coveo/ui-kit/commits/a72c3ac349f62e819c77aeef4ed2e85b97375a2c))
+- **headless commerce:** correctly determine hasBreadcrumbs value for category facets ([#4175](https://github.com/coveo/ui-kit/issues/4175)) ([b004374](https://github.com/coveo/ui-kit/commits/b004374072deaa8d35cc4d4408f0259966c09ecf))
+- **headless/commerce:** schema validation error when calling deselect method on hierarchical breadcrumb ([#4173](https://github.com/coveo/ui-kit/issues/4173)) ([e226898](https://github.com/coveo/ui-kit/commits/e226898af80e238801cf825397e3a41f3e256c7b))
+- **headless:** bump relay version ([#4167](https://github.com/coveo/ui-kit/issues/4167)) ([184763d](https://github.com/coveo/ui-kit/commits/184763d317281cc2ceb3fbaae287b1cfc34adbd6))
+- **headless:** separate manual numeric facet in a separate slice for commerce ([#4183](https://github.com/coveo/ui-kit/issues/4183)) ([3c58454](https://github.com/coveo/ui-kit/commits/3c58454d0b6776d0988ef61011db7930be819bba))
+- remove pageId from analyticsPayload ([#4176](https://github.com/coveo/ui-kit/issues/4176)) ([473da7d](https://github.com/coveo/ui-kit/commits/473da7d3ccecc44fc8f10bbe31a22d6733b74e8e))
+- use browseResults for results-per-page ([#4189](https://github.com/coveo/ui-kit/issues/4189)) ([183b257](https://github.com/coveo/ui-kit/commits/183b257e5977c9ee93bc1af8acc0800d9d2f1723))
+
+### Features
+
+- **answer:** error handling ([#4146](https://github.com/coveo/ui-kit/issues/4146)) ([cd679cc](https://github.com/coveo/ui-kit/commits/cd679ccf529011af79f7df1d14e823f9767f6af5))
+- **answer:** knowledge answer controller ([#4135](https://github.com/coveo/ui-kit/issues/4135)) ([54d426e](https://github.com/coveo/ui-kit/commits/54d426e9a9472e500edab22aaf7136b68de6b50c))
+- **answer:** knowledge controller preparation ([#4129](https://github.com/coveo/ui-kit/issues/4129)) ([3e1b7d1](https://github.com/coveo/ui-kit/commits/3e1b7d1e8df18d07949e2a51b54e63920eb37b3a))
+- **genqa:** new feedback modal ([#4092](https://github.com/coveo/ui-kit/issues/4092)) ([7bf9bfe](https://github.com/coveo/ui-kit/commits/7bf9bfecfa2f01a250ebf13897d5322472873855))
+- **headless commerce:** expose deselectAll method on facet generator controller ([#4141](https://github.com/coveo/ui-kit/issues/4141)) ([5ed478c](https://github.com/coveo/ui-kit/commits/5ed478ce85a5e0cd9df0bd4df5131f9c135cb0f4)), closes [#4067](https://github.com/coveo/ui-kit/issues/4067)
+- **headless:** trigger request answer from search request ([#4148](https://github.com/coveo/ui-kit/issues/4148)) ([ebae5ee](https://github.com/coveo/ui-kit/commits/ebae5ee02ca1ec8e13a2760c3d84f3db2f224bf2))
+
+# 2.72.0 (2024-07-09)
+
+### Bug Fixes
+
+- **atomic/commerce:** fix url manager ([#4151](https://github.com/coveo/ui-kit/issues/4151)) ([d5991f5](https://github.com/coveo/ui-kit/commits/d5991f57581712eec670df3b23483cc3f1fc5382))
+- **deps:** update dependency @reduxjs/toolkit to v2.2.6 j:kit-282 ([#3969](https://github.com/coveo/ui-kit/issues/3969)) ([ccb34a7](https://github.com/coveo/ui-kit/commits/ccb34a7124aa1f13814a78afdae8e77102f58554))
+- **headless:** defensive code against clientID access from relay ([#4165](https://github.com/coveo/ui-kit/issues/4165)) ([26bf619](https://github.com/coveo/ui-kit/commits/26bf619777c4d9cb61c2288c7681b9decc2586c9))
+
+### Features
+
+- **atomic:** add middleware preprocessor for the recommendation engine ([#4164](https://github.com/coveo/ui-kit/issues/4164)) ([4e0803d](https://github.com/coveo/ui-kit/commits/4e0803d747077001c5ca836f570409c505375ada))
+- **atomic:** add new atomic-commerce-refine-toggle component ([#4155](https://github.com/coveo/ui-kit/issues/4155)) ([71d81ba](https://github.com/coveo/ui-kit/commits/71d81ba6a60c8ab83a2d744cb56097d85f691383))
+- **commerce:** distinguish facet search solution type ([#4156](https://github.com/coveo/ui-kit/issues/4156)) ([a1aba3e](https://github.com/coveo/ui-kit/commits/a1aba3e05763a123e7fdadf99318601887df9a0d))
+- **headless:** quick view event for insight use case made an InsightPanel.ItemAction ([#4136](https://github.com/coveo/ui-kit/issues/4136)) ([eaef9fa](https://github.com/coveo/ui-kit/commits/eaef9fa3878e28ace749b78772491bc70fe3676d))
+
+# 2.71.0 (2024-07-03)
+
+### Features
+
+- **commerce:** add atomic-commerce-breadbox ([#4121](https://github.com/coveo/ui-kit/issues/4121)) ([d96287a](https://github.com/coveo/ui-kit/commits/d96287a7efb853f575700fe982b898ab6c1e7744))
+- **headless commerce:** expose additional actions ([#4140](https://github.com/coveo/ui-kit/issues/4140)) ([1fec656](https://github.com/coveo/ui-kit/commits/1fec656409fd2dee85717670d14ecd389d202f17))
+
+## 2.70.1 (2024-07-03)
+
+### Bug Fixes
+
+- **commerce:** expose child product directly on `promoteChildToParent` ([#4128](https://github.com/coveo/ui-kit/issues/4128)) ([d333812](https://github.com/coveo/ui-kit/commits/d3338121f6e49477424faec1d520c9ac53e11af3))
+- **commerce:** only expose breadcrumbs with values ([#4132](https://github.com/coveo/ui-kit/issues/4132)) ([d3d57e8](https://github.com/coveo/ui-kit/commits/d3d57e837f237eb1a915cb9d9555ec710818a138))
+- **commerce:** populate `context.user.userAgent` with `navigatorContext` ([#4113](https://github.com/coveo/ui-kit/issues/4113)) ([0dc9434](https://github.com/coveo/ui-kit/commits/0dc9434ee910da0e37f9bac30edb145b42d51408))
+- **commerce:** remove `executeFirstSearch` & friend from commerce engine ([#4095](https://github.com/coveo/ui-kit/issues/4095)) ([64cda10](https://github.com/coveo/ui-kit/commits/64cda1085a8be29e92e8965222962c0c90762d89))
+
+### Features
+
+- **commerce:** make commerce sub-package generally available ([#4088](https://github.com/coveo/ui-kit/issues/4088)) ([927c921](https://github.com/coveo/ui-kit/commits/927c9214d5068ed2114b50bd77f85f2e2fab74f1))
+- **headless commerce:** create use & export commerce-specific actions & loaders ([#4124](https://github.com/coveo/ui-kit/issues/4124)) ([ce6fb7e](https://github.com/coveo/ui-kit/commits/ce6fb7ee5e23f10840b4cc654544e7dde05d80d2))
+- **headless:** retrieve client ID from navigator context provider ([#4126](https://github.com/coveo/ui-kit/issues/4126)) ([60a384d](https://github.com/coveo/ui-kit/commits/60a384d0b90aa72b069386bd9f45a06f869f58c4))
+- **headless:** update rga and smart snippets feedback events ([#4105](https://github.com/coveo/ui-kit/issues/4105)) ([5b8eab2](https://github.com/coveo/ui-kit/commits/5b8eab22499d695a89c5633a365569e7f039b3d9))
+- **knowledgeAPI:** api slice ([#4014](https://github.com/coveo/ui-kit/issues/4014)) ([052fac3](https://github.com/coveo/ui-kit/commits/052fac339c621895c1c137b949ef4a0445300010))
+
+# 2.69.0 (2024-06-26)
+
+### Bug Fixes
+
+- **atomic:** fix atomic-commerce-search-box needlessly requesting suggestions when input is disabled ([#4096](https://github.com/coveo/ui-kit/issues/4096)) ([49e9415](https://github.com/coveo/ui-kit/commits/49e9415a601924996d87f1062ea87fed231dcb36))
+- **headless:** update product interface to reflect how the commerce api behaves ([#4104](https://github.com/coveo/ui-kit/issues/4104)) ([5e514c5](https://github.com/coveo/ui-kit/commits/5e514c5bf642e709c6bd897f693ec42174026c24))
+
+### Features
+
+- **commerce:** make summary a sub-controller ([#4082](https://github.com/coveo/ui-kit/issues/4082)) ([cfcc9d9](https://github.com/coveo/ui-kit/commits/cfcc9d9b2557345a0a96e271a0dba9cb549812b4))
+- **headless commerce:** retrieve clientId from Relay instead of coveoua when building commerce API requests ([#4111](https://github.com/coveo/ui-kit/issues/4111)) ([6c6b8e4](https://github.com/coveo/ui-kit/commits/6c6b8e49ccc3f6f2a91d18a42655588f5349e32e))
+- **headless:** handle 401 like 419 ([#4103](https://github.com/coveo/ui-kit/issues/4103)) ([6623e03](https://github.com/coveo/ui-kit/commits/6623e031e92406df2b10b8455724161fa62cd00c))
+
+# 2.68.0 (2024-06-19)
+
+### Features
+
+- **headless/commerce:** add basic plp, search and recs use case examples ([#4079](https://github.com/coveo/ui-kit/issues/4079)) ([7dcb7ac](https://github.com/coveo/ui-kit/commits/7dcb7ac80523c64c125a208b1b99465a2bc33296))
+- update search action cause to browseResults in insight-search and pagination ([#4068](https://github.com/coveo/ui-kit/issues/4068)) ([a5ee23a](https://github.com/coveo/ui-kit/commits/a5ee23a90cbecc2cde33a1482fbaed70285f3e53))
+
+# 2.67.0 (2024-06-13)
+
+### Bug Fixes
+
+- **commerce:** forward analytics source on `context.source` ([#4086](https://github.com/coveo/ui-kit/issues/4086)) ([c9822ed](https://github.com/coveo/ui-kit/commits/c9822ed0710644c0973546e8e2c2cdb3609554b9))
+
+### Features
+
+- **atomic:** add excerpt and product name highlights ([#4046](https://github.com/coveo/ui-kit/issues/4046)) ([fe412e0](https://github.com/coveo/ui-kit/commits/fe412e0077084e4ed4b5da8f7c7210e1f0dc8de8))
+- **commerce:** mark v2 listings as non-v2 and non-v2 listings as old ([#4087](https://github.com/coveo/ui-kit/issues/4087)) ([19c6363](https://github.com/coveo/ui-kit/commits/19c6363614cfac3ba7b6880ec8e9c4ea40186606))
+
+# 2.66.0 (2024-06-12)
+
+### Bug Fixes
+
+- **commerce:** reset pagination on search box submit ([#4065](https://github.com/coveo/ui-kit/issues/4065)) ([35e1517](https://github.com/coveo/ui-kit/commits/35e151707c87fe36d0168d5d6d2d7b0f49bd12f7))
+
+### Features
+
+- **atomic commerce:** add interactive product controller support ([#4026](https://github.com/coveo/ui-kit/issues/4026)) ([a07f4b9](https://github.com/coveo/ui-kit/commits/a07f4b9eafd14931c917baf39ec10edaba5ec11c))
+- **headless,atomic:** fix issues for commerce did you mean + handle query trigger for commerce ([#4053](https://github.com/coveo/ui-kit/issues/4053)) ([d1d098d](https://github.com/coveo/ui-kit/commits/d1d098dab142c8bada5767ea1a9a04f77b643e4b))
+- **headless:** enforce organization endpoints usage for headless commerce ([#4060](https://github.com/coveo/ui-kit/issues/4060)) ([8bb77af](https://github.com/coveo/ui-kit/commits/8bb77af019e326380a424646b226055f36038d2e))
+- **headless:** expose deselectAll method on automatic facet generator controller ([#4067](https://github.com/coveo/ui-kit/issues/4067)) ([893d7a6](https://github.com/coveo/ui-kit/commits/893d7a6c8b6fb8555ff25afed1f969789951e593))
+- use navigator relay & context on search-actions ([#3820](https://github.com/coveo/ui-kit/issues/3820)) ([dba90d1](https://github.com/coveo/ui-kit/commits/dba90d19187271c21707601490b020c896fb6f6e)), closes [#3819](https://github.com/coveo/ui-kit/issues/3819)
+
+# 2.65.0 (2024-06-06)
+
+### Features
+
+- **commerce:** toggle `capture` from analytics configuration ([#4057](https://github.com/coveo/ui-kit/issues/4057)) ([9e16744](https://github.com/coveo/ui-kit/commits/9e16744338e67dd293b064da8387a3bfd21e6c4e))
+
+# 2.64.0 (2024-06-06)
+
+### Bug Fixes
+
+- **atomic:** handle category facet on new query ([#4050](https://github.com/coveo/ui-kit/issues/4050)) ([ef37005](https://github.com/coveo/ui-kit/commits/ef370059f64e161ab9241d418ca18ddf82301e14))
+- **headless commerce:** dispatch fetchProductsActionCreator when calling core breadcrumb manager deselectAll ([#4049](https://github.com/coveo/ui-kit/issues/4049)) ([236e35c](https://github.com/coveo/ui-kit/commits/236e35ce02c613c312edc087fcf396c54debff73))
+- **headless:** add commerce executeSearch to slice ([#4040](https://github.com/coveo/ui-kit/issues/4040)) ([fedded8](https://github.com/coveo/ui-kit/commits/fedded8aa9c50cd4bd036dc28576dceb25a97ff8))
+- remove userId, email and ip properties ([#4021](https://github.com/coveo/ui-kit/issues/4021)) ([96dcd08](https://github.com/coveo/ui-kit/commits/96dcd080e47ea3dedaeac1f4ed888fec06008109))
+
+### Features
+
+- **atomic,headless:** support for atomic-commerce-did-you-mean ([#4029](https://github.com/coveo/ui-kit/issues/4029)) ([5e860a5](https://github.com/coveo/ui-kit/commits/5e860a52ea93a7fa7fa442a5c9612ba5febadaf1))
+- **atomic:** add date facet ([#4024](https://github.com/coveo/ui-kit/issues/4024)) ([ea5c9b1](https://github.com/coveo/ui-kit/commits/ea5c9b1443311048d1f2cfb80a174c6f6023816d))
+- **Commerce Headless:** change the way selectors are exposed ([#4016](https://github.com/coveo/ui-kit/issues/4016)) ([534e1c2](https://github.com/coveo/ui-kit/commits/534e1c2d402c740de0e5f824b7cf6854eeb1f1fd))
+- **commerce:** provide restore parameters action loaders ([#4022](https://github.com/coveo/ui-kit/issues/4022)) ([91d4f8f](https://github.com/coveo/ui-kit/commits/91d4f8f838b28e36effdaa7a30853891a755b143)), closes [/github.com/coveo/ui-kit/pull/3979#discussion_r1616296539](https://github.com//github.com/coveo/ui-kit/pull/3979/issues/discussion_r1616296539)
+- **headless:** add method to set range on Date Facet ([#4023](https://github.com/coveo/ui-kit/issues/4023)) ([f99453f](https://github.com/coveo/ui-kit/commits/f99453f681b72faa72efebdad9fce24c19b42bc6))
+- simplify the arguments for the `setRanges()` method in numeric and date facets ([#4042](https://github.com/coveo/ui-kit/issues/4042)) ([20c0978](https://github.com/coveo/ui-kit/commits/20c0978a783122e55ebe4de975d34abc45817fce))
+
+## 2.63.5 (2024-05-29)
+
+## 2.63.4 (2024-05-22)
+
+## 2.63.3 (2024-05-15)
+
+## 2.63.2 (2024-05-10)
+
+## 2.63.1 (2024-05-06)
+
 # 2.63.0 (2024-05-02)
 
 ### Bug Fixes

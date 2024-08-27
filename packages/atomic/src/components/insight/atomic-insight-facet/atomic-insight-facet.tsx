@@ -18,7 +18,6 @@ import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
-import {getFieldCaptions} from '../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -31,18 +30,13 @@ import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
-import {FacetSearchInput} from '../../common/facets/facet-search/facet-search-input';
-import {FacetSearchInputGuard} from '../../common/facets/facet-search/facet-search-input-guard';
-import {FacetSearchMatches} from '../../common/facets/facet-search/facet-search-matches';
-import {shouldDisplaySearchResults} from '../../common/facets/facet-search/facet-search-utils';
-import {FacetSearchValue} from '../../common/facets/facet-search/facet-search-value';
 import {FacetShowMoreLess} from '../../common/facets/facet-show-more-less/facet-show-more-less';
 import {
   FacetValueProps,
   FacetValue,
 } from '../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
+import {initializePopover} from '../../common/facets/popover/popover-type';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -59,7 +53,6 @@ export class AtomicInsightFacet
   @InitializeBindings() public bindings!: InsightBindings;
   public facet!: InsightFacet;
   public searchStatus!: InsightSearchStatus;
-  public withSearch = false;
   public dependsOn = {};
   @Element() private host!: HTMLElement;
 
@@ -182,6 +175,9 @@ export class AtomicInsightFacet
   }
 
   public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
     this.facetConditionsManager?.stopWatching();
   }
 
@@ -208,32 +204,8 @@ export class AtomicInsightFacet
               onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
               headerRef={(el) => this.focusTargets.header.setTarget(el)}
             ></FacetHeader>
-            <FacetSearchInputGuard
-              canShowMoreValues={this.facetState.canShowMoreValues}
-              numberOfDisplayedValues={this.facetState.values.length}
-              withSearch={this.withSearch}
-            >
-              <FacetSearchInput
-                i18n={this.bindings.i18n}
-                label={this.label}
-                onChange={(value) => {
-                  if (value === '') {
-                    this.facet.facetSearch.clear();
-                    return;
-                  }
-                  this.facet.facetSearch.updateCaptions(
-                    getFieldCaptions(this.field, this.bindings.i18n)
-                  );
-                  this.facet.facetSearch.updateText(value);
-                  this.facet.facetSearch.search();
-                }}
-                onClear={() => this.facet.facetSearch.clear()}
-                query={this.facetState.facetSearch.query}
-              />
-            </FacetSearchInputGuard>
-            {shouldDisplaySearchResults(this.facetState.facetSearch)
-              ? [this.renderSearchResults(), this.renderMatches()]
-              : [this.renderValues(), this.renderShowMoreLess()]}
+
+            {[this.renderValues(), this.renderShowMoreLess()]}
           </FacetContainer>
         ) : (
           <FacetPlaceholder
@@ -259,20 +231,6 @@ export class AtomicInsightFacet
           {children}
         </ul>
       </FacetValuesGroup>
-    );
-  }
-
-  private renderSearchResults() {
-    return this.renderValuesContainer(
-      this.facet.state.facetSearch.values.map((value) => (
-        <FacetSearchValue
-          {...this.facetValueProps}
-          facetCount={value.count}
-          onExclude={() => this.facet.facetSearch.exclude(value)}
-          onSelect={() => this.facet.facetSearch.select(value)}
-          facetValue={value.rawValue}
-        />
-      ))
     );
   }
 
@@ -324,17 +282,6 @@ export class AtomicInsightFacet
         canShowMoreValues={this.facet.state.canShowMoreValues}
         canShowLessValues={this.facet.state.canShowLessValues}
       ></FacetShowMoreLess>
-    );
-  }
-
-  private renderMatches() {
-    return (
-      <FacetSearchMatches
-        i18n={this.bindings.i18n}
-        query={this.facet.state.facetSearch.query}
-        numberOfMatches={this.facet.state.facetSearch.values.length}
-        hasMoreMatches={this.facet.state.facetSearch.moreValuesAvailable}
-      ></FacetSearchMatches>
     );
   }
 

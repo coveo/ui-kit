@@ -13,6 +13,7 @@ import {
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
+import {answerApi} from '../api/knowledge/stream-answer-api';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -39,6 +40,7 @@ import {
 } from './navigatorContextProvider';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {stateKey} from './state-key';
 import {CoreExtraArguments, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
@@ -110,6 +112,23 @@ export interface CoreEngine<
   navigatorContext: NavigatorContext;
 }
 
+export type CoreEngineNext<
+  State extends object = {},
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+> = Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> & {
+  /**
+   * The readonly internal state of the headless engine.
+   *
+   * @internal
+   */
+  readonly [stateKey]: State & CoreState;
+
+  /**
+   * The readonly global headless engine configuration
+   */
+  readonly configuration: EngineConfiguration;
+};
+
 export interface EngineOptions<Reducers extends ReducersMapObject>
   extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
   /**
@@ -180,12 +199,19 @@ function getUpdateAnalyticsConfigurationPayload(
     apiBaseUrl,
   };
 
-  if (doNotTrack()) {
+  // TODO KIT-2844
+  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,
       enabled: false,
     };
+  }
+
+  if (payloadWithURL.analyticsMode === 'next' && !payload.trackingId) {
+    throw new InvalidEngineConfiguration(
+      'analytics.trackingId is required when analytics.analyticsMode="next"'
+    );
   }
 
   return payloadWithURL;
@@ -263,17 +289,29 @@ function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const navigatorContextProvider =
-    options.navigatorContextProvider ?? isBrowser()
-      ? defaultBrowserNavigatorContextProvider
-      : defaultNodeJSNavigatorContextProvider;
+  const getClientId = () => {
+    let clientId = '';
+    try {
+      clientId = getRelayInstanceFromState(engine.state).getMeta('').clientId;
+    } catch (e) {
+      logger.warn('Error while obtaining clientID from relay', e);
+    }
+    return clientId;
+  };
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
       return getRelayInstanceFromState(engine.state);
     },
     get navigatorContext() {
-      return navigatorContextProvider();
+      if (options.navigatorContextProvider) {
+        return options.navigatorContextProvider();
+      }
+      if (!isBrowser()) {
+        return defaultNodeJSNavigatorContextProvider();
+      }
+
+      return defaultBrowserNavigatorContextProvider(getClientId());
     },
   };
   const store = createStore(
@@ -313,7 +351,14 @@ function buildCoreEngine<
     },
 
     get navigatorContext() {
-      return navigatorContextProvider();
+      if (options.navigatorContextProvider) {
+        return options.navigatorContextProvider();
+      }
+      if (!isBrowser()) {
+        return defaultNodeJSNavigatorContextProvider();
+      }
+
+      return defaultBrowserNavigatorContextProvider(getClientId());
     },
 
     logger,
@@ -359,7 +404,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(options.middlewares || []);
+  ].concat(answerApi.middleware, options.middlewares || []);
 }
 
 function shouldWarnAboutOrganizationEndpoints(
@@ -386,4 +431,11 @@ function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
 
   const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
   return match && match.organizationId !== configuration.organizationId;
+}
+
+class InvalidEngineConfiguration extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidEngineConfiguration';
+  }
 }

@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import {promisify} from 'util';
 
 const readFile = promisify(fs.readFile);
@@ -15,9 +16,8 @@ function getI18nLocaleKey(key) {
 }
 
 async function copyDayjsLocales() {
-  const localesJSONData = await readFile(
-    '../../node_modules/dayjs/locale.json'
-  );
+  const dayJsPath = fileURLToPath(import.meta.resolve('dayjs/locale.json'));
+  const localesJSONData = await readFile(dayJsPath);
   const localesData = JSON.parse(localesJSONData);
   let fileContent =
     'export const locales: Record<string, () => Promise<unknown>> = {';

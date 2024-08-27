@@ -1,5 +1,5 @@
 import {Result} from '../../api/search/search/result';
-import {CoreEngine} from '../../app/engine';
+import {CoreEngine, CoreEngineNext} from '../../app/engine';
 import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {FieldsSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -34,7 +34,7 @@ export interface ResultTemplatesManager<Content = unknown> {
  * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
  */
 export function buildResultTemplatesManager<Content = unknown>(
-  engine: CoreEngine
+  engine: CoreEngine | CoreEngineNext
 ): ResultTemplatesManager<Content> {
   if (!loadResultTemplatesManagerReducers(engine)) {
     throw loadReducerError;
@@ -56,8 +56,8 @@ export function buildResultTemplatesManager<Content = unknown>(
 }
 
 function loadResultTemplatesManagerReducers(
-  engine: CoreEngine
-): engine is CoreEngine<FieldsSection> {
+  engine: CoreEngine | CoreEngineNext
+): engine is CoreEngine<FieldsSection> | CoreEngineNext<FieldsSection> {
   engine.addReducers({fields});
   return true;
 }

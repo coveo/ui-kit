@@ -43,6 +43,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
+ * @slot default - The default slot where the result templates are inserted.
+ *
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
@@ -238,6 +240,7 @@ export class AtomicResultList implements InitializableComponent {
       return (
         <DisplayGrid
           item={result}
+          gridTarget={this.gridCellLinkTarget}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
             element && this.resultListCommon.setNewResultRef(element, i)

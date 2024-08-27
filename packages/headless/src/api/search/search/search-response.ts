@@ -1,9 +1,9 @@
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
+import {Trigger} from '../../common/trigger';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../search-api-error-response';
-import {Trigger} from './../trigger';
 import {AutomaticFacets} from './automatic-facets';
 import {ExecutionReport} from './execution-report';
 import {ExtendedResults} from './extended-results';

@@ -95,14 +95,14 @@ export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 
 @ProxyCmp({
-  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
 })
 @Component({
   selector: 'atomic-category-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch'],
+  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch'],
 })
 export class AtomicCategoryFacet {
   protected el: HTMLElement;
@@ -117,14 +117,14 @@ export declare interface AtomicCategoryFacet extends Components.AtomicCategoryFa
 
 
 @ProxyCmp({
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'withSearch']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
 })
 @Component({
   selector: 'atomic-color-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'withSearch'],
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch'],
 })
 export class AtomicColorFacet {
   protected el: HTMLElement;
@@ -136,6 +136,296 @@ export class AtomicColorFacet {
 
 
 export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
+
+
+@ProxyCmp({
+  inputs: ['facet', 'field', 'isCollapsed', 'summary']
+})
+@Component({
+  selector: 'atomic-commerce-category-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['facet', 'field', 'isCollapsed', 'summary'],
+})
+export class AtomicCommerceCategoryFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceCategoryFacet extends Components.AtomicCommerceCategoryFacet {}
+
+
+@ProxyCmp({
+  inputs: ['facet', 'field', 'isCollapsed', 'summary']
+})
+@Component({
+  selector: 'atomic-commerce-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['facet', 'field', 'isCollapsed', 'summary'],
+})
+export class AtomicCommerceFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceFacet extends Components.AtomicCommerceFacet {}
+
+
+@ProxyCmp({
+  inputs: ['collapseFacetsAfter']
+})
+@Component({
+  selector: 'atomic-commerce-facets',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseFacetsAfter'],
+})
+export class AtomicCommerceFacets {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceFacets extends Components.AtomicCommerceFacets {}
+
+
+@ProxyCmp({
+  inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
+  methods: ['initialize', 'initializeWithEngine', 'executeFirstRequest']
+})
+@Component({
+  selector: 'atomic-commerce-interface',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
+})
+export class AtomicCommerceInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceInterface extends Components.AtomicCommerceInterface {}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-load-more-products',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceLoadMoreProducts {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceLoadMoreProducts extends Components.AtomicCommerceLoadMoreProducts {}
+
+
+@ProxyCmp({
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
+})
+@Component({
+  selector: 'atomic-commerce-pager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
+})
+export class AtomicCommercePager {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicCommercePager extends Components.AtomicCommercePager {
+
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
+  inputs: ['choicesDisplayed', 'initialChoice']
+})
+@Component({
+  selector: 'atomic-commerce-products-per-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['choicesDisplayed', 'initialChoice'],
+})
+export class AtomicCommerceProductsPerPage {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicCommerceProductsPerPage extends Components.AtomicCommerceProductsPerPage {
+
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-query-summary',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceQuerySummary {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceQuerySummary extends Components.AtomicCommerceQuerySummary {}
+
+
+@ProxyCmp({
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
+})
+@Component({
+  selector: 'atomic-commerce-refine-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton'],
+})
+export class AtomicCommerceRefineModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceRefineModal extends Components.AtomicCommerceRefineModal {}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'atomic-commerce-refine-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicCommerceRefineToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceRefineToggle extends Components.AtomicCommerceRefineToggle {}
+
+
+@ProxyCmp({
+  inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
+})
+@Component({
+  selector: 'atomic-commerce-search-box',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout'],
+})
+export class AtomicCommerceSearchBox {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['redirect']);
+  }
+}
+
+
+import type { RedirectionPayload as IAtomicCommerceSearchBoxRedirectionPayload } from '@coveo/atomic';
+
+export declare interface AtomicCommerceSearchBox extends Components.AtomicCommerceSearchBox {
+  /**
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+
+Example:
+```html
+<script>
+  document.querySelector('atomic-commerce-search-box').addEventListener((e) => {
+    e.preventDefault();
+    // handle redirection
+  });
+</script>
+...
+<atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box>
+```
+   */
+  redirect: EventEmitter<CustomEvent<IAtomicCommerceSearchBoxRedirectionPayload>>;
+}
+
+
+@ProxyCmp({
+  inputs: ['count', 'value']
+})
+@Component({
+  selector: 'atomic-commerce-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['count', 'value'],
+})
+export class AtomicCommerceText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceText extends Components.AtomicCommerceText {}
 
 
 @ProxyCmp({
@@ -183,14 +473,14 @@ export declare interface AtomicDidYouMean extends Components.AtomicDidYouMean {}
 
 
 @ProxyCmp({
-  inputs: ['selector']
+  inputs: ['boundInterface', 'selector']
 })
 @Component({
   selector: 'atomic-external',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['selector'],
+  inputs: ['boundInterface', 'selector'],
 })
 export class AtomicExternal {
   protected el: HTMLElement;
@@ -205,14 +495,14 @@ export declare interface AtomicExternal extends Components.AtomicExternal {}
 
 
 @ProxyCmp({
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'enableExclusion', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'withSearch']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'enableExclusion', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
 })
 @Component({
   selector: 'atomic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'enableExclusion', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'withSearch'],
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'enableExclusion', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch'],
 })
 export class AtomicFacet {
   protected el: HTMLElement;
@@ -381,14 +671,14 @@ export declare interface AtomicFrequentlyBoughtTogether extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['answerStyle']
+  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerStyle'],
+  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -556,14 +846,14 @@ export declare interface AtomicNotifications extends Components.AtomicNotificati
 
 
 @ProxyCmp({
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withInput']
 })
 @Component({
   selector: 'atomic-numeric-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput'],
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withInput'],
 })
 export class AtomicNumericFacet {
   protected el: HTMLElement;
@@ -647,6 +937,29 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
 @ProxyCmp({
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
+  methods: ['getTemplate']
+})
+@Component({
+  selector: 'atomic-product-template',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
+})
+export class AtomicProductTemplate {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductTemplate extends Components.AtomicProductTemplate {}
+
+
+@ProxyCmp({
 })
 @Component({
   selector: 'atomic-query-error',
@@ -711,14 +1024,43 @@ export declare interface AtomicQuickview extends Components.AtomicQuickview {}
 
 
 @ProxyCmp({
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
+  inputs: ['content', 'current', 'modalCloseCallback', 'result', 'sandbox', 'total'],
+  methods: ['reset']
+})
+@Component({
+  selector: 'atomic-quickview-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['content', 'current', 'modalCloseCallback', 'result', 'sandbox', 'total'],
+})
+export class AtomicQuickviewModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/quickview/next', 'atomic/quickview/previous']);
+  }
+}
+
+
+export declare interface AtomicQuickviewModal extends Components.AtomicQuickviewModal {
+
+  'atomic/quickview/next': EventEmitter<CustomEvent<any>>;
+
+  'atomic/quickview/previous': EventEmitter<CustomEvent<any>>;
+}
+
+
+@ProxyCmp({
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-rating-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals'],
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicRatingFacet {
   protected el: HTMLElement;
@@ -733,14 +1075,14 @@ export declare interface AtomicRatingFacet extends Components.AtomicRatingFacet 
 
 
 @ProxyCmp({
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-rating-range-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals'],
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicRatingRangeFacet {
   protected el: HTMLElement;
@@ -1112,14 +1454,14 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 
 @ProxyCmp({
-  inputs: ['fallback', 'field']
+  inputs: ['fallback', 'field', 'imageAltField']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fallback', 'field'],
+  inputs: ['fallback', 'field', 'imageAltField'],
 })
 export class AtomicResultImage {
   protected el: HTMLElement;
@@ -1726,14 +2068,14 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
 
 
 @ProxyCmp({
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-segmented-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria'],
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSegmentedFacet {
   protected el: HTMLElement;
@@ -1769,14 +2111,14 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle'],
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;
@@ -1860,14 +2202,14 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 
 @ProxyCmp({
-  inputs: ['expression', 'label']
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['expression', 'label'],
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSortExpression {
   protected el: HTMLElement;
@@ -1879,6 +2221,28 @@ export class AtomicSortExpression {
 
 
 export declare interface AtomicSortExpression extends Components.AtomicSortExpression {}
+
+
+@ProxyCmp({
+  inputs: ['clearFiltersOnTabChange']
+})
+@Component({
+  selector: 'atomic-tab-manager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['clearFiltersOnTabChange'],
+})
+export class AtomicTabManager {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicTabManager extends Components.AtomicTabManager {}
 
 
 @ProxyCmp({
@@ -1948,14 +2312,14 @@ export declare interface AtomicTimeframe extends Components.AtomicTimeframe {}
 
 
 @ProxyCmp({
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'withDatePicker']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withDatePicker']
 })
 @Component({
   selector: 'atomic-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'withDatePicker'],
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withDatePicker'],
 })
 export class AtomicTimeframeFacet {
   protected el: HTMLElement;

@@ -184,6 +184,11 @@ describe('engine', () => {
     );
   });
 
+  it('should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
+    options.configuration.analytics = {analyticsMode: 'next'};
+    expect(() => initEngine()).toThrowErrorMatchingSnapshot();
+  });
+
   describe('with preloaded state', () => {
     const testAction = createAction('increment');
     const testReducer = createReducer(0, (builder) =>

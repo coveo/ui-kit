@@ -1,7 +1,8 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {AsyncThunkOptions} from '../../../../../app/async-thunk-options';
-import {CoreEngine} from '../../../../../app/engine';
+import {CoreEngine, CoreEngineNext} from '../../../../../app/engine';
+import {stateKey} from '../../../../../app/state-key';
 import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments';
 import {
   registerCategoryFacetSearch,
@@ -23,14 +24,14 @@ export interface CategoryFacetSearchProps {
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
   executeFieldSuggestActionCreator: (
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
 }
@@ -40,13 +41,18 @@ export type CategoryFacetSearch = ReturnType<
 >;
 
 export function buildCoreCategoryFacetSearch(
-  engine: CoreEngine<CategoryFacetSearchSection & ConfigurationSection>,
+  engine:
+    | CoreEngine<CategoryFacetSearchSection & ConfigurationSection>
+    | CoreEngineNext<CategoryFacetSearchSection & ConfigurationSection>,
   props: CategoryFacetSearchProps
 ) {
   const {dispatch} = engine;
   const options = {...defaultFacetSearchOptions, ...props.options};
   const {facetId} = options;
-  const getFacetSearch = () => engine.state.categoryFacetSearchSet[facetId];
+  const getFacetSearch = () =>
+    'state' in engine
+      ? engine.state.categoryFacetSearchSet[facetId]
+      : engine[stateKey].categoryFacetSearchSet[facetId];
 
   dispatch(registerCategoryFacetSearch(options));
 

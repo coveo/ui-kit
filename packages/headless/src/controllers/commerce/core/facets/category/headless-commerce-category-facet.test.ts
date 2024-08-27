@@ -1,8 +1,8 @@
-import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
+} from '../../../../../features/commerce/facets/category-facet/category-facet-actions';
+import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
@@ -14,7 +14,6 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
 import {
   CategoryFacet,
   CategoryFacetOptions,
@@ -22,7 +21,7 @@ import {
 } from './headless-commerce-category-facet';
 
 jest.mock(
-  '../../../../../features/facets/category-facet-set/category-facet-set-actions'
+  '../../../../../features/commerce/facets/category-facet/category-facet-actions'
 );
 
 describe('CategoryFacet', () => {
@@ -31,6 +30,9 @@ describe('CategoryFacet', () => {
   let state: CommerceAppState;
   let options: CategoryFacetOptions;
   let facet: CategoryFacet;
+  const mockFetchProductsActionCreator = jest.fn();
+  const mockFacetResponseSelector = jest.fn();
+  const mockIsFacetLoadingResponseSelector = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -51,14 +53,14 @@ describe('CategoryFacet', () => {
         ...config,
       }),
     });
-    state.productListing.facets = [
+    mockFacetResponseSelector.mockReturnValue(
       buildMockCategoryFacetResponse({
         moreValuesAvailable,
         facetId,
         type: 'hierarchical',
         values: config.values ?? [],
-      }),
-    ];
+      })
+    );
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
@@ -67,7 +69,10 @@ describe('CategoryFacet', () => {
 
     options = {
       facetId,
-      ...commonOptions,
+      fetchProductsActionCreator: mockFetchProductsActionCreator,
+      facetResponseSelector: mockFacetResponseSelector,
+      isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
+      facetSearch: {type: 'SEARCH'},
     };
 
     state = buildMockCommerceState();

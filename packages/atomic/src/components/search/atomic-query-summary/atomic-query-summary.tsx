@@ -10,7 +10,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {QuerySummaryCommon} from '../../common/query-summary/query-summary-common';
+import {LocalizedString} from '../../../utils/jsx-utils';
+import {QuerySummaryContainer} from '../../common/query-summary/container';
+import {QuerySummaryGuard} from '../../common/query-summary/guard';
+import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -45,12 +48,55 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   public render() {
+    const {
+      firstSearchExecuted,
+      hasResults,
+      hasError,
+      total,
+      firstResult,
+      lastResult,
+      query,
+      durationInSeconds,
+      isLoading,
+    } = this.querySummaryState;
+
+    const {i18nKey, highlights, ariaLiveMessage} =
+      getQuerySummaryI18nParameters({
+        first: firstResult,
+        last: lastResult,
+        query,
+        total,
+        i18n: this.bindings.i18n,
+        isLoading,
+      });
+
+    this.ariaMessage = ariaLiveMessage;
+
     return (
-      <QuerySummaryCommon
-        bindings={this.bindings}
-        querySummaryState={this.querySummaryState}
-        setAriaLive={(msg) => (this.ariaMessage = msg)}
-      />
+      <QuerySummaryGuard
+        firstSearchExecuted={firstSearchExecuted}
+        hasResults={hasResults}
+        hasError={hasError}
+      >
+        <QuerySummaryContainer>
+          <LocalizedString
+            key={i18nKey}
+            i18n={this.bindings.i18n}
+            params={highlights}
+            count={total}
+          />
+          <span class="hidden" part="duration">
+            &nbsp;
+            <LocalizedString
+              key="in-seconds"
+              i18n={this.bindings.i18n}
+              params={{
+                count: durationInSeconds.toLocaleString(),
+              }}
+            />
+          </span>
+        </QuerySummaryContainer>
+      </QuerySummaryGuard>
     );
   }
 }

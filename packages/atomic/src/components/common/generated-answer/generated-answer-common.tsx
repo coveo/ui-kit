@@ -21,10 +21,14 @@ import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
 import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
+import {ShowButton} from './show-button';
 import {SourceCitations} from './source-citations';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
+  withToggle?: boolean;
+  collapsible?: boolean;
+  withRephraseButtons?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -60,10 +64,14 @@ export class GeneratedAnswerCommon {
   }
 
   public readStoredData(): GeneratedAnswerData {
-    return this.storage.getParsedJSON<GeneratedAnswerData>(
+    const {withToggle} = this.props;
+    const storedData = this.storage.getParsedJSON<GeneratedAnswerData>(
       StorageItems.GENERATED_ANSWER_DATA,
       {isVisible: true}
     );
+
+    // This check ensures that the answer is visible when the toggle is hidden and visible is set to false in the local storage.
+    return {isVisible: (withToggle && storedData.isVisible) || !withToggle};
   }
 
   public writeStoredData(data: GeneratedAnswerData) {
@@ -162,6 +170,14 @@ export class GeneratedAnswerCommon {
     }, 2000);
   }
 
+  private clickOnShowButton() {
+    if (this.props.getGeneratedAnswerState()?.expanded) {
+      this.props.getGeneratedAnswer()?.collapse();
+    } else {
+      this.props.getGeneratedAnswer()?.expand();
+    }
+  }
+
   private getCitation(citation: GeneratedAnswerCitation) {
     const {title} = citation;
     const {i18n} = this.props.getBindings();
@@ -172,10 +188,17 @@ export class GeneratedAnswerCommon {
   }
 
   private renderCitations() {
-    return this.props
-      .getGeneratedAnswerState()
-      ?.citations.map((citation: GeneratedAnswerCitation, index: number) => {
-        const interactiveCitation = this.props.buildInteractiveCitation({
+    const {
+      getGeneratedAnswerState,
+      buildInteractiveCitation,
+      getGeneratedAnswer,
+    } = this.props;
+    const {citations} = getGeneratedAnswerState() ?? {};
+    const {logCitationHover} = getGeneratedAnswer() ?? {};
+
+    return citations?.map(
+      (citation: GeneratedAnswerCitation, index: number) => {
+        const interactiveCitation = buildInteractiveCitation({
           options: {
             citation,
           },
@@ -186,43 +209,59 @@ export class GeneratedAnswerCommon {
               citation={this.getCitation(citation)}
               index={index}
               sendHoverEndEvent={(citationHoverTimeMs: number) => {
-                this.props
-                  .getGeneratedAnswer()
-                  ?.logCitationHover(citation.id, citationHoverTimeMs);
+                logCitationHover?.(citation.id, citationHoverTimeMs);
               }}
               interactiveCitation={interactiveCitation}
               exportparts="citation,citation-popover"
             />
           </li>
         );
-      });
+      }
+    );
   }
 
   private renderFeedbackAndCopyButtons() {
-    if (this.props.getGeneratedAnswerState()?.isStreaming) {
+    const {getGeneratedAnswerState, getBindings, getCopied, getCopyError} =
+      this.props;
+    const {i18n} = getBindings();
+    const {liked, disliked, answer, isStreaming} =
+      getGeneratedAnswerState() ?? {};
+
+    const containerClasses = [
+      'feedback-buttons',
+      'flex',
+      'h-9',
+      'absolute',
+      'top-6',
+      'shrink-0',
+      'gap-2',
+      this.props.withToggle ? 'right-20' : 'right-6',
+    ].join(' ');
+
+    if (isStreaming) {
       return null;
     }
+
     return (
-      <div class="feedback-buttons flex h-9 absolute top-6 right-20 shrink-0 gap-2">
+      <div class={containerClasses}>
         <FeedbackButton
-          title={this.props.getBindings().i18n.t('this-answer-was-helpful')}
+          title={i18n.t('this-answer-was-helpful')}
           variant="like"
-          active={!!this.props.getGeneratedAnswerState()?.liked}
-          onClick={() => this.props.getGeneratedAnswer()?.like()}
+          active={!!liked}
+          onClick={() => this.clickLike()}
         />
         <FeedbackButton
-          title={this.props.getBindings().i18n.t('this-answer-was-not-helpful')}
+          title={i18n.t('this-answer-was-not-helpful')}
           variant="dislike"
-          active={!!this.props.getGeneratedAnswerState()?.disliked}
+          active={!!disliked}
           onClick={() => this.clickDislike()}
         />
         {this.hasClipboard ? (
           <CopyButton
             title={this.copyToClipboardTooltip}
-            isCopied={this.props.getCopied()}
-            error={this.props.getCopyError()}
+            isCopied={getCopied()}
+            error={getCopyError()}
             onClick={async () => {
-              const answer = this.props.getGeneratedAnswerState()?.answer;
               if (answer) {
                 await this.copyToClipboard(answer);
               }
@@ -233,14 +272,31 @@ export class GeneratedAnswerCommon {
     );
   }
 
-  private clickDislike() {
+  private setIsAnswerHelpful(isAnswerHelpful: boolean) {
+    if (this.modalRef) {
+      this.modalRef.helpful = isAnswerHelpful;
+    }
+  }
+
+  private openFeedbackModal() {
     if (
       this.modalRef &&
       !this.props.getGeneratedAnswerState()?.feedbackSubmitted
     ) {
       this.modalRef.isOpen = true;
     }
+  }
+
+  private clickDislike() {
+    this.setIsAnswerHelpful(false);
     this.props.getGeneratedAnswer()?.dislike();
+    this.openFeedbackModal();
+  }
+
+  private clickLike() {
+    this.setIsAnswerHelpful(true);
+    this.props.getGeneratedAnswer()?.like();
+    this.openFeedbackModal();
   }
 
   private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
@@ -248,87 +304,153 @@ export class GeneratedAnswerCommon {
       this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
       answerStyle
     ) {
-      this.props.getGeneratedAnswer()?.rephrase({answerStyle});
+      this.props.getGeneratedAnswer()?.rephrase({
+        ...this.props.getGeneratedAnswerState()?.responseFormat,
+        answerStyle,
+      });
     }
   }
 
+  private renderRephraseButtons() {
+    const {getGeneratedAnswerState, getBindings, withRephraseButtons} =
+      this.props;
+    const {i18n} = getBindings();
+    const {isStreaming, responseFormat} = getGeneratedAnswerState() ?? {};
+    const {answerStyle} = responseFormat ?? {};
+    const canRender = withRephraseButtons && !isStreaming;
+
+    if (!canRender) {
+      return null;
+    }
+    return (
+      <RephraseButtons
+        answerStyle={answerStyle ?? 'default'}
+        i18n={i18n}
+        onChange={(answerStyle) => this.onChangeAnswerStyle(answerStyle)}
+      />
+    );
+  }
+
+  private renderDisclaimer() {
+    const {getGeneratedAnswerState, getBindings} = this.props;
+    const {i18n} = getBindings();
+    const {isStreaming} = getGeneratedAnswerState() ?? {};
+
+    if (isStreaming) {
+      return null;
+    }
+    return (
+      <div class="text-neutral-dark text-xs">
+        <slot name="disclaimer" slot="disclaimer">
+          {i18n.t('generated-answer-disclaimer')}
+        </slot>
+      </div>
+    );
+  }
+
+  private renderShowButton() {
+    const {getGeneratedAnswerState, getBindings, collapsible} = this.props;
+    const {i18n} = getBindings();
+    const {expanded, isStreaming} = getGeneratedAnswerState() ?? {};
+    const canRender = collapsible && !isStreaming;
+
+    if (!canRender) {
+      return null;
+    }
+    return (
+      <ShowButton
+        i18n={i18n}
+        onClick={() => this.clickOnShowButton()}
+        isCollapsed={!expanded}
+      ></ShowButton>
+    );
+  }
+
+  private renderGeneratingAnswerLabel() {
+    const {getGeneratedAnswerState, getBindings, collapsible} = this.props;
+    const {i18n} = getBindings();
+    const {isStreaming} = getGeneratedAnswerState() ?? {};
+
+    const canRender = collapsible && isStreaming;
+
+    if (!canRender) {
+      return null;
+    }
+    return (
+      <div
+        part="is-generating"
+        class="text-primary hidden text-base font-light"
+      >
+        {i18n.t('generating-answer')}...
+      </div>
+    );
+  }
+
   private renderContent() {
+    const {getGeneratedAnswerState, getBindings, getGeneratedAnswer} =
+      this.props;
+    const {i18n} = getBindings();
+    const {isStreaming, answer, citations, answerContentFormat} =
+      getGeneratedAnswerState() ?? {};
+
     return (
       <div part="generated-content">
         <div class="flex items-center">
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
           >
-            {this.props.getBindings().i18n.t('generated-answer-title')}
+            {i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex h-9 items-center ml-auto">
+          <div class="ml-auto flex h-9 items-center">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
               onToggle={(checked) => {
                 checked
-                  ? this.props.getGeneratedAnswer()?.show()
-                  : this.props.getGeneratedAnswer()?.hide();
+                  ? getGeneratedAnswer()?.show()
+                  : getGeneratedAnswer()?.hide();
               }}
-              ariaLabel={this.props
-                .getBindings()
-                .i18n.t('generated-answer-title')}
+              ariaLabel={i18n.t('generated-answer-title')}
               title={this.toggleTooltip}
+              withToggle={this.props.withToggle}
             ></Switch>
           </div>
         </div>
         {this.hasRetryableError && this.isAnswerVisible ? (
           <RetryPrompt
-            onClick={() => this.props.getGeneratedAnswer()?.retry()}
-            buttonLabel={this.props.getBindings().i18n.t('retry')}
-            message={this.props.getBindings().i18n.t('retry-stream-message')}
+            onClick={() => getGeneratedAnswer()?.retry()}
+            buttonLabel={i18n.t('retry')}
+            message={i18n.t('retry-stream-message')}
           />
         ) : null}
 
         {!this.hasRetryableError && this.isAnswerVisible ? (
           <GeneratedContentContainer
-            answer={this.props.getGeneratedAnswerState()?.answer}
-            isStreaming={!!this.props.getGeneratedAnswerState()?.isStreaming}
+            answer={answer}
+            answerContentFormat={answerContentFormat}
+            isStreaming={!!isStreaming}
           >
             {this.renderFeedbackAndCopyButtons()}
             <SourceCitations
-              label={this.props.getBindings().i18n.t('citations')}
-              isVisible={
-                !!this.props.getGeneratedAnswerState()?.citations.length
-              }
+              label={i18n.t('citations')}
+              isVisible={!!citations?.length}
             >
               {this.renderCitations()}
             </SourceCitations>
 
-            {!this.props.getGeneratedAnswerState()?.isStreaming && (
-              <RephraseButtons
-                answerStyle={
-                  this.props.getGeneratedAnswerState()?.responseFormat
-                    .answerStyle ?? 'default'
-                }
-                i18n={this.props.getBindings().i18n}
-                onChange={(answerStyle) =>
-                  this.onChangeAnswerStyle(answerStyle)
-                }
-              />
-            )}
+            {this.renderRephraseButtons()}
           </GeneratedContentContainer>
         ) : null}
 
-        {!this.hasRetryableError &&
-          this.isAnswerVisible &&
-          !this.props.getGeneratedAnswerState()?.isStreaming && (
-            <div
-              part="generated-answer-footer"
-              class="flex justify-end mt-6 text-neutral-dark text-xs"
-            >
-              <slot name="disclaimer" slot="disclaimer">
-                {this.props.getBindings().i18n.t('generated-answer-disclaimer')}
-              </slot>
-            </div>
-          )}
+        {!this.hasRetryableError && this.isAnswerVisible && (
+          <div part="generated-answer-footer" class="mt-6 flex justify-end">
+            {this.renderGeneratingAnswerLabel()}
+            {this.renderShowButton()}
+            {this.renderDisclaimer()}
+          </div>
+        )}
       </div>
     );
   }

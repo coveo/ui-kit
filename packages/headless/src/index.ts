@@ -284,6 +284,12 @@ export type {
 export {buildTab} from './controllers/tab/headless-tab';
 
 export type {
+  TabManagerState,
+  TabManager,
+} from './controllers/tab-manager/headless-tab-manager';
+export {buildTabManager} from './controllers/tab-manager/headless-tab-manager';
+
+export type {
   FacetManagerPayload,
   FacetManagerState,
   FacetManager,
@@ -365,13 +371,13 @@ export {buildFoldedResultList} from './controllers/folded-result-list/headless-f
 export type {
   RedirectionTrigger,
   RedirectionTriggerState,
-} from './controllers/triggers/headless-redirection-trigger';
+} from './controllers/core/triggers/headless-core-redirection-trigger';
 export {buildRedirectionTrigger} from './controllers/triggers/headless-redirection-trigger';
 
 export type {
   QueryTrigger,
   QueryTriggerState,
-} from './controllers/triggers/headless-query-trigger';
+} from './controllers/core/triggers/headless-core-query-trigger';
 export {buildQueryTrigger} from './controllers/triggers/headless-query-trigger';
 
 export type {
@@ -380,12 +386,12 @@ export type {
 } from './controllers/triggers/headless-execute-trigger';
 export {buildExecuteTrigger} from './controllers/triggers/headless-execute-trigger';
 
-export type {ExecuteTriggerParams} from './controllers/../api/search/trigger';
+export type {ExecuteTriggerParams} from './api/common/trigger';
 
 export type {
   NotifyTrigger,
   NotifyTriggerState,
-} from './controllers/triggers/headless-notify-trigger';
+} from './controllers/core/triggers/headless-core-notify-trigger';
 export {buildNotifyTrigger} from './controllers/triggers/headless-notify-trigger';
 
 export type {
@@ -483,6 +489,7 @@ export type {
   GeneratedAnswerProps,
   GeneratedAnswerCitation,
   GeneratedResponseFormat,
+  GeneratedAnswerPropsInitialState,
 } from './controllers/generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer';
 
@@ -645,4 +652,8 @@ export type {
 
 export * from './utils/query-expression/query-expression';
 
-export type {GeneratedAnswerFeedback} from './features/generated-answer/generated-answer-analytics-actions';
+export type {
+  GeneratedAnswerFeedback,
+  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedbackOption,
+} from './features/generated-answer/generated-answer-analytics-actions';

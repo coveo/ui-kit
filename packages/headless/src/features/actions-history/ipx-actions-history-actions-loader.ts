@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {CoreEngine} from '../../app/engine';
 import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions';
 
 /**
@@ -14,7 +14,7 @@ export interface IPXActionsHistoryActionCreators {
 }
 
 export function loadIPXActionsHistoryActions(
-  engine: SearchEngine
+  engine: CoreEngine
 ): IPXActionsHistoryActionCreators {
   engine.addReducers({});
 

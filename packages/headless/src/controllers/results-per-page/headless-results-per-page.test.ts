@@ -1,10 +1,21 @@
+import {AsyncThunk, UnknownAction} from '@reduxjs/toolkit';
+import {ThunkDispatch} from 'redux-thunk';
+import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {SearchAPIClient} from '../../api/search/search-api-client';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {configuration} from '../../app/common-reducers';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../features/pagination/pagination-actions';
 import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
-import {fetchPage} from '../../features/search/search-actions';
+import {
+  ExecuteSearchThunkReturn,
+  fetchPage,
+  TransitiveSearchAction,
+} from '../../features/search/search-actions';
+import {StateNeededByExecuteSearch} from '../../features/search/search-actions-thunk-processor';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
@@ -24,7 +35,25 @@ describe('ResultsPerPage', () => {
   let engine: MockedSearchEngine;
   let props: ResultsPerPageProps;
   let resultsPerPage: ResultsPerPage;
-
+  let mockedFetchPage: jest.MockedFunctionDeep<
+    AsyncThunk<
+      ExecuteSearchThunkReturn,
+      TransitiveSearchAction,
+      {
+        rejectValue: SearchAPIErrorWithStatusCode;
+        state: StateNeededByExecuteSearch;
+        extra: ClientThunkExtraArguments<
+          SearchAPIClient,
+          GeneratedAnswerAPIClient
+        >;
+        dispatch?: ThunkDispatch<unknown, unknown, UnknownAction>;
+        serializedErrorType?: unknown;
+        pendingMeta?: unknown;
+        fulfilledMeta?: unknown;
+        rejectedMeta?: unknown;
+      }
+    >
+  >;
   function initResultsPerPage() {
     resultsPerPage = buildResultsPerPage(engine, props);
   }
@@ -35,7 +64,7 @@ describe('ResultsPerPage', () => {
     props = {
       initialState: {},
     };
-
+    mockedFetchPage = jest.mocked(fetchPage);
     initResultsPerPage();
   });
 
@@ -85,6 +114,12 @@ describe('ResultsPerPage', () => {
     resultsPerPage.set(10);
 
     expect(fetchPage).toHaveBeenCalled();
+  });
+
+  it('calling #set executes a fetchPage with the proper analytics payload', () => {
+    resultsPerPage.set(10);
+
+    expect(mockedFetchPage.mock.lastCall).toMatchSnapshot();
   });
 
   describe('when the state #numberOfResults is set to a value', () => {

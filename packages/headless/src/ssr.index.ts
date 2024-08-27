@@ -88,6 +88,7 @@ export type {
   InferBuildResult,
 } from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {LogLevel} from './app/logger';
 
@@ -314,6 +315,12 @@ export type {
 export {defineTab} from './controllers/tab/headless-tab.ssr';
 
 export type {
+  TabManagerState,
+  TabManager,
+} from './controllers/tab-manager/headless-tab-manager.ssr';
+export {defineTabManager} from './controllers/tab-manager/headless-tab-manager.ssr';
+
+export type {
   FacetManagerPayload,
   FacetManagerState,
   FacetManager,
@@ -411,7 +418,7 @@ export type {
 } from './controllers/triggers/headless-execute-trigger.ssr';
 export {defineExecuteTrigger} from './controllers/triggers/headless-execute-trigger.ssr';
 
-export type {ExecuteTriggerParams} from './api/search/trigger';
+export type {ExecuteTriggerParams} from './api/common/trigger';
 
 export type {
   NotifyTrigger,

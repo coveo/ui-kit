@@ -1,4 +1,4 @@
-import {TriggerRedirect} from '../../src/api/search/trigger';
+import {TriggerRedirect} from '../api/common/trigger';
 
 export function buildMockRedirectTrigger(
   config: Partial<TriggerRedirect> = {}

@@ -1,5 +1,5 @@
 export interface CommerceQueryState {
-  query?: string;
+  query: string;
 }
 
 export const getCommerceQueryInitialState: () => CommerceQueryState = () => ({

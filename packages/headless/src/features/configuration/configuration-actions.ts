@@ -8,7 +8,6 @@ import {
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
-import {doNotTrack} from '../../utils/utils';
 import {
   nonEmptyString,
   validatePayload,
@@ -154,13 +153,16 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   documentLocation?: string;
   /**
-   * TBD
+   * The unique identifier of the tracking target.
    */
   trackingId?: string;
   /**
-   * Specifies the analytics mode to use.
-   * By default, `legacy`.
-   * @internal
+   * The analytics client to use.
+   * - `legacy`: The legacy analytics client, i.e., the Coveo Analytics.js library.
+   * - `next`: The next analytics client, i.e., the Coveo Event Protocol with the Relay library.
+   *
+   * Starting at V3.0, the default value will be `next`.
+   * @default 'legacy'
    */
   analyticsMode?: 'legacy' | 'next';
   /**
@@ -172,7 +174,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-const analyticsConfigurationSchema: SchemaDefinition<
+export const analyticsConfigurationSchema: SchemaDefinition<
   Required<UpdateAnalyticsConfigurationActionCreatorPayload>
 > = {
   enabled: new BooleanValue({default: true}),
@@ -207,9 +209,6 @@ const analyticsConfigurationSchema: SchemaDefinition<
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
   (payload: UpdateAnalyticsConfigurationActionCreatorPayload) => {
-    if (doNotTrack()) {
-      payload.enabled = false;
-    }
     return validatePayload(payload, analyticsConfigurationSchema);
   }
 );

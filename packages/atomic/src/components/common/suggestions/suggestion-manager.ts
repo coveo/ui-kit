@@ -105,7 +105,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public onSubmit() {
-    this.updateActiveDescendant();
+    this.clickOnActiveElement();
     this.clearSuggestions();
   }
 
@@ -374,6 +374,11 @@ export class SuggestionManager<SearchBoxController> {
         this.rightSuggestions
       );
     }
+  }
+
+  public forceUpdate() {
+    this.updateSuggestionElements(this.suggestedQuery);
+    forceUpdate(this.ownerSearchBoxProps.getHost());
   }
 
   private isPanelInFocus(

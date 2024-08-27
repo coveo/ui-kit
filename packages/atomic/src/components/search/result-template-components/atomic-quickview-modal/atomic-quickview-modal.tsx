@@ -45,7 +45,11 @@ export interface HighlightKeywords {
 }
 
 /**
- * @internal
+ * The modal opened when clicking on a quickview button.
+ * Do not use this component directly; use `atomic-quickview` instead.
+ *
+ * @part quickview-modal-header-icon - The close icon of the modal.
+ * @part quickview-modal-header-title - The title of the modal.
  */
 @Component({
   tag: 'atomic-quickview-modal',
@@ -82,7 +86,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private interactiveResult?: InteractiveResult;
 
-  public componentWillRender(): void {
+  public componentWillLoad(): void {
     this.minimizeSidebar = this.bindings.store.isMobile();
   }
 
@@ -117,6 +121,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
               this.interactiveResult?.cancelPendingSelect()
             }
             className="truncate"
+            part="quickview-modal-header-title"
           >
             {this.result.title}
           </LinkWithItemAnalytics>
@@ -132,7 +137,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
       );
     }
     return (
-      <div slot="header" class="w-full flex justify-between items-center">
+      <div slot="header" class="flex w-full items-center justify-between">
         {headerContent}
       </div>
     );
@@ -140,7 +145,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private renderBody() {
     return (
-      <div slot="body" class="grid grid-cols-[min-content_auto] h-full">
+      <div slot="body" class="grid h-full grid-cols-[min-content_auto]">
         <div
           class="h-full overflow-y-auto"
           style={{backgroundColor: 'var(--atomic-neutral-light)'}}
@@ -156,7 +161,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
           />
         </div>
-        <div class="overflow-auto relative">
+        <div class="relative overflow-auto">
           <QuickviewIframe
             logger={this.logger}
             src={this.quickviewSrc}

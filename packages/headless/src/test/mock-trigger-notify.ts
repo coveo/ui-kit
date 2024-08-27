@@ -1,4 +1,4 @@
-import {TriggerNotify} from '../../src/api/search/trigger';
+import {TriggerNotify} from '../api/common/trigger';
 
 export function buildMockNotifyTrigger(
   config: Partial<TriggerNotify> = {}

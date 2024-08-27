@@ -6,18 +6,29 @@
   <template lwc:else>
     <template if:false={hideSort}>
       <div class="slds-var-m-bottom_small slds-clearfix">
-        <c-quantic-sort
-          class="slds-float_left"
-          engine-id={engineId}
-        ></c-quantic-sort>
+        <template lwc:if={isSortComponentReady}>
+          <c-quantic-sort class="slds-float_left" engine-id={engineId}>
+            <template for:each={sortOptions} for:item="sortOption">
+              <c-quantic-sort-option
+                key={sortOption.value}
+                value={sortOption.value}
+                criterion={sortOption.criterion}
+                label={sortOption.label}
+                slot="sortOption"
+              ></c-quantic-sort-option>
+            </template>
+          </c-quantic-sort>
+        </template>
       </div>
     </template>
     <template if:true={hasFacets}>
       <div
         class="slds-align_absolute-center filters-header slds-var-m-bottom_small"
       >
-        <template if:true={someFacetsRendered}>
-          <div class="slds-text-heading_small">{labels.filters}</div>
+        <template if:true={shouldDisplayFiltersTitle}>
+          <div data-cy="filters-title" class="slds-text-heading_small">
+            {labels.filters}
+          </div>
         </template>
         <template if:true={hasActiveFilters}>
           <lightning-button

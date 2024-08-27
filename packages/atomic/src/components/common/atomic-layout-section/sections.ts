@@ -5,6 +5,7 @@ export type Section =
   | 'status'
   | 'results'
   | 'horizontal-facets'
+  | 'products'
   | 'pagination';
 
 export function findSection(element: HTMLElement, section: Section) {

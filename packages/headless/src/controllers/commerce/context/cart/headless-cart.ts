@@ -1,9 +1,12 @@
-import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
+  CartActionPayload,
+  emitCartActionEvent,
+  emitPurchaseEvent,
   purchase,
   setItems,
-  updateItem,
+  updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions';
 import {
   Transaction,
@@ -39,12 +42,6 @@ export interface CartItem {
   productId: string;
 
   /**
-   * The stock keeping unit for the item being added to cart.
-   * Depending on how your catalog is structured, this may be the same value as the productId.
-   */
-  sku: string;
-
-  /**
    * The human-readable name of the product.
    */
   name: string;
@@ -75,21 +72,23 @@ export interface Cart extends Controller {
    * Creates, updates, or deletes an item in the cart, and emits an `ec.cartAction` analytics event if the `quantity` of
    * the item in the cart changes.
    *
-   * If an item with the specified `productId` already exists in the cart:
-   * - Setting `quantity` to `0` deletes the item from the cart; `name` and `price` have no effect.
-   * - Setting `quantity` to a positive number updates the item's `name`, `price`, and `quantity` to the
-   * specified values.
+   * If an item with the specified `productId`, `name` and `price` already exists in the cart:
+   * - Setting `quantity` to `0` deletes the item from the cart.
+   * - Setting `quantity` to a positive number updates the item.
    *
    * Otherwise:
-   * - Setting `quantity` to a positive number creates the item in the cart with the specified `productName`,
-   * `pricePerUnit`, and `quantity`.
+   * - Setting `quantity` to a positive number creates the item in the cart with the specified `name`,
+   * `price`, and `quantity`.
    *
    * If the specified `quantity` is equivalent to the current quantity of the item in the cart, no analytics event is
    * emitted. Otherwise, the method emits an `ec.cartAction` event with the appropriate action (`add` or `remove`).
    *
+   * Note: Updating the `name` or `price` will create a new item in the cart, leaving the previous item with the same
+   * `productId`, `name` and `price` unchanged. If you wish to change these items, delete and recreate the item.
+   *
    * @param item - The cart item to create, update, or delete.
    */
-  updateItem(item: CartItem): void;
+  updateItemQuantity(item: CartItem): void;
 
   /**
    * Sets the quantity of each item in the cart to 0, effectively emptying the cart.
@@ -145,7 +144,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state.cart;
+  const getState = () => engine[stateKey].cart;
 
   const initialState = {
     ...props.initialState,
@@ -174,10 +173,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return isCurrentQuantityGreater ? 'add' : 'remove';
   }
 
-  function getCurrency(): CurrencyCodeISO4217 {
-    return engine.state.commerceContext.currency;
-  }
-
   function isEqual(
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
@@ -192,17 +187,15 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   function createEcCartActionPayload(
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
-  ): Ec.CartAction {
-    const {quantity: currentQuantity, sku, ...product} = currentItem;
+  ): CartActionPayload {
+    const {quantity: currentQuantity, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity
       : Math.abs(currentQuantity - prevItem.quantity);
-    const currency = getCurrency();
 
     return {
       action,
-      currency,
       quantity,
       product,
     };
@@ -213,16 +206,17 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
     empty: function () {
       for (const item of itemsSelector(getState())) {
-        this.updateItem({...item, quantity: 0});
+        this.updateItemQuantity({...item, quantity: 0});
       }
     },
 
     purchase(transaction: Transaction) {
-      dispatch(purchase(transaction));
+      dispatch(emitPurchaseEvent(transaction));
+      dispatch(purchase());
     },
 
-    updateItem(item: CartItem) {
-      const prevItem = itemSelector(getState(), item.sku);
+    updateItemQuantity(item: CartItem) {
+      const prevItem = itemSelector(getState(), item);
       const doesNotNeedUpdate = !prevItem && item.quantity <= 0;
 
       if (doesNotNeedUpdate || isEqual(item, prevItem)) {
@@ -230,13 +224,12 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
 
       if (isNewQuantityDifferent(item, prevItem)) {
-        engine.relay.emit(
-          'ec.cartAction',
-          createEcCartActionPayload(item, prevItem)
+        dispatch(
+          emitCartActionEvent(createEcCartActionPayload(item, prevItem))
         );
       }
 
-      dispatch(updateItem(item));
+      dispatch(updateItemQuantity(item));
     },
 
     get state() {
@@ -249,6 +242,12 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       };
     },
   };
+}
+
+export type CartKey = string;
+
+export function createCartKey(item: CartItem): CartKey {
+  return `${item.productId},${item.name},${item.price}`;
 }
 
 function loadBaseCartReducers(

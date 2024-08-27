@@ -1,4 +1,8 @@
-import {GeneratedAnswer, GeneratedAnswerFeedback} from '@coveo/headless';
+import {
+  GeneratedAnswer,
+  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedbackOption,
+} from '@coveo/headless';
 import {
   Component,
   State,
@@ -19,7 +23,9 @@ import {
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../button';
+import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
+import {RadioButton} from '../../radio-button';
 
 /**
  * @internal
@@ -43,15 +49,23 @@ export class AtomicGeneratedAnswerFeedbackModal
    * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
    */
   @Prop({reflect: true, mutable: true}) generatedAnswer!: GeneratedAnswer;
+  /**
+   * Indicates whether the answer was helpful or not.
+   */
+  @Prop({reflect: true, mutable: true}) helpful = false;
 
   @State() public error!: Error;
-  @State() currentAnswer?: GeneratedAnswerFeedback | 'other' | undefined;
+  @State() private currentAnswer: Partial<GeneratedAnswerFeedbackV2> =
+    this.getInitialAnswerState();
   @State() feedbackSubmitted: boolean = false;
+  @State() answerEvaluationRequired: boolean = false;
 
   private readonly formId = randomID(
     'atomic-generated-answer-feedback-modal-form-'
   );
   private detailsInputRef?: HTMLTextAreaElement;
+
+  private linkInputRef?: HTMLInputElement;
 
   @Event() feedbackSent!: EventEmitter;
 
@@ -63,66 +77,94 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   private static options: {
-    id: string;
     localeKey: string;
-    correspondingAnswer: GeneratedAnswerFeedback | 'other';
+    correspondingAnswer: keyof GeneratedAnswerFeedbackV2;
   }[] = [
     {
-      id: 'irrelevant',
-      localeKey: 'irrelevant',
-      correspondingAnswer: 'irrelevant',
+      localeKey: 'feedback-correct-topic',
+      correspondingAnswer: 'correctTopic',
     },
     {
-      id: 'notAccurate',
-      localeKey: 'not-accurate',
-      correspondingAnswer: 'notAccurate',
+      localeKey: 'feedback-hallucination-free',
+      correspondingAnswer: 'hallucinationFree',
     },
     {
-      id: 'outOfDate',
-      localeKey: 'out-of-date',
-      correspondingAnswer: 'outOfDate',
+      localeKey: 'feedback-documented',
+      correspondingAnswer: 'documented',
     },
     {
-      id: 'harmful',
-      localeKey: 'harmful',
-      correspondingAnswer: 'harmful',
-    },
-    {
-      id: 'other',
-      localeKey: 'other',
-      correspondingAnswer: 'other',
+      localeKey: 'feedback-readable',
+      correspondingAnswer: 'readable',
     },
   ];
 
-  private setIsOpen(isOpen: boolean) {
-    this.isOpen = isOpen;
+  private getInitialAnswerState(): Partial<GeneratedAnswerFeedbackV2> {
+    return {
+      documented: undefined,
+      correctTopic: undefined,
+      hallucinationFree: undefined,
+      readable: undefined,
+    };
   }
 
-  private close() {
+  private resetState() {
     this.feedbackSubmitted = false;
+    this.currentAnswer = this.getInitialAnswerState();
+    this.answerEvaluationRequired = false;
+    this.isOpen = false;
+  }
+
+  private clearInputRefs() {
     if (this.detailsInputRef) {
       this.detailsInputRef.value = '';
     }
-    this.currentAnswer = undefined;
-    this.setIsOpen(false);
+    if (this.linkInputRef) {
+      this.linkInputRef.value = '';
+    }
+  }
+
+  private close() {
+    this.clearInputRefs();
+    this.resetState();
     this.generatedAnswer.closeFeedbackModal();
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
-  private setCurrentAnswer(answer?: GeneratedAnswerFeedback | 'other') {
-    this.currentAnswer = answer;
+  private setCurrentAnswer(
+    key: keyof GeneratedAnswerFeedbackV2,
+    value: GeneratedAnswerFeedbackOption | string
+  ) {
+    this.currentAnswer = {
+      ...this.currentAnswer,
+      [key]: value,
+    };
   }
 
   public sendFeedback() {
-    if (this.currentAnswer === 'other') {
-      this.generatedAnswer.sendDetailedFeedback(this.detailsInputRef!.value);
-    } else {
-      this.generatedAnswer.sendFeedback(
-        this.currentAnswer as GeneratedAnswerFeedback
-      );
-    }
+    const feedback: GeneratedAnswerFeedbackV2 = {
+      ...(this.currentAnswer as GeneratedAnswerFeedbackV2),
+      helpful: this.helpful,
+    };
+    this.generatedAnswer.sendFeedback(feedback);
     this.feedbackSent.emit();
+  }
+
+  private isAnyAnswerEvaluationUndefined = () => {
+    return Object.values(this.currentAnswer).some(
+      (value) => value === undefined
+    );
+  };
+
+  private handleSubmit(e: Event) {
+    e.preventDefault();
+    if (this.isAnyAnswerEvaluationUndefined()) {
+      this.answerEvaluationRequired = true;
+      return;
+    }
+    this.feedbackSubmitted = true;
+    this.answerEvaluationRequired = false;
+    this.sendFeedback();
   }
 
   private renderHeader() {
@@ -130,17 +172,83 @@ export class AtomicGeneratedAnswerFeedbackModal
       <div
         slot="header"
         part="modal-header"
-        class="w-full flex justify-between items-center"
+        class="flex w-full items-center justify-between"
       >
-        <h1>{this.bindings.i18n.t('feedback')}</h1>
+        <h1>
+          <span>{this.bindings.i18n.t('feedback-modal-title')}</span>
+          <span class="hide ml-0.5">
+            {this.bindings.i18n.t('additional-feedback')}
+          </span>
+        </h1>
         <IconButton
           style="text-transparent"
           class="search-clear-button"
           onClick={() => this.close()}
           icon={CloseIcon}
           partPrefix={'close'}
-          ariaLabel={this.bindings.i18n.t('modal-done')}
+          ariaLabel={this.bindings.i18n.t('close')}
         />
+      </div>
+    );
+  }
+
+  private renderFeedbackOption(
+    option: GeneratedAnswerFeedbackOption,
+    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
+  ) {
+    const buttonClasses = [
+      'min-w-20',
+      'flex',
+      'items-center',
+      'justify-center',
+      'px-3',
+      'py-1.5',
+      'mr-1',
+      'text-neutral-dark',
+    ];
+    const isSelected = this.currentAnswer[correspondingAnswer] === option;
+
+    if (isSelected) {
+      buttonClasses.push('active');
+    }
+    return (
+      <RadioButton
+        key={String(correspondingAnswer)}
+        groupName={this.bindings.i18n.t(correspondingAnswer)}
+        style="outline-neutral"
+        checked={isSelected}
+        aria-checked={isSelected}
+        onChecked={() => {
+          this.setCurrentAnswer(correspondingAnswer, option);
+        }}
+        class={buttonClasses.join(' ')}
+        text={this.bindings.i18n.t(option)}
+      ></RadioButton>
+    );
+  }
+
+  private renderAnswerEvaluation(
+    label: string,
+    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
+  ) {
+    const labelClasses = ['text-error-red', 'text-sm', 'hidden'];
+    const isRequired =
+      this.answerEvaluationRequired &&
+      this.currentAnswer[correspondingAnswer] === undefined;
+    if (isRequired) {
+      labelClasses.push('required');
+    }
+    return (
+      <div class="block">
+        <div class="flex">
+          <label class="text-base">
+            {this.bindings.i18n.t(label)}
+            <span class="text-error-red ml-0.5">*</span>
+          </label>
+        </div>
+        <span class={labelClasses.join(' ')}>
+          {this.bindings.i18n.t('required-fields-error')}
+        </span>
       </div>
     );
   }
@@ -148,77 +256,97 @@ export class AtomicGeneratedAnswerFeedbackModal
   private renderOptions() {
     return (
       <fieldset>
-        <legend part="reason-title" class="text-base">
-          {this.bindings.i18n.t('generated-answer-feedback-instructions')}
+        <legend class="font-bold">
+          {this.bindings.i18n.t('answer-evaluation')}
         </legend>
         {AtomicGeneratedAnswerFeedbackModal.options.map(
-          ({id, localeKey, correspondingAnswer}) => (
-            <div
-              class={`flex items-center ${correspondingAnswer} mobile-only:mt-4 desktop-only:mt-6`}
-              key={id}
-              part="reason"
-            >
-              <input
-                part="reason-radio"
-                type="radio"
-                name="answer"
-                id={id}
-                checked={this.currentAnswer === correspondingAnswer}
-                onChange={(e) =>
-                  (e.currentTarget as HTMLInputElement | null)?.checked &&
-                  this.setCurrentAnswer(correspondingAnswer)
-                }
-                class="mr-2"
-                required
-              />
-              <label part="reason-label" htmlFor={id}>
-                {this.bindings.i18n.t(localeKey)}
-              </label>
-            </div>
+          ({localeKey, correspondingAnswer}) => (
+            <FieldsetGroup label={this.bindings.i18n.t(localeKey)}>
+              <div
+                class={`answer-evaluation mt-3 flex items-center justify-between ${String(correspondingAnswer)}`}
+                key={String(correspondingAnswer)}
+              >
+                {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
+                <div
+                  class="options flex text-base"
+                  aria-label={this.bindings.i18n.t(localeKey)}
+                >
+                  {this.renderFeedbackOption('yes', correspondingAnswer)}
+                  {this.renderFeedbackOption('unknown', correspondingAnswer)}
+                  {this.renderFeedbackOption('no', correspondingAnswer)}
+                </div>
+              </div>
+            </FieldsetGroup>
           )
         )}
       </fieldset>
     );
   }
 
-  private renderDetails() {
-    if (this.currentAnswer !== 'other') {
-      return;
-    }
-
+  private renderLinkToCorrectAnswerField() {
     return (
       <fieldset>
+        <legend class="font-bold">
+          {this.bindings.i18n.t('generated-answer-feedback-link')}
+        </legend>
+        <input
+          type="text"
+          ref={(linkInputRef) => (this.linkInputRef = linkInputRef)}
+          placeholder="https://URL"
+          class="input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4"
+          onChange={(e) =>
+            this.setCurrentAnswer(
+              'documentUrl',
+              (e.currentTarget as HTMLInputElement).value
+            )
+          }
+        />
+      </fieldset>
+    );
+  }
+
+  private renderAddNotesField() {
+    return (
+      <fieldset>
+        <legend class="mt-8 font-bold">
+          {this.bindings.i18n.t('generated-answer-additional-notes')}
+        </legend>
         <textarea
-          part="details-input"
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
+          class="placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-none focus-visible:ring-2"
           rows={4}
-          placeholder={this.bindings.i18n.t('add-details')}
-          required
+          placeholder={this.bindings.i18n.t('add-notes')}
+          onChange={(e) =>
+            this.setCurrentAnswer(
+              'details',
+              (e.currentTarget as HTMLTextAreaElement).value
+            )
+          }
         ></textarea>
       </fieldset>
     );
   }
 
-  private renderBody() {
-    return !this.feedbackSubmitted ? (
+  private renderFeedbackForm() {
+    return (
       <form
         part="form"
         id={this.formId}
         slot="body"
-        onSubmit={(e) => {
-          e.preventDefault();
-          this.feedbackSubmitted = true;
-          this.sendFeedback();
-        }}
-        class="flex flex-col gap-8 text-base leading-4 text-neutral-dark p-2"
+        onSubmit={(e) => this.handleSubmit(e)}
+        class="flex flex-col gap-8 leading-4"
       >
         {this.renderOptions()}
-        {this.renderDetails()}
+        {this.renderLinkToCorrectAnswerField()}
+        {this.renderAddNotesField()}
       </form>
-    ) : (
-      <div slot="body" class="flex flex-col items-center gap-4 my-4">
+    );
+  }
+
+  private renderSuccessMessage() {
+    return (
+      <div slot="body" class="my-4 flex flex-col items-center gap-4">
         <atomic-icon icon={Success} class="w-48" />
         <p class="text-base">
           {this.bindings.i18n.t('generated-answer-feedback-success')}
@@ -227,46 +355,75 @@ export class AtomicGeneratedAnswerFeedbackModal
     );
   }
 
-  private renderFooter() {
+  private renderBody() {
+    if (!this.feedbackSubmitted) {
+      return this.renderFeedbackForm();
+    } else {
+      return this.renderSuccessMessage();
+    }
+  }
+
+  private renderFeedbackFormFooter() {
+    const buttonClasses =
+      'flex items-center justify-center text-sm leading-4 p-2 rounded-md';
+
     return (
-      <div slot="footer" part="modalFooter">
-        {!this.feedbackSubmitted ? (
-          <div part="buttons" class="flex justify-end gap-2 px-4">
+      <div slot="footer" part="modal-footer">
+        <div class="flex items-center justify-between">
+          <div class="required-label text-base">
+            <span class="text-error mr-0.5">*</span>
+            {this.bindings.i18n.t('required-fields')}
+          </div>
+          <div class="flex gap-2">
             <Button
               part="cancel-button"
-              style="outline-neutral"
-              class="text-primary flex justify-center text-sm leading-4 p-2"
-              ariaLabel={this.bindings.i18n.t('close')}
+              style="outline-primary"
+              class={buttonClasses}
+              ariaLabel={this.bindings.i18n.t('skip')}
               onClick={() => this.close()}
             >
-              {this.bindings.i18n.t('close')}
+              {this.bindings.i18n.t('skip')}
             </Button>
             <Button
               part="submit-button"
               style="primary"
               type="submit"
               form={this.formId}
-              class="flex justify-center text-sm leading-4 p-2"
-              ariaLabel={this.bindings.i18n.t('feedback-send')}
+              class={buttonClasses}
+              ariaLabel={this.bindings.i18n.t('generated-answer-send-feedback')}
             >
-              {this.bindings.i18n.t('feedback-send')}
+              {this.bindings.i18n.t('generated-answer-send-feedback')}
             </Button>
           </div>
-        ) : (
-          <div part="buttons" class="flex justify-end gap-2 p-2">
-            <Button
-              part="cancel-button"
-              style="primary"
-              onClick={() => this.close()}
-              class="flex justify-center text-sm leading-4 p-2"
-              ariaLabel={this.bindings.i18n.t('modal-done')}
-            >
-              {this.bindings.i18n.t('modal-done')}
-            </Button>
-          </div>
-        )}
+        </div>
       </div>
     );
+  }
+
+  private renderSuccessFormFooter() {
+    return (
+      <div slot="footer">
+        <div class="flex justify-end gap-2 p-2">
+          <Button
+            part="cancel-button"
+            style="primary"
+            onClick={() => this.close()}
+            class="flex justify-center p-2 text-sm leading-4"
+            ariaLabel={this.bindings.i18n.t('modal-done')}
+          >
+            {this.bindings.i18n.t('modal-done')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  private renderFooter() {
+    if (!this.feedbackSubmitted) {
+      return this.renderFeedbackFormFooter();
+    } else {
+      return this.renderSuccessFormFooter();
+    }
   }
 
   public render() {
@@ -278,6 +435,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         isOpen={this.isOpen}
         close={() => this.close()}
         container={this.host}
+        part="generated-answer-feedback-modal"
         exportparts="backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
       >
         {this.renderHeader()}

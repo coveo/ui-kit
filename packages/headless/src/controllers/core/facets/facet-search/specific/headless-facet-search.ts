@@ -1,7 +1,8 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {AsyncThunkOptions} from '../../../../../app/async-thunk-options';
-import {CoreEngine} from '../../../../../app/engine';
+import {CoreEngine, CoreEngineNext} from '../../../../../app/engine';
+import {stateKey} from '../../../../../app/state-key';
 import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments';
 import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
@@ -25,14 +26,14 @@ export interface FacetSearchProps {
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
   executeFieldSuggestActionCreator: (
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
 }
@@ -40,7 +41,9 @@ export interface FacetSearchProps {
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 
 export function buildFacetSearch(
-  engine: CoreEngine<FacetSearchSection & ConfigurationSection>,
+  engine:
+    | CoreEngine<FacetSearchSection & ConfigurationSection>
+    | CoreEngineNext<FacetSearchSection & ConfigurationSection>,
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;
@@ -53,7 +56,10 @@ export function buildFacetSearch(
     executeFieldSuggestActionCreator,
   } = props;
   const {facetId} = options;
-  const getFacetSearch = () => engine.state.facetSearchSet[facetId];
+  const getFacetSearch = () =>
+    'state' in engine
+      ? engine.state.facetSearchSet[facetId]
+      : engine[stateKey].facetSearchSet[facetId];
 
   dispatch(registerFacetSearch(options));
 

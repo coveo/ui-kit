@@ -1,4 +1,4 @@
-import {CoreEngine} from '../app/engine';
+import type {CoreEngine, CoreEngineNext} from '../app/engine';
 import {Controller} from '../controllers/controller/headless-controller';
 
 function isEngine(obj: object): obj is CoreEngine {
@@ -6,7 +6,7 @@ function isEngine(obj: object): obj is CoreEngine {
 }
 
 export function waitForNextStateChange(
-  target: Controller | CoreEngine,
+  target: Controller | CoreEngine | CoreEngineNext,
   options: {action?: () => void; expectedSubscriberCalls?: number} = {}
 ) {
   return new Promise<void>((resolve) => {

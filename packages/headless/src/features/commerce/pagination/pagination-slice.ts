@@ -1,17 +1,29 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {setContext, setView} from '../context/context-actions';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
 import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from '../../facets/facet-set/facet-set-actions';
+  clearAllCoreFacets,
+  deselectAllValuesInCoreFacet,
+} from '../facets/core-facet/core-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../facets/date-facet/date-facet-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {setContext, setUser, setView} from '../context/context-actions';
+} from '../facets/numeric-facet/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../facets/regular-facet/regular-facet-actions';
+import {Parameters} from '../parameters/parameters-actions';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {fetchRecommendations} from '../recommendations/recommendations-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {executeSearch} from '../search/search-actions';
+import {applySort} from '../sort/sort-actions';
 import {
   nextPage,
   previousPage,
@@ -87,20 +99,26 @@ export const paginationReducer = createReducer(
       .addCase(registerRecommendationsSlotPagination, (state, action) => {
         const slotId = action.payload.slotId;
 
-        if (slotId in state) {
+        if (slotId in state.recommendations) {
           return;
         }
 
         state.recommendations[slotId] = getCommercePaginationInitialSlice();
       })
-      .addCase(deselectAllFacetValues, handlePaginationReset)
+      .addCase(clearAllCoreFacets, handlePaginationReset)
+      .addCase(deselectAllValuesInCoreFacet, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
       .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
+      .addCase(toggleSelectDateFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeDateFacetValue, handlePaginationReset)
+      .addCase(toggleSelectCategoryFacetValue, handlePaginationReset)
+      .addCase(applySort, handlePaginationReset)
       .addCase(setContext, handlePaginationReset)
       .addCase(setView, handlePaginationReset)
-      .addCase(setUser, handlePaginationReset);
+      .addCase(restoreSearchParameters, handleRestoreParameters)
+      .addCase(restoreProductListingParameters, handleRestoreParameters);
   }
 );
 
@@ -114,5 +132,18 @@ function getEffectiveSlice(
 }
 
 function handlePaginationReset(state: CommercePaginationState) {
-  state.principal = getCommercePaginationInitialSlice();
+  state.principal.page = getCommercePaginationInitialSlice().page;
+}
+
+function handleRestoreParameters(
+  state: CommercePaginationState,
+  action: {payload: Parameters}
+) {
+  if (action.payload.page) {
+    state.principal.page = action.payload.page;
+  }
+
+  if (action.payload.perPage) {
+    state.principal.perPage = action.payload.perPage;
+  }
 }

@@ -4,6 +4,7 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   nextPage,
   previousPage,
@@ -18,10 +19,10 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 /**
- * The `Pagination` controller is responsible for navigating between pages of results in a commerce interface.
+ * The `Pagination` sub-controller is responsible for navigating between pages of results in a commerce interface.
  */
 export interface Pagination extends Controller {
   /**
@@ -49,7 +50,12 @@ export interface Pagination extends Controller {
   setPageSize(pageSize: number): void;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Pagination` controller.
+   * Fetches the next page of products, and appends them to the current list of products.
+   */
+  fetchMoreProducts(): void;
+
+  /**
+   * A scoped and simplified part of the headless state that is relevant to the `Pagination` sub-controller.
    */
   state: PaginationState;
 }
@@ -70,7 +76,8 @@ export interface CorePaginationOptions {
 }
 
 export interface CorePaginationProps {
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
+  fetchMoreProductsActionCreator: FetchProductsActionCreator;
   options?: CorePaginationOptions;
 }
 
@@ -86,11 +93,11 @@ const optionsSchema = new Schema({
 
 /**
  * @internal
- * Creates a `Pagination` controller instance.
+ * Creates a `Pagination` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `Pagination` controller properties.
- * @returns A `Pagination` controller instance.
+ * @param props - The configurable `Pagination` sub-controller properties.
+ * @returns A `Pagination` sub-controller instance.
  * */
 export function buildCorePagination(
   engine: CommerceEngine,
@@ -135,7 +142,7 @@ export function buildCorePagination(
     ...controller,
 
     get state() {
-      return paginationSelector(engine.state);
+      return paginationSelector(engine[stateKey]);
     },
 
     selectPage(page: number) {
@@ -145,22 +152,26 @@ export function buildCorePagination(
           page,
         })
       );
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     nextPage() {
       dispatch(nextPage({slotId}));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     previousPage() {
       dispatch(previousPage({slotId}));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     setPageSize(pageSize: number) {
       dispatch(setPageSize({slotId, pageSize}));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
+    },
+
+    fetchMoreProducts() {
+      dispatch(props.fetchMoreProductsActionCreator());
     },
   };
 }

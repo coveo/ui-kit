@@ -1,0 +1,13 @@
+name: 'Delete PR artifact on merge'
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  delete:
+    environment: PR Artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: ./.github/actions/publish-pr-review-site
+        with:
+          token: ${{ secrets.GH_PUBLISH_TOKEN }}

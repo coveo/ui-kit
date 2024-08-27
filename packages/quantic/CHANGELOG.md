@@ -1,3 +1,87 @@
+# 2.57.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
+# 2.56.0 (2024-08-20)
+
+### Features
+
+- **quantic:** Add option for rephrase buttons, remove citations numbers ([#4277](https://github.com/coveo/ui-kit/issues/4277)) ([e65b99f](https://github.com/coveo/ui-kit/commits/e65b99f2bf1b8f2fead1595942a439731dd3f623))
+- **quantic:** added support for custom options in the quanticSort component ([#4101](https://github.com/coveo/ui-kit/issues/4101)) ([ecb5e24](https://github.com/coveo/ui-kit/commits/ecb5e2484b80822356dba24130e8058deb1413a6))
+
+# 2.55.0 (2024-08-14)
+
+### Bug Fixes
+
+- **quantic:** fix issue with persisting search box suggestion value on blur ([#4279](https://github.com/coveo/ui-kit/issues/4279)) ([c4e2c7c](https://github.com/coveo/ui-kit/commits/c4e2c7c6a4a36d67499f67a858ea2b9e233e1c5f))
+- **quantic:** Issue with overflowing code markdown in generated answer ([#4263](https://github.com/coveo/ui-kit/issues/4263)) ([aab5a7f](https://github.com/coveo/ui-kit/commits/aab5a7f33524fc3526a83060a3b913eccf34ac69))
+- **quantic:** styling issue fixed with quantic facet search component ([#4265](https://github.com/coveo/ui-kit/issues/4265)) ([b94476d](https://github.com/coveo/ui-kit/commits/b94476dd746c87ffd0e9340e66d1703fb7728e7a))
+
+### Features
+
+- **genqa:** filter citations that points to same document ([#4250](https://github.com/coveo/ui-kit/issues/4250)) ([7f04f73](https://github.com/coveo/ui-kit/commits/7f04f7349ad2f25a7100d7d537686a3a06a25188))
+
+## 2.54.1 (2024-07-31)
+
+### Bug Fixes
+
+- **ep:** do not send actionCause w/ breadcrumbResetAll ([#4207](https://github.com/coveo/ui-kit/issues/4207)) ([bcecc55](https://github.com/coveo/ui-kit/commits/bcecc552b433b5da3b9940bae96c725ea731df90))
+
+# 2.54.0 (2024-07-24)
+
+### Bug Fixes
+
+- **quantic:** styling of the search box input adjusted ([#4220](https://github.com/coveo/ui-kit/issues/4220)) ([6cf2171](https://github.com/coveo/ui-kit/commits/6cf2171525e062ccd18a97b3ad94d16e0cbcb8a2))
+
+### Features
+
+- **quantic:** quantic search box improvements ([#4120](https://github.com/coveo/ui-kit/issues/4120)) ([f2363fa](https://github.com/coveo/ui-kit/commits/f2363fa2beeb8abc444acd2fa8b210a970916c80))
+
+# 2.53.0 (2024-07-17)
+
+### Features
+
+- **quantic:** new feedback modal for RGA ([#4162](https://github.com/coveo/ui-kit/issues/4162)) ([ada849a](https://github.com/coveo/ui-kit/commits/ada849a8c75a2db44c7c80c1737a6f766d1b4836))
+
+## 2.52.3 (2024-07-09)
+
+### Bug Fixes
+
+- **SFINT-5598:** Always send contentFormat even with rephrase RGA ([#4134](https://github.com/coveo/ui-kit/issues/4134)) ([3890010](https://github.com/coveo/ui-kit/commits/389001005a577b9787bcdd46369909c77a13ec5f))
+
+## 2.52.1 (2024-07-03)
+
+### Features
+
+- **headless:** update rga and smart snippets feedback events ([#4105](https://github.com/coveo/ui-kit/issues/4105)) ([5b8eab2](https://github.com/coveo/ui-kit/commits/5b8eab22499d695a89c5633a365569e7f039b3d9))
+
+# 2.51.0 (2024-06-26)
+
+### Features
+
+- **quantic:** rich text formatting for quantic RGA ([#4015](https://github.com/coveo/ui-kit/issues/4015)) ([bb4f76a](https://github.com/coveo/ui-kit/commits/bb4f76aa2ee627e0315b7930e89a2f399d35e914))
+
+## 2.50.9 (2024-06-12)
+
+### Bug Fixes
+
+- **quantic:** fix unexpected back browser button behaviour with standalone search box ([#4077](https://github.com/coveo/ui-kit/issues/4077)) ([afa8303](https://github.com/coveo/ui-kit/commits/afa8303543ceeb4ee525c872449c5b2cbb6ab1ce))
+- **quantic:** issue occurring with result title and quick view in salesforce service console addressed ([#4078](https://github.com/coveo/ui-kit/issues/4078)) ([71bc15b](https://github.com/coveo/ui-kit/commits/71bc15b9efebcfb5e56f53a27fb250513b28bade))
+
+## 2.50.7 (2024-06-06)
+
+## 2.50.6 (2024-05-29)
+
+## 2.50.5 (2024-05-22)
+
+## 2.50.4 (2024-05-15)
+
+## 2.50.3 (2024-05-10)
+
+## 2.50.2 (2024-05-06)
+
 ## 2.50.1 (2024-05-02)
 
 ### Bug Fixes

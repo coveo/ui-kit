@@ -3,12 +3,13 @@ import {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine';
-import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {stateKey} from '../../../../../app/state-key';
 import {
-  defaultNumberOfValuesIncrement,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
+} from '../../../../../features/commerce/facets/category-facet/category-facet-actions';
+import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
 import {
   CategoryFacetValue,
@@ -41,7 +42,7 @@ export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
 };
 
 /**
- * The `CategoryFacet` controller offers a high-level programming interface for implementing a commerce category
+ * The `CategoryFacet` sub-controller offers a high-level programming interface for implementing a commerce category
  * facet UI component.
  */
 export type CategoryFacet = Omit<
@@ -60,12 +61,12 @@ export type CategoryFacet = Omit<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `CategoryFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `CategoryFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `CategoryFacet` options used internally.
- * @returns A `CategoryFacet` controller instance.
+ * @returns A `CategoryFacet` sub-controller instance.
  * */
 export function buildCategoryFacet(
   engine: CommerceEngine,
@@ -88,7 +89,7 @@ export function buildCategoryFacet(
     return buildCategoryFacetSearch(engine, {
       options: {facetId: getFacetId(), ...options.facetSearch},
       select: () => {
-        dispatch(options.fetchResultsActionCreator());
+        dispatch(options.fetchProductsActionCreator());
       },
       isForFieldSuggestions: false,
     });
@@ -120,7 +121,7 @@ export function buildCategoryFacet(
         defaultNumberOfValuesIncrement;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     showLessValues() {
@@ -132,7 +133,7 @@ export function buildCategoryFacet(
           numberOfValues: defaultNumberOfValuesIncrement,
         })
       );
-      dispatch(options.fetchResultsActionCreator());
+      dispatch(options.fetchProductsActionCreator());
     },
 
     facetSearch: restOfFacetSearch,
@@ -160,7 +161,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         hasActiveValues,
         selectedValueAncestry,
-        facetSearch: facetSearchStateSelector(engine.state),
+        facetSearch: facetSearchStateSelector(engine[stateKey]),
       };
     },
 

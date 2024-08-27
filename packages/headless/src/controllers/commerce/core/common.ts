@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 
-export type FetchResultsActionCreator = () => AsyncThunkAction<
+export type FetchProductsActionCreator = () => AsyncThunkAction<
   unknown,
   unknown,
   AsyncThunkOptions<unknown>

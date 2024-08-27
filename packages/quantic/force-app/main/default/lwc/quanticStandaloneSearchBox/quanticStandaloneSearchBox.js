@@ -194,12 +194,11 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     );
   }
 
+  get searchBoxValue() {
+    return this.standaloneSearchBox?.state.value || '';
+  }
+
   updateStandaloneState() {
-    if (this.state?.value !== this.standaloneSearchBox.state.value) {
-      // @ts-ignore
-      this.quanticSearchBoxInput.inputValue =
-        this.standaloneSearchBox.state.value;
-    }
     this.state = this.standaloneSearchBox?.state;
     this.suggestions =
       this.state?.suggestions?.map((s, index) => ({
@@ -241,7 +240,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}#q=${encodeURIComponent(value)}`,
+          url: `${this.redirectUrl}${
+            value ? `#q=${encodeURIComponent(value)}` : ''
+          }`,
         },
       },
       false
@@ -253,13 +254,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   handleInputValueChange = (event) => {
     event.stopPropagation();
-    const updatedValue = event.detail.newInputValue;
-    const isSelectionReset = event.detail.resetSelection;
-    if (this.standaloneSearchBox?.state?.value !== updatedValue) {
-      if (isSelectionReset) {
-        this.quanticSearchBoxInput.resetSelection();
-      }
-      this.standaloneSearchBox.updateText(updatedValue);
+    const newValue = event.detail.value;
+    if (this.standaloneSearchBox?.state?.value !== newValue) {
+      this.standaloneSearchBox.updateText(newValue);
     }
   };
 
@@ -286,8 +283,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
-    const selectedSuggestion = event.detail.selectedSuggestion;
-    this.standaloneSearchBox?.selectSuggestion(selectedSuggestion);
+    const {value} = event.detail.selectedSuggestion;
+    this.standaloneSearchBox?.selectSuggestion(value);
   };
 
   /**

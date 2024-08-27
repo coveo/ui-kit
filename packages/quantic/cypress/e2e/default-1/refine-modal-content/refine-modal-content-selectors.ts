@@ -3,13 +3,6 @@ import {ComponentSelector, CypressSelector} from '../../common-selectors';
 const refineContentComponent = 'c-quantic-refine-modal-content';
 const refineContentContainer = '.facets-container';
 
-export interface RefineContentSelector extends FacetSelector {
-  container: FacetSelector;
-  sort: () => CypressSelector;
-  clearAllFiltersButton: () => CypressSelector;
-  filtersTitle: () => CypressSelector;
-}
-
 export interface FacetSelector extends ComponentSelector {
   get: () => CypressSelector;
   facetManager: () => CypressSelector;
@@ -26,6 +19,13 @@ export interface FacetSelector extends ComponentSelector {
   timeframeFacetFirstOption: () => CypressSelector;
   facetFirstOption: () => CypressSelector;
   timeframeFacetValues: () => CypressSelector;
+}
+
+export interface SortSelector extends ComponentSelector {
+  get: () => CypressSelector;
+  sort: () => CypressSelector;
+  sortOption: (value: string) => CypressSelector;
+  sortDropdown: () => CypressSelector;
 }
 
 const getCommonFacetSelectors = (
@@ -60,14 +60,34 @@ const getCommonFacetSelectors = (
   };
 };
 
+export interface RefineContentSelector extends FacetSelector, SortSelector {
+  container: FacetSelector;
+  clearAllFiltersButton: () => CypressSelector;
+  filtersTitle: () => CypressSelector;
+  refineSort: () => CypressSelector;
+  refineSortDropdown: () => CypressSelector;
+  refineSortOption: (value: string) => CypressSelector;
+}
+
 export const RefineContentSelectors: RefineContentSelector = {
   container: getCommonFacetSelectors(() => cy.get(refineContentContainer)),
   ...getCommonFacetSelectors(() => cy.get(refineContentComponent)),
-  sort: () => RefineContentSelectors.get().find('c-quantic-sort'),
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
-    RefineContentSelectors.get().find(
-      '.filters-header .slds-text-heading_small'
+    RefineContentSelectors.get().find('[data-cy="filters-title"]'),
+  refineSort: () => cy.get('c-quantic-refine-modal-content c-quantic-sort'),
+  refineSortDropdown: () =>
+    RefineContentSelectors.refineSort().find('[data-cy="sort-dropdown"]'),
+  refineSortOption: (value: string) =>
+    RefineContentSelectors.refineSortDropdown().find(
+      `.slds-listbox__option[data-value="${value}"]`
+    ),
+  sort: () => cy.get('c-quantic-sort[data-cy="main-sort"]'),
+  sortDropdown: () =>
+    RefineContentSelectors.sort().find('[data-cy="sort-dropdown"]'),
+  sortOption: (value: string) =>
+    RefineContentSelectors.sortDropdown().find(
+      `.slds-listbox__option[data-value="${value}"]`
     ),
 };

@@ -1,6 +1,5 @@
 import {
   setContext,
-  setUser,
   setView,
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer} from '../../../features/commerce/context/context-slice';
@@ -77,19 +76,9 @@ describe('headless commerce context', () => {
     );
   });
 
-  it('setUser dispatches #setUser', () => {
-    context.setUser({
-      userId: 'some-user-id',
-    });
-    expect(setUser).toHaveBeenCalledWith(
-      expect.objectContaining({userId: 'some-user-id'})
-    );
-  });
-
   it('setView dispatches #setView', () => {
     context.setView({
       url: 'https://example.org',
-      referrer: 'https://example.org/referrer',
     });
     expect(setView).toHaveBeenCalled();
   });

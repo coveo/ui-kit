@@ -13,7 +13,11 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {NoResultsCommon} from '../../common/no-results/no-results-common';
+import {NoItemsContainer} from '../../common/no-items/container';
+import {NoItemsGuard} from '../../common/no-items/guard';
+import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
+import {NoItems} from '../../common/no-items/no-items';
+import {SearchTips} from '../../common/no-items/tips';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -49,16 +53,18 @@ export class AtomicInsightNoResults
   }
 
   public render() {
+    const {
+      bindings: {i18n},
+    } = this;
     return (
       <div class="p-3 text-center">
-        {
-          <NoResultsCommon
-            bindings={this.bindings}
-            searchStatusState={this.searchStatusState}
-            querySummaryState={this.querySummaryState}
-            setAriaLive={(msg) => (this.ariaMessage = msg)}
-          />
-        }
+        <NoItemsGuard {...this.searchStatusState}>
+          <NoItemsContainer>
+            <MagnifyingGlass />
+            <NoItems query={this.querySummaryState.query} i18n={i18n} />
+            <SearchTips i18n={i18n} />
+          </NoItemsContainer>
+        </NoItemsGuard>
       </div>
     );
   }

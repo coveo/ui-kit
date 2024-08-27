@@ -1,35 +1,82 @@
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
+import {ChildProduct, Product} from '../../../api/commerce/common/product';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
-import {responseIdSelector} from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
+import {
+  pagePrincipalSelector,
+  perPagePrincipalSelector,
+  totalEntriesPrincipalSelector,
+} from '../../../features/commerce/pagination/pagination-selectors';
+import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
+import {
+  activeParametersSelector,
+  enrichedParametersSelector,
+} from '../../../features/commerce/parameters/parameters-selectors';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
+import {
+  fetchProductListing,
+  fetchMoreProducts,
+  promoteChildToParent,
+} from '../../../features/commerce/product-listing/product-listing-actions';
+import {
+  errorSelector,
+  isLoadingSelector,
+  numberOfProductsSelector,
+  requestIdSelector,
+  responseIdSelector,
+} from '../../../features/commerce/product-listing/product-listing-selectors';
+import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
 import {
-  buildSolutionTypeSubControllers,
+  buildProductListingSubControllers,
   SearchAndListingSubControllers,
 } from '../core/sub-controller/headless-sub-controller';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options';
+import {ProductListingSummaryState} from './summary/headless-product-listing-summary';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
 export interface ProductListing
   extends Controller,
-    SearchAndListingSubControllers {
+    SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   /**
    * Fetches the product listing.
    */
   refresh(): void;
+
+  /**
+   * Executes the first request if it has not been executed yet.
+   */
+  executeFirstRequest(): void;
+
+  /**
+   * Finds the specified parent product and the specified child product of that parent, and makes that child the new
+   * parent. The `children` and `totalNumberOfChildren` properties of the original parent are preserved in the new
+   * parent.
+   *
+   * This method is useful when leveraging the product grouping feature to allow users to select nested products.
+   *
+   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * to make that child the new parent product, and re-render the product as such in the storefront.
+   *
+   * **Note:** In the controller state, a product that has children will always include itself as its own child so that
+   * it can be rendered as a nested product, and restored as the parent product through this method as needed.
+   *
+   * @param child The child product that will become the new parent.
+   */
+  promoteChildToParent(child: ChildProduct): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
@@ -57,12 +104,25 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
-  const subControllers = buildSolutionTypeSubControllers(engine, {
+  const getState = () => engine[stateKey];
+  const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
-    fetchResultsActionCreator: fetchProductListing,
+    fetchProductsActionCreator: fetchProductListing,
+    fetchMoreProductsActionCreator: fetchMoreProducts,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
+    requestIdSelector,
+    serializer: productListingSerializer,
+    parametersDefinition,
+    activeParametersSelector,
+    restoreActionCreator: restoreProductListingParameters,
+    enrichParameters: enrichedParametersSelector,
+    isLoadingSelector,
+    errorSelector,
+    pageSelector: pagePrincipalSelector,
+    perPageSelector: perPagePrincipalSelector,
+    totalEntriesSelector: totalEntriesPrincipalSelector,
+    numberOfProductsSelector,
   });
 
   return {
@@ -80,7 +140,21 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       };
     },
 
+    promoteChildToParent(child: ChildProduct) {
+      dispatch(promoteChildToParent({child}));
+    },
+
     refresh: () => dispatch(fetchProductListing()),
+
+    executeFirstRequest() {
+      const firstRequestExecuted = responseIdSelector(getState()) !== '';
+
+      if (firstRequestExecuted) {
+        return;
+      }
+
+      dispatch(fetchProductListing());
+    },
   };
 }
 

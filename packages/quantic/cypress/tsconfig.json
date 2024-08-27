@@ -10,5 +10,5 @@
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["**/*.ts", "**/*.js"]
+  "include": ["../node_modules/cypress", "**/*.ts", "**/*.js"]
 }

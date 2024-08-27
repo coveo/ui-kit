@@ -23,7 +23,7 @@ import {AtomicRecsStore} from '../atomic-recs-interface/store';
  */
 @Component({
   tag: 'atomic-recs-result',
-  styleUrl: '../../common/result/result.pcss',
+  styleUrl: 'atomic-recs-result.pcss',
   shadow: true,
 })
 export class AtomicRecsResult {

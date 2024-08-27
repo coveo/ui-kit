@@ -1,22 +1,80 @@
-import {StringValue} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
+import {BooleanValue, StringValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
+  AsyncThunkCommerceOptions,
+  isErrorResponse,
+} from '../../../api/commerce/commerce-api-client';
+import {CommerceSearchRequest} from '../../../api/commerce/search/request';
+import {isRedirectTrigger} from '../../../api/common/trigger';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
+import {
+  CartSection,
   CommerceContextSection,
   CommerceQuerySection,
   ConfigurationSection,
-  PipelineSection,
-  SearchHubSection,
 } from '../../../state/state-sections';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload';
+import {buildBaseCommerceAPIRequest} from '../common/actions';
 
 export type StateNeededForRedirect = ConfigurationSection &
+  CommerceContextSection &
   CommerceQuerySection &
-  Partial<CommerceContextSection & SearchHubSection & PipelineSection>;
+  CartSection;
 
-export interface RegisterStandaloneSearchBoxActionCreatorPayload {
+export interface FetchRedirectUrlPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+}
+
+// eslint-disable-next-line @cspell/spellchecker
+// TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+export const fetchRedirectUrl = createAsyncThunk<
+  string,
+  FetchRedirectUrlPayload,
+  AsyncThunkCommerceOptions<StateNeededForRedirect>
+>(
+  'commerce/standaloneSearchBox/fetchRedirect',
+  async (
+    payload,
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+  ) => {
+    validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
+    const state = getState();
+    const request = buildPlanRequest(state, navigatorContext);
+    const response = await apiClient.plan(request);
+    if (isErrorResponse(response)) {
+      return rejectWithValue(response.error);
+    }
+
+    const redirectTriggers =
+      response.success.triggers.filter(isRedirectTrigger);
+
+    return redirectTriggers.length ? redirectTriggers[0].content : '';
+  }
+);
+export interface RegisterStandaloneSearchBoxPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+
+  /**
+   * The default URL to which to redirect the user.
+   */
+  redirectionUrl: string;
+
+  /**
+   * Whether to overwrite the existing standalone search box with the same id.
+   */
+  overwrite?: boolean;
+}
+
+export interface UpdateStandaloneSearchBoxPayload {
   /**
    * The standalone search box id.
    */
@@ -29,15 +87,25 @@ export interface RegisterStandaloneSearchBoxActionCreatorPayload {
 }
 
 export const registerStandaloneSearchBox = createAction(
-  'standaloneSearchBox/register',
-  (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
+  'commerce/standaloneSearchBox/register',
+  (payload: RegisterStandaloneSearchBoxPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      redirectionUrl: requiredNonEmptyString,
+      overwrite: new BooleanValue({required: false}),
+    })
+);
+
+export const updateStandaloneSearchBoxRedirectionUrl = createAction(
+  'commerce/standaloneSearchBox/updateRedirectionUrl',
+  (payload: UpdateStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
       redirectionUrl: requiredNonEmptyString,
     })
 );
 
-export interface ResetStandaloneSearchBoxActionCreatorPayload {
+export interface ResetStandaloneSearchBoxPayload {
   /**
    * The standalone search box id.
    */
@@ -45,31 +113,19 @@ export interface ResetStandaloneSearchBoxActionCreatorPayload {
 }
 
 export const resetStandaloneSearchBox = createAction(
-  'standaloneSearchBox/reset',
-  (payload: ResetStandaloneSearchBoxActionCreatorPayload) =>
+  'commerce/standaloneSearchBox/reset',
+  (payload: ResetStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
     })
 );
 
-export interface FetchRedirectUrlActionCreatorPayload {
-  /**
-   * The standalone search box id.
-   */
-  id: string;
-  /**
-   *  TODO: KIT-3134: remove once the `search/redirect` endpoint is implemented.
-   * This is a temporary hack to simulate the redirection URL. It will be removed once the `search/redirect` endpoint is implemented.
-   */
-  redirectionUrl: string;
-}
-
-export const fetchRedirectUrl = createAction(
-  // TODO: KIT-3134: implement createAsyncThunk logic to fetch the redirection URL from the Commerce API endpoint.
-  'commerce/standaloneSearchBox/fetchRedirect',
-  (payload: FetchRedirectUrlActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: new StringValue({emptyAllowed: false}),
-      redirectionUrl: new StringValue({emptyAllowed: false}),
-    })
-);
+export const buildPlanRequest = (
+  state: StateNeededForRedirect,
+  navigatorContext: NavigatorContext
+): CommerceSearchRequest => {
+  return {
+    query: state.commerceQuery.query,
+    ...buildBaseCommerceAPIRequest(state, navigatorContext),
+  };
+};

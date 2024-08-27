@@ -1,12 +1,15 @@
-export type NumericFacetDomain = {
-  domain: NumericFacetDomainProperties;
+export type NumericFacetExtraProperties = {
+  domain?: NumericFacetDomain;
+  interval: NumericFacetInterval;
 };
 
-type NumericFacetDomainProperties = {
+type NumericFacetDomain = {
   min: number;
   max: number;
   increment: number;
 };
+
+type NumericFacetInterval = 'continuous' | 'discrete' | 'even' | 'equiprobable';
 
 export type CategoryFacetDelimitingCharacter = {
   delimitingCharacter: string;

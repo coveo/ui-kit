@@ -12,6 +12,25 @@
   color: var(--lwc-colorTextPlaceholder, #747474);
   font-weight: normal;
   font-size: inherit;
+  padding-top: 0;
+}
+
+.radio-buttons-group__container {
+  container-name: radio-buttons-group;
+  container-type: inline-size;
+}
+
+@container radio-buttons-group (min-width:25em) {
+  .radio-buttons-group__label { 
+    display: block;
+  }
+}
+
+@container radio-buttons-group (max-width:25em) {
+  .radio-buttons-group__label {
+    display: none;
+  }
+
 }
 
 .radio-buttons-group__label {
@@ -59,4 +78,12 @@
 
 .radio-buttons-group__tooltip-container {
   position: relative;
+  flex-grow: 1;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.radio-buttons-group__icon-container {
+  min-height: var(--lwc-lineHeightButton,1.875rem);
+  align-items: center;
 }

@@ -1,0 +1,63 @@
+import {createReducer} from '@reduxjs/toolkit';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
+import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions';
+import {
+  getManualNumericFacetInitialState,
+  ManualNumericFacetSetState,
+} from './manual-numeric-facet-state';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateManualNumericFacetRange,
+} from './numeric-facet-actions';
+
+export const manualNumericFacetReducer = createReducer(
+  getManualNumericFacetInitialState(),
+  (builder) =>
+    builder
+      .addCase(updateManualNumericFacetRange, (state, action) => {
+        const {facetId, ...manualRange} = action.payload;
+        state[facetId] = {manualRange};
+      })
+      .addCase(toggleExcludeNumericFacetValue, (state, action) => {
+        clearManualRange(state, action.payload.facetId);
+      })
+      .addCase(toggleSelectNumericFacetValue, (state, action) => {
+        clearManualRange(state, action.payload.facetId);
+      })
+      .addCase(deselectAllValuesInCoreFacet, (state, action) => {
+        clearManualRange(state, action.payload.facetId);
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        restoreParameters(state, action.payload.mnf);
+      })
+      .addCase(restoreProductListingParameters, (state, action) => {
+        restoreParameters(state, action.payload.mnf);
+      })
+);
+
+const clearManualRange = (
+  state: ManualNumericFacetSetState,
+  facetId: string
+) => {
+  if (state[facetId]) {
+    state[facetId] = {manualRange: undefined};
+  }
+};
+
+const restoreParameters = (
+  state: ManualNumericFacetSetState,
+  payload?: Record<string, NumericRangeRequest[]>
+) => {
+  for (const facetId of Object.keys(state)) {
+    delete state[facetId];
+  }
+  if (payload) {
+    Object.entries(payload).forEach(([facetId, manualRange]) => {
+      const range = manualRange[0];
+      state[facetId] = {manualRange: range};
+    });
+  }
+};

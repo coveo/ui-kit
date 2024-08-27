@@ -1,8 +1,8 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../app/state-key';
 import {
   setContext,
-  setUser,
   setView,
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
@@ -18,26 +18,11 @@ export interface ContextOptions {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
-  user?: User;
   view: View;
 }
 
-interface UserId {
-  userId: string;
-}
-
-interface Email {
-  email: string;
-}
-
-export type User = (UserId | Email | (UserId & Email)) & {
-  userIp?: string;
-  userAgent?: string;
-};
-
 export interface View {
   url: string;
-  referrer?: string;
 }
 
 export interface ContextProps {
@@ -70,12 +55,6 @@ export interface Context extends Controller {
   setCurrency(currency: CurrencyCodeISO4217): void;
 
   /**
-   * Sets the user.
-   * @param user - The new user.
-   */
-  setUser(user: User): void;
-
-  /**
    * Sets the view.
    * @param view - The new view.
    */
@@ -91,7 +70,6 @@ export interface ContextState {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
-  user?: User;
   view: View;
 }
 
@@ -112,7 +90,7 @@ export function buildContext(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   if (props.options) {
     validateOptions(engine, contextSchema, props.options, 'buildContext');
@@ -149,8 +127,6 @@ export function buildContext(
           currency,
         })
       ),
-
-    setUser: (user: User) => dispatch(setUser(user)),
 
     setView: (view: View) => dispatch(setView(view)),
   };

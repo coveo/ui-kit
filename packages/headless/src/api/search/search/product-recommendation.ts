@@ -1,3 +1,7 @@
+/**
+ * Deprecated. The `product-recommendation` sub-package is deprecated. Use the `commerce` sub-package instead.
+ * @deprecated
+ */
 export interface ProductRecommendation {
   /**
    * This parameter is no longer used by the Coveo Usage Analytics service.

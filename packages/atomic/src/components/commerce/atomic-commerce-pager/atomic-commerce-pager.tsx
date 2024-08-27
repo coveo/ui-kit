@@ -1,8 +1,11 @@
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  buildProductListingPagination,
-  buildSearchPagination,
   Pagination,
   PaginationState,
+  ProductListing,
+  Search,
+  buildProductListing,
+  buildSearch,
 } from '@coveo/headless/commerce';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
@@ -37,7 +40,7 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
  * @part previous-button-icon - Icon of the previous button.
  * @part next-button-icon - Icon of the next button.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-pager',
@@ -49,6 +52,7 @@ export class AtomicCommercePager
 {
   @InitializeBindings() public bindings!: CommerceBindings;
   public pager!: Pagination;
+  public listingOrSearch!: ProductListing | Search;
 
   @BindStateToController('pager')
   @State()
@@ -73,7 +77,7 @@ export class AtomicCommercePager
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) previousButtonIcon = ArrowLeftIcon;
+  @Prop({reflect: true}) previousButtonIcon: string = ArrowLeftIcon;
 
   /**
    * The SVG icon to use to display the Next button.
@@ -82,17 +86,27 @@ export class AtomicCommercePager
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
+  @Prop({reflect: true}) nextButtonIcon: string = ArrowRightIcon;
 
   private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-commerce-pager-');
 
   public initialize() {
+    this.validateProps();
     if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.pager = buildProductListingPagination(this.bindings.engine);
-    } else if (this.bindings.interfaceElement.type === 'search') {
-      this.pager = buildSearchPagination(this.bindings.engine);
+      this.listingOrSearch = buildProductListing(this.bindings.engine);
+    } else {
+      this.listingOrSearch = buildSearch(this.bindings.engine);
     }
+    this.pager = this.listingOrSearch.pagination();
+  }
+
+  private validateProps() {
+    new Schema({
+      numberOfPages: new NumberValue({min: 0}),
+    }).validate({
+      numberOfPages: this.numberOfPages,
+    });
   }
 
   public render() {
@@ -105,20 +119,20 @@ export class AtomicCommercePager
     return (
       <PagerGuard
         hasError={false}
-        hasResults={this.pagerState.totalPages > 1}
+        hasItems={this.pagerState.totalPages > 1}
         isAppLoaded={this.bindings.store.isAppLoaded()}
       >
-        <PagerNavigation label={this.bindings.i18n.t('pagination')}>
+        <PagerNavigation i18n={this.bindings.i18n}>
           <PagerPreviousButton
             icon={this.previousButtonIcon}
             disabled={this.pagerState.page === 0}
-            ariaLabel={this.bindings.i18n.t('previous')}
+            i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.previousPage();
               this.focusOnFirstResultAndScrollToTop();
             }}
           />
-          <PagerPageButtons>
+          <PagerPageButtons i18n={this.bindings.i18n}>
             {pagesRange.map((pageNumber) => {
               return (
                 <PagerPageButton
@@ -148,7 +162,7 @@ export class AtomicCommercePager
           <PagerNextButton
             icon={this.nextButtonIcon}
             disabled={this.pagerState.page >= this.pagerState.totalPages}
-            ariaLabel={this.bindings.i18n.t('next')}
+            i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.nextPage();
               this.focusOnFirstResultAndScrollToTop();

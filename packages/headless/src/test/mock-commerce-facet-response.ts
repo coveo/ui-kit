@@ -39,6 +39,7 @@ export function buildMockCommerceNumericFacetResponse(
     ...getMockBaseCommerceFacetResponse(),
     type: 'numericalRange',
     values: [],
+    interval: 'equiprobable',
     ...config,
   };
 }

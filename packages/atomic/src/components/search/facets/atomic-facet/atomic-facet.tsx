@@ -12,6 +12,9 @@ import {
   FacetConditionsManager,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  TabManagerState,
+  TabManager,
+  buildTabManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -21,6 +24,7 @@ import {
   Element,
   VNode,
   Fragment,
+  Watch,
 } from '@stencil/core';
 import {
   AriaLiveRegion,
@@ -49,13 +53,14 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {
   FacetValueProps,
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -105,6 +110,7 @@ export class AtomicFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -113,6 +119,9 @@ export class AtomicFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -129,10 +138,37 @@ export class AtomicFacet implements InitializableComponent {
    */
   @Prop({reflect: true}) public field!: string;
   /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
+  /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+
   /**
    * Whether this facet should contain a search box.
    *
@@ -257,9 +293,18 @@ export class AtomicFacet implements InitializableComponent {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.initAriaLive();
     this.initConditionManager();
     this.initPopover();
@@ -267,12 +312,30 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
     this.facetConditionsManager?.stopWatching();
   }
 
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
+      updateFacetVisibilityForActiveTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab,
+        this.facet
+      );
+    }
+  }
+
   public componentShouldUpdate(
-    next: unknown,
-    prev: unknown,
+    next: FacetState,
+    prev: FacetState,
     propName: keyof AtomicFacet
   ) {
     if (
@@ -455,6 +518,7 @@ export class AtomicFacet implements InitializableComponent {
         query={this.facet.state.facetSearch.query}
         numberOfMatches={this.facet.state.facetSearch.values.length}
         hasMoreMatches={this.facet.state.facetSearch.moreValuesAvailable}
+        showMoreMatches={() => this.facet.facetSearch.showMoreResults()}
       ></FacetSearchMatches>
     );
   }

@@ -16,3 +16,5 @@ scripts/translation-gpt/temporary.json
 # CI Release
 topology.json
 .git-message
+packages/atomic/custom-elements.json
+.nx

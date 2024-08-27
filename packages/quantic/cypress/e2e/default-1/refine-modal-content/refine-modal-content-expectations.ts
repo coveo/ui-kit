@@ -1,7 +1,10 @@
+import {Interception} from 'cypress/types/net-stubbing';
+import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {
   RefineContentSelector,
   RefineContentSelectors,
+  SortSelector,
 } from './refine-modal-content-selectors';
 
 const COMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
@@ -38,10 +41,10 @@ const DATE_FACET_PROPERTIES = ['numberOfValues', 'formattingFunction'];
 
 function refineContentExpectations(selector: RefineContentSelector) {
   return {
-    displayFiltersTitle: () => {
+    displayFiltersTitle: (display: boolean) => {
       selector
         .filtersTitle()
-        .should('exist')
+        .should(display ? 'exist' : 'not.exist')
         .logDetail('should display the filters title');
     },
 
@@ -186,13 +189,6 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should display the duplicated date facet');
     },
 
-    displaySort: (display: boolean) => {
-      selector
-        .sort()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the Quantic Sort component`);
-    },
-
     displayDuplicatedTimeframeFacetClearFiltersButton: (display: boolean) => {
       selector
         .timeframeFacetClearFiltersButton()
@@ -263,9 +259,65 @@ function refineContentExpectations(selector: RefineContentSelector) {
         })
         .logDetail('should order the facets correctly');
     },
+
+    displayRefineModalSort: (display: boolean) => {
+      selector
+        .refineSort()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(
+          `${should(display)} display the Quantic Sort component in the refine modal`
+        );
+    },
+
+    refineSortOptionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector
+          .refineSortOption(option.value)
+          .should('exist')
+          .should('contain', option.label)
+          .logDetail(
+            `should contain the sort option ${option.label} in the refine modal sort component`
+          );
+      });
+    },
+  };
+}
+
+function sortExpectations(selector: SortSelector) {
+  return {
+    displaySort: (display: boolean) => {
+      selector
+        .sort()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the Quantic Sort component`);
+    },
+
+    sortOptionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector
+          .sortOption(option.value)
+          .should('exist')
+          .should('contain', option.label)
+          .logDetail(
+            `should contain the sort option ${option.label} in the sort component`
+          );
+      });
+    },
+
+    sortCriteriaInSearchRequest: (value: string) => {
+      cy.get<Interception>(InterceptAliases.Search)
+        .then((interception) => {
+          const body = interception.request.body;
+          expect(body.sortCriteria).to.equal(value);
+        })
+        .logDetail(
+          'should have the correct sort criteria in the search request'
+        );
+    },
   };
 }
 
 export const RefineContentExpectations = {
   ...refineContentExpectations(RefineContentSelectors),
+  ...sortExpectations(RefineContentSelectors),
 };

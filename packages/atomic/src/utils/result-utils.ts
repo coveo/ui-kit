@@ -4,6 +4,7 @@ import {
   Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
+import {RecsBindings} from '../components/recommendations/atomic-recs-interface/atomic-recs-interface';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 
 /**
@@ -52,18 +53,18 @@ export function bindLogDocumentOpenOnResult(
 export function buildStringTemplateFromResult(
   template: string,
   result: Result,
-  bindings: Bindings
+  bindings: Bindings | RecsBindings
 ) {
   return template.replace(/\${(.*?)}/g, (value: string) => {
     const key = value.substring(2, value.length - 1);
     let newValue = readFromObject(result, key);
-    if (!newValue) {
+    if (!newValue && typeof window !== 'undefined') {
       newValue = readFromObject(window, key);
     }
 
     if (!newValue) {
       bindings.engine.logger.warn(
-        `${key} used in the href template is undefined for this result: ${result.uniqueId}`
+        `${key} used in the href template is undefined for this result: ${result.uniqueId} and could not be found in the window object.`
       );
       return '';
     }
@@ -82,13 +83,20 @@ export function getStringValueFromResultOrNull(result: Result, field: string) {
   return value;
 }
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-function readFromObject(object: any, key: string): string {
-  const firstPeriodIndex = key.indexOf('.');
-  if (object && firstPeriodIndex !== -1) {
-    const newKey = key.substring(firstPeriodIndex + 1);
-    key = key.substring(0, firstPeriodIndex);
-    return readFromObject(object[key], newKey);
+function readFromObject<T extends object>(
+  object: T,
+  key: string
+): string | undefined {
+  const keys = key.split('.');
+  let current: unknown = object;
+
+  for (const k of keys) {
+    if (current && typeof current === 'object' && k in current) {
+      current = (current as Record<string, unknown>)[k];
+    } else {
+      return undefined;
+    }
   }
-  return object ? object[key] : undefined;
+
+  return typeof current === 'string' ? current : undefined;
 }

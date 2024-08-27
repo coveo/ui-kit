@@ -121,7 +121,11 @@ export type SearchBoxSuggestionsEvent<
   bindings: SearchBoxSuggestionsBindings<SearchBoxController, Bindings>
 ) => SearchBoxSuggestions;
 
-const searchBoxElements = ['atomic-search-box', 'atomic-insight-search-box'];
+const searchBoxElements = [
+  'atomic-search-box',
+  'atomic-insight-search-box',
+  'atomic-commerce-search-box',
+];
 
 /**
  * The bindings passed from the search box to the suggestions.
@@ -137,11 +141,11 @@ export type SearchBoxSuggestionsBindings<
   /**
    * Whether the search box is [standalone](https://docs.coveo.com/en/atomic/latest/usage/ssb/).
    */
-  isStandalone: boolean;
+  isStandalone(): boolean;
   /**
    * The search box headless controller.
    */
-  searchBoxController: SearchBoxController;
+  searchBoxController(): SearchBoxController;
   /**
    * The number of queries to display when the user interacts with the search box.
    */

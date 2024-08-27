@@ -11,7 +11,11 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+import {LoadMoreButton} from '../../common/load-more/button';
+import {LoadMoreContainer} from '../../common/load-more/container';
+import {LoadMoreGuard} from '../../common/load-more/guard';
+import {LoadMoreProgressBar} from '../../common/load-more/progress-bar';
+import {LoadMoreSummary} from '../../common/load-more/summary';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -50,81 +54,30 @@ export class AtomicLoadMoreResults {
     });
   }
 
-  private wrapHighlight(content: string) {
-    return `<span class="font-bold text-on-background" part="highlight">${content}</span>`;
-  }
-
-  private renderShowingResults() {
-    const locale = this.bindings.i18n.language;
-    const content = this.bindings.i18n.t('showing-results-of-load-more', {
-      interpolation: {escapeValue: false},
-      last: this.wrapHighlight(
-        this.querySummaryState.lastResult.toLocaleString(locale)
-      ),
-      total: this.wrapHighlight(
-        this.querySummaryState.total.toLocaleString(locale)
-      ),
-    });
-
-    return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code.
-      <div
-        class="my-2 text-lg text-neutral-dark"
-        part="showing-results"
-        innerHTML={content}
-      ></div>
-    );
-  }
-
-  private renderProgressBar() {
-    const percentage =
-      (this.querySummaryState.lastResult / this.querySummaryState.total) * 100;
-    const width = `${Math.ceil(percentage)}%`;
-    return (
-      <div
-        part="progress-bar"
-        class="relative w-72 h-1 my-2 rounded bg-neutral"
-      >
-        <div
-          class="progress-bar absolute h-full left-0 top-0 z-1 overflow-hidden rounded bg-gradient-to-r"
-          style={{width}}
-        ></div>
-      </div>
-    );
-  }
-
   private async onClick() {
     this.bindings.store.state.resultList?.focusOnNextNewResult();
     this.resultList.fetchMoreResults();
   }
 
-  private renderLoadMoreResults() {
-    return (
-      <Button
-        style="primary"
-        text={this.bindings.i18n.t('load-more-results')}
-        part="load-more-results-button"
-        class="font-bold my-2 p-3"
-        onClick={() => this.onClick()}
-      ></Button>
-    );
-  }
-
   public render() {
-    if (
-      !this.bindings.store.isAppLoaded() ||
-      !this.querySummaryState.hasResults
-    ) {
-      return;
-    }
+    const {lastResult: from, total: to} = this.querySummaryState;
+    const {i18n} = this.bindings;
 
     return (
-      <div class="flex flex-col items-center" part="container">
-        {this.renderShowingResults()}
-        {this.renderProgressBar()}
-        {this.resultListState.moreResultsAvailable &&
-          this.renderLoadMoreResults()}
-      </div>
+      <LoadMoreGuard
+        hasResults={this.querySummaryState.hasResults}
+        isLoaded={this.bindings.store.isAppLoaded()}
+      >
+        <LoadMoreContainer>
+          <LoadMoreSummary from={from} to={to} i18n={i18n} />
+          <LoadMoreProgressBar from={from} to={to} />
+          <LoadMoreButton
+            i18n={i18n}
+            moreAvailable={this.resultListState.moreResultsAvailable}
+            onClick={() => this.onClick()}
+          />
+        </LoadMoreContainer>
+      </LoadMoreGuard>
     );
   }
 }

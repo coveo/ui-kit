@@ -2,7 +2,7 @@ import {
   CyHttpMessages,
   HttpResponseInterceptor,
   RouteMatcher,
-  StaticResponse, // eslint-disable-next-line node/no-unpublished-import
+  StaticResponse,
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
@@ -81,10 +81,14 @@ export const InterceptAliases = {
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
       ShowGeneratedAnswer: uaAlias('generatedAnswerShowAnswers'),
       HideGeneratedAnswer: uaAlias('generatedAnswerHideAnswers'),
-      GeneratedAnswerFeedbackSubmit: uaAlias('generatedAnswerFeedbackSubmit'),
+      GeneratedAnswerFeedbackSubmitV2: uaAlias(
+        'generatedAnswerFeedbackSubmitV2'
+      ),
       RephraseGeneratedAnswer: uaAlias('rephraseGeneratedAnswer'),
       GeneratedAnswerSourceHover: uaAlias('generatedAnswerSourceHover'),
       GeneratedAnswerCopyToClipboard: uaAlias('generatedAnswerCopyToClipboard'),
+      GeneratedAnswerCollapse: uaAlias('generatedAnswerCollapse'),
+      GeneratedAnswerExpand: uaAlias('generatedAnswerExpand'),
     },
     DidYouMean: uaAlias('didyoumeanAutomatic'),
     DidyoumeanClick: uaAlias('didyoumeanClick'),
@@ -94,6 +98,11 @@ export const InterceptAliases = {
     },
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
+    RecentQueries: {
+      ClearRecentQueries: uaAlias('clearRecentQueries'),
+      ClickRecentQueries: uaAlias('recentQueriesClick'),
+    },
+    OmniboxAnalytics: uaAlias('omniboxAnalytics'),
   },
   NextAnalytics: {
     Qna: {
@@ -108,6 +117,7 @@ export const InterceptAliases = {
         Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
+      SubmitRgaFeedback: nextAnalyticsAlias('Qna.SubmitRgaFeedback'),
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(
@@ -522,8 +532,20 @@ export function mockStreamResponse(streamId: string, body: unknown) {
       url: `**/machinelearning/streaming/${streamId}`,
     },
     (request) => {
-      request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
-        'content-type': 'text/event-stream',
+      let bodyText = '';
+      if (!Array.isArray(body)) {
+        bodyText = `data: ${JSON.stringify(body)} \n\n`;
+      } else {
+        body.forEach((data) => {
+          bodyText += `data: ${JSON.stringify(data)} \n\n`;
+        });
+      }
+      request.reply({
+        statusCode: 200,
+        body: bodyText,
+        headers: {
+          'content-type': 'text/event-stream',
+        },
       });
     }
   ).as(getStreamInterceptAlias(streamId).substring(1));
@@ -635,4 +657,18 @@ export function mockSearchWithNotifyTrigger(
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockQuerySuggestions(suggestions: string[]) {
+  cy.intercept(routeMatchers.querySuggest, (req) => {
+    req.continue((res) => {
+      res.body.completions = suggestions.map((suggestion) => ({
+        expression: suggestion,
+        highlighted: suggestion,
+      }));
+
+      res.body.responseId = crypto.randomUUID();
+      res.send();
+    });
+  }).as(InterceptAliases.QuerySuggestions.substring(1));
 }

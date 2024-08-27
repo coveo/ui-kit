@@ -2,14 +2,14 @@
  * @prop --atomic-facet-checkbox-size: Size of the checkbox.
  */
 .value-checkbox {
-  width: var(--atomic-facet-checkbox-size, 16px);
-  height: var(--atomic-facet-checkbox-size, 16px);
+  width: var(--atomic-facet-checkbox-size, 1rem);
+  height: var(--atomic-facet-checkbox-size, 1rem);
 
-  @apply absolute z-1 left-2;
+  @apply z-1 absolute left-2;
 }
 
 .value-checkbox + label {
-  @apply w-full flex flex-row pl-8 pr-2 py-2.5 text-on-background cursor-pointer truncate hover:bg-neutral-light;
+  @apply text-on-background hover:bg-neutral-light flex w-full cursor-pointer flex-row truncate py-2.5 pl-8 pr-2;
 }
 
 .value-checkbox.selected:focus-visible + label .value-label,

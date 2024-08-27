@@ -1,5 +1,4 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {getRandomArbitrary} from '../../../../utils/utils';
 
 export interface FacetPlaceholderProps {
   numberOfValues: number;
@@ -12,23 +11,21 @@ export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
 }) => {
   const facetValues = [];
   for (let i = 0; i < numberOfValues; i++) {
-    const width = `${getRandomArbitrary(60, 100)}%`;
-    const opacity = `${getRandomArbitrary(0.3, 1)}`;
     facetValues.push(
-      <div class="flex bg-neutral h-5 mt-4" style={{width, opacity}}></div>
+      <div
+        class="bg-neutral mt-4 flex h-5"
+        style={{width: '100%', opacity: '0.5'}}
+      ></div>
     );
   }
 
   return (
     <div
       part="placeholder"
-      class="bg-background animate-pulse border border-neutral rounded-lg mb-4 p-7"
+      class="bg-background border-neutral mb-4 animate-pulse rounded-lg border p-7"
       aria-hidden="true"
     >
-      <div
-        class="bg-neutral rounded h-8"
-        style={{width: `${getRandomArbitrary(25, 75)}%`}}
-      ></div>
+      <div class="bg-neutral h-8 rounded" style={{width: '75%'}}></div>
       {!isCollapsed && <div class="mt-7">{facetValues}</div>}
     </div>
   );

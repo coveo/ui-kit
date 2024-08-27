@@ -17,6 +17,7 @@ const useCaseEntries = {
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
+  'ssr-commerce': 'src/ssr-commerce.index.ts',
   commerce: 'src/commerce.index.ts',
 };
 
@@ -36,6 +37,7 @@ function getUmdGlobalName(useCase) {
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
+    'ssr-commerce': 'CoveoHeadlessCommerceSSR',
     commerce: 'CoveoHeadlessCommerce',
   };
 
@@ -150,7 +152,10 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      inject: ['ponyfills/abortable-fetch-shim.js'],
+      inject: [
+        'ponyfills/abortable-fetch-shim.js',
+        '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
+      ],
       plugins: [umdWrapper({libraryName: globalName})],
     },
     outDir

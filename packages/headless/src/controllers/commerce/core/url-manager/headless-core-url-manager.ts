@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
-import {Serializer} from '../../../../features/commerce/search-parameters/search-parameter-serializer';
+import {stateKey} from '../../../../app/state-key';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
+import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {buildController} from '../../../controller/headless-controller';
@@ -24,7 +25,7 @@ export type {
 };
 
 interface CoreUrlManagerProps<T extends Parameters> extends UrlManagerProps {
-  requestIdSelector: (state: CommerceEngine['state']) => string;
+  requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
   parameterManagerBuilder: (
     engine: CommerceEngine,
     props: ParameterManagerProps<T>
@@ -34,11 +35,11 @@ interface CoreUrlManagerProps<T extends Parameters> extends UrlManagerProps {
 
 /**
  * @internal
- * Creates a `UrlManager` controller instance.
+ * Creates a `UrlManager` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `UrlManager` properties.
- * @returns A `UrlManager` controller instance.
+ * @returns A `UrlManager` sub-controller instance.
  */
 export function buildCoreUrlManager<T extends Parameters>(
   engine: CommerceEngine,
@@ -47,11 +48,11 @@ export function buildCoreUrlManager<T extends Parameters>(
   let lastRequestId: string;
 
   function updateLastRequestId() {
-    lastRequestId = props.requestIdSelector(engine.state);
+    lastRequestId = props.requestIdSelector(engine[stateKey]);
   }
 
   function hasRequestIdChanged() {
-    return lastRequestId !== props.requestIdSelector(engine.state);
+    return lastRequestId !== props.requestIdSelector(engine[stateKey]);
   }
 
   validateInitialState(

@@ -1,0 +1,26 @@
+name: 'Playwright Atomic'
+description: 'Run Playwright tests for Atomic'
+inputs:
+  shardIndex:
+    description: 'The shard index to run'
+    required: true
+  shardTotal:
+    description: 'The total number of shards'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: packages/atomic
+      shell: bash
+    - name: Run Playwright tests
+      run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      working-directory: packages/atomic
+      shell: bash
+    - uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4
+      if: always()
+      with:
+        name: blob-report-${{ matrix.shardIndex }}
+        path: packages/atomic/blob-report
+        retention-days: 5

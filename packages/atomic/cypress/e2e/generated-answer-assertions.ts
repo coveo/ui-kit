@@ -58,6 +58,14 @@ export function assertToggleValue(checked: boolean) {
   });
 }
 
+export function assertToggleVisibility(isVisible: boolean) {
+  it(`${should(isVisible)} show the toggle button`, () => {
+    GeneratedAnswerSelectors.toggle().should(
+      isVisible ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
 export function assertLocalStorageData(data: {isVisible: boolean}) {
   it(`should have value in local storage: ${JSON.stringify(data)}`, () => {
     cy.window().then((win) => {
@@ -110,6 +118,33 @@ export function assertDisclaimer(isDisplayed: boolean) {
   it(`${should(isDisplayed)} show the disclaimer`, () => {
     GeneratedAnswerSelectors.disclaimer().should(
       isDisplayed ? 'exist' : 'not.exist'
+    );
+  });
+}
+
+export function assertShowButton(isDisplayed: boolean) {
+  it(`${should(isDisplayed)} show the show button`, () => {
+    GeneratedAnswerSelectors.showButton().should(
+      isDisplayed ? 'be.visible' : 'be.hidden'
+    );
+  });
+}
+
+export function assertAnswerCollapsed(isCollapsed: boolean) {
+  it(`${should(isCollapsed)} show the answer collapsed`, () => {
+    GeneratedAnswerSelectors.answerContainer().should(
+      isCollapsed ? 'have.class' : 'not.have.class',
+      'answer-collapsed'
+    );
+  });
+}
+
+export function assertShowMoreLabel(isShowMore: boolean) {
+  const expectedLabel = isShowMore ? 'show more' : 'show less';
+  it(`should show the ${expectedLabel} label`, () => {
+    GeneratedAnswerSelectors.showButton().should(
+      'have.text',
+      isShowMore ? 'Show more' : 'Show less'
     );
   });
 }

@@ -1,5 +1,5 @@
 import {configure} from '../../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {interceptSearch, InterceptAliases} from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 import {RefineContentActions as Actions} from './refine-modal-content-actions';
 import {RefineContentExpectations as Expect} from './refine-modal-content-expectations';
@@ -8,6 +8,35 @@ interface RefineContentOptions {
   hideSort: boolean;
   disableDynamicNavigation: boolean;
 }
+
+const customSortOptions = [
+  {
+    label: 'Date ascending',
+    value: 'date ascending',
+    criterion: {
+      by: 'date',
+      order: 'ascending',
+    },
+  },
+  {
+    label: 'Views Descending',
+    value: '@ytviewcount descending',
+    criterion: {
+      by: 'field',
+      field: 'ytviewcount',
+      order: 'descending',
+    },
+  },
+  {
+    label: 'NO SORT',
+    value: 'nosort',
+    criterion: {
+      by: 'nosort',
+    },
+  },
+];
+
+const defaultCustomOptionValue = 'date ascending';
 
 describe('quantic-refine-content', () => {
   const pageUrl = 's/quantic-refine-modal-content';
@@ -29,7 +58,7 @@ describe('quantic-refine-content', () => {
       visitRefineContent();
 
       scope('when loading the page', () => {
-        Expect.displayFiltersTitle();
+        Expect.displayFiltersTitle(true);
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager();
         Expect.displayDuplicatedNumericFacet();
@@ -37,7 +66,7 @@ describe('quantic-refine-content', () => {
         Expect.displayDuplicatedCategoryFacet();
         Expect.displayDuplicatedTimeframeFacet();
         Expect.displayDuplicatedDateFacet();
-        Expect.displaySort(true);
+        Expect.displayRefineModalSort(true);
         Expect.correctFacetsOrder();
       });
 
@@ -75,7 +104,7 @@ describe('quantic-refine-content', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayFiltersTitle();
+        Expect.displayFiltersTitle(false);
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager();
         Expect.displayDuplicatedNumericFacet();
@@ -85,7 +114,7 @@ describe('quantic-refine-content', () => {
         Actions.clickDuplicatedTimeframeFacetExpandButton();
         Expect.displayDuplicatedTimeframeFacetValues();
         Expect.displayDuplicatedDateFacet();
-        Expect.displaySort(false);
+        Expect.displayRefineModalSort(false);
         Expect.correctFacetsOrder();
       });
     });
@@ -98,7 +127,7 @@ describe('quantic-refine-content', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayFiltersTitle();
+        Expect.displayFiltersTitle(true);
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager(false);
         Expect.displayDuplicatedNumericFacet();
@@ -108,8 +137,35 @@ describe('quantic-refine-content', () => {
         Actions.clickDuplicatedTimeframeFacetExpandButton();
         Expect.displayDuplicatedTimeframeFacetValues();
         Expect.displayDuplicatedDateFacet();
-        Expect.displaySort(true);
+        Expect.displayRefineModalSort(true);
       });
+    });
+  });
+
+  describe('when using custom sort options', () => {
+    it('should render the same custom sort options in the sort component and in the refine modal', () => {
+      visitRefineContent();
+      Expect.sortCriteriaInSearchRequest(defaultCustomOptionValue);
+
+      scope(
+        'when opening the sort options of the quantic sort component',
+        () => {
+          Expect.displaySort(true);
+          Actions.openSortDropdown();
+
+          Expect.sortOptionsEqual(customSortOptions);
+        }
+      );
+
+      scope(
+        'when opening the sort options of the quantic sort component inside the refine modal',
+        () => {
+          Expect.displayRefineModalSort(true);
+          Actions.openRefineModalSortDropdown();
+
+          Expect.refineSortOptionsEqual(customSortOptions);
+        }
+      );
     });
   });
 });

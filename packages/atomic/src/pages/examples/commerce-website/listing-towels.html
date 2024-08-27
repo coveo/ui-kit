@@ -9,27 +9,72 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {setupEngine, setupProductListing, renderProducts} from './engine.mjs';
+      import {commerceEngine} from './engine.mjs';
 
-      const engine = await setupEngine();
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
 
-      await customElements.whenDefined('atomic-commerce-interface');
-      const commerceInterface = document.querySelector('atomic-commerce-interface');
+        await commerceInterface.initializeWithEngine(commerceEngine);
 
-      await commerceInterface.initializeWithEngine(engine);
+        commerceInterface.executeFirstRequest();
+      })();
     </script>
   </head>
 
   <body>
-    <h1>Product listing page</h1>
-    <main>
-      <section>
-        <atomic-commerce-interface type="product-listing">
-          <atomic-commerce-result-list> </atomic-commerce-result-list>
-          <atomic-commerce-pager></atomic-commerce-pager>
-        </atomic-commerce-interface>
-      </section>
-    </main>
+    <h1>Towels</h1>
+
+    <atomic-commerce-interface type="product-listing">
+      <atomic-commerce-layout>
+        <atomic-layout-section section="facets"
+          ><atomic-commerce-facets></atomic-commerce-facets
+        ></atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-commerce-breadbox></atomic-commerce-breadbox>
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
+            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+            <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
+          </atomic-layout-section>
+          <atomic-layout-section section="products">
+            <atomic-commerce-product-list display="grid" density="compact" image-size="small">
+              <atomic-product-template>
+                <template>
+                  <atomic-product-section-name>
+                    <atomic-product-link class="font-bold"></atomic-product-link>
+                  </atomic-product-section-name>
+                  <atomic-product-section-visual>
+                    <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                  </atomic-product-section-visual>
+                  <atomic-product-section-children>
+                    <atomic-product-children></atomic-product-children>
+                  </atomic-product-section-children>
+                  <atomic-product-section-metadata>
+                    <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                    <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                  </atomic-product-section-metadata>
+                  <atomic-product-section-emphasized>
+                    <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
+                  </atomic-product-section-emphasized>
+                  <atomic-product-section-description>
+                    <atomic-product-description></atomic-product-description>
+                  </atomic-product-section-description>
+                </template>
+              </atomic-product-template>
+            </atomic-commerce-product-list>
+            <atomic-commerce-query-error></atomic-commerce-query-error>
+            <atomic-commerce-no-products></atomic-commerce-no-products>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+            <!-- Alternative pagination
+                <atomic-commerce-pager></atomic-commerce-pager>
+                -->
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-commerce-layout>
+    </atomic-commerce-interface>
 
     <script src="../../header.js" type="text/javascript"></script>
     <script src="commerce-nav.mjs" type="module"></script>

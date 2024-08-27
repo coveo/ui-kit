@@ -1,6 +1,6 @@
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
+import {buildFetchProductListingResponse} from '../../../../test/mock-old-product-listing';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';

@@ -1,7 +1,10 @@
 import {
+  CommerceEngine,
+  Selectors,
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
+  ChildProduct,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -30,12 +33,11 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   currentQuickviewPosition: number;
+  activeProductChild: ChildProduct | undefined;
 }
 
 export interface AtomicCommerceStore
   extends AtomicCommonStore<AtomicStoreData> {
-  getAllFacets(): FacetInfoMap;
-
   isMobile(): boolean;
 }
 
@@ -46,7 +48,9 @@ export interface FacetInfoMap {
     | (FacetInfo & FacetValueFormat<DateFacetValue>);
 }
 
-export function createAtomicCommerceStore(): AtomicCommerceStore {
+export function createAtomicCommerceStore(
+  type: 'search' | 'product-listing'
+): AtomicCommerceStore {
   const commonStore = createAtomicCommonStore<AtomicStoreData>({
     loadingFlags: [],
     facets: {},
@@ -59,24 +63,29 @@ export function createAtomicCommerceStore(): AtomicCommerceStore {
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
     currentQuickviewPosition: -1,
+    activeProductChild: undefined,
   });
 
   return {
     ...commonStore,
 
-    getAllFacets() {
-      return {
-        ...commonStore.state.facets,
-        ...commonStore.state.dateFacets,
-        ...commonStore.state.categoryFacets,
-        ...commonStore.state.numericFacets,
-      };
-    },
-
     isMobile() {
       return !window.matchMedia(
         makeDesktopQuery(commonStore.state.mobileBreakpoint)
       ).matches;
+    },
+
+    getUniqueIDFromEngine(engine: CommerceEngine): string {
+      switch (type) {
+        case 'search':
+          return Selectors.Search.responseIdSelector(engine);
+        case 'product-listing':
+          return Selectors.ProductListing.responseIdSelector(engine);
+        default:
+          throw new Error(
+            `getUniqueIDFromEngine not implemented for this interface type, ${type}`
+          );
+      }
     },
   };
 }

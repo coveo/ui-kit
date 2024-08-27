@@ -1,14 +1,16 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
-import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
-import {selectQuerySuggestion} from '../../../features/query-suggest/query-suggest-actions';
+import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {
   CommerceQuerySection,
@@ -37,6 +39,11 @@ export interface StandaloneSearchBox extends SearchBox {
    */
   submit(): void;
   /**
+   * Updates the redirection url of the standalone search box.
+   * @param url - The new URL to redirect to.
+   */
+  updateRedirectUrl(url: string): void;
+  /**
    * Resets the standalone search box state. To be dispatched on single page applications after the redirection has been triggered.
    */
   afterRedirection(): void;
@@ -48,7 +55,7 @@ export interface StandaloneSearchBox extends SearchBox {
 
 export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
-   * The Url to redirect to.
+   * The URL to redirect to.
    */
   redirectTo: string;
 }
@@ -56,11 +63,9 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
 /**
  * Creates a `StandaloneSearchBox` controller instance.
  *
- * @param engine - The commerce headless engine.
- * @param props - The configurable `SearchBox` properties.
- * @returns A `StandaloneSearchBoxProps` controller instance.
- *
- * @internal
+ * @param engine - The headless commerce engine.
+ * @param props - The configurable `StandaloneSearchBox` properties.
+ * @returns A `StandaloneSearchBox` controller instance.
  */
 export function buildStandaloneSearchBox(
   engine: CommerceEngine,
@@ -71,13 +76,14 @@ export function buildStandaloneSearchBox(
   }
 
   const {dispatch} = engine;
-  const getState = () => engine.state;
+  const getState = () => engine[stateKey];
 
   const id = props.options.id || randomID('standalone_search_box');
   const options: Required<StandaloneSearchBoxOptions> = {
     id,
     highlightOptions: {...props.options.highlightOptions},
     ...defaultSearchBoxOptions,
+    ...{overwrite: false},
     ...props.options,
   };
 
@@ -90,7 +96,11 @@ export function buildStandaloneSearchBox(
 
   const searchBox = buildSearchBox(engine, {options});
   dispatch(
-    registerStandaloneSearchBox({id, redirectionUrl: options.redirectionUrl})
+    registerStandaloneSearchBox({
+      id,
+      redirectionUrl: options.redirectionUrl,
+      overwrite: options.overwrite,
+    })
   );
 
   return {
@@ -110,20 +120,19 @@ export function buildStandaloneSearchBox(
       dispatch(resetStandaloneSearchBox({id}));
     },
 
+    updateRedirectUrl(url: string) {
+      dispatch(
+        updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url})
+      );
+    },
+
     submit() {
       dispatch(
         updateQuery({
           query: this.state.value,
         })
       );
-      dispatch(
-        fetchRedirectUrl({
-          id,
-          // TODO: KIT-3134: remove once the `search/redirect` endpoint is implemented.
-          // In the meantime, we simply use the redirection URL provided in the props
-          redirectionUrl: props.options.redirectionUrl,
-        })
-      );
+      dispatch(fetchRedirectUrl({id}));
     },
 
     get state() {
@@ -148,7 +157,7 @@ function loadStandaloneSearchBoxReducers(
 > {
   engine.addReducers({
     commerceQuery,
-    commerceStandaloneSearchBoxSet: standaloneSearchBoxSet,
+    commerceStandaloneSearchBoxSet,
     configuration,
     querySuggest,
   });

@@ -8,8 +8,9 @@ import {
   GeneratedAnswerStyle,
   buildInteractiveCitation,
 } from '@coveo/headless';
-import {Component, Element, State, Prop} from '@stencil/core';
+import {Component, Element, State, Prop, Watch} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -36,9 +37,28 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part rephrase-buttons-container - The container of the rephrase buttons.
  * @part rephrase-button-label - The label of the rephrase button.
  *
+ * @part answer-code-block - The generated answer multi-line code blocks.
+ * @part answer-emphasis - The generated answer emphasized text elements.
+ * @part answer-inline-code - The generated answer inline code elements.
+ * @part answer-heading-1 - The generated answer level 1 heading elements.
+ * @part answer-heading-2 - The generated answer level 2 heading elements.
+ * @part answer-heading-3 - The generated answer level 3 heading elements.
+ * @part answer-heading-4 - The generated answer level 4 heading elements.
+ * @part answer-heading-5 - The generated answer level 5 heading elements.
+ * @part answer-heading-6 - The generated answer level 6 heading elements.
+ * @part answer-list-item - The generated answer list item elements for both ordered and unordered lists.
+ * @part answer-ordered-list - The generated answer ordered list elements.
+ * @part answer-paragraph - The generated answer paragraph elements.
+ * @part answer-quote-block - The generated answer quote block elements.
+ * @part answer-unordered-list - The generated answer unordered list elements.
+ * @part answer-strong - The generated answer strong text elements.
+ * @part answer-table - The generated answer table elements.
+ * @part answer-table-container - The generated answer table container elements.
+ * @part answer-table-content - The generated answer table content cell elements.
+ * @part answer-table-header - The generated answer table header cell elements.
+ *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
- * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-generated-answer',
@@ -49,6 +69,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public generatedAnswer!: GeneratedAnswer;
   public searchStatus!: SearchStatus;
+  private resizeObserver?: ResizeObserver;
 
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
@@ -81,14 +102,43 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    */
   @Prop() answerStyle: GeneratedAnswerStyle = 'default';
 
+  /**
+   * Whether to render a toggle button that lets the user hide or show the answer.
+   * @default false
+   */
+  @Prop() withToggle?: boolean;
+
+  /**
+   * Whether to allow the answer to be collapsed when the text is taller than 250px.
+   * @default false
+   */
+  @Prop() collapsible?: boolean;
+
+  /**
+   * Whether to render the rephrase buttons that lets the user rephrase the answer.
+   * @default false
+   */
+  @Prop() withRephraseButtons?: boolean;
+
+  /**
+   * @internal
+   * The unique identifier of the answer configuration to use to generate the answer.
+   */
+  @Prop() answerConfigurationId?: string;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
   private generatedAnswerCommon!: GeneratedAnswerCommon;
+  private fullAnswerHeight?: number;
+  private maxCollapsedHeight = 250;
 
   public initialize() {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
       host: this.host,
+      withToggle: this.withToggle,
+      collapsible: this.collapsible,
+      withRephraseButtons: this.withRephraseButtons,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
@@ -106,11 +156,47 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         isVisible: this.generatedAnswerCommon.data.isVisible,
         responseFormat: {
           answerStyle: this.answerStyle,
+          contentFormat: ['text/markdown', 'text/plain'],
         },
       },
+      ...(this.answerConfigurationId && {
+        answerConfigurationId: this.answerConfigurationId,
+      }),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
+
+    if (window.ResizeObserver && this.collapsible) {
+      const debouncedAdaptAnswerHeight = debounce(
+        () => this.adaptAnswerHeight(),
+        100
+      );
+      this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
+      this.resizeObserver.observe(this.host);
+    }
+  }
+
+  @Watch('generatedAnswerState')
+  public updateAnswerCollapsed(
+    newState: GeneratedAnswerState,
+    oldState: GeneratedAnswerState
+  ) {
+    const newExpanded = newState.expanded;
+    const oldExpanded = oldState ? oldState.expanded : undefined;
+
+    if (newExpanded !== oldExpanded) {
+      const container = this.getAnswerContainer();
+
+      if (!container) {
+        return;
+      }
+
+      this.toggleClass(container, 'answer-collapsed', !newExpanded);
+    }
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
   }
 
   // @ts-expect-error: This function is used by BindStateToController.
@@ -142,6 +228,54 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private setAriaMessage = (message: string) => {
     this.ariaMessage = message;
   };
+
+  private toggleClass(element: Element, className: string, condition: boolean) {
+    element.classList.toggle(className, condition);
+  }
+
+  private adaptAnswerHeight() {
+    this.fullAnswerHeight = this.host?.shadowRoot
+      ?.querySelector('[part="generated-text"]')
+      ?.getBoundingClientRect().height;
+    this.updateAnswerHeight();
+  }
+
+  private getAnswerContainer() {
+    return this.host?.shadowRoot?.querySelector('[part="generated-container"]');
+  }
+
+  private getAnswerFooter() {
+    return this.host?.shadowRoot?.querySelector(
+      '[part="generated-answer-footer"]'
+    );
+  }
+
+  private updateAnswerHeight() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
+      this.toggleClass(
+        container,
+        'answer-collapsed',
+        !this.generatedAnswerState.expanded
+      );
+      this.toggleClass(footer, 'is-collapsible', true);
+      this.toggleClass(
+        footer,
+        'generating-label-visible',
+        this.generatedAnswerState.isStreaming
+      );
+    } else {
+      this.toggleClass(container, 'answer-collapsed', false);
+      this.toggleClass(footer, 'is-collapsible', false);
+      this.toggleClass(footer, 'generating-label-visible', false);
+    }
+  }
 
   public render() {
     return this.generatedAnswerCommon.render();

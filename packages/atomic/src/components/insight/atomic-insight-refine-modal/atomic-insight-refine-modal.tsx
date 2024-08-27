@@ -17,8 +17,8 @@ import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
 import {
   getClonedFacetElements,
-  RefineModalCommon,
-} from '../../common/refine-modal/refine-modal-common';
+  RefineModal,
+} from '../../common/refine-modal/modal';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -107,7 +107,7 @@ export class AtomicInsightRefineModal
 
   private renderHeader() {
     return (
-      <div class="w-full flex justify-between mb-3">
+      <div class="mb-3 flex w-full justify-between">
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
@@ -126,7 +126,7 @@ export class AtomicInsightRefineModal
     }
 
     return (
-      <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+      <aside slot="body" class="adjust-for-scroll-bar flex w-full flex-col">
         {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
@@ -146,18 +146,18 @@ export class AtomicInsightRefineModal
             }`}
           </style>
         )}
-        <RefineModalCommon
-          bindings={this.bindings}
+        <RefineModal
+          i18n={this.bindings.i18n}
           host={this.host}
           isOpen={this.isOpen}
           onClose={() => (this.isOpen = false)}
-          querySummaryState={this.querySummaryState}
+          numberOfItems={this.querySummaryState.total}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
           scope={this.bindings.interfaceElement}
         >
           {this.renderBody()}
-        </RefineModalCommon>
+        </RefineModal>
       </Host>
     );
   }

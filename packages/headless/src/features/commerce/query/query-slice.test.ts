@@ -1,4 +1,4 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
 import {updateQuery} from './query-actions';
 import {queryReducer} from './query-slice';
 import {CommerceQueryState, getCommerceQueryInitialState} from './query-state';
@@ -43,6 +43,16 @@ describe('query slice', () => {
       ).toEqual({
         query: 'new query',
       });
+    });
+
+    it('default to empty string if no query in payload', () => {
+      expect(queryReducer(state, restoreSearchParameters({})).query).toBe('');
+    });
+  });
+
+  it('#selectQuerySuggestion sets the query to the payload', () => {
+    expect(queryReducer(state, updateQuery({query: 'some query'}))).toEqual({
+      query: 'some query',
     });
   });
 });

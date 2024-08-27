@@ -9,46 +9,68 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {
-        setupEngine,
-        setupRecommendationsMostPurchased,
-        setupRecommendationsMostViewed,
-        renderProducts,
-      } from './engine.mjs';
+      import {commerceEngine} from './engine.mjs';
 
-      const engine = await setupEngine();
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-recommendation-interface');
+        const recommendationInterfaces = document.querySelectorAll('atomic-commerce-recommendation-interface');
 
-      /*
-       * The following code section should be replaced by actual atomic-commerce-recommendation component
-       */
-
-      const recommendationsMostPurchased = setupRecommendationsMostPurchased(engine);
-      recommendationsMostPurchased.subscribe(() => {
-        renderProducts('#mostPurchased', 'MOST PURCHASED', recommendationsMostPurchased.state.products);
-      });
-
-      const recommendationsMostViewed = setupRecommendationsMostViewed(engine);
-      recommendationsMostViewed.subscribe(() => {
-        renderProducts('#mostViewed', 'MOST VIEWED', recommendationsMostViewed.state.products);
-      });
-      /**
-       * End of section to be replaced
-       */
+        for (const recommendationInterface of recommendationInterfaces) {
+          await recommendationInterface.initializeWithEngine(commerceEngine);
+        }
+      })();
     </script>
+    <style>
+      atomic-commerce-recommendation-list {
+        margin-top: var(--atomic-layout-spacing-y);
+        --atomic-recs-number-of-columns: 3;
+      }
+
+      @media only screen and (max-width: 1024px) {
+        atomic-commerce-recommendation-list {
+          --atomic-recs-number-of-columns: 1;
+        }
+      }
+    </style>
   </head>
   <body>
     <h1>Cart</h1>
     <main>
       <section>
-        <article id="mostPurchased" style="border-bottom: 1px solid black; padding-bottom: 50px">
-          REPLACE ME; THIS SHOULD BE A RECOMMENDATION CAROUSEL FOR MOST POPULAR BOUGHT
-        </article>
-      </section>
-      <section>
-        <article id="mostViewed">REPLACE ME; THIS SHOULD BE A RECOMMENDATION CAROUSEL FOR MOST POPULAR VIEWED</article>
+        <atomic-commerce-recommendation-interface>
+          <atomic-commerce-layout>
+            <atomic-layout-section section="main">
+              <atomic-commerce-recommendation-list
+                id="cart_recommendations"
+                slot-id="d8118c04-ff59-4f03-baca-2fc5f3b81221"
+                products-per-page="3"
+              >
+                <atomic-product-template>
+                  <template>
+                    <atomic-product-section-name>
+                      <atomic-product-link class="font-bold"></atomic-product-link>
+                    </atomic-product-section-name>
+                    <atomic-product-section-visual>
+                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                    </atomic-product-section-visual>
+                    <atomic-product-section-metadata>
+                      <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                    </atomic-product-section-metadata>
+                    <atomic-product-section-emphasized>
+                      <atomic-product-price currency="USD"></atomic-product-price>
+                    </atomic-product-section-emphasized>
+                    <atomic-product-section-children>
+                      <atomic-product-children></atomic-product-children>
+                    </atomic-product-section-children>
+                  </template>
+                </atomic-product-template>
+              </atomic-commerce-recommendation-list>
+            </atomic-layout-section>
+          </atomic-commerce-layout>
+        </atomic-commerce-recommendation-interface>
       </section>
     </main>
-
     <script src="../../header.js" type="text/javascript"></script>
     <script src="commerce-nav.mjs" type="module"></script>
   </body>

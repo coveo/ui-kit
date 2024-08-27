@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -20,6 +21,7 @@ import {
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  updateAnswerConfigurationId,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -46,7 +48,13 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        state.citations = state.citations.concat(payload.citations);
+        const citationMap = new Map<string, GeneratedAnswerCitation>();
+        for (const citationCollection of [state.citations, payload.citations]) {
+          for (const citation of citationCollection) {
+            citationMap.set(citation.uri, citation);
+          }
+        }
+        state.citations = Array.from(citationMap.values());
         delete state.error;
       })
       .addCase(updateError, (state, {payload}) => {
@@ -79,6 +87,9 @@ export const generatedAnswerReducer = createReducer(
       .addCase(resetAnswer, (state) => {
         return {
           ...getGeneratedAnswerInitialState(),
+          ...(state.answerConfigurationId
+            ? {answerConfigurationId: state.answerConfigurationId}
+            : {}),
           responseFormat: state.responseFormat,
           fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
           isVisible: state.isVisible,
@@ -110,5 +121,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(collapseGeneratedAnswer, (state) => {
         state.expanded = false;
+      })
+      .addCase(updateAnswerConfigurationId, (state, {payload}) => {
+        state.answerConfigurationId = payload;
       })
 );

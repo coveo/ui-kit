@@ -1,22 +1,22 @@
 import {configuration} from '../../../app/common-reducers';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {selectPage} from '../../../features/commerce/pagination/pagination-actions';
-import {fetchQuerySuggestions} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {updateQuery} from '../../../features/commerce/query/query-actions';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
-import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
-import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
+import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
-import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
+} from '../../../features/commerce/query-set/query-set-actions';
 import {
-  registerQuerySuggest,
   clearQuerySuggest,
+  fetchQuerySuggestions,
+  registerQuerySuggest,
   selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
+} from '../../../features/commerce/query-suggest/query-suggest-actions';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
+import {
+  executeSearch,
+  prepareForSearchWithQuery,
+} from '../../../features/commerce/search/search-actions';
+import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
@@ -32,12 +32,10 @@ import {
   buildSearchBox,
 } from './headless-search-box';
 
-jest.mock('../../../features/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/search/search-actions');
-jest.mock('../../../features/query-set/query-set-actions');
-jest.mock('../../../features/facets/generic/facet-actions');
-jest.mock('../../../features/breadcrumb/breadcrumb-actions');
+jest.mock('../../../features/commerce/query-set/query-set-actions');
+jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock('../../../features/commerce/pagination/pagination-actions');
 jest.mock('../../../features/commerce/query/query-actions');
 
@@ -230,11 +228,11 @@ describe('headless search box', () => {
       searchBox.submit();
     });
 
-    it('when clearFilters option is true, dispatches #deselectAllBreadcrumbs', () => {
-      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
+    it('dispatches #prepareForSearchWithQuery', () => {
+      expect(prepareForSearchWithQuery).toHaveBeenCalled();
     });
 
-    it('when clearFilters option is false, does not dispatch #deselectAllBreadcrumbs', () => {
+    it('when clearFilters option is false, does not dispatch #clearAllCoreFacets', () => {
       jest.resetAllMocks();
       engine = buildMockCommerceEngine(state);
       searchBox = buildSearchBox(engine, {
@@ -242,26 +240,7 @@ describe('headless search box', () => {
         options: {clearFilters: false},
       });
       searchBox.submit();
-      expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
-    });
-
-    it('dispatches #updateFacetAutoSelection with proper payload', () => {
-      expect(updateFacetAutoSelection).toHaveBeenCalledWith({allow: true});
-    });
-
-    it('allows autoSelection after deselecting facets', () => {
-      expect(deselectAllBreadcrumbs).toHaveBeenCalled();
-      expect(updateFacetAutoSelection).toHaveBeenCalled();
-    });
-
-    it('dispatches #updateQuery', () => {
-      const expectedQuery = state.querySet[id];
-
-      expect(updateQuery).toHaveBeenCalledWith({query: expectedQuery});
-    });
-
-    it('updates the page to the first one', () => {
-      expect(selectPage).toHaveBeenCalledWith({page: 0});
+      expect(clearAllCoreFacets).not.toHaveBeenCalled();
     });
 
     it('dispatches #executeSearch', () => {

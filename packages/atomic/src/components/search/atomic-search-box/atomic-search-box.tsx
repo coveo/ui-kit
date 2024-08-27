@@ -33,7 +33,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../utils/utils';
+import {isFocusingOut, once, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
@@ -55,6 +55,8 @@ import {
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
+ *
+ * @slot default - The default slot where you can add child components to the search box.
  *
  * @part wrapper - The search box wrapper.
  * @part input - The search box input.
@@ -235,28 +237,44 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
 
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
+
   public initialize() {
-    this.id = randomID('atomic-search-box-');
+    this.id ??= randomID('atomic-search-box-');
 
-    if (!this.textarea) {
-      this.bindings.engine.logger.warn(
-        'As of Atomic version 3.0.0, the searchbox will be enabled as a text area by default. To remove this warning, set textarea="true" on the search box.',
-        this.host
-      );
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
+  }
+
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
     }
+  }
 
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -287,6 +305,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
+  public disconnectedCallback = () => {};
+
   @Listen('atomic/searchBoxSuggestion/register')
   public registerSuggestions(
     event: CustomEvent<
@@ -303,7 +323,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
-  public componentWillRender() {
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -315,7 +335,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
   private initializeSuggestionManager() {
@@ -356,8 +376,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     return {
       ...this.bindings,
       id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
+      isStandalone: () => !!this.redirectionUrl,
+      searchBoxController: () => this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearFilters: this.clearFilters,
     };
@@ -397,20 +417,27 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private async onFocus() {
+    if (this.isExpanded) {
+      return;
+    }
     this.isExpanded = true;
     await this.suggestionManager.triggerSuggestions();
     this.announceNewSuggestionsToScreenReader();
   }
 
   private onSubmit() {
-    if (this.suggestionManager.isRightPanelInFocus()) {
-      this.suggestionManager.clickOnActiveElement();
+    this.isExpanded = false;
+    if (
+      this.suggestionManager.isRightPanelInFocus() ||
+      this.suggestionManager.activeDescendantElement?.part.contains(
+        'recent-query-title-item'
+      )
+    ) {
+      this.suggestionManager.onSubmit();
       return;
     }
 
-    this.isExpanded = false;
     this.searchBox.submit();
-    this.suggestionManager.onSubmit();
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -565,7 +592,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
           this.shouldShowSuggestions ? '' : 'hidden'
         }`}
         role="application"
@@ -640,7 +667,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       <textarea
         aria-hidden
         part="textarea-spacer"
-        class="invisible text-lg py-3.5 px-4 w-full"
+        class="invisible w-full px-4 py-3.5 text-lg"
         rows={1}
       ></textarea>
     );
@@ -701,28 +728,36 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>
         {this.textarea ? this.renderAbsolutePositionSpacer() : null}
         {[
-          <SearchBoxWrapper disabled={isDisabled} textArea={this.textarea}>
-            <atomic-focus-detector
-              style={{display: 'contents'}}
-              onFocusExit={() => this.suggestionManager.clearSuggestions()}
-            >
-              {this.renderTextBox(searchLabel)}
-              <Submit
-                bindings={this.bindings}
-                disabled={isDisabled}
-                onClick={() => {
-                  this.searchBox.submit();
-                  this.suggestionManager.clearSuggestions();
-                }}
-                title={searchLabel}
-              />
-              {this.renderSuggestions()}
-            </atomic-focus-detector>
+          <SearchBoxWrapper
+            disabled={isDisabled}
+            textArea={this.textarea}
+            onFocusout={(event) => {
+              if (!isFocusingOut(event)) {
+                return;
+              }
+              this.suggestionManager.clearSuggestions();
+              this.isExpanded = false;
+            }}
+          >
+            {this.renderTextBox(searchLabel)}
+            <Submit
+              bindings={this.bindings}
+              disabled={isDisabled}
+              onClick={() => {
+                this.searchBox.submit();
+                this.suggestionManager.clearSuggestions();
+              }}
+              title={searchLabel}
+            />
+            {this.renderSuggestions()}
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>

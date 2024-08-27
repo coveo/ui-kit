@@ -1,3 +1,62 @@
+## 2.13.1 (2024-08-07)
+
+# 2.13.0 (2024-07-31)
+
+### Features
+
+- **atomic-commerce:** products-per-page ([#4107](https://github.com/coveo/ui-kit/issues/4107)) ([81e31cf](https://github.com/coveo/ui-kit/commits/81e31cff63c19f19b12babd4b10aa5b2e60c19e6))
+
+# 2.12.0 (2024-07-09)
+
+### Features
+
+- **atomic:** add new atomic-commerce-refine-toggle component ([#4155](https://github.com/coveo/ui-kit/issues/4155)) ([71d81ba](https://github.com/coveo/ui-kit/commits/71d81ba6a60c8ab83a2d744cb56097d85f691383))
+
+# 2.11.0 (2024-07-03)
+
+### Features
+
+- **commerce:** add atomic-commerce-breadbox ([#4121](https://github.com/coveo/ui-kit/issues/4121)) ([d96287a](https://github.com/coveo/ui-kit/commits/d96287a7efb853f575700fe982b898ab6c1e7744))
+
+## 2.10.7 (2024-07-03)
+
+### Bug Fixes
+
+- **commerce:** remove `executeFirstSearch` & friend from commerce engine ([#4095](https://github.com/coveo/ui-kit/issues/4095)) ([64cda10](https://github.com/coveo/ui-kit/commits/64cda1085a8be29e92e8965222962c0c90762d89))
+
+## 2.10.5 (2024-06-26)
+
+### Bug Fixes
+
+- **atomic:** add query-summary E2E tests ([#4102](https://github.com/coveo/ui-kit/issues/4102)) ([6f73da7](https://github.com/coveo/ui-kit/commits/6f73da703b5d948b713680d187f03da1d207976a))
+
+## 2.10.4 (2024-06-19)
+
+### Bug Fixes
+
+- expose atomic-commerce-load-more-products to react ([#4097](https://github.com/coveo/ui-kit/issues/4097)) ([d7214c7](https://github.com/coveo/ui-kit/commits/d7214c7b988e169ccb4bb9b84a4b471721f329cb))
+
+# 2.10.0 (2024-06-06)
+
+### Features
+
+- **atomic,headless:** support for atomic-commerce-did-you-mean ([#4029](https://github.com/coveo/ui-kit/issues/4029)) ([5e860a5](https://github.com/coveo/ui-kit/commits/5e860a52ea93a7fa7fa442a5c9612ba5febadaf1))
+- **atomic:** add commerce-no-products component ([#4013](https://github.com/coveo/ui-kit/issues/4013)) ([5374847](https://github.com/coveo/ui-kit/commits/5374847bc2ac08a168317586fa0380d12cd283cf))
+- **atomic:** add date facet ([#4024](https://github.com/coveo/ui-kit/issues/4024)) ([ea5c9b1](https://github.com/coveo/ui-kit/commits/ea5c9b1443311048d1f2cfb80a174c6f6023816d))
+- **commerce:** atomic-product-field-condition ([#3959](https://github.com/coveo/ui-kit/issues/3959)) ([5e14eec](https://github.com/coveo/ui-kit/commits/5e14eec2b037a7cbe9842dc8ffac73645d2b6741)), closes [#3956](https://github.com/coveo/ui-kit/issues/3956)
+
+## 2.9.6 (2024-05-29)
+
+## 2.9.5 (2024-05-22)
+
+## 2.9.4 (2024-05-22)
+
+## 2.9.3 (2024-05-15)
+
+## 2.9.2 (2024-05-10)
+
+## 2.9.1 (2024-05-06)
+
 # 2.9.0 (2024-05-02)
 
 ### Features

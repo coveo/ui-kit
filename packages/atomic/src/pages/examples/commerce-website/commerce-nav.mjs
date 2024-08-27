@@ -1,4 +1,4 @@
-const barcaRoot = 'https://sports-dev.barca.group';
+const barcaRoot = 'https://sports.barca.group';
 export const navContent = {
   Homepage: {href: 'homepage.html', label: 'Homepage', barcaUrl: barcaRoot},
   Pants: {
@@ -9,7 +9,7 @@ export const navContent = {
   'Surf accessories': {
     href: 'listing-surf-accessories.html',
     label: 'Surf accessories',
-    barcaUrl: `${barcaRoot}/browse/promotions/accessories/surf-with-us-this-year`,
+    barcaUrl: `${barcaRoot}/browse/promotions/surf-accessories`,
   },
   Towels: {
     href: 'listing-towels.html',
@@ -56,3 +56,78 @@ nav.innerHTML = `
         `;
 
 document.body.querySelector('header').insertAdjacentElement('beforeend', nav);
+
+const isOnSearchPage = () => {
+  return window.location.pathname === '/examples/commerce-website/search.html';
+};
+
+if (!isOnSearchPage()) {
+  const standaloneSearchBoxHTML = `
+    <atomic-layout-section section="search">
+      <atomic-commerce-search-box redirection-url="./search.html">
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+        <atomic-commerce-search-box-instant-products image-size="small">
+          <atomic-product-template>
+            <template>
+              <atomic-product-section-name>
+                <atomic-product-link class="font-bold"></atomic-product-link>
+              </atomic-product-section-name>
+              <atomic-product-section-visual>
+                <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+              </atomic-product-section-visual>
+              <atomic-product-section-metadata>
+                <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+                <atomic-product-rating field="ec_rating"></atomic-product-rating>
+              </atomic-product-section-metadata>
+              <atomic-product-section-emphasized>
+                <atomic-product-price currency="USD"></atomic-product-price>
+              </atomic-product-section-emphasized>
+              <atomic-product-section-children>
+                <atomic-product-children></atomic-product-children>
+              </atomic-product-section-children>
+            </template>
+          </atomic-product-template>
+        </atomic-commerce-search-box-instant-products>
+      </atomic-commerce-search-box>
+    </atomic-layout-section>
+  `;
+
+  const standaloneSearchBox = document.createElement('search');
+
+  const atomicCommerceInterface = document.body.querySelector(
+    'atomic-commerce-interface'
+  );
+
+  if (atomicCommerceInterface) {
+    standaloneSearchBox.innerHTML = standaloneSearchBoxHTML;
+    const atomicCommerceLayout = atomicCommerceInterface.querySelector(
+      'atomic-commerce-layout'
+    );
+    if (atomicCommerceLayout) {
+      atomicCommerceLayout.insertAdjacentHTML(
+        'afterbegin',
+        standaloneSearchBoxHTML
+      );
+    } else {
+      atomicCommerceInterface.insertAdjacentElement(
+        'afterbegin',
+        standaloneSearchBox
+      );
+    }
+  } else {
+    standaloneSearchBox.innerHTML = `
+      <atomic-commerce-interface type="search">
+        ${standaloneSearchBoxHTML}
+      </atomic-commerce-interface>`;
+
+    document.body
+      .querySelector('main')
+      .insertAdjacentElement('afterbegin', standaloneSearchBox);
+
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = './init-standalone-search-box.js';
+    document.body.insertAdjacentElement('beforeend', script);
+  }
+}

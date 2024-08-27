@@ -1,11 +1,10 @@
 import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
 import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {NumericFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-  updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+  updateManualNumericFacetRange,
+} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
 import {CommerceAppState} from '../../../../../state/commerce-app-state';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
 import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-commerce-facet-response';
@@ -16,7 +15,7 @@ import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2';
-import {commonOptions} from '../../../product-listing/facets/headless-product-listing-facet-options';
+import {NumericRangeRequest} from '../headless-core-commerce-facet';
 import {
   NumericFacet,
   NumericFacetOptions,
@@ -24,7 +23,7 @@ import {
 } from './headless-commerce-numeric-facet';
 
 jest.mock(
-  '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
+  '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
 
 jest.mock(
@@ -36,7 +35,8 @@ describe('NumericFacet', () => {
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
-  const fetchResultsActionCreator = jest.fn();
+  const facetResponseSelector = jest.fn();
+  const fetchProductsActionCreator = jest.fn();
   let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -51,9 +51,9 @@ describe('NumericFacet', () => {
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
       request: buildMockCommerceFacetRequest({facetId, type, ...config}),
     });
-    state.productListing.facets = [
-      buildMockCommerceNumericFacetResponse({facetId}),
-    ];
+    facetResponseSelector.mockReturnValue(
+      buildMockCommerceNumericFacetResponse({facetId})
+    );
   }
 
   beforeEach(() => {
@@ -61,8 +61,9 @@ describe('NumericFacet', () => {
 
     options = {
       facetId,
-      ...commonOptions,
-      fetchResultsActionCreator,
+      fetchProductsActionCreator,
+      facetResponseSelector,
+      isFacetLoadingResponseSelector: jest.fn(),
     };
 
     state = buildMockCommerceState();
@@ -102,32 +103,28 @@ describe('NumericFacet', () => {
   });
 
   describe('#setRanges', () => {
-    let values: NumericFacetValue[];
+    let range: NumericRangeRequest;
     beforeEach(() => {
-      values = [buildMockCommerceNumericFacetValue()];
-      facet.setRanges(values);
+      range = {start, end, endInclusive: true, state: 'selected'};
+      facet.setRanges([range]);
     });
-    it('dispatches #updateNumericFacetValues with the correct payload', () => {
-      expect(updateNumericFacetValues).toHaveBeenCalledWith({
-        facetId,
-        values,
-      });
+    it('dispatches #updateManualNumericFacetRange with the correct payload', () => {
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        updateManualNumericFacetRange({facetId, ...range})
+      );
     });
 
-    it('dispatches #fetchResultsActionCreator', () => {
-      expect(fetchResultsActionCreator).toHaveBeenCalledTimes(1);
+    it('dispatches #fetchProductsActionCreator', () => {
+      expect(fetchProductsActionCreator).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('#state', () => {
     it('includes #domain if present in the response state', () => {
       const domain = {increment: 1, max: 100, min: 0};
-      state.productListing.facets = [
-        buildMockCommerceNumericFacetResponse({
-          facetId,
-          domain,
-        }),
-      ];
+      facetResponseSelector.mockReturnValue(
+        buildMockCommerceNumericFacetResponse({facetId, domain})
+      );
 
       initFacet();
 

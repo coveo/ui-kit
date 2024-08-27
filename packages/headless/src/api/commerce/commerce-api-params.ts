@@ -18,17 +18,25 @@ export interface CurrencyParam {
 }
 
 export interface ClientIdParam {
-  clientId: string;
+  clientId?: string;
 }
 
 export interface ContextParam {
   context: ContextParams;
 }
 
+export interface ProductParam {
+  productId: string;
+}
+
 export interface ContextParams {
   view: ViewParams;
   user?: UserParams;
+  product?: ProductParam;
   cart?: CartItemParam[];
+  purchased?: CartItemParam[];
+  capture: boolean;
+  source: string[];
 }
 
 export interface ViewParams {
@@ -36,28 +44,18 @@ export interface ViewParams {
   referrer?: string;
 }
 
-interface UserIdRequired {
-  userId: string;
-  email?: string;
-}
-
-interface EmailRequired {
-  userId?: string;
-  email: string;
-}
-
-interface UserIdAndEmail {
-  userId: string;
-  email: string;
-}
-
-export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
-  userIp?: string;
+export type UserParams = {
   userAgent?: string;
 };
 
 export interface CartItemParam {
-  sku: string;
+  /**
+   * The unique identifier of the product.
+   */
+  productId: string;
+  /**
+   * The quantity of the product in the cart.
+   */
   quantity: number;
 }
 

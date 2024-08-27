@@ -5,7 +5,7 @@ import {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {CollectionId} from '../folding/folding-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
@@ -21,11 +21,11 @@ export const buildInsightBaseRequest = async (
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {
   const cq = buildConstantQuery(state);
   const facets = getAllFacets(state);
-
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
+    locale: state.configuration.search.locale,
     insightId: state.insightConfiguration.insightId,
     ...(state.configuration.analytics.enabled &&
       (await fromAnalyticsStateToAnalyticsParams(

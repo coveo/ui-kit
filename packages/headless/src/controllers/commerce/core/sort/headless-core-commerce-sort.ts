@@ -1,5 +1,6 @@
 import {Schema} from '@coveo/bueno';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {stateKey} from '../../../../app/state-key';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -13,14 +14,13 @@ import {
 } from '../../../../features/commerce/sort/sort';
 import {applySort} from '../../../../features/commerce/sort/sort-actions';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildController,
   Controller,
+  buildController,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {
@@ -32,13 +32,13 @@ export {
 
 export interface SortProps {
   /**
-   * The initial state that should be applied to this `Sort` controller.
+   * The initial state that should be applied to this `Sort` sub-controller.
    */
   initialState?: SortInitialState;
 }
 
 export interface CoreSortProps extends SortProps {
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
 }
 
 export interface SortInitialState {
@@ -63,6 +63,9 @@ function validateSortInitialState(
   validateInitialState(engine, schema, state, 'buildSort');
 }
 
+/**
+ * The `Sort` sub-controller lets you sort the products in a commerce interface.
+ */
 export interface Sort extends Controller {
   /**
    * Updates the sort criterion and executes a new query.
@@ -88,7 +91,7 @@ export interface Sort extends Controller {
   isAvailable(criterion: SortCriterion): boolean;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Sort` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Sort` sub-controller.
    */
   state: SortState;
 }
@@ -107,11 +110,11 @@ export interface SortState {
 
 /**
  * @internal
- * Creates a core `Sort` controller instance for commerce solution types.
+ * Creates a core `Sort` sub-controller instance for commerce solution types.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `Sort` controller properties.
- * @returns A `Sort` controller instance.
+ * @param props - The configurable `Sort` sub-controller properties.
+ * @returns A `Sort` sub-controller instance.
  */
 export function buildCoreSort(
   engine: CommerceEngine,
@@ -123,7 +126,6 @@ export function buildCoreSort(
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state;
 
   validateSortInitialState(engine, props.initialState);
 
@@ -137,13 +139,12 @@ export function buildCoreSort(
     ...controller,
 
     get state() {
-      return getState().commerceSort;
+      return engine[stateKey].commerceSort;
     },
 
     sortBy(criterion: SortCriterion) {
       dispatch(applySort(criterion));
-      dispatch(updatePage(0));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     isSortedBy(criterion: SortCriterion) {

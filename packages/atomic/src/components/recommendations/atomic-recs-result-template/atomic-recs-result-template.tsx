@@ -72,7 +72,7 @@ export class AtomicRecsResultTemplate {
       setError: (err) => {
         this.error = err;
       },
-      validParents: ['atomic-recs-list'],
+      validParents: ['atomic-recs-list', 'atomic-ipx-recs-list'],
       allowEmpty: true,
     });
   }

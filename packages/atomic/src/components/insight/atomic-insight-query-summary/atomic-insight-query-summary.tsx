@@ -10,7 +10,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {QuerySummaryCommon} from '../../common/query-summary/query-summary-common';
+import {LocalizedString} from '../../../utils/jsx-utils';
+import {QuerySummaryContainer} from '../../common/query-summary/container';
+import {QuerySummaryGuard} from '../../common/query-summary/guard';
+import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -40,15 +43,44 @@ export class AtomicQuerySummary
   }
 
   public render() {
-    if (this.querySummaryState.hasQuery) {
+    const {
+      hasError,
+      hasQuery,
+      hasResults,
+      firstSearchExecuted,
+      firstResult,
+      lastResult,
+      isLoading,
+      query,
+      total,
+    } = this.querySummaryState;
+    const {ariaLiveMessage, highlights, i18nKey} =
+      getQuerySummaryI18nParameters({
+        first: firstResult,
+        i18n: this.bindings.i18n,
+        isLoading,
+        last: lastResult,
+        query,
+        total,
+      });
+
+    if (hasQuery) {
+      this.ariaMessage = ariaLiveMessage;
       return (
-        <div class="px-6 py-4">
-          <QuerySummaryCommon
-            setAriaLive={(msg) => (this.ariaMessage = msg)}
-            bindings={this.bindings}
-            querySummaryState={this.querySummaryState}
-          />
-        </div>
+        <QuerySummaryGuard
+          firstSearchExecuted={firstSearchExecuted}
+          hasResults={hasResults}
+          hasError={hasError}
+        >
+          <QuerySummaryContainer additionalClasses="px-6 py-4">
+            <LocalizedString
+              key={i18nKey}
+              i18n={this.bindings.i18n}
+              params={highlights}
+              count={total}
+            ></LocalizedString>
+          </QuerySummaryContainer>
+        </QuerySummaryGuard>
       );
     }
 
@@ -57,7 +89,7 @@ export class AtomicQuerySummary
     }
 
     return (
-      <div class="bg-[#F1F2FF] text-[#54698D] px-6 py-4 italic">
+      <div class="bg-[#F1F2FF] px-6 py-4 italic text-[#54698D]">
         {this.bindings.i18n.t('insight-related-cases')}
       </div>
     );

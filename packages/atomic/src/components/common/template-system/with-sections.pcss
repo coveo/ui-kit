@@ -1,0 +1,74 @@
+@define-mixin result-with-sections map(post-css-map-for-sections, variables) {
+  display: grid;
+  justify-items: stretch;
+
+  /* == Common styles == */
+  $(section-visual) {
+    grid-area: visual;
+  }
+
+  $(section-badges) {
+    grid-area: badges;
+  }
+
+  $(section-actions) {
+    grid-area: actions;
+
+    atomic-result-quickview {
+      display: inline-block;
+    }
+  }
+
+  $(section-title) {
+    grid-area: title;
+    color: var(--atomic-on-background);
+  }
+
+  $(section-title-metadata) {
+    grid-area: title-metadata;
+  }
+
+  $(section-emphasized) {
+    grid-area: emphasized;
+  }
+
+  $(section-excerpt) {
+    grid-area: excerpt;
+    color: var(--atomic-neutral-dark);
+  }
+
+  $(section-bottom-metadata) {
+    grid-area: bottom-metadata;
+    color: var(--atomic-neutral-dark);
+  }
+
+  $(section-children) {
+    grid-area: children;
+  }
+
+  $(section-badges),
+  $(section-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
+  }
+
+  $(section-visual),
+  $(section-badges),
+  $(section-actions),
+  $(section-title),
+  $(section-title-metadata),
+  $(section-emphasized),
+  $(section-excerpt),
+  $(section-bottom-metadata) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.image-icon {
+    $(section-visual) {
+      border-radius: var(--atomic-border-radius);
+    }
+  }
+}

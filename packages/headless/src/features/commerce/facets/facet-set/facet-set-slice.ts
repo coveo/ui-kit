@@ -5,43 +5,62 @@ import {
   FacetValueRequest,
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {
-  defaultNumberOfValuesIncrement,
-  toggleSelectCategoryFacetValue,
-  updateCategoryFacetNumberOfValues,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
+import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-  updateFacetIsFieldExpanded,
-  updateFacetNumberOfValues,
-} from '../../../facets/facet-set/facet-set-actions';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import {updateFacetAutoSelection} from '../../../facets/generic/facet-actions';
 import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers';
+import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
+import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
+import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {setContext, setView} from '../../context/context-actions';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
+import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
+import {executeSearch} from '../../search/search-actions';
+import '../category-facet/category-facet-actions';
+import {
+  toggleSelectCategoryFacetValue,
+  updateCategoryFacetNumberOfValues,
+} from '../category-facet/category-facet-actions';
+import {
+  deselectAllValuesInCoreFacet,
+  updateCoreFacetFreezeCurrentValues,
+  updateCoreFacetIsFieldExpanded,
+  updateCoreFacetNumberOfValues,
+  updateAutoSelectionForAllCoreFacets,
+  clearAllCoreFacets,
+} from '../core-facet/core-facet-actions';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
-import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
-import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
+  updateDateFacetValues,
+} from '../date-facet/date-facet-actions';
+import {
+  executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+} from '../facet-search-set/commerce-facet-search-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
+  updateManualNumericFacetRange,
   updateNumericFacetValues,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {setContext, setUser, setView} from '../../context/context-actions';
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
-import {executeSearch} from '../../search/search-actions';
+} from '../numeric-facet/numeric-facet-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from '../regular-facet/regular-facet-actions';
 import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers';
+import {
+  buildCategoryFacetValueRequest,
+  buildSelectedFacetValueRequest,
+  restoreFromParameters,
+  selectPath,
+} from './facet-set-reducers';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
@@ -64,6 +83,24 @@ export const commerceFacetSetReducer = createReducer(
     builder
       .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
       .addCase(executeSearch.fulfilled, handleQueryFulfilled)
+      .addCase(executeCommerceFieldSuggest.fulfilled, (state, action) =>
+        handleFieldSuggestionsFulfilled(
+          state,
+          getFacetIdWithCommerceFieldSuggestionNamespace(action.payload.facetId)
+        )
+      )
+      .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
+        if (!action.payload.fieldSuggestionsFacets) {
+          return;
+        }
+
+        for (const {facetId} of action.payload.fieldSuggestionsFacets) {
+          handleFieldSuggestionsFulfilled(
+            state,
+            getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
+          );
+        }
+      })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -83,6 +120,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'select');
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -105,7 +143,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'select');
 
         if (
-          isContinuousRangeRequest(facetRequest) &&
+          facetRequest.interval === 'continuous' &&
           existingValue.state === 'idle'
         ) {
           facetRequest.values = [];
@@ -183,6 +221,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleExcludeNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -206,7 +245,7 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'exclude');
 
         if (
-          isContinuousRangeRequest(facetRequest) &&
+          facetRequest.interval === 'continuous' &&
           existingValue.state === 'idle'
         ) {
           facetRequest.values = [];
@@ -258,6 +297,7 @@ export const commerceFacetSetReducer = createReducer(
 
         const {rawValue} = value;
 
+        facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
@@ -265,7 +305,10 @@ export const commerceFacetSetReducer = createReducer(
         );
 
         if (!existingValue) {
-          insertNewValue(facetRequest, {state: 'selected', value: rawValue});
+          insertNewValue(
+            facetRequest,
+            buildSelectedFacetValueRequest(rawValue) as AnyFacetValueRequest
+          );
           return;
         }
 
@@ -275,16 +318,13 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
 
-        if (
-          !facetRequest ||
-          (facetRequest.type !== 'regular' &&
-            facetRequest.type !== 'hierarchical')
-        ) {
+        if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
 
         const {rawValue} = value;
 
+        facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
@@ -326,10 +366,22 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
         request.values = convertToNumericRangeRequests(values);
         request.numberOfValues = values.length;
       })
-      .addCase(updateFacetNumberOfValues, (state, action) => {
+      .addCase(updateDateFacetValues, (state, action) => {
+        const {facetId, values} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request || !ensureDateFacetRequest(request)) {
+          return;
+        }
+
+        request.values = convertToDateRangeRequests(values);
+        request.numberOfValues = values.length;
+      })
+      .addCase(updateCoreFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -339,7 +391,7 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.numberOfValues = numberOfValues;
       })
-      .addCase(updateFacetIsFieldExpanded, (state, action) => {
+      .addCase(updateCoreFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
         const facetRequest = state[facetId]?.request;
 
@@ -349,13 +401,23 @@ export const commerceFacetSetReducer = createReducer(
 
         facetRequest.isFieldExpanded = isFieldExpanded;
       })
-      .addCase(updateFacetAutoSelection, (state, action) =>
+      .addCase(updateAutoSelectionForAllCoreFacets, (state, action) =>
         Object.values(state).forEach((slice) => {
           slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
-      .addCase(deselectAllFacetValues, (state, action) => {
-        const facetId = action.payload;
+      .addCase(updateCoreFacetFreezeCurrentValues, (state, action) => {
+        const {facetId, freezeCurrentValues} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.freezeCurrentValues = freezeCurrentValues;
+      })
+      .addCase(deselectAllValuesInCoreFacet, (state, action) => {
+        const {facetId} = action.payload;
         const request = state[facetId]?.request;
 
         if (!request) {
@@ -364,10 +426,21 @@ export const commerceFacetSetReducer = createReducer(
 
         handleDeselectAllFacetValues(request);
       })
-      .addCase(deselectAllBreadcrumbs, setAllFacetValuesToIdle)
+      .addCase(updateManualNumericFacetRange, (state, action) => {
+        const {facetId} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        handleDeselectAllFacetValues(request);
+      })
+      .addCase(clearAllCoreFacets, setAllFacetValuesToIdle)
       .addCase(setContext, clearAllFacetValues)
       .addCase(setView, clearAllFacetValues)
-      .addCase(setUser, clearAllFacetValues);
+      .addCase(restoreSearchParameters, restoreFromParameters)
+      .addCase(restoreProductListingParameters, restoreFromParameters);
   }
 );
 
@@ -412,6 +485,19 @@ function handleQueryFulfilled(
   }
 }
 
+function handleFieldSuggestionsFulfilled(
+  state: WritableDraft<CommerceFacetSetState>,
+  facetId: string
+) {
+  let facetRequest = state[facetId]?.request;
+  if (!facetRequest) {
+    state[facetId] = {request: {} as AnyFacetRequest};
+    facetRequest = state[facetId].request;
+    facetRequest.initialNumberOfValues = 10;
+    facetRequest.values = [];
+  }
+}
+
 function handleDeselectAllFacetValues(request: AnyFacetRequest) {
   if (request.type === 'hierarchical') {
     request.numberOfValues = request.initialNumberOfValues;
@@ -445,19 +531,6 @@ function ensurePathAndReturnChildren(
 
   return children;
 }
-
-function buildCategoryFacetValueRequest(
-  value: string,
-  retrieveCount: number
-): CategoryFacetValueRequest {
-  return {
-    children: [],
-    state: 'idle',
-    value,
-    retrieveCount,
-  };
-}
-
 function updateExistingFacetValueState(
   existingFacetValue: WritableDraft<
     FacetValueRequest | NumericRangeRequest | DateRangeRequest
@@ -505,18 +578,22 @@ function updateStateFromFacetResponse(
   facetRequest.type = facetResponse.type;
   facetRequest.values =
     getFacetRequestValuesFromFacetResponse(facetResponse) ?? [];
+  facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
   if (
     facetResponse.type === 'hierarchical' &&
     ensureCategoryFacetRequest(facetRequest)
   ) {
     facetRequest.delimitingCharacter = facetResponse.delimitingCharacter;
-  } else if (facetResponse.type === 'numericalRange' && facetResponse.domain) {
-    facetRequest.domain = {
-      min: facetResponse.domain.min,
-      max: facetResponse.domain.max,
-      increment: facetResponse.domain.increment,
-    };
+  } else if (facetResponse.type === 'numericalRange') {
+    facetRequest.interval = facetResponse.interval;
+    if (facetResponse.domain) {
+      facetRequest.domain = {
+        min: facetResponse.domain.min,
+        max: facetResponse.domain.max,
+        increment: facetResponse.domain.increment,
+      };
+    }
   }
 }
 
@@ -576,48 +653,13 @@ function insertNewValue(
 }
 
 function setAllFacetValuesToIdle(state: CommerceFacetSetState) {
-  Object.values(state).forEach((facet) => {
-    facet.request.values.forEach((value) => (value.state = 'idle'));
-  });
+  Object.values(state).forEach((facet) =>
+    handleDeselectAllFacetValues(facet.request)
+  );
 }
 
 function clearAllFacetValues(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values = [];
   });
-}
-
-export function selectPath(
-  request: CategoryFacetRequest,
-  path: string[],
-  initialNumberOfValues: number
-) {
-  request.values = buildCurrentValuesFromPath(path, initialNumberOfValues);
-  request.numberOfValues = path.length ? 1 : initialNumberOfValues;
-  request.preventAutoSelect = true;
-}
-
-function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
-  if (!path.length) {
-    return [];
-  }
-
-  const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
-  let curr = root;
-
-  for (const segment of path.splice(1)) {
-    const next = buildCategoryFacetValueRequest(segment, retrieveCount);
-    curr.children.push(next);
-    curr = next;
-  }
-
-  curr.state = 'selected';
-
-  return [root];
-}
-
-// eslint-disable-next-line @cspell/spellchecker
-// TODO CAPI-850: Tthis is the best we can do for now to identify a continuous range. When the `interval` property gets added to the facet response, we'll use that instead.
-function isContinuousRangeRequest(request: NumericFacetRequest): boolean {
-  return request.values.length === 1 && request.domain?.increment === 0;
 }

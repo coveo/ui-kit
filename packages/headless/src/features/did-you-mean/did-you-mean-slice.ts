@@ -8,10 +8,10 @@ import {
   disableAutomaticQueryCorrection,
   setCorrectionMode,
 } from './did-you-mean-actions';
+import {setToNonEmptyQueryCorrection} from './did-you-mean-slice-functions';
 import {
   CorrectionMode,
   emptyLegacyCorrection,
-  emptyNextCorrection,
   getDidYouMeanInitialState,
 } from './did-you-mean-state';
 
@@ -49,19 +49,7 @@ export const didYouMeanReducer = createReducer(
         }
 
         if (state.queryCorrectionMode === 'next') {
-          const nonOptionalQueryCorrection = {
-            ...emptyNextCorrection(),
-            ...queryCorrection,
-            ...{
-              correctedQuery:
-                queryCorrection?.correctedQuery ||
-                queryCorrection?.corrections[0]?.correctedQuery ||
-                '',
-            },
-          };
-
-          state.queryCorrection = nonOptionalQueryCorrection;
-          state.wasCorrectedTo = nonOptionalQueryCorrection.correctedQuery;
+          setToNonEmptyQueryCorrection(state, queryCorrection);
         }
 
         state.wasAutomaticallyCorrected = action.payload.automaticallyCorrected;

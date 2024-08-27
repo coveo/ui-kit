@@ -4,11 +4,11 @@ import {
   buildRecommendationEngine,
 } from '@coveo/headless/recommendation';
 import React, {useEffect, useRef} from 'react';
-import {AtomicRecsInterface} from '../stencil-generated/index';
+import {AtomicRecsInterface} from '../stencil-generated/search';
 
 type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
 /**
- * The properties of the AtomicSearchInterface component
+ * The properties of the AtomicRecsInterface component
  */
 interface WrapperProps
   extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {

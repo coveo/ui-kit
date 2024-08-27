@@ -1,3 +1,13 @@
+## 0.46.1 (2024-07-31)
+
+# 0.46.0 (2024-07-24)
+
+### Features
+
+- **headless:** creation of the new headless insight user actions controller ([#4192](https://github.com/coveo/ui-kit/issues/4192)) ([b52953e](https://github.com/coveo/ui-kit/commits/b52953e2053ba7fd4b9fe4bec35000075fc95af5))
+
+## 0.45.9 (2024-06-06)
+
 ## 0.45.8 (2024-03-20)
 
 ## 0.45.7 (2024-02-09)

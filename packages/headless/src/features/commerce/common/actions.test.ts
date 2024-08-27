@@ -3,11 +3,15 @@ import {
   BaseCommerceAPIRequest,
   CommerceAPIRequest,
 } from '../../../api/commerce/common/request';
+import {NavigatorContext} from '../../../app/navigatorContextProvider';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
 import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice';
 import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider';
+import {VERSION} from '../../../utils/version';
 import {CommerceFacetSlice} from '../facets/facet-set/facet-set-state';
+import {ManualNumericFacetSetSlice} from '../facets/numeric-facet/manual-numeric-facet-state';
 import {
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
@@ -17,6 +21,16 @@ import {getCommerceSortInitialState} from '../sort/sort-state';
 import * as Actions from './actions';
 
 describe('commerce common actions', () => {
+  let navigatorContext: NavigatorContext;
+
+  beforeEach(() => {
+    navigatorContext = buildMockNavigatorContextProvider({
+      userAgent: 'user_agent',
+      referrer: 'referrer',
+      clientId: 'client_id',
+    })();
+  });
+
   describe('#buildBaseCommerceAPIRequest', () => {
     let expected: BaseCommerceAPIRequest;
     let state: Actions.StateNeededByQueryCommerceAPI;
@@ -37,24 +51,23 @@ describe('commerce common actions', () => {
         language: 'en',
         country: 'CA',
         currency: 'CAD',
-        clientId: expect.any(String),
+        clientId: 'client_id',
         context: {
           user: {
-            userId: 'user_id',
-            email: 'email',
-            userIp: 'user_ip',
             userAgent: 'user_agent',
           },
           view: {
             url: 'https://example.com',
-            referrer: 'https://referrer.com',
+            referrer: 'referrer',
           },
+          capture: true,
           cart: [
             {
-              sku: product.sku,
+              productId: product.productId,
               quantity: product.quantity,
             },
           ],
+          source: ['@coveo/atomic@version', `@coveo/headless@${VERSION}`],
         },
       };
 
@@ -64,10 +77,12 @@ describe('commerce common actions', () => {
       state.configuration.accessToken = expected.accessToken;
       state.configuration.organizationId = expected.organizationId;
       state.configuration.analytics.trackingId = expected.trackingId;
+      state.configuration.analytics.source = {
+        '@coveo/atomic': 'version',
+      };
       state.commerceContext.language = expected.language;
       state.commerceContext.country = expected.country;
       state.commerceContext.currency = expected.currency as CurrencyCodeISO4217;
-      state.commerceContext.user = expected.context.user;
       state.commerceContext.view = expected.context.view;
       state.cart.cartItems = [product.productId];
       state.cart.cart = {
@@ -77,17 +92,18 @@ describe('commerce common actions', () => {
       };
     });
 
-    it('given a state with no commercePagination section, returns the expected base request', async () => {
+    it('given a state with no commercePagination section, returns the expected base request', () => {
       delete state.commercePagination;
 
-      const request = await Actions.buildBaseCommerceAPIRequest(state);
+      const request = Actions.buildBaseCommerceAPIRequest(
+        state,
+        navigatorContext
+      );
 
       expect(request).toEqual({...expected});
     });
 
-    it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', async () => {
-      delete state.commerceSort;
-
+    it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', () => {
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
         principal: {
@@ -103,14 +119,15 @@ describe('commerce common actions', () => {
         perPage: state.commercePagination.principal.perPage,
       };
 
-      const request = await Actions.buildBaseCommerceAPIRequest(state);
+      const request = Actions.buildBaseCommerceAPIRequest(
+        state,
+        navigatorContext
+      );
 
       expect(request).toEqual(expectedWithPagination);
     });
 
-    it('given a slotId, returns expected base request with the effective pagination for that slot', async () => {
-      delete state.commerceSort;
-
+    it('given a slotId, returns expected base request with the effective pagination for that slot', () => {
       const slotId = 'slot_id';
       state.commercePagination = {
         ...getCommercePaginationInitialState(),
@@ -129,14 +146,18 @@ describe('commerce common actions', () => {
         perPage: state.commercePagination.recommendations[slotId]!.perPage,
       };
 
-      const request = await Actions.buildBaseCommerceAPIRequest(state, slotId);
+      const request = Actions.buildBaseCommerceAPIRequest(
+        state,
+        navigatorContext,
+        slotId
+      );
 
       expect(request).toEqual(expectedWithPagination);
     });
   });
 
   describe('#buildCommerceAPIRequest', () => {
-    let state: Actions.StateNeededByQueryCommerceAPI;
+    let state: Actions.ListingAndSearchStateNeededByQueryCommerceAPI;
     let mockedBuildBaseCommerceAPIRequest: jest.SpyInstance;
     beforeEach(() => {
       jest.clearAllMocks();
@@ -147,38 +168,44 @@ describe('commerce common actions', () => {
       );
     });
 
-    it('given a state with none of the optional sections, returns the expected base request along an empty #facets array', async () => {
+    it('given a state with none of the optional sections, returns the expected base request along an empty #facets array', () => {
       delete state.commerceSort;
       delete state.facetOrder;
       delete state.commerceFacetSet;
 
-      const request = await Actions.buildCommerceAPIRequest(state);
+      const request = Actions.buildCommerceAPIRequest(state, navigatorContext);
 
-      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+        state,
+        navigatorContext
+      );
 
       expect(request).toEqual({
-        ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+        ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
         facets: [],
       });
     });
 
-    it('given a state that has the facetOrder section but not the commerceFacetSet section, returns the expected base request with an empty #facets array', async () => {
+    it('given a state that has the facetOrder section but not the commerceFacetSet section, returns the expected base request with an empty #facets array', () => {
       delete state.commerceSort;
       delete state.commerceFacetSet;
 
       state.facetOrder = ['facet_id'];
 
-      const request = await Actions.buildCommerceAPIRequest(state);
+      const request = Actions.buildCommerceAPIRequest(state, navigatorContext);
 
-      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+        state,
+        navigatorContext
+      );
 
       expect(request).toEqual({
-        ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+        ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
         facets: [],
       });
     });
 
-    it('given a state that has the commerceFacetSet section but not the facetOrder section, returns the expected base request with an empty #facets array', async () => {
+    it('given a state that has the commerceFacetSet section but not the facetOrder section, returns the expected base request with an empty #facets array', () => {
       delete state.commerceSort;
       delete state.commerceFacetSet;
 
@@ -186,13 +213,122 @@ describe('commerce common actions', () => {
         facet_id: buildMockCommerceFacetSlice(),
       };
 
-      const request = await Actions.buildCommerceAPIRequest(state);
+      const request = Actions.buildCommerceAPIRequest(state, navigatorContext);
 
-      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+      expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+        state,
+        navigatorContext
+      );
 
       expect(request).toEqual({
-        ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+        ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
         facets: [],
+      });
+    });
+
+    it.each([true, false])(
+      'sets the capture property from the analytics configuration',
+      (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request.context.capture).toEqual(analyticsEnabled);
+      }
+    );
+
+    it.each([true, false])(
+      'sets the clientId conditionally upon the analytics configuration',
+      (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request.clientId).toEqual(
+          analyticsEnabled ? 'client_id' : undefined
+        );
+      }
+    );
+
+    describe('given a state that has the commerceFacetSet and manualNumericFacetSet', () => {
+      let facet1: CommerceFacetSlice;
+      let manualFacet1: ManualNumericFacetSetSlice;
+
+      beforeEach(() => {
+        delete state.commerceSort;
+        facet1 = buildMockCommerceFacetSlice({
+          request: {
+            ...buildMockCommerceFacetRequest({
+              facetId: 'facet_1_id',
+              values: [buildMockCommerceRegularFacetValue()],
+            }),
+          },
+        });
+
+        manualFacet1 = {
+          manualRange: {
+            start: 0,
+            end: 10,
+            endInclusive: false,
+            state: 'selected',
+          },
+        };
+
+        state.facetOrder = ['facet_id_1'];
+
+        state.commerceFacetSet = {
+          [facet1.request.facetId]: facet1,
+        };
+
+        state.manualNumericFacetSet = {
+          facet_id_1: manualFacet1,
+        };
+      });
+
+      it('includes only the manual numeric facet in the #facets array of the returned request', () => {
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request).toEqual({
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
+          facets: [
+            {
+              facetId: 'facet_id_1',
+              field: 'facet_id_1',
+              initialNumberOfValues: 1,
+              isFieldExpanded: false,
+              numberOfValues: 1,
+              preventAutoSelect: true,
+              type: 'numericalRange',
+              values: [
+                {start: 0, end: 10, endInclusive: false, state: 'selected'},
+              ],
+            },
+          ],
+        });
       });
     });
 
@@ -228,18 +364,24 @@ describe('commerce common actions', () => {
           [facet2.request.facetId]: facet2,
         };
       });
-      it('includes all non-empty facets in the #facets array of the returned request', async () => {
-        const request = await Actions.buildCommerceAPIRequest(state);
+      it('includes all non-empty facets in the #facets array of the returned request', () => {
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
 
-        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
 
         expect(request).toEqual({
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [facet1.request, facet2.request],
         });
       });
 
-      it('does not include empty facets in the #facets array of the returned request', async () => {
+      it('does not include empty facets in the #facets array of the returned request', () => {
         const facet3 = buildMockCommerceFacetSlice({
           request: {
             ...buildMockCommerceFacetRequest({
@@ -253,24 +395,30 @@ describe('commerce common actions', () => {
         state.commerceFacetSet![facet3.request.facetId] = facet3;
         state.facetOrder.push(facet3.request.facetId);
 
-        const request = await Actions.buildCommerceAPIRequest(state);
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
 
-        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
 
         expect(request).toEqual({
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [facet1.request, facet2.request],
         });
       });
     });
 
-    describe('give a state that has the commerceSort section', () => {
+    describe('given a state that has the commerceSort section', () => {
       beforeEach(() => {
         delete state.facetOrder;
         delete state.commerceFacetSet;
       });
 
-      it('when applied sort is "relevance", returns expected base request with expected #sort.sortCriteria', async () => {
+      it('when applied sort is "relevance", returns expected base request with expected #sort.sortCriteria', () => {
         state.commerceSort = {
           ...getCommerceSortInitialState(),
           appliedSort: {
@@ -278,12 +426,18 @@ describe('commerce common actions', () => {
           },
         };
 
-        const request = await Actions.buildCommerceAPIRequest(state);
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
 
-        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
 
         const expectedWithSort: CommerceAPIRequest = {
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [],
           sort: {
             sortCriteria: SortBy.Relevance,
@@ -293,7 +447,7 @@ describe('commerce common actions', () => {
         expect(request).toEqual(expectedWithSort);
       });
 
-      it('when applied sort is "fields", returns expected base request with expected #sort.sortCriteria and #sort.fields', async () => {
+      it('when applied sort is "fields", returns expected base request with expected #sort.sortCriteria and #sort.fields', () => {
         const sortCriterion: SortCriterion = {
           by: SortBy.Fields,
           fields: [
@@ -309,12 +463,18 @@ describe('commerce common actions', () => {
           appliedSort: sortCriterion,
         };
 
-        const request = await Actions.buildCommerceAPIRequest(state);
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
 
-        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(state);
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
 
         const expectedWithSort: CommerceAPIRequest = {
-          ...(await mockedBuildBaseCommerceAPIRequest.mock.results[0].value),
+          ...mockedBuildBaseCommerceAPIRequest.mock.results[0].value,
           facets: [],
           sort: {
             sortCriteria: sortCriterion.by,

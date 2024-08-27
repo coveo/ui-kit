@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {analyticsModeTest} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
@@ -26,6 +27,9 @@ interface GeneratedAnswerOptions {
   multilineFooter: boolean;
   fieldsToIncludeInCitations: string;
   useCase: string;
+  collapsible: boolean;
+  withToggle: boolean;
+  withRephraseButtons: boolean;
 }
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
@@ -33,14 +37,6 @@ const exampleTrackingId = 'tracking_id_123';
 const answerType = 'RGA';
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
-const otherOption = 'other';
-const feedbackOptions = [
-  'irrelevant',
-  'notAccurate',
-  'outOfDate',
-  'harmful',
-  otherOption,
-];
 
 const defaultFieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
 const defaultRephraseOption = 'default';
@@ -59,6 +55,17 @@ const genQaMessageTypePayload = {
   payloadType: 'genqa.messageType',
   payload: JSON.stringify({
     textDelta: testText,
+  }),
+  finishReason: 'COMPLETED',
+};
+
+const testLongText = `Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.
+
+There now is your insular city of the Manhattoes, belted round by wharves as Indian isles by coral reefs—commerce surrounds it with her surf. Right and left, the streets take you waterward. Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by breezes, which a few hours previous were out of sight of land. Look at the crowds of water-gazers there.`;
+const genQaLongMessageTypePayload = {
+  payloadType: 'genqa.messageType',
+  payload: JSON.stringify({
+    textDelta: testLongText,
   }),
   finishReason: 'COMPLETED',
 };
@@ -112,13 +119,22 @@ describe('quantic-generated-answer', () => {
       });
 
       describe('when stream ID is returned', () => {
-        describe('when a message event is received', () => {
+        describe('when the completed message event is received', () => {
           const streamId = crypto.randomUUID();
 
           beforeEach(() => {
             mockSearchWithGeneratedAnswer(streamId, param.useCase);
             mockStreamResponse(streamId, genQaMessageTypePayload);
             visitGeneratedAnswer({useCase: param.useCase});
+          });
+
+          it('should perform a search query with the default rephrase option', () => {
+            cy.wait(InterceptAliases.Search);
+            Expect.searchQueryContainsCorrectRephraseOption(
+              defaultRephraseOption,
+              param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit',
+              ['text/markdown', 'text/plain']
+            );
           });
 
           it('should log the stream ID in the search event custom data', () => {
@@ -130,7 +146,10 @@ describe('quantic-generated-answer', () => {
           it('should display the generated answer content', () => {
             Expect.displayGeneratedAnswerContent(true);
             Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
-            Expect.generatedAnswerFooterIsOnMultiline(false);
+            Expect.generatedAnswerFooterRowsIsOnMultiline(false);
+            Expect.generatedAnswerCollapsed(false);
+            Expect.displayRephraseButtons(false);
+            Expect.displayToggleGeneratedAnswerButton(false);
           });
 
           it('should display the correct message', () => {
@@ -145,24 +164,11 @@ describe('quantic-generated-answer', () => {
             Expect.generatedAnswerIsStreaming(false);
           });
 
-          it('should perform a search query with the default rephrase button', () => {
-            cy.wait(InterceptAliases.Search);
-            Expect.searchQueryContainsCorrectRephraseOption(
-              defaultRephraseOption,
-              param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit'
-            );
-          });
-
           it('should perform a search query with the default fields to include in citations', () => {
             cy.wait(InterceptAliases.Search);
             Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
               defaultFieldsToIncludeInCitations.split(',')
             );
-          });
-
-          it('should display the rephrase buttons', () => {
-            Expect.displayRephraseButtons(true);
-            Expect.displayRephraseLabel(true);
           });
 
           it('should display feedback buttons', () => {
@@ -173,158 +179,174 @@ describe('quantic-generated-answer', () => {
           });
         });
 
-        describe('when a value is provided to the answer style attribute', () => {
+        describe('handling text/markdown', () => {
           const streamId = crypto.randomUUID();
-
-          beforeEach(() => {
-            mockSearchWithGeneratedAnswer(streamId, param.useCase);
-            mockStreamResponse(streamId, genQaMessageTypePayload);
-            visitGeneratedAnswer({
-              answerStyle: bulletRephraseOption,
-              useCase: param.useCase,
-            });
-          });
-
-          it('should send a search query with the right rephrase option as a parameter', () => {
-            scope('when loading the page', () => {
-              Expect.displayRephraseButtons(true);
-              Expect.rephraseButtonIsSelected(stepRephraseOption, false);
-              Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
-              Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
-              Expect.searchQueryContainsCorrectRephraseOption(
-                bulletRephraseOption,
-                param.useCase === 'search' ? 'interfaceLoad' : 'searchboxSubmit'
-              );
-            });
-          });
-        });
-
-        describe('when a custom value is provided to the fields to include in citations attribute', () => {
-          const streamId = crypto.randomUUID();
-          const customFields = 'foo,bar';
-
-          beforeEach(() => {
-            mockSearchWithGeneratedAnswer(streamId, param.useCase);
-            mockStreamResponse(streamId, genQaMessageTypePayload);
-            visitGeneratedAnswer({
-              fieldsToIncludeInCitations: customFields,
-              useCase: param.useCase,
-            });
-          });
-
-          it('should send a search query with the right fields to include in citations option as a parameter', () => {
-            scope('when loading the page', () => {
-              Expect.displayGeneratedAnswerContent(true);
-              Expect.displayRephraseButtons(true);
-              Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
-                customFields.split(',')
-              );
-            });
-          });
-        });
-
-        describe('when the property multilineFooter is set to true', () => {
-          const streamId = crypto.randomUUID();
-
-          beforeEach(() => {
-            mockSearchWithGeneratedAnswer(streamId, param.useCase);
-            mockStreamResponse(streamId, genQaMessageTypePayload);
-            visitGeneratedAnswer({
-              multilineFooter: true,
-              useCase: param.useCase,
-            });
-          });
-
-          it('should properly display the generated answer footer on multiple lines', () => {
-            scope('when loading the page', () => {
-              Expect.displayGeneratedAnswerCard(true);
-              Expect.generatedAnswerFooterIsOnMultiline(true);
-              Expect.displayDisclaimer(true);
-            });
-          });
-        });
-
-        describe('when the generated answer is still streaming', () => {
-          const streamId = crypto.randomUUID();
-
-          const testMessagePayload = {
-            payloadType: 'genqa.messageType',
+          const genQaMarkdownTypePayload = {
+            payloadType: 'genqa.headerMessageType',
             payload: JSON.stringify({
-              textDelta: testText,
+              answerStyle: 'default',
+              contentFormat: 'text/markdown',
             }),
           };
 
           beforeEach(() => {
             mockSearchWithGeneratedAnswer(streamId, param.useCase);
-            mockStreamResponse(streamId, testMessagePayload);
-            visitGeneratedAnswer({useCase: param.useCase});
           });
 
-          it('should display the correct message and the streaming cursor', () => {
+          it('should display the generated answer content in markdown format', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta: '# Some markdown text',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
+            });
             Expect.displayGeneratedAnswerCard(true);
-            Expect.generatedAnswerContains(testText);
-            Expect.generatedAnswerIsStreaming(true);
-            Expect.displayRephraseButtons(false);
-            Expect.displayLikeButton(false);
-            Expect.displayDislikeButton(false);
-            Expect.displayCopyToClipboardButton(false);
-            Expect.displayToggleGeneratedAnswerButton(true);
-            Expect.toggleGeneratedAnswerButtonIsChecked(true);
-            Expect.displayDisclaimer(false);
           });
-        });
 
-        rephraseOptions.forEach((option) => {
-          const rephraseOption = option;
-
-          describe(`when clicking the ${rephraseOption} rephrase button`, () => {
-            const streamId = crypto.randomUUID();
-            const secondStreamId = crypto.randomUUID();
-
-            beforeEach(() => {
-              mockSearchWithGeneratedAnswer(streamId, param.useCase);
-              mockStreamResponse(streamId, genQaMessageTypePayload);
-              visitGeneratedAnswer({useCase: param.useCase});
+          it('should properly create divs instead of headings', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta: '# level1\n ## level2\n ### level3',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
             });
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContentContainsHTML(
+              'div[data-level="answer-heading-1"]'
+            );
+            Expect.generatedAnswerContentContainsText('level1');
+            Expect.generatedAnswerContentContainsHTML(
+              'div[data-level="answer-heading-2"]'
+            );
+            Expect.generatedAnswerContentContainsText('level2');
+            Expect.generatedAnswerContentContainsHTML(
+              'div[data-level="answer-heading-3"]'
+            );
+            Expect.generatedAnswerContentContainsText('level3');
+          });
 
-            it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
-              scope('when loading the page', () => {
-                Expect.displayRephraseButtonWithLabel(rephraseOption);
-                const expectedRephraseButtonSelected =
-                  option === defaultRephraseOption;
-                Expect.rephraseButtonIsSelected(
-                  rephraseOption,
-                  expectedRephraseButtonSelected
-                );
-              });
-
-              scope('when selecting the rephrase button', () => {
-                mockSearchWithGeneratedAnswer(secondStreamId, param.useCase);
-                mockStreamResponse(secondStreamId, genQaMessageTypePayload);
-
-                Actions.clickRephraseButton(rephraseOption);
-                Expect.displayRephraseButtonWithLabel(rephraseOption);
-                Expect.rephraseButtonIsSelected(rephraseOption, true);
-                rephraseOptions
-                  .filter((item) => {
-                    return item !== rephraseOption;
-                  })
-                  .forEach((unselectedOption) => {
-                    Expect.displayRephraseButtonWithLabel(unselectedOption);
-                    Expect.rephraseButtonIsSelected(unselectedOption, false);
-                  });
-                Expect.searchQueryContainsCorrectRephraseOption(
-                  rephraseOption,
-                  'rephraseGeneratedAnswer'
-                );
-                if (analyticsMode === 'legacy') {
-                  Expect.logRephraseGeneratedAnswer(
-                    rephraseOption,
-                    secondStreamId
-                  );
-                }
-              });
+          it('should properly close bold tags even before receiving the closing tag', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta: '**bold text',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
             });
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContentContainsHTML('strong');
+            Expect.generatedAnswerContentContainsText('bold text');
+          });
+
+          it('should properly close code tags even before receiving the closing tag', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta: '`code text',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
+            });
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContentContainsHTML('code');
+            Expect.generatedAnswerContentContainsText('code text');
+          });
+
+          it('should properly render lists as ul and li', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta: '- list item 1\n- list item 2',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
+            });
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContentContainsHTML('ul');
+            Expect.generatedAnswerContentContainsHTML('li');
+            Expect.generatedAnswerContentContainsText('list item 1');
+            Expect.generatedAnswerContentContainsText('list item 2');
+          });
+
+          it('should properly render tables as scrollable-tables', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta:
+                  '| Tables | Are | Cool |\n|----------|-------------|------|\n| col1 | col2 | col3 |',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
+            });
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContentContainsHTML(
+              'div.scrollable-table > table > thead'
+            );
+            Expect.generatedAnswerContentContainsHTML('th');
+            Expect.generatedAnswerContentContainsText('Tables Are Cool');
+            Expect.generatedAnswerContentContainsText('col1 col2 col3');
+          });
+
+          it('should properly render code blocks', () => {
+            const genQaMarkdownTextPayload = {
+              payloadType: 'genqa.messageType',
+              payload: JSON.stringify({
+                textDelta: '```\nconst foo = "bar";\nconsole.log(foo);\n```',
+              }),
+              finishReason: 'COMPLETED',
+            };
+            mockStreamResponse(streamId, [
+              genQaMarkdownTypePayload,
+              genQaMarkdownTextPayload,
+            ]);
+            visitGeneratedAnswer({
+              useCase: param.useCase,
+            });
+            Expect.displayGeneratedAnswerCard(true);
+            Expect.generatedAnswerContentContainsHTML('pre > code');
+            Expect.generatedAnswerContentContainsText('const foo = "bar";');
+            Expect.generatedAnswerContentContainsText('console.log(foo);');
           });
         });
 
@@ -381,11 +403,9 @@ describe('quantic-generated-answer', () => {
                 scope('should properly log the analytics', () => {
                   Actions.likeGeneratedAnswer();
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaLikeEvent(
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
-                        feedback: {
-                          liked: true,
-                        },
+                        action: 'like',
                         answer: {
                           responseId,
                           type: answerType,
@@ -402,6 +422,9 @@ describe('quantic-generated-answer', () => {
               });
             });
 
+            // The Salesforce lightning-modal is very flaky, sometimes throwing random errors in Cypress test runs.
+            // We are skipping this test for now until we can find a more reliable way to test it.
+            // Common stack trace when clicking on the dislike: `Cannot read properties of null (reading 'appendChild')`
             describe.skip(
               'when providing detailed feedback',
               {
@@ -410,6 +433,12 @@ describe('quantic-generated-answer', () => {
               () => {
                 const streamId = crypto.randomUUID();
                 const responseId = crypto.randomUUID();
+
+                const yesOption = 'yes';
+                const unknownOption = 'unknown';
+                const noOption = 'no';
+                const exampleDetails = 'example details';
+                const exampleDocumentUrl = 'https://www.foo.com/';
 
                 beforeEach(() => {
                   mockSearchWithGeneratedAnswer(
@@ -422,8 +451,6 @@ describe('quantic-generated-answer', () => {
                 });
 
                 it('should send detailed feedback', () => {
-                  const exampleDetails = 'example details';
-
                   Expect.displayLikeButton(true);
                   Expect.displayDislikeButton(true);
                   Expect.likeButtonIsChecked(false);
@@ -432,11 +459,9 @@ describe('quantic-generated-answer', () => {
                   scope('when disliking the generated answer', () => {
                     Actions.dislikeGeneratedAnswer();
                     if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaDislikeEvent(
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                         {
-                          feedback: {
-                            liked: false,
-                          },
+                          action: 'dislike',
                           answer: {
                             responseId,
                             type: answerType,
@@ -447,38 +472,76 @@ describe('quantic-generated-answer', () => {
                     } else {
                       Expect.logDislikeGeneratedAnswer(streamId);
                     }
-                    Expect.likeButtonIsChecked(false);
-                    Expect.dislikeButtonIsChecked(true);
-                    Expect.displayFeedbackModal(true);
                   });
 
-                  scope('when selecting a feedback option', () => {
+                  const feedbackQuestionsIndexes = {
+                    correctTopic: 0,
+                    hallucinationFree: 1,
+                    documented: 2,
+                    readable: 3,
+                  };
+
+                  scope('when submiting invalid feedback', () => {
                     Actions.clickFeedbackOption(
-                      feedbackOptions.indexOf(otherOption)
+                      unknownOption,
+                      feedbackQuestionsIndexes.correctTopic
                     );
-                    Actions.typeInFeedbackDetailsInput(exampleDetails);
+
                     Actions.clickFeedbackSubmitButton();
+                    Expect.displaySuccessMessage(false);
+                  });
+
+                  scope('when submiting valid feedback', () => {
+                    Actions.clickFeedbackOption(
+                      unknownOption,
+                      feedbackQuestionsIndexes.correctTopic
+                    );
+                    Actions.clickFeedbackOption(
+                      yesOption,
+                      feedbackQuestionsIndexes.hallucinationFree
+                    );
+                    Actions.clickFeedbackOption(
+                      yesOption,
+                      feedbackQuestionsIndexes.documented
+                    );
+                    Actions.clickFeedbackOption(
+                      noOption,
+                      feedbackQuestionsIndexes.readable
+                    );
+                    Actions.typeInFeedbackDocumentUrlInput(exampleDocumentUrl);
+                    Actions.typeInFeedbackDetailsInput(exampleDetails);
+
+                    Actions.clickFeedbackSubmitButton();
+                    Expect.displaySuccessMessage(true);
                     if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
+                      NextAnalyticsExpectations.emitQnaSubmitRgaFeedbackEvent(
                         {
                           feedback: {
-                            liked: false,
+                            helpful: false,
+                            readable: noOption,
+                            documented: yesOption,
                             details: exampleDetails,
-                            reason: 'other',
+                            hallucination_free: yesOption,
+                            document_url: exampleDocumentUrl,
                           },
                           answer: {
                             responseId,
-                            type: answerType,
                           },
                         },
                         exampleTrackingId
                       );
                     } else {
                       Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-                        reason: otherOption,
+                        helpful: false,
+                        correctTopicValue: unknownOption,
+                        hallucinationFree: yesOption,
+                        documented: yesOption,
+                        readable: noOption,
+                        documentUrl: exampleDocumentUrl,
                         details: exampleDetails,
                       });
                     }
+
                     Actions.clickFeedbackDoneButton();
                   });
 
@@ -486,58 +549,6 @@ describe('quantic-generated-answer', () => {
                     Actions.dislikeGeneratedAnswer();
                     Expect.displayFeedbackModal(false);
                   });
-
-                  scope(
-                    'when trying to open the feedback modal after rephrasing the generated answer',
-                    () => {
-                      const secondStreamId = crypto.randomUUID();
-                      const secondResponseId = crypto.randomUUID();
-
-                      mockSearchWithGeneratedAnswer(
-                        secondStreamId,
-                        param.useCase,
-                        secondResponseId
-                      );
-                      mockStreamResponse(
-                        secondStreamId,
-                        genQaMessageTypePayload
-                      );
-                      Actions.clickRephraseButton(rephraseOptions[0]);
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              responseId: secondResponseId,
-                              type: answerType,
-                            },
-                          },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(
-                          secondStreamId,
-                          {
-                            reason: otherOption,
-                            details: exampleDetails,
-                          }
-                        );
-                      }
-
-                      Actions.clickFeedbackDoneButton();
-                    }
-                  );
 
                   scope(
                     'when trying to open the feedback modal after executing a new query',
@@ -557,34 +568,6 @@ describe('quantic-generated-answer', () => {
                       performSearch();
                       Actions.dislikeGeneratedAnswer();
                       Expect.displayFeedbackModal(true);
-                      Actions.clickFeedbackOption(
-                        feedbackOptions.indexOf(otherOption)
-                      );
-                      Actions.typeInFeedbackDetailsInput(exampleDetails);
-                      Actions.clickFeedbackSubmitButton();
-                      if (analyticsMode === 'next') {
-                        NextAnalyticsExpectations.emitQnaSubmitFeedbackReasonEvent(
-                          {
-                            feedback: {
-                              liked: false,
-                              details: exampleDetails,
-                              reason: 'other',
-                            },
-                            answer: {
-                              responseId: thirdResponseId,
-                              type: answerType,
-                            },
-                          },
-                          exampleTrackingId
-                        );
-                      } else {
-                        Expect.logGeneratedAnswerFeedbackSubmit(thirdStreamId, {
-                          reason: otherOption,
-                          details: exampleDetails,
-                        });
-                      }
-
-                      Actions.clickFeedbackDoneButton();
                     }
                   );
                 });
@@ -602,7 +585,10 @@ describe('quantic-generated-answer', () => {
                   responseId
                 );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
-                visitGeneratedAnswer({useCase: param.useCase});
+                visitGeneratedAnswer({
+                  useCase: param.useCase,
+                  withToggle: true,
+                });
               });
 
               it('should display the toggle generated answer button', () => {
@@ -659,6 +645,84 @@ describe('quantic-generated-answer', () => {
                     isVisible: true,
                   });
                 });
+              });
+            });
+
+            describe('the collapsible option', () => {
+              const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
+
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
+                mockStreamResponse(streamId, genQaLongMessageTypePayload);
+                visitGeneratedAnswer({
+                  useCase: param.useCase,
+                  collapsible: true,
+                });
+              });
+
+              it('should display the toggle collapse button', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(true);
+                Expect.displayGeneratedAnswerGeneratingMessage(false);
+                Expect.displayCitations(false);
+                Expect.displayDisclaimer(true);
+
+                scope('when clicking the show more button to expand', () => {
+                  Actions.clickToggleCollapseButton();
+                  Expect.generatedAnswerCollapsed(false);
+                  Expect.generatedAnswerToggleCollapseButtonContains(
+                    'Show less'
+                  );
+                  Expect.displayCitations(false);
+                  Expect.displayDisclaimer(true);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                      {
+                        answer: {
+                          responseId,
+                          type: answerType,
+                        },
+                        action: 'expand',
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logGeneratedAnswerExpand(streamId);
+                  }
+                });
+
+                scope(
+                  'when clicking the show less button a second time to collapse',
+                  () => {
+                    Actions.clickToggleCollapseButton();
+                    Expect.generatedAnswerCollapsed(true);
+                    Expect.generatedAnswerToggleCollapseButtonContains(
+                      'Show more'
+                    );
+                    Expect.displayCitations(false);
+                    Expect.displayDisclaimer(true);
+                    if (analyticsMode === 'next') {
+                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                        {
+                          answer: {
+                            responseId,
+                            type: answerType,
+                          },
+                          action: 'collapse',
+                        },
+                        exampleTrackingId
+                      );
+                    } else {
+                      Expect.logGeneratedAnswerCollapse(streamId);
+                    }
+                  }
+                );
               });
             });
 
@@ -720,7 +784,7 @@ describe('quantic-generated-answer', () => {
               const firstTestCitation = {
                 id: 'some-id-1',
                 title: 'Some Title 1',
-                uri: 'https://www.coveo.com',
+                uri: 'https://www.coveo1.com',
                 permanentid: 'some-permanent-id-1',
                 clickUri: exampleLinkUrl,
                 text: 'example text 1',
@@ -728,7 +792,7 @@ describe('quantic-generated-answer', () => {
               const secondTestCitation = {
                 id: 'some-id-2',
                 title: 'Some Title 2',
-                uri: 'https://www.coveo.com',
+                uri: 'https://www.coveo2.com',
                 permanentid: 'some-permanent-id-2',
                 clickUri: exampleLinkUrl,
                 text: 'example text 2',
@@ -756,7 +820,6 @@ describe('quantic-generated-answer', () => {
                 Expect.displayCitations(true);
                 testCitations.forEach((citation, index) => {
                   Expect.citationTitleContains(index, citation.title);
-                  Expect.citationNumberContains(index, `${index + 1}`);
                   Expect.citationLinkContains(index, citation.clickUri);
                 });
               });
@@ -903,6 +966,271 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'legacy') {
                     Expect.logRetryGeneratedAnswer(streamId);
                   }
+                });
+              });
+            });
+          });
+        });
+
+        describe('when #fieldsToIncludeInCitations attribute has a value', () => {
+          const streamId = crypto.randomUUID();
+          const customFields = 'foo,bar';
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              fieldsToIncludeInCitations: customFields,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should send a search query with the right fields to include in citations option as a parameter', () => {
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerContent(true);
+              Expect.searchQueryContainsCorrectFieldsToIncludeInCitations(
+                customFields.split(',')
+              );
+            });
+          });
+        });
+
+        describe('when #multilineFooter is set to true', () => {
+          const streamId = crypto.randomUUID();
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              multilineFooter: true,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should properly display the generated answer footer on multiple lines', () => {
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerCard(true);
+              Expect.generatedAnswerFooterRowsIsOnMultiline(true);
+              Expect.displayDisclaimer(true);
+            });
+          });
+        });
+
+        describe('when #collapsible is set to true', () => {
+          describe('when the generated answer is still streaming', () => {
+            it('should properly display the generating answer message', () => {
+              const streamId = crypto.randomUUID();
+
+              const testMessagePayload = {
+                payloadType: 'genqa.messageType',
+                payload: JSON.stringify({
+                  textDelta: testLongText,
+                }),
+              };
+
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, testMessagePayload);
+              visitGeneratedAnswer({
+                collapsible: true,
+                useCase: param.useCase,
+              });
+
+              scope('when loading the page', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(false);
+                Expect.displayGeneratedAnswerGeneratingMessage(true);
+                Expect.displayCitations(false);
+                Expect.displayDisclaimer(false);
+              });
+            });
+          });
+
+          describe('when the generated answer is done streaming', () => {
+            it('should properly display the generated answer collapsed when the answer is too long', () => {
+              const streamId = crypto.randomUUID();
+
+              mockSearchWithGeneratedAnswer(streamId, param.useCase);
+              mockStreamResponse(streamId, genQaLongMessageTypePayload);
+              visitGeneratedAnswer({
+                collapsible: true,
+                useCase: param.useCase,
+              });
+
+              scope('when loading the page', () => {
+                Expect.displayGeneratedAnswerCard(true);
+                Expect.generatedAnswerCollapsed(true);
+                Expect.displayGeneratedAnswerToggleCollapseButton(true);
+                Expect.generatedAnswerToggleCollapseButtonContains('Show more');
+                Expect.displayCitations(false);
+                Expect.displayDisclaimer(true);
+              });
+
+              scope('when clicking the show more button to expand', () => {
+                Actions.clickToggleCollapseButton();
+                Expect.generatedAnswerCollapsed(false);
+                Expect.generatedAnswerToggleCollapseButtonContains('Show less');
+                Expect.displayCitations(false);
+                Expect.displayDisclaimer(true);
+                if (analyticsMode === 'legacy') {
+                  Expect.logGeneratedAnswerExpand(streamId);
+                }
+              });
+
+              scope(
+                'when clicking the show less button a second time to collapse',
+                () => {
+                  Actions.clickToggleCollapseButton();
+                  Expect.generatedAnswerCollapsed(true);
+                  Expect.generatedAnswerToggleCollapseButtonContains(
+                    'Show more'
+                  );
+                  Expect.displayCitations(false);
+                  Expect.displayDisclaimer(true);
+                  if (analyticsMode === 'legacy') {
+                    Expect.logGeneratedAnswerCollapse(streamId);
+                  }
+                }
+              );
+            });
+          });
+
+          it('should not display the answer collapsed when the answer is short', () => {
+            const newStreamId = crypto.randomUUID();
+
+            mockSearchWithGeneratedAnswer(newStreamId, param.useCase);
+            mockStreamResponse(newStreamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              collapsible: true,
+              useCase: param.useCase,
+            });
+
+            scope('when loading the page', () => {
+              Expect.displayGeneratedAnswerCard(true);
+              Expect.generatedAnswerCollapsed(false);
+              Expect.displayGeneratedAnswerToggleCollapseButton(false);
+              Expect.displayDisclaimer(true);
+            });
+          });
+        });
+
+        describe('when #withRephraseButtons is set to true', () => {
+          const streamId = crypto.randomUUID();
+          const secondStreamId = crypto.randomUUID();
+
+          beforeEach(() => {
+            mockSearchWithGeneratedAnswer(streamId, param.useCase);
+            mockStreamResponse(streamId, genQaMessageTypePayload);
+            visitGeneratedAnswer({
+              withRephraseButtons: true,
+              useCase: param.useCase,
+            });
+          });
+
+          it('should display the generated answer content with rephrase buttons', () => {
+            Expect.displayGeneratedAnswerContent(true);
+            Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
+            Expect.generatedAnswerFooterRowsIsOnMultiline(false);
+            Expect.generatedAnswerCollapsed(false);
+            Expect.displayRephraseButtons(true);
+            Expect.displayRephraseLabel(true);
+            Expect.displayToggleGeneratedAnswerButton(false);
+          });
+
+          describe('when clicking on a rephrase button', () => {
+            rephraseOptions.forEach((option) => {
+              const rephraseOption = option;
+              analyticsModeTest.forEach((analytics) => {
+                describe(analytics.label, () => {
+                  before(() => {
+                    analyticsMode = analytics.mode;
+                  });
+                  it(`should send a new search query with the rephrase option ${option} as a parameter`, () => {
+                    scope('when loading the page', () => {
+                      Expect.displayRephraseButtonWithLabel(rephraseOption);
+                      const expectedRephraseButtonSelected =
+                        option === defaultRephraseOption;
+                      Expect.rephraseButtonIsSelected(
+                        rephraseOption,
+                        expectedRephraseButtonSelected
+                      );
+                    });
+                    scope('when selecting the rephrase button', () => {
+                      mockSearchWithGeneratedAnswer(
+                        secondStreamId,
+                        param.useCase
+                      );
+                      mockStreamResponse(
+                        secondStreamId,
+                        genQaMessageTypePayload
+                      );
+
+                      Actions.clickRephraseButton(rephraseOption);
+                      Expect.displayRephraseButtonWithLabel(rephraseOption);
+                      Expect.rephraseButtonIsSelected(rephraseOption, true);
+                      rephraseOptions
+                        .filter((item) => {
+                          return item !== rephraseOption;
+                        })
+                        .forEach((unselectedOption) => {
+                          Expect.displayRephraseButtonWithLabel(
+                            unselectedOption
+                          );
+                          Expect.rephraseButtonIsSelected(
+                            unselectedOption,
+                            false
+                          );
+                        });
+                      Expect.searchQueryContainsCorrectRephraseOption(
+                        rephraseOption,
+                        'rephraseGeneratedAnswer',
+                        ['text/markdown', 'text/plain']
+                      );
+                      if (analyticsMode === 'legacy') {
+                        Expect.logRephraseGeneratedAnswer(
+                          rephraseOption,
+                          secondStreamId
+                        );
+                      }
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+
+        describe('when the #answerStyle property is given a value', () => {
+          analyticsModeTest.forEach((analytics) => {
+            describe(analytics.label, () => {
+              const streamId = crypto.randomUUID();
+              before(() => {
+                analyticsMode = analytics.mode;
+              });
+
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockStreamResponse(streamId, genQaMessageTypePayload);
+                visitGeneratedAnswer({
+                  answerStyle: bulletRephraseOption,
+                  withRephraseButtons: true,
+                  useCase: param.useCase,
+                });
+              });
+
+              it('should send a search query with the right rephrase option as a parameter', () => {
+                scope('when loading the page', () => {
+                  Expect.displayRephraseButtons(true);
+                  Expect.rephraseButtonIsSelected(stepRephraseOption, false);
+                  Expect.rephraseButtonIsSelected(conciseRephraseOption, false);
+                  Expect.rephraseButtonIsSelected(bulletRephraseOption, true);
+                  Expect.searchQueryContainsCorrectRephraseOption(
+                    bulletRephraseOption,
+                    param.useCase === 'search'
+                      ? 'interfaceLoad'
+                      : 'searchboxSubmit',
+                    ['text/markdown', 'text/plain']
+                  );
                 });
               });
             });

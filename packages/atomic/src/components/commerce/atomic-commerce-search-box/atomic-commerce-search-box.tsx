@@ -1,14 +1,13 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
   SearchBoxOptions,
-  StandaloneSearchBox,
   StandaloneSearchBoxState,
-} from '@coveo/headless';
-import {
+  StandaloneSearchBox,
   SearchBox,
   SearchBoxState,
   buildSearchBox,
   buildStandaloneSearchBox,
+  loadQuerySetActions,
 } from '@coveo/headless/commerce';
 import {
   Component,
@@ -35,7 +34,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../utils/utils';
+import {isFocusingOut, once, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
@@ -52,9 +51,12 @@ import {
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+ *
+ * @slot default - The default slot where you can add child components to the search box.
  *
  * @part wrapper - The search box wrapper.
  * @part input - The search box input.
@@ -89,11 +91,11 @@ import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/at
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  *
- * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-results` component.
- * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-results` component.
- * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-results` component.
+ * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-search-box',
@@ -177,16 +179,6 @@ export class AtomicCommerceSearchBox
   @Prop({reflect: true}) public clearFilters = true;
 
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
-   * You should only enable query syntax in the search box if you have good reasons to do so, as it
-   * requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised
-   * by the search box behaviour.
-   *
-   * When the `redirection-url` property is set and redirects to a page with more `atomic-commerce-search-box` components, all `atomic-commerce-search-box` components need to have the same `enable-query-syntax` value.
-   */
-  @Prop({reflect: true}) public enableQuerySyntax = false;
-
-  /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
    * Example:
@@ -211,26 +203,46 @@ export class AtomicCommerceSearchBox
 
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
+  public disconnectedCallback = () => {};
+
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
 
   public initialize() {
-    this.id = randomID('atomic-commerce-search-box-');
+    this.id ??= randomID('atomic-commerce-search-box-');
 
-    this.searchBox = buildSearchBox(this.bindings.engine, {
-      options: this.searchBoxOptions,
-    });
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
+  }
 
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
+    }
+  }
+
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -241,15 +253,14 @@ export class AtomicCommerceSearchBox
       return;
     }
 
-    const {redirectTo, value, analytics} = this.searchBoxState;
+    const {redirectTo, value} = this.searchBoxState;
 
     if (redirectTo === '') {
       return;
     }
-    const data: StandaloneSearchBoxData = {
+    const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
       value,
-      enableQuerySyntax: this.enableQuerySyntax,
-      analytics,
+      enableQuerySyntax: false,
     };
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
@@ -277,7 +288,14 @@ export class AtomicCommerceSearchBox
     }
   }
 
-  public componentWillRender() {
+  @Listen('atomic/selectChildProduct')
+  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
+    event.stopPropagation();
+    this.bindings.store.state.activeProductChild = event.detail.child;
+    this.suggestionManager.forceUpdate();
+  }
+
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -289,7 +307,7 @@ export class AtomicCommerceSearchBox
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
   private initializeSuggestionManager() {
@@ -330,8 +348,8 @@ export class AtomicCommerceSearchBox
     return {
       ...this.bindings,
       id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
+      isStandalone: () => !!this.redirectionUrl,
+      searchBoxController: () => this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearFilters: this.clearFilters,
     };
@@ -340,7 +358,6 @@ export class AtomicCommerceSearchBox
   private get searchBoxOptions(): SearchBoxOptions {
     return {
       id: this.id,
-      numberOfSuggestions: 0,
       highlightOptions: {
         notMatchDelimiters: {
           open: '<span class="font-bold">',
@@ -352,14 +369,13 @@ export class AtomicCommerceSearchBox
         },
       },
       clearFilters: this.clearFilters,
-      enableQuerySyntax: this.enableQuerySyntax,
     };
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private async onInput(value: string) {
-    this.searchBox.updateText(value);
+    this.updateQueryWithoutQuerySuggestionTrigger(value);
 
     if (this.isSearchDisabledForEndUser(value)) {
       this.suggestionManager.clearSuggestions();
@@ -371,20 +387,30 @@ export class AtomicCommerceSearchBox
   }
 
   private async onFocus() {
+    if (this.isExpanded) {
+      return;
+    }
+    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
+      return;
+    }
     this.isExpanded = true;
     await this.suggestionManager.triggerSuggestions();
     this.announceNewSuggestionsToScreenReader();
   }
 
   private onSubmit() {
-    if (this.suggestionManager.isRightPanelInFocus()) {
-      this.suggestionManager.clickOnActiveElement();
+    this.isExpanded = false;
+    if (
+      this.suggestionManager.isRightPanelInFocus() ||
+      this.suggestionManager.activeDescendantElement?.part.contains(
+        'recent-query-title-item'
+      )
+    ) {
+      this.suggestionManager.onSubmit();
       return;
     }
 
-    this.isExpanded = false;
     this.searchBox.submit();
-    this.suggestionManager.onSubmit();
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -533,7 +559,7 @@ export class AtomicCommerceSearchBox
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
           this.suggestionManager.hasSuggestions &&
           this.isExpanded &&
           !this.isSearchDisabledForEndUser(this.searchBoxState.value)
@@ -602,7 +628,7 @@ export class AtomicCommerceSearchBox
       <textarea
         aria-hidden
         part="textarea-spacer"
-        class="invisible text-lg py-3.5 px-4 w-full"
+        class="invisible w-full px-4 py-3.5 text-lg"
         rows={1}
       ></textarea>
     );
@@ -655,6 +681,16 @@ export class AtomicCommerceSearchBox
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
+  private updateQueryWithoutQuerySuggestionTrigger(query: string) {
+    const {engine} = this.bindings;
+    engine.dispatch(
+      loadQuerySetActions(engine).updateQuerySetQuery({
+        id: this.id,
+        query,
+      })
+    );
+  }
+
   public render() {
     this.updateBreakpoints();
 
@@ -663,35 +699,41 @@ export class AtomicCommerceSearchBox
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>
         {this.renderAbsolutePositionSpacer()}
         {[
-          <SearchBoxWrapper disabled={isDisabled} textArea={true}>
-            <atomic-focus-detector
-              style={{display: 'contents'}}
-              onFocusExit={() => this.suggestionManager.clearSuggestions()}
-            >
-              {this.renderTextBox(searchLabel)}
-              <Submit
-                bindings={this.bindings}
-                disabled={isDisabled}
-                onClick={() => {
-                  this.searchBox.submit();
-                  this.suggestionManager.clearSuggestions();
-                }}
-                title={searchLabel}
-              />
-              {this.renderSuggestions()}
-            </atomic-focus-detector>
+          <SearchBoxWrapper
+            disabled={isDisabled}
+            textArea={true}
+            onFocusout={(event) => {
+              if (!isFocusingOut(event)) {
+                return;
+              }
+              this.suggestionManager.clearSuggestions();
+              this.isExpanded = false;
+            }}
+          >
+            {this.renderTextBox(searchLabel)}
+            <Submit
+              bindings={this.bindings}
+              disabled={isDisabled}
+              onClick={() => {
+                this.searchBox.submit();
+                this.suggestionManager.clearSuggestions();
+              }}
+              title={searchLabel}
+            />
+            {this.renderSuggestions()}
           </SearchBoxWrapper>,
           !this.suggestionManager.suggestions.length && (
             <slot>
-              {/* TODO: KIT-3130 Add recent queries */}
-              {/* <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries> */}
-              {/* TODO: KIT-3128 Add query suggestions */}
-              {/* <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions> */}
+              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
             </slot>
           ),
         ]}

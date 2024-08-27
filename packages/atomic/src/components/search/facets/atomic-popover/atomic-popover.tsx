@@ -17,9 +17,12 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
+import {
+  PopoverChildFacet,
+  popoverClass,
+} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {PopoverChildFacet, popoverClass} from './popover-type';
 
 /**
  * The `atomic-popover` component displays any facet as a popover menu.
@@ -135,16 +138,16 @@ export class AtomicPopover implements InitializableComponent {
         ariaExpanded={`${this.isOpen}`}
         ariaLabel={ariaLabel}
         ariaControls={this.popoverId}
-        class={`rounded flex box-border h-full items-center min-w-[6rem] max-w-[15rem] p-2.5 group hover:border-primary-light focus-visible:border-primary-light ${
+        class={`hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full min-w-[6rem] max-w-[15rem] items-center rounded p-2.5 ${
           this.isOpen
-            ? 'border-primary ring ring-ring-primary text-primary z-[9999]'
+            ? 'border-primary ring-ring-primary text-primary z-[9999] ring'
             : ''
         }`}
       >
         <span
           title={label}
           part="value-label"
-          class={`truncate mr-1.5 ${
+          class={`mr-1.5 truncate ${
             this.isOpen
               ? ''
               : 'group-hover:text-primary-light group-focus:text-primary'
@@ -154,7 +157,7 @@ export class AtomicPopover implements InitializableComponent {
         </span>
         <span
           part="value-count"
-          class={`truncate mr-1.5 text-sm group-hover:text-primary-light group-focus:text-primary ${
+          class={`group-hover:text-primary-light group-focus:text-primary mr-1.5 truncate text-sm ${
             hasActiveValues ? '' : 'hidden'
           } ${this.isOpen ? 'text-primary' : 'text-neutral-dark'}`}
         >
@@ -164,7 +167,7 @@ export class AtomicPopover implements InitializableComponent {
         </span>
         <atomic-icon
           part="arrow-icon"
-          class={`w-2 ml-auto group-hover:text-primary-light group-focus:text-primary ${
+          class={`group-hover:text-primary-light group-focus:text-primary ml-auto w-2 ${
             this.isOpen ? 'rotate-180' : ''
           } `}
           icon={ArrowBottomIcon}
@@ -177,7 +180,7 @@ export class AtomicPopover implements InitializableComponent {
     return (
       <div
         part="backdrop"
-        class="fixed left-0 top-0 right-0 bottom-0 z-[9998] bg-transparent cursor-pointer"
+        class="fixed bottom-0 left-0 right-0 top-0 z-[9998] cursor-pointer bg-transparent"
         onClick={() => this.togglePopover()}
       ></div>
     );
@@ -209,7 +212,7 @@ export class AtomicPopover implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-8 w-32 bg-neutral animate-pulse rounded"
+          class="bg-neutral h-8 w-32 animate-pulse rounded"
         ></div>
       );
     }

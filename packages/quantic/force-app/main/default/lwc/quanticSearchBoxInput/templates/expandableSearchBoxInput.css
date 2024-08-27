@@ -46,6 +46,7 @@ textarea.searchbox__input {
 }
 
 .searchbox__container-wrapper {
+  position: relative;
   min-height: 3.125rem;
 }
 

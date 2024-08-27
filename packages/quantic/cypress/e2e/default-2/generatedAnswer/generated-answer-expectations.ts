@@ -66,6 +66,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the copy to clipboard button`);
     },
 
+    displaySuccessMessage: (display: boolean) => {
+      selector
+        .successMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the success message`);
+    },
+
     likeButtonIsChecked: (selected: boolean) => {
       selector
         .likeButton()
@@ -103,18 +110,49 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    generatedAnswerFooterIsOnMultiline: (multilineDisplay: boolean) => {
+    generatedAnswerFooterRowsIsOnMultiline: (multilineDisplay: boolean) => {
       selector
-        .generatedAnswerFooter()
+        .generatedAnswerFooterRow()
         .should(
           multilineDisplay ? 'have.class' : 'not.have.class',
-          'generated-answer__footer--multiline'
+          'slds-grid_vertical'
         )
         .log(
-          `the generated answer footer ${should(
+          `the generated answer footer rows ${should(
             multilineDisplay
-          )} be displayed on multiple lines`
+          )} be displayed on multiple lines with slds-grid_vertical`
         );
+    },
+
+    generatedAnswerCollapsed: (collapsible: boolean) => {
+      selector
+        .generatedAnswer()
+        .should(
+          collapsible ? 'have.class' : 'not.have.class',
+          'generated-answer__answer--collapsed'
+        )
+        .log(`the generated answer ${should(collapsible)} be collapsed`);
+    },
+
+    displayGeneratedAnswerGeneratingMessage: (display: boolean) => {
+      selector
+        .generatingMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generating message`);
+    },
+
+    displayGeneratedAnswerToggleCollapseButton: (display: boolean) => {
+      selector
+        .toggleCollapseButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generated answer collapse button`);
+    },
+
+    generatedAnswerToggleCollapseButtonContains: (text: string) => {
+      selector
+        .toggleCollapseButton()
+        .contains(text)
+        .log(`the generated answer collapse button should contain "${text}"`);
     },
 
     generatedAnswerContains: (answer: string) => {
@@ -124,12 +162,30 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the generated answer should contain "${answer}"`);
     },
 
+    generatedAnswerContentContainsHTML: (findSelector: string) => {
+      selector
+        .generatedAnswerContentContainer()
+        .find(findSelector)
+        .log(
+          `the generated answer content should contain an element matching "${findSelector}"`
+        );
+    },
+
+    generatedAnswerContentContainsText: (text: string) => {
+      selector
+        .generatedAnswerContentContainer()
+        .contains(text)
+        .log(
+          `the generated answer content should contain text matching "${text}"`
+        );
+    },
+
     generatedAnswerIsStreaming: (isStreaming: boolean) => {
       selector
-        .generatedAnswer()
+        .generatedAnswerContentContainer()
         .should(
           isStreaming ? 'have.class' : 'not.have.class',
-          'generated-answer__answer--streaming'
+          'generated-answer-content__answer--streaming'
         )
         .log(`the generated answer ${should(isStreaming)} be streaming`);
     },
@@ -142,17 +198,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         })
         .log(
           `the citation at the index ${index} should contain the title "${title}"`
-        );
-    },
-
-    citationNumberContains: (index: number, value: string) => {
-      selector
-        .citationIndex(index)
-        .then((element) => {
-          expect(element.get(0).innerText).to.equal(value);
-        })
-        .log(
-          `the citation at the index ${index} should contain the number "${value}"`
         );
     },
 
@@ -292,7 +337,8 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
 
     searchQueryContainsCorrectRephraseOption: (
       expectedAnswerStyle: string,
-      expectedActionCause: string
+      expectedActionCause: string,
+      expectedContentFormat?: string[]
     ) => {
       cy.get<Interception>(InterceptAliases.Search)
         .then((interception) => {
@@ -300,6 +346,9 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           const answerStyle =
             body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
               ?.responseFormat?.answerStyle;
+          const contentFormat =
+            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
+              ?.responseFormat?.contentFormat;
           const analyticsSection = body.analytics;
 
           expect(answerStyle).to.eq(expectedAnswerStyle);
@@ -308,6 +357,10 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'actionCause',
             expectedActionCause
           );
+          if (expectedContentFormat) {
+            expect(contentFormat).to.exist;
+            expect(contentFormat).to.deep.equal(expectedContentFormat);
+          }
         })
         .log(
           `the search query should contain the correct ${expectedAnswerStyle} parameter`
@@ -464,14 +517,28 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     logGeneratedAnswerFeedbackSubmit(
       streamId: string,
       payload: {
-        reason: string;
+        correctTopicValue: string;
+        documented: string;
+        hallucinationFree: string;
+        helpful: boolean;
+        readable: string;
+        documentUrl?: string;
         details?: string;
       }
     ) {
       logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmitV2,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
+          const {
+            helpful,
+            correctTopicValue,
+            documented,
+            hallucinationFree,
+            readable,
+            documentUrl,
+            details,
+          } = payload;
           expect(analyticsBody).to.have.property(
             'eventType',
             'generatedAnswer'
@@ -480,9 +547,23 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
-          expect(customData).to.have.property('reason', payload.reason);
-          if (payload.details) {
-            expect(customData).to.have.property('details', payload.details);
+          expect(customData).to.have.property('helpful', helpful);
+          expect(customData).to.have.property(
+            'correctTopicValue',
+            correctTopicValue
+          );
+          expect(customData).to.have.property('documented', documented);
+          expect(customData).to.have.property(
+            'hallucinationFree',
+            hallucinationFree
+          );
+          expect(customData).to.have.property('readable', readable);
+
+          if (documentUrl) {
+            expect(customData).to.have.property('documentUrl', documentUrl);
+          }
+          if (details) {
+            expect(customData).to.have.property('details', details);
           }
         }
       );
@@ -542,6 +623,40 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     logCopyGeneratedAnswer(streamId: string) {
       logGeneratedAnswerEvent(
         InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCopyToClipboard,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerExpand(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerExpand,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
+
+    logGeneratedAnswerCollapse(streamId: string) {
+      logGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCollapse,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(

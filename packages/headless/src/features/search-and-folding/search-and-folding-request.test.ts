@@ -1,4 +1,5 @@
 import {SearchAppState} from '../../state/search-app-state';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
 import {createMockState} from '../../test/mock-state';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request';
@@ -10,7 +11,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.aq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.aq).toBe('a');
     });
 
@@ -19,7 +23,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.aq = '';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.aq).toBe(undefined);
     });
   });
@@ -30,7 +37,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.cq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.cq).toBe('a');
     });
 
@@ -39,7 +49,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.tabSet = {a: buildMockTabSlice({expression: 'a', isActive: true})};
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.cq).toBe(undefined);
     });
   });
@@ -50,7 +63,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.lq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.lq).toBe('a');
     });
 
@@ -59,7 +75,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.lq = '';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.lq).toBe(undefined);
     });
   });
@@ -70,7 +89,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.dq = 'a';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.dq).toBe('a');
     });
 
@@ -79,7 +101,10 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.advancedSearchQueries.dq = '';
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.dq).toBe(undefined);
     });
   });
@@ -90,14 +115,20 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       const state = createMockState();
       state.excerptLength = {length: 1234};
 
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.excerptLength).toBe(1234);
     });
 
     it('when there is no excerptLength in the state, the parameter is not included in the request', async () => {
       const state = createMockState();
       state.excerptLength.length = undefined;
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.excerptLength).toBe(undefined);
     });
   });
@@ -110,13 +141,11 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
 
     it('#visitorId is included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.visitorId).toBeDefined();
-    });
-
-    it('#actionsHistory is included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
-      expect(request.actionsHistory).toBeDefined();
     });
   });
 
@@ -128,12 +157,18 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
 
     it('#visitorId is not included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.visitorId).toBeUndefined();
     });
 
     it('#actionsHistory is not included in the request', async () => {
-      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      const request = buildSearchAndFoldingLoadCollectionRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
       expect(request.actionsHistory).toBeUndefined();
     });
   });

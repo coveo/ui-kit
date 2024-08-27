@@ -1,26 +1,37 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
+  fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
-} from '../../standalone-search-box-set/standalone-search-box-set-actions';
-import {fetchRedirectUrl} from './standalone-search-box-set-actions';
+  updateStandaloneSearchBoxRedirectionUrl,
+} from './standalone-search-box-set-actions';
 import {
   getCommerceStandaloneSearchBoxSetInitialState,
   StandaloneSearchBoxEntry,
 } from './standalone-search-box-set-state';
 
-export const standaloneSearchBoxSetReducer = createReducer(
+export const commerceStandaloneSearchBoxSetReducer = createReducer(
   getCommerceStandaloneSearchBoxSetInitialState(),
   (builder) =>
     builder
       .addCase(registerStandaloneSearchBox, (state, action) => {
-        const {id, redirectionUrl} = action.payload;
+        const {id, redirectionUrl, overwrite} = action.payload;
 
-        if (id in state) {
+        if (!overwrite && id in state) {
           return;
         }
 
         state[id] = buildStandaloneSearchBoxEntry(redirectionUrl);
+      })
+      .addCase(updateStandaloneSearchBoxRedirectionUrl, (state, action) => {
+        const {id, redirectionUrl} = action.payload;
+        const searchBox = state[id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.defaultRedirectionUrl = redirectionUrl;
       })
       .addCase(resetStandaloneSearchBox, (state, action) => {
         const {id} = action.payload;
@@ -33,9 +44,18 @@ export const standaloneSearchBoxSetReducer = createReducer(
           return;
         }
       })
-      .addCase(fetchRedirectUrl, (state, action) => {
-        const {redirectionUrl} = action.payload;
-        const searchBox = state[action.payload.id];
+      .addCase(fetchRedirectUrl.pending, (state, action) => {
+        const searchBox = state[action.meta.arg.id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.isLoading = true;
+      })
+      .addCase(fetchRedirectUrl.fulfilled, (state, action) => {
+        const redirectionUrl = action.payload;
+        const searchBox = state[action.meta.arg.id];
 
         if (!searchBox) {
           return;
@@ -44,6 +64,18 @@ export const standaloneSearchBoxSetReducer = createReducer(
         searchBox.redirectTo = redirectionUrl
           ? redirectionUrl
           : searchBox.defaultRedirectionUrl;
+
+        searchBox.isLoading = false;
+      })
+
+      .addCase(fetchRedirectUrl.rejected, (state, action) => {
+        const searchBox = state[action.meta.arg.id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.isLoading = false;
       })
 );
 
@@ -53,5 +85,6 @@ function buildStandaloneSearchBoxEntry(
   return {
     defaultRedirectionUrl,
     redirectTo: '',
+    isLoading: false,
   };
 }

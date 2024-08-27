@@ -4,22 +4,29 @@
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": ["dom", "es2020"],
+    "lib": ["dom", "es2020", "ESNext.Collection"],
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    // If true then breaks the decorator patch:
-    // https://github.com/ionic-team/stencil/issues/3831#issuecomment-1714466948
     "useDefineForClassFields": false,
     "module": "esnext",
-    // create-react-app compatibility
-    // https://github.com/facebook/create-react-app/issues/9468#issuecomment-692963920
     "target": "es2019",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
     "jsxFactory": "h"
   },
-  "references": [{"path": "tsconfig.stories.json"}],
+  "references": [
+    {
+      "path": "./tsconfig.storybook.json"
+    }
+  ],
   "include": ["src", "types/jsx.d.ts"],
-  "exclude": ["node_modules", "src/external-builds", "**/*.stories.tsx"]
+  "exclude": [
+    "node_modules",
+    "src/external-builds",
+    "**/*.stories.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.js",
+    "**/e2e/**/*"
+  ]
 }

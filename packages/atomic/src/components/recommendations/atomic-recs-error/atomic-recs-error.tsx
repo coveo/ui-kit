@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildRecommendationList,
   RecommendationList,
@@ -10,7 +11,15 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {QueryErrorCommon} from '../../common/query-error/query-error-common';
+import {QueryErrorContainer} from '../../common/query-error/container';
+import {QueryErrorDescription} from '../../common/query-error/description';
+import {QueryErrorDetails} from '../../common/query-error/details';
+import {QueryErrorGuard} from '../../common/query-error/guard';
+import {QueryErrorIcon} from '../../common/query-error/icon';
+import {QueryErrorLink} from '../../common/query-error/link';
+import {QueryErrorShowMore} from '../../common/query-error/show-more';
+import {QueryErrorTitle} from '../../common/query-error/title';
+import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
 /**
@@ -46,17 +55,48 @@ export class AtomicRecsError implements InitializableComponent<RecsBindings> {
   }
 
   public render() {
+    const {error} = this.recommendationListState;
+
+    const {
+      bindings: {
+        i18n,
+        engine: {
+          state: {
+            configuration: {organizationId, platformUrl},
+          },
+        },
+      },
+    } = this;
+
+    const hasError = !isNullOrUndefined(error);
+
+    if (hasError) {
+      this.ariaMessage = getAriaMessageFromErrorType(
+        i18n,
+        organizationId,
+        platformUrl,
+        error?.type
+      );
+    }
+
     return (
-      <QueryErrorCommon
-        bindings={this.bindings}
-        onShowMoreInfo={() => true}
-        queryErrorState={{
-          error: this.recommendationListState.error,
-          hasError: !!this.recommendationListState.error,
-        }}
-        setAriaLive={(msg) => (this.ariaMessage = msg)}
-        showMoreInfo={this.showMoreInfo}
-      />
+      <QueryErrorGuard hasError={hasError}>
+        <QueryErrorContainer>
+          <QueryErrorIcon errorType={error?.type} />
+          <QueryErrorTitle i18n={i18n} organizationId={organizationId} />
+          <QueryErrorDescription
+            i18n={i18n}
+            organizationId={organizationId}
+            url={platformUrl}
+          />
+          <QueryErrorShowMore
+            link={<QueryErrorLink i18n={i18n} errorType={error?.type} />}
+            onShowMore={() => (this.showMoreInfo = !this.showMoreInfo)}
+            i18n={i18n}
+          />
+          <QueryErrorDetails error={error} show={this.showMoreInfo} />
+        </QueryErrorContainer>
+      </QueryErrorGuard>
     );
   }
 }

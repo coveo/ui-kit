@@ -1,22 +1,29 @@
 import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request';
+import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
 import {buildCommerceAPIRequest} from '../../../common/actions';
 import {
   AnyFacetRequest,
   CategoryFacetRequest,
 } from '../../facet-set/interfaces/request';
+import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions';
 import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state';
 
-export const buildCategoryFacetSearchRequest = async (
+export const buildCategoryFacetSearchRequest = (
   facetId: string,
   state: StateNeededForCategoryFacetSearch,
-  isFieldSuggestionsRequest: boolean
-): Promise<CategoryFacetSearchRequest> => {
+  isFieldSuggestionsRequest: boolean,
+  navigatorContext: NavigatorContext
+): CategoryFacetSearchRequest => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const categoryFacet = state.commerceFacetSet[facetId]!.request;
-  const path = isCategoryFacetRequest(categoryFacet)
-    ? getPathToSelectedCategoryFacetItem(categoryFacet)
-    : [];
+  const categoryFacet =
+    state.commerceFacetSet[
+      getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId)
+    ]?.request;
+  const path =
+    categoryFacet && isCategoryFacetRequest(categoryFacet)
+      ? categoryFacet && getPathToSelectedCategoryFacetItem(categoryFacet)
+      : [];
   const ignorePaths = path.length ? [path] : [];
   const query = state.commerceQuery?.query;
 
@@ -31,13 +38,13 @@ export const buildCategoryFacetSearchRequest = async (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = await buildCommerceAPIRequest(state);
+  } = buildCommerceAPIRequest(state, navigatorContext);
 
   return {
     url,
     accessToken,
     organizationId,
-    facetId,
+    facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
     facetQuery,
     ignorePaths,
     trackingId,
@@ -46,7 +53,8 @@ export const buildCategoryFacetSearchRequest = async (
     currency,
     clientId,
     context,
-    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query}),
+    query,
+    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query: ''}),
   };
 };
 

@@ -14,23 +14,27 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   retryButton: () => CypressSelector;
   toggleGeneratedAnswerButton: () => CypressSelector;
   generatedAnswerContent: () => CypressSelector;
+  generatedAnswerContentContainer: () => CypressSelector;
   feedbackModal: () => CypressSelector;
-  feedbackOption: (index: number) => CypressSelector;
   feedbackSubmitButton: () => CypressSelector;
   feedbackCancelButton: () => CypressSelector;
   feedbackDoneButton: () => CypressSelector;
+  feedbackDocumentUrlInput: () => CypressSelector;
   feedbackDetailsInput: () => CypressSelector;
   rephraseButtons: () => CypressSelector;
   rephraseLabel: () => CypressSelector;
   rephraseButtonByLabel: (label: string) => CypressSelector;
-  rephraseInputButtonByLabel: (label: string) => CypressSelector;
-  generatedAnswerFooter: () => CypressSelector;
+  generatedAnswerFooterRow: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
   citationTooltip: (index: number) => CypressSelector;
   citationTooltipUri: (index: number) => CypressSelector;
   citationTooltipTitle: (index: number) => CypressSelector;
   citationTooltipText: (index: number) => CypressSelector;
   disclaimer: () => CypressSelector;
+  toggleCollapseButton: () => CypressSelector;
+  generatingMessage: () => CypressSelector;
+  feedbackOption: (value: string, index: number) => CypressSelector;
+  successMessage: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -56,10 +60,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__title')
       .eq(index),
-  citationIndex: (index: number) =>
-    GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__index')
-      .eq(index),
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__link')
@@ -76,19 +76,29 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__content"]'
     ),
+  generatedAnswerContentContainer: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__content-container"]'
+    ),
   feedbackModal: () => cy.get('lightning-modal'),
-  feedbackOption: (index: number) =>
-    cy.get('lightning-modal').find('lightning-radio-group input').eq(index),
   feedbackSubmitButton: () =>
-    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__submit"]'),
+    GeneratedAnswerSelectors.feedbackModal().find(
+      '[data-cy="feedback-modal-qna-footer__submit"]'
+    ),
   feedbackCancelButton: () =>
-    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__cancel"]'),
+    GeneratedAnswerSelectors.feedbackModal().find(
+      '[data-cy="feedback-modal-footer__cancel"]'
+    ),
   feedbackDoneButton: () =>
-    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__done"]'),
+    GeneratedAnswerSelectors.feedbackModal().find(
+      '[data-cy="feedback-modal-footer__done"]'
+    ),
+  feedbackDocumentUrlInput: () =>
+    GeneratedAnswerSelectors.feedbackModal().find('input[name="documentUrl"]'),
   feedbackDetailsInput: () =>
-    cy
-      .get('lightning-modal')
-      .find('[data-cy="feedback-modal-body__details-input"] textarea'),
+    GeneratedAnswerSelectors.feedbackModal().find(
+      '[data-name="details"] textarea'
+    ),
   rephraseButtons: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__rephrase-buttons"]'
@@ -101,8 +111,10 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       `c-quantic-radio-buttons-group [data-cy="${label}"]`
     ),
-  generatedAnswerFooter: () =>
-    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__footer"]'),
+  generatedAnswerFooterRow: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__footer-row"]'
+    ),
   copyToClipboardButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__copy-to-clipboard"]'
@@ -133,5 +145,21 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   disclaimer: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__disclaimer"]'
+    ),
+  toggleCollapseButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__answer-toggle"]'
+    ),
+  generatingMessage: () =>
+    GeneratedAnswerSelectors.get().find(
+      'div.generated-answer__collapse-generating-message'
+    ),
+  feedbackOption: (value: string, index: number) =>
+    GeneratedAnswerSelectors.feedbackModal()
+      .find(`.feedback-modal-qna__question input[value=${value}]`)
+      .eq(index),
+  successMessage: () =>
+    GeneratedAnswerSelectors.feedbackModal().find(
+      '[data-cy="feedback-modal-body__success-message"]'
     ),
 };

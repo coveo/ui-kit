@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
-import {CoreEngine} from '../../../../app/engine';
+import {CoreEngine, CoreEngineNext} from '../../../../app/engine';
 import {
   ClientThunkExtraArguments,
   ThunkExtraArguments,
@@ -28,14 +28,14 @@ export interface GenericFacetSearchProps<T extends FacetSearchState> {
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
   executeFieldSuggestActionCreator: (
     facetId: string
   ) => AsyncThunkAction<
     unknown,
-    string,
+    unknown,
     AsyncThunkOptions<unknown, ThunkExtraArguments>
   >;
 }
@@ -43,10 +43,17 @@ export interface GenericFacetSearchProps<T extends FacetSearchState> {
 export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
 
 export function buildGenericFacetSearch<T extends FacetSearchState>(
-  engine: CoreEngine<
-    ConfigurationSection & (FacetSearchSection | CategoryFacetSearchSection),
-    ClientThunkExtraArguments<FacetSearchAPIClient>
-  >,
+  engine:
+    | CoreEngine<
+        ConfigurationSection &
+          (FacetSearchSection | CategoryFacetSearchSection),
+        ClientThunkExtraArguments<FacetSearchAPIClient>
+      >
+    | CoreEngineNext<
+        ConfigurationSection &
+          (FacetSearchSection | CategoryFacetSearchSection),
+        ClientThunkExtraArguments<FacetSearchAPIClient>
+      >,
   props: GenericFacetSearchProps<T>
 ) {
   const dispatch = engine.dispatch;

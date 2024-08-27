@@ -1,3 +1,4 @@
+import {stateKey} from '../../../../../app/state-key';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
@@ -34,7 +35,7 @@ describe('CategoryFacetSearch', () => {
   }
 
   function setFacetSearchState() {
-    engine.state.categoryFacetSearchSet[facetId] =
+    engine[stateKey].categoryFacetSearchSet[facetId] =
       buildMockCategoryFacetSearch();
   }
 
@@ -46,6 +47,7 @@ describe('CategoryFacetSearch', () => {
       isForFieldSuggestions: false,
       options: {
         facetId,
+        type: 'SEARCH',
       },
     };
 

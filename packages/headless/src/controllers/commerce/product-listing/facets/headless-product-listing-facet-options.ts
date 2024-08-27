@@ -1,13 +1,11 @@
 import {isFacetResponse} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {
   CommerceFacetSetSection,
-  ProductListingV2Section,
+  ProductListingSection,
 } from '../../../../state/state-sections';
-import {CoreCommerceFacetOptions} from '../../core/facets/headless-core-commerce-facet';
 
 export const facetResponseSelector = (
-  state: ProductListingV2Section & CommerceFacetSetSection,
+  state: ProductListingSection & CommerceFacetSetSection,
   facetId: string
 ) => {
   const response = state.productListing.facets.find(
@@ -20,17 +18,5 @@ export const facetResponseSelector = (
   return undefined;
 };
 
-export const isFacetLoadingResponseSelector = (
-  state: ProductListingV2Section
-) => state.productListing.isLoading;
-
-export const commonOptions: Pick<
-  CoreCommerceFacetOptions,
-  | 'fetchResultsActionCreator'
-  | 'facetResponseSelector'
-  | 'isFacetLoadingResponseSelector'
-> = {
-  fetchResultsActionCreator: fetchProductListing,
-  facetResponseSelector,
-  isFacetLoadingResponseSelector,
-};
+export const isFacetLoadingResponseSelector = (state: ProductListingSection) =>
+  state.productListing.isLoading;

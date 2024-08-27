@@ -1,6 +1,6 @@
 import {GeneratedAnswerStyle} from '@coveo/headless';
 import {RouteAlias, TagProps} from '../fixtures/fixture-common';
-import {TestFixture} from '../fixtures/test-fixture';
+import {TestFixture, generateLongTextAnswer} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
   addGeneratedAnswer,
@@ -93,6 +93,7 @@ describe('Generated Answer Test Suites', () => {
         mockStreamResponse(streamId, testMessagePayload);
         setupGeneratedAnswerWithoutFirstIntercept(streamId, {
           'answer-style': answerStyle.value,
+          'with-rephrase-buttons': true,
         });
       });
 
@@ -151,48 +152,148 @@ describe('Generated Answer Test Suites', () => {
         setupGeneratedAnswer(streamId);
         cy.wait(getStreamInterceptAlias(streamId));
         GeneratedAnswerSelectors.answer();
-        GeneratedAnswerSelectors.dislikeButton().click({force: true});
       });
 
       it('should open when an answer is disliked', () => {
+        GeneratedAnswerSelectors.dislikeButton().click({force: true});
+
+        feedbackModalSelectors.modalBody().should('exist');
+        feedbackModalSelectors.modalHeader().should('exist');
+        feedbackModalSelectors.modalFooter().should('exist');
+      });
+
+      it('should open when an answer is liked', () => {
+        GeneratedAnswerSelectors.likeButton().click({force: true});
+
         feedbackModalSelectors.modalBody().should('exist');
         feedbackModalSelectors.modalHeader().should('exist');
         feedbackModalSelectors.modalFooter().should('exist');
       });
 
       describe('select button', () => {
-        it('should submit proper reason', () => {
-          const notAccurateReason = feedbackModalSelectors.reason().eq(1);
-          notAccurateReason.should('have.id', 'notAccurate');
-          notAccurateReason.click({force: true});
+        it('should submit proper feedback', () => {
+          GeneratedAnswerSelectors.likeButton().click({force: true});
+
+          feedbackModalSelectors
+            .feedbackOption('correctTopic', 'Yes')
+            .click({force: true});
+          feedbackModalSelectors
+            .feedbackOption('hallucinationFree', 'No')
+            .click({force: true});
+
+          feedbackModalSelectors.submitButton().click();
+          feedbackModalSelectors.submitButton().should('exist');
+
+          feedbackModalSelectors
+            .feedbackOption('readable', 'Yes')
+            .click({force: true});
+          feedbackModalSelectors
+            .feedbackOption('documented', 'Yes')
+            .click({force: true});
 
           feedbackModalSelectors.submitButton().click();
           feedbackModalSelectors.submitButton().should('not.exist');
           feedbackModalSelectors.cancelButton().should('exist');
 
           cy.get(`${RouteAlias.UA}.3`)
-            .its('request.body.customData.reason')
-            .should('equal', 'notAccurate');
-        });
-      });
+            .its('request.body.customData.helpful')
+            .should('equal', true);
 
-      describe('add details text area', () => {
-        it('should be visible when other is selected', () => {
-          feedbackModalSelectors.detailsTextArea().should('not.exist');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.correctTopic')
+            .should('equal', 'yes');
 
-          const reasons = feedbackModalSelectors.reason();
-          reasons.last().should('have.id', 'other');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.hallucinationFree')
+            .should('equal', 'no');
 
-          reasons.last().click({force: true});
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.readable')
+            .should('equal', 'yes');
 
-          feedbackModalSelectors.detailsInput().should('exist');
-          feedbackModalSelectors.submitButton().should('be.enabled');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.documented')
+            .should('equal', 'yes');
         });
       });
     });
 
+    describe('when withToggle prop is NOT provided', () => {
+      beforeEach(() => {
+        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id');
+      });
+
+      it('should hide the toggle button', () => {
+        GeneratedAnswerAssertions.assertToggleVisibility(false);
+      });
+    });
+
+    describe('when collapsible prop is provided', () => {
+      describe('answer height is more than 250px', () => {
+        const streamId = crypto.randomUUID();
+
+        const testTextDelta = generateLongTextAnswer();
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            collapsible: true,
+          });
+        });
+
+        GeneratedAnswerAssertions.assertShowButton(true);
+        GeneratedAnswerAssertions.assertAnswerCollapsed(true);
+        GeneratedAnswerAssertions.assertShowMoreLabel(true);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
+
+        describe('when we click on show more button', () => {
+          beforeEach(() => {
+            GeneratedAnswerSelectors.showButton().click();
+          });
+
+          GeneratedAnswerAssertions.assertAnswerCollapsed(false);
+          GeneratedAnswerAssertions.assertShowMoreLabel(false);
+          GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
+        });
+      });
+
+      describe('answer height is less than 250px', () => {
+        const streamId = crypto.randomUUID();
+
+        const testTextDelta = 'Some text';
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            collapsible: true,
+          });
+        });
+
+        GeneratedAnswerAssertions.assertShowButton(false);
+        GeneratedAnswerAssertions.assertAnswerCollapsed(false);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+        GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
+      });
+    });
+
     describe('when a stream ID is returned', () => {
-      describe('when component is deactivated', () => {
+      describe('when withToggle prop is provided and component is deactivated', () => {
         const streamId = crypto.randomUUID();
         const testTextDelta = 'Some text';
         const testMessagePayload = {
@@ -205,7 +306,9 @@ describe('Generated Answer Test Suites', () => {
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
-          setupGeneratedAnswer(streamId);
+          setupGeneratedAnswerWithoutFirstIntercept(streamId, {
+            'with-toggle': true,
+          });
           cy.wait(getStreamInterceptAlias(streamId));
 
           GeneratedAnswerSelectors.toggle().click();
@@ -213,13 +316,14 @@ describe('Generated Answer Test Suites', () => {
 
         GeneratedAnswerAssertions.assertAnswerVisibility(false);
         GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertToggleVisibility(true);
         GeneratedAnswerAssertions.assertToggleValue(false);
         GeneratedAnswerAssertions.assertCopyButtonVisibility(false);
         GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
         GeneratedAnswerAssertions.assertLogHideGeneratedAnswer();
         GeneratedAnswerAssertions.assertDisclaimer(false);
 
-        describe('when component is re-activated', () => {
+        describe('when withToggle prop is provided and component is re-activated', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
             GeneratedAnswerSelectors.toggle().click();
@@ -227,6 +331,7 @@ describe('Generated Answer Test Suites', () => {
 
           GeneratedAnswerAssertions.assertAnswerVisibility(true);
           GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertToggleVisibility(true);
           GeneratedAnswerAssertions.assertToggleValue(true);
           GeneratedAnswerAssertions.assertCopyButtonVisibility(true);
           GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
@@ -240,7 +345,9 @@ describe('Generated Answer Test Suites', () => {
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
-          setupGeneratedAnswer(streamId);
+          setupGeneratedAnswer(streamId, {
+            'with-rephrase-buttons': true,
+          });
           cy.wait(getStreamInterceptAlias(streamId));
         });
 
@@ -345,6 +452,7 @@ describe('Generated Answer Test Suites', () => {
           mockStreamResponse(streamId, testCitationsPayload);
           setupGeneratedAnswer(streamId);
           cy.wait(getStreamInterceptAlias(streamId));
+          cy.wait(1000);
         });
 
         it('should display the citation link', () => {
@@ -356,7 +464,6 @@ describe('Generated Answer Test Suites', () => {
             'have.text',
             testCitation.title
           );
-          GeneratedAnswerSelectors.citationIndex().should('have.text', '1');
           GeneratedAnswerSelectors.citation().should(
             'have.attr',
             'href',
@@ -398,9 +505,7 @@ describe('Generated Answer Test Suites', () => {
         describe('when a citation is clicked', () => {
           beforeEach(() => {
             AnalyticsTracker.reset();
-            GeneratedAnswerSelectors.citation()
-              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
-              .click();
+            GeneratedAnswerSelectors.citation().click();
           });
 
           it('should log an openGeneratedAnswerSource click event', () => {
@@ -488,7 +593,6 @@ describe('Generated Answer Test Suites', () => {
             GeneratedAnswerSelectors.container().should('not.exist');
           });
         });
-
         describe('Retryable error', () => {
           [500, 429].forEach((errorCode) => {
             describe(`${errorCode} error`, () => {

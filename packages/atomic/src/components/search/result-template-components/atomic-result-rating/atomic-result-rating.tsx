@@ -2,7 +2,10 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Element, Prop, h, State} from '@stencil/core';
 import Star from '../../../../images/star.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {Rating} from '../../atomic-rating/atomic-rating';
+import {
+  Rating,
+  computeNumberOfStars,
+} from '../../../common/atomic-rating/atomic-rating';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
@@ -55,19 +58,12 @@ export class AtomicResultRating {
       this.result,
       this.field
     );
-    if (value === null) {
+    try {
+      this.numberOfStars = computeNumberOfStars(value, this.field);
+    } catch (error) {
+      this.error = error instanceof Error ? error : new Error(`${error}`);
       this.numberOfStars = null;
-      return;
     }
-    const valueAsNumber = parseFloat(`${value}`);
-    if (Number.isNaN(valueAsNumber)) {
-      this.error = new Error(
-        `Could not parse "${value}" from field "${this.field}" as a number.`
-      );
-      this.numberOfStars = null;
-      return;
-    }
-    this.numberOfStars = valueAsNumber;
   }
 
   componentWillRender() {

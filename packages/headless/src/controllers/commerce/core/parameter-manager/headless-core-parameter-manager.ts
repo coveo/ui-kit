@@ -1,18 +1,19 @@
 import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {Parameters} from '../../../../features/commerce/search-parameters/search-parameter-actions';
+import {stateKey} from '../../../../app/state-key';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
-  buildController,
   Controller,
+  buildController,
 } from '../../../controller/headless-controller';
-import {FetchResultsActionCreator} from '../common';
+import {FetchProductsActionCreator} from '../common';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**
-   * The initial state that should be applied to the `ParameterManager` controller.
+   * The initial state that should be applied to the `ParameterManager` sub-controller.
    */
   initialState: ParameterManagerInitialState<T>;
 }
@@ -27,17 +28,17 @@ export interface CoreParameterManagerProps<T extends Parameters>
   /**
    * The selector to retrieve the active parameters from the state.
    */
-  activeParametersSelector: (state: CommerceEngine['state']) => T;
+  activeParametersSelector: (state: CommerceEngine[typeof stateKey]) => T;
 
   /**
    * The action to dispatch to update the parameters in the state.
    */
-  restoreActionCreator: (parameters: T) => AnyAction;
+  restoreActionCreator: (parameters: T) => UnknownAction;
 
   /**
    * The action to dispatch to fetch more results.
    */
-  fetchResultsActionCreator: FetchResultsActionCreator;
+  fetchProductsActionCreator: FetchProductsActionCreator;
 
   /**
    * Enriches the parameters with the active parameters.
@@ -45,7 +46,7 @@ export interface CoreParameterManagerProps<T extends Parameters>
    * @param activeParams
    */
   enrichParameters(
-    state: CommerceEngine['state'],
+    state: CommerceEngine[typeof stateKey],
     activeParams: T
   ): Required<T>;
 }
@@ -68,7 +69,7 @@ const initialStateSchema = <T extends Parameters>(
   });
 
 /**
- * The `ParameterManager` controller allows restoring parameters that affect the results (e.g., from the URL).
+ * The `ParameterManager` sub-controller allows restoring parameters that affect the results (e.g., from the URL).
  */
 export interface ParameterManager<T extends Parameters> extends Controller {
   /**
@@ -79,7 +80,7 @@ export interface ParameterManager<T extends Parameters> extends Controller {
   synchronize(parameters: T): void;
 
   /**
-   * The state relevant to the `ParameterManager` controller.
+   * The state relevant to the `ParameterManager` sub-controller.
    */
   state: ParameterManagerState<T>;
 }
@@ -93,11 +94,11 @@ export interface ParameterManagerState<T extends Parameters> {
 
 /**
  * @internal
- * Creates a `ParameterManager` controller instance.
+ * Creates a `ParameterManager` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `ParameterManager` properties.
- * @returns A `ParameterManager` controller instance.
+ * @returns A `ParameterManager` sub-controller instance.
  */
 export function buildCoreParameterManager<T extends Parameters>(
   engine: CommerceEngine,
@@ -118,20 +119,20 @@ export function buildCoreParameterManager<T extends Parameters>(
     ...controller,
 
     synchronize(parameters: T) {
-      const activeParams = props.activeParametersSelector(engine.state);
-      const oldParams = props.enrichParameters(engine.state, activeParams);
-      const newParams = props.enrichParameters(engine.state, parameters);
+      const activeParams = props.activeParametersSelector(engine[stateKey]);
+      const oldParams = props.enrichParameters(engine[stateKey], activeParams);
+      const newParams = props.enrichParameters(engine[stateKey], parameters);
 
       if (deepEqualAnyOrder(oldParams, newParams)) {
         return;
       }
 
       dispatch(props.restoreActionCreator(parameters));
-      dispatch(props.fetchResultsActionCreator());
+      dispatch(props.fetchProductsActionCreator());
     },
 
     get state() {
-      const parameters = props.activeParametersSelector(engine.state);
+      const parameters = props.activeParametersSelector(engine[stateKey]);
       return {parameters};
     },
   };

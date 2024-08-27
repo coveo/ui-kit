@@ -1,4 +1,10 @@
 import {configuration} from '../../../app/common-reducers';
+import {stateKey} from '../../../app/state-key';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../../features/commerce/query-set/query-set-actions';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../../features/commerce/query/query-actions';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
 import {
@@ -6,12 +12,7 @@ import {
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
-import {standaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
-import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
-import {selectQuerySuggestion} from '../../../features/query-suggest/query-suggest-actions';
+import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
 // TODO: KIT-3127: import from commerce
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {CommerceAppState} from '../../../state/commerce-app-state';
@@ -28,8 +29,8 @@ import {
 } from './headless-standalone-search-box';
 import {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options';
 
-jest.mock('../../../features/query-set/query-set-actions'); // TODO: KIT-3127: add missing commerce actions
-jest.mock('../../../features/query-suggest/query-suggest-actions'); // TODO: KIT-3127: add missing commerce actions
+jest.mock('../../../features/commerce/query-set/query-set-actions');
+jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
 jest.mock('../../../features/commerce/query/query-actions');
 jest.mock(
   '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions'
@@ -79,6 +80,7 @@ describe('headless standalone searchBox', () => {
     expect(registerStandaloneSearchBox).toHaveBeenCalledWith({
       id,
       redirectionUrl: options.redirectionUrl,
+      overwrite: false,
     });
   });
 
@@ -112,7 +114,7 @@ describe('headless standalone searchBox', () => {
 
   it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
     const redirectTo = '/search-page';
-    engine.state.commerceStandaloneSearchBoxSet![id] =
+    engine[stateKey].commerceStandaloneSearchBoxSet![id] =
       buildMockStandaloneSearchBoxEntry({redirectTo});
     expect(searchBox.state.redirectTo).toBe(redirectTo);
   });
@@ -160,8 +162,6 @@ describe('headless standalone searchBox', () => {
 
       expect(fetchRedirectUrl).toHaveBeenCalled();
     });
-
-    it.todo('TODO: KIT-3134: Support redirect for Standalone searchbox');
   });
 
   it('should dispatch a resetStandaloneSearchBox action when calling afterRedirection', () => {
