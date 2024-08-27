@@ -194,6 +194,9 @@ describe('c-quantic-search-box-input', () => {
       describe('when the suggestions list is not empty', () => {
         describe('when only query suggestions are displayed', () => {
           it('should display the suggestions in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -229,9 +232,12 @@ describe('c-quantic-search-box-input', () => {
 
             expect(suggestionOptionLabels).not.toBeNull();
             expect(suggestionOptionLabels.length).toEqual(suggestionsLength);
-            expect(suggestionOptionLabels[suggestionsLength - 1].title).toEqual(
-              mockSuggestions[suggestionsLength - 1].value
-            );
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
           });
         });
 
