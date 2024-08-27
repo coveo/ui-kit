@@ -81,7 +81,7 @@ export const logInsightCreateArticle = (
   });
 
 export const logOpenUserActions = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.openUserActions)({
+  makeInsightAnalyticsActionFactory('openUserActions')({
     prefix: 'analytics/insight/openUserActions',
     __legacy__getBuilder: (client, state) => {
       return client.logOpenUserActions(
