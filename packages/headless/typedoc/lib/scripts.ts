@@ -32,11 +32,14 @@ export function insertSearchBox() {
       logoCell.classList.add('table-cell', 'coveo-logo-cell');
       const logoDiv = document.createElement('div');
       logoDiv.classList.add('coveo-logo');
+      const logoLink = document.createElement('a');
+      logoLink.href = 'https://docs.coveo.com/en/0';
       const logoImg = document.createElement('img');
       logoImg.src = '../assets/coveo-docs-logo.svg';
       logoImg.alt = 'Coveo Docs Logo';
 
-      logoDiv.appendChild(logoImg);
+      logoLink.appendChild(logoImg);
+      logoDiv.appendChild(logoLink);
       logoCell.appendChild(logoDiv);
       tsdToolbarContents.insertBefore(logoCell, tsdToolbarContents.firstChild);
     }
