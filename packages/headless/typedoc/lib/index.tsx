@@ -3,7 +3,7 @@ import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 // eslint-disable-next-line n/no-extraneous-import
 import {Application, JSX, RendererEvent} from 'typedoc';
-import {insertLinkAndSearchBox} from './scripts.js';
+import {insertSearchBox} from './scripts.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -31,15 +31,26 @@ export function load(app: Application) {
         src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
       ></script>
       <script>
-        <JSX.Raw html={`(${insertLinkAndSearchBox.toString()})();`} />
+        <JSX.Raw html={`(${insertSearchBox.toString()})();`} />
       </script>
     </>
   ));
 
   const onRenderEnd = () => {
-    const from = resolve(__dirname, '../assets/style.css');
-    const to = resolve(app.options.getValue('out'), 'assets/docs-style.css');
-    cpSync(from, to);
+    const filesToCopy = [
+      {
+        from: resolve(__dirname, '../assets/docs-style.css'),
+        to: resolve(app.options.getValue('out'), 'assets/docs-style.css'),
+      },
+      {
+        from: resolve(__dirname, '../assets/coveo-docs-logo.svg'),
+        to: resolve(app.options.getValue('out'), 'assets/coveo-docs-logo.svg'),
+      },
+    ];
+
+    filesToCopy.forEach((file) => {
+      cpSync(file.from, file.to);
+    });
   };
 
   // @ts-expect-error: Support for 0.25.x

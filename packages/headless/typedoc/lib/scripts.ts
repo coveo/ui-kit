@@ -22,13 +22,29 @@ declare global {
   }
 }
 
-export function insertLinkAndSearchBox() {
+export function insertSearchBox() {
   document.addEventListener('DOMContentLoaded', () => {
-    // Insert Atomic search box in the header
+    const tsdToolbarContents = document.getElementsByClassName(
+      'tsd-toolbar-contents'
+    )[0];
+    if (tsdToolbarContents) {
+      const logoCell = document.createElement('div');
+      logoCell.classList.add('table-cell', 'coveo-logo-cell');
+      const logoDiv = document.createElement('div');
+      logoDiv.classList.add('coveo-logo');
+      const logoImg = document.createElement('img');
+      logoImg.src = 'assets/coveo-docs-logo.svg'; // Update the path as needed
+      logoImg.alt = 'Coveo Docs Logo';
+
+      logoDiv.appendChild(logoImg);
+      logoCell.appendChild(logoDiv);
+      tsdToolbarContents.insertBefore(logoCell, tsdToolbarContents.firstChild);
+    }
     const tsdSearch = document.getElementById('tsd-search');
     if (tsdSearch) {
       tsdSearch.innerHTML = ''; // Clear existing contents
 
+      // Create the search interface and search box
       const searchInterface = document.createElement('atomic-search-interface');
       const searchBox = document.createElement('atomic-search-box');
       searchBox.setAttribute(
