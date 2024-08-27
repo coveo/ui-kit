@@ -176,10 +176,10 @@ export class AtomicCommerceSearchBoxInstantProducts
         content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
         onSelect: () => {
           this.bindings.clearSuggestions();
-          this.bindings.searchBoxController.updateText(
-            this.instantProducts.state.query
-          );
-          this.bindings.searchBoxController.submit();
+          this.bindings
+            .searchBoxController()
+            .updateText(this.instantProducts.state.query);
+          this.bindings.searchBoxController().submit();
         },
       });
     }
@@ -226,7 +226,7 @@ export class AtomicCommerceSearchBoxInstantProducts
   private onSuggestedQueryChange() {
     if (
       !this.bindings.getSuggestionElements().length &&
-      !this.bindings.searchBoxController.state.value
+      !this.bindings.searchBoxController().state.value
     ) {
       console.warn(
         "There doesn't seem to be any query suggestions configured. Make sure to include either an atomic-commerce-search-box-query-suggestions or atomic-commerce-search-box-recent-queries in your search box in order to see some instant products."
