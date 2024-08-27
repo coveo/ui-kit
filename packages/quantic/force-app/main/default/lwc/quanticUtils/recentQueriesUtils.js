@@ -6,17 +6,23 @@ export class RecentQueryUtils {
    * @returns {String}
    */
   static formatRecentQuery(recentQuery, query) {
-    const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
+    const startIndex = recentQuery.indexOf(query);
+    if (startIndex === -1) {
+      return recentQuery;
+    }
+
+    const highlights = [
+      {
+        offset: startIndex,
+        length: query.length,
+      },
+    ];
+
+    return CoveoHeadless.HighlightUtils.highlightString({
       content: recentQuery,
       openingDelimiter: '<b>',
       closingDelimiter: '</b>',
-      highlights: [
-        {
-          offset: query.length,
-          length: recentQuery.length - query.length,
-        },
-      ],
+      highlights: highlights,
     });
-    return highlightedValue;
   }
 }

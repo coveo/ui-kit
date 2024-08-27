@@ -94,7 +94,7 @@ export default class QuanticSearchBox extends LightningElement {
       options: {
         numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
-          notMatchDelimiters: {
+          exactMatchDelimiters: {
             open: '<b>',
             close: '</b>',
           },

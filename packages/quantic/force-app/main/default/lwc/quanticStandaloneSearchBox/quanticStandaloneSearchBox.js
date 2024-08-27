@@ -165,7 +165,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       options: {
         numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
-          notMatchDelimiters: {
+          exactMatchDelimiters: {
             open: '<b>',
             close: '</b>',
           },
