@@ -1141,8 +1141,18 @@ ul.tsd-type-parameter-list h5 {
   padding: 12px 0;
 }
 
+#icon-menu rect {
+  fill: white;
+}
+
 #tsd-widgets {
   padding-left: 0.5rem;
+  padding-top: 0.25rem;
+}
+#tsd-widgets .feedback a {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
 .tsd-widget {
@@ -1314,6 +1324,9 @@ img {
   .tsd-widget.options,
   .tsd-widget.menu {
     display: inline-block;
+  }
+  .feedback {
+    display: none;
   }
 
   .container-main {

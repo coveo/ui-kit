@@ -43,6 +43,18 @@ export function insertSearchBox() {
       logoCell.appendChild(logoDiv);
       tsdToolbarContents.insertBefore(logoCell, tsdToolbarContents.firstChild);
     }
+    const tsdWidgets = document.getElementById('tsd-widgets');
+    if (tsdWidgets) {
+      const feedbackDiv = document.createElement('div');
+      feedbackDiv.classList.add('feedback');
+      const feedbackLink = document.createElement('a');
+      feedbackLink.href =
+        'https://docs.google.com/forms/d/e/1FAIpQLSeyNL18g4JWIDR5xEyIMY48JIjyjwXRmlCveecjXBNSLh4Ygg/viewform';
+      feedbackLink.target = '_blank';
+      feedbackLink.textContent = 'Feedback';
+      feedbackDiv.appendChild(feedbackLink);
+      tsdWidgets.appendChild(feedbackDiv);
+    }
     const tsdSearch = document.getElementById('tsd-search');
     if (tsdSearch) {
       tsdSearch.innerHTML = ''; // Clear existing contents
