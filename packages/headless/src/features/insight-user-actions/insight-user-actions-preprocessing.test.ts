@@ -1,7 +1,7 @@
 import {
   mapAndSortActionsByMostRecent,
   isActionWithinSessionThreshold,
-  preprocessActionsData,
+  preprocessUserActionsData,
   splitActionsIntoTimelineSessions,
   shouldExcludeAction,
   insertSessionInTimeline,
@@ -816,7 +816,7 @@ describe('insight user actions preprocessing', () => {
     });
   });
 
-  describe('#preprocessActionsData', () => {
+  describe('#preprocessUserActionsData', () => {
     describe('when ticket creation date is not provided', () => {
       it('should return an empty timeline', async () => {
         const expectedTimeline = {
@@ -830,7 +830,7 @@ describe('insight user actions preprocessing', () => {
           loading: false,
         };
 
-        const timeline = preprocessActionsData(mockState, fakeActions);
+        const timeline = preprocessUserActionsData(mockState, fakeActions);
 
         expect(timeline).toEqual(expectedTimeline);
         expect(timeline.session).toBeUndefined();
@@ -940,7 +940,7 @@ describe('insight user actions preprocessing', () => {
           ],
         };
 
-        const preprocessedTimeline = preprocessActionsData(
+        const preprocessedTimeline = preprocessUserActionsData(
           mockState,
           fakeActions
         );

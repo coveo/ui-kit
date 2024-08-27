@@ -3,7 +3,7 @@ import {
   fetchUserActions,
   registerUserActions,
 } from './insight-user-actions-actions';
-import {preprocessActionsData} from './insight-user-actions-preprocessing';
+import {preprocessUserActionsData} from './insight-user-actions-preprocessing';
 import {getInsightUserActionsInitialState} from './insight-user-actions-state';
 
 export const insightUserActionsReducer = createReducer(
@@ -27,7 +27,7 @@ export const insightUserActionsReducer = createReducer(
       .addCase(fetchUserActions.fulfilled, (state, action) => {
         state.loading = false;
         state.error = undefined;
-        state.timeline = preprocessActionsData(
+        state.timeline = preprocessUserActionsData(
           state,
           action.payload.response.value
         );

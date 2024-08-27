@@ -29,11 +29,11 @@ export interface RawUserAction {
  * @param actions {rawUserAction[]} - The raw user actions array to preprocess
  * @returns {UserActionTimeline}
  */
-export const preprocessActionsData = (
+export const preprocessUserActionsData = (
   state: UserActionsState,
   actions: Array<RawUserAction>
 ): UserActionTimeline => {
-  if (!state.ticketCreationDate || actions?.length === 0) {
+  if (!state.ticketCreationDate || !actions?.length) {
     return {
       precedingSessions: [],
       session: undefined,
