@@ -1,3 +1,8 @@
+import {
+  // @ts-ignore
+  getNavigateCalledWith, // @ts-ignore
+  getGenerateUrlCalledWith,
+} from 'lightning/navigation';
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticSmartSnippetSource from '../quanticSmartSnippetSource';
@@ -22,8 +27,10 @@ const exampleActions = {
 };
 
 const defaultOptions = {
-  uri: exampleUri,
-  title: exampleTitle,
+  source: {
+    clickUri: exampleUri,
+    title: exampleTitle,
+  },
   actions: exampleActions,
 };
 
@@ -104,7 +111,13 @@ describe('c-quantic-smart-snippet-source', () => {
   });
 
   it('should not display the source uri when the uri option is undefined', async () => {
-    const element = createTestComponent({...defaultOptions, uri: undefined});
+    const element = createTestComponent({
+      ...defaultOptions,
+      source: {
+        clickUri: undefined,
+        title: exampleTitle,
+      },
+    });
     await flushPromises();
 
     const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
@@ -113,7 +126,13 @@ describe('c-quantic-smart-snippet-source', () => {
   });
 
   it('should not display the source title when the title option is undefined', async () => {
-    const element = createTestComponent({...defaultOptions, title: undefined});
+    const element = createTestComponent({
+      ...defaultOptions,
+      source: {
+        clickUri: exampleUri,
+        title: undefined,
+      },
+    });
     await flushPromises();
 
     const sourceTitle = element.shadowRoot.querySelector(selectors.sourceTitle);
@@ -125,7 +144,13 @@ describe('c-quantic-smart-snippet-source', () => {
     describe(`the analytics bindings of the ${key}`, () => {
       for (const [eventName, action] of Object.entries(bindingsMap)) {
         it(`should execute the proper action when the ${eventName} is triggered`, async () => {
-          const element = createTestComponent({...defaultOptions, uri: '#'});
+          const element = createTestComponent({
+            ...defaultOptions,
+            source: {
+              clickUri: '#',
+              title: exampleTitle,
+            },
+          });
           await flushPromises();
 
           const sourceUri = element.shadowRoot.querySelector(selectors[key]);
@@ -134,6 +159,133 @@ describe('c-quantic-smart-snippet-source', () => {
           expect(action).toHaveBeenCalledTimes(1);
         });
       }
+    });
+  });
+
+  describe('when the smart snippet source is of type Salesforce', () => {
+    const exampleSfid = '123';
+    const exampleSalesforceLink = 'https://www.example-salesforce.com/';
+
+    it('should call the navigation mixin to get the Salesforce record URL', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        source: {
+          clickUri: exampleUri,
+          title: exampleTitle,
+          raw: {
+            sfid: exampleSfid,
+          },
+        },
+      });
+      await flushPromises();
+
+      const sourceTitle = element.shadowRoot.querySelector(
+        selectors.sourceTitle
+      );
+      const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+      const {pageReference} = getGenerateUrlCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(exampleSfid);
+      expect(sourceTitle.href).toBe(exampleSalesforceLink);
+      expect(sourceUri.href).toBe(exampleSalesforceLink);
+    });
+
+    it('should open the source link inside Salesforce after clicking the source title', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        source: {
+          clickUri: exampleUri,
+          title: exampleTitle,
+          raw: {
+            sfid: exampleSfid,
+          },
+        },
+      });
+      await flushPromises();
+
+      const sourceTitle = element.shadowRoot.querySelector(
+        selectors.sourceTitle
+      );
+      sourceTitle.click();
+
+      const {pageReference} = getNavigateCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(exampleSfid);
+    });
+
+    it('should open the source link inside Salesforce after clicking the source uri', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        source: {
+          clickUri: exampleUri,
+          title: exampleTitle,
+          raw: {
+            sfid: exampleSfid,
+          },
+        },
+      });
+      await flushPromises();
+
+      const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+      sourceUri.click();
+
+      const {pageReference} = getNavigateCalledWith();
+
+      expect(pageReference.attributes.recordId).toBe(exampleSfid);
+    });
+
+    describe('when the result is a knowledge article', () => {
+      it('should open the source link inside Salesforce after clicking the source title', async () => {
+        const exampleSfkavid = 'bar';
+        const element = createTestComponent({
+          ...defaultOptions,
+          source: {
+            clickUri: exampleUri,
+            title: exampleTitle,
+            raw: {
+              sfid: exampleSfid,
+              sfkbid: 'foo',
+              sfkavid: exampleSfkavid,
+            },
+          },
+        });
+        await flushPromises();
+
+        const sourceTitle = element.shadowRoot.querySelector(
+          selectors.sourceTitle
+        );
+        sourceTitle.click();
+
+        const {pageReference} = getNavigateCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(exampleSfkavid);
+        expect(sourceTitle.href).toBe(exampleSalesforceLink);
+      });
+
+      it('should open the source link inside Salesforce after clicking the source uri', async () => {
+        const exampleSfkavid = 'bar';
+        const element = createTestComponent({
+          ...defaultOptions,
+          source: {
+            clickUri: exampleUri,
+            title: exampleTitle,
+            raw: {
+              sfid: exampleSfid,
+              sfkbid: 'foo',
+              sfkavid: exampleSfkavid,
+            },
+          },
+        });
+        await flushPromises();
+
+        const sourceUri = element.shadowRoot.querySelector(selectors.sourceUri);
+        sourceUri.click();
+
+        const {pageReference} = getNavigateCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(exampleSfkavid);
+        expect(sourceUri.href).toBe(exampleSalesforceLink);
+      });
     });
   });
 });
