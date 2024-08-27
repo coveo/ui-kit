@@ -22,7 +22,7 @@ import {DocumentSuggestionExpectations as Expect} from './document-suggestion-ex
 interface DocumentSuggestionOptions {
   maxDocuments: number;
   fetchOnInit: boolean;
-  showQuickview: boolean;
+  hideQuickview: boolean;
   numberOfAutoOpenedDocuments: number;
 }
 
@@ -76,71 +76,6 @@ describe('quantic-document-suggestion', () => {
             Expect.displayAccordion(true);
             Expect.numberOfSuggestions(defaultMaxDocuments);
             Expect.displayAccordionSectionContent(true, 0);
-          });
-
-          scope('when clicking on a document suggestion', () => {
-            const clickIndex = 1;
-
-            Actions.clickSuggestion(clickIndex);
-            if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
-                {
-                  documentSuggestion: {
-                    id: allDocuments[clickIndex].uniqueId,
-                    responseId: exampleResponseId,
-                  },
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logClickingSuggestion(clickIndex, allDocuments);
-            }
-            Expect.displayAccordionSectionContent(true, 0);
-            Expect.displayAccordionSectionContent(true, clickIndex);
-          });
-
-          scope('when rating a document suggestion', () => {
-            const clickIndex = 1;
-
-            sendRating(clickIndex);
-            if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionFeedback(
-                {
-                  documentSuggestion: {
-                    id: allDocuments[clickIndex].uniqueId,
-                    responseId: exampleResponseId,
-                  },
-                  liked: true,
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logRatingSuggestion(clickIndex, allDocuments);
-            }
-          });
-        });
-      });
-
-      describe('when showQuickView is set to true', () => {
-        it('should render the component and all parts with the quick view button', () => {
-          const exampleResponseId = crypto.randomUUID();
-          visitDocumentSuggestion({
-            showQuickview: true,
-          });
-
-          scope('when loading the page', () => {
-            Expect.displayAccordion(false);
-            Expect.numberOfSuggestions(0);
-            Expect.displayNoSuggestions(true);
-          });
-
-          scope('when fetching suggestions', () => {
-            mockDocumentSuggestion(allDocuments, exampleResponseId);
-            fetchSuggestions();
-            Expect.displayNoSuggestions(false);
-            Expect.displayAccordion(true);
-            Expect.numberOfSuggestions(defaultMaxDocuments);
-            Expect.displayAccordionSectionContent(true, 0);
             Expect.displayQuickviewButton(true, 0);
           });
 
@@ -164,7 +99,7 @@ describe('quantic-document-suggestion', () => {
             Expect.displayAccordionSectionContent(true, 0);
             Expect.displayAccordionSectionContent(true, clickIndex);
             Expect.displayQuickviewButton(true, 0);
-            Expect.displayQuickviewButton(true, 1);
+            Expect.displayQuickviewButton(true, clickIndex);
           });
 
           scope('when rating a document suggestion', () => {
@@ -211,6 +146,53 @@ describe('quantic-document-suggestion', () => {
               Expect.logClickingSuggestion(clickIndex, allDocuments, true);
             }
             Actions.closeQuickview();
+          });
+        });
+      });
+
+      describe('when hideQuickView is set to true', () => {
+        it('should not render quick view button', () => {
+          const exampleResponseId = crypto.randomUUID();
+          visitDocumentSuggestion({
+            hideQuickview: true,
+          });
+
+          scope('when loading the page', () => {
+            Expect.displayAccordion(false);
+            Expect.numberOfSuggestions(0);
+            Expect.displayNoSuggestions(true);
+          });
+
+          scope('when fetching suggestions', () => {
+            mockDocumentSuggestion(allDocuments, exampleResponseId);
+            fetchSuggestions();
+            Expect.displayNoSuggestions(false);
+            Expect.displayAccordion(true);
+            Expect.numberOfSuggestions(defaultMaxDocuments);
+            Expect.displayAccordionSectionContent(true, 0);
+            Expect.displayQuickviews(false);
+          });
+
+          scope('when clicking on a document suggestion', () => {
+            const clickIndex = 1;
+
+            Actions.clickSuggestion(clickIndex);
+            if (analyticsMode === 'next') {
+              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
+                {
+                  documentSuggestion: {
+                    id: allDocuments[clickIndex].uniqueId,
+                    responseId: exampleResponseId,
+                  },
+                },
+                exampleTrackingId
+              );
+            } else {
+              Expect.logClickingSuggestion(clickIndex, allDocuments);
+            }
+            Expect.displayAccordionSectionContent(true, 0);
+            Expect.displayAccordionSectionContent(true, clickIndex);
+            Expect.displayQuickviews(false);
           });
         });
       });
