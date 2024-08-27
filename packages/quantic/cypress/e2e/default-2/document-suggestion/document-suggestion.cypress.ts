@@ -299,7 +299,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(maxDocuments);
         Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviews(true);
       });
     });
   });
@@ -327,7 +327,7 @@ describe('quantic-document-suggestion', () => {
         for (let i = 0; i < numberOfAutoOpenedDocuments; i++) {
           Expect.displayAccordionSectionContent(true, i);
         }
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviews(true);
       });
     });
 
@@ -350,7 +350,7 @@ describe('quantic-document-suggestion', () => {
         Expect.numberOfSuggestions(defaultMaxDocuments);
         Expect.displayAccordionSectionContent(false, 0);
 
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviews(true);
       });
     });
   });
@@ -393,7 +393,7 @@ describe('quantic-document-suggestion', () => {
         for (let i = 0; i < defaultMaxDocuments; i++) {
           Expect.displayAccordionSectionContent(true, i);
         }
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviews(true);
       });
     });
   });
@@ -447,7 +447,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(5);
         Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviews(true);
       });
     });
   });
