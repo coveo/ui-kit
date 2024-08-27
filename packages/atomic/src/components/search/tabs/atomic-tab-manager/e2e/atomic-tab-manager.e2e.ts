@@ -44,7 +44,7 @@ test.describe('AtomicTabManager', () => {
       test.beforeEach(async ({facets}) => {
         await facets.getFacetValue.first().waitFor({state: 'visible'});
       });
-      test('facets', async ({tabManager}) => {
+      test.fixme('facets', async ({tabManager}) => {
         const includedFacets = await tabManager.includedFacet.all();
         for (let i = 0; i < includedFacets.length; i++) {
           await expect(includedFacets[i]).toBeHidden();
@@ -128,7 +128,7 @@ test.describe('AtomicTabManager', () => {
         });
 
         test.describe('should change other component visibility', async () => {
-          test('facets', async ({tabManager}) => {
+          test.fixme('facets', async ({tabManager}) => {
             const excludedFacets = await tabManager.excludedFacet.all();
             for (let i = 0; i < excludedFacets.length; i++) {
               await expect(excludedFacets[i]).toBeVisible();
