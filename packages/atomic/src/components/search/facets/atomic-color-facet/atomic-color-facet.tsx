@@ -590,6 +590,10 @@ export class AtomicColorFacet implements InitializableComponent {
         ? [...this.allowedValues]
         : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
   }
 

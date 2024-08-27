@@ -278,6 +278,10 @@ export class AtomicCategoryFacet implements InitializableComponent {
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     announceFacetSearchResultsWithAriaLive(

@@ -268,6 +268,10 @@ export class AtomicTimeframeFacet implements InitializableComponent {
         field: this.field,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
     return this.facetForDatePicker;
@@ -283,6 +287,10 @@ export class AtomicTimeframeFacet implements InitializableComponent {
         sortCriteria: this.sortCriteria,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
     return this.facetForDateRange;

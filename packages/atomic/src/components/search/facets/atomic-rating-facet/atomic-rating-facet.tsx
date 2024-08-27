@@ -242,6 +242,10 @@ export class AtomicRatingFacet implements InitializableComponent {
       generateAutomaticRanges: false,
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;

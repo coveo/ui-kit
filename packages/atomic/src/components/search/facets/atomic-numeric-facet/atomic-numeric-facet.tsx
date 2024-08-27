@@ -277,6 +277,10 @@ export class AtomicNumericFacet implements InitializableComponent {
         rangeAlgorithm: this.rangeAlgorithm,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 
