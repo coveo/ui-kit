@@ -6,7 +6,7 @@ import {
   buildMockCommerceEngine,
 } from '../../../test/mock-engine-v2';
 import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger';
-import {buildNotifyTrigger} from './headless-commerce-notify-trigger';
+import {buildNotifyTrigger} from './headless-notify-trigger';
 
 describe('commerce notify trigger', () => {
   let engine: MockedCommerceEngine;

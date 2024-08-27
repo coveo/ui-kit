@@ -25,9 +25,43 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   get includedFacet() {
     return this.page.getByLabel(/^included-facet$/);
   }
+  get excludedModalFacet() {
+    return this.page
+      .locator('atomic-refine-modal')
+      .getByLabel(/^excluded-facet$/);
+  }
+
+  get includedModalFacet() {
+    return this.page
+      .locator('atomic-refine-modal')
+      .getByLabel(/^included-facet$/);
+  }
 
   get smartSnippet() {
-    return this.page.locator('atomic-smart-snippet [part="smart-snippet"]');
+    return this.page.getByText('Creating an In-Product Experience (IPX)');
+  }
+
+  get sortDropdown() {
+    return this.page.getByRole('combobox', {name: 'Sort by'});
+  }
+
+  get sortDropdownOptions() {
+    return this.page.getByLabel('Sort by').getByRole('option');
+  }
+
+  get refineModalSortDropdownOptions() {
+    return this.page
+      .locator('atomic-modal [part="select-wrapper"]')
+      .getByLabel('Sort by')
+      .getByRole('option');
+  }
+
+  get refineModalButton() {
+    return this.page.getByRole('button', {name: 'Sort & Filter'});
+  }
+
+  get refineModalHeader() {
+    return this.page.getByRole('heading', {name: 'Sort & Filter'});
   }
 
   tabButtons(value?: string) {

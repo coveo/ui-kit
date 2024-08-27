@@ -178,10 +178,10 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
         content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
         onSelect: () => {
           this.bindings.clearSuggestions();
-          this.bindings.searchBoxController.updateText(
-            this.instantResults.state.q
-          );
-          this.bindings.searchBoxController.submit();
+          this.bindings
+            .searchBoxController()
+            .updateText(this.instantResults.state.q);
+          this.bindings.searchBoxController().submit();
         },
       });
     }
@@ -223,7 +223,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   private onSuggestedQueryChange() {
     if (
       !this.bindings.getSuggestionElements().length &&
-      !this.bindings.searchBoxController.state.value
+      !this.bindings.searchBoxController().state.value
     ) {
       console.warn(
         "There doesn't seem to be any query suggestions configured. Make sure to include either an atomic-search-box-query-suggestions or atomic-search-box-recent-queries in your search box in order to see some instant results."

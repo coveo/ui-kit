@@ -117,7 +117,7 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
-          repo: ui-kit-prs
+          repositories: 'ui-kit-prs'
       - uses: ./.github/actions/publish-pr-review-site
         if: ${{ always() && github.event_name == 'pull_request'}}
         with:
@@ -328,12 +328,13 @@ jobs:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   is-valid-pr:
-    name: 'Confirm build is valid'
+    name: 'Confirm build is valid (PR)'
     if: ${{ always() && github.event_name == 'pull_request'}}
     needs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
@@ -362,12 +363,13 @@ jobs:
             exit 1
           fi
   is-valid-merge-queue:
-    name: 'Confirm build is valid'
+    name: 'Confirm build is valid (merge group)'
     if: ${{ always() && github.event_name == 'merge_group'}}
     needs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
+      - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'
@@ -386,6 +388,23 @@ jobs:
     steps:
       - run: |
           success="${{ !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure')}}"
+          if [[ $success == "true" ]]; then
+            echo "Build is valid"
+            exit 0
+          else
+            echo "Build is invalid"
+            exit 1
+          fi
+  is-valid:
+    name: 'Confirm build is valid'
+    if: ${{ always() }}
+    needs:
+      - 'is-valid-pr'
+      - 'is-valid-merge-queue'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          success="${{ contains(needs.*.result, 'success')}}"
           if [[ $success == "true" ]]; then
             echo "Build is valid"
             exit 0

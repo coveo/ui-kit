@@ -16,6 +16,7 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+import { AtomicInterface } from "./utils/initialization-utils";
 import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -46,6 +47,7 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+export { AtomicInterface } from "./utils/initialization-utils";
 export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -801,6 +803,10 @@ export namespace Components {
      */
     interface AtomicExternal {
         /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
+        /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
         "selector": string;
@@ -1058,6 +1064,11 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
+        /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
          */
@@ -1198,6 +1209,11 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -3262,6 +3278,14 @@ export namespace Components {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -3341,6 +3365,14 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     interface AtomicTab {
         /**
@@ -6441,6 +6473,10 @@ declare namespace LocalJSX {
      */
     interface AtomicExternal {
         /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
+        /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
         "selector"?: string;
@@ -6696,6 +6732,11 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
+        /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
          */
@@ -6833,6 +6874,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -8778,6 +8824,14 @@ declare namespace LocalJSX {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -8870,6 +8924,14 @@ declare namespace LocalJSX {
           * The non-localized label to display for this expression.
          */
         "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     interface AtomicTab {
         /**
