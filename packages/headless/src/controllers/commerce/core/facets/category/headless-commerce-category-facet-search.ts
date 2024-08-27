@@ -28,9 +28,7 @@ export type CategoryFacetSearchState =
 export type CategoryFacetSearch = Omit<
   ReturnType<typeof buildCoreCategoryFacetSearch>,
   'showMoreResults' | 'updateCaptions' | 'state'
-> & {
-  state: CategoryFacetSearchState;
-};
+>;
 
 export function buildCategoryFacetSearch(
   engine: CommerceEngine,
@@ -40,7 +38,7 @@ export function buildCategoryFacetSearch(
     throw loadReducerError;
   }
 
-  const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
+  const {showMoreResults, state, updateCaptions, ...restOfFacetSearch} =
     buildCoreCategoryFacetSearch(engine, {
       ...props,
       executeFacetSearchActionCreator: (facetId: string) =>
