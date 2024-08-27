@@ -1,3 +1,16 @@
+# 2.57.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
+# 2.56.0 (2024-08-20)
+
+### Features
+
+- **quantic:** Add option for rephrase buttons, remove citations numbers ([#4277](https://github.com/coveo/ui-kit/issues/4277)) ([e65b99f](https://github.com/coveo/ui-kit/commits/e65b99f2bf1b8f2fead1595942a439731dd3f623))
+- **quantic:** added support for custom options in the quanticSort component ([#4101](https://github.com/coveo/ui-kit/issues/4101)) ([ecb5e24](https://github.com/coveo/ui-kit/commits/ecb5e2484b80822356dba24130e8058deb1413a6))
+
 # 2.55.0 (2024-08-14)
 
 ### Bug Fixes

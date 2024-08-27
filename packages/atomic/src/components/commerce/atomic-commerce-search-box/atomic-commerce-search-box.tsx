@@ -203,22 +203,46 @@ export class AtomicCommerceSearchBox
 
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
+  public disconnectedCallback = () => {};
+
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
 
   public initialize() {
-    this.id = randomID('atomic-commerce-search-box-');
+    this.id ??= randomID('atomic-commerce-search-box-');
 
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
+  }
+
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
+    }
+  }
+
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -271,7 +295,7 @@ export class AtomicCommerceSearchBox
     this.suggestionManager.forceUpdate();
   }
 
-  public componentWillRender() {
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -283,7 +307,7 @@ export class AtomicCommerceSearchBox
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
   private initializeSuggestionManager() {
@@ -324,8 +348,8 @@ export class AtomicCommerceSearchBox
     return {
       ...this.bindings,
       id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
+      isStandalone: () => !!this.redirectionUrl,
+      searchBoxController: () => this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearFilters: this.clearFilters,
     };
@@ -675,6 +699,9 @@ export class AtomicCommerceSearchBox
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>

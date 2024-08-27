@@ -237,28 +237,44 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
 
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
+
   public initialize() {
-    this.id = randomID('atomic-search-box-');
+    this.id ??= randomID('atomic-search-box-');
 
-    if (!this.textarea) {
-      this.bindings.engine.logger.warn(
-        'As of Atomic version 3.0.0, the searchbox will be enabled as a text area by default. To remove this warning, set textarea="true" on the search box.',
-        this.host
-      );
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
+  }
+
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
     }
+  }
 
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -289,6 +305,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
+  public disconnectedCallback = () => {};
+
   @Listen('atomic/searchBoxSuggestion/register')
   public registerSuggestions(
     event: CustomEvent<
@@ -305,7 +323,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
-  public componentWillRender() {
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -317,7 +335,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
   private initializeSuggestionManager() {
@@ -358,8 +376,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     return {
       ...this.bindings,
       id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
+      isStandalone: () => !!this.redirectionUrl,
+      searchBoxController: () => this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearFilters: this.clearFilters,
     };
@@ -710,6 +728,9 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>

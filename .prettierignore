@@ -13,4 +13,13 @@ utils/**/.storybook/**
 **/www/**
 scripts/deploy/execute-deployment-pipeline.mjs
 **/staticresources/**
-/.nx/cache
+packages/atomic-hosted-page/loader/**/*
+packages/atomic/loader/**/*
+packages/atomic/docs/**/*
+packages/atomic/dist-storybook/**/*
+packages/atomic/src/components/search/atomic-search-interface/lang/*.json
+packages/atomic/src/external-builds/**/*
+packages/atomic/src/generated/**
+packages/quantic/docs/out/quantic-docs.json
+packages/samples/headless-react/build/**/*
+packages/samples/angular/src/lang/*.json
