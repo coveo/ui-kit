@@ -40,3 +40,17 @@ export const wrapInSearchInterface = (
     });
   },
 });
+
+export const playExecuteFirstSearch: (
+  context: StoryContext
+) => Promise<void> = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement);
+
+  const searchInterface =
+    await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(
+      'root-interface'
+    );
+  await step('Execute the first search', async () => {
+    await searchInterface!.executeFirstSearch();
+  });
+};
