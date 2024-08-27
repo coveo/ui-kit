@@ -7,6 +7,7 @@ import {
   SearchStaticState,
   searchEngineDefinition,
 } from '../../_lib/commerce-engine';
+import FacetGenerator from '../facets/facet-generator';
 import ProductList from '../product-list';
 import SearchBox from '../search-box';
 import ShowMore from '../show-more';
@@ -60,6 +61,10 @@ export default function SearchPage({
           staticState.controllers.instantProducts.state
         }
         instantProductsController={hydratedState?.controllers.instantProducts}
+      />
+      <FacetGenerator
+        staticState={staticState.controllers.facetGenerator.state}
+        controller={hydratedState?.controllers.facetGenerator}
       />
       <Summary
         staticState={staticState.controllers.summary.state}
