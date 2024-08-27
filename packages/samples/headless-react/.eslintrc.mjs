@@ -1,8 +1,13 @@
-const {resolve} = require('path');
-const gtsPkgJsonPath = require.resolve('gts/package.json');
+import {resolve} from 'path';
+import {fileURLToPath} from 'url';
+
+// Resolve the path to the gts package.json
+const gtsPkgJsonPath = fileURLToPath(
+  new URL('gts/package.json', import.meta.url)
+);
 const gtsPath = resolve(gtsPkgJsonPath, '..');
 
-module.exports = {
+export default {
   root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'react'],
