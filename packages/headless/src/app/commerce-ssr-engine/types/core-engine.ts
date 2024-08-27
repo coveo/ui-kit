@@ -1,4 +1,5 @@
 import {UnknownAction} from '@reduxjs/toolkit';
+import type {View} from '../../../controllers/commerce/context/headless-context';
 import type {Controller} from '../../../controllers/controller/headless-controller';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
@@ -75,7 +76,12 @@ export interface EngineDefinition<
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
 
-  setURL: (url: string) => void;
+  /**
+   * Sets the view for the commerce engine.
+   *
+   * This method can be used to dynamically set the view (eg: URL) necessary for the commerce engine to function properly.
+   */
+  setView: (view: View) => void;
 }
 
 export type InferStaticState<

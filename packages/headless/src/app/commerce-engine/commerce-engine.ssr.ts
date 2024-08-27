@@ -3,6 +3,7 @@
  */
 import {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../app/state-key';
+import type {View} from '../../controllers/commerce/context/headless-context';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
 import {buildSearch} from '../../controllers/commerce/search/headless-search';
 import type {Controller} from '../../controllers/controller/headless-controller';
@@ -145,10 +146,10 @@ export function defineCommerceEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  const setURL = (url: string) => {
+  const setView = (view: View) => {
     engineOptions.configuration.context = {
       ...engineOptions.configuration.context,
-      view: {url},
+      view,
     };
   };
 
@@ -269,13 +270,14 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticStateFactory(SolutionType.listing),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.listing),
       setNavigatorContextProvider,
-      setURL,
+      setView,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
     searchEngineDefinition: {
       build: buildFactory(SolutionType.search),
       fetchStaticState: fetchStaticStateFactory(SolutionType.search),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
+      setView,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
   };
 }
