@@ -17,7 +17,7 @@ export default class QuanticSmartSnippetSource extends NavigationMixin(
   LightningElement
 ) {
   /**
-   * The click uri of the smart snippet source.
+   * The smart snippet source.
    * @api
    * @type {Result}
    */
