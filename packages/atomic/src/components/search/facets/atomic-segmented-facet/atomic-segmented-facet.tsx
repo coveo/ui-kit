@@ -25,7 +25,6 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';

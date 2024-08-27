@@ -52,7 +52,6 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {
   FacetValueProps,
   FacetValue,
