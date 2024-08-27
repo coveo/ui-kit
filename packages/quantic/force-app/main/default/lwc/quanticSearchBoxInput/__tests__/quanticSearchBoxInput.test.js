@@ -237,6 +237,11 @@ describe('c-quantic-search-box-input', () => {
 
         describe('with both query suggestions and recent queries available', () => {
           it('should display the query suggestions and the recent queries in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...exampleRecentQueries,
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
+
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -284,9 +289,10 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionOptionLabels.length).toEqual(
               suggestionsAndRecentQueriesLength
             );
-            mockSuggestions.forEach((suggestion, idx) => {
-              expect(suggestionOptionLabels[idx].title).toEqual(
-                suggestion.value
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
               );
             });
           });
