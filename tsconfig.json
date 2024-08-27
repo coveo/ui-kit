@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "./node_modules/gts/tsconfig-google.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true
   },
