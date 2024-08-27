@@ -16,15 +16,7 @@ import {
   TabManager,
   buildTabManager,
 } from '@coveo/headless';
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  Fragment,
-  Watch,
-} from '@stencil/core';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -346,21 +338,6 @@ export class AtomicCategoryFacet implements InitializableComponent {
       !this.facet.state.enabled ||
       (!this.facet.state.values.length && !this.facet.state.parents.length)
     );
-  }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
   }
 
   public componentShouldUpdate(

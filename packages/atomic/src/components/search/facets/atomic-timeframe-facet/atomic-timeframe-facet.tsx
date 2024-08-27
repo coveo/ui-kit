@@ -20,7 +20,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, Element, h, Listen, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -254,21 +254,6 @@ export class AtomicTimeframeFacet implements InitializableComponent {
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
-  }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facetForDateRange
-      );
-    }
   }
 
   public disconnectedCallback() {

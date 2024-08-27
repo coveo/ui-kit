@@ -18,7 +18,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element, Watch} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
@@ -269,21 +269,6 @@ export class AtomicRatingFacet implements InitializableComponent {
       return;
     }
     this.dependenciesManager?.stopWatching();
-  }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
   }
 
   private get isHidden() {

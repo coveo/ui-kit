@@ -17,7 +17,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element, Watch} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
@@ -32,7 +32,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
@@ -213,20 +212,6 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
     this.tabManager = buildTabManager(this.bindings.engine);
     this.initializeFacet();
     this.initializeDependenciesManager();
-  }
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
   }
   public disconnectedCallback() {
     if (this.host.isConnected) {

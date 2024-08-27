@@ -16,7 +16,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, VNode, Watch} from '@stencil/core';
+import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
@@ -213,21 +213,6 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         >(this.dependsOn),
       }
     );
-  }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
   }
 
   disconnectedCallback() {
