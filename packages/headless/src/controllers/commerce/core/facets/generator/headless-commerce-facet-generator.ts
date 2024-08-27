@@ -70,7 +70,7 @@ export type GeneratedFacetControllers = Array<
   MappedGeneratedFacetController[FacetType]
 >;
 
-type MappedGeneratedFacetController = {
+export type MappedGeneratedFacetController = {
   [T in FacetType]: T extends 'numericalRange'
     ? NumericFacet
     : T extends 'regular'
