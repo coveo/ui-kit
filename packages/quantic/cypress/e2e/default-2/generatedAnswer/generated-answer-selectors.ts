@@ -60,10 +60,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__title')
       .eq(index),
-  citationIndex: (index: number) =>
-    GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__index')
-      .eq(index),
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__link')

@@ -11,6 +11,7 @@ export type {
   InsightEngine,
   InsightEngineOptions,
   InsightEngineConfiguration,
+  InsightEngineSearchConfigurationOptions,
 } from './app/insight-engine/insight-engine';
 export {buildInsightEngine} from './app/insight-engine/insight-engine';
 
