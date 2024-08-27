@@ -64,6 +64,13 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.getByRole('heading', {name: 'Sort & Filter'});
   }
 
+  get includedResultList() {
+    return this.page.getByTestId('included-result-list');
+  }
+  get excludedResultList() {
+    return this.page.getByTestId('excluded-result-list');
+  }
+
   tabButtons(value?: string) {
     const baseLocator = this.page.getByLabel(/tab for .*/);
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
