@@ -1,4 +1,4 @@
-import {platformUrl} from '../../api/platform-client';
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {allValidPlatformCombination} from '../../test/platform-url';
 import {
   updateBasicConfiguration as updateCommerceBasicConfiguration,
@@ -26,13 +26,14 @@ import {
 jest.mock('../../api/analytics/coveo-analytics-utils');
 
 describe('configuration slice', () => {
-  const url = platformUrl({environment: 'dev', region: 'eu'});
+  const organizationId = 'myorg';
+  const organizationEndpoints = getOrganizationEndpoints(organizationId, 'dev');
   const existingState: ConfigurationState = {
     ...getConfigurationInitialState(),
     accessToken: 'mytoken123',
-    organizationId: 'myorg',
+    organizationId,
     search: {
-      apiBaseUrl: `${url}/rest/search/v2`,
+      apiBaseUrl: organizationEndpoints.search,
       locale: 'en-US',
       timezone: 'Africa/Johannesburg',
       authenticationProviders: [],
@@ -42,8 +43,8 @@ describe('configuration slice', () => {
       originContext: '0',
       originLevel2: '2',
       originLevel3: '3',
-      apiBaseUrl: `${url}/rest/ua`,
-      nextApiBaseUrl: `${url}/rest/organizations/myorg/events/v1`,
+      apiBaseUrl: organizationEndpoints.analytics,
+      nextApiBaseUrl: `${organizationEndpoints.platform}/rest/organizations/myorg/events/v1`,
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',

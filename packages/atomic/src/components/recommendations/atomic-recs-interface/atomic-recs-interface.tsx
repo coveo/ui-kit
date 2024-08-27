@@ -186,7 +186,7 @@ export class AtomicRecsInterface
   }
 
   /**
-   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
    */
   @Method() public initialize(options: RecsInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));

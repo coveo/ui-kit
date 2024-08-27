@@ -52,9 +52,20 @@ const engineConfigurationDefinitions: SchemaDefinition<ProductRecommendationEngi
   {
     organizationId: requiredNonEmptyString,
     accessToken: requiredNonEmptyString,
-    platformUrl: new StringValue({
-      required: false,
-      emptyAllowed: false,
+    organizationEndpoints: new RecordValue({
+      options: {
+        required: true,
+      },
+      values: {
+        platform: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
+        analytics: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
+      },
     }),
     name: new StringValue({
       required: false,

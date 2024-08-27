@@ -328,7 +328,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
    */
   @Method() public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));

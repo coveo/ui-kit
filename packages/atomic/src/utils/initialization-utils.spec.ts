@@ -216,9 +216,12 @@ describe('initializeBindings method', () => {
       html: '<atomic-search-interface></atomic-search-interface>',
     });
     const searchInterface = page.body.querySelector('atomic-search-interface')!;
+    const organizationId = 'myorg';
     await searchInterface.initialize({
       accessToken: '123456789',
-      organizationId: 'myorg',
+      organizationId,
+      organizationEndpoints:
+        await searchInterface.getOrganizationEndpoints(organizationId),
     });
 
     const element = document.createElement('my-component');

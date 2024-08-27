@@ -58,8 +58,7 @@ function getUpdateSearchConfigurationPayload(
   options: SearchEngineOptions
 ): UpdateSearchConfigurationActionCreatorPayload {
   const search = options.configuration.search;
-  const apiBaseUrl =
-    options.configuration.organizationEndpoints?.search || undefined;
+  const apiBaseUrl = options.configuration.organizationEndpoints.search;
 
   const payloadWithURL = {
     ...search,

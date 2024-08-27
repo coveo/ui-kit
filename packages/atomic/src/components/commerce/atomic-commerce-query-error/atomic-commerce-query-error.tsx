@@ -72,18 +72,16 @@ export class AtomicQueryError
       bindings: {
         i18n,
         engine: {
-          configuration: {organizationId, organizationEndpoints, platformUrl},
+          configuration: {organizationId, organizationEndpoints},
         },
       },
     } = this;
     const hasError = !isNullOrUndefined(error);
-    const actualPlatformUrl =
-      organizationEndpoints?.platform || platformUrl || '';
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        actualPlatformUrl,
+        organizationEndpoints.platform,
         error?.type
       );
     }
@@ -99,7 +97,7 @@ export class AtomicQueryError
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={organizationEndpoints?.platform || platformUrl || ''}
+            url={organizationEndpoints.platform}
             errorType={error?.type}
           />
           <QueryErrorShowMore

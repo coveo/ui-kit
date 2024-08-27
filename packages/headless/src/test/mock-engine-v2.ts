@@ -1,5 +1,6 @@
 import {Relay} from '@coveo/relay';
 import pino, {Logger} from 'pino';
+import {getOrganizationEndpoints} from '../api/platform-client';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import type {CoreEngine, CoreEngineNext} from '../app/engine';
@@ -96,7 +97,12 @@ export function buildMockCoreEngineNext<
   const state: State = initialState;
   return {
     [stateKey]: state,
-    configuration: state.configuration,
+    configuration: {
+      ...state.configuration,
+      organizationEndpoints: getOrganizationEndpoints(
+        state.configuration.organizationId
+      ),
+    },
     dispatch: jest.fn(),
     addReducers: jest.fn(),
     disableAnalytics: jest.fn(),

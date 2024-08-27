@@ -4,7 +4,7 @@ import fetch from '@coveo/please-give-me-fetch';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
-import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils';
+import {PlatformEnvironment} from '../utils/url-utils';
 import {clone} from '../utils/utils';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {
@@ -127,28 +127,6 @@ export class PlatformClient {
   }
 }
 
-interface URLOptions<E extends PlatformEnvironment> {
-  environment?: E;
-  region?: Extract<PlatformCombination, {env: E}>['region'];
-  multiRegionSubDomain?: string;
-}
-
-function coveoCloudURL<E extends PlatformEnvironment>(
-  subdomain: string,
-  options?: URLOptions<E>
-) {
-  const urlEnv =
-    !options || !options.environment || options.environment === 'prod'
-      ? ''
-      : options.environment;
-  const urlRegion =
-    !options || !options.region || options.region === 'us'
-      ? ''
-      : `-${options.region}`;
-
-  return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
-}
-
 /**
  * Returns the unique endpoint(s) for a given organization identifier.
  * @param orgId The organization identifier.
@@ -167,36 +145,6 @@ export function getOrganizationEndpoints(
   const admin = `https://${orgId}.admin.org${envSuffix}.coveo.com`;
 
   return {platform, analytics, search, admin};
-}
-
-/**
- * Returns the base Coveo platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
- *
- * @param options
- * @returns string
- */
-export function platformUrl<E extends PlatformEnvironment>(
-  options?: URLOptions<E>
-) {
-  if (options?.multiRegionSubDomain) {
-    return `https://${options.multiRegionSubDomain}.org.coveo.com`;
-  }
-
-  return coveoCloudURL('platform', options);
-}
-
-/**
- * Returns the Coveo analytics platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
- *
- * @param options
- * @returns
- */
-export function analyticsUrl<E extends PlatformEnvironment = 'prod'>(
-  options?: URLOptions<E>
-) {
-  return coveoCloudURL('analytics', options);
 }
 
 function buildDefaultRequestOptions(

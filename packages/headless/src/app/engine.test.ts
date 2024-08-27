@@ -25,6 +25,7 @@ jest.mock('pino', () => ({
 describe('engine', () => {
   let options: EngineOptions<{}>;
   let engine: CoreEngine;
+  let organizationId: string;
 
   function initEngine() {
     const thunkArguments = buildMockThunkExtraArguments();
@@ -33,11 +34,12 @@ describe('engine', () => {
   }
 
   beforeEach(() => {
+    organizationId = 'orgId';
     options = {
       configuration: {
-        organizationId: 'orgId',
+        organizationId,
         accessToken: 'token',
-        platformUrl: 'https://www.coveo.com/',
+        organizationEndpoints: getOrganizationEndpoints(organizationId),
       },
       reducers: {},
     };
@@ -52,7 +54,9 @@ describe('engine', () => {
     expect(configuration.organizationId).toBe(
       options.configuration.organizationId
     );
-    expect(configuration.platformUrl).toBe(options.configuration.platformUrl);
+    expect(configuration.platformUrl).toBe(
+      getOrganizationEndpoints(configuration.organizationId).platform
+    );
   });
 
   it('when an #analytics configuration is specified, it registers the configuration', () => {
@@ -125,56 +129,11 @@ describe('engine', () => {
     expect(stateListener).not.toHaveBeenCalled();
   });
 
-  it.each([
-    {
-      organizationEndpoints: undefined,
-      platformUrl: undefined,
-      expectedMessage:
-        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
-    },
-
-    {
-      organizationEndpoints: undefined,
-      platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-      expectedMessage:
-        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
-    },
-    {
-      organizationEndpoints: undefined,
-      platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-      expectedMessage:
-        'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.',
-    },
-  ] as const)(
-    'should correctly log warnings when dealing with the organizationEndpoints and platformUrl option',
-    (testCase) => {
-      options.configuration = {
-        ...options.configuration,
-        ...testCase,
-      };
-      initEngine();
-      expect(engine.logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining(testCase.expectedMessage)
-      );
-    }
-  );
-
-  it('should not log warnings when the organizationEndpoints option is set and platformUrl is not set', () => {
-    options.configuration = {
-      ...options.configuration,
-      organizationEndpoints: getOrganizationEndpoints('orgId'),
-      platformUrl: undefined,
-    };
-    initEngine();
-    expect(engine.logger.warn).not.toHaveBeenCalled();
-  });
-
   it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option.', () => {
     options.configuration = {
       ...options.configuration,
       organizationId: 'a',
       organizationEndpoints: getOrganizationEndpoints('b'),
-      platformUrl: undefined,
     };
     initEngine();
     expect(engine.logger.warn).toHaveBeenCalledWith(

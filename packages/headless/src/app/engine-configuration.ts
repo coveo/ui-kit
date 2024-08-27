@@ -63,13 +63,6 @@ export interface EngineConfiguration<
    */
   preprocessRequest?: PreprocessRequest;
   /**
-   * The Platform URL to use. (e.g., https://platform.cloud.coveo.com)
-   * The platformUrl() helper method can be useful to know what url is available.
-   *
-   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
-   */
-  platformUrl?: string;
-  /**
    * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
    * @defaultValue 'coveo-headless'
    */
@@ -85,9 +78,9 @@ export interface EngineConfiguration<
    *
    * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
    *
-   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.  See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
+   * See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
    */
-  organizationEndpoints?: OrganizationEndpoints;
+  organizationEndpoints: OrganizationEndpoints;
 }
 
 /**
@@ -181,9 +174,20 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
   {
     organizationId: requiredNonEmptyString,
     accessToken: requiredNonEmptyString,
-    platformUrl: new StringValue({
-      required: false,
-      emptyAllowed: false,
+    organizationEndpoints: new RecordValue({
+      options: {
+        required: true,
+      },
+      values: {
+        platform: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
+        analytics: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
+      },
     }),
     name: new StringValue({
       required: false,

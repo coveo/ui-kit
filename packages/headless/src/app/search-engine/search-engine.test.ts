@@ -96,26 +96,6 @@ describe('searchEngine', () => {
           'https://myorg.analytics.org.coveo.com'
         );
       });
-
-      it('configures proper url when deprecated #platformUrl is used', () => {
-        const engine = buildSearchEngine({
-          configuration: {
-            accessToken: 'foo',
-            organizationId: 'bar',
-            platformUrl: 'https://platform-eu.cloud.coveo.com',
-          },
-        });
-
-        expect(engine.state.configuration.platformUrl).toBe(
-          'https://platform-eu.cloud.coveo.com'
-        );
-        expect(engine.state.configuration.search.apiBaseUrl).toBe(
-          'https://platform-eu.cloud.coveo.com/rest/search/v2'
-        );
-        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
-          'https://analytics-eu.cloud.coveo.com/rest/ua'
-        );
-      });
     });
 
     describe('when passing a search configuration', () => {

@@ -11,23 +11,13 @@ export interface InitializationOptions {
    */
   accessToken: string;
   /**
-   * The Platform URL to use. (e.g., https://platform.cloud.coveo.com)
-   * The platformUrl() helper method can be useful to know what url is available.
-   * @defaultValue `https://platform.cloud.coveo.com`
-   *
-   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
-   */
-  platformUrl?: string;
-  /**
    * The endpoints to use.
    *
    * For example: `https://orgid.admin.org.coveo.com`
    *
    * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
-   *
-   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
    */
-  organizationEndpoints?: ReturnType<typeof getOrganizationEndpoints>;
+  organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
 }
 
 export const validateOptions = (
@@ -47,6 +37,4 @@ export const validateOptions = (
 };
 
 export const extractPlatformUrl = (options: InitializationOptions) =>
-  options.platformUrl ||
-  options.organizationEndpoints?.admin ||
-  `https://${options.organizationId}.admin.org.coveo.com`;
+  options.organizationEndpoints.admin;

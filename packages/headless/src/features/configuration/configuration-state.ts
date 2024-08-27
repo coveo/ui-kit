@@ -2,7 +2,6 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import {analyticsUrl, platformUrl} from '../../api/platform-client';
 import {CoveoFramework} from '../../utils/version';
 
 dayjs.extend(utc);
@@ -159,16 +158,16 @@ interface KnowledgeState {
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
-  platformUrl: platformUrl(),
+  platformUrl: 'https://.org.coveo.com',
   search: {
-    apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
+    apiBaseUrl: 'https://.org.coveo.com/rest/search/v2',
     locale: 'en-US',
     timezone: dayjs.tz.guess(),
     authenticationProviders: [],
   },
   analytics: {
     enabled: true,
-    apiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
+    apiBaseUrl: 'https://.org.analytics.coveo.com',
     nextApiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',

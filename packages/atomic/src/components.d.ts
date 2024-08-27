@@ -393,7 +393,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless commerce engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+          * Initializes the connection with the headless commerce engine using options for accessToken (required), organizationId (required), organizationEndpoints (required), and renewAccessToken.
          */
         "initialize": (options: CommerceInitializationOptions) => Promise<void>;
         /**
@@ -1261,7 +1261,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
          */
         "initialize": (options: InsightInitializationOptions) => Promise<void>;
         /**

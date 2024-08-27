@@ -73,28 +73,21 @@ describe('buildCommerceEngine', () => {
     );
     initEngine();
 
-    expect(engine.configuration.platformUrl).toBe(
+    expect(engine.configuration.organizationEndpoints.platform).toBe(
       'https://my-org-id.orghipaa.coveo.com'
     );
-  });
 
-  it('uses organization endpoints when not manually specified', () => {
-    options.configuration.organizationEndpoints = undefined;
-    options.configuration.environment = 'hipaa';
-    options.configuration.organizationId = 'my-org-id';
-    initEngine();
-
-    expect(engine.configuration.platformUrl).toBe(
-      'https://my-org-id.orghipaa.coveo.com'
+    expect(engine.configuration.organizationEndpoints.analytics).toBe(
+      'https://my-org-id.analytics.orghipaa.coveo.com'
     );
   });
 
   it('uses organization endpoints defaulting to prod when not manually specified', () => {
-    options.configuration.organizationEndpoints = undefined;
-    options.configuration.organizationId = 'my-org-id';
+    options.configuration.organizationEndpoints =
+      getOrganizationEndpoints('my-org-id');
     initEngine();
 
-    expect(engine.configuration.platformUrl).toBe(
+    expect(engine.configuration.organizationEndpoints.platform).toBe(
       'https://my-org-id.org.coveo.com'
     );
   });

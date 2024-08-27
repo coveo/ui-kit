@@ -3,14 +3,11 @@
 import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
-import {allValidPlatformCombination} from '../test/platform-url';
 import {ExpiredTokenError} from '../utils/errors';
 import {PlatformEnvironment} from '../utils/url-utils';
 import {
-  platformUrl,
   PlatformClient,
   PlatformClientCallOptions,
-  analyticsUrl,
   getOrganizationEndpoints,
 } from './platform-client';
 import {
@@ -25,22 +22,6 @@ const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
 describe('url helper', () => {
-  it('return the correct #platformUrl()', () => {
-    allValidPlatformCombination().forEach((expectation) => {
-      expect(platformUrl(expectation)).toEqual(expectation.platform);
-    });
-  });
-
-  it.each(
-    allValidPlatformCombination().filter(
-      (expectation) => !expectation.multiRegionSubDomain
-    )
-  )('$expectation return the correct #analyticsUrl()', (expectation) => {
-    expect(analyticsUrl(expectation)).toEqual(
-      expectation.analytics.split('/rest')[0]
-    );
-  });
-
   it.each([
     {
       orgId: 'foo',
@@ -97,6 +78,7 @@ describe('url helper', () => {
 });
 
 describe('PlatformClient call', () => {
+  let platformUrl: string;
   function platformCall(options: Partial<PlatformClientCallOptions> = {}) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
@@ -105,7 +87,7 @@ describe('PlatformClient call', () => {
       requestParams: {
         test: 123,
       },
-      url: platformUrl(),
+      url: getOrganizationEndpoints('').platform,
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
       origin: 'searchApiFetch',
@@ -114,6 +96,7 @@ describe('PlatformClient call', () => {
   }
 
   beforeEach(() => {
+    platformUrl = getOrganizationEndpoints('').platform;
     mockFetch.mockClear();
   });
 
@@ -124,7 +107,7 @@ describe('PlatformClient call', () => {
 
     await platformCall();
 
-    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+    expect(mockFetch).toHaveBeenCalledWith(platformUrl, {
       body: JSON.stringify({
         test: 123,
       }),
@@ -151,7 +134,7 @@ describe('PlatformClient call', () => {
     };
     await platformCall({preprocessRequest: middleware});
 
-    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+    expect(mockFetch).toHaveBeenCalledWith(platformUrl, {
       body: JSON.stringify({
         test: 123,
       }),
@@ -176,7 +159,7 @@ describe('PlatformClient call', () => {
     };
     await platformCall({preprocessRequest});
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.objectContaining({
         headers: {
           Authorization: 'Bearer accessToken1',
@@ -194,7 +177,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -208,7 +191,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.objectContaining({body: ''})
     );
   });
@@ -218,7 +201,7 @@ describe('PlatformClient call', () => {
     await platformCall({contentType: undefined, requestParams});
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.objectContaining({body: JSON.stringify(requestParams)})
     );
   });
@@ -231,7 +214,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -244,7 +227,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -257,7 +240,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.not.objectContaining({body: expect.anything()})
     );
   });
@@ -270,7 +253,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      platformUrl,
       expect.not.objectContaining({body: expect.anything()})
     );
   });

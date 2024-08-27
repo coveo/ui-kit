@@ -13,7 +13,7 @@ describe('ResultPreviewRequestBuilder', () => {
 
   const testOrgId = 'someOrgId';
   const testConfigId = 'some-insight-id-123';
-  const expectedUrl = `https://platform.cloud.coveo.com/rest/organizations/${testOrgId}/insight/v1/configs/${testConfigId}`;
+  const expectedUrl = `https://.org.coveo.com/rest/organizations/${testOrgId}/insight/v1/configs/${testConfigId}`;
 
   beforeEach(() => {
     state = {

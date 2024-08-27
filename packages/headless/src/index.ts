@@ -599,11 +599,7 @@ export type {
   TemplatesManager,
   Template,
 } from './features/templates/templates-manager';
-export {
-  platformUrl,
-  analyticsUrl,
-  getOrganizationEndpoints,
-} from './api/platform-client';
+export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
 export type {
   CategoryFacetValueRequest,

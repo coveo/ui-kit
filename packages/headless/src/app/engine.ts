@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
+import {isUndefined} from '@coveo/bueno';
 import {type Relay} from '@coveo/relay';
 import {
   Dispatch,
@@ -230,21 +230,9 @@ export function buildEngine<
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
   const {organizationEndpoints} = options.configuration;
-  const platformUrl =
-    organizationEndpoints?.platform || options.configuration.platformUrl;
+  const platformUrl = organizationEndpoints.platform;
 
-  if (shouldWarnAboutPlatformURL(options.configuration)) {
-    engine.logger.warn(
-      `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).`
-    );
-  }
-
-  if (shouldWarnAboutOrganizationEndpoints(options.configuration)) {
-    // @v3 make organizationEndpoints the default.
-    engine.logger.warn(
-      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
-    );
-  } else if (
+  if (
     shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
       options.configuration
     )
@@ -405,19 +393,6 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
   ].concat(answerApi.middleware, options.middlewares || []);
-}
-
-function shouldWarnAboutOrganizationEndpoints(
-  configuration: EngineConfiguration
-) {
-  return isUndefined(configuration.organizationEndpoints);
-}
-
-function shouldWarnAboutPlatformURL(configuration: EngineConfiguration) {
-  return (
-    !isNullOrUndefined(configuration.platformUrl) ||
-    isNullOrUndefined(configuration.organizationEndpoints?.platform)
-  );
 }
 
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(

@@ -1,5 +1,5 @@
 import {buildSamlClient, SamlClient, SamlClientOptions} from '@coveo/auth';
-import {buildSearchEngine} from '@coveo/headless';
+import {buildSearchEngine, getOrganizationEndpoints} from '@coveo/headless';
 import {
   useState,
   useMemo,
@@ -35,6 +35,9 @@ export const SamlPage: FunctionComponent<PropsWithChildren> = ({children}) => {
               organizationId: samlClientOptions.organizationId,
               accessToken: initialAccessToken,
               renewAccessToken: samlClient.current.authenticate,
+              organizationEndpoints: getOrganizationEndpoints(
+                samlClientOptions.organizationId
+              ),
             },
           })
         : null,

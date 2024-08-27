@@ -32,7 +32,7 @@ describe('ResultPreviewRequestBuilder', () => {
       q: '',
       requestedOutputSize: 0,
       uniqueId: '1',
-      url: 'https://platform.cloud.coveo.com/rest/search/v2',
+      url: 'https://.org.coveo.com/rest/search/v2',
       visitorId: expect.any(String),
     });
   });

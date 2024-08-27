@@ -1,7 +1,6 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
-import {getOrganizationEndpoints} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
@@ -104,16 +103,6 @@ export function buildCommerceEngine(
 
   const augmentedOptions: EngineOptions<CommerceEngineReducers> = {
     ...options,
-    configuration: {
-      ...options.configuration,
-      organizationEndpoints: {
-        ...getOrganizationEndpoints(
-          options.configuration.organizationId,
-          options.configuration.environment
-        ),
-        ...options.configuration.organizationEndpoints,
-      },
-    },
     reducers: commerceEngineReducers,
   };
 
@@ -136,7 +125,13 @@ export function buildCommerceEngine(
     },
 
     get configuration() {
-      return internalEngine.state.configuration;
+      return {
+        ...internalEngine.state.configuration,
+        organizationEndpoints: {
+          platform: internalEngine.state.configuration.platformUrl,
+          analytics: internalEngine.state.configuration.analytics.apiBaseUrl,
+        },
+      };
     },
   });
 }

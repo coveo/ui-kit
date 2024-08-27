@@ -1,3 +1,4 @@
+import {getOrganizationEndpoints} from '@coveo/headless';
 import {
   buildProductRecommendationEngine,
   buildFrequentlyViewedTogetherList,
@@ -9,13 +10,14 @@ import {AppContext} from '../context/engine';
 import {Section} from '../layout/section';
 
 export function ProductRecommendationsPage() {
+  const organizationId = 'electronicscoveodemocomo0n2fu8v';
   const engine = useMemo(
     () =>
       buildProductRecommendationEngine({
         configuration: {
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-          organizationId: 'electronicscoveodemocomo0n2fu8v',
-          platformUrl: 'https://platform.cloud.coveo.com',
+          organizationId,
+          organizationEndpoints: getOrganizationEndpoints(organizationId),
           searchHub: 'UI_KIT_E2E',
         },
       }),
