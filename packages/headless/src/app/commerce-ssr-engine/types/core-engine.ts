@@ -74,6 +74,8 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
+
+  setURL: (url: string) => void;
 }
 
 export type InferStaticState<

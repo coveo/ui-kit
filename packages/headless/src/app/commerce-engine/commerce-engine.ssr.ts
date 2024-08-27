@@ -145,6 +145,13 @@ export function defineCommerceEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
+  const setURL = (url: string) => {
+    engineOptions.configuration.context = {
+      ...engineOptions.configuration.context,
+      view: {url},
+    };
+  };
+
   const buildFactory =
     <T extends SolutionType>(solutionType: T) =>
     async (...[buildOptions]: BuildParameters) => {
@@ -262,6 +269,7 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticStateFactory(SolutionType.listing),
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.listing),
       setNavigatorContextProvider,
+      setURL,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
     searchEngineDefinition: {
       build: buildFactory(SolutionType.search),
