@@ -81,7 +81,7 @@ describe('Result Link Component', () => {
       });
 
       it('should render an "atomic-result-text" component containing the title', () => {
-        ResultLinkSelectors.firstInResult().should('have.text', title);
+        ResultLinkSelectors.firstInResult().first().should('have.text', title);
       });
     });
 
