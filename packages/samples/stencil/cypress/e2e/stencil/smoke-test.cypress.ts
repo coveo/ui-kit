@@ -26,7 +26,7 @@ describe('smoke test', () => {
       cy.get('atomic-search-box')
         .should('exist')
         .shadow()
-        .find('input')
+        .find('textarea')
         .type('test{enter}');
 
       cy.get('atomic-facet').should('exist');
