@@ -105,7 +105,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
   private id!: string;
-  private inputRef!: HTMLInputElement;
   private textAreaRef!: HTMLTextAreaElement;
   private suggestionManager!: SuggestionManager<
     SearchBox | StandaloneSearchBox
