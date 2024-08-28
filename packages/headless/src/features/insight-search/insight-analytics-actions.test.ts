@@ -14,7 +14,6 @@ import {
 const mockLogCreateArticle = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();
 const mockLogOpenUserActions = jest.fn();
-
 const emit = jest.fn();
 
 jest.mock('@coveo/relay');

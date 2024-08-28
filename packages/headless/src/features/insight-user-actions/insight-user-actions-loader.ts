@@ -13,7 +13,7 @@ import {
 export type {RegisterUserActionsPayload};
 export interface InsightUserActionsActionCreators {
   /**
-   * Registers the user actions.
+   * Registers the user actions for a given user ID, ticket creation date, and excluded custom actions.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
