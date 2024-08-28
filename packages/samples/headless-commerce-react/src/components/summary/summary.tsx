@@ -14,14 +14,33 @@ export default function Summary(props: ISummaryProps) {
     controller.subscribe(() => setState(controller.state));
   }, [controller]);
 
-  const getSummaryText = () => {
-    const {firstProduct, lastProduct, totalNumberOfProducts} = state;
-    return `Showing results ${firstProduct} - ${lastProduct} of ${totalNumberOfProducts}`;
+  const renderQuerySummary = () => {
+    if (!('query' in state) || state.query === '') {
+      return null;
+    }
+
+    return (
+      <span>
+        {' '}
+        for query <b>{state.query as string}</b>
+      </span>
+    );
   };
 
-  return (
-    <div className="Summary">
-      <span>{getSummaryText()}</span>
-    </div>
-  );
+  const renderSummary = () => {
+    if (state.isLoading) {
+      return <span>Loading...</span>;
+    }
+
+    const {firstProduct, lastProduct, totalNumberOfProducts} = state;
+    return (
+      <span>
+        Showing products {firstProduct} - {lastProduct} of{' '}
+        {totalNumberOfProducts}
+        {renderQuerySummary()}
+      </span>
+    );
+  };
+
+  return <div className="Summary">{renderSummary()}</div>;
 }

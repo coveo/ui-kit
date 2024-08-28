@@ -1,3 +1,9 @@
+# 2.28.0 (2024-08-27)
+
+### Features
+
+- **atomic:** allow user to customize grid card click behavior/links ([#4287](https://github.com/coveo/ui-kit/issues/4287)) ([e5961ca](https://github.com/coveo/ui-kit/commits/e5961ca33490499a2916bb9eb8818d360ff85c18)), closes [#4267](https://github.com/coveo/ui-kit/issues/4267)
+
 ## 2.27.1 (2024-08-20)
 
 ### Bug Fixes

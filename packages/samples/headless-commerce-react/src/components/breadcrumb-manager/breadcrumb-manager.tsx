@@ -18,7 +18,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
   const [state, setState] = useState(controller.state);
 
   useEffect(() => {
-    controller.subscribe(() => setState(controller.state));
+    controller.subscribe(() => setState({...controller.state}));
   }, [controller]);
 
   if (!state.hasBreadcrumbs) {
@@ -57,14 +57,17 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
         <button onClick={controller.deselectAll}>Clear all filters</button>
       </div>
       <ul className="Breadcrumbs">
-        {state.facetBreadcrumbs.map((facetBreadcrumb, index) => {
+        {state.facetBreadcrumbs.map((facetBreadcrumb) => {
           return (
-            <li className="FacetBreadcrumbs" key={index}>
+            <li
+              className="FacetBreadcrumbs"
+              key={`${facetBreadcrumb.facetId}-breadcrumbs`}
+            >
               {facetBreadcrumb.values.map((value, index) => {
                 return (
                   <button
                     className="BreadcrumbValue"
-                    key={index}
+                    key={`${value.value}-breadcrumb-${index}`}
                     onClick={() => value.deselect()}
                   >
                     {facetBreadcrumb.facetDisplayName}:{' '}

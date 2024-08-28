@@ -60,9 +60,6 @@ export const NoFirstSearch: Story = {
 export const OpenInNewTab: Story = {
   name: 'Open Product in New Tab',
   tags: ['test'],
-  argTypes: {
-    'attributes-grid-cell-link-target': {table: {category: 'attributes'}},
-  },
   args: {'attributes-grid-cell-link-target': '_blank'},
   play: async (context) => {
     await wrapInCommerceInterface({skipFirstSearch: true}).play(context);
