@@ -1,4 +1,4 @@
-import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
+import {buildSearchBox, Controller, SearchEngine} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import i18next from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
@@ -105,7 +105,7 @@ describe('InitializeBindings decorator', () => {
     it(`when "engine" is defined
     should render the content `, () => {
       component['bindings'] = {
-        engine: TestUtils.buildMockSearchEngine(TestUtils.createMockState()),
+        engine: jest.mocked({} as SearchEngine),
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
@@ -127,7 +127,7 @@ describe('BindStateToController decorator', () => {
     console.error = jest.fn();
     component = {
       bindings: {
-        engine: TestUtils.buildMockSearchEngine(TestUtils.createMockState()),
+        engine: jest.mocked({} as SearchEngine),
         i18n: i18next,
         store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
