@@ -759,28 +759,6 @@ export declare interface AtomicLayoutSection extends Components.AtomicLayoutSect
 
 
 @ProxyCmp({
-  inputs: ['label']
-})
-@Component({
-  selector: 'atomic-load-more-children-results',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['label'],
-})
-export class AtomicLoadMoreChildrenResults {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicLoadMoreChildrenResults extends Components.AtomicLoadMoreChildrenResults {}
-
-
-@ProxyCmp({
 })
 @Component({
   selector: 'atomic-load-more-results',

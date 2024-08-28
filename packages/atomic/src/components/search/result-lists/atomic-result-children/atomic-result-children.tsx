@@ -1,9 +1,11 @@
 import {
   buildInteractiveResult,
   FoldedResult,
+  FoldedResultList,
   FoldedResultListState,
 } from '@coveo/headless';
 import {Component, Element, State, h, Listen, Prop} from '@stencil/core';
+import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -25,6 +27,7 @@ import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/collection-guard';
 import {ResultChildrenGuard} from '../../../common/result-children/guard';
+import {ShowHideButton} from '../../../common/result-children/show-hide-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
 
@@ -38,7 +41,6 @@ const componentTag = 'atomic-result-children';
  * @part children-root - The wrapper for the message when there are child results
  * @part no-result-root - The wrapper for the message when there are no results.
  * @part show-hide-button - The button that allows to collapse or show all child results.
- * THOSE TWO SLOTS ARE LIES. They are only when collection.isLoadingMoreResults
  * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
  * @slot after-children - Slot that allows rendering content after the list of children, only when children exist.
  */
@@ -52,7 +54,7 @@ export class AtomicResultChildren implements InitializableComponent {
   @ChildTemplatesContext()
   public itemTemplateProvider?: ItemTemplateProvider;
   @FoldedItemListContext()
-  // private foldedResultList!: FoldedResultList;
+  private foldedResultList!: FoldedResultList;
   @ResultContext({folded: true})
   private result!: FoldedResult;
   @ItemDisplayConfigContext()
@@ -81,6 +83,12 @@ export class AtomicResultChildren implements InitializableComponent {
    * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
    */
   @Prop() public noResultText = 'no-documents-related';
+
+  // This is not even needed, they could disable it via css...
+  /**
+   * Whether to show a button to load more or collapse the children results.
+   */
+  // @Prop() public showLoadMore = true;
 
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
@@ -161,9 +169,12 @@ export class AtomicResultChildren implements InitializableComponent {
       return r.result.uniqueId === this.result.result.uniqueId;
     });
   }
-
+  private loadFullCollection() {
+    this.host.dispatchEvent(
+      buildCustomEvent('atomic/loadCollection', this.collection)
+    );
+  }
   private renderCollection() {
-    //TODO: collapseButton
     const collection = this.collection!;
 
     const children = this.showInitialChildren
@@ -180,6 +191,22 @@ export class AtomicResultChildren implements InitializableComponent {
         imageSize={this.imageSize || this.displayConfig.imageSize}
         noResultText={this.bindings.i18n.t(this.noResultText)}
       >
+        <ShowHideButton
+          moreResultsAvailable={collection.moreResultsAvailable}
+          loadFullCollection={() => this.loadFullCollection()}
+          showInitialChildren={this.showInitialChildren}
+          toggleShowInitialChildren={() => {
+            this.showInitialChildren
+              ? this.foldedResultList.logShowMoreFoldedResults(
+                  this.result.result
+                )
+              : this.foldedResultList.logShowLessFoldedResults();
+
+            this.showInitialChildren = !this.showInitialChildren;
+          }}
+          loadAllResults={this.bindings.i18n.t('load-all-results')}
+          collapseResults={this.bindings.i18n.t('collapse-results')}
+        ></ShowHideButton>
         <ChildrenWrapper hasChildren={collection.children.length > 0}>
           {children.map((child, i) =>
             this.renderChild(child, i === children.length - 1)

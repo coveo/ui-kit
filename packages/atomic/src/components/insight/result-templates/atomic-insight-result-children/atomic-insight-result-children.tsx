@@ -3,7 +3,9 @@ import {
   buildInsightInteractiveResult,
   InsightFoldedResultListState,
   InsightFoldedResult,
+  InsightFoldedResultList,
 } from '../..';
+import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -26,6 +28,7 @@ import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/collection-guard';
 import {ResultChildrenGuard} from '../../../common/result-children/guard';
+import {ShowHideButton} from '../../../common/result-children/show-hide-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 const childTemplateComponent = 'atomic-insight-result-children-template';
@@ -46,7 +49,7 @@ export class AtomicResultChildren
   @ChildTemplatesContext()
   public itemTemplateProvider?: ItemTemplateProvider;
   @FoldedItemListContext()
-  // private foldedResultList!: InsightFoldedResultList;
+  private foldedResultList!: InsightFoldedResultList;
   @ItemContext({folded: true, parentName: 'atomic-insight-result'})
   private result!: InsightFoldedResult;
   @ItemDisplayConfigContext()
@@ -149,10 +152,17 @@ export class AtomicResultChildren
     this.initialChildren = this.collection.children;
   }
 
+  //TODO: out this in a util
   private get collection() {
     return this.foldedResultListState.results.find((r) => {
       return r.result.uniqueId === this.result.result.uniqueId;
     });
+  }
+
+  private loadFullCollection() {
+    this.host.dispatchEvent(
+      buildCustomEvent('atomic/loadCollection', this.collection)
+    );
   }
 
   private renderCollection() {
@@ -173,6 +183,22 @@ export class AtomicResultChildren
         imageSize={this.imageSize || this.displayConfig.imageSize}
         noResultText={this.bindings.i18n.t(this.noResultText)}
       >
+        <ShowHideButton
+          moreResultsAvailable={collection.moreResultsAvailable}
+          loadFullCollection={() => this.loadFullCollection()}
+          showInitialChildren={this.showInitialChildren}
+          toggleShowInitialChildren={() => {
+            this.showInitialChildren
+              ? this.foldedResultList.logShowMoreFoldedResults(
+                  this.result.result
+                )
+              : this.foldedResultList.logShowLessFoldedResults();
+
+            this.showInitialChildren = !this.showInitialChildren;
+          }}
+          loadAllResults={this.bindings.i18n.t('load-all-results')}
+          collapseResults={this.bindings.i18n.t('collapse-results')}
+        ></ShowHideButton>
         <ChildrenWrapper hasChildren={collection.children.length > 0}>
           {children.map((child, i) =>
             this.renderChild(child, i === children.length - 1)
