@@ -1,4 +1,4 @@
-import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   Context,
   buildContext,
@@ -11,7 +11,7 @@ export type {ContextState, Context, ContextProps} from './headless-context';
 export type {View, ContextOptions};
 
 export interface ContextDefinition
-  extends SearchAndListingControllerDefinitionWithoutProps<Context> {}
+  extends UniversalControllerDefinitionWithoutProps<Context> {}
 
 /**
  * Defines a `Context` controller instance.
@@ -24,6 +24,7 @@ export function defineContext(props: ContextProps = {}): ContextDefinition {
   return {
     listing: true,
     search: true,
+    standalone: true,
     build: (engine) => buildContext(engine, props),
   };
 }
