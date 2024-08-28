@@ -13,7 +13,7 @@ import {FetchProductsActionCreator} from '../common';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**
-   * The initial state that should be applied to the `ParameterManager` controller.
+   * The initial state that should be applied to the `ParameterManager` sub-controller.
    */
   initialState: ParameterManagerInitialState<T>;
 }
@@ -69,7 +69,7 @@ const initialStateSchema = <T extends Parameters>(
   });
 
 /**
- * The `ParameterManager` controller allows restoring parameters that affect the results (e.g., from the URL).
+ * The `ParameterManager` sub-controller allows restoring parameters that affect the results (e.g., from the URL).
  */
 export interface ParameterManager<T extends Parameters> extends Controller {
   /**
@@ -80,7 +80,7 @@ export interface ParameterManager<T extends Parameters> extends Controller {
   synchronize(parameters: T): void;
 
   /**
-   * The state relevant to the `ParameterManager` controller.
+   * The state relevant to the `ParameterManager` sub-controller.
    */
   state: ParameterManagerState<T>;
 }
@@ -94,11 +94,11 @@ export interface ParameterManagerState<T extends Parameters> {
 
 /**
  * @internal
- * Creates a `ParameterManager` controller instance.
+ * Creates a `ParameterManager` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `ParameterManager` properties.
- * @returns A `ParameterManager` controller instance.
+ * @returns A `ParameterManager` sub-controller instance.
  */
 export function buildCoreParameterManager<T extends Parameters>(
   engine: CommerceEngine,

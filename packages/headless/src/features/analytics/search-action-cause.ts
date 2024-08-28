@@ -10,11 +10,11 @@ export enum SearchPageEvents {
   /**
    * Identifies the search event that gets logged when `enableAutoCorrection: true` and the query is automatically corrected.
    */
-  didyoumeanAutomatic = 'didyoumeanAutomatic',
+  didYouMeanAutomatic = 'didYouMeanAutomatic',
   /**
    * Identifies the search event that gets logged when the query suggestion with the corrected term is selected and successfully updates the query.
    */
-  didyoumeanClick = 'didyoumeanClick',
+  didYouMeanClick = 'didYouMeanClick',
   /**
    * Identifies the search event that gets logged when a sorting method is selected.
    */

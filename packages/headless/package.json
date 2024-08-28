@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.73.0",
+  "version": "2.80.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -23,6 +23,7 @@
     "insight/",
     "case-assist/",
     "ssr/",
+    "ssr-commerce/",
     "commerce/"
   ],
   "scripts": {
@@ -48,15 +49,15 @@
     "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.45.9",
+    "@coveo/bueno": "0.46.1",
     "@coveo/relay": "0.7.10",
-    "@coveo/relay-event-types": "9.2.0",
+    "@coveo/relay-event-types": "9.4.0",
     "@microsoft/fetch-event-source": "2.0.1",
-    "@reduxjs/toolkit": "2.2.6",
+    "@reduxjs/toolkit": "2.2.7",
     "abab": "2.0.6",
     "abortcontroller-polyfill": "1.7.5",
-    "coveo.analytics": "2.30.6",
-    "dayjs": "1.11.11",
+    "coveo.analytics": "2.30.26",
+    "dayjs": "1.11.12",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
@@ -68,9 +69,9 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@microsoft/api-extractor": "7.43.4",
-    "@microsoft/api-extractor-model": "7.28.16",
-    "@microsoft/tsdoc": "0.14.2",
+    "@microsoft/api-extractor": "7.47.3",
+    "@microsoft/api-extractor-model": "7.29.3",
+    "@microsoft/tsdoc": "0.15.0",
     "eslint-plugin-canonical": "4.18.0",
     "execa": "8.0.1",
     "install": "0.13.0",

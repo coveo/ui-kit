@@ -1,22 +1,29 @@
-import {isFacetResponse} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
+import {createSelector} from '@reduxjs/toolkit';
 import {
   CommerceFacetSetSection,
   CommerceSearchSection,
 } from '../../../../state/state-sections';
 
-export const facetResponseSelector = (
-  state: CommerceSearchSection & CommerceFacetSetSection,
-  facetId: string
-) => {
-  const response = state.commerceSearch.facets.find(
-    (response) => response.facetId === facetId
-  );
-  if (isFacetResponse(state, response)) {
-    return response;
+export const facetResponseSelector = createSelector(
+  (
+    state: CommerceSearchSection & CommerceFacetSetSection,
+    facetId: string
+  ) => ({state, facetId}),
+
+  ({state, facetId}) => {
+    const facetResponse = state.commerceSearch.facets.find(
+      (facetResponse) => facetResponse.facetId === facetId
+    );
+    if (facetResponse && facetResponse.facetId in state.commerceFacetSet) {
+      return facetResponse;
+    }
+
+    return undefined;
   }
+);
 
-  return undefined;
-};
+export const isFacetLoadingResponseSelector = createSelector(
+  (state: CommerceSearchSection) => ({state}),
 
-export const isFacetLoadingResponseSelector = (state: CommerceSearchSection) =>
-  state.commerceSearch.isLoading;
+  ({state}) => state.commerceSearch.isLoading
+);

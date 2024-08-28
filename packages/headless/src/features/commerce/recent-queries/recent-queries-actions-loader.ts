@@ -7,6 +7,8 @@ import {
 } from '../../recent-queries/recent-queries-actions';
 import {recentQueriesReducer as recentQueries} from './recent-queries-slice';
 
+export type {RegisterRecentQueriesCreatorPayload};
+
 /**
  * The commerce recent queries action creators.
  */

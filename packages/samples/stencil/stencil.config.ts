@@ -1,5 +1,4 @@
 import {Config} from '@stencil/core';
-// eslint-disable-next-line node/no-unpublished-import
 import html from 'rollup-plugin-html';
 
 // https://stenciljs.com/docs/config

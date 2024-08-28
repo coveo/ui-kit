@@ -8,6 +8,7 @@ import {stateKey} from '../../../app/state-key';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
 import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {executeSearch} from '../../../features/commerce/search/search-actions';
+import {FieldSuggestionsOrderSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
@@ -64,7 +65,7 @@ export function buildFieldSuggestionsGenerator(
   const controller = buildController(engine);
 
   const createFieldSuggestionsControllers = createSelector(
-    (state: CommerceEngineState) => state.fieldSuggestionsOrder!,
+    (state: CommerceEngineState) => state.fieldSuggestionsOrder,
     (facetOrder) =>
       facetOrder.map(({type, facetId}) => {
         switch (type) {
@@ -88,14 +89,14 @@ export function buildFieldSuggestionsGenerator(
     },
 
     get state() {
-      return engine[stateKey].fieldSuggestionsOrder!;
+      return engine[stateKey].fieldSuggestionsOrder;
     },
   };
 }
 
 function loadFieldSuggestionsGeneratorReducers(
   engine: CommerceEngine
-): engine is CommerceEngine {
+): engine is CommerceEngine<FieldSuggestionsOrderSection> {
   engine.addReducers({
     fieldSuggestionsOrder,
   });

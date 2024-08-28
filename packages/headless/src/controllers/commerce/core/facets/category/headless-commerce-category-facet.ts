@@ -1,8 +1,4 @@
-import {createSelector} from '@reduxjs/toolkit';
-import {
-  CommerceEngine,
-  CommerceEngineState,
-} from '../../../../../app/commerce-engine/commerce-engine';
+import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
 import {
   toggleSelectCategoryFacetValue,
@@ -11,6 +7,7 @@ import {
 import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
 import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
+import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector';
 import {
   CategoryFacetValue,
   CoreCommerceFacet,
@@ -32,17 +29,21 @@ export type CategoryFacetOptions = Omit<
 > &
   SearchableFacetOptions;
 
-export type CategoryFacetState = CoreCommerceFacetState<CategoryFacetValue> & {
+export type CategoryFacetState = Omit<
+  CoreCommerceFacetState<CategoryFacetValue>,
+  'type'
+> & {
   activeValue?: CategoryFacetValue;
   canShowLessValues: boolean;
   canShowMoreValues: boolean;
   hasActiveValues: boolean;
   selectedValueAncestry?: CategoryFacetValue[];
   facetSearch: CategoryFacetSearchState;
+  type: 'hierarchical';
 };
 
 /**
- * The `CategoryFacet` controller offers a high-level programming interface for implementing a commerce category
+ * The `CategoryFacet` sub-controller offers a high-level programming interface for implementing a commerce category
  * facet UI component.
  */
 export type CategoryFacet = Omit<
@@ -61,12 +62,12 @@ export type CategoryFacet = Omit<
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `CategoryFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `CategoryFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `CategoryFacet` options used internally.
- * @returns A `CategoryFacet` controller instance.
+ * @returns A `CategoryFacet` sub-controller instance.
  * */
 export function buildCategoryFacet(
   engine: CommerceEngine,
@@ -85,27 +86,13 @@ export function buildCategoryFacet(
     coreController;
   const {dispatch} = engine;
   const getFacetId = () => coreController.state.facetId;
-  const createFacetSearch = () => {
-    return buildCategoryFacetSearch(engine, {
-      options: {facetId: getFacetId(), ...options.facetSearch},
-      select: () => {
-        dispatch(options.fetchProductsActionCreator());
-      },
-      isForFieldSuggestions: false,
-    });
-  };
-
-  const facetSearch = createFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
-  const facetSearchStateSelector = createSelector(
-    (state: CommerceEngineState) => state.categoryFacetSearchSet[getFacetId()],
-    (facetSearch) => ({
-      isLoading: facetSearch.isLoading,
-      moreValuesAvailable: facetSearch.response.moreValuesAvailable,
-      query: facetSearch.options.query,
-      values: facetSearch.response.values,
-    })
-  );
+  const facetSearch = buildCategoryFacetSearch(engine, {
+    options: {facetId: getFacetId(), ...options.facetSearch},
+    select: () => {
+      dispatch(options.fetchProductsActionCreator());
+    },
+    isForFieldSuggestions: false,
+  });
 
   return {
     deselectAll,
@@ -136,35 +123,49 @@ export function buildCategoryFacet(
       dispatch(options.fetchProductsActionCreator());
     },
 
-    facetSearch: restOfFacetSearch,
+    facetSearch,
 
     get state() {
-      const selectedValueAncestry = findActiveValueAncestry(
-        coreController.state.values
+      return getCategoryFacetState(
+        coreController.state,
+        categoryFacetSearchStateSelector(engine[stateKey], getFacetId())
       );
-      const activeValue = selectedValueAncestry.length
-        ? selectedValueAncestry[selectedValueAncestry.length - 1]
-        : undefined;
-      const canShowLessValues = activeValue
-        ? activeValue.children.length > defaultNumberOfValuesIncrement
-        : false;
-      const canShowMoreValues =
-        activeValue?.moreValuesAvailable ??
-        coreController.state.canShowMoreValues ??
-        false;
-      const hasActiveValues = !!activeValue;
-
-      return {
-        ...coreController.state,
-        activeValue,
-        canShowLessValues,
-        canShowMoreValues,
-        hasActiveValues,
-        selectedValueAncestry,
-        facetSearch: facetSearchStateSelector(engine[stateKey]),
-      };
     },
 
     type: 'hierarchical',
   };
 }
+
+export const getCategoryFacetState = (
+  coreState: CoreCommerceFacetState<CategoryFacetValue>,
+  facetSearchSelector: ReturnType<typeof categoryFacetSearchStateSelector>
+): CategoryFacetState => {
+  const {values} = coreState;
+  const selectedValueAncestry = findActiveValueAncestry(values);
+  const activeValue = selectedValueAncestry.length
+    ? selectedValueAncestry[selectedValueAncestry.length - 1]
+    : undefined;
+  const canShowLessValues = activeValue
+    ? activeValue.children.length > defaultNumberOfValuesIncrement
+    : false;
+  const canShowMoreValues =
+    activeValue?.moreValuesAvailable ?? coreState.canShowMoreValues ?? false;
+  const hasActiveValues = !!activeValue;
+  return {
+    ...coreState,
+    activeValue,
+    canShowLessValues,
+    canShowMoreValues,
+    facetSearch: {
+      isLoading: facetSearchSelector?.isLoading ?? false,
+      moreValuesAvailable:
+        facetSearchSelector?.response.moreValuesAvailable ?? false,
+      query: facetSearchSelector?.options.query ?? '',
+      values: facetSearchSelector?.response.values ?? [],
+    },
+    hasActiveValues,
+    selectedValueAncestry,
+    type: 'hierarchical',
+    values,
+  };
+};

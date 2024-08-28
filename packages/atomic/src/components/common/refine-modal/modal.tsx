@@ -44,7 +44,7 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
         >
           <atomic-icon
             part="close-icon"
-            class="w-5 h-5"
+            class="h-5 w-5"
             icon={CloseIcon}
           ></atomic-icon>
         </Button>
@@ -58,10 +58,10 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
         <Button
           style="primary"
           part="footer-button"
-          class="w-full p-3 flex text-lg justify-center"
+          class="flex w-full justify-center p-3 text-lg"
           onClick={props.onClose}
         >
-          <span part="footer-button-text" class="truncate mr-1">
+          <span part="footer-button-text" class="mr-1 truncate">
             {props.i18n.t('view-results')}
           </span>
           <span part="footer-button-count">

@@ -20,7 +20,8 @@
       }
     ],
     "paths": {
-      "@/common/*": ["../common/*"]
+      "@/common/*": ["../common/*"],
+      "react": ["../node_modules/@types/react"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

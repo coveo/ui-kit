@@ -6,7 +6,7 @@ interface SearchTipsProps {
 }
 export const SearchTips: FunctionalComponent<SearchTipsProps> = ({i18n}) => {
   return (
-    <div class="my-2 text-lg text-neutral-dark text-center" part="search-tips">
+    <div class="text-neutral-dark my-2 text-center text-lg" part="search-tips">
       {i18n.t('search-tips')}
     </div>
   );

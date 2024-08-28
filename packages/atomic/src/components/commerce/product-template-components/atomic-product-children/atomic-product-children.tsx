@@ -146,7 +146,7 @@ export class AtomicProductChildren
 
   private renderLabel() {
     return (
-      <div class="my-2 font-semibold text-neutral-dark">
+      <div class="text-neutral-dark my-2 font-semibold">
         <atomic-commerce-text
           value={this.bindings.i18n.t(this.label)}
         ></atomic-commerce-text>

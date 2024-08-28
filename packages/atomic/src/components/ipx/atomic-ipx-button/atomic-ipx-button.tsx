@@ -86,7 +86,7 @@ export class AtomicIPXButton implements InitializableComponent {
             icon={this.getIcon(this.openIcon)}
           ></atomic-icon>
         </span>
-        <span part="button-text">{this.label}</span>
+        {this.label ? <span part="button-text">{this.label}</span> : null}
       </Button>
     );
   }

@@ -20,10 +20,15 @@ export type DateFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
+export type DateFacetState = Omit<
+  CoreCommerceFacetState<DateFacetValue>,
+  'type'
+> & {
+  type: 'dateRange';
+};
 
 /**
- * The `DateFacet` controller offers a high-level programming interface for implementing date commerce
+ * The `DateFacet` sub-controller offers a high-level programming interface for implementing date commerce
  * facet UI component.
  */
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
@@ -34,7 +39,7 @@ export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
    */
   setRanges: (ranges: DateRangeRequest[]) => void;
   /**
-   * The state of the `DateFacet` controller.
+   * The state of the `DateFacet` sub-controller.
    */
   state: DateFacetState;
 } & FacetControllerType<'dateRange'>;
@@ -46,12 +51,12 @@ export {buildDateRange};
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `DateFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `DateFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `DateFacet` options used internally.
- * @returns A `DateFacet` controller instance.
+ * @returns A `DateFacet` sub-controller instance.
  */
 export function buildCommerceDateFacet(
   engine: CommerceEngine,
@@ -86,9 +91,18 @@ export function buildCommerceDateFacet(
     },
 
     get state() {
-      return coreController.state;
+      return getDateFacetState(coreController.state);
     },
 
     type: 'dateRange',
   };
 }
+
+export const getDateFacetState = (
+  coreState: CoreCommerceFacetState<DateFacetValue>
+): DateFacetState => {
+  return {
+    ...coreState,
+    type: 'dateRange',
+  };
+};

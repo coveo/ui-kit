@@ -14,7 +14,7 @@ export const NoItems: FunctionalComponent<NoItemsProps> = ({i18n, query}) => {
       params={{
         query: (
           <span
-            class="font-bold truncate inline-block align-bottom max-w-full whitespace-normal"
+            class="inline-block max-w-full truncate whitespace-normal align-bottom font-bold"
             part="highlight"
           >
             <LocalizedString
@@ -31,7 +31,7 @@ export const NoItems: FunctionalComponent<NoItemsProps> = ({i18n, query}) => {
   );
   return (
     <div
-      class="my-2 text-2xl font-medium max-w-full text-center"
+      class="my-2 max-w-full text-center text-2xl font-medium"
       part="no-results"
     >
       {content}

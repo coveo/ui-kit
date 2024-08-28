@@ -33,8 +33,8 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
     <Button
       style="text-transparent"
       part="label-button"
-      class="flex font-bold justify-between w-full py-1 px-2 text-lg rounded-none"
-      title={props.isCollapsed ? expandFacet : collapseFacet}
+      class="flex w-full justify-between rounded-none px-2 py-1 text-lg font-bold"
+      ariaLabel={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
       ariaExpanded={(!props.isCollapsed).toString()}
       ref={props.headerRef}
@@ -44,7 +44,7 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
       </Heading>
       <atomic-icon
         part="label-button-icon"
-        class="w-3 self-center shrink-0 ml-4"
+        class="ml-4 w-3 shrink-0 self-center"
         icon={props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
       ></atomic-icon>
     </Button>,
@@ -52,13 +52,13 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
       <Button
         style="text-primary"
         part="clear-button"
-        class="flex items-baseline max-w-full p-2 text-sm"
+        class="flex max-w-full items-baseline p-2 text-sm"
         ariaLabel={clearFiltersForFacet}
         onClick={() => props.onClearFilters!()}
       >
         <atomic-icon
           part="clear-button-icon"
-          class="w-2 h-2 mr-1"
+          class="mr-1 h-2 w-2"
           icon={CloseIcon}
         ></atomic-icon>
         <span>{clearFilters}</span>

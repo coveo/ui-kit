@@ -1,6 +1,7 @@
 import {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {FieldSuggestionsFacet} from '../../commerce/facets/field-suggestions-order/field-suggestions-order-state';
 import {FacetSearchOptions} from './facet-search-request-options';
 
@@ -156,11 +157,17 @@ export function handleCommerceFacetFieldSuggestionsFulfilled<
   buildEmptyResponse: () => T
 ) {
   const {facetId, response} = payload;
-  let search = state[facetId];
+  const namespacedFacetId =
+    getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
+  let search = state[namespacedFacetId];
 
   if (!search) {
-    handleFacetSearchRegistration(state, {facetId}, buildEmptyResponse);
-    search = state[facetId];
+    handleFacetSearchRegistration(
+      state,
+      {facetId: namespacedFacetId},
+      buildEmptyResponse
+    );
+    search = state[namespacedFacetId];
   } else if (search.requestId !== requestId) {
     return;
   }
@@ -223,14 +230,17 @@ export function handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet<
   }
 
   for (const fieldSuggestionFacet of payload.fieldSuggestionsFacets) {
+    const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
+      fieldSuggestionFacet.facetId
+    );
     if (
-      fieldSuggestionFacet.facetId in state ||
+      namespacedFacetId in state ||
       fieldSuggestionFacet.type !== 'hierarchical'
     ) {
       continue;
     }
 
-    state[fieldSuggestionFacet.facetId] = {
+    state[namespacedFacetId] = {
       options: {
         ...defaultFacetSearchOptions,
         query: payload.query ?? '',

@@ -66,6 +66,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the copy to clipboard button`);
     },
 
+    displaySuccessMessage: (display: boolean) => {
+      selector
+        .successMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the success message`);
+    },
+
     likeButtonIsChecked: (selected: boolean) => {
       selector
         .likeButton()
@@ -191,17 +198,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         })
         .log(
           `the citation at the index ${index} should contain the title "${title}"`
-        );
-    },
-
-    citationNumberContains: (index: number, value: string) => {
-      selector
-        .citationIndex(index)
-        .then((element) => {
-          expect(element.get(0).innerText).to.equal(value);
-        })
-        .log(
-          `the citation at the index ${index} should contain the number "${value}"`
         );
     },
 
@@ -521,14 +517,28 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     logGeneratedAnswerFeedbackSubmit(
       streamId: string,
       payload: {
-        reason: string;
+        correctTopicValue: string;
+        documented: string;
+        hallucinationFree: string;
+        helpful: boolean;
+        readable: string;
+        documentUrl?: string;
         details?: string;
       }
     ) {
       logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmitV2,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
+          const {
+            helpful,
+            correctTopicValue,
+            documented,
+            hallucinationFree,
+            readable,
+            documentUrl,
+            details,
+          } = payload;
           expect(analyticsBody).to.have.property(
             'eventType',
             'generatedAnswer'
@@ -537,9 +547,23 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
-          expect(customData).to.have.property('reason', payload.reason);
-          if (payload.details) {
-            expect(customData).to.have.property('details', payload.details);
+          expect(customData).to.have.property('helpful', helpful);
+          expect(customData).to.have.property(
+            'correctTopicValue',
+            correctTopicValue
+          );
+          expect(customData).to.have.property('documented', documented);
+          expect(customData).to.have.property(
+            'hallucinationFree',
+            hallucinationFree
+          );
+          expect(customData).to.have.property('readable', readable);
+
+          if (documentUrl) {
+            expect(customData).to.have.property('documentUrl', documentUrl);
+          }
+          if (details) {
+            expect(customData).to.have.property('details', details);
           }
         }
       );

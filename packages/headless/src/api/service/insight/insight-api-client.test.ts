@@ -4,12 +4,16 @@ import {NoopPreprocessRequest} from '../../preprocess-request';
 import {InsightAPIClient} from './insight-api-client';
 
 describe('insight api client', () => {
-  const insightRequest = {
+  const configuration = {
     accessToken: 'some token',
-    insightId: 'some insight id',
     organizationId: 'some organization id',
     url: 'https://some.platform.com',
   };
+  const insightRequest = {
+    ...configuration,
+    insightId: 'some insight id',
+  };
+  const exampleUserId = 'John Doe';
 
   let client: InsightAPIClient;
 
@@ -192,12 +196,8 @@ describe('insight api client', () => {
 
   describe('userActions', () => {
     const userActionsRequest = {
-      ...insightRequest,
-      ticketCreationDate: new Date().toISOString(),
-      numberSessionsBefore: 50,
-      numberSessionsAfter: 250,
-      maximumSessionInactivityMinutes: 60,
-      excludedCustomActions: ['unknown', 'irrelevant'],
+      ...configuration,
+      userId: exampleUserId,
     };
 
     it('should call the platform endpoint with the correct arguments', async () => {
@@ -211,35 +211,10 @@ describe('insight api client', () => {
         accessToken: userActionsRequest.accessToken,
         method: 'POST',
         contentType: 'application/json',
-        url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/insight/v1/configs/${userActionsRequest.insightId}/useractions`,
+        url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/machinelearning/user/actions`,
         origin: 'insightApiFetch',
         requestParams: {
-          ticketCreationDate: userActionsRequest.ticketCreationDate,
-          numberSessionsBefore: userActionsRequest.numberSessionsBefore,
-          numberSessionsAfter: userActionsRequest.numberSessionsAfter,
-          maximumSessionInactivityMinutes:
-            userActionsRequest.maximumSessionInactivityMinutes,
-          excludedCustomActions: userActionsRequest.excludedCustomActions,
-        },
-      });
-    });
-
-    it('should call the platform endpoint with the default values when not specified', async () => {
-      const callSpy = setupCallMock(true, 'some content');
-
-      await client.userActions({
-        ...insightRequest,
-        ticketCreationDate: new Date().toISOString(),
-      });
-
-      expect(callSpy).toHaveBeenCalled();
-      const request = callSpy.mock.calls[0][0];
-      expect(request).toMatchObject({
-        requestParams: {
-          numberSessionsBefore: 50,
-          numberSessionsAfter: 50,
-          maximumSessionInactivityMinutes: 30,
-          excludedCustomActions: [],
+          objectId: userActionsRequest.userId,
         },
       });
     });

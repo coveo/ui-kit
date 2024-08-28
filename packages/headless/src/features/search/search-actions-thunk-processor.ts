@@ -53,7 +53,7 @@ import {
 import {buildSearchRequest} from './search-request';
 
 export interface AnalyticsAction {
-  actionCause: string;
+  actionCause?: string;
 }
 
 export type StateNeededByExecuteSearch = ConfigurationSection &

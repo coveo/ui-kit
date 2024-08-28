@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import {
   searchBoxOptionDefinitions,
   SearchBoxOptions,
@@ -10,6 +10,10 @@ export interface StandaloneSearchBoxOptions extends SearchBoxOptions {
    * If a query pipeline redirect is triggered, it will redirect to that Url instead.
    */
   redirectionUrl: string;
+  /**
+   * Whether to overwrite the existing standalone search box with the same id.
+   */
+  overwrite?: boolean;
 }
 
 export const standaloneSearchBoxSchema = new Schema<
@@ -19,5 +23,8 @@ export const standaloneSearchBoxSchema = new Schema<
   redirectionUrl: new StringValue({
     required: true,
     emptyAllowed: false,
+  }),
+  overwrite: new BooleanValue({
+    required: false,
   }),
 });

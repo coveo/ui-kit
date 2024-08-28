@@ -15,7 +15,9 @@
       "outputs": [
         "{projectRoot}/docs/out",
         "{projectRoot}/force-app/main/default/staticresources/coveobueno",
-        "{projectRoot}/force-app/main/default/staticresources/coveoheadless"
+        "{projectRoot}/force-app/main/default/staticresources/coveoheadless",
+        "{projectRoot}/force-app/main/default/staticresources/dompurify",
+        "{projectRoot}/force-app/main/default/staticresources/marked"
       ],
       "executor": "nx:run-commands",
       "options": {

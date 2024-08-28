@@ -58,7 +58,7 @@ export interface Pagination extends Controller {
   fetchMoreProducts(): void;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `Pagination` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `Pagination` sub-controller.
    */
   state: PaginationState;
 }
@@ -114,7 +114,7 @@ const optionsSchema = new Schema({
 
 /**
  * @internal
- * Creates a `Pagination` controller instance.
+ * Creates a `Pagination` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Pagination` controller properties.

@@ -40,6 +40,7 @@ import {GeneratedAnswerState} from '../features/generated-answer/generated-answe
 import {HistoryState} from '../features/history/history-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
+import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
 import {OldProductListingState} from '../features/product-listing/old-product-listing-state';
@@ -502,6 +503,13 @@ export interface GeneratedAnswerSection {
    * The properties related to generative question answering.
    */
   generatedAnswer: GeneratedAnswerState;
+}
+
+export interface InsightUserActionsSection {
+  /**
+   * The insight user actions state.
+   */
+  insightUserActions: UserActionsState;
 }
 
 export interface ManualRangeSection {

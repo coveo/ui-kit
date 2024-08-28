@@ -1,0 +1,18 @@
+{
+  "name": "headless-commerce-react-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:client"],
+        "parallel": true,
+        "cwd": "packages/samples/headless-commerce-react"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

@@ -4,8 +4,6 @@ import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   facetClearAll,
-  facetShowLess,
-  facetShowMore,
   facetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -173,7 +171,6 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       dispatch(
         fetchFacetValues({
           legacy: logFacetShowMore(getFacetId()),
-          next: facetShowMore(),
         })
       );
     },
@@ -183,7 +180,6 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       dispatch(
         fetchFacetValues({
           legacy: logFacetShowLess(getFacetId()),
-          next: facetShowLess(),
         })
       );
     },

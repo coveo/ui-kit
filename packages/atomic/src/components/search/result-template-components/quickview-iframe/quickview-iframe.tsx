@@ -62,7 +62,7 @@ export const QuickviewIframe: FunctionalComponent<{
   return (
     <iframe
       src="about:blank"
-      class="w-full h-full"
+      class="h-full w-full"
       sandbox={sandbox}
       ref={async (el) => {
         const iframeRef = el as HTMLIFrameElement;

@@ -81,6 +81,7 @@ describe('headless standalone searchBox', () => {
     expect(registerStandaloneSearchBox).toHaveBeenCalledWith({
       id,
       redirectionUrl: options.redirectionUrl,
+      overwrite: false,
     });
   });
 

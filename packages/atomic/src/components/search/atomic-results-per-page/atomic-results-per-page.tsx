@@ -14,7 +14,17 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
-import {RadioButton} from '../../common/radio-button';
+import {Choices} from '../../common/items-per-page/choices';
+import {
+  ChoiceIsNaNError,
+  InitialChoiceNotInChoicesError,
+} from '../../common/items-per-page/error';
+import {Label} from '../../common/items-per-page/label';
+import {
+  convertChoicesToNumbers,
+  validateInitialChoice,
+} from '../../common/items-per-page/validate';
+import {PagerGuard} from '../../common/pager/pager-guard';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -51,6 +61,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @Prop({reflect: true}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+   * @type {number}
    */
   @Prop({mutable: true, reflect: true}) initialChoice?: number;
 
@@ -60,8 +71,19 @@ export class AtomicResultsPerPage implements InitializableComponent {
   private scrollToTopEvent!: EventEmitter;
 
   public initialize() {
-    this.choices = this.validateChoicesDisplayed();
-    this.validateInitialChoice();
+    try {
+      this.choices = convertChoicesToNumbers(this.choicesDisplayed);
+      this.initialChoice = this.initialChoice ?? this.choices[0];
+      validateInitialChoice(this.initialChoice, this.choices);
+    } catch (error) {
+      if (
+        error instanceof ChoiceIsNaNError ||
+        error instanceof InitialChoiceNotInChoicesError
+      ) {
+        this.bindings.engine.logger.error(error.message, this);
+        throw error;
+      }
+    }
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
@@ -69,97 +91,38 @@ export class AtomicResultsPerPage implements InitializableComponent {
     });
   }
 
-  private validateChoicesDisplayed() {
-    return this.choicesDisplayed.split(',').map((choice) => {
-      const parsedChoice = parseInt(choice);
-      if (isNaN(parsedChoice)) {
-        const errorMsg = `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`;
-        this.bindings.engine.logger.error(errorMsg, this);
-        throw new Error(errorMsg);
-      }
-
-      return parsedChoice;
-    });
-  }
-
-  private validateInitialChoice() {
-    if (!this.initialChoice) {
-      this.initialChoice = this.choices[0];
-      return;
-    }
-    if (!this.choices.includes(this.initialChoice)) {
-      const errorMsg = `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`;
-      this.bindings.engine.logger.error(errorMsg, this);
-      throw new Error(errorMsg);
-    }
-  }
-
-  private buildChoice(choice: number) {
-    const isSelected = this.resultPerPage.isSetTo(choice);
-    const parts = ['button'];
-    if (isSelected) {
-      parts.push('active-button');
-    }
-    const text = choice.toLocaleString(this.bindings.i18n.language);
-
-    return (
-      <RadioButton
-        key={choice}
-        groupName={this.radioGroupName}
-        style="outline-neutral"
-        checked={isSelected}
-        ariaLabel={text}
-        onChecked={() => {
-          this.focusOnProperResultDependingOnChoice(choice);
-          this.resultPerPage.set(choice);
-        }}
-        class="btn-page focus-visible:bg-neutral-light"
-        part={parts.join(' ')}
-        text={text}
-      ></RadioButton>
-    );
-  }
-
-  private focusOnProperResultDependingOnChoice(choice: number) {
-    if (choice < this.resultPerPageState.numberOfResults) {
-      this.bindings.store.state.resultList
-        ?.focusOnFirstResultAfterNextSearch()
-        .then(() => this.scrollToTopEvent.emit());
-    } else if (choice > this.resultPerPageState.numberOfResults) {
-      this.bindings.store.state.resultList?.focusOnNextNewResult();
-    }
+  private get label() {
+    return this.bindings.i18n.t('results-per-page');
   }
 
   public render() {
-    if (
-      !this.bindings.store.isAppLoaded() ||
-      !this.searchStatusState.hasResults
-    ) {
-      return;
-    }
-
-    const label = this.bindings.i18n.t('results-per-page');
-
     return (
-      <div class="flex items-center">
-        <span
-          part="label"
-          class="self-start text-on-background text-lg mr-3 leading-10"
-          aria-hidden="true"
-        >
-          {label}
-        </span>
-        <FieldsetGroup label={label}>
-          <div
-            part="buttons"
-            role="radiogroup"
-            aria-label={this.bindings.i18n.t('results-per-page')}
-            class="flex flex-wrap gap-2"
-          >
-            {this.choices.map((choice) => this.buildChoice(choice))}
-          </div>
-        </FieldsetGroup>
-      </div>
+      <PagerGuard
+        hasError={this.searchStatusState.hasError}
+        hasItems={this.searchStatusState.hasResults}
+        isAppLoaded={this.bindings.store.isAppLoaded()}
+      >
+        <div class="flex items-center">
+          <Label>{this.label}</Label>
+          <FieldsetGroup label={this.label}>
+            <Choices
+              label={this.label}
+              groupName={this.radioGroupName}
+              pageSize={this.resultPerPageState.numberOfResults}
+              choices={this.choices}
+              lang={this.bindings.i18n.language}
+              scrollToTopEvent={this.scrollToTopEvent.emit}
+              setItemSize={this.resultPerPage.set}
+              focusOnFirstResultAfterNextSearch={() =>
+                this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch()
+              }
+              focusOnNextNewResult={() =>
+                this.bindings.store.state.resultList?.focusOnNextNewResult()
+              }
+            ></Choices>
+          </FieldsetGroup>
+        </div>
+      </PagerGuard>
     );
   }
 }

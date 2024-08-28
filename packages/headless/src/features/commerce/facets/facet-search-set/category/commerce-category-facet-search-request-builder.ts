@@ -5,6 +5,7 @@ import {
   AnyFacetRequest,
   CategoryFacetRequest,
 } from '../../facet-set/interfaces/request';
+import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions';
 import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state';
 
 export const buildCategoryFacetSearchRequest = (
@@ -15,7 +16,10 @@ export const buildCategoryFacetSearchRequest = (
 ): CategoryFacetSearchRequest => {
   const baseFacetQuery = state.categoryFacetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const categoryFacet = state.commerceFacetSet[facetId]?.request;
+  const categoryFacet =
+    state.commerceFacetSet[
+      getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId)
+    ]?.request;
   const path =
     categoryFacet && isCategoryFacetRequest(categoryFacet)
       ? categoryFacet && getPathToSelectedCategoryFacetItem(categoryFacet)
@@ -40,7 +44,7 @@ export const buildCategoryFacetSearchRequest = (
     url,
     accessToken,
     organizationId,
-    facetId,
+    facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
     facetQuery,
     ignorePaths,
     trackingId,

@@ -11,6 +11,7 @@ import {
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
   resetStandaloneSearchBox,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
 import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
@@ -49,6 +50,12 @@ export interface StandaloneSearchBox extends SearchBox {
    * Triggers a redirection.
    */
   submit(): void;
+
+  /**
+   * Updates the redirection url of the standalone search box.
+   * @param url - The new URL to redirect to.
+   */
+  updateRedirectUrl(url: string): void;
 
   /**
    * Resets the standalone search box state. To be dispatched on single page applications after the redirection has been triggered.
@@ -96,6 +103,7 @@ export function buildStandaloneSearchBox(
     id,
     highlightOptions: {...props.options.highlightOptions},
     ...defaultSearchBoxOptions,
+    ...{overwrite: false},
     ...props.options,
   };
 
@@ -108,7 +116,11 @@ export function buildStandaloneSearchBox(
 
   const searchBox = buildSearchBox(engine, {options});
   dispatch(
-    registerStandaloneSearchBox({id, redirectionUrl: options.redirectionUrl})
+    registerStandaloneSearchBox({
+      id,
+      redirectionUrl: options.redirectionUrl,
+      overwrite: options.overwrite,
+    })
   );
 
   return {
@@ -133,6 +145,12 @@ export function buildStandaloneSearchBox(
 
     afterRedirection() {
       dispatch(resetStandaloneSearchBox({id}));
+    },
+
+    updateRedirectUrl(url: string) {
+      dispatch(
+        updateStandaloneSearchBoxRedirectionUrl({id, redirectionUrl: url})
+      );
     },
 
     submit() {

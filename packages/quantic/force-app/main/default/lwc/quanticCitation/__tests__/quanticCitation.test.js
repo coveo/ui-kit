@@ -51,7 +51,6 @@ const defaultOptions = {
 
 const selectors = {
   citation: '.citation',
-  citationIndex: '.citation__index',
   citationLink: '.citation__link',
   citationTitle: '.citation__title',
   citationTooltip: 'c-quantic-tooltip',
@@ -113,9 +112,6 @@ describe('c-quantic-citation', () => {
     const citationLink = element.shadowRoot.querySelector(
       selectors.citationLink
     );
-    const citationIndex = element.shadowRoot.querySelector(
-      selectors.citationIndex
-    );
     const citationTitle = element.shadowRoot.querySelector(
       selectors.citationTitle
     );
@@ -125,13 +121,11 @@ describe('c-quantic-citation', () => {
 
     expect(citation).not.toBeNull();
     expect(citationLink).not.toBeNull();
-    expect(citationIndex).not.toBeNull();
     expect(citationTitle).not.toBeNull();
     expect(citationTooltip).not.toBeNull();
 
     expect(citationLink.href).toBe(exampleCitation.clickUri);
     expect(citationLink.target).toBe('_blank');
-    expect(citationIndex.textContent).toBe(exampleCitation.index);
     expect(citationTitle.textContent).toBe(exampleCitation.title);
   });
 

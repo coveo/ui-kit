@@ -35,10 +35,10 @@ export class AtomicRelevanceInspector {
         <p slot="body">
           The Relevance Inspector will open in the Coveo Administration Console.
         </p>
-        <div slot="footer" class="w-full flex justify-end items-center">
+        <div slot="footer" class="flex w-full items-center justify-end">
           <Button
             style="outline-primary"
-            class="p-2 mr-2"
+            class="mr-2 p-2"
             onClick={() => this.closeRelevanceInspector?.emit()}
           >
             Ignore

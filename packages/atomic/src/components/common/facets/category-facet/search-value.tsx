@@ -51,7 +51,7 @@ export const CategoryFacetSearchValue: FunctionalComponent<
       <span class="mr-0.5">{inLabel}</span>,
       ellipsedPath(path).map((value, index) => [
         index > 0 && <span class="mx-0.5">{SEPARATOR}</span>,
-        <span class={value === ELLIPSIS ? '' : 'truncate flex-1 max-w-max'}>
+        <span class={value === ELLIPSIS ? '' : 'max-w-max flex-1 truncate'}>
           {value}
         </span>,
       ]),
@@ -64,10 +64,10 @@ export const CategoryFacetSearchValue: FunctionalComponent<
         style="text-neutral"
         part="search-result"
         onClick={() => onClick()}
-        class="w-full flex flex-col px-2 py-2.5 truncate group no-outline"
+        class="no-outline group flex w-full flex-col truncate px-2 py-2.5"
         aria-label={ariaLabel}
       >
-        <div class="w-full flex">
+        <div class="flex w-full">
           <FacetValueLabelHighlight
             displayValue={value.displayValue}
             isSelected={false}
@@ -81,7 +81,7 @@ export const CategoryFacetSearchValue: FunctionalComponent<
         </div>
         <div
           part="search-result-path"
-          class="flex w-full text-neutral-dark mt-1 group-focus:text-primary group-hover:text-primary"
+          class="text-neutral-dark group-focus:text-primary group-hover:text-primary mt-1 flex w-full"
         >
           {renderPath(localizedPath)}
         </div>

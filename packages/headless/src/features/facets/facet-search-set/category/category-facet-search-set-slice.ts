@@ -3,6 +3,7 @@ import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/c
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
@@ -57,7 +58,10 @@ export const categoryFacetSearchSetReducer = createReducer(
       })
       .addCase(executeCommerceFieldSuggest.rejected, (state, action) => {
         const {facetId} = action.meta.arg;
-        handleFacetSearchRejected(state, facetId);
+        handleFacetSearchRejected(
+          state,
+          getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
+        );
       })
       .addCase(executeFacetSearch.rejected, (state, action) => {
         const facetId = action.meta.arg;

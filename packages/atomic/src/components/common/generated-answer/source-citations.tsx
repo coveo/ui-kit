@@ -11,10 +11,10 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
 ) =>
   props.isVisible ? (
     <div class="source-citations">
-      <p part="citations-label" class="mb-2 text-neutral-dark shrink-0">
+      <p part="citations-label" class="text-neutral-dark mb-2 shrink-0">
         {props.label}
       </p>
-      <ol class="list-none citations-container gap-2 flex items-center flex-wrap">
+      <ol class="citations-container flex list-none flex-wrap items-center gap-2">
         {children}
       </ol>
     </div>

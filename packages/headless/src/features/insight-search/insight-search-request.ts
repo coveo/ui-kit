@@ -21,11 +21,11 @@ export const buildInsightBaseRequest = async (
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {
   const cq = buildConstantQuery(state);
   const facets = getAllFacets(state);
-
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
+    locale: state.configuration.search.locale,
     insightId: state.insightConfiguration.insightId,
     ...(state.configuration.analytics.enabled &&
       (await fromAnalyticsStateToAnalyticsParams(

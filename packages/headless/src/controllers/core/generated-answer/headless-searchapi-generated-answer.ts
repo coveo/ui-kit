@@ -9,6 +9,7 @@ import {
   setId,
   streamAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
+import {rephraseGeneratedAnswer} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
@@ -126,10 +127,25 @@ export function buildSearchAPIGeneratedAnswer(
   const controller = buildCoreGeneratedAnswer(engine, analyticsClient, props);
   const getState = () => engine.state;
 
+  if (
+    engine.state.generatedAnswer.id &&
+    !subscribeStateManager.engines[engine.state.generatedAnswer.id]
+  ) {
+    subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
+      abortController: undefined,
+      lastRequestId: engine.state.search.requestId,
+      lastStreamId:
+        engine.state.search.extendedResults.generativeQuestionAnsweringId ?? '',
+    };
+  }
+
   if (!engine.state.generatedAnswer.id) {
     const genQaEngineId = randomID('genQA-', 12);
     engine.dispatch(setId({id: genQaEngineId}));
-    subscribeStateManager.engines[genQaEngineId] = {
+  }
+
+  if (!subscribeStateManager.engines[engine.state.generatedAnswer.id]) {
+    subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
       abortController: undefined,
       lastRequestId: '',
       lastStreamId: '',
@@ -167,6 +183,7 @@ export function buildSearchAPIGeneratedAnswer(
       engine.dispatch(
         executeSearch({
           legacy: analyticsClient.logRephraseGeneratedAnswer(responseFormat),
+          next: rephraseGeneratedAnswer(),
         })
       );
     },

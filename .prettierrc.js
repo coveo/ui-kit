@@ -5,7 +5,10 @@ const decoratorPlugin = JSON.stringify([
 
 /** @type {import('prettier').Config} */
 module.exports = {
-  plugins: ['@trivago/prettier-plugin-sort-imports'],
+  plugins: [
+    '@trivago/prettier-plugin-sort-imports',
+    'prettier-plugin-tailwindcss',
+  ],
   bracketSpacing: false,
   singleQuote: true,
   trailingComma: 'es5',

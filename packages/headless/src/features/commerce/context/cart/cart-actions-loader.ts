@@ -5,27 +5,38 @@ import {
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine';
 import {
+  CartActionPayload,
   PurchasePayload,
   SetItemsPayload,
   UpdateItemQuantityPayload,
+  emitCartActionEvent,
+  emitPurchaseEvent,
   purchase,
   setItems,
   updateItemQuantity,
 } from './cart-actions';
 import {cartReducer as cart} from './cart-slice';
 
-export type {PurchasePayload, SetItemsPayload, UpdateItemQuantityPayload};
+export type {
+  CartActionPayload,
+  PurchasePayload,
+  SetItemsPayload,
+  UpdateItemQuantityPayload,
+};
 
 /**
  * The cart action creators.
  */
 export interface CartActionCreators {
   /**
-   * Emits an ec_purchase analytics events with the current cart state.
+   * Emits an `ec.purchase` analytics event with the current cart state.
+   *
+   * Should be dispatched before the `purchase` action.
    *
    * @param payload - The action creator payload.
+   * @returns A dispatchable action.
    */
-  purchase(
+  emitPurchaseEvent(
     payload: PurchasePayload
   ): AsyncThunkAction<
     void,
@@ -33,19 +44,46 @@ export interface CartActionCreators {
     AsyncThunkCommerceOptions<CommerceEngineState>
   >;
 
-  // TODO KIT-3346: Add/expose action to emit ec_cartAction analytics events
+  /**
+   * Marks the items in the cart as purchased and empties the cart.
+   *
+   * Should be dispatched after the `emitPurchase` action.
+   *
+   * @returns A dispatchable action.
+   */
+  purchase(): PayloadAction<void>;
 
   /**
    * Sets the items in the cart.
    *
    * @param payload - The action creator payload.
+   * @returns A dispatchable action.
    */
   setItems(payload: SetItemsPayload): PayloadAction<SetItemsPayload>;
 
   /**
-   * Updates the quantity of an item in the cart.
+   * Emits an `ec.cartAction` analytics event.
+   *
+   * Should be dispatched before the `updateItemQuantity` action.
    *
    * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  emitCartActionEvent(
+    payload: CartActionPayload
+  ): AsyncThunkAction<
+    void,
+    CartActionPayload,
+    AsyncThunkCommerceOptions<CommerceEngineState>
+  >;
+
+  /**
+   * Updates the quantity of an item in the cart.
+   *
+   * Should be dispatched after the `emitCartAction` action.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
    */
   updateItemQuantity(
     payload: UpdateItemQuantityPayload
@@ -61,6 +99,8 @@ export interface CartActionCreators {
 export function loadCartActions(engine: CommerceEngine): CartActionCreators {
   engine.addReducers({cart});
   return {
+    emitPurchaseEvent,
+    emitCartActionEvent,
     purchase,
     setItems,
     updateItemQuantity,

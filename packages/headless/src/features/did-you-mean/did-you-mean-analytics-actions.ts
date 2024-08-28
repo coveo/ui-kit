@@ -18,9 +18,9 @@ export const logDidYouMeanAutomatic = (): LegacySearchAction =>
   );
 
 export const didYouMeanClick = (): SearchAction => ({
-  actionCause: SearchPageEvents.didyoumeanClick,
+  actionCause: SearchPageEvents.didYouMeanClick,
 });
 
 export const didYouMeanAutomatic = (): SearchAction => ({
-  actionCause: SearchPageEvents.didyoumeanAutomatic,
+  actionCause: SearchPageEvents.didYouMeanAutomatic,
 });

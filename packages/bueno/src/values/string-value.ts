@@ -6,11 +6,14 @@ interface StringValueConfig<T extends string> extends ValueConfig<T> {
   url?: boolean;
   regex?: RegExp;
   constrainTo?: readonly T[];
+  ISODate?: boolean;
 }
 
 // Source: https://github.com/jquery-validation/jquery-validation/blob/c1db10a34c0847c28a5bd30e3ee1117e137ca834/src/core.js#L1349
 const urlRegex =
   /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+const ISODateStringRegex =
+  /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
 
 export class StringValue<T extends string = string>
   implements SchemaValue<string>
@@ -27,7 +30,7 @@ export class StringValue<T extends string = string>
   }
 
   public validate(value: T) {
-    const {emptyAllowed, url, regex, constrainTo} = this.config;
+    const {emptyAllowed, url, regex, constrainTo, ISODate} = this.config;
     const valueValidation = this.value.validate(value);
     if (valueValidation) {
       return valueValidation;
@@ -56,6 +59,16 @@ export class StringValue<T extends string = string>
     if (constrainTo && !constrainTo.includes(value)) {
       const values = constrainTo.join(', ');
       return `value should be one of: ${values}.`;
+    }
+
+    if (
+      ISODate &&
+      !(
+        ISODateStringRegex.test(value) &&
+        new Date(value).toString() !== 'Invalid Date'
+      )
+    ) {
+      return 'value is not a valid ISO8601 date string';
     }
 
     return null;

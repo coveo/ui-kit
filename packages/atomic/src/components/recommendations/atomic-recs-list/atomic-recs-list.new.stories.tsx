@@ -1,6 +1,6 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {wrapInRecommendationInterface} from '@coveo/atomic/storybookUtils/recs-interface-wrapper';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+import {wrapInRecommendationInterface} from '@coveo/atomic/storybookUtils/search/recs-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit-html/static.js';
 

@@ -28,6 +28,7 @@ interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
   withToggle?: boolean;
   collapsible?: boolean;
+  withRephraseButtons?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -311,12 +312,14 @@ export class GeneratedAnswerCommon {
   }
 
   private renderRephraseButtons() {
-    const {getGeneratedAnswerState, getBindings} = this.props;
+    const {getGeneratedAnswerState, getBindings, withRephraseButtons} =
+      this.props;
     const {i18n} = getBindings();
     const {isStreaming, responseFormat} = getGeneratedAnswerState() ?? {};
     const {answerStyle} = responseFormat ?? {};
+    const canRender = withRephraseButtons && !isStreaming;
 
-    if (isStreaming) {
+    if (!canRender) {
       return null;
     }
     return (
@@ -376,7 +379,7 @@ export class GeneratedAnswerCommon {
     return (
       <div
         part="is-generating"
-        class="hidden text-primary font-light text-base"
+        class="text-primary hidden text-base font-light"
       >
         {i18n.t('generating-answer')}...
       </div>
@@ -396,11 +399,11 @@ export class GeneratedAnswerCommon {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
           >
             {i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex h-9 items-center ml-auto">
+          <div class="ml-auto flex h-9 items-center">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -442,7 +445,7 @@ export class GeneratedAnswerCommon {
         ) : null}
 
         {!this.hasRetryableError && this.isAnswerVisible && (
-          <div part="generated-answer-footer" class="flex justify-end mt-6">
+          <div part="generated-answer-footer" class="mt-6 flex justify-end">
             {this.renderGeneratingAnswerLabel()}
             {this.renderShowButton()}
             {this.renderDisclaimer()}

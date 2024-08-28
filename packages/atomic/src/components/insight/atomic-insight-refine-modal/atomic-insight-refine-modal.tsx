@@ -107,7 +107,7 @@ export class AtomicInsightRefineModal
 
   private renderHeader() {
     return (
-      <div class="w-full flex justify-between mb-3">
+      <div class="mb-3 flex w-full justify-between">
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
@@ -126,7 +126,7 @@ export class AtomicInsightRefineModal
     }
 
     return (
-      <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+      <aside slot="body" class="adjust-for-scroll-bar flex w-full flex-col">
         {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>

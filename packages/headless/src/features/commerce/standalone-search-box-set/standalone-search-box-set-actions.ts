@@ -1,4 +1,4 @@
-import {StringValue} from '@coveo/bueno';
+import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
@@ -67,11 +67,38 @@ export interface RegisterStandaloneSearchBoxPayload {
    * The default URL to which to redirect the user.
    */
   redirectionUrl: string;
+
+  /**
+   * Whether to overwrite the existing standalone search box with the same id.
+   */
+  overwrite?: boolean;
+}
+
+export interface UpdateStandaloneSearchBoxPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+
+  /**
+   * The default URL to which to redirect the user.
+   */
+  redirectionUrl: string;
 }
 
 export const registerStandaloneSearchBox = createAction(
   'commerce/standaloneSearchBox/register',
   (payload: RegisterStandaloneSearchBoxPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      redirectionUrl: requiredNonEmptyString,
+      overwrite: new BooleanValue({required: false}),
+    })
+);
+
+export const updateStandaloneSearchBoxRedirectionUrl = createAction(
+  'commerce/standaloneSearchBox/updateRedirectionUrl',
+  (payload: UpdateStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
       redirectionUrl: requiredNonEmptyString,

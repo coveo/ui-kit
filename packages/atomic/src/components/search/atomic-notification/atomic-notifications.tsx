@@ -72,14 +72,14 @@ export class AtomicNotifyTrigger implements InitializableComponent {
     return (
       <div
         part="notification"
-        class="shadow-lg bg-background border border-neutral-dark rounded-md p-6 flex items-center"
+        class="bg-background border-neutral-dark flex items-center rounded-md border p-6 shadow-lg"
       >
         <atomic-icon
           icon={this.icon ?? InfoIcon}
           part="icon"
-          class="w-7 h-7 mr-6 text-neutral-dark"
+          class="text-neutral-dark mr-6 h-7 w-7"
         />
-        <span part="text" class="leading-5 text-base text-on-background">
+        <span part="text" class="text-on-background text-base leading-5">
           {text}
         </span>
       </div>

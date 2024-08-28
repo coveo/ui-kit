@@ -5,6 +5,6 @@ export const resultTextComponent = 'atomic-result-text';
 export const ResultTextSelectors = {
   shadow: () => cy.get(resultTextComponent),
   firstInResult: () =>
-    ResultListSelectors.firstResult().find(resultTextComponent),
+    ResultListSelectors.firstResult().find(resultTextComponent).first(),
   highlight: () => ResultTextSelectors.firstInResult().find('b'),
 };

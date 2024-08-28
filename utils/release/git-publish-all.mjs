@@ -74,7 +74,7 @@ process.chdir(process.env.INIT_CWD);
 
   // Current release branch
   // TODO v3: Bump to release/v3
-  const currentReleaseBranch = 'release/v2';
+  const currentReleaseBranch = 'release/v3';
   await octokit.rest.git.updateRef({
     owner: REPO_OWNER,
     repo: REPO_NAME,

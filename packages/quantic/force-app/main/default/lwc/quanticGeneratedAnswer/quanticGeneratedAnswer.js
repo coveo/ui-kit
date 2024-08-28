@@ -100,6 +100,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   @api withToggle = false;
 
+  /**
+   * Whether the component should display the rephrase buttons.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api withRephraseButtons = false;
+
   labels = {
     generatedAnswerForYou,
     thisAnswerWasNotHelpful,
@@ -441,6 +449,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get isStreaming() {
     return this?.state?.isStreaming;
+  }
+
+  get shouldDisplayRephraseButtons() {
+    return (
+      this.withRephraseButtons &&
+      this.isVisible &&
+      !this.isStreaming &&
+      !this.isAnswerCollapsed
+    );
   }
 
   get shouldDisplayActions() {

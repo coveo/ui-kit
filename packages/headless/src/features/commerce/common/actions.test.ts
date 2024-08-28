@@ -245,6 +245,27 @@ describe('commerce common actions', () => {
       }
     );
 
+    it.each([true, false])(
+      'sets the clientId conditionally upon the analytics configuration',
+      (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request.clientId).toEqual(
+          analyticsEnabled ? 'client_id' : undefined
+        );
+      }
+    );
+
     describe('given a state that has the commerceFacetSet and manualNumericFacetSet', () => {
       let facet1: CommerceFacetSlice;
       let manualFacet1: ManualNumericFacetSetSlice;

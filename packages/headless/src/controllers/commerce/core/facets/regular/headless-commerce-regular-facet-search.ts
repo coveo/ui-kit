@@ -50,7 +50,7 @@ export function buildRegularFacetSearch(
     throw loadReducerError;
   }
 
-  const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
+  const {showMoreResults, state, updateCaptions, ...restOfFacetSearch} =
     buildFacetSearch(engine, {
       ...props,
       executeFacetSearchActionCreator: (facetId: string) =>

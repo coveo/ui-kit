@@ -36,10 +36,6 @@ jest.mock(
 jest.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
-  it('should be tested', () => {
-    expect(true).toBe(true);
-  });
-
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
@@ -289,5 +285,26 @@ describe('searchapi-generated-answer', () => {
     expect(registerFieldsToIncludeInCitations).toHaveBeenCalledWith(
       exampleFieldsToIncludeInCitations
     );
+  });
+
+  describe('when used with a preloaded state', () => {
+    beforeEach(() => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          id: 'some-id',
+        },
+      });
+      state.search.requestId = 'some-request-id';
+      state.search.extendedResults.generativeQuestionAnsweringId =
+        'some-stream-id';
+      engine = buildMockSearchEngine(state);
+    });
+
+    it('should not trigger any actions on initialization', () => {
+      engine.dispatch.mockClear();
+      createGeneratedAnswer();
+      expect(engine.dispatch).not.toHaveBeenCalled();
+    });
   });
 });

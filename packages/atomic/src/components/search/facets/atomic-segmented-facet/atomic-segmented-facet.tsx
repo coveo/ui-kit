@@ -12,8 +12,11 @@ import {
   FacetValueRequest,
   SearchStatus,
   SearchStatusState,
+  buildTabManager,
+  TabManager,
+  TabManagerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, VNode} from '@stencil/core';
+import {Component, h, Prop, State, VNode, Watch} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
@@ -22,6 +25,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -44,8 +48,12 @@ import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-valu
 export class AtomicSegmentedFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @BindStateToController('facet')
   @State()
   public facetState!: FacetState;
@@ -65,6 +73,32 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label?: string;
+  /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -157,7 +191,16 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   private dependenciesManager!: FacetConditionsManager;
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
 
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
@@ -170,6 +213,21 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         >(this.dependsOn),
       }
     );
+  }
+
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
+      updateFacetVisibilityForActiveTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab,
+        this.facet
+      );
+    }
   }
 
   disconnectedCallback() {
@@ -253,7 +311,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-8 w-48 bg-neutral animate-pulse rounded"
+          class="bg-neutral h-8 w-48 animate-pulse rounded"
         ></div>
       );
     }
@@ -265,7 +323,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 items-center"
+        class="flex h-10 items-center whitespace-nowrap"
       >
         {this.renderLabel()}
         {this.renderValues()}

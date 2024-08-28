@@ -41,7 +41,7 @@
       "rangeStrategy": "replace"
     },
     {
-      "matchPackagePatterns": ["^@storybook/*"],
+      "matchPackagePatterns": ["^@storybook/*", "^storybook$"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
       "rangeStrategy": "replace"

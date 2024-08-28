@@ -259,19 +259,48 @@ test.describe('with instant results & query suggestions', () => {
     test('should display in the search box what has been submitted', async ({
       searchBox,
     }) => {
-      await searchBox.searchInput.fill('Rec');
+      await searchBox.searchInput.fill('surf');
       await searchBox.searchInput.press('Enter');
-      await expect(searchBox.searchInput).toHaveValue('Rec');
+      await expect(searchBox.searchInput).toHaveValue('surf');
     });
 
     test.describe('after focusing on suggestion with the mouse', () => {
       test('should submit what is in the search box regardless of the mouse position', async ({
         searchBox,
       }) => {
-        await searchBox.searchInput.fill('Rec');
+        await searchBox.searchInput.fill('surf');
         await searchBox.searchSuggestions({listSide: 'Left'}).first().hover();
         await searchBox.searchInput.press('Enter');
-        await expect(searchBox.searchInput).toHaveValue('Rec');
+        await expect(searchBox.searchInput).toHaveValue('surf');
+      });
+    });
+
+    test.describe('after updating the redirect-url attribute', () => {
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.component.evaluate((node) =>
+          node.setAttribute(
+            'redirection-url',
+            './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000'
+          )
+        );
+      });
+
+      test('should redirect to the specified url after selecting a suggestion', async ({
+        page,
+        searchBox,
+      }) => {
+        const suggestionText = await searchBox
+          .searchSuggestions()
+          .first()
+          .textContent();
+
+        expect(suggestionText).not.toBeNull();
+
+        await searchBox.searchSuggestions().first().click();
+        await page.waitForURL(
+          '**/iframe.html?id=atomic-commerce-search-box--in-page*'
+        );
+        await expect(searchBox.searchInput).toHaveValue(suggestionText ?? '');
       });
     });
   });

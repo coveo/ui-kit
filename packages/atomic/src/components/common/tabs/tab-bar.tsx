@@ -146,7 +146,7 @@ export class TabBar {
       <Button
         part="popover-tab"
         style="text-transparent"
-        class="font-semibold px-4 py-2 rounded truncate"
+        class="truncate rounded px-4 py-2 font-semibold"
         ariaLabel={tab.label}
         onClick={() => {
           tab.select();

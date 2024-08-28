@@ -5,6 +5,7 @@ import {
   PlatformClientCallOptions,
 } from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
+import {InsightUserActionsRequest} from './user-actions/user-actions-request';
 
 export interface InsightIdParam {
   insightId: string;
@@ -16,6 +17,9 @@ export const baseInsightUrl = (req: InsightParam, path?: string) =>
   `${req.url}/rest/organizations/${req.organizationId}/insight/v1/configs/${
     req.insightId
   }${path ?? ''}`;
+
+export const baseInsightUserActionsUrl = (req: InsightUserActionsRequest) =>
+  `${req.url}/rest/organizations/${req.organizationId}/machinelearning/user/actions`;
 
 export const baseInsightRequest = (
   req: InsightParam,
@@ -39,12 +43,33 @@ export const baseInsightRequest = (
   };
 };
 
+export const baseInsightUserActionRequest = (
+  req: InsightUserActionsRequest,
+  method: HttpMethods,
+  contentType: HTTPContentType
+): Pick<
+  PlatformClientCallOptions,
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
+> => {
+  validateInsightUserActionRequestParams(req);
+
+  const baseUrl = baseInsightUserActionsUrl(req);
+
+  return {
+    accessToken: req.accessToken,
+    method,
+    contentType,
+    url: baseUrl,
+    origin: 'insightApiFetch',
+  };
+};
+
 export const pickNonInsightParams = (req: InsightParam) => {
   const {insightId, ...nonInsightParams} = pickNonBaseParams(req);
   return nonInsightParams;
 };
 
-const validateInsightRequestParams = (req: InsightParam) => {
+const validateConfigParams = (req: BaseParam) => {
   if (!req.url) {
     throw new Error("The 'url' attribute must contain a valid platform URL.");
   }
@@ -58,9 +83,22 @@ const validateInsightRequestParams = (req: InsightParam) => {
       "The 'accessToken' attribute must contain a valid platform access token."
     );
   }
+};
+
+const validateInsightRequestParams = (req: InsightParam) => {
+  validateConfigParams(req);
   if (!req.insightId) {
     throw new Error(
       "The 'insightId' attribute must contain a valid Insight Panel configuration ID."
     );
+  }
+};
+
+const validateInsightUserActionRequestParams = (
+  req: InsightUserActionsRequest
+) => {
+  validateConfigParams(req);
+  if (!req.userId) {
+    throw new Error("The 'userId' attribute must contain a valid user ID.");
   }
 };

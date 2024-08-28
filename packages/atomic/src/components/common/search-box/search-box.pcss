@@ -6,7 +6,7 @@
 
 .loading::after {
   content: '';
-  @apply absolute w-5/6 h-5/6 bg-background rounded-full;
+  @apply bg-background absolute h-5/6 w-5/6 rounded-full;
 }
 
 [part='textarea-expander'] {
@@ -22,7 +22,7 @@
 
   > [part='textarea'],
   &::after {
-    @apply whitespace-nowrap z-10 h-full outline-none resize-none bg-transparent text-neutral-dark text-lg grow p-3.5 px-4 overflow-hidden;
+    @apply text-neutral-dark z-10 h-full grow resize-none overflow-hidden whitespace-nowrap bg-transparent p-3.5 px-4 text-lg outline-none;
     /* Place on top of each other */
     grid-area: 1 / 1 / 2 / 2;
   }

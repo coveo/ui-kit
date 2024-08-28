@@ -151,7 +151,7 @@ export class SmartSnippetCommon {
           {this.props.getBindings().i18n.t('smart-snippet')}
         </Heading>
         <article
-          class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background"
+          class="bg-background border-neutral text-on-background rounded-lg border p-6 pb-4"
           part="smart-snippet"
         >
           <atomic-smart-snippet-collapse-wrapper

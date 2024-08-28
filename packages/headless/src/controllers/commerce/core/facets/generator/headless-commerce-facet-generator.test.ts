@@ -21,7 +21,7 @@ jest.mock(
   '../../../../../features/commerce/facets/core-facet/core-facet-actions'
 );
 
-describe('FacetGenerator', () => {
+describe('CSR FacetGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
   let options: FacetGeneratorOptions;

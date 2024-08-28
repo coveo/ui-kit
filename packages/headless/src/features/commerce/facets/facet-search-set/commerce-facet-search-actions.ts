@@ -114,3 +114,21 @@ export const isRegularFieldSuggestionsState = (
     (facet) => facet.facetId === facetId && facet.type === 'regular'
   );
 };
+
+const commerceFieldSuggestionNamespace = 'field_suggestion:';
+
+export function getFacetIdWithoutCommerceFieldSuggestionNamespace(
+  facetId: string
+) {
+  return facetId.startsWith(commerceFieldSuggestionNamespace)
+    ? facetId.slice(commerceFieldSuggestionNamespace.length)
+    : facetId;
+}
+
+export function getFacetIdWithCommerceFieldSuggestionNamespace(
+  facetId: string
+): string {
+  return facetId.startsWith(commerceFieldSuggestionNamespace)
+    ? facetId
+    : `${commerceFieldSuggestionNamespace}${facetId}`;
+}

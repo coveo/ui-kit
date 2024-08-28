@@ -101,6 +101,7 @@ export class AtomicCommerceRecommendationList
    * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link.
    * This property is ignored unless the `display` property is set to `grid`.
    * @defaultValue `_self`
+   * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
@@ -172,20 +173,23 @@ export class AtomicCommerceRecommendationList
 
     this.recommendations.refresh();
 
-    this.productTemplateProvider = new ProductTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-template')
-      ),
-      getResultTemplateRegistered: () => this.productTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.productTemplateRegistered = value;
+    this.productTemplateProvider = new ProductTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-product-template')
+        ),
+        getResultTemplateRegistered: () => this.productTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.productTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-    });
+      this.gridCellLinkTarget
+    );
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -319,6 +323,7 @@ export class AtomicCommerceRecommendationList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
+      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       display: this.display,
@@ -348,7 +353,6 @@ export class AtomicCommerceRecommendationList
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
-        gridTarget={this.gridCellLinkTarget}
         select={() => {
           this.logWarningIfNeeded(interactiveProduct.warningMessage);
           interactiveProduct.select();

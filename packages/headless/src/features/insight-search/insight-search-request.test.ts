@@ -39,6 +39,7 @@ describe('insight search request', () => {
       expect(params.accessToken).toBe(state.configuration.accessToken);
       expect(params.organizationId).toBe(state.configuration.organizationId);
       expect(params.url).toBe(state.configuration.platformUrl);
+      expect(params.locale).toBe(state.configuration.search.locale);
     });
 
     it('#buildInsightSearchRequest returns the state #insightId', async () => {

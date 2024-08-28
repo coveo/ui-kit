@@ -1,6 +1,7 @@
 import {Component, Prop, Listen} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
+  AtomicInterface,
   InitializeEvent,
   initializeEventName,
 } from '../../../utils/initialization-utils';
@@ -21,7 +22,7 @@ export class AtomicExternal {
   public handleInitialization(event: InitializeEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.interface.dispatchEvent(
+    this.#interface.dispatchEvent(
       buildCustomEvent(initializeEventName, event.detail)
     );
   }
@@ -30,19 +31,26 @@ export class AtomicExternal {
   public handleScrollToTop(event: CustomEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.interface.dispatchEvent(
+    this.#interface.dispatchEvent(
       buildCustomEvent('atomic/scrollToTop', event.detail)
     );
   }
 
-  private get interface() {
-    const element = document.querySelector(this.selector);
-    if (!element) {
-      throw new Error(
-        `Cannot find interface element with selector "${this.selector}"`
-      );
+  /**
+   * Represents the bound interface for the AtomicExternal component.
+   */
+  @Prop({mutable: true}) boundInterface?: AtomicInterface;
+
+  get #interface() {
+    if (!this.boundInterface) {
+      this.boundInterface = document.querySelector(this.selector) ?? undefined;
+      if (!this.boundInterface) {
+        throw new Error(
+          `Cannot find interface element with selector "${this.selector}"`
+        );
+      }
     }
 
-    return element;
+    return this.boundInterface!;
   }
 }

@@ -10,6 +10,7 @@ import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions';
 
 export type {
@@ -55,6 +56,15 @@ export interface StandaloneSearchBoxSetActionCreators {
   resetStandaloneSearchBox(
     payload: ResetStandaloneSearchBoxPayload
   ): PayloadAction<ResetStandaloneSearchBoxPayload>;
+
+  /**
+   * Updates the redirection URL of the standalone search box.
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateStandaloneSearchBoxRedirectionUrl(
+    payload: RegisterStandaloneSearchBoxPayload
+  ): PayloadAction<RegisterStandaloneSearchBoxPayload>;
 }
 
 /**
@@ -70,6 +80,7 @@ export function loadStandaloneSearchBoxSetActions(
   return {
     fetchRedirectUrl,
     registerStandaloneSearchBox,
+    updateStandaloneSearchBoxRedirectionUrl,
     resetStandaloneSearchBox,
   };
 }

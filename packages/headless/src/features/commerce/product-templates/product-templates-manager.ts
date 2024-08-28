@@ -8,7 +8,10 @@ import {
 export type ProductTemplate<Content = unknown> = Template<Product, Content>;
 export type ProductTemplateCondition = TemplateCondition<Product>;
 
-export interface ProductTemplatesManager<Content = unknown> {
+export interface ProductTemplatesManager<
+  Content = unknown,
+  LinkContent = unknown,
+> {
   /**
    * Registers any number of product templates in the manager.
    * @param templates (...Template<Product, Content>) A list of templates to register.
@@ -21,6 +24,13 @@ export interface ProductTemplatesManager<Content = unknown> {
    * @returns (Content) The content of the selected template, or null if no template can be selected for the given product.
    */
   selectTemplate: (product: Product) => Content | null;
+  /**
+   * Selects the highest priority link template for which the given product satisfies all conditions.
+   * In the case where satisfied templates have equal priority, the template that was registered first is returned.
+   * @param product (Product) The product for which to select a template.
+   * @returns (Content) The content of the selected template, or null if no template can be selected for the given product.
+   */
+  selectLinkTemplate: (product: Product) => LinkContent | null;
 }
 
 /**
@@ -29,6 +39,7 @@ export interface ProductTemplatesManager<Content = unknown> {
  */
 export function buildProductTemplatesManager<
   Content = unknown,
->(): ProductTemplatesManager<Content> {
-  return buildTemplatesManager<Product, Content>();
+  LinkContent = unknown,
+>(): ProductTemplatesManager<Content, LinkContent> {
+  return buildTemplatesManager<Product, Content, LinkContent>();
 }

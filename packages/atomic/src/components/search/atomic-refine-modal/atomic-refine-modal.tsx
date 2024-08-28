@@ -13,13 +13,18 @@ import {
   SearchStatus,
   FacetManager,
   buildFacetManager,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {
+  AtomicInterface,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {sortByDocumentPosition} from '../../../utils/utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
 import {
@@ -95,6 +100,10 @@ export class AtomicRefineModal implements InitializableComponent {
   @State()
   public facetManagerState!: FacetManagerState;
   @State() @BindStateToController('sort') public sortState!: SortState;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   @Prop({mutable: true}) openButton?: HTMLElement;
@@ -126,6 +135,7 @@ export class AtomicRefineModal implements InitializableComponent {
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.watchEnabled(this.isOpen);
   }
 
@@ -135,26 +145,41 @@ export class AtomicRefineModal implements InitializableComponent {
     this.addFacetColumnStyling(divSlot);
 
     const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
-    const atomicSearchInterface = this.host.closest('atomic-search-interface')!;
-    const facetsSection = findSection(atomicSearchInterface, 'facets');
-    const horizontalFacetsSection = findSection(
-      atomicSearchInterface,
-      'horizontal-facets'
+    const boundInterfaces = this.getBoundInterfaces().sort(
+      sortByDocumentPosition
     );
+    const facetsSection = [];
+    const horizontalFacetsSection = [];
+    for (const boundInterface of boundInterfaces) {
+      const facetSection = findSection(boundInterface, 'facets');
+      if (facetSection) {
+        facetsSection.push(facetSection);
+      }
+      const horizontalFacetSection = findSection(
+        boundInterface,
+        'horizontal-facets'
+      );
+      if (horizontalFacetSection) {
+        horizontalFacetsSection.push(horizontalFacetSection);
+      }
+    }
     const triagedFacets = triageFacetsByParents(
       facets,
-      horizontalFacetsSection,
-      facetsSection
+      ...horizontalFacetsSection,
+      ...facetsSection
     );
-    const [horizontalFacetsSectionFacets, facetsSectionFacets, orphanedFacets] =
-      triagedFacets.map((facetsArray) =>
-        facetsArray.sort(sortByDocumentPosition)
+    for (const triagedFacet of triagedFacets.values()) {
+      triagedFacet.sort(sortByDocumentPosition);
+    }
+
+    const sortedFacets = [];
+    for (let i = 0; i < boundInterfaces.length; i++) {
+      sortedFacets.push(...(triagedFacets.get(facetsSection[i]) || []));
+      sortedFacets.push(
+        ...(triagedFacets.get(horizontalFacetsSection[i]) || [])
       );
-    const sortedFacets = [
-      ...facetsSectionFacets,
-      ...horizontalFacetsSectionFacets,
-      ...orphanedFacets,
-    ];
+    }
+    sortedFacets.push(...(triagedFacets.get(null) || []));
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
@@ -179,6 +204,22 @@ export class AtomicRefineModal implements InitializableComponent {
     }
 
     return divSlot;
+  }
+
+  private getBoundInterfaces(): AtomicInterface[] {
+    const mainInterface: AtomicInterface | null =
+      this.host.closest('atomic-search-interface') ??
+      this.host.closest('atomic-external')?.boundInterface ??
+      null;
+    if (!mainInterface) {
+      throw new Error('Cannot find bound interface');
+    }
+    const boundExternalInterfaces = Array.from(
+      document.querySelectorAll('atomic-external')
+    ).filter(
+      (atomicExternal) => atomicExternal.boundInterface === mainInterface
+    );
+    return [...boundExternalInterfaces, mainInterface];
   }
 
   private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
@@ -229,7 +270,16 @@ export class AtomicRefineModal implements InitializableComponent {
     option && this.sort.sortBy(option.criteria);
   }
 
-  private buildOption({expression, criteria, label}: SortDropdownOption) {
+  private buildOption({expression, criteria, label, tabs}: SortDropdownOption) {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...tabs.included],
+        [...tabs.excluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      return;
+    }
     return (
       <option value={expression} selected={this.sort.isSortedBy(criteria)}>
         {this.bindings.i18n.t(label)}

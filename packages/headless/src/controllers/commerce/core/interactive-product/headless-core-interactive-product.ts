@@ -23,7 +23,7 @@ export interface InteractiveProductOptions
 export interface InteractiveProductCoreProps
   extends InteractiveResultHeadlessCoreProps {
   /**
-   * The options for the `InteractiveResult` controller.
+   * The options for the `InteractiveProduct` sub-controller.
    */
   options: InteractiveProductOptions;
 
@@ -39,7 +39,7 @@ export type InteractiveProductProps = Omit<
 >;
 
 /**
- * The `InteractiveProduct` controller provides an interface for handling long presses, multiple clicks, etc. to ensure
+ * The `InteractiveProduct` sub-controller provides an interface for handling long presses, multiple clicks, etc. to ensure
  * analytics events are logged properly when a user selects a product.
  */
 export interface InteractiveProduct extends InteractiveResultCore {
@@ -47,11 +47,11 @@ export interface InteractiveProduct extends InteractiveResultCore {
 }
 
 /**
- * Creates an `InteractiveProduct` controller instance.
+ * Creates an `InteractiveProduct` sub-controller instance.
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `InteractiveProduct` properties.
- * @returns An `InteractiveProduct` controller instance.
+ * @returns An `InteractiveProduct` sub-controller instance.
  */
 export function buildCoreInteractiveProduct(
   engine: CommerceEngine,
