@@ -2341,7 +2341,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
          */
         "initialize": (options: RecsInitializationOptions) => Promise<void>;
         /**
@@ -3165,7 +3165,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
