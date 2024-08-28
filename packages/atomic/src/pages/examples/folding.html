@@ -27,7 +27,6 @@
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
           organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
-          analytics: {enabled: true},
         });
 
         const engine = searchInterface.engine;
@@ -58,7 +57,6 @@
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
-          <div slot="after-children">Alex</div>
           <atomic-search-box textarea></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">

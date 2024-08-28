@@ -15,7 +15,6 @@ interface CollectionGuardProps {
   imageSize: ItemDisplayImageSize;
   noResultText: string;
 }
-//TODO: how to have less props here
 export const CollectionGuard: FunctionalComponent<CollectionGuardProps> = (
   {
     isLoadingMoreResults,
