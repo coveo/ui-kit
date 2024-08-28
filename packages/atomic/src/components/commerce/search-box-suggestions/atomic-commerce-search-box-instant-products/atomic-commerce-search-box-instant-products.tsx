@@ -107,7 +107,9 @@ export class AtomicCommerceSearchBoxInstantProducts
         : el?.querySelector('atomic-product');
 
     return (
-      atomicProduct?.shadowRoot?.querySelector('atomic-product-link a') || null
+      atomicProduct?.shadowRoot?.querySelector(
+        'atomic-product-link a:not([slot])'
+      ) || null
     );
   }
 
