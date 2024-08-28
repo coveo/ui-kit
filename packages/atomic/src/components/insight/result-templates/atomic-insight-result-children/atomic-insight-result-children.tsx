@@ -2,7 +2,6 @@ import {Component, Element, State, h, Listen, Prop} from '@stencil/core';
 import {
   buildInsightInteractiveResult,
   InsightFoldedResultListState,
-  InsightFoldedResultList,
   InsightFoldedResult,
 } from '../..';
 import {
@@ -24,7 +23,9 @@ import {
 } from '../../../common/item-list/item-list-decorators';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {ItemDisplayImageSize} from '../../../common/layout/display-options';
-import {ResultChildrenCommon} from '../../../common/result-children/result-children-common';
+import {ChildrenWrapper} from '../../../common/result-children/children-wrapper';
+import {CollectionGuard} from '../../../common/result-children/collection-guard';
+import {ResultChildrenGuard} from '../../../common/result-children/guard';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 const childTemplateComponent = 'atomic-insight-result-children-template';
@@ -45,7 +46,7 @@ export class AtomicResultChildren
   @ChildTemplatesContext()
   public itemTemplateProvider?: ItemTemplateProvider;
   @FoldedItemListContext()
-  private foldedResultList!: InsightFoldedResultList;
+  // private foldedResultList!: InsightFoldedResultList;
   @ItemContext({folded: true, parentName: 'atomic-insight-result'})
   private result!: InsightFoldedResult;
   @ItemDisplayConfigContext()
@@ -75,8 +76,6 @@ export class AtomicResultChildren
    */
   @Prop() public noResultText = 'no-documents-related';
 
-  private resultChildrenCommon!: ResultChildrenCommon;
-
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
@@ -84,27 +83,6 @@ export class AtomicResultChildren
   }
 
   public initialize() {
-    this.resultChildrenCommon = new ResultChildrenCommon({
-      getHost: () => this.host,
-      getBindings: () => this.bindings,
-      getResult: () => this.result,
-      getShowInitialChildren: () => this.showInitialChildren,
-      getFoldedResultList: () => this.foldedResultList,
-      getInitialChildren: () => this.initialChildren,
-      getInheritTemplates: () => this.inheritTemplates,
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      getNoResultText: () => this.noResultText,
-      getDisplayConfig: () => this.displayConfig,
-      getImageSize: () => this.imageSize,
-      getFoldedResultListState: () => this.foldedResultListState,
-      renderChild: this.renderChild.bind(this),
-      setInitialChildren: (initialChildren: InsightFoldedResult[]) =>
-        (this.initialChildren = initialChildren),
-      toggleShowInitialChildren: () =>
-        (this.showInitialChildren = !this.showInitialChildren),
-    });
-
     if (this.inheritTemplates) {
       return;
     }
@@ -164,10 +142,71 @@ export class AtomicResultChildren
   }
 
   public componentWillRender() {
-    this.resultChildrenCommon.componentWillRender();
+    if (this.initialChildren || !this.collection) {
+      return;
+    }
+
+    this.initialChildren = this.collection.children;
+  }
+
+  private get collection() {
+    return this.foldedResultListState.results.find((r) => {
+      return r.result.uniqueId === this.result.result.uniqueId;
+    });
+  }
+
+  private renderCollection() {
+    //TODO: collapseButton
+    const collection = this.collection!;
+
+    const children = this.showInitialChildren
+      ? this.initialChildren
+      : collection.children;
+
+    return (
+      <CollectionGuard
+        isLoadingMoreResults={collection.isLoadingMoreResults}
+        moreResultsAvailable={collection.moreResultsAvailable}
+        hasChildren={collection.children.length > 0}
+        numberOfChildren={collection.children.length}
+        density={this.displayConfig.density}
+        imageSize={this.imageSize || this.displayConfig.imageSize}
+        noResultText={this.bindings.i18n.t(this.noResultText)}
+      >
+        <ChildrenWrapper hasChildren={collection.children.length > 0}>
+          {children.map((child, i) =>
+            this.renderChild(child, i === children.length - 1)
+          )}
+        </ChildrenWrapper>
+      </CollectionGuard>
+    );
+  }
+
+  private renderFoldedResult() {
+    if (this.result.children.length === 0) {
+      return;
+    }
+
+    const children = this.result.children;
+
+    return (
+      <ChildrenWrapper hasChildren={this.result.children.length > 0}>
+        {children.map((child, i) =>
+          this.renderChild(child, i === children.length - 1)
+        )}
+      </ChildrenWrapper>
+    );
   }
 
   public render() {
-    return this.resultChildrenCommon.render();
+    return (
+      <ResultChildrenGuard
+        inheritTemplates={this.inheritTemplates}
+        resultTemplateRegistered={this.resultTemplateRegistered}
+        templateHasError={this.templateHasError}
+      >
+        {this.collection ? this.renderCollection() : this.renderFoldedResult()}
+      </ResultChildrenGuard>
+    );
   }
 }

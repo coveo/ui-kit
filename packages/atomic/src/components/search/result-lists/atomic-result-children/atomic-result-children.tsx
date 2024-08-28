@@ -155,6 +155,7 @@ export class AtomicResultChildren implements InitializableComponent {
     this.initialChildren = this.collection.children;
   }
 
+  // put this in a util
   private get collection() {
     return this.foldedResultListState.results.find((r) => {
       return r.result.uniqueId === this.result.result.uniqueId;
