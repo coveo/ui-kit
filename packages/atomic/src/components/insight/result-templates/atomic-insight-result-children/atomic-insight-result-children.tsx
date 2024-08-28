@@ -214,7 +214,7 @@ export class AtomicResultChildren
     const children = this.result.children;
 
     return (
-      <ChildrenWrapper hasChildren={this.result.children.length > 0}>
+      <ChildrenWrapper hasChildren={children.length > 0}>
         {children.map((child, i) =>
           this.renderChild(child, i === children.length - 1)
         )}
