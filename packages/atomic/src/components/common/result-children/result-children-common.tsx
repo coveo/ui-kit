@@ -64,6 +64,7 @@ export class ResultChildrenCommon {
   }
 
   private renderNoResult() {
+    console.log(this.props.getBindings().i18n.t(''));
     return (
       <p part="no-result-root" class="no-result-root my-3">
         {this.props.getBindings().i18n.t(this.props.getNoResultText())}
@@ -168,6 +169,8 @@ export class ResultChildrenCommon {
   }
 
   public render() {
+    console.log('empty binding', this.props.getBindings().i18n.t(''));
+
     if (
       !this.props.getInheritTemplates() &&
       !this.props.getResultTemplateRegistered()
