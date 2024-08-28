@@ -112,6 +112,10 @@ export interface InstantProductsState {
    * An error returned when executing an instant products request, if any. This is `null` otherwise.
    */
   error: CommerceAPIErrorResponse | SerializedError | null;
+  /**
+   * The total number of products that match the current query.
+   */
+  totalCount: number;
 }
 
 /**
@@ -220,6 +224,7 @@ export function buildInstantProducts(
         isLoading: cached?.isLoading || false,
         error: cached?.error || null,
         products: getProducts(),
+        totalCount: cached?.totalCountFiltered || 0,
       };
     },
   };
