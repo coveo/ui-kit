@@ -305,7 +305,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
     this.bindings.store.registerFacet('categoryFacets', facetInfo);
     initializePopover(this.host, {
       ...facetInfo,
-      hasValues: () => !!this.facet.state.values.length,
+      hasValues: () => !!this.facet.state.selectedValueAncestry.length,
       numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
     this.initializeDependenciesManager();
@@ -344,7 +344,8 @@ export class AtomicCategoryFacet implements InitializableComponent {
     return (
       this.searchStatusState.hasError ||
       !this.facet.state.enabled ||
-      (!this.facet.state.values.length && !this.facet.state.parents.length)
+      (!this.facet.state.selectedValueAncestry.length &&
+        !this.facet.state.selectedValueAncestry.length)
     );
   }
 
@@ -381,7 +382,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
   }
 
   private get hasParents() {
-    return !!this.facetState.parents.length;
+    return !!this.facetState.valuesAsTrees.length;
   }
 
   private initializeDependenciesManager() {
@@ -551,11 +552,11 @@ export class AtomicCategoryFacet implements InitializableComponent {
   }
 
   private renderChildren() {
-    if (!this.facetState.values.length) {
+    if (!this.facetState.selectedValueAncestry.length) {
       return;
     }
 
-    return this.facetState.values.map((value, i) =>
+    return this.facetState.selectedValueAncestry.map((value, i) =>
       this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
     );
   }
@@ -598,7 +599,8 @@ export class AtomicCategoryFacet implements InitializableComponent {
           label={this.label}
           i18n={this.bindings.i18n}
           onShowMore={() => {
-            this.resultIndexToFocusOnShowMore = this.facetState.values.length;
+            this.resultIndexToFocusOnShowMore =
+              this.facetState.selectedValueAncestry.length;
             this.focusTargets.showMoreFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
@@ -627,7 +629,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
     const {
       bindings: {i18n},
       label,
-      facetState: {facetSearch, enabled, valuesAsTrees, parents},
+      facetState: {facetSearch, enabled, valuesAsTrees},
       searchStatusState: {hasError, firstSearchExecuted},
     } = this;
 
@@ -666,7 +668,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
                         isTopLevel={true}
                         className="mt-3"
                       >
-                        {this.renderValuesTree(parents, true)}
+                        {this.renderValuesTree(valuesAsTrees, true)}
                       </CategoryFacetParentAsTreeContainer>
                     ) : (
                       <CategoryFacetChildrenAsTreeContainer className="mt-3">
