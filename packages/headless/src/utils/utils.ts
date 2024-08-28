@@ -44,33 +44,6 @@ export function getObjectHash<T>(obj: T) {
   return encodedBtoa(JSON.stringify(obj));
 }
 
-const doNotTrackValues = new Set(['1', 1, 'yes', true]);
-// TODO KIT-2844
-
-/**
- * Logic copied from coveo.analytics.
- *
- * @deprecated Starting with Event Protocol, Coveo will no longer respect the DNT standard.
- * Instead, we will provide implementers with documentation on privacy best-practices, letting
- * them decide which standards to respect.
- * For more context behind the decision, see: https://coveord.atlassian.net/browse/LENS-1502
- */
-export function doNotTrack() {
-  if (typeof navigator === 'undefined' || typeof window === 'undefined') {
-    return false;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const nav = <any>navigator;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const win = <any>window;
-  return [
-    nav.globalPrivacyControl,
-    nav.doNotTrack,
-    nav.msDoNotTrack,
-    win.doNotTrack,
-  ].some((value) => doNotTrackValues.has(value));
-}
-
 export function fromEntries<K extends PropertyKey, V>(
   values: [K, V][]
 ): Record<K, V> {

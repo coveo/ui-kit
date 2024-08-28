@@ -25,7 +25,6 @@ import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
 import {isBrowser} from '../utils/runtime';
 import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
-import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {configuration} from './common-reducers';
 import {EngineConfiguration} from './engine-configuration';
@@ -185,8 +184,7 @@ export interface ExternalEngineOptions<State extends object> {
 }
 
 function getUpdateAnalyticsConfigurationPayload(
-  configuration: EngineConfiguration,
-  logger: Logger
+  configuration: EngineConfiguration
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const apiBaseUrl =
     configuration.organizationEndpoints?.analytics || undefined;
@@ -198,15 +196,6 @@ function getUpdateAnalyticsConfigurationPayload(
     nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${configuration.organizationId}/events/v1`,
     apiBaseUrl,
   };
-
-  // TODO KIT-2844
-  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
-    logger.info('Analytics disabled since doNotTrack is active.');
-    return {
-      ...payloadWithURL,
-      enabled: false,
-    };
-  }
 
   if (payloadWithURL.analyticsMode === 'next' && !payload.trackingId) {
     throw new InvalidEngineConfiguration(
@@ -263,8 +252,7 @@ export function buildEngine<
   );
 
   const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
-    options.configuration,
-    engine.logger
+    options.configuration
   );
   if (analyticsPayload) {
     engine.dispatch(updateAnalyticsConfiguration(analyticsPayload));
