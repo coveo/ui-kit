@@ -10,7 +10,7 @@ import {
   REPO_OWNER,
 } from './common/constants.mjs';
 
-const RELEASE_FREEZE_ID = 215874;
+const RELEASE_FREEZE_ID = 1510095;
 
 export const limitWriteAccessToBot = () => changeBranchRestrictions(true);
 

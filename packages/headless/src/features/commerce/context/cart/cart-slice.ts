@@ -43,7 +43,7 @@ export const cartReducer = createReducer(
         state.cart[key] = payload;
         return;
       })
-      .addCase(purchase.fulfilled, (state) => {
+      .addCase(purchase, (state) => {
         setItemsAsPurchased(state);
         const {cart, cartItems} = getCartInitialState();
         setItemsInState(state, cartItems, cart);
