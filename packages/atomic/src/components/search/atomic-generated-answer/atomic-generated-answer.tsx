@@ -117,26 +117,26 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() answerConfigurationId?: string;
 
   /**
-   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
-   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   *  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer>
    * ```
-   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
   public tabsIncluded: string[] | string = '[]';
 
   /**
-   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
    * Set this property as a stringified JSON array, e.g.,
    * ```html
-   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   *  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer>
    * ```
-   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
