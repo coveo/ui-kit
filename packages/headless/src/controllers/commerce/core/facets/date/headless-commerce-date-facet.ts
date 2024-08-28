@@ -20,7 +20,12 @@ export type DateFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-export type DateFacetState = CoreCommerceFacetState<DateFacetValue>;
+export type DateFacetState = Omit<
+  CoreCommerceFacetState<DateFacetValue>,
+  'type'
+> & {
+  type: 'dateRange';
+};
 
 /**
  * The `DateFacet` sub-controller offers a high-level programming interface for implementing date commerce
@@ -86,9 +91,18 @@ export function buildCommerceDateFacet(
     },
 
     get state() {
-      return coreController.state;
+      return getDateFacetState(coreController.state);
     },
 
     type: 'dateRange',
   };
 }
+
+export const getDateFacetState = (
+  coreState: CoreCommerceFacetState<DateFacetValue>
+): DateFacetState => {
+  return {
+    ...coreState,
+    type: 'dateRange',
+  };
+};

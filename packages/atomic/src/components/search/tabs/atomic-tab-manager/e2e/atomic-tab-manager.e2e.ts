@@ -69,6 +69,11 @@ test.describe('AtomicTabManager', () => {
           'Relevance',
         ]);
       });
+
+      test('result list', async ({tabManager}) => {
+        await expect(tabManager.excludedResultList).toBeVisible();
+        await expect(tabManager.includedResultList).toBeHidden();
+      });
     });
 
     test('should display tab buttons for each atomic-tab elements', async ({
@@ -119,6 +124,11 @@ test.describe('AtomicTabManager', () => {
             'Relevance',
           ]);
         });
+
+        test('result list', async ({tabManager}) => {
+          await expect(tabManager.includedResultList).toBeVisible();
+          await expect(tabManager.excludedResultList).toBeHidden();
+        });
       });
 
       test.describe('when selecting previous tab', () => {
@@ -152,6 +162,11 @@ test.describe('AtomicTabManager', () => {
               'Name ascending',
               'Relevance',
             ]);
+          });
+
+          test('result list', async ({tabManager}) => {
+            await expect(tabManager.excludedResultList).toBeVisible();
+            await expect(tabManager.includedResultList).toBeHidden();
           });
         });
       });
@@ -245,6 +260,11 @@ test.describe('AtomicTabManager', () => {
             'Relevance',
           ]);
         });
+
+        test('result list', async ({tabManager}) => {
+          await expect(tabManager.includedResultList).toBeVisible();
+          await expect(tabManager.excludedResultList).toBeHidden();
+        });
       });
 
       test.describe('when selecting previous dropdown option', () => {
@@ -281,6 +301,11 @@ test.describe('AtomicTabManager', () => {
               'Name ascending',
               'Relevance',
             ]);
+          });
+
+          test('result list', async ({tabManager}) => {
+            await expect(tabManager.excludedResultList).toBeVisible();
+            await expect(tabManager.includedResultList).toBeHidden();
           });
         });
       });
