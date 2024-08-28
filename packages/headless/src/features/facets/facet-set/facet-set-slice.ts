@@ -3,7 +3,6 @@ import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
 } from '../../breadcrumb/breadcrumb-actions';
-import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
 import {disableFacet} from '../../facet-options/facet-options-actions';
 import {change} from '../../history/history-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
@@ -187,16 +186,6 @@ export const facetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
-        facets.forEach((facetResponse) =>
-          mutateStateFromFacetResponse(
-            state[facetResponse.facetId]?.request,
-            facetResponse
-          )
-        );
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const facets = (action.payload.response?.facets ||
-          []) as unknown as FacetResponse[];
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,

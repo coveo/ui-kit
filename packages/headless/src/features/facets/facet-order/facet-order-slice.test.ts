@@ -3,12 +3,9 @@ import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce
 import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
 import {buildSearchResponse} from '../../../test/mock-commerce-search';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
 import {Parameters} from '../../commerce/parameters/parameters-actions';
-import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions';
-import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../commerce/search-parameters/search-parameters-actions';
 import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
 import {change} from '../../history/history-actions';
@@ -72,11 +69,6 @@ describe('facet-order slice', () => {
 
   describe.each([
     {
-      actionName: '#fetchProductListing.fulfilled',
-      action: fetchProductListing.fulfilled,
-      responseBuilder: buildFetchProductListingResponse,
-    },
-    {
       actionName: '#executeCommerceSearch.fulfilled',
       action: executeCommerceSearch.fulfilled,
       responseBuilder: buildSearchResponse,
@@ -109,10 +101,6 @@ describe('facet-order slice', () => {
     {
       actionName: '#restoreSearchParameters',
       action: restoreSearchParameters,
-    },
-    {
-      actionName: '#restoreProductListingParameters',
-      action: restoreProductListingParameters,
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ])('$actionName', ({action}: {action: (payload: any) => Action}) => {

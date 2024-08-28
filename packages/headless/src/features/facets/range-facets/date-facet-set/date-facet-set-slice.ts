@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {disableFacet} from '../../../facet-options/facet-options-actions';
 import {change} from '../../../history/history-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
@@ -74,11 +73,6 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];
-        onRangeFacetRequestFulfilled(state, facets, convertToDateRangeRequests);
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const facets = (action.payload.response?.facets ||
-          []) as unknown as DateFacetResponse[];
         onRangeFacetRequestFulfilled(state, facets, convertToDateRangeRequests);
       })
       .addCase(disableFacet, (state, action) => {
