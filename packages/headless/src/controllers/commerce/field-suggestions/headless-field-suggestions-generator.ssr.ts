@@ -1,4 +1,4 @@
-import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   FieldSuggestionsGenerator,
   buildFieldSuggestionsGenerator,
@@ -17,7 +17,7 @@ export type {GeneratedFieldSuggestionsControllers} from './headless-field-sugges
 export type {FieldSuggestionsGenerator};
 
 export interface FieldSuggestionsGeneratorDefinition
-  extends SearchAndListingControllerDefinitionWithoutProps<FieldSuggestionsGenerator> {}
+  extends UniversalControllerDefinitionWithoutProps<FieldSuggestionsGenerator> {}
 
 /**
  * Defines the `FieldSuggestionsGenerator` controller for the purpose of server-side rendering.
@@ -30,6 +30,7 @@ export function defineFieldSuggestionsGenerator(): FieldSuggestionsGeneratorDefi
   return {
     search: true,
     listing: true,
+    standalone: true,
     build: (engine) => buildFieldSuggestionsGenerator(engine),
   };
 }

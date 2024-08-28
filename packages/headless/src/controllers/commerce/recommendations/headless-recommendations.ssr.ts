@@ -23,7 +23,7 @@ export function defineRecommendations(
   return {
     search: true,
     listing: true,
-    recommendation: true,
+    standalone: true,
     build: (engine) => buildRecommendations(engine, props),
   };
 }

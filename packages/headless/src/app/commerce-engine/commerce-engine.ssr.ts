@@ -138,9 +138,9 @@ export function defineCommerceEngine<
     TControllerDefinitions,
     SolutionType.search
   >;
-  recommendationEngineDefinition: CommerceEngineDefinition<
+  standaloneEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
-    SolutionType.recommendation
+    SolutionType.standalone
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
@@ -299,16 +299,14 @@ export function defineCommerceEngine<
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
-    recommendationEngineDefinition: {
-      build: buildFactory(SolutionType.recommendation),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.recommendation),
-      hydrateStaticState: hydrateStaticStateFactory(
-        SolutionType.recommendation
-      ),
+    standaloneEngineDefinition: {
+      build: buildFactory(SolutionType.standalone),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.standalone),
+      hydrateStaticState: hydrateStaticStateFactory(SolutionType.standalone),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<
       TControllerDefinitions,
-      SolutionType.recommendation
+      SolutionType.standalone
     >,
   };
 }

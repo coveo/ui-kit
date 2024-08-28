@@ -10,7 +10,7 @@ const engineDefinition = defineCommerceEngine(engineConfig);
 export const {
   listingEngineDefinition,
   searchEngineDefinition,
-  recommendationEngineDefinition,
+  standaloneEngineDefinition,
 } = engineDefinition;
 
 export type ListingStaticState = InferStaticState<
@@ -25,9 +25,9 @@ export type SearchHydratedState = InferHydratedState<
   typeof searchEngineDefinition
 >;
 
-export type RecommendationStaticState = InferStaticState<
-  typeof recommendationEngineDefinition
+export type StandaloneStaticState = InferStaticState<
+  typeof standaloneEngineDefinition
 >;
-export type RecommendationHydratedState = InferHydratedState<
-  typeof recommendationEngineDefinition
+export type StandaloneHydratedState = InferHydratedState<
+  typeof standaloneEngineDefinition
 >;

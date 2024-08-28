@@ -27,7 +27,7 @@ export function defineProductView(): ProductViewDefinition {
   return {
     listing: true,
     search: true,
-    recommendation: true,
+    standalone: true,
     build: (engine) => buildSSRProductView(engine),
   };
 }

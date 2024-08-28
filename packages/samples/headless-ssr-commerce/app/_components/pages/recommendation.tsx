@@ -3,9 +3,9 @@
 import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 import {
-  RecommendationStaticState,
-  RecommendationHydratedState,
-  recommendationEngineDefinition,
+  StandaloneStaticState,
+  StandaloneHydratedState,
+  standaloneEngineDefinition,
 } from '../../_lib/commerce-engine';
 import {Recommendations} from '../recommendation-list';
 
@@ -13,20 +13,20 @@ export default function Recommendation({
   staticState,
   navigatorContext,
 }: {
-  staticState: RecommendationStaticState;
+  staticState: StandaloneStaticState;
   navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
-    RecommendationHydratedState | undefined
+    StandaloneHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  recommendationEngineDefinition.setNavigatorContextProvider(
+  standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
 
   useEffect(() => {
-    recommendationEngineDefinition
+    standaloneEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
       })

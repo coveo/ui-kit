@@ -66,16 +66,15 @@ export function buildControllerDefinitions<
       definition['listing'] === false &&
       solutionType === SolutionType['listing'];
 
-    const unavailableInRecommendationSolutionType =
-      solutionType === SolutionType['recommendation'] &&
-      'recommendation' in definition
-        ? definition['recommendation'] === false
+    const unavailableInStandaloneSolutionType =
+      solutionType === SolutionType['standalone'] && 'standalone' in definition
+        ? definition['standalone'] === false
         : false;
 
     if (
       unavailableInSearchSolutionType ||
       unavailableInListingSolutionType ||
-      unavailableInRecommendationSolutionType
+      unavailableInStandaloneSolutionType
     ) {
       return null;
     }

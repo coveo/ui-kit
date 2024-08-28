@@ -16,7 +16,7 @@ export type {
 export enum SolutionType {
   search = 'search',
   listing = 'listing',
-  recommendation = 'recommendation',
+  standalone = 'standalone',
 }
 
 export interface ControllerDefinitionWithoutProps<
@@ -153,7 +153,7 @@ interface UniversalController {
   /**
    * @internal
    */
-  [SolutionType.recommendation]: true;
+  [SolutionType.standalone]: true;
 }
 
 interface SearchOnlyController {
