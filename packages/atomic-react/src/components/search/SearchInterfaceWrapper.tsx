@@ -36,10 +36,6 @@ interface WrapperProps
    * @deprecated This option has no effect. Rather, set the search hub through the `engine` `search` configuration.
    */
   searchHub?: string;
-  /**
-   * @deprecated This option has no effect. Rather, set the analytics through the `engine` `analytics` `enabled` configuration.
-   */
-  analytics?: boolean;
 }
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
