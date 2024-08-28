@@ -39,7 +39,6 @@ import {
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
-import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
@@ -128,9 +127,6 @@ export type InsightAction =
 
 export type CaseAssistAction =
   PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
-
-export type ProductRecommendationAction =
-  PreparableAnalyticsAction<StateNeededByProductRecommendationsAnalyticsProvider>;
 
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,

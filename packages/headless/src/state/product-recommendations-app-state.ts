@@ -2,13 +2,13 @@ import {
   ConfigurationSection,
   ContextSection,
   DictionaryFieldContextSection,
-  ProductRecommendationsSection,
+  RecommendationsSection,
   SearchHubSection,
   VersionSection,
 } from './state-sections';
 
 export type ProductRecommendationsAppState = ConfigurationSection &
-  ProductRecommendationsSection &
+  RecommendationsSection &
   ContextSection &
   DictionaryFieldContextSection &
   SearchHubSection &

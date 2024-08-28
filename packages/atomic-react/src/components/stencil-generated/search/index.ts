@@ -23,7 +23,6 @@ export const AtomicFoldedResultList = /*@__PURE__*/createReactComponent<JSX.Atom
 export const AtomicFormatCurrency = /*@__PURE__*/createReactComponent<JSX.AtomicFormatCurrency, HTMLAtomicFormatCurrencyElement>('atomic-format-currency');
 export const AtomicFormatNumber = /*@__PURE__*/createReactComponent<JSX.AtomicFormatNumber, HTMLAtomicFormatNumberElement>('atomic-format-number');
 export const AtomicFormatUnit = /*@__PURE__*/createReactComponent<JSX.AtomicFormatUnit, HTMLAtomicFormatUnitElement>('atomic-format-unit');
-export const AtomicFrequentlyBoughtTogether = /*@__PURE__*/createReactComponent<JSX.AtomicFrequentlyBoughtTogether, HTMLAtomicFrequentlyBoughtTogetherElement>('atomic-frequently-bought-together');
 export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswer, HTMLAtomicGeneratedAnswerElement>('atomic-generated-answer');
 export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');

@@ -1057,11 +1057,6 @@ export namespace Components {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface AtomicFrequentlyBoughtTogether {
-    }
-    /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
@@ -4150,15 +4145,6 @@ declare global {
         new (): HTMLAtomicFormatUnitElement;
     };
     /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
-    }
-    var HTMLAtomicFrequentlyBoughtTogetherElement: {
-        prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
-        new (): HTMLAtomicFrequentlyBoughtTogetherElement;
-    };
-    /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
@@ -5665,7 +5651,6 @@ declare global {
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
-        "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
@@ -6756,11 +6741,6 @@ declare namespace LocalJSX {
           * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
-    }
-    /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface AtomicFrequentlyBoughtTogether {
     }
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -9179,7 +9159,6 @@ declare namespace LocalJSX {
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
-        "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
@@ -9538,10 +9517,6 @@ declare module "@stencil/core" {
              * The numerical format of compatible parents will be set according to the properties of this component.
              */
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
-            /**
-             * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-             */
-            "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             /**
              * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
