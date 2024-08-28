@@ -19,7 +19,6 @@
     "dist/",
     "recommendation/",
     "product-recommendation/",
-    "product-listing/",
     "insight/",
     "case-assist/",
     "ssr/",

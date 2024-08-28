@@ -1,3 +1,4 @@
+import {getProductListingInitialState} from '../features/commerce/product-listing/product-listing-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getContextInitialState} from '../features/context/context-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
@@ -9,7 +10,6 @@ import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-st
 import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
-import {getProductListingInitialState} from '../features/product-listing/old-product-listing-state';
 import {getSortInitialState} from '../features/sort/sort-state';
 import {ProductListingAppState} from '../state/product-listing-app-state';
 

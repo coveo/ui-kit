@@ -1,4 +1,4 @@
-import {ProductListing as HeadlessProductListing} from '@coveo/headless/product-listing';
+import {ProductListing as HeadlessProductListing} from '@coveo/headless/commerce';
 import {useEffect, useState, FunctionComponent} from 'react';
 
 interface ProductListingProps {

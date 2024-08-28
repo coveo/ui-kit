@@ -10,13 +10,13 @@ import {
   FacetSection,
   NumericFacetSection,
   PaginationSection,
-  OldProductListingSection,
+  ProductListingSection,
   StructuredSortSection,
   VersionSection,
 } from './state-sections';
 
 export type ProductListingAppState = ConfigurationSection &
-  OldProductListingSection &
+  ProductListingSection &
   FacetSearchSection &
   FacetSection &
   NumericFacetSection &

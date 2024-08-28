@@ -1,12 +1,12 @@
 import {
-  OldProductListingSection,
+  ProductListingSection,
   SearchSection,
 } from '../../../state/state-sections';
 import {FacetSection} from '../../../state/state-sections';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {FacetResponse, FacetValue} from './interfaces/response';
 
-export type FacetResponseSection = SearchSection | OldProductListingSection;
+export type FacetResponseSection = SearchSection | ProductListingSection;
 
 export const baseFacetResponseSelector = (
   state: Partial<FacetResponseSection>,
@@ -19,7 +19,7 @@ export const baseFacetResponseSelector = (
     'facets' in state.productListing &&
     'results' in state.productListing.facets
   ) {
-    return state.productListing.facets.results.find(findById);
+    return state.productListing.facets.find(findById);
   }
 
   if ('search' in state && state.search) {
@@ -42,7 +42,9 @@ export const facetResponseSelector = (
   state: FacetResponseSection & FacetSection,
   facetId: string
 ) => {
-  const response = baseFacetResponseSelector(state, facetId);
+  const response = baseFacetResponseSelector(state, facetId) as
+    | AnyFacetResponse
+    | undefined;
   if (isFacetResponse(state, response)) {
     return response;
   }

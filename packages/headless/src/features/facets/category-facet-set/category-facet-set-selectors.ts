@@ -18,7 +18,9 @@ export const categoryFacetResponseSelector = (
   state: CategoryFacetSection & Partial<FacetResponseSection>,
   facetId: string
 ) => {
-  const response = baseFacetResponseSelector(state, facetId);
+  const response = baseFacetResponseSelector(state, facetId) as
+    | AnyFacetResponse
+    | undefined;
   if (isCategoryFacetResponse(state, response)) {
     return response;
   }
