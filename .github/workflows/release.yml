@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          ref: 'release/v2'
+          ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
@@ -67,7 +67,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          ref: 'release/v2'
+          ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Notify Docs
         run: npm run notify:docs
@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          ref: 'release/v2'
+          ref: 'release/v3'
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
