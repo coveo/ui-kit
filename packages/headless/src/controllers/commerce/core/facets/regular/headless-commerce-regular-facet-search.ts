@@ -21,9 +21,7 @@ export type RegularFacetSearchState =
 export type RegularFacetSearch = Omit<
   ReturnType<typeof buildFacetSearch>,
   'showMoreResults' | 'updateCaptions' | 'state'
-> & {
-  state: RegularFacetSearchState;
-};
+>;
 
 export interface RegularFacetSearchProps
   extends Omit<
@@ -41,7 +39,7 @@ export function buildRegularFacetSearch(
     throw loadReducerError;
   }
 
-  const {showMoreResults, updateCaptions, ...restOfFacetSearch} =
+  const {showMoreResults, state, updateCaptions, ...restOfFacetSearch} =
     buildFacetSearch(engine, {
       ...props,
       executeFacetSearchActionCreator: (facetId: string) =>
