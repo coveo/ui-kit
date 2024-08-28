@@ -152,7 +152,6 @@ export class AtomicResultChildren
     this.initialChildren = this.collection.children;
   }
 
-  //TODO: out this in a util
   private get collection() {
     return this.foldedResultListState.results.find((r) => {
       return r.result.uniqueId === this.result.result.uniqueId;
@@ -166,7 +165,6 @@ export class AtomicResultChildren
   }
 
   private renderCollection() {
-    //TODO: collapseButton
     const collection = this.collection!;
 
     const children = this.showInitialChildren

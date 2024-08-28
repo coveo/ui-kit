@@ -84,12 +84,6 @@ export class AtomicResultChildren implements InitializableComponent {
    */
   @Prop() public noResultText = 'no-documents-related';
 
-  // This is not even needed, they could disable it via css...
-  /**
-   * Whether to show a button to load more or collapse the children results.
-   */
-  // @Prop() public showLoadMore = true;
-
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
@@ -163,7 +157,6 @@ export class AtomicResultChildren implements InitializableComponent {
     this.initialChildren = this.collection.children;
   }
 
-  // put this in a util
   private get collection() {
     return this.foldedResultListState.results.find((r) => {
       return r.result.uniqueId === this.result.result.uniqueId;
