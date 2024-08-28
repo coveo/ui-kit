@@ -2,8 +2,7 @@ name: Master Robot
 on:
   push:
     branches:
-      - master
-      - 'prerelease/**'
+      - v2
 jobs:
   build:
     name: 'Build'

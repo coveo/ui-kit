@@ -18,7 +18,7 @@ import {CoveoFramework} from '../utils/version';
  *
  * For example: `https://orgid.org.coveo.com`
  *
- * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
+ * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/v2/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
  */
 export interface CoreEngineOrganizationEndpoints {
   /**
@@ -83,7 +83,7 @@ export interface EngineConfiguration<
    *
    * For example: `https://orgid.org.coveo.com`
    *
-   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
+   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/v2/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
    *
    * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.  See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
    */

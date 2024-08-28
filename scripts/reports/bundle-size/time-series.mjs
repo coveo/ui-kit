@@ -5,7 +5,7 @@ const branch = process.env.GIT_BRANCH;
 const fileName = 'bundle-size-time-series.csv';
 
 function isMasterBranch() {
-  return branch === 'origin/master';
+  return branch === 'origin/v2';
 }
 
 function dataFileExists() {
