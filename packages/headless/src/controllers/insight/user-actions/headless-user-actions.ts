@@ -52,7 +52,7 @@ export interface UserActions extends Controller {
    */
   fetchUserActions(userId: string): void;
   /**
-   * Log the opening of the user actions.
+   * Emits an analytics event indicating that the user actions panel was opened.
    */
   logOpenUserActions(): void;
   /**
