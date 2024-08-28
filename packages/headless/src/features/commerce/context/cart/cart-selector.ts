@@ -29,6 +29,16 @@ export const getECPurchasePayload = (
   transaction,
 });
 
+export interface CartActionDetails extends Omit<Ec.CartAction, 'currency'> {}
+
+export const getECCartActionPayload = (
+  cartActionDetails: CartActionDetails,
+  state: CommerceEngineState
+): Ec.CartAction => ({
+  currency: getCurrency(state.commerceContext),
+  ...cartActionDetails,
+});
+
 export const itemsSelector = createSelector(
   (cartState: CartState) => cartState.cart,
   (cartState: CartState) => cartState.cartItems,
