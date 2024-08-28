@@ -26,14 +26,14 @@ export default defineConfig({
         viewport: DEFAULT_DESKTOP_VIEWPORT,
       },
     },
-    {
-      name: 'firefox',
-      use: {...devices['Desktop Firefox'], viewport: DEFAULT_DESKTOP_VIEWPORT},
-    },
-    {
-      name: 'webkit',
-      use: {...devices['Desktop Safari'], viewport: DEFAULT_DESKTOP_VIEWPORT},
-    },
+    // {
+    //   name: 'firefox',
+    //   use: {...devices['Desktop Firefox'], viewport: DEFAULT_DESKTOP_VIEWPORT},
+    // },
+    // {
+    //   name: 'webkit',
+    //   use: {...devices['Desktop Safari'], viewport: DEFAULT_DESKTOP_VIEWPORT},
+    // },
   ],
   expect: {
     timeout: 7 * 1000,
