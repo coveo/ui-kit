@@ -35,7 +35,7 @@ export function insertSearchBox() {
       const logoLink = document.createElement('a');
       logoLink.href = 'https://docs.coveo.com/en/0';
       const logoImg = document.createElement('img');
-      logoImg.src = '../assets/coveo-docs-logo.svg';
+      logoImg.src = 'assets/coveo-docs-logo.svg';
       logoImg.alt = 'Coveo Docs Logo';
 
       logoLink.appendChild(logoImg);
