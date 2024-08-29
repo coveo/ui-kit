@@ -113,7 +113,7 @@ async function buildOptions(): Promise<Options> {
       template: 'Build Your Own',
     },
     scratchOrg: {
-      alias: 'LWC',
+      alias: 'LWC2',
       defFile: await prepareScratchOrgDefinitionFile(
         path.resolve('config/project-scratch-def.json')
       ),
