@@ -21,11 +21,6 @@ export function load(app: Application) {
         rel="stylesheet"
         href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"
       />
-    </>
-  ));
-
-  app.renderer.hooks.on('body.end', () => (
-    <>
       <script
         type="module"
         src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
