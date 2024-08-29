@@ -17,7 +17,8 @@ import {
 } from './preprocess-request';
 
 const {Response} = jest.requireActual('node-fetch');
-const mockFetch = fetch as jest.Mock;
+global.fetch = jest.fn();
+const mockFetch = global.fetch as jest.Mock;
 
 describe('url helper', () => {
   it('return the correct #platformUrl()', () => {
