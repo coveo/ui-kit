@@ -13,10 +13,7 @@ import {
 export type ResultTemplate<Content = unknown> = Template<Result, Content>;
 export type ResultTemplateCondition = TemplateCondition<Result>;
 
-export interface ResultTemplatesManager<
-  Content = unknown,
-  LinkContent = unknown,
-> {
+export interface ResultTemplatesManager<Content = unknown> {
   /**
    * Registers any number of result templates in the manager.
    * @param templates (...ResultTemplate<Content>) A list of templates to register.
@@ -29,13 +26,6 @@ export interface ResultTemplatesManager<
    * @returns (Content) The selected template's content, or null if no template's conditions are satisfied.
    */
   selectTemplate(result: Result): Content | null;
-  /**
-   * Selects the highest priority link template for which the given result satisfies all conditions.
-   * In the case where satisfied templates have equal priority, the template that was registered first is returned.
-   * @param result (Result) The result for which to select a template.
-   * @returns (Content) The selected template's content, or null if no template's conditions are satisfied.
-   */
-  selectLinkTemplate(result: Result): LinkContent | null;
 }
 
 /**
@@ -43,21 +33,15 @@ export interface ResultTemplatesManager<
  * @param engine (HeadlessEngine) The `HeadlessEngine` instance of your application.
  * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
  */
-export function buildResultTemplatesManager<
-  Content = unknown,
-  LinkContent = unknown,
->(
+export function buildResultTemplatesManager<Content = unknown>(
   engine: CoreEngine | CoreEngineNext
-): ResultTemplatesManager<Content, LinkContent> {
+): ResultTemplatesManager<Content> {
   if (!loadResultTemplatesManagerReducers(engine)) {
     throw loadReducerError;
   }
 
-  const {
-    registerTemplates: coreRegisterTemplates,
-    selectTemplate,
-    selectLinkTemplate,
-  } = buildTemplatesManager<Result, Content, LinkContent>();
+  const {registerTemplates: coreRegisterTemplates, selectTemplate} =
+    buildTemplatesManager<Result, Content>();
   return {
     registerTemplates: (...newTemplates: Template<Result, Content>[]) => {
       coreRegisterTemplates(...newTemplates);
@@ -68,7 +52,6 @@ export function buildResultTemplatesManager<
       engine.dispatch(registerFieldsToInclude(fields));
     },
     selectTemplate,
-    selectLinkTemplate,
   };
 }
 

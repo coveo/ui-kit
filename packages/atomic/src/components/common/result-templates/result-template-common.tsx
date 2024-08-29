@@ -6,7 +6,6 @@ import {
 import {h} from '@stencil/core';
 import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/sections';
 
 export type TemplateContent = DocumentFragment;
@@ -47,7 +46,6 @@ function groupNodesByType(nodes: NodeList) {
 export class ResultTemplateCommon {
   private host: HTMLDivElement;
   public matchConditions: ResultTemplateCondition[] = [];
-  private gridCellLinkTarget: ItemTarget = '_self';
 
   constructor({
     host,
@@ -81,17 +79,7 @@ export class ResultTemplateCommon {
       return;
     }
 
-    if (
-      host.parentElement?.attributes.getNamedItem('display')?.value === 'grid'
-    ) {
-      this.gridCellLinkTarget = host.parentElement?.attributes.getNamedItem(
-        'grid-cell-link-target'
-      )?.value as ItemTarget;
-    }
-
-    const template = host.querySelector<HTMLTemplateElement>(
-      'template:not([slot])'
-    );
+    const template = host.querySelector('template');
     if (!template) {
       setError(
         new Error(
@@ -138,7 +126,6 @@ export class ResultTemplateCommon {
     return {
       conditions: conditions.concat(this.matchConditions),
       content: getTemplateElement(this.host).content!,
-      linkContent: this.getLinkTemplateElement(this.host).content!,
       priority: 1,
     };
   }
@@ -153,23 +140,10 @@ export class ResultTemplateCommon {
       );
     }
   }
-
-  getDefaultLinkTemplateElement() {
-    const linkTemplate = document.createElement('template');
-    linkTemplate.innerHTML = `<atomic-result-link>${this.gridCellLinkTarget ? `<a slot="attributes" target="${this.gridCellLinkTarget}"></a>` : ''}</atomic-result-link>`;
-    return linkTemplate;
-  }
-
-  getLinkTemplateElement(host: HTMLElement) {
-    return (
-      host.querySelector<HTMLTemplateElement>('template[slot="link"]') ??
-      this.getDefaultLinkTemplateElement()
-    );
-  }
 }
 
 function getTemplateElement(host: HTMLElement) {
-  return host.querySelector<HTMLTemplateElement>('template:not([slot])')!;
+  return host.querySelector('template')!;
 }
 
 export function makeMatchConditions(

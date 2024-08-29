@@ -99,7 +99,6 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
-   * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
@@ -180,24 +179,21 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
       },
     });
 
-    this.itemTemplateProvider = new ItemTemplateProvider(
-      {
-        includeDefaultTemplate: true,
-        templateElements: Array.from(
-          this.host.querySelectorAll('atomic-recs-result-template')
-        ),
-        getResultTemplateRegistered: () => this.resultTemplateRegistered,
-        getTemplateHasError: () => this.templateHasError,
-        setResultTemplateRegistered: (value: boolean) => {
-          this.resultTemplateRegistered = value;
-        },
-        setTemplateHasError: (value: boolean) => {
-          this.templateHasError = value;
-        },
-        bindings: this.bindings,
+    this.itemTemplateProvider = new ItemTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-recs-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
       },
-      this.gridCellLinkTarget
-    );
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      bindings: this.bindings,
+    });
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -386,6 +382,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
     return (
       <DisplayGrid
         item={recommendation}
+        gridTarget={this.gridCellLinkTarget}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)

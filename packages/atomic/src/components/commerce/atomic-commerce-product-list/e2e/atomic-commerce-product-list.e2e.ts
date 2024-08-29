@@ -48,9 +48,10 @@ test.describe('when gridCellLinkTarget is set to _blank', async () => {
   });
 
   test('should open product in new tab', async ({context, productList}) => {
-    const newTabPromise = context.waitForEvent('page');
-    await productList.products.first().click();
-    const newTab = await newTabPromise;
+    const [newTab] = await Promise.all([
+      context.waitForEvent('page'),
+      productList.products.first().click(),
+    ]);
     await newTab.waitForLoadState();
 
     expect(newTab.url()).toMatch(/sports\.barca\.group\/pdp\/.*$/);

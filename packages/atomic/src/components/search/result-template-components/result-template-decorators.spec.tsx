@@ -8,6 +8,12 @@ import {createAtomicStore} from '../atomic-search-interface/store';
 import {AtomicResultFieldsList} from './atomic-result-fields-list/atomic-result-fields-list';
 import {resultContext} from './result-template-decorators';
 
+// https://github.com/ionic-team/stencil/issues/3260
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(global as any).DocumentFragment = class DocumentFragment extends Node {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(global as any).ShadowRoot = class ShadowRoot extends DocumentFragment {};
+
 describe('ResultContext decorator', () => {
   let page: SpecPage;
 

@@ -23,4 +23,3 @@ packages/atomic/src/generated/**
 packages/quantic/docs/out/quantic-docs.json
 packages/samples/headless-react/build/**/*
 packages/samples/angular/src/lang/*.json
-packages/samples/vuejs/public/lang/*.json

@@ -13,26 +13,26 @@ export interface TemplateProviderProps<ItemType> {
   includeDefaultTemplate: boolean;
 }
 
-export abstract class TemplateProvider<ItemType> {
-  private templateManager: TemplatesManager<
-    ItemType,
-    DocumentFragment,
-    DocumentFragment
-  >;
+function defaultTemplate() {
+  const content = document.createDocumentFragment();
+  const linkEl = document.createElement('atomic-result-link');
+  content.appendChild(linkEl);
+  return {
+    content,
+    conditions: [],
+  };
+}
 
-  protected abstract makeDefaultTemplate(): Template<
-    ItemType,
-    DocumentFragment,
-    DocumentFragment
-  >;
+export class TemplateProvider<ItemType> {
+  private templateManager: TemplatesManager<ItemType, DocumentFragment>;
 
   constructor(
     private props: TemplateProviderProps<ItemType>,
-    private buildManager: () => TemplatesManager<
+    private buildManager: () => TemplatesManager<ItemType, DocumentFragment>,
+    private makeDefaultTemplate: () => Template<
       ItemType,
-      DocumentFragment,
       DocumentFragment
-    >
+    > = defaultTemplate
   ) {
     this.templateManager = this.buildManager();
     this.registerResultTemplates();
@@ -56,7 +56,6 @@ export abstract class TemplateProvider<ItemType> {
     ).concat(
       customTemplates.filter((template) => template) as Template<
         ItemType,
-        DocumentFragment,
         DocumentFragment
       >[]
     );
@@ -67,10 +66,6 @@ export abstract class TemplateProvider<ItemType> {
 
   public getTemplateContent(item: ItemType) {
     return this.templateManager.selectTemplate(item)!;
-  }
-
-  public getLinkTemplateContent(item: ItemType) {
-    return this.templateManager.selectLinkTemplate(item)!;
   }
 
   public get templatesRegistered() {

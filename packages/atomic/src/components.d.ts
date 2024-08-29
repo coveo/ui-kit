@@ -479,9 +479,6 @@ export namespace Components {
          */
         "previousButtonIcon": string;
     }
-    /**
-     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -494,7 +491,6 @@ export namespace Components {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -597,7 +593,6 @@ export namespace Components {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -1643,7 +1638,6 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget1;
         /**
@@ -1935,11 +1929,6 @@ export namespace Components {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
-        /**
-          * The product link to use when the product is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -2384,7 +2373,6 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2556,11 +2544,6 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
-        /**
-          * The result link to use when the result is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -2740,7 +2723,6 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2941,6 +2923,8 @@ export namespace Components {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -3826,9 +3810,6 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
-    /**
-     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-     */
     interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceProductListElement: {
@@ -5257,6 +5238,8 @@ declare global {
     };
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -6194,9 +6177,6 @@ declare namespace LocalJSX {
          */
         "previousButtonIcon"?: string;
     }
-    /**
-     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -6209,7 +6189,6 @@ declare namespace LocalJSX {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -6298,7 +6277,6 @@ declare namespace LocalJSX {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -7296,7 +7274,6 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget1;
         /**
@@ -7573,11 +7550,6 @@ declare namespace LocalJSX {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
-        /**
-          * The product link to use when the product is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -7994,7 +7966,6 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -8150,11 +8121,6 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
-        /**
-          * The result link to use when the result is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -8330,7 +8296,6 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -8526,6 +8491,8 @@ declare namespace LocalJSX {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -9383,9 +9350,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
-            /**
-             * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-             */
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -9922,6 +9886,8 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+             * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */

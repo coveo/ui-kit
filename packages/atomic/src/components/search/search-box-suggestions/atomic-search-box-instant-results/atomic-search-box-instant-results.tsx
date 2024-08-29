@@ -107,9 +107,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       el.tagName === 'ATOMIC-RESULT' ? el : el?.querySelector('atomic-result');
 
     return (
-      atomicResult?.shadowRoot?.querySelector(
-        'atomic-result-link a:not([slot])'
-      ) || null
+      atomicResult?.shadowRoot?.querySelector('atomic-result-link a') || null
     );
   }
 

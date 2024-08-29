@@ -1,6 +1,5 @@
 import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   AtomicCommonStore,
@@ -64,13 +63,6 @@ export class AtomicProduct {
   @Prop() content?: ParentNode;
 
   /**
-   * The product link to use when the product is clicked in a grid layout.
-   *
-   * @default - An `atomic-result-link` without any customization.
-   */
-  @Prop() linkContent: ParentNode = new DocumentFragment();
-
-  /**
    * How products should be displayed.
    */
   @Prop() display: ItemDisplayLayout = 'list';
@@ -106,7 +98,6 @@ export class AtomicProduct {
   @Prop() renderingFunction: ItemRenderingFunction;
 
   private productRootRef?: HTMLElement;
-  private linkContainerRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
 
   @Listen('atomic/resolveResult')
@@ -156,23 +147,9 @@ export class AtomicProduct {
   }
 
   private getContentHTML() {
-    return parentNodeToString(this.content!);
-  }
-
-  private getLinkHTML() {
-    return parentNodeToString(this.linkContent ?? new HTMLElement());
-  }
-
-  @Listen('click')
-  public handleClick(event: MouseEvent) {
-    if (this.stopPropagation) {
-      event.stopPropagation();
-    }
-    this.host
-      .shadowRoot!.querySelector<HTMLAnchorElement>(
-        '.link-container > atomic-product-link a:not([slot])'
-      )
-      ?.click();
+    return Array.from(this.content!.children)
+      .map((child) => child.outerHTML)
+      .join('');
   }
 
   private shouldExecuteRenderFunction() {
@@ -191,14 +168,11 @@ export class AtomicProduct {
             class="result-root"
             ref={(ref) => (this.productRootRef = ref)}
           ></div>
-          <div
-            class="link-container"
-            ref={(ref) => (this.linkContainerRef = ref)}
-          ></div>
         </Host>
       );
     }
     return (
+      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
         <div
           class={`result-root ${this.layout
@@ -207,7 +181,6 @@ export class AtomicProduct {
             .join(' ')}`}
           innerHTML={this.getContentHTML()}
         ></div>
-        <div class="link-container" innerHTML={this.getLinkHTML()}></div>
       </Host>
     );
   }
@@ -223,8 +196,7 @@ export class AtomicProduct {
     if (this.shouldExecuteRenderFunction()) {
       const customRenderOutputAsString = this.renderingFunction!(
         this.product,
-        this.productRootRef!,
-        this.linkContainerRef!
+        this.productRootRef!
       );
 
       this.productRootRef!.className += ` ${this.layout
