@@ -14,6 +14,7 @@ import {
   StateNeededForRedirect,
   resetStandaloneSearchBox,
   ResetStandaloneSearchBoxActionCreatorPayload,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions';
 
 export type {
@@ -63,6 +64,15 @@ export interface StandaloneSearchBoxSetActionCreators {
   >;
 
   /**
+   * Updates the redirection URL of the standalone search box.
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateStandaloneSearchBoxRedirectionUrl(
+    payload: RegisterStandaloneSearchBoxActionCreatorPayload
+  ): PayloadAction<RegisterStandaloneSearchBoxActionCreatorPayload>;
+
+  /**
    * Updates the standalone search box analytics data to reflect a search submitted using the search box.
    *
    * @param payload - The action creator payload.
@@ -97,6 +107,7 @@ export function loadStandaloneSearchBoxSetActions(
   return {
     registerStandaloneSearchBox,
     fetchRedirectUrl,
+    updateStandaloneSearchBoxRedirectionUrl,
     updateAnalyticsToSearchFromLink,
     updateAnalyticsToOmniboxFromLink,
     resetStandaloneSearchBox,

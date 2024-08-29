@@ -1,4 +1,4 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {CoreEngine, CoreEngineNext} from '../../engine';
 import {
   ControllersMap,
@@ -16,7 +16,7 @@ export interface HydrateStaticStateOptions<TSearchAction> {
 export type HydrateStaticState<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
-  TSearchAction extends AnyAction,
+  TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
 > = {
   /**
