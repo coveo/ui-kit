@@ -42,5 +42,8 @@
     "ncp": "2.0.0",
     "ng-packagr": "17.3.0",
     "typescript": "5.4.5"
+  },
+  "engines": {
+    "node": "^20.9.0"
   }
 }
