@@ -24,10 +24,10 @@ declare global {
 
 export function insertHeader() {
   document.addEventListener('DOMContentLoaded', () => {
-    const tsdToolbarContents = document.getElementsByClassName(
+    const toolbarContents = document.getElementsByClassName(
       'tsd-toolbar-contents'
     )[0];
-    if (tsdToolbarContents) {
+    if (toolbarContents) {
       const logoCell = document.createElement('div');
       logoCell.classList.add('table-cell', 'coveo-logo-cell');
       const logoDiv = document.createElement('div');
@@ -41,11 +41,11 @@ export function insertHeader() {
       logoLink.appendChild(logoImg);
       logoDiv.appendChild(logoLink);
       logoCell.appendChild(logoDiv);
-      tsdToolbarContents.insertBefore(logoCell, tsdToolbarContents.firstChild);
+      toolbarContents.insertBefore(logoCell, toolbarContents.firstChild);
     }
 
-    const tsdWidgets = document.getElementById('tsd-widgets');
-    if (tsdWidgets) {
+    const toolbarWidgets = document.getElementById('tsd-widgets');
+    if (toolbarWidgets) {
       const feedbackDiv = document.createElement('div');
       feedbackDiv.classList.add('feedback');
       const feedbackLink = document.createElement('a');
@@ -54,12 +54,12 @@ export function insertHeader() {
       feedbackLink.target = '_blank';
       feedbackLink.textContent = 'Feedback';
       feedbackDiv.appendChild(feedbackLink);
-      tsdWidgets.appendChild(feedbackDiv);
+      toolbarWidgets.appendChild(feedbackDiv);
     }
 
-    const tsdSearch = document.getElementById('tsd-search');
-    if (tsdSearch) {
-      tsdSearch.innerHTML = '';
+    const typedocSearchBox = document.getElementById('tsd-search');
+    if (typedocSearchBox) {
+      typedocSearchBox.innerHTML = '';
       const searchInterface = document.createElement('atomic-search-interface');
       const searchBox = document.createElement('atomic-search-box');
       searchBox.setAttribute(
@@ -67,7 +67,7 @@ export function insertHeader() {
         'https://docs.coveo.com/en/search'
       );
       searchInterface.appendChild(searchBox);
-      tsdSearch.appendChild(searchInterface);
+      typedocSearchBox.appendChild(searchInterface);
 
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
