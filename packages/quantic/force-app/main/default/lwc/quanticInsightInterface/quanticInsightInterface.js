@@ -68,6 +68,9 @@ export default class QuanticInsightInterface extends LightningElement {
                 search: {
                   locale: LOCALE,
                 },
+                analytics: {
+                  ...(document.referrer && {originLevel3: document.referrer}),
+                },
               },
             };
             setEngineOptions(
