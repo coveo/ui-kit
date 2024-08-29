@@ -286,15 +286,15 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get values() {
-    return this.state?.values ?? [];
+    return this.state?.valuesAsTrees ?? [];
   }
 
   get nonActiveParents() {
-    return this.state?.parents?.slice(0, -1) ?? [];
+    return this.state?.selectedValueAncestry?.slice(0, -1) ?? [];
   }
 
   get activeParent() {
-    return this.state?.parents?.slice(-1)[0];
+    return this.state?.selectedValueAncestry?.slice(-1)[0];
   }
 
   get activeParentFormattedValue() {
@@ -314,11 +314,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get hasParents() {
-    return this.state?.parents?.length;
+    return this.state?.selectedValueAncestry?.length;
   }
 
   get hasValues() {
-    return this.state?.values?.length;
+    return this.state?.valuesAsTrees?.length;
   }
 
   get hasSearchResults() {
