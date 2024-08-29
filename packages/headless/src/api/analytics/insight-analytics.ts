@@ -20,6 +20,7 @@ import {
   QuerySection,
   SearchHubSection,
   SearchSection,
+  TriggerSection,
 } from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
@@ -35,6 +36,7 @@ export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
       SearchSection &
       PipelineSection &
       QuerySection &
+      TriggerSection &
       SectionNeededForFacetMetadata &
       GeneratedAnswerSection
   >;
