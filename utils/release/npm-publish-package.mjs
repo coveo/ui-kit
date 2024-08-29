@@ -38,7 +38,7 @@ if (!name || !version) {
   throw 'Expected name and version to exist in package.json.';
 }
 if (!(await isPublished(name, version))) {
-  const tagToPublish = isPrerelease ? 'alpha' : 'beta';
+  const tagToPublish = isPrerelease ? 'v2-alpha' : 'v2-beta';
   await npmPublish('.', {
     tag: tagToPublish,
     provenance: shouldProvideProvenance,

@@ -73,32 +73,33 @@ jobs:
         run: npm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  quantic-prod:
-    needs: release
-    runs-on: ubuntu-latest
-    environment: 'Quantic Production'
-    permissions:
-      contents: read
-      packages: write
-      discussions: write
-    steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-        with:
-          ref: 'release/v2'
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
-      - name: Promote SFDX package to production
-        run: |
-          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          npx --no-install nx run quantic:"promote:sfdx:ci"
-          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-        env:
-          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-          SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
-          SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ./packages/quantic
+  # TODO SFINT-5697
+  # quantic-prod:
+  #   needs: release
+  #   runs-on: ubuntu-latest
+  #   environment: 'Quantic Production'
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #     discussions: write
+  #   steps:
+  #     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+  #       with:
+  #         ref: 'release/v2'
+  #     - uses: ./.github/actions/setup
+  #     - uses: ./.github/actions/setup-sfdx
+  #     - name: Promote SFDX package to production
+  #       run: |
+  #         echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+  #         npx --no-install nx run quantic:"promote:sfdx:ci"
+  #         rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+  #       env:
+  #         SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+  #         SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  #         SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
+  #         SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       working-directory: ./packages/quantic
 
   # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
   # github-prod:
