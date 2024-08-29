@@ -12,5 +12,5 @@ export default {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'react'],
   extends: [gtsPath],
-  ignorePatterns: ['**/*.js', 'build/**/*'],
+  ignorePatterns: ['build/**', '**/build/**', '**/*.js'],
 };
