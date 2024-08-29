@@ -1,7 +1,7 @@
 import {cpSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-//following docs https://typedoc.org/guides/development/#plugins
+// following docs https://typedoc.org/guides/development/#plugins
 // eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent} from 'typedoc';
 import {insertHeader} from './scripts.js';
