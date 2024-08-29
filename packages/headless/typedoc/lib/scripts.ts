@@ -27,6 +27,7 @@ export function insertSearchBox() {
     const tsdToolbarContents = document.getElementsByClassName(
       'tsd-toolbar-contents'
     )[0];
+
     if (tsdToolbarContents) {
       const logoCell = document.createElement('div');
       logoCell.classList.add('table-cell', 'coveo-logo-cell');
@@ -43,6 +44,7 @@ export function insertSearchBox() {
       logoCell.appendChild(logoDiv);
       tsdToolbarContents.insertBefore(logoCell, tsdToolbarContents.firstChild);
     }
+
     const tsdWidgets = document.getElementById('tsd-widgets');
     if (tsdWidgets) {
       const feedbackDiv = document.createElement('div');
@@ -55,28 +57,24 @@ export function insertSearchBox() {
       feedbackDiv.appendChild(feedbackLink);
       tsdWidgets.appendChild(feedbackDiv);
     }
+
     const tsdSearch = document.getElementById('tsd-search');
     if (tsdSearch) {
-      tsdSearch.innerHTML = ''; // Clear existing contents
-
-      // Create the search interface and search box
+      tsdSearch.innerHTML = '';
       const searchInterface = document.createElement('atomic-search-interface');
       const searchBox = document.createElement('atomic-search-box');
       searchBox.setAttribute(
         'redirection-url',
         'https://docs.coveo.com/en/search'
       );
-
       searchInterface.appendChild(searchBox);
       tsdSearch.appendChild(searchInterface);
 
-      // Initialize the search interface with necessary configurations
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterfaceElement = document.querySelector(
           'atomic-search-interface'
         );
-
         if (searchInterfaceElement) {
           await searchInterfaceElement.initialize({
             organizationId: 'coveosearch',
