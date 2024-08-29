@@ -74,7 +74,12 @@ export const facetOptionsReducer = createReducer(
       .addCase(restoreSearchParameters, (state, action) => {
         for (const facetId in state.facets) {
           const facet = state.facets[facetId];
-          facet.enabled = isFacetIncludedOnTab(facet.tabs, action.payload.tab);
+          if (Object.keys({...facet.tabs}).length > 0) {
+            facet.enabled = isFacetIncludedOnTab(
+              facet.tabs,
+              action.payload.tab
+            );
+          }
         }
         [
           ...Object.keys(action.payload.f ?? {}),
