@@ -51,7 +51,7 @@
     "marked": "12.0.2"
   },
   "engines": {
-    "node": ">=20.0.0 <22.0.0"
+    "node": "^20.9.0"
   },
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "39.9.1",
