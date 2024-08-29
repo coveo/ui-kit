@@ -167,7 +167,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
  */
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
-  const packageJson = require(packageJsonPath);
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
   return resolve(
     dirname(packageJsonPath),
     packageJson['module'] || packageJson['main']
@@ -190,10 +190,6 @@ async function buildBrowserConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve(
-          './ponyfills',
-          'fetch-ponyfill-browser.js'
-        ),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
       ...(options.plugins || []),
@@ -245,10 +241,6 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': require.resolve('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve(
-          './ponyfills',
-          'fetch-ponyfill-node.js'
-        ),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],

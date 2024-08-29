@@ -1,4 +1,3 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import {buildMockSearchEngine} from './test/mock-engine-v2';
 import {buildMockRaw} from './test/mock-raw';
 import {buildMockResult} from './test/mock-result';
@@ -11,8 +10,6 @@ const TestUtils = {
   buildMockResult,
   createMockState,
 };
-
-polyfillCryptoNode();
 
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
