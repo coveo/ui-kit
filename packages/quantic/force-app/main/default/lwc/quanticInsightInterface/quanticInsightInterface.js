@@ -69,7 +69,7 @@ export default class QuanticInsightInterface extends LightningElement {
                   locale: LOCALE,
                 },
                 analytics: {
-                  originLevel3: document.referrer ?? '',
+                  ...(document.referrer && {originLevel3: document.referrer}),
                 },
               },
             };
