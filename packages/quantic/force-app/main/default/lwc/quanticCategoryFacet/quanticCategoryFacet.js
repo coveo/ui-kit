@@ -286,7 +286,15 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get values() {
-    return this.state?.valuesAsTrees ?? [];
+    if (!this.state?.valuesAsTrees?.length) {
+      return [];
+    }
+
+    if (this.state?.selectedValueAncestry?.length > 0) {
+      return this.state?.activeValue?.children ?? [];
+    }
+
+    return this.state?.valuesAsTrees;
   }
 
   get nonActiveParents() {
