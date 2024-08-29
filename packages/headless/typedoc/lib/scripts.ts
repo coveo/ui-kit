@@ -22,12 +22,11 @@ declare global {
   }
 }
 
-export function insertSearchBox() {
+export function insertHeader() {
   document.addEventListener('DOMContentLoaded', () => {
     const tsdToolbarContents = document.getElementsByClassName(
       'tsd-toolbar-contents'
     )[0];
-
     if (tsdToolbarContents) {
       const logoCell = document.createElement('div');
       logoCell.classList.add('table-cell', 'coveo-logo-cell');

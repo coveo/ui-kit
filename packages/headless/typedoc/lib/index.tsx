@@ -1,9 +1,10 @@
 import {cpSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+//following docs https://typedoc.org/guides/development/#plugins
 // eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent} from 'typedoc';
-import {insertSearchBox} from './scripts.js';
+import {insertHeader} from './scripts.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -26,7 +27,7 @@ export function load(app: Application) {
         src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
       ></script>
       <script>
-        <JSX.Raw html={`(${insertSearchBox.toString()})();`} />
+        <JSX.Raw html={`(${insertHeader.toString()})();`} />
       </script>
     </>
   ));
