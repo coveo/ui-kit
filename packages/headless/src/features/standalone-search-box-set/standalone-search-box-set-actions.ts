@@ -1,4 +1,4 @@
-import {StringValue} from '@coveo/bueno';
+import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
@@ -34,11 +34,38 @@ export interface RegisterStandaloneSearchBoxActionCreatorPayload {
    * The default URL to which to redirect the user.
    */
   redirectionUrl: string;
+
+  /**
+   * Whether to overwrite the existing standalone search box with the same id.
+   */
+  overwrite?: boolean;
+}
+
+export interface UpdateStandaloneSearchBoxPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+
+  /**
+   * The default URL to which to redirect the user.
+   */
+  redirectionUrl: string;
 }
 
 export const registerStandaloneSearchBox = createAction(
   'standaloneSearchBox/register',
   (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      redirectionUrl: requiredNonEmptyString,
+      overwrite: new BooleanValue({required: false}),
+    })
+);
+
+export const updateStandaloneSearchBoxRedirectionUrl = createAction(
+  'standaloneSearchBox/updateRedirectionUrl',
+  (payload: UpdateStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
       redirectionUrl: requiredNonEmptyString,

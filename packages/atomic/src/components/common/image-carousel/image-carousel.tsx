@@ -27,7 +27,10 @@ export const ImageCarousel: FunctionalComponent<
       <Button
         style="text-primary"
         ariaLabel={props.bindings.i18n.t('previous')}
-        onClick={() => props.previousImage()}
+        onClick={(event) => {
+          event?.stopPropagation();
+          props.previousImage();
+        }}
         part="previous-button"
         class={`${commonPaginationClasses} left-0 ml-1`}
       >
@@ -44,7 +47,10 @@ export const ImageCarousel: FunctionalComponent<
       <Button
         style="text-primary"
         ariaLabel={props.bindings.i18n.t('next')}
-        onClick={() => props.nextImage()}
+        onClick={(event) => {
+          event?.stopPropagation();
+          props.nextImage();
+        }}
         part="next-button"
         class={`${commonPaginationClasses} right-0 mr-1`}
       >
