@@ -69,19 +69,19 @@ const copyHeadless = async () => {
     {recursive: true}
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/quantic/headless.js',
+    '../../node_modules/@coveo/headless/dist/quantic-compiled/headless.js',
     './force-app/main/default/staticresources/coveoheadless/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/quantic/case-assist/headless.js',
+    '../../node_modules/@coveo/headless/dist/quantic-compiled/case-assist/headless.js',
     './force-app/main/default/staticresources/coveoheadless/case-assist/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/quantic/insight/headless.js',
+    '../../node_modules/@coveo/headless/dist/quantic-compiled/insight/headless.js',
     './force-app/main/default/staticresources/coveoheadless/insight/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/quantic/recommendation/headless.js',
+    '../../node_modules/@coveo/headless/dist/quantic-compiled/recommendation/headless.js',
     './force-app/main/default/staticresources/coveoheadless/recommendation/headless.js'
   );
   await copy(
