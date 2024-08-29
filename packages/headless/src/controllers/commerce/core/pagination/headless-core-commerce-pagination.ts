@@ -118,7 +118,7 @@ const optionsSchema = new Schema({
  *
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Pagination` sub-controller properties.
- * @returns A `Pagination` controller instance.
+ * @returns A `Pagination` sub-controller instance.
  *
  * @group Sub-controllers
  * @category Pagination
