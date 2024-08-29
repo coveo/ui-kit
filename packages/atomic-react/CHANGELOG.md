@@ -1,3 +1,9 @@
+## 2.14.1 (2024-08-29)
+
+### Bug Fixes
+
+- **atomic-react:** deprecate analytics from atomic search interface ([#4342](https://github.com/coveo/ui-kit/issues/4342)) ([fbb90fb](https://github.com/coveo/ui-kit/commits/fbb90fbdc8ebd410ffbf41711cbfef1b62b705c0)), closes [#4348](https://github.com/coveo/ui-kit/issues/4348)
+
 # 2.14.0 (2024-08-27)
 
 ### Features

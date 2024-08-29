@@ -1,3 +1,10 @@
+## 2.78.1 (2024-08-29)
+
+### Bug Fixes
+
+- **atomic:** do not add click outside of grid layout ([#4354](https://github.com/coveo/ui-kit/issues/4354)) ([bc6cb1f](https://github.com/coveo/ui-kit/commits/bc6cb1f4b3c48be221da8bb70ad6b9465fa9c19d)), closes [#4355](https://github.com/coveo/ui-kit/issues/4355)
+- **atomic:** field sort should be applied when selected ([#4345](https://github.com/coveo/ui-kit/issues/4345)) ([dbb23f0](https://github.com/coveo/ui-kit/commits/dbb23f0445bc23fe2d24d0d61c3c0bd185a36405)), closes [#4308](https://github.com/coveo/ui-kit/issues/4308)
+
 # 2.78.0 (2024-08-27)
 
 ### Bug Fixes
