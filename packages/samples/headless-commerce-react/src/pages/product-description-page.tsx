@@ -46,6 +46,10 @@ export default function ProductDescriptionPage(
   const product = loadProduct();
 
   useEffect(() => {
+    /**
+     * It is important to call the `Context` controller's `setView` method with the current URL when a page is loaded,
+     * as the Commerce API requires this information to function properly.
+     */
     contextController.setView({url});
   }, [contextController, url]);
 
