@@ -1,6 +1,7 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../../app/state-key';
-import {selectManualRange} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
+import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
+import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {
   toggleExcludeNumericFacetValue,
@@ -24,18 +25,17 @@ export type NumericFacetOptions = Omit<
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
-/**
- * @group Generated controllers
- * @category NumericFacet
- */
-export interface NumericFacetState
-  extends CoreCommerceFacetState<NumericFacetValue> {
+export type NumericFacetState = Omit<
+  CoreCommerceFacetState<NumericFacetValue>,
+  'type'
+> & {
   /**
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
   manualRange?: NumericRangeRequest;
-}
+  type: 'numericalRange';
+};
 
 /**
  * @group Generated controllers
@@ -57,7 +57,7 @@ export interface NumericFacetDomain {
 }
 
 /**
- * The `NumericFacet` controller offers a high-level programming interface for implementing numeric commerce
+ * The `NumericFacet` sub-controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
  *
  * @group Generated controllers
@@ -73,7 +73,7 @@ export interface NumericFacet
    */
   setRanges: (ranges: NumericRangeRequest[]) => void;
   /**
-   * The state of the `NumericFacet` controller.
+   * The state of the `NumericFacet` sub-controller.
    */
   state: NumericFacetState;
 }
@@ -83,12 +83,12 @@ export interface NumericFacet
  *
  * **Important:** This initializer is meant for internal use by headless only.
  * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `NumericFacet` controller instances through the state of a `FacetGenerator`
- * controller.
+ * You will instead interact with `NumericFacet` sub-controller instances through the state of a `FacetGenerator`
+ * sub-controller.
  *
  * @param engine - The headless commerce engine.
  * @param options - The `NumericFacet` options used internally.
- * @returns A `NumericFacet` controller instance.
+ * @returns A `NumericFacet` sub-controller instance.
  */
 export function buildCommerceNumericFacet(
   engine: CommerceEngine,
@@ -125,27 +125,12 @@ export function buildCommerceNumericFacet(
 
     get state(): NumericFacetState {
       const response = options.facetResponseSelector(engine[stateKey], facetId);
-      const manualRange = selectManualRange(
-        facetId,
-        engine[stateKey].manualNumericFacetSet
+
+      return getNumericFacetState(
+        coreController.state,
+        response?.type === 'numericalRange' ? response : undefined,
+        manualNumericFacetSelector(engine[stateKey], facetId)
       );
-
-      if (response?.type === 'numericalRange' && response.domain) {
-        const {min, max} = response.domain;
-        return {
-          ...coreController.state,
-          domain: {
-            min,
-            max,
-          },
-          manualRange,
-        };
-      }
-
-      return {
-        ...coreController.state,
-        manualRange,
-      };
     },
 
     type: 'numericalRange',
@@ -158,3 +143,25 @@ function loadCommerceNumericFacetReducers(
   engine.addReducers({manualNumericFacetSet});
   return true;
 }
+
+export const getNumericFacetState = (
+  coreState: CoreCommerceFacetState<NumericFacetValue>,
+  facetResponseSelector: NumericFacetResponse | undefined,
+  manualFacetRangeSelector: NumericRangeRequest | undefined
+): NumericFacetState => {
+  const response =
+    facetResponseSelector?.type === 'numericalRange'
+      ? facetResponseSelector
+      : undefined;
+  return {
+    ...coreState,
+    ...(response?.domain && {
+      domain: {
+        min: response.domain.min,
+        max: response.domain.max,
+      },
+    }),
+    ...(manualFacetRangeSelector && {manualRange: manualFacetRangeSelector}),
+    type: 'numericalRange',
+  };
+};

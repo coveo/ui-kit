@@ -1,0 +1,32 @@
+{
+  "name": "@coveo/headless-commerce-react-samples",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@coveo/headless": "2.80.0",
+    "@testing-library/jest-dom": "6.4.8",
+    "@testing-library/react": "16.0.0",
+    "@testing-library/user-event": "14.5.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "dev": "react-scripts start",
+    "build": "nx build",
+    "build:client": "tsc --noEmit && tsc --module commonjs --noEmit",
+    "test": "react-scripts test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,55 +1,22 @@
-import {
-  baseInsightRequest,
-  InsightParam,
-  pickNonInsightParams,
-} from '../insight-params';
+import {BaseParam} from '../../../platform-service-params';
+import {baseInsightUserActionRequest} from '../insight-params';
 
-export type InsightUserActionsRequest = InsightParam &
-  TicketCreationDateParam &
-  NumberSessionsBeforeParam &
-  NumberSessionsAfterParam &
-  MaximumSessionInactivityMinutesParam &
-  ExcludedCustomActionsParam;
+export type InsightUserActionsRequest = BaseParam & UserIdParam;
 
-interface TicketCreationDateParam {
+interface UserIdParam {
   /**
-   * The ticket creation date in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.
+   *  Identifier of the user from which Clicked Documents are shown.
    */
-  ticketCreationDate: string;
-}
-
-interface NumberSessionsBeforeParam {
-  numberSessionsBefore?: number;
-}
-
-interface NumberSessionsAfterParam {
-  numberSessionsAfter?: number;
-}
-
-interface MaximumSessionInactivityMinutesParam {
-  maximumSessionInactivityMinutes?: number;
-}
-
-interface ExcludedCustomActionsParam {
-  excludedCustomActions?: string[];
+  userId: string;
 }
 
 export const buildInsightUserActionsRequest = (
   req: InsightUserActionsRequest
 ) => {
-  const params = pickNonInsightParams(
-    req
-  ) as Partial<InsightUserActionsRequest>;
-
   return {
-    ...baseInsightRequest(req, 'POST', 'application/json', '/useractions'),
+    ...baseInsightUserActionRequest(req, 'POST', 'application/json'),
     requestParams: {
-      ticketCreationDate: params.ticketCreationDate,
-      numberSessionsBefore: params.numberSessionsBefore ?? 50,
-      numberSessionsAfter: params.numberSessionsAfter ?? 50,
-      maximumSessionInactivityMinutes:
-        params.maximumSessionInactivityMinutes ?? 30,
-      excludedCustomActions: params.excludedCustomActions ?? [],
+      objectId: req.userId,
     },
   };
 };

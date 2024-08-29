@@ -13,7 +13,7 @@ export const Cancel: FunctionalComponent<CancelProps> = ({i18n, onClick}) => {
       part="cancel-button"
       text={i18n.t('cancel-last-action')}
       onClick={() => onClick()}
-      class="font-bold px-2.5 py-3 my-3"
+      class="my-3 px-2.5 py-3 font-bold"
     ></Button>
   );
 };

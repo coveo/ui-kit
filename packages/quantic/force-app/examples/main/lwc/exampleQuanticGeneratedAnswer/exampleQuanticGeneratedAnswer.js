@@ -43,6 +43,13 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
       defaultValue: false,
     },
     {
+      attribute: 'withRephraseButtons',
+      label: 'With Rephrase Buttons',
+      description:
+        'Indicates whether the rephrase buttons should be available.',
+      defaultValue: false,
+    },
+    {
       attribute: 'useCase',
       label: 'Use Case',
       description:

@@ -1,7 +1,9 @@
-import {CurrencyCodeISO4217, Ec} from '@coveo/relay-event-types';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {stateKey} from '../../../../app/state-key';
 import {
+  CartActionPayload,
+  emitCartActionEvent,
+  emitPurchaseEvent,
   purchase,
   setItems,
   updateItemQuantity,
@@ -191,10 +193,6 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     return isCurrentQuantityGreater ? 'add' : 'remove';
   }
 
-  function getCurrency(): CurrencyCodeISO4217 {
-    return engine[stateKey].commerceContext.currency;
-  }
-
   function isEqual(
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
@@ -209,17 +207,15 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   function createEcCartActionPayload(
     currentItem: CartItem,
     prevItem: CartItemWithMetadata | undefined
-  ): Ec.CartAction {
+  ): CartActionPayload {
     const {quantity: currentQuantity, ...product} = currentItem;
     const action = getCartAction(currentItem, prevItem);
     const quantity = !prevItem
       ? currentQuantity
       : Math.abs(currentQuantity - prevItem.quantity);
-    const currency = getCurrency();
 
     return {
       action,
-      currency,
       quantity,
       product,
     };
@@ -235,7 +231,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
     },
 
     purchase(transaction: Transaction) {
-      dispatch(purchase(transaction));
+      dispatch(emitPurchaseEvent(transaction));
+      dispatch(purchase());
     },
 
     updateItemQuantity(item: CartItem) {
@@ -247,9 +244,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       }
 
       if (isNewQuantityDifferent(item, prevItem)) {
-        engine.relay.emit(
-          'ec.cartAction',
-          createEcCartActionPayload(item, prevItem)
+        dispatch(
+          emitCartActionEvent(createEcCartActionPayload(item, prevItem))
         );
       }
 

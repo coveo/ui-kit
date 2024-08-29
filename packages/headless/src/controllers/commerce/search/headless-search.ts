@@ -46,6 +46,7 @@ import {
 /**
  * @group Buildable controllers
  * @category Search
+ * The `Search` controller lets you create a commerce search page.
  */
 export interface Search extends Controller, SearchSubControllers {
   /**

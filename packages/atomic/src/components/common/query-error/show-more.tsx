@@ -19,7 +19,7 @@ export const QueryErrorShowMore: FunctionalComponent<
     <Button
       part="more-info-btn"
       style="primary"
-      class="p-3 mt-8"
+      class="mt-8 p-3"
       onClick={() => {
         onShowMore();
       }}
