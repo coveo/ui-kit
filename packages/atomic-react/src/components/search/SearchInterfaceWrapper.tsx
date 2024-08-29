@@ -11,7 +11,10 @@ type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
  * The properties of the AtomicSearchInterface component
  */
 interface WrapperProps
-  extends Omit<JSX.AtomicSearchInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+  extends Omit<
+    JSX.AtomicSearchInterface,
+    'i18n' | 'pipeline' | 'searchHub' | 'analytics'
+  > {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
@@ -33,6 +36,10 @@ interface WrapperProps
    * @deprecated This option has no effect. Rather, set the search hub through the `engine` `search` configuration.
    */
   searchHub?: string;
+  /**
+   * @deprecated This option has no effect. Rather, set the analytics through the `engine` `analytics` `enabled` configuration.
+   */
+  analytics?: boolean;
 }
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
