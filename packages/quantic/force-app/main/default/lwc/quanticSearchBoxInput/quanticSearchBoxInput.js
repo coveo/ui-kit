@@ -85,26 +85,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @defaultValue 7
    */
   @api maxNumberOfSuggestions = 7;
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * The blur function.
-   * @deprecated
-   * @api
-   * @type {VoidFunction}
-   */
-  @api blur() {
-    this.input.blur();
-  }
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * The reset selection function.
-   * @deprecated
-   * @api
-   * @type {VoidFunction}
-   */
-  @api resetSelection() {
-    this.suggestionListElement?.resetSelection();
-  }
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
