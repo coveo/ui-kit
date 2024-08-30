@@ -11,7 +11,10 @@ type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
  * The properties of the AtomicSearchInterface component
  */
 interface WrapperProps
-  extends Omit<JSX.AtomicSearchInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+  extends Omit<
+    JSX.AtomicSearchInterface,
+    'i18n' | 'pipeline' | 'searchHub' | 'analytics'
+  > {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
