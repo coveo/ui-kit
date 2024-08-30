@@ -133,12 +133,11 @@ describe('insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call coveo.analytics.logExpandToFullUI properly', async () => {
-        await logExpandToFullUI(
-          exampleCaseId,
-          exampleCaseNumber,
-          'c__FullSearch',
-          'openFullSearchButton'
-        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+        await logExpandToFullUI('c__FullSearch', 'openFullSearchButton')()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         const expectedPayload = {
           caseContext: {
@@ -191,7 +190,7 @@ describe('insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call relay.emit properly', async () => {
-        await logExpandToFullUI(exampleCaseId, exampleCaseNumber, '', '')()(
+        await logExpandToFullUI('', '')()(
           engine.dispatch,
           () => engine.state,
           {} as ThunkExtraArguments

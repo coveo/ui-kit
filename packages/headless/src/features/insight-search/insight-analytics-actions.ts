@@ -15,8 +15,6 @@ export interface CreateArticleMetadata {
 }
 
 export const logExpandToFullUI = (
-  _caseId: string,
-  _caseNumber: string,
   fullSearchComponentName: string,
   triggeredBy: string
 ): InsightAction =>
