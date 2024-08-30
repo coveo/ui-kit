@@ -79,3 +79,13 @@ export const logInsightCreateArticle = (
       };
     },
   });
+
+export const logOpenUserActions = (): InsightAction =>
+  makeInsightAnalyticsActionFactory('openUserActions')({
+    prefix: 'analytics/insight/openUserActions',
+    __legacy__getBuilder: (client, state) => {
+      return client.logOpenUserActions(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+  });
