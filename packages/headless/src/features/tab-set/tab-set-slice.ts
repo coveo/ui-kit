@@ -25,6 +25,7 @@ export const tabSetReducer = createReducer(
       .addCase(restoreSearchParameters, (state, action) => {
         const id = action.payload.tab || '';
         activateTabIfIdExists(state, id);
+        updateActiveTab(id);
       })
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.tabSet ?? state;
