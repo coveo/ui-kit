@@ -208,6 +208,12 @@ const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
       entryPoints: [entryPoint],
       outfile,
       format: 'cjs',
+      plugins: [
+        alias({
+          'coveo.analytics': require.resolve('coveo.analytics'),
+          '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
+        }),
+      ],
     },
     dir
   );
@@ -223,6 +229,15 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       entryPoints: [entryPoint],
       outfile,
       format: 'esm',
+      plugins: [
+        alias({
+          'coveo.analytics': resolve(
+            './node_modules/coveo.analytics',
+            'dist/library.mjs'
+          ),
+          '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
+        }),
+      ],
     },
     dir
   );
@@ -238,12 +253,6 @@ async function buildNodeConfig(options, outDir) {
     metafile: true,
     platform: 'node',
     treeShaking: true,
-    plugins: [
-      alias({
-        'coveo.analytics': require.resolve('coveo.analytics'),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
-      }),
-    ],
     ...options,
   });
 
