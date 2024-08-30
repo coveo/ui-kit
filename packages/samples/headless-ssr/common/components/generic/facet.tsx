@@ -26,7 +26,7 @@ export const Facet: FunctionComponent<FacetProps> = ({
     [controller]
   );
 
-  if (state.enabled === false) {
+  if (!state.enabled) {
     return;
   }
 

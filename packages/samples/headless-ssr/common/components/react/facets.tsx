@@ -6,7 +6,7 @@ import FacetCommon from '../common/facet';
 export const AuthorFacet = () => {
   const {state, methods} = useAuthorFacet();
 
-  if (state.enabled === false) {
+  if (!state.enabled) {
     return;
   }
 
