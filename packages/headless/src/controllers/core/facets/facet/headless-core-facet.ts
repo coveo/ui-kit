@@ -34,6 +34,7 @@ import {
   isFacetValueSelected,
 } from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
+import {selectActiveTab} from '../../../../features/tab-set/tab-set-selectors';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -209,6 +210,10 @@ export interface CoreFacetState {
 
   /** Whether the facet is enabled and its values are used to filter search results. */
   enabled: boolean;
+
+  /** The tabs on which the facet should be enabled or disabled. */
+  tabs?: {included?: string[]; excluded?: string[]};
+
   /**
    * The name to display if this field is used by the Facet Generator in your interface.
    * See [Change Facet Generator options](https://docs.coveo.com/en/n9sd0159#change-facet-generator-options).
@@ -350,12 +355,17 @@ export function buildCoreFacet(
   const controller = buildController(engine);
 
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const registrationOptions = {
     ...defaultFacetOptions,
     ...omit('facetSearch', props.options),
     field: props.options.field,
     facetId,
+    tabs,
+    activeTab,
   };
+
   const options: Required<FacetOptions> = {
     facetSearch: {...defaultFacetSearchOptions, ...props.options.facetSearch},
     ...registrationOptions,
@@ -491,6 +501,7 @@ export function buildCoreFacet(
       return {
         label: response?.label,
         facetId,
+        tabs,
         values,
         sortCriterion,
         resultsMustMatch,

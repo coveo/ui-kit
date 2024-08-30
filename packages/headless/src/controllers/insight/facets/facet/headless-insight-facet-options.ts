@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {facetResultsMustMatch} from '../../../../features/facets/facet-api/request';
 import {facetSortCriteria} from '../../../../features/facets/facet-set/interfaces/request';
 import {
@@ -46,6 +46,15 @@ export interface FacetOptions extends CoreFacetOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   filterFacetCount,
   injectionDepth,
   numberOfValues,
