@@ -1,3 +1,4 @@
+import React from 'react';
 import {BrowserRouter, NavLink, Routes, Route} from 'react-router-dom';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
