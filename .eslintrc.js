@@ -10,6 +10,7 @@ module.exports = {
     'www',
     '!.storybook',
     'scripts/deploy/execute-deployment-pipeline.mjs',
+    'build',
   ],
   env: {
     jest: true,

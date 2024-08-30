@@ -4,36 +4,59 @@ import {
   CommerceEngineDefinitionOptions,
   CommerceEngine,
   defineProductList,
+  defineCart,
+  defineSearchBox,
+  defineContext,
+  defineRecentQueriesList,
+  defineNotifyTrigger,
+  defineQueryTrigger,
+  defineRedirectionTrigger,
+  defineStandaloneSearchBox,
+  defineInstantProducts,
+  defineSummary,
+  definePagination,
+  defineFacetGenerator,
+  defineSort,
+  defineProductView,
   getSampleCommerceEngineConfiguration,
-  defineQuerySummary,
+  defineDidYouMean, //defineParameterManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
   ControllerDefinitionsMap<CommerceEngine, Controller>
 >;
 
-const configuration = {
-  ...getSampleCommerceEngineConfiguration(),
-  analytics: {
-    trackingId: 'sports-ui-samples',
-    enabled: false, // TODO: enable analytics
-  },
-};
-
 export default {
   configuration: {
-    ...configuration,
+    ...getSampleCommerceEngineConfiguration(),
     context: {
+      language: 'en',
       country: 'US',
       currency: 'USD',
-      language: 'en',
       view: {
-        url: 'https://sports.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
       },
     },
   },
   controllers: {
-    summary: defineQuerySummary(),
+    summary: defineSummary(),
     productList: defineProductList(),
+    cart: defineCart(),
+    searchBox: defineSearchBox(),
+    context: defineContext(),
+    recentQueriesList: defineRecentQueriesList(),
+    notifyTrigger: defineNotifyTrigger(),
+    queryTrigger: defineQueryTrigger(),
+    redirectionTrigger: defineRedirectionTrigger(),
+    standaloneSearchBox: defineStandaloneSearchBox({
+      options: {redirectionUrl: '/search'},
+    }),
+    instantProducts: defineInstantProducts({options: {}}),
+    pagination: definePagination({options: {pageSize: 9}}),
+    sort: defineSort(),
+    productView: defineProductView(),
+    didYouMean: defineDidYouMean(), // TODO KIT-3463: implement did you mean in sample
+    //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
+    facetGenerator: defineFacetGenerator(),
   },
 } satisfies CommerceEngineConfig;

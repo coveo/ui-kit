@@ -14,7 +14,11 @@ import {
 export const resultComponentClass = 'result-component';
 
 export type ItemRenderingFunction<SpecificResult extends AnyItem = AnyItem> =
-  | ((result: SpecificResult, root: HTMLElement) => string)
+  | ((
+      result: SpecificResult,
+      root: HTMLElement,
+      linkContainer?: HTMLElement
+    ) => string)
   | undefined;
 
 export interface ItemListCommonProps {

@@ -692,12 +692,14 @@ describe('commerceFacetSetReducer', () => {
         [getFacetIdWithCommerceFieldSuggestionNamespace('regular_field')]: {
           request: {
             initialNumberOfValues: 10,
+            values: [],
           },
         },
         [getFacetIdWithCommerceFieldSuggestionNamespace('hierarchical_field')]:
           {
             request: {
               initialNumberOfValues: 10,
+              values: [],
             },
           },
       });

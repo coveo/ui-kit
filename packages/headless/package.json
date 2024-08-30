@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.77.0",
+  "version": "2.80.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -80,6 +80,6 @@
     "ts-node": "10.9.2"
   },
   "engines": {
-    "node": ">=12"
+    "node": "^20.9.0"
   }
 }
