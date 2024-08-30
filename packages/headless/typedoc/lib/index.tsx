@@ -4,7 +4,9 @@ import {fileURLToPath} from 'node:url';
 // following docs https://typedoc.org/guides/development/#plugins
 // eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent} from 'typedoc';
-import {insertHeader} from './scripts.js';
+import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
+import {insertCoveoLogo} from './insertCoveoLogo.js';
+import {insertSurveyLink} from './insertSurveyLink.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -27,7 +29,13 @@ export function load(app: Application) {
         src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
       ></script>
       <script>
-        <JSX.Raw html={`(${insertHeader.toString()})();`} />
+        <JSX.Raw html={`(${insertAtomicSearchBox.toString()})();`} />
+      </script>
+      <script>
+        <JSX.Raw html={`(${insertSurveyLink.toString()})();`} />
+      </script>
+      <script>
+        <JSX.Raw html={`(${insertCoveoLogo.toString()})();`} />
       </script>
     </>
   ));
