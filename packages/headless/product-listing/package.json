@@ -3,8 +3,8 @@
   "name": "product-listing",
   "description": "Headless Product Listing Module",
   "main": "../dist/product-listing/headless.js",
-  "module": "../dist/product-listing/headless.esm.js",
-  "browser": "../dist/browser/product-listing/headless.esm.js",
+  "module": "../dist/product-listing/headless.mjs",
+  "browser": "../dist/browser/product-listing/headless.mjs",
   "types": "../dist/definitions/product-listing.index.d.ts",
   "license": "Apache-2.0"
 }

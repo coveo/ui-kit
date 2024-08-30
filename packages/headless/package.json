@@ -7,9 +7,9 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.js",
-  "module": "./dist/headless.esm.js",
+  "module": "./dist/headless.mjs",
   "browser": {
-    "./dist/headless.esm.js": "./dist/browser/headless.esm.js",
+    "./dist/headless.mjs": "./dist/browser/headless.mjs",
     "./dist/headless.js": "./dist/browser/headless.js"
   },
   "types": "./dist/definitions/index.d.ts",

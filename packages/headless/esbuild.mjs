@@ -78,7 +78,7 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
   (entry) => {
     const [useCase, entryPoint] = entry;
     const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
-    const outfile = `${outDir}/headless.esm.js`;
+    const outfile = `${outDir}/headless.mjs`;
 
     return buildBrowserConfig(
       {
@@ -96,7 +96,7 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/browser', useCase);
-  const outfile = `${outDir}/headless.esm.js`;
+  const outfile = `${outDir}/headless.mjs`;
 
   let config = {
     entryPoints: [entryPoint],
@@ -220,7 +220,7 @@ const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
 const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const dir = getUseCaseDir('dist/', useCase);
-  const outfile = `${dir}/headless.esm.js`;
+  const outfile = `${dir}/headless.mjs`;
 
   return buildNodeConfig(
     {
@@ -280,7 +280,7 @@ function getNodeEsmBundlePaths() {
   return Object.entries(useCaseEntries).map((entry) => {
     const [useCase] = entry;
     const dir = getUseCaseDir('dist/', useCase);
-    return `${dir}/headless.esm.js`;
+    return `${dir}/headless.mjs`;
   });
 }
 

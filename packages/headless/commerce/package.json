@@ -3,8 +3,8 @@
   "name": "commerce",
   "description": "Headless Commerce Module",
   "main": "../dist/commerce/headless.js",
-  "module": "../dist/commerce/headless.esm.js",
-  "browser": "../dist/browser/commerce/headless.esm.js",
+  "module": "../dist/commerce/headless.mjs",
+  "browser": "../dist/browser/commerce/headless.mjs",
   "types": "../dist/definitions/commerce.index.d.ts",
   "license": "Apache-2.0"
 }

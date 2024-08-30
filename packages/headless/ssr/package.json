@@ -3,8 +3,8 @@
   "name": "ssr",
   "description": "Server side rendering utilities",
   "main": "../dist/ssr/headless.js",
-  "module": "../dist/ssr/headless.esm.js",
-  "browser": "../dist/browser/ssr/headless.esm.js",
+  "module": "../dist/ssr/headless.mjs",
+  "browser": "../dist/browser/ssr/headless.mjs",
   "types": "../dist/definitions/ssr.index.d.ts",
   "license": "Apache-2.0"
 }

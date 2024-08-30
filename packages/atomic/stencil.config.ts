@@ -46,7 +46,7 @@ function replaceHeadlessMap() {
       bundle[headlessBundle].map = null;
 
       bundle[headlessBundle].code +=
-        '//# sourceMappingURL=./headless/headless.esm.js.map';
+        '//# sourceMappingURL=./headless/headless.mjs.map';
       return bundle;
     },
   };
@@ -190,49 +190,49 @@ export const config: Config = {
               find: '@coveo/headless/case-assist',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/case-assist/headless.esm.js'
+                './src/external-builds/case-assist/headless.mjs'
               ),
             },
             {
               find: '@coveo/headless/commerce',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/commerce/headless.esm.js'
+                './src/external-builds/commerce/headless.mjs'
               ),
             },
             {
               find: '@coveo/headless/recommendation',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/recommendation/headless.esm.js'
+                './src/external-builds/recommendation/headless.mjs'
               ),
             },
             {
               find: '@coveo/headless/commerce',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/commerce/headless.esm.js'
+                './src/external-builds/commerce/headless.mjs'
               ),
             },
             {
               find: '@coveo/headless/product-recommendation',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/product-recommendation/headless.esm.js'
+                './src/external-builds/product-recommendation/headless.mjs'
               ),
             },
             {
               find: '@coveo/headless/insight',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/insight/headless.esm.js'
+                './src/external-builds/insight/headless.mjs'
               ),
             },
             {
               find: '@coveo/headless',
               replacement: path.resolve(
                 __dirname,
-                './src/external-builds/headless.esm.js'
+                './src/external-builds/headless.mjs'
               ),
             },
           ],

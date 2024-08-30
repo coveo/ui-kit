@@ -44,8 +44,8 @@ Headless provides exports through multiple sub packages. A sub-package groups to
      "name": "case-assist",
      "description": "Headless Case Assist Module",
      "main": "../dist/case-assist/headless.js",
-     "module": "../dist/case-assist/headless.esm.js",
-     "browser": "../dist/browser/case-assist/headless.esm.js",
+     "module": "../dist/case-assist/headless.mjs",
+     "browser": "../dist/browser/case-assist/headless.mjs",
      "types": "../dist/definitions/case-assist.index.d.ts",
      "license": "Apache-2.0"
    }

@@ -37,7 +37,7 @@ function getUseCasesAndFilePaths(dir) {
 
 function getEsmFilePaths(dir) {
   const paths = getFilePaths(dir);
-  return paths.filter((path) => path.endsWith('.esm.js'));
+  return paths.filter((path) => path.endsWith('.mjs'));
 }
 
 function getFilePaths(dir, files = []) {

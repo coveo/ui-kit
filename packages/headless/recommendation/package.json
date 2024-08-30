@@ -3,8 +3,8 @@
   "name": "recommendation",
   "description": "Headless Recommendation Module",
   "main": "../dist/recommendation/headless.js",
-  "module": "../dist/recommendation/headless.esm.js",
-  "browser": "../dist/browser/recommendation/headless.esm.js",
+  "module": "../dist/recommendation/headless.mjs",
+  "browser": "../dist/browser/recommendation/headless.mjs",
   "types": "../dist/definitions/recommendation.index.d.ts",
   "license": "Apache-2.0"
 }
