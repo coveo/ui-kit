@@ -24,6 +24,7 @@ import {
   Element,
   VNode,
   Fragment,
+  Watch,
 } from '@stencil/core';
 import {
   AriaLiveRegion,
@@ -317,17 +318,26 @@ export class AtomicFacet implements InitializableComponent {
     this.facetConditionsManager?.stopWatching();
   }
 
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
+      updateFacetVisibilityForActiveTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab,
+        this.facet
+      );
+    }
+  }
+
   public componentShouldUpdate(
-    next: unknown,
-    prev: unknown,
+    next: FacetState,
+    prev: FacetState,
     propName: keyof AtomicFacet
   ) {
-    updateFacetVisibilityForActiveTab(
-      [...this.tabsIncluded],
-      [...this.tabsExcluded],
-      this.tabManagerState?.activeTab,
-      this.facet
-    );
     if (
       this.isFacetState(prev, propName) &&
       this.isFacetState(next, propName)

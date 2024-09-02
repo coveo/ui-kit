@@ -41,9 +41,10 @@ export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
         style={isExclusion ? 'outline-error' : 'outline-bg-neutral'}
         class={classNames.join(' ')}
         title={title}
-        // TODO: [KIT-2939] Replace `remove-filter-on` by `remove-include-filter-on`.
         ariaLabel={props.i18n.t(
-          isExclusion ? 'remove-exclusion-filter-on' : 'remove-filter-on',
+          isExclusion
+            ? 'remove-exclusion-filter-on'
+            : 'remove-inclusion-filter-on',
           {
             value: title,
           }

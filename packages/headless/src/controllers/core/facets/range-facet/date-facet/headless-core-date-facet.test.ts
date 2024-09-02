@@ -106,6 +106,8 @@ describe('date facet', () => {
   it('registers a date facet with the passed options', () => {
     expect(registerDateFacet).toHaveBeenCalledWith({
       facetId,
+      activeTab: '',
+      tabs: {},
       currentValues: [],
       ...options,
     });

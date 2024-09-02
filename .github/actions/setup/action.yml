@@ -42,6 +42,7 @@ runs:
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
-    - if: steps.nx-cache.outputs.cache-hit != 'true'
-      run: npm run build
+    # TODO KIT-3483: Move to artifact
+    # - if: steps.nx-cache.outputs.cache-hit != 'true'
+    - run: npm run build
       shell: bash

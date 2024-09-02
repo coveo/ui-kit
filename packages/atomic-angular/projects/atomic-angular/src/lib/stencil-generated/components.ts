@@ -275,6 +275,29 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
 
 
 @ProxyCmp({
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'numberOfPlaceholders'],
+  methods: ['setRenderFunction']
+})
+@Component({
+  selector: 'atomic-commerce-product-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'numberOfPlaceholders'],
+})
+export class AtomicCommerceProductList {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicCommerceProductList extends Components.AtomicCommerceProductList {}
+
+
+@ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
 })
 @Component({
@@ -473,14 +496,14 @@ export declare interface AtomicDidYouMean extends Components.AtomicDidYouMean {}
 
 
 @ProxyCmp({
-  inputs: ['selector']
+  inputs: ['boundInterface', 'selector']
 })
 @Component({
   selector: 'atomic-external',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['selector'],
+  inputs: ['boundInterface', 'selector'],
 })
 export class AtomicExternal {
   protected el: HTMLElement;
@@ -561,7 +584,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
 
 
 @ProxyCmp({
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -569,7 +592,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicFoldedResultList {
   protected el: HTMLElement;
@@ -671,14 +694,14 @@ export declare interface AtomicFrequentlyBoughtTogether extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['answerStyle', 'collapsible', 'withToggle']
+  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerStyle', 'collapsible', 'withToggle'],
+  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -1279,14 +1302,14 @@ export declare interface AtomicRelevanceInspector extends Components.AtomicRelev
 
 
 @ProxyCmp({
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation'],
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation'],
 })
 export class AtomicResult {
   protected el: HTMLElement;
@@ -1498,7 +1521,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -1506,7 +1529,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicResultList {
   protected el: HTMLElement;
@@ -2111,14 +2134,14 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle'],
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;
@@ -2202,14 +2225,14 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 
 @ProxyCmp({
-  inputs: ['expression', 'label']
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['expression', 'label'],
+  inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicSortExpression {
   protected el: HTMLElement;

@@ -6,6 +6,10 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
     super(page, 'atomic-search-box');
   }
 
+  get component() {
+    return this.page.locator('atomic-search-box');
+  }
+
   get submitButton() {
     return this.page.getByLabel('Search', {exact: true});
   }

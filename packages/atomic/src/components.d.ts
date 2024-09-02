@@ -16,6 +16,7 @@ import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+import { AtomicInterface } from "./utils/initialization-utils";
 import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -47,6 +48,7 @@ export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemD
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+export { AtomicInterface } from "./utils/initialization-utils";
 export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -479,6 +481,9 @@ export namespace Components {
          */
         "previousButtonIcon": string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -491,6 +496,7 @@ export namespace Components {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -593,6 +599,7 @@ export namespace Components {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -803,6 +810,10 @@ export namespace Components {
      */
     interface AtomicExternal {
         /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
+        /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
         "selector": string;
@@ -988,6 +999,14 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -1059,6 +1078,11 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -1200,6 +1224,11 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -1642,6 +1671,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget1;
         /**
@@ -1933,6 +1963,11 @@ export namespace Components {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -2377,6 +2412,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2548,6 +2584,11 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -2727,6 +2768,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2738,6 +2780,14 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -2927,8 +2977,6 @@ export namespace Components {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -3282,6 +3330,14 @@ export namespace Components {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -3361,6 +3417,14 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     interface AtomicTab {
         /**
@@ -3798,6 +3862,9 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceProductListElement: {
@@ -5246,8 +5313,6 @@ declare global {
     };
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -6187,6 +6252,9 @@ declare namespace LocalJSX {
          */
         "previousButtonIcon"?: string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -6199,6 +6267,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -6287,6 +6356,7 @@ declare namespace LocalJSX {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -6483,6 +6553,10 @@ declare namespace LocalJSX {
      */
     interface AtomicExternal {
         /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
+        /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
         "selector"?: string;
@@ -6666,6 +6740,14 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
+        /**
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -6737,6 +6819,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -6875,6 +6962,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Whether to render the rephrase buttons that lets the user rephrase the answer.
+          * @default false
+         */
+        "withRephraseButtons"?: boolean;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -7288,6 +7380,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget1;
         /**
@@ -7564,6 +7657,11 @@ declare namespace LocalJSX {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -7980,6 +8078,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -8135,6 +8234,11 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -8310,12 +8414,21 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -8505,8 +8618,6 @@ declare namespace LocalJSX {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -8838,6 +8949,14 @@ declare namespace LocalJSX {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -8930,6 +9049,14 @@ declare namespace LocalJSX {
           * The non-localized label to display for this expression.
          */
         "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     interface AtomicTab {
         /**
@@ -9350,6 +9477,9 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            /**
+             * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+             */
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -9896,8 +10026,6 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */

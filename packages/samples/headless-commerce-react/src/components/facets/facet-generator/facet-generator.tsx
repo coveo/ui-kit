@@ -25,7 +25,7 @@ export default function FacetGenerator(props: IFacetGeneratorProps) {
   }
 
   return (
-    <ul className="Facets">
+    <nav className="Facets">
       {facetState.map((facet, index) => {
         switch (facet.type) {
           case 'regular':
@@ -42,6 +42,6 @@ export default function FacetGenerator(props: IFacetGeneratorProps) {
             return null;
         }
       })}
-    </ul>
+    </nav>
   );
 }

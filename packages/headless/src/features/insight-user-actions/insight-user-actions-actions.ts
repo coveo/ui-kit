@@ -5,12 +5,12 @@ import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-cl
 import {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response';
 import {
   ConfigurationSection,
-  InsightUserActionSection,
+  InsightUserActionsSection,
 } from '../../state/state-sections';
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
 import {buildFetchUserActionsRequest} from './insight-user-actions-request';
 
-interface RegisterUserActionsPayload {
+export interface RegisterUserActionsPayload {
   ticketCreationDate: string;
   excludedCustomActions?: string[];
 }
@@ -38,7 +38,7 @@ export interface FetchUserActionsThunkReturn {
 }
 
 export type StateNeededByFetchUserActions = ConfigurationSection &
-  InsightUserActionSection;
+  InsightUserActionsSection;
 
 export type UserId = string;
 
