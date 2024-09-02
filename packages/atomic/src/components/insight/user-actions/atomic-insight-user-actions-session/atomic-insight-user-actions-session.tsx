@@ -1,12 +1,12 @@
 import {Component, h, Prop, Watch, State} from '@stencil/core';
-import {UserAction} from '../..';
+import {UserAction as IUserAction} from '../..';
 import Flag from '../../../../images/flag.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
-import {AtomicInsightUserAction} from '../atomic-insight-user-action/atomic-insight-user-action';
+import {UserAction} from './user-action';
 
 export type UserActionType =
   | 'SEARCH'
@@ -38,10 +38,10 @@ export class AtomicInsightUserActionsSession {
   /**
    * The list of user actions performed during the session.
    */
-  @Prop() public userActions!: Array<UserAction>;
+  @Prop() public userActions!: Array<IUserAction>;
 
-  private userActionsToDisplay: Array<UserAction> = [];
-  private userActionsAfterCaseCreation: Array<UserAction> = [];
+  private userActionsToDisplay: Array<IUserAction> = [];
+  private userActionsAfterCaseCreation: Array<IUserAction> = [];
   @State() areActionsAfterCaseCreationVisible = false;
 
   connectedCallback() {
@@ -95,14 +95,11 @@ export class AtomicInsightUserActionsSession {
     );
   }
 
-  renderActions(actions: Array<UserAction>) {
+  renderActions(actions: Array<IUserAction>) {
     return (
       <ol class="px-3">
         {actions?.map((action) => (
-          <AtomicInsightUserAction
-            action={action}
-            bindings={this.bindings}
-          ></AtomicInsightUserAction>
+          <UserAction action={action} bindings={this.bindings}></UserAction>
         ))}
       </ol>
     );

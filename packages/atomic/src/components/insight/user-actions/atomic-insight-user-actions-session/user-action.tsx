@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {UserAction} from '../..';
+import {UserAction as IUserAction} from '../..';
 import BookmarkIcon from '../../../../images/bookmark.svg';
 import DocumentIcon from '../../../../images/document.svg';
 import PointIcon from '../../../../images/point.svg';
@@ -16,14 +16,15 @@ const icons = {
   TICKET_CREATION: BookmarkIcon,
 };
 
-interface AtomicInsightUserAction {
-  action: UserAction;
+interface UserAction {
+  action: IUserAction;
   bindings: InsightBindings;
 }
 
-export const AtomicInsightUserAction: FunctionalComponent<
-  AtomicInsightUserAction
-> = ({bindings, action}) => {
+export const UserAction: FunctionalComponent<UserAction> = ({
+  bindings,
+  action,
+}) => {
   const renderActionTimestamp = () => {
     const {hours, minutes} = parseTimestampToDateDetails(action.timestamp);
 
