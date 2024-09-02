@@ -1,5 +1,5 @@
 import {Component, h, Prop, Watch, State} from '@stencil/core';
-import {UserAction as IUserAction} from '../..';
+import {InsightUserAction as IUserAction} from '../..';
 import Flag from '../../../../images/flag.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
 import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
