@@ -99,6 +99,7 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const outfile = `${outDir}/headless.esm.js`;
 
   let config = {
+    packages: 'external',
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
@@ -226,6 +227,7 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
 
   return buildNodeConfig(
     {
+      packages: 'external',
       entryPoints: [entryPoint],
       outfile,
       format: 'esm',
