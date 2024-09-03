@@ -1,0 +1,33 @@
+name: 'Confirm build is valid'
+description: 'Confirm build is valid'
+inputs:
+  github-token:
+    description: The GitHub token
+    required: true
+  conclusion:
+    description: The conclusion of the check. failure or success
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Add GitHub check
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const conclusion = '${{ inputs.check_conclusion }}'; // Get the conclusion input
+
+          const checkOptions = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: 'Confirm Build OK',
+            head_sha: context.sha,
+            status: 'completed',
+            conclusion: conclusion, // Use the conclusion input
+            output: {
+            title: 'Build Confirmation',
+            summary: `The build was ${conclusion}.`
+            }
+          };
+
+          github.rest.checks.create(checkOptions);
