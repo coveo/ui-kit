@@ -353,15 +353,20 @@ jobs:
       - 'e2e-headless-ssr-test-pages-prod'
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          success="${{ !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure')}}"
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - name: Determine conclusion
+        run: |
+          success="${{ contains(needs.*.result, 'success')}}"
           if [[ $success == "true" ]]; then
-            echo "Build is valid"
-            exit 0
+              echo "conclusion=success"
           else
-            echo "Build is invalid"
-            exit 1
+              echo "conclusion=failure"
           fi
+        id: determine-conclusion
+      - uses: ./.github/actions/confirm-build-ok
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          conclusion: ${{ steps.determine-conclusion.outputs.conclusion }}
   is-valid-merge-queue:
     name: 'Confirm build is valid (merge group)'
     if: ${{ always() && github.event_name == 'merge_group'}}
@@ -384,28 +389,6 @@ jobs:
       - 'e2e-headless-ssr-test-app-prod'
       - 'e2e-headless-ssr-test-pages-dev'
       - 'e2e-headless-ssr-test-pages-prod'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - name: Determine conclusion
-        run: |
-          success="${{ contains(needs.*.result, 'success')}}"
-          if [[ $success == "true" ]]; then
-              echo "conclusion=success"
-          else
-              echo "conclusion=failure"
-          fi
-        id: determine-conclusion
-      - uses: ./.github/actions/confirm-build-ok
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          conclusion: ${{ steps.determine-conclusion.outputs.conclusion }}
-  is-valid:
-    name: 'Confirm build is valid'
-    if: ${{ always() }}
-    needs:
-      - 'is-valid-pr'
-      - 'is-valid-merge-queue'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
