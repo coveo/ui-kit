@@ -61,7 +61,7 @@ export interface ConfigurationActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  updateCommerceConfiguration(
+  updateProxyBaseUrl(
     payload: UpdateProxyBaseUrlPayload
   ): PayloadAction<UpdateProxyBaseUrlPayload>;
 }
@@ -81,6 +81,6 @@ export function loadConfigurationActions(
     enableAnalytics,
     updateAnalyticsConfiguration,
     updateBasicConfiguration,
-    updateCommerceConfiguration: updateProxyBaseUrl,
+    updateProxyBaseUrl,
   };
 }
