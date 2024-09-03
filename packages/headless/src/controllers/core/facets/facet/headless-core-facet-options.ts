@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   FacetResultsMustMatch,
   facetResultsMustMatch,
@@ -26,6 +26,11 @@ export interface FacetOptions {
    * A unique identifier for the controller. By default, a random unique identifier is generated.
    * */
   facetId?: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * Facet search options.
@@ -99,6 +104,15 @@ export interface FacetSearchOptions {
 
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   field,
   filterFacetCount,
   injectionDepth,

@@ -1,8 +1,8 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {ManualNumericFacetSetState} from './manual-numeric-facet-state';
+import {ManualRangeSection} from '../../../../state/state-sections';
 
-export const selectManualRange = createSelector(
-  (facetId: string, state?: ManualNumericFacetSetState) =>
-    state && state[facetId]?.manualRange,
+export const manualNumericFacetSelector = createSelector(
+  (state: ManualRangeSection, facetId: string) =>
+    state.manualNumericFacetSet[facetId]?.manualRange,
   (manualRange) => manualRange
 );

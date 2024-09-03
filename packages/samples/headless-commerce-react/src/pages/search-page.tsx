@@ -1,4 +1,5 @@
 import {
+  buildInstantProducts,
   buildSearch,
   buildSearchBox,
   Cart,
@@ -25,8 +26,10 @@ export default function Search(props: ISearchProps) {
 
   contextController.setView({url});
   const searchController = buildSearch(engine);
+
+  const searchBoxId = 'search-box';
   const searchBoxController = buildSearchBox(engine, {
-    options: {id: 'search-box', highlightOptions},
+    options: {id: searchBoxId, highlightOptions},
   });
 
   const bindUrlManager = useCallback(() => {
@@ -58,6 +61,16 @@ export default function Search(props: ISearchProps) {
   }, [searchController]);
 
   useEffect(() => {
+    /**
+     * It is important to call the `Context` controller's `setView` method with the current URL when a page is loaded,
+     * as the Commerce API requires this information to function properly.
+     *
+     * Note, however, that calling this method will reset the query, pagination, sort, and facets.
+     *
+     * This means that on a search or listing page, you must call this method BEFORE you bind the URL manager.
+     * Otherwise, the URL manager will restore the state from the URL parameters, and then this state will get
+     * immediately reset when the `setView` method is called.
+     */
     contextController.setView({url});
     const unsubscribe = bindUrlManager();
 
@@ -84,7 +97,13 @@ export default function Search(props: ISearchProps) {
 
   return (
     <div className="SearchPage">
-      <SearchBox controller={searchBoxController} />
+      <SearchBox
+        controller={searchBoxController}
+        instantProductsController={buildInstantProducts(engine, {
+          options: {searchBoxId},
+        })}
+        navigate={navigate}
+      />
       <h2 className="PageTitle">Search</h2>
       <DidYouMean controller={searchController.didYouMean()} />
       <SearchAndListingInterface

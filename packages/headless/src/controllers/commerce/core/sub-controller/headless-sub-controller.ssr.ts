@@ -22,6 +22,7 @@ export function defineQuerySummary<
       solutionType === SolutionType.listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
+    // TODO: KIT-3503: support recommendation summary
   } as SubControllerDefinitionWithoutProps<
     Summary<ProductListingSummaryState & SearchSummaryState>, // TODO: fix conditional typing to return the appropriate type based on current solution type
     TOptions

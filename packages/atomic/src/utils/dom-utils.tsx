@@ -6,3 +6,9 @@ export function rectEquals(r1: DOMRect, r2: DOMRect) {
     r1.height === r2.height
   );
 }
+
+export function parentNodeToString(node: ParentNode): string {
+  return Array.from(node.children)
+    .map((child) => child.outerHTML)
+    .join('');
+}

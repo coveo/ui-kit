@@ -3,12 +3,16 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {render} from '@testing-library/react';
+import {vi, SpyInstance} from 'vitest';
 import App from './App';
 
-let errorSpy: jest.SpyInstance;
+let errorSpy: SpyInstance<
+  [message?: unknown, ...optionalParams: unknown[]],
+  void
+>;
 
 beforeEach(() => {
-  errorSpy = jest.spyOn(global.console, 'error');
+  errorSpy = vi.spyOn(global.console, 'error');
 });
 
 test('renders without error', async () => {
