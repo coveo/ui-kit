@@ -7,6 +7,7 @@ import {ExpiredTokenError} from '../utils/errors';
 import {PlatformEnvironment} from '../utils/url-utils';
 import {
   getDefaultAnalyticsNextEndpointBaseUrl,
+  getDefaultCommerceEndpointBaseUrl,
   getDefaultOrganizationEndpointBaseUrl,
   getDefaultSearchEndpointBaseUrl,
   PlatformClient,
@@ -32,6 +33,7 @@ it.each([
       analytics: 'https://foo.analytics.org.coveo.com',
       analyticsNext:
         'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      commerce: 'https://foo.org.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.org.coveo.com',
       search: 'https://foo.org.coveo.com/rest/search/v2',
     },
@@ -44,6 +46,8 @@ it.each([
       analytics: 'https://foo.analytics.orgdev.coveo.com',
       analyticsNext:
         'https://foo.analytics.orgdev.coveo.com/rest/organizations/foo/events/v1',
+      commerce:
+        'https://foo.orgdev.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.orgdev.coveo.com',
       search: 'https://foo.orgdev.coveo.com/rest/search/v2',
     },
@@ -56,6 +60,8 @@ it.each([
       analytics: 'https://foo.analytics.orgstg.coveo.com',
       analyticsNext:
         'https://foo.analytics.orgstg.coveo.com/rest/organizations/foo/events/v1',
+      commerce:
+        'https://foo.orgstg.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.orgstg.coveo.com',
       search: 'https://foo.orgstg.coveo.com/rest/search/v2',
     },
@@ -68,6 +74,7 @@ it.each([
       analytics: 'https://foo.analytics.org.coveo.com',
       analyticsNext:
         'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      commerce: 'https://foo.org.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.org.coveo.com',
       search: 'https://foo.org.coveo.com/rest/search/v2',
     },
@@ -80,6 +87,8 @@ it.each([
       analytics: 'https://foo.analytics.orghipaa.coveo.com',
       analyticsNext:
         'https://foo.analytics.orghipaa.coveo.com/rest/organizations/foo/events/v1',
+      commerce:
+        'https://foo.orghipaa.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.orghipaa.coveo.com',
       search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
     },
@@ -90,8 +99,9 @@ it.each([
   organizationEndpoints: {
     admin: string;
     analytics: string;
-    platform: string;
     analyticsNext: string;
+    commerce: string;
+    platform: string;
     search: string;
   };
 }>)(
@@ -105,6 +115,9 @@ it.each([
     ).toEqual(organizationEndpoints.analytics);
     expect(getDefaultAnalyticsNextEndpointBaseUrl(orgId, env)).toEqual(
       organizationEndpoints.analyticsNext
+    );
+    expect(getDefaultCommerceEndpointBaseUrl(orgId, env)).toEqual(
+      organizationEndpoints.commerce
     );
     expect(
       getDefaultOrganizationEndpointBaseUrl(orgId, 'platform', env)

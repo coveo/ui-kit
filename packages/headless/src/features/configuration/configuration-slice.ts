@@ -4,6 +4,7 @@ import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   getDefaultAnalyticsNextEndpointBaseUrl,
+  getDefaultCommerceEndpointBaseUrl,
   getDefaultOrganizationEndpointBaseUrl,
   getDefaultSearchEndpointBaseUrl,
 } from '../../api/platform-client';
@@ -142,6 +143,18 @@ function handleUpdateBasicConfiguration(
       )
     ) {
       state.analytics.nextApiBaseUrl = getDefaultAnalyticsNextEndpointBaseUrl(
+        organizationId,
+        environment
+      );
+    }
+
+    if (
+      state.commerce.apiBaseUrl.length === 0 ||
+      matchCoveoOrganizationEndpointUrlAnyOrganization(
+        state.commerce.apiBaseUrl
+      )
+    ) {
+      state.commerce.apiBaseUrl = getDefaultCommerceEndpointBaseUrl(
         organizationId,
         environment
       );

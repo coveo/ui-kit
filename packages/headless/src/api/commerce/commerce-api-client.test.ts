@@ -1,15 +1,18 @@
 import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {VERSION} from '../../utils/version';
-import {PlatformClient} from '../platform-client';
+import {
+  getDefaultCommerceEndpointBaseUrl,
+  PlatformClient,
+} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
 import {CommerceAPIRequest} from './common/request';
 import {CommerceResponse} from './common/response';
 import {CommerceRecommendationsRequest} from './recommendations/recommendations-request';
 
 describe('commerce api client', () => {
-  const platformUrl = 'https://platformdev.cloud.coveo.com';
-  const organizationId = 'some-org-id';
+  const organizationId = 'organization';
+  const platformUrl = getDefaultCommerceEndpointBaseUrl(organizationId);
   const accessToken = 'some-access-token';
   const trackingId = 'some-tracking-id';
 
@@ -91,7 +94,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/listing`,
+      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/listing`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -123,7 +126,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/search`,
+      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/search`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -153,7 +156,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/recommendations`,
+      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/recommendations`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -185,7 +188,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/search/productSuggest`,
+      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/search/productSuggest`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -218,7 +221,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/search/querySuggest`,
+      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/search/querySuggest`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -256,7 +259,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${platformUrl}/rest/organizations/${organizationId}/commerce/v2/facet?type=SEARCH`,
+      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/facet?type=SEARCH`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {

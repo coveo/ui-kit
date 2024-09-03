@@ -165,6 +165,19 @@ export function getDefaultAnalyticsNextEndpointBaseUrl(
   return `${baseUrl}/rest/organizations/${organizationId}/events/v1`;
 }
 
+export function getDefaultCommerceEndpointBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const baseUrl = getDefaultOrganizationEndpointBaseUrl(
+    organizationId,
+    'platform',
+    environment
+  );
+
+  return `${baseUrl}/rest/organizations/${organizationId}/commerce/v2`;
+}
+
 function buildDefaultRequestOptions(
   options: PlatformClientCallOptions
 ): PlatformRequestOptions {
