@@ -156,16 +156,6 @@ export function buildMockCommerceEngine<
     ...buildMockCoreEngineNext(initialState),
     configuration: {
       ...initialState.configuration,
-      context: initialState.commerceContext,
-      cart: {
-        items: Object.values(initialState.cart.cart).map((value) => ({
-          name: value.name,
-          price: value.price,
-          productId: value.productId,
-          quantity: value.quantity,
-        })),
-      },
-      platformUrl: initialState.configuration.platformUrl,
     },
   };
 }

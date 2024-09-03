@@ -18,6 +18,10 @@ import {recommendationsReducer} from '../../features/commerce/recommendations/re
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
+import {
+  AnalyticsState as AnalyticsApiConfigurationState,
+  CommerceState as CommerceApiConfigurationState,
+} from '../../features/configuration/configuration-state';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -70,7 +74,7 @@ export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
     State & CommerceEngineState,
     CommerceThunkExtraArguments,
-    CommerceEngineReadonlyConfiguration
+    CommerceEngineReadonlyConfigurationState
   > {}
 
 /**
@@ -84,8 +88,30 @@ export interface CommerceEngineOptions
   configuration: CommerceEngineConfiguration;
 }
 
-export interface CommerceEngineReadonlyConfiguration
-  extends Omit<CommerceEngineConfiguration, 'proxyBaseUrl'> {
+export interface CommerceEngineReadonlyConfigurationState
+  extends Omit<
+    CommerceEngineConfiguration,
+    'analytics' | 'cart' | 'context' | 'proxyBaseUrl'
+  > {
+  /**
+   * The global headless engine Usage Analytics API configuration.
+   */
+  analytics: Pick<
+    AnalyticsApiConfigurationState,
+    'enabled' | 'nextApiBaseUrl' | 'source' | 'trackingId'
+  >;
+  /**
+   * The global headless engine Commerce API configuration.
+   */
+  commerce: CommerceApiConfigurationState;
+  /**
+   * The base platform [organization endpoint](https://docs.coveo.com/en/mcc80216).
+   *
+   * This value is automatically resolved from the `organizationId` and `environment`.
+   *
+   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
+   * will be `https://mycoveocloudorganizationg8tp8wu3.org.coveo.com`.
+   */
   platformUrl: string;
 }
 
@@ -130,7 +156,7 @@ export function buildCommerceEngine(
 
   engine.dispatch(setContext(context));
 
-  if (cart !== undefined && cart.items !== undefined) {
+  if (cart?.items !== undefined) {
     engine.dispatch(setItems(cart.items));
   }
 
@@ -141,16 +167,9 @@ export function buildCommerceEngine(
       return internalEngine.state;
     },
 
-    get configuration(): CommerceEngineReadonlyConfiguration {
+    get configuration(): CommerceEngineReadonlyConfigurationState {
       return {
         ...internalEngine.state.configuration,
-        context: {...internalEngine.state.commerceContext},
-        cart: {
-          items: Object.values(internalEngine.state.cart.cart).map(
-            (value) => value
-          ),
-        },
-        platformUrl: internalEngine.state.configuration.platformUrl,
       };
     },
   });

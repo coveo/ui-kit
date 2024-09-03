@@ -1,5 +1,6 @@
 import {
   getDefaultAnalyticsNextEndpointBaseUrl,
+  getDefaultCommerceEndpointBaseUrl,
   getDefaultOrganizationEndpointBaseUrl,
   getDefaultSearchEndpointBaseUrl,
 } from '../../api/platform-client';
@@ -110,6 +111,12 @@ describe('configuration slice', () => {
             environment
           ),
         },
+        commerce: {
+          apiBaseUrl: getDefaultCommerceEndpointBaseUrl(
+            organizationId,
+            environment
+          ),
+        },
         search: {
           ...getConfigurationInitialState().search,
           apiBaseUrl: getDefaultSearchEndpointBaseUrl(
@@ -153,6 +160,12 @@ describe('configuration slice', () => {
             environment
           ),
           nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
+            organizationId,
+            environment
+          ),
+        },
+        commerce: {
+          apiBaseUrl: getDefaultCommerceEndpointBaseUrl(
             organizationId,
             environment
           ),

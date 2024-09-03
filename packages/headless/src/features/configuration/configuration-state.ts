@@ -18,7 +18,7 @@ export interface ConfigurationState {
    */
   accessToken: string;
   /**
-   * The base platform [organization endpoint](https://docs.coveo.com/en/mcc80216) to use.
+   * The base platform [organization endpoint](https://docs.coveo.com/en/mcc80216).
    *
    * This value is automatically resolved from the `organizationId` and `environment`.
    *
@@ -114,7 +114,6 @@ export interface AnalyticsState {
 
   /**
    * @internal
-  /**
    * The Analytics API base URL to use.
    *
    * By default, this value is automatically resolved from the `organizationId` and `environment` values in the
