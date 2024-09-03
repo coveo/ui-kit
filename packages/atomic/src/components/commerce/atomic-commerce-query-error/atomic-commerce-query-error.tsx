@@ -72,16 +72,17 @@ export class AtomicQueryError
       bindings: {
         i18n,
         engine: {
-          configuration: {organizationId, organizationEndpoints},
+          configuration: {organizationId, platformUrl},
         },
       },
     } = this;
+
     const hasError = !isNullOrUndefined(error);
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        organizationEndpoints.platform,
+        platformUrl,
         error?.type
       );
     }
@@ -97,7 +98,7 @@ export class AtomicQueryError
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={organizationEndpoints.platform}
+            url={platformUrl}
             errorType={error?.type}
           />
           <QueryErrorShowMore

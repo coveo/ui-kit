@@ -248,7 +248,7 @@ export class AtomicCommerceInterface
   }
 
   /**
-   * Initializes the connection with the headless commerce engine using options for accessToken (required), organizationId (required), organizationEndpoints (required), and renewAccessToken.
+   * Initializes the connection with the headless commerce engine using the specified options.
    */
   @Method() public initialize(options: CommerceInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));

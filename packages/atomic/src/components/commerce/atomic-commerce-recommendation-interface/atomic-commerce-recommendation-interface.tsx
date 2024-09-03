@@ -1,6 +1,4 @@
 import {
-  PlatformEnvironment,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
   CommerceEngine,
   CommerceEngineConfiguration,
   Context,
@@ -196,18 +194,6 @@ export class AtomicCommerceRecommendationInterface
    */
   @Method() public initializeWithEngine(engine: CommerceEngine) {
     return this.internalInitialization(() => (this.engine = engine));
-  }
-
-  /**
-   * Returns the unique, organization-specific endpoint(s).
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
   public get bindings(): CommerceBindings {

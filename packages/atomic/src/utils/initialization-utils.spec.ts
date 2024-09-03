@@ -220,8 +220,6 @@ describe('initializeBindings method', () => {
     await searchInterface.initialize({
       accessToken: '123456789',
       organizationId,
-      organizationEndpoints:
-        await searchInterface.getOrganizationEndpoints(organizationId),
     });
 
     const element = document.createElement('my-component');
