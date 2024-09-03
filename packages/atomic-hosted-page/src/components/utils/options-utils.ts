@@ -1,5 +1,5 @@
 import {Schema, SchemaValue, StringValue} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '@coveo/headless';
+import {PlatformEnvironment} from '@coveo/headless';
 
 export interface InitializationOptions {
   /**
@@ -10,14 +10,7 @@ export interface InitializationOptions {
    * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
    */
   accessToken: string;
-  /**
-   * The endpoints to use.
-   *
-   * For example: `https://orgid.admin.org.coveo.com`
-   *
-   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
-   */
-  organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
+  environment?: PlatformEnvironment;
 }
 
 export const validateOptions = (
@@ -28,7 +21,11 @@ export const validateOptions = (
     new Schema({
       organizationId: new StringValue({required: true, emptyAllowed: false}),
       accessToken: new StringValue({required: true, emptyAllowed: false}),
-      platformUrl: new StringValue({required: false, emptyAllowed: false}),
+      environment: new StringValue<PlatformEnvironment>({
+        required: false,
+        default: 'prod',
+        constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+      }),
       ...additionalSchemaValidation,
     }).validate(opts);
   } catch (e) {
@@ -37,4 +34,4 @@ export const validateOptions = (
 };
 
 export const extractPlatformUrl = (options: InitializationOptions) =>
-  options.organizationEndpoints.admin;
+  `https://${options.organizationId}.admin.org${options.environment && options.environment !== 'prod' ? `.${options.environment}` : ''}.coveo.com`;
