@@ -14,6 +14,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           <Link href={'/search'}>Search Page</Link>
           <Link href={'/listing'}>Listing Page</Link>
+          <Link href={'/recommendation'}>Recommendations</Link>
         </div>
 
         {children}

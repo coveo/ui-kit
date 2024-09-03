@@ -157,6 +157,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadGenericAnalyticsActions',
   },
+  {
+    initializer: 'loadInsightUserActionsActions',
+  },
 ];
 
 const engine: EngineConfiguration = {

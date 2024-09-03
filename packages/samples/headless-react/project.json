@@ -5,7 +5,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:client", "npm run build:server"],
+        "commands": ["npm run build:client"],
         "parallel": true,
         "cwd": "packages/samples/headless-react"
       }
