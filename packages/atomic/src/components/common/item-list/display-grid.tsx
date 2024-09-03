@@ -1,6 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
 export interface DisplayGridProps {
+  selectorForItem: string;
   item: {clickUri: string; title: string};
   setRef: (element?: HTMLElement) => void;
   select: () => void;
@@ -9,7 +10,7 @@ export interface DisplayGridProps {
 }
 
 export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
-  {setRef},
+  {setRef, selectorForItem},
   children
 ) => {
   let ref: HTMLElement | undefined;
@@ -22,7 +23,7 @@ export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
       }}
       onClick={(event) => {
         event.preventDefault();
-        ref?.querySelector('atomic-product')?.click();
+        (ref?.querySelector(selectorForItem) as HTMLElement)?.click();
       }}
     >
       {...children}
