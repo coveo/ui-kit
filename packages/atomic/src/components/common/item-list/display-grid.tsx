@@ -22,7 +22,7 @@ export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
       }}
       onClick={(event) => {
         event.preventDefault();
-        ref?.querySelector('atomic-result')?.click();
+        ref?.querySelector('atomic-product')?.click();
       }}
     >
       {...children}
