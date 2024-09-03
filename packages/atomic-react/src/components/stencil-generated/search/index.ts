@@ -27,6 +27,7 @@ export const AtomicFrequentlyBoughtTogether = /*@__PURE__*/createReactComponent<
 export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswer, HTMLAtomicGeneratedAnswerElement>('atomic-generated-answer');
 export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
+export const AtomicInsightUserActionsTimeline = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsTimeline, HTMLAtomicInsightUserActionsTimelineElement>('atomic-insight-user-actions-timeline');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicLoadMoreChildrenResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreChildrenResults, HTMLAtomicLoadMoreChildrenResultsElement>('atomic-load-more-children-results');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
