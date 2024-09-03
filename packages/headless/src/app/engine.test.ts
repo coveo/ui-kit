@@ -137,7 +137,7 @@ describe('engine', () => {
     });
   });
 
-  it('throws an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
+  it('should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
     options.configuration.analytics = {analyticsMode: 'next'};
     expect(() => initEngine()).toThrowErrorMatchingSnapshot();
   });
