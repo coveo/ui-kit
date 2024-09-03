@@ -21,12 +21,11 @@ import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVe
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
+import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-import { UserActionType } from "./components/insight/user-actions/atomic-insight-user-action-session/atomic-insight-user-actions-session";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -53,12 +52,11 @@ export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVe
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
+export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-export { UserActionType } from "./components/insight/user-actions/atomic-insight-user-action-session/atomic-insight-user-actions-session";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -1604,21 +1602,17 @@ export namespace Components {
     }
     /**
      * @category Insight Panel
-     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-     */
-    interface AtomicInsightUserAction {
-        "actionTitle": string;
-        "origin": string;
-        "timestamp": number;
-        "type": UserActionType;
-    }
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
      */
     interface AtomicInsightUserActionsSession {
-        "startDate": number;
-        "userActions": UserActions;
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
     }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
@@ -4435,17 +4429,7 @@ declare global {
     };
     /**
      * @category Insight Panel
-     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-     */
-    interface HTMLAtomicInsightUserActionElement extends Components.AtomicInsightUserAction, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionElement: {
-        prototype: HTMLAtomicInsightUserActionElement;
-        new (): HTMLAtomicInsightUserActionElement;
-    };
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
      */
     interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
     }
@@ -5739,7 +5723,6 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-insight-user-action": HTMLAtomicInsightUserActionElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
@@ -7310,21 +7293,17 @@ declare namespace LocalJSX {
     }
     /**
      * @category Insight Panel
-     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-     */
-    interface AtomicInsightUserAction {
-        "actionTitle": string;
-        "origin"?: string;
-        "timestamp": number;
-        "type": UserActionType;
-    }
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
      */
     interface AtomicInsightUserActionsSession {
-        "startDate": number;
-        "userActions"?: UserActions;
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
     }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
@@ -9273,7 +9252,6 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-insight-user-action": AtomicInsightUserAction;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
@@ -9652,12 +9630,7 @@ declare module "@stencil/core" {
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
              * @category Insight Panel
-             * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-             */
-            "atomic-insight-user-action": LocalJSX.AtomicInsightUserAction & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionElement>;
-            /**
-             * @category Insight Panel
-             * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
