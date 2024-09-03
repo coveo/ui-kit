@@ -1,26 +1,13 @@
-import {
-  ProductListingSection,
-  SearchSection,
-} from '../../../state/state-sections';
+import {SearchSection} from '../../../state/state-sections';
 import {FacetSection} from '../../../state/state-sections';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {FacetResponse, FacetValue} from './interfaces/response';
 
-export type FacetResponseSection = SearchSection | ProductListingSection;
-
 export const baseFacetResponseSelector = (
-  state: Partial<FacetResponseSection>,
+  state: Partial<SearchSection>,
   id: string
 ) => {
   const findById = (response: {facetId: string}) => response.facetId === id;
-  if (
-    'productListing' in state &&
-    state.productListing &&
-    'facets' in state.productListing &&
-    'results' in state.productListing.facets
-  ) {
-    return state.productListing.facets.find(findById);
-  }
 
   if ('search' in state && state.search) {
     return state.search.response.facets.find(findById);
@@ -39,12 +26,10 @@ function isFacetResponse(
   return !!response && response.facetId in state.facetSet;
 }
 export const facetResponseSelector = (
-  state: FacetResponseSection & FacetSection,
+  state: SearchSection & FacetSection,
   facetId: string
 ) => {
-  const response = baseFacetResponseSelector(state, facetId) as
-    | AnyFacetResponse
-    | undefined;
+  const response = baseFacetResponseSelector(state, facetId);
   if (isFacetResponse(state, response)) {
     return response;
   }
@@ -53,9 +38,9 @@ export const facetResponseSelector = (
 };
 
 export const facetResponseSelectedValuesSelector = (
-  state: FacetResponseSection & FacetSection,
+  state: SearchSection & FacetSection,
   facetId: string
-): FacetValue[] => {
+) => {
   const response = facetResponseSelector(state, facetId);
   if (!response) {
     return [];
@@ -65,7 +50,7 @@ export const facetResponseSelectedValuesSelector = (
 };
 
 export const facetResponseActiveValuesSelector = (
-  state: FacetResponseSection & FacetSection,
+  state: SearchSection & FacetSection,
   facetId: string
 ): FacetValue[] => {
   const response = facetResponseSelector(state, facetId);
@@ -76,10 +61,6 @@ export const facetResponseActiveValuesSelector = (
   return response.values.filter((value) => value.state !== 'idle');
 };
 
-export const isFacetLoadingResponseSelector = (state: FacetResponseSection) => {
-  if ('productListing' in state) {
-    return state.productListing.isLoading;
-  }
-
+export const isFacetLoadingResponseSelector = (state: SearchSection) => {
   return state.search.isLoading;
 };

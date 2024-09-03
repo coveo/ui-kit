@@ -1,8 +1,10 @@
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
 import {
   executeSearch as executeCommerceSearch,
@@ -210,6 +212,19 @@ describe('CategoryFacetSearchSet slice', () => {
 
     expect(
       FacetSearchReducerHelpers.handleFacetSearchClear
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#fetchProductListing.fulfilled calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    const action = fetchProductListing.fulfilled(
+      {} as QueryCommerceAPIThunkReturn,
+      ''
+    );
+    facetSearchSetReducer(state, action);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
     ).toHaveBeenCalledTimes(1);
   });
 

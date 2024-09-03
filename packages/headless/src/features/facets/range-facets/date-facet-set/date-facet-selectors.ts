@@ -17,9 +17,7 @@ export const dateFacetResponseSelector = (
   state: SearchSection & DateFacetSection,
   facetId: string
 ) => {
-  const response = baseFacetResponseSelector(state, facetId) as
-    | AnyFacetResponse
-    | undefined;
+  const response = baseFacetResponseSelector(state, facetId);
   if (isDateFacetResponse(state, response)) {
     return response;
   }

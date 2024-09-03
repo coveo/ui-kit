@@ -1,7 +1,9 @@
 import {buildSearchResponse} from '../../../../test/mock-commerce-search';
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
 import {setView} from '../../../commerce/context/context-actions';
 import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
 import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
 import {
   executeSearch,
@@ -152,6 +154,16 @@ describe('FacetSearch slice', () => {
       legacy: null as never,
     });
     facetSearchSetReducer(state, action);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('on #fetchProductListing.fulfilled, calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    const response = buildFetchProductListingResponse();
+    facetSearchSetReducer(state, fetchProductListing.fulfilled(response, ''));
 
     expect(
       FacetSearchReducerHelpers.handleFacetSearchSetClear

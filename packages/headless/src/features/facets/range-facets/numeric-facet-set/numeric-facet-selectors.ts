@@ -17,9 +17,7 @@ export const numericFacetResponseSelector = (
   state: SearchSection & NumericFacetSection,
   facetId: string
 ) => {
-  const response = baseFacetResponseSelector(state, facetId) as
-    | AnyFacetResponse
-    | undefined;
+  const response = baseFacetResponseSelector(state, facetId);
   if (isNumericFacetResponse(state, response)) {
     return response;
   }
