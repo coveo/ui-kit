@@ -260,8 +260,6 @@ export type {ProductListingSummaryState} from './controllers/commerce/product-li
 export type {RecommendationsSummaryState} from './controllers/commerce/recommendations/summary/headless-recommendations-summary';
 export type {Summary} from './controllers/commerce/core/summary/headless-core-summary';
 
-export {getOrganizationEndpoints} from './api/platform-client';
-
 export type {
   DidYouMean,
   DidYouMeanState,

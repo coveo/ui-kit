@@ -1,4 +1,3 @@
-import {getOrganizationEndpoints} from '../../api/platform-client';
 import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart';
 import {stateKey} from '../state-key';
 import {
@@ -28,6 +27,15 @@ describe('buildCommerceEngine', () => {
   it('initializes', () => {
     expect(initEngine).not.toThrow();
     expect(engine[stateKey]).toBeTruthy();
+  });
+
+  it('when proxyBaseUrl is specified in the configuration, sets the apiBaseUrl', () => {
+    options.configuration.proxyBaseUrl = 'https://example.com/commerce';
+    initEngine();
+
+    expect(engine[stateKey].configuration.commerce.apiBaseUrl).toBe(
+      options.configuration.proxyBaseUrl
+    );
   });
 
   it('sets the context', () => {
@@ -64,31 +72,5 @@ describe('buildCommerceEngine', () => {
       [createCartKey(items[0])]: items[0],
       [createCartKey(items[1])]: items[1],
     });
-  });
-
-  it('uses organization endpoints when manually configured', () => {
-    options.configuration.organizationEndpoints = getOrganizationEndpoints(
-      'my-org-id',
-      'hipaa'
-    );
-    initEngine();
-
-    expect(engine.configuration.organizationEndpoints.platform).toBe(
-      'https://my-org-id.orghipaa.coveo.com'
-    );
-
-    expect(engine.configuration.organizationEndpoints.analytics).toBe(
-      'https://my-org-id.analytics.orghipaa.coveo.com'
-    );
-  });
-
-  it('uses organization endpoints defaulting to prod when not manually specified', () => {
-    options.configuration.organizationEndpoints =
-      getOrganizationEndpoints('my-org-id');
-    initEngine();
-
-    expect(engine.configuration.organizationEndpoints.platform).toBe(
-      'https://my-org-id.org.coveo.com'
-    );
   });
 });

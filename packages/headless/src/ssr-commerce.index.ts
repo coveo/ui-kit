@@ -273,7 +273,6 @@ export type {
 } from './features/commerce/product-templates/product-templates-manager';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
-export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';

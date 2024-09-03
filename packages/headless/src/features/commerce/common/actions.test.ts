@@ -44,7 +44,7 @@ describe('commerce common actions', () => {
       };
 
       expected = {
-        url: 'https://platform.cloud.coveo.com',
+        url: '',
         accessToken: 'access_token',
         organizationId: 'org_id',
         trackingId: 'tracking_id',

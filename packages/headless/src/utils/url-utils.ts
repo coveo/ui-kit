@@ -57,9 +57,13 @@ export const matchCoveoOrganizationEndpointUrl = (
 
 export const matchCoveoOrganizationEndpointUrlAnyOrganization = (
   url: string
-): {organizationId?: string; environment?: PlatformEnvironment} | null => {
+): {
+  organizationId?: string;
+  type?: '.analytics' | '.admin';
+  environment?: PlatformEnvironment;
+} | null => {
   const match = url.match(
-    /^https:\/\/(?<organizationId>\w+)\.org(?<environment>dev|stg|hipaa)?\.coveo\.com/
+    /^https:\/\/(?<organizationId>\w+)(?<type>\.analytics|admin)?\.org(?<environment>dev|stg|hipaa)?\.coveo\.com/
   );
   return match?.groups ? match.groups : null;
 };

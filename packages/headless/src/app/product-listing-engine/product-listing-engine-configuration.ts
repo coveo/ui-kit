@@ -5,6 +5,7 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
+import {PlatformEnvironment} from '../../utils/url-utils';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
@@ -23,21 +24,6 @@ export interface ProductListingEngineConfiguration
 const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
   organizationId: requiredNonEmptyString,
   accessToken: requiredNonEmptyString,
-  organizationEndpoints: new RecordValue({
-    options: {
-      required: true,
-    },
-    values: {
-      platform: new StringValue({
-        required: true,
-        emptyAllowed: false,
-      }),
-      analytics: new StringValue({
-        required: true,
-        emptyAllowed: false,
-      }),
-    },
-  }),
   name: new StringValue({
     required: false,
     emptyAllowed: false,
@@ -63,7 +49,15 @@ const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
         constrainTo: ['legacy'],
         required: false,
       }),
+      proxyBaseUrl: new StringValue({
+        required: false,
+        url: true,
+      }),
     },
+  }),
+  environment: new StringValue<PlatformEnvironment>({
+    required: false,
+    constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
   }),
 };
 

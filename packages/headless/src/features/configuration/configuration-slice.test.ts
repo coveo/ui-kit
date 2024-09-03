@@ -1,5 +1,8 @@
-import {getOrganizationEndpoints} from '../../api/platform-client';
-import {allValidPlatformCombination} from '../../test/platform-url';
+import {
+  getDefaultAnalyticsNextEndpointBaseUrl,
+  getDefaultOrganizationEndpointBaseUrl,
+  getDefaultSearchEndpointBaseUrl,
+} from '../../api/platform-client';
 import {
   updateBasicConfiguration as updateCommerceBasicConfiguration,
   updateAnalyticsConfiguration as updateCommerceAnalyticsConfiguration,
@@ -26,14 +29,21 @@ import {
 jest.mock('../../api/analytics/coveo-analytics-utils');
 
 describe('configuration slice', () => {
+  const initialState = getConfigurationInitialState();
+  const {environment} = initialState;
   const organizationId = 'myorg';
-  const organizationEndpoints = getOrganizationEndpoints(organizationId, 'dev');
+
   const existingState: ConfigurationState = {
-    ...getConfigurationInitialState(),
+    ...initialState,
     accessToken: 'mytoken123',
     organizationId,
+    platformUrl: getDefaultOrganizationEndpointBaseUrl(
+      organizationId,
+      'platform',
+      environment
+    ),
     search: {
-      apiBaseUrl: organizationEndpoints.search,
+      apiBaseUrl: getDefaultSearchEndpointBaseUrl(organizationId, environment),
       locale: 'en-US',
       timezone: 'Africa/Johannesburg',
       authenticationProviders: [],
@@ -43,8 +53,15 @@ describe('configuration slice', () => {
       originContext: '0',
       originLevel2: '2',
       originLevel3: '3',
-      apiBaseUrl: organizationEndpoints.analytics,
-      nextApiBaseUrl: `${organizationEndpoints.platform}/rest/organizations/myorg/events/v1`,
+      apiBaseUrl: getDefaultOrganizationEndpointBaseUrl(
+        organizationId,
+        'analytics',
+        environment
+      ),
+      nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
+        organizationId,
+        environment
+      ),
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',
@@ -67,84 +84,178 @@ describe('configuration slice', () => {
       | typeof updateCommerceBasicConfiguration
   ) => {
     it('works on initial state', () => {
+      const accessToken = 'mytoken123';
+      const environment = 'hipaa';
+      const organizationId = 'myorg';
+
       const expectedState: ConfigurationState = {
         ...getConfigurationInitialState(),
-        accessToken: 'mytoken123',
-        organizationId: 'myorg',
+        accessToken,
+        environment: environment,
+        organizationId,
+        platformUrl: getDefaultOrganizationEndpointBaseUrl(
+          organizationId,
+          'platform',
+          environment
+        ),
+        analytics: {
+          ...getConfigurationInitialState().analytics,
+          apiBaseUrl: getDefaultOrganizationEndpointBaseUrl(
+            organizationId,
+            'analytics',
+            environment
+          ),
+          nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
+            organizationId,
+            environment
+          ),
+        },
+        search: {
+          ...getConfigurationInitialState().search,
+          apiBaseUrl: getDefaultSearchEndpointBaseUrl(
+            organizationId,
+            environment
+          ),
+        },
       };
       expect(
         configurationReducer(
           undefined,
           updateBasic({
-            organizationId: 'myorg',
-            accessToken: 'mytoken123',
+            organizationId,
+            accessToken,
+            environment,
           })
         )
       ).toEqual(expectedState);
     });
 
     it('works on an existing state', () => {
+      const accessToken = 'mynewtoken';
+      const environment = 'hipaa';
+      const organizationId = 'myotherorg';
+
       const expectedState: ConfigurationState = {
         ...existingState,
-        accessToken: 'mynewtoken',
-        organizationId: 'myotherorg',
+        accessToken,
+        environment,
+        organizationId,
+        platformUrl: getDefaultOrganizationEndpointBaseUrl(
+          organizationId,
+          'platform',
+          environment
+        ),
+        analytics: {
+          ...existingState.analytics,
+          apiBaseUrl: getDefaultOrganizationEndpointBaseUrl(
+            organizationId,
+            'analytics',
+            environment
+          ),
+          nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
+            organizationId,
+            environment
+          ),
+        },
+        search: {
+          ...existingState.search,
+          apiBaseUrl: getDefaultSearchEndpointBaseUrl(
+            organizationId,
+            environment
+          ),
+        },
       };
 
       expect(
         configurationReducer(
           existingState,
           updateBasic({
-            accessToken: 'mynewtoken',
-            organizationId: 'myotherorg',
+            accessToken,
+            environment,
+            organizationId,
           })
         )
       ).toEqual(expectedState);
     });
 
-    it('setting platformUrl to a relative url does not return an error', () => {
-      const platformUrl = '/rest/search/v2';
-      const action = updateBasic({platformUrl});
-      expect('error' in action).toBe(false);
-    });
+    it('setting organizationId updates #organizationId, #platformUrl, #analytics.apiBaseUrl, #analytics.nextApiBaseUrl, and #search.apiBaseUrl in state', () => {
+      const organizationId = 'neworganization';
 
-    it('setting platformUrl keep search and analytics url in sync', () => {
-      allValidPlatformCombination().forEach((expectation) => {
-        const newState = configurationReducer(
-          existingState,
-          updateBasic({
-            platformUrl: expectation.platform,
-          })
-        );
-
-        expect(newState.search.apiBaseUrl).toBe(expectation.search);
-        expect(newState.analytics.apiBaseUrl).toBe(expectation.analytics);
-      });
-    });
-
-    it('setting platformUrl to a relative URL keep search and analytics url in sync', () => {
       const newState = configurationReducer(
         existingState,
-        updateBasic({
-          platformUrl: '/foo',
-        })
+        updateBasic({organizationId})
       );
 
-      expect(newState.search.apiBaseUrl).toBe('/foo/rest/search/v2');
-      expect(newState.analytics.apiBaseUrl).toBe('/foo');
-    });
+      expect(newState.organizationId).toBe(organizationId);
 
-    it('setting platformUrl to a non relative URL pointing to a non Coveo platform keep search and analytics url in sync', () => {
-      const newState = configurationReducer(
-        existingState,
-        updateBasic({
-          platformUrl: 'https://my.domain.com',
-        })
+      expect(newState.platformUrl).toBe(
+        getDefaultOrganizationEndpointBaseUrl(
+          organizationId,
+          'platform',
+          existingState.environment
+        )
+      );
+      expect(newState.analytics.apiBaseUrl).toBe(
+        getDefaultOrganizationEndpointBaseUrl(
+          organizationId,
+          'analytics',
+          existingState.environment
+        )
+      );
+
+      expect(newState.analytics.nextApiBaseUrl).toBe(
+        getDefaultAnalyticsNextEndpointBaseUrl(
+          organizationId,
+          existingState.environment
+        )
       );
 
       expect(newState.search.apiBaseUrl).toBe(
-        'https://my.domain.com/rest/search/v2'
+        getDefaultSearchEndpointBaseUrl(
+          organizationId,
+          existingState.environment
+        )
       );
-      expect(newState.analytics.apiBaseUrl).toBe('https://my.domain.com');
+    });
+
+    it('setting environment updates #environment #platformUrl, #analytics.apiBaseUrl, #analytics.nextApiBaseUrl, and #search.apiBaseUrl in state', () => {
+      const environment = 'dev';
+      const newState = configurationReducer(
+        existingState,
+        updateBasic({environment})
+      );
+
+      expect(newState.environment).toBe(environment);
+
+      expect(newState.platformUrl).toBe(
+        getDefaultOrganizationEndpointBaseUrl(
+          existingState.organizationId,
+          'platform',
+          environment
+        )
+      );
+
+      expect(newState.analytics.apiBaseUrl).toBe(
+        getDefaultOrganizationEndpointBaseUrl(
+          existingState.organizationId,
+          'analytics',
+          environment
+        )
+      );
+
+      expect(newState.analytics.nextApiBaseUrl).toBe(
+        getDefaultAnalyticsNextEndpointBaseUrl(
+          existingState.organizationId,
+          environment
+        )
+      );
+
+      expect(newState.search.apiBaseUrl).toBe(
+        getDefaultSearchEndpointBaseUrl(
+          existingState.organizationId,
+          environment
+        )
+      );
     });
   };
 
@@ -165,8 +276,8 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
-          nextApiBaseUrl: 'http://test.com/new-analytics',
-          apiBaseUrl: 'http://test.com/analytics',
+          nextApiBaseUrl: 'https://example.com/analytics',
+          apiBaseUrl: 'https://example.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
@@ -184,8 +295,7 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
-            nextApiBaseUrl: 'http://test.com/new-analytics',
-            apiBaseUrl: 'http://test.com/analytics',
+            proxyBaseUrl: 'https://example.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
@@ -204,8 +314,8 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
-          nextApiBaseUrl: 'http://test.com/new-analytics',
-          apiBaseUrl: 'http://test.com/analytics',
+          nextApiBaseUrl: 'https://example.com/analytics',
+          apiBaseUrl: 'https://example.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
           userDisplayName: 'displayName',
@@ -224,8 +334,7 @@ describe('configuration slice', () => {
             originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
-            nextApiBaseUrl: 'http://test.com/new-analytics',
-            apiBaseUrl: 'http://test.com/analytics',
+            proxyBaseUrl: 'https://example.com/analytics',
             anonymous: true,
             deviceId: 'fuzz',
             userDisplayName: 'displayName',
@@ -236,12 +345,20 @@ describe('configuration slice', () => {
       ).toEqual(expectedState);
     });
 
-    it('setting apiBaseUrl to a relative url does not return an error', () => {
-      const apiBaseUrl = '/rest/ua';
+    it('setting proxyBaseUrl to an URL does not return an error', () => {
+      const proxyBaseUrl = 'https://example.com/analytics';
       const action = updateAnalyticsConfiguration({
-        apiBaseUrl: apiBaseUrl,
+        proxyBaseUrl,
       });
       expect('error' in action).toBe(false);
+    });
+
+    it('setting proxyBaseUrl to a non-URL returns an error', () => {
+      const proxyBaseUrl = '/analytics';
+      const action = updateAnalyticsConfiguration({
+        proxyBaseUrl,
+      });
+      expect('error' in action).toBe(true);
     });
   });
 
@@ -299,7 +416,7 @@ describe('configuration slice', () => {
       const expectedState: ConfigurationState = {
         ...getConfigurationInitialState(),
         search: {
-          apiBaseUrl: 'http://test.com/search',
+          apiBaseUrl: 'https://example.com/search',
           locale: 'fr-CA',
           timezone: 'Africa/Johannesburg',
           authenticationProviders: ['theProvider'],
@@ -310,7 +427,7 @@ describe('configuration slice', () => {
         configurationReducer(
           undefined,
           updateSearchConfiguration({
-            apiBaseUrl: 'http://test.com/search',
+            proxyBaseUrl: 'https://example.com/search',
             locale: 'fr-CA',
             timezone: 'Africa/Johannesburg',
             authenticationProviders: ['theProvider'],
@@ -323,7 +440,7 @@ describe('configuration slice', () => {
       const expectedState: ConfigurationState = {
         ...existingState,
         search: {
-          apiBaseUrl: 'http://test.com/search',
+          apiBaseUrl: 'https://example.com/search',
           locale: 'fr-CA',
           timezone: 'Africa/Johannesburg',
           authenticationProviders: ['theNewProvider'],
@@ -334,7 +451,7 @@ describe('configuration slice', () => {
         configurationReducer(
           existingState,
           updateSearchConfiguration({
-            apiBaseUrl: 'http://test.com/search',
+            proxyBaseUrl: 'https://example.com/search',
             locale: 'fr-CA',
             timezone: 'Africa/Johannesburg',
             authenticationProviders: ['theNewProvider'],
@@ -343,10 +460,16 @@ describe('configuration slice', () => {
       ).toEqual(expectedState);
     });
 
-    it('setting apiBaseUrl to a relative url does not return an error', () => {
-      const apiBaseUrl = '/rest/search/v2';
-      const action = updateSearchConfiguration({apiBaseUrl});
+    it('setting apiBaseUrl to an URL does not return an error', () => {
+      const proxyBaseUrl = 'https://example.com/search';
+      const action = updateSearchConfiguration({proxyBaseUrl});
       expect('error' in action).toBe(false);
+    });
+
+    it('setting apiBaseUrl to a non-URL returns an error', () => {
+      const proxyBaseUrl = '/search';
+      const action = updateSearchConfiguration({proxyBaseUrl});
+      expect('error' in action).toBe(true);
     });
   });
 

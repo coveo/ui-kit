@@ -4,11 +4,10 @@ import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
 import {ExpiredTokenError} from '../utils/errors';
-import {PlatformEnvironment} from '../utils/url-utils';
 import {
+  getDefaultOrganizationEndpointBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
-  getOrganizationEndpoints,
 } from './platform-client';
 import {
   NoopPreprocessRequest,
@@ -21,61 +20,7 @@ jest.mock('@coveo/please-give-me-fetch');
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
-describe('url helper', () => {
-  it.each([
-    {
-      orgId: 'foo',
-      env: 'dev',
-      organizationEndpoints: {
-        platform: 'https://foo.orgdev.coveo.com',
-        search: 'https://foo.orgdev.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.orgdev.coveo.com',
-        admin: 'https://foo.admin.orgdev.coveo.com',
-      },
-    },
-    {
-      orgId: 'foo',
-      env: 'stg',
-      organizationEndpoints: {
-        platform: 'https://foo.orgstg.coveo.com',
-        search: 'https://foo.orgstg.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.orgstg.coveo.com',
-        admin: 'https://foo.admin.orgstg.coveo.com',
-      },
-    },
-    {
-      orgId: 'foo',
-      env: 'prod',
-      organizationEndpoints: {
-        platform: 'https://foo.org.coveo.com',
-        search: 'https://foo.org.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.org.coveo.com',
-        admin: 'https://foo.admin.org.coveo.com',
-      },
-    },
-    {
-      orgId: 'foo',
-      env: 'hipaa',
-      organizationEndpoints: {
-        platform: 'https://foo.orghipaa.coveo.com',
-        search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.orghipaa.coveo.com',
-        admin: 'https://foo.admin.orghipaa.coveo.com',
-      },
-    },
-  ] as Array<{
-    orgId: string;
-    env: PlatformEnvironment;
-    organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
-  }>)(
-    'return the correct #getOrganizationEndpoints()',
-    ({orgId, env, organizationEndpoints}) => {
-      expect(getOrganizationEndpoints(orgId, env)).toEqual(
-        expect.objectContaining(organizationEndpoints)
-      );
-    }
-  );
-});
+// TODO test new url helpers
 
 describe('PlatformClient call', () => {
   let platformUrl: string;
@@ -87,7 +32,7 @@ describe('PlatformClient call', () => {
       requestParams: {
         test: 123,
       },
-      url: getOrganizationEndpoints('').platform,
+      url: getDefaultOrganizationEndpointBaseUrl('', 'platform'),
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
       origin: 'searchApiFetch',
@@ -96,7 +41,7 @@ describe('PlatformClient call', () => {
   }
 
   beforeEach(() => {
-    platformUrl = getOrganizationEndpoints('').platform;
+    platformUrl = getDefaultOrganizationEndpointBaseUrl('', 'platform');
     mockFetch.mockClear();
   });
 

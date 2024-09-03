@@ -2,6 +2,7 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import {PlatformEnvironment} from '../../utils/url-utils';
 import {CoveoFramework} from '../../utils/version';
 
 dayjs.extend(utc);
@@ -17,35 +18,22 @@ export interface ConfigurationState {
    */
   accessToken: string;
   /**
-   * The Platform URL to use.
-   * By default, https://platform.cloud.coveo.com
+   * The base platform [organization endpoint](https://docs.coveo.com/en/mcc80216) to use.
+   *
+   * This value is automatically resolved from the `organizationId` and `environment`.
+   *
+   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
+   * will be `https://mycoveocloudorganizationg8tp8wu3.org.coveo.com`.
    */
   platformUrl: string;
   /**
    * The global headless engine Search API configuration.
    */
-  search: {
-    /**
-     * The Search API base URL to use.
-     * By default, will append /rest/search/v2 to the platformUrl value.
-     */
-    apiBaseUrl: string;
-    /**
-     * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
-     */
-    locale: string;
-    /**
-     * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
-     * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-     */
-    timezone: string;
-    /**
-     * Specifies the name of the authentication providers to use to perform queries.
-     *
-     * See [SAML Authentication](https://docs.coveo.com/en/91/).
-     */
-    authenticationProviders: string[];
-  };
+  search: SearchState;
+  /**
+   * The global headless engine Commerce API configuration.
+   */
+  commerce: CommerceState;
   /**
    * The global headless engine Usage Analytics API configuration.
    */
@@ -54,6 +42,54 @@ export interface ConfigurationState {
    * The global headless engine Knowledge configuration.
    */
   knowledge: KnowledgeState;
+  /**
+   * The environment in which the Coveo cloud organization is hosted.
+   *
+   * The `dev` and `stg` environments are only available internally for Coveo employees (e.g., Professional Services).
+   *
+   * Defaults to `prod`.
+   */
+  environment: PlatformEnvironment;
+}
+
+export interface CommerceState {
+  /**
+   * The Commerce API base URL to use.
+   *
+   * By default, will append `/rest/organizations/{organizationId}/commerce/v2` to the automatically resolved
+   * `platformUrl` value.
+   *
+   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the configuration of your commerce
+   * engine, or in the payload of an `updateBasicCommerceConfiguration` action.
+   */
+  apiBaseUrl: string;
+}
+
+export interface SearchState {
+  /**
+   * The Search API base URL to use.
+   *
+   * By default, will append `/rest/search/v2` to the automatically resolved `platformUrl` value.
+   *
+   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `search` object of your search
+   * engine's configuration, or in the payload of an `updateSearchConfiguration` action.
+   */
+  apiBaseUrl: string;
+  /**
+   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   */
+  locale: string;
+  /**
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
+   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
+   */
+  timezone: string;
+  /**
+   * Specifies the name of the authentication providers to use to perform queries.
+   *
+   * See [SAML Authentication](https://docs.coveo.com/en/91/).
+   */
+  authenticationProviders: string[];
 }
 
 export interface AnalyticsState {
@@ -64,14 +100,32 @@ export interface AnalyticsState {
 
   /**
    * The Analytics API base URL to use.
-   * By default, will append /rest/ua to the platformUrl value.
+   *
+   * By default, this value is automatically resolved from the `organizationId` and `environment` values in the
+   * top-level configuration state.
+   *
+   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
+   * will be `https://analytics.mycoveocloudorganizationg8tp8wu3.org.coveo.com`.
+   *
+   * If necessary, this value can be overridden by specifying a `proxyBaseUrl` in the engine configuration's analytics
+   * object, or in the payload when dispatching the `updateAnalyticsConfiguration` action.
    */
   apiBaseUrl: string;
 
   /**
    * @internal
+  /**
    * The Analytics API base URL to use.
-   * By default, will append /rest/organizations/${organizationId}/events/v1 to the platformUrl value.
+   *
+   * By default, this value is automatically resolved from the `organizationId` and `environment` values in the
+   * top-level configuration state.
+   *
+   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
+   * will be
+   * `https://analytics.mycoveocloudorganizationg8tp8wu3.org.coveo.com/rest/organizations/${organizationId}/events/v1`.
+   *
+   * If necessary, this value can be overridden by specifying a `proxyBaseUrl` in the engine configuration's analytics
+   * object, or in the payload when dispatching the `updateAnalyticsConfiguration` action.
    */
   nextApiBaseUrl: string;
 
@@ -148,9 +202,6 @@ export interface AnalyticsState {
   source: Partial<Record<CoveoFramework, string>>;
 }
 
-export const searchAPIEndpoint = '/rest/search/v2';
-export const analyticsAPIEndpoint = '/rest/ua';
-
 interface KnowledgeState {
   answerConfigurationId: string;
 }
@@ -158,16 +209,16 @@ interface KnowledgeState {
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
-  platformUrl: 'https://.org.coveo.com',
+  platformUrl: '',
   search: {
-    apiBaseUrl: 'https://.org.coveo.com/rest/search/v2',
+    apiBaseUrl: '',
     locale: 'en-US',
     timezone: dayjs.tz.guess(),
     authenticationProviders: [],
   },
   analytics: {
     enabled: true,
-    apiBaseUrl: 'https://.org.analytics.coveo.com',
+    apiBaseUrl: '',
     nextApiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',
@@ -180,7 +231,11 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     analyticsMode: 'legacy',
     source: {},
   },
+  commerce: {
+    apiBaseUrl: '',
+  },
   knowledge: {
     answerConfigurationId: '',
   },
+  environment: 'prod',
 });

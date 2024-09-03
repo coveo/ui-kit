@@ -3,7 +3,11 @@ import {
   createAction,
   createReducer,
 } from '@reduxjs/toolkit';
-import {getOrganizationEndpoints} from '../api/platform-client';
+import {
+  getDefaultAnalyticsNextEndpointBaseUrl,
+  getDefaultOrganizationEndpointBaseUrl,
+  getDefaultSearchEndpointBaseUrl,
+} from '../api/platform-client';
 import * as Store from '../app/store';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
@@ -39,39 +43,103 @@ describe('engine', () => {
       configuration: {
         organizationId,
         accessToken: 'token',
-        organizationEndpoints: getOrganizationEndpoints(organizationId),
       },
       reducers: {},
     };
   });
 
-  it('when no reducers are specified, it still registers the configuration correctly', () => {
-    options.reducers = {};
+  it('registers the basic configuration', () => {
+    const {accessToken, environment, organizationId} = options.configuration;
     initEngine();
-
-    const {configuration} = engine.state;
-    expect(configuration.accessToken).toBe(options.configuration.accessToken);
-    expect(configuration.organizationId).toBe(
-      options.configuration.organizationId
+    expect(engine.state.configuration.accessToken).toBe(accessToken);
+    expect(engine.state.configuration.environment).toBe('prod');
+    expect(engine.state.configuration.organizationId).toBe(organizationId);
+    expect(engine.state.configuration.platformUrl).toBe(
+      getDefaultOrganizationEndpointBaseUrl(
+        organizationId,
+        'platform',
+        environment
+      )
     );
-    expect(configuration.platformUrl).toBe(
-      getOrganizationEndpoints(configuration.organizationId).platform
+    expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+      getDefaultOrganizationEndpointBaseUrl(
+        organizationId,
+        'analytics',
+        environment
+      )
+    );
+    expect(engine.state.configuration.analytics.nextApiBaseUrl).toBe(
+      getDefaultAnalyticsNextEndpointBaseUrl(organizationId, environment)
+    );
+    expect(engine.state.configuration.search.apiBaseUrl).toBe(
+      getDefaultSearchEndpointBaseUrl(organizationId, environment)
     );
   });
 
-  it('when an #analytics configuration is specified, it registers the configuration', () => {
-    const enabled = true;
-    const originLevel2 = 'tab';
-    const originLevel3 = 'referrer';
+  it('when no reducers are specified, still registers the basic configuration correctly', () => {
+    options.reducers = {};
+    const {accessToken, environment, organizationId} = options.configuration;
+    initEngine();
+    expect(engine.state.configuration.accessToken).toBe(accessToken);
+    expect(engine.state.configuration.environment).toBe('prod');
+    expect(engine.state.configuration.organizationId).toBe(organizationId);
+    expect(engine.state.configuration.platformUrl).toBe(
+      getDefaultOrganizationEndpointBaseUrl(
+        organizationId,
+        'platform',
+        environment
+      )
+    );
+    expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+      getDefaultOrganizationEndpointBaseUrl(
+        organizationId,
+        'analytics',
+        environment
+      )
+    );
+    expect(engine.state.configuration.analytics.nextApiBaseUrl).toBe(
+      getDefaultAnalyticsNextEndpointBaseUrl(organizationId, environment)
+    );
+    expect(engine.state.configuration.search.apiBaseUrl).toBe(
+      getDefaultSearchEndpointBaseUrl(organizationId, environment)
+    );
+  });
 
-    options.configuration.analytics = {enabled, originLevel2, originLevel3};
+  it('registers the analytics configuration if specified', () => {
+    options.configuration.analytics = {
+      analyticsMode: 'next',
+      anonymous: true,
+      deviceId: 'deviceId',
+      documentLocation: 'https://example.com/documentLocation',
+      enabled: true,
+      originLevel2: 'originLevel2',
+      originLevel3: 'originLevel3',
+      originContext: 'originContext',
+      proxyBaseUrl: 'https://example.com/analytics',
+      trackingId: 'trackingId',
+      source: {
+        '@coveo/atomic': '1.0.0',
+        '@coveo/quantic': '1.0.0',
+      },
+      userDisplayName: 'userDisplayName',
+    };
+
     initEngine();
 
     const {analytics} = engine.state.configuration;
+    const {proxyBaseUrl, ...restOfAnalyticsConfiguration} =
+      options.configuration.analytics;
 
-    expect(analytics.enabled).toBe(enabled);
-    expect(analytics.originLevel2).toBe(originLevel2);
-    expect(analytics.originLevel3).toBe(originLevel3);
+    expect(analytics).toEqual({
+      ...restOfAnalyticsConfiguration,
+      apiBaseUrl: proxyBaseUrl,
+      nextApiBaseUrl: proxyBaseUrl,
+    });
+  });
+
+  it('throws an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
+    options.configuration.analytics = {analyticsMode: 'next'};
+    expect(() => initEngine()).toThrowErrorMatchingSnapshot();
   });
 
   it('calling #enableAnalytics sets #analytics.enabled to true', () => {
@@ -127,25 +195,6 @@ describe('engine', () => {
     engine.addReducers({configuration});
 
     expect(stateListener).not.toHaveBeenCalled();
-  });
-
-  it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option.', () => {
-    options.configuration = {
-      ...options.configuration,
-      organizationId: 'a',
-      organizationEndpoints: getOrganizationEndpoints('b'),
-    };
-    initEngine();
-    expect(engine.logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'There is a mismatch between the `organizationId` option (a) and the organization configured in the `organizationEndpoints` option (https://b.org.coveo.com).'
-      )
-    );
-  });
-
-  it('should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
-    options.configuration.analytics = {analyticsMode: 'next'};
-    expect(() => initEngine()).toThrowErrorMatchingSnapshot();
   });
 
   describe('with preloaded state', () => {

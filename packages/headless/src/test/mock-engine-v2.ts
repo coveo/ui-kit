@@ -1,6 +1,5 @@
 import {Relay} from '@coveo/relay';
 import pino, {Logger} from 'pino';
-import {getOrganizationEndpoints} from '../api/platform-client';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
 import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr';
@@ -98,12 +97,7 @@ export function buildMockCoreEngineNext<
   const state: State = initialState;
   return {
     [stateKey]: state,
-    configuration: {
-      ...state.configuration,
-      organizationEndpoints: getOrganizationEndpoints(
-        state.configuration.organizationId
-      ),
-    },
+    configuration: state.configuration,
     dispatch: jest.fn(),
     addReducers: jest.fn(),
     disableAnalytics: jest.fn(),
@@ -158,7 +152,22 @@ export function buildMockCaseAssistEngine<
 export function buildMockCommerceEngine<
   State extends StateFromEngineNext<CommerceEngine>,
 >(initialState: State): CommerceEngine {
-  return buildMockCoreEngineNext(initialState);
+  return {
+    ...buildMockCoreEngineNext(initialState),
+    configuration: {
+      ...initialState.configuration,
+      context: initialState.commerceContext,
+      cart: {
+        items: Object.values(initialState.cart.cart).map((value) => ({
+          name: value.name,
+          price: value.price,
+          productId: value.productId,
+          quantity: value.quantity,
+        })),
+      },
+      platformUrl: initialState.configuration.platformUrl,
+    },
+  };
 }
 
 export function buildMockInsightEngine<

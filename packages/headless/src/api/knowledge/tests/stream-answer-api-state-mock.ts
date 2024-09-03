@@ -4,6 +4,7 @@ import {StateNeededByAnswerAPI} from '../stream-answer-api';
 export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   configuration: {
     organizationId: 'lbergeronsfdevt1z2624x',
+    environment: 'dev',
     accessToken: 'x7d408c4b-5b56-40b0-9cc5-eb6e9bf7a7f8',
     platformUrl: 'https://lbergeronsfdevt1z2624x.orgdev.coveo.com',
     search: {
@@ -12,6 +13,10 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       locale: 'en',
       timezone: 'America/New_York',
       authenticationProviders: [],
+    },
+    commerce: {
+      apiBaseUrl:
+        'https://lbergeronsfdevt1z2624x.orgdev.coveo.com/rest/organizations/lbergeronsfdevt1z2624x/commerce/v2',
     },
     analytics: {
       enabled: false,

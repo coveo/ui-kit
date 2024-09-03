@@ -61,7 +61,7 @@ export const buildBaseCommerceAPIRequest = (
   const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
-    url: state.configuration.platformUrl,
+    url: state.configuration.commerce.apiBaseUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,

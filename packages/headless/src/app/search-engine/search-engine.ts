@@ -1,6 +1,7 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
+import {getDefaultSearchEndpointBaseUrl} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -55,10 +56,12 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
 function getUpdateSearchConfigurationPayload(
-  options: SearchEngineOptions
+  configuration: SearchEngineConfiguration
 ): UpdateSearchConfigurationActionCreatorPayload {
-  const search = options.configuration.search;
-  const apiBaseUrl = options.configuration.organizationEndpoints.search;
+  const {search, organizationId, environment} = configuration;
+  const apiBaseUrl = search?.proxyBaseUrl
+    ? search.proxyBaseUrl
+    : getDefaultSearchEndpointBaseUrl(organizationId, environment);
 
   const payloadWithURL = {
     ...search,
@@ -109,13 +112,14 @@ export interface SearchEngineOptions
  */
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
-  validateConfiguration(options.configuration, logger);
+  const {configuration} = options;
+  validateConfiguration(configuration, logger);
 
-  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
+  const searchAPIClient = createSearchAPIClient(configuration, logger);
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments = {
-    ...buildThunkExtraArguments(options.configuration, logger),
+    ...buildThunkExtraArguments(configuration, logger),
     apiClient: searchAPIClient,
     streamingClient: generatedAnswerClient,
   };
@@ -128,7 +132,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const search = getUpdateSearchConfigurationPayload(options);
+  const search = getUpdateSearchConfigurationPayload(configuration);
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));

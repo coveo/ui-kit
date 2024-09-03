@@ -2,6 +2,7 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {updateProxyBaseUrl} from '../../features/commerce/configuration/configuration-actions';
 import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
@@ -68,7 +69,8 @@ export type CommerceEngineState =
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
     State & CommerceEngineState,
-    CommerceThunkExtraArguments
+    CommerceThunkExtraArguments,
+    CommerceEngineReadonlyConfiguration
   > {}
 
 /**
@@ -82,6 +84,11 @@ export interface CommerceEngineOptions
   configuration: CommerceEngineConfiguration;
 }
 
+export interface CommerceEngineReadonlyConfiguration
+  extends Omit<CommerceEngineConfiguration, 'proxyBaseUrl'> {
+  platformUrl: string;
+}
+
 /**
  * Creates a commerce engine instance.
  *
@@ -92,12 +99,13 @@ export function buildCommerceEngine(
   options: CommerceEngineOptions
 ): CommerceEngine {
   const logger = buildLogger(options.loggerOptions);
-  validateConfiguration(options.configuration, logger);
+  const {configuration} = options;
+  validateConfiguration(configuration, logger);
 
-  const commerceClient = createCommerceAPIClient(options.configuration, logger);
+  const commerceClient = createCommerceAPIClient(configuration, logger);
 
   const thunkArguments = {
-    ...buildThunkExtraArguments(options.configuration, logger),
+    ...buildThunkExtraArguments(configuration, logger),
     apiClient: commerceClient,
   };
 
@@ -107,14 +115,23 @@ export function buildCommerceEngine(
   };
 
   const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+
   const {state: _, ...engine} = internalEngine;
 
-  engine.dispatch(setContext(options.configuration.context));
-  if (
-    options.configuration.cart !== undefined &&
-    options.configuration.cart.items !== undefined
-  ) {
-    engine.dispatch(setItems(options.configuration.cart.items));
+  const {proxyBaseUrl, context, cart} = configuration;
+
+  if (proxyBaseUrl !== undefined) {
+    engine.dispatch(
+      updateProxyBaseUrl({
+        proxyBaseUrl,
+      })
+    );
+  }
+
+  engine.dispatch(setContext(context));
+
+  if (cart !== undefined && cart.items !== undefined) {
+    engine.dispatch(setItems(cart.items));
   }
 
   return redactEngine({
@@ -124,13 +141,16 @@ export function buildCommerceEngine(
       return internalEngine.state;
     },
 
-    get configuration() {
+    get configuration(): CommerceEngineReadonlyConfiguration {
       return {
         ...internalEngine.state.configuration,
-        organizationEndpoints: {
-          platform: internalEngine.state.configuration.platformUrl,
-          analytics: internalEngine.state.configuration.analytics.apiBaseUrl,
+        context: {...internalEngine.state.commerceContext},
+        cart: {
+          items: Object.values(internalEngine.state.cart.cart).map(
+            (value) => value
+          ),
         },
+        platformUrl: internalEngine.state.configuration.platformUrl,
       };
     },
   });

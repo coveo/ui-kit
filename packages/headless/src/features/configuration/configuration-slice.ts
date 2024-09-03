@@ -2,17 +2,21 @@ import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
-import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
-  matchCoveoOrganizationEndpointUrl,
-  isCoveoPlatformURL,
-} from '../../utils/url-utils';
+  getDefaultAnalyticsNextEndpointBaseUrl,
+  getDefaultOrganizationEndpointBaseUrl,
+  getDefaultSearchEndpointBaseUrl,
+} from '../../api/platform-client';
+import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../../utils/url-utils';
 import {
   updateBasicConfiguration as updateCommerceBasicConfiguration,
   updateAnalyticsConfiguration as updateCommerceAnalyticsConfiguration,
   disableAnalytics as disableCommerceAnalytics,
   enableAnalytics as enableCommerceAnalytics,
+  updateProxyBaseUrl as updateCommerceProxyBaseUrl,
+  UpdateProxyBaseUrlPayload,
 } from '../commerce/configuration/configuration-actions';
+import {UpdateAnalyticsConfigurationPayload as UpdateCommerceAnalyticsConfigurationPayload} from '../commerce/configuration/configuration-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -24,40 +28,13 @@ import {
   setOriginLevel2,
   setOriginLevel3,
   UpdateBasicConfigurationActionCreatorPayload,
+  UpdateSearchConfigurationActionCreatorPayload,
+  UpdateAnalyticsConfigurationActionCreatorPayload,
 } from './configuration-actions';
 import {
   getConfigurationInitialState,
-  searchAPIEndpoint,
-  analyticsAPIEndpoint,
   ConfigurationState,
 } from './configuration-state';
-
-function legacyAnalyticsUrlFromPlatformUrl(
-  platformUrl: string,
-  organizationId: string
-) {
-  const matchCoveoPlatformURL = isCoveoPlatformURL(platformUrl);
-  if (matchCoveoPlatformURL) {
-    return (
-      platformUrl.replace(/^(https:\/\/)platform/, '$1analytics') +
-      analyticsAPIEndpoint
-    );
-  }
-
-  const matchCoveoOrganizationEndpoints = matchCoveoOrganizationEndpointUrl(
-    platformUrl,
-    organizationId
-  );
-
-  if (matchCoveoOrganizationEndpoints) {
-    return getOrganizationEndpoints(
-      organizationId,
-      matchCoveoOrganizationEndpoints.environment
-    ).analytics;
-  }
-
-  return platformUrl;
-}
 
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),
@@ -70,80 +47,16 @@ export const configurationReducer = createReducer(
         handleUpdateBasicConfiguration(state, action.payload);
       })
       .addCase(updateSearchConfiguration, (state, action) => {
-        if (action.payload.apiBaseUrl) {
-          state.search.apiBaseUrl = action.payload.apiBaseUrl;
-        }
-        if (action.payload.locale) {
-          state.search.locale = action.payload.locale;
-        }
-        if (action.payload.timezone) {
-          state.search.timezone = action.payload.timezone;
-        }
-        if (action.payload.authenticationProviders) {
-          state.search.authenticationProviders =
-            action.payload.authenticationProviders;
-        }
+        handleUpdateSearchConfiguration(state, action.payload);
+      })
+      .addCase(updateCommerceProxyBaseUrl, (state, action) => {
+        handleUpdateCommerceProxyBaseUrl(state, action.payload);
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
-        if (!isNullOrUndefined(action.payload.enabled)) {
-          state.analytics.enabled = action.payload.enabled;
-        }
-        if (!isNullOrUndefined(action.payload.originContext)) {
-          state.analytics.originContext = action.payload.originContext;
-        }
-        if (!isNullOrUndefined(action.payload.originLevel2)) {
-          state.analytics.originLevel2 = action.payload.originLevel2;
-        }
-        if (!isNullOrUndefined(action.payload.originLevel3)) {
-          state.analytics.originLevel3 = action.payload.originLevel3;
-        }
-        if (!isNullOrUndefined(action.payload.apiBaseUrl)) {
-          state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
-        }
-        if (!isNullOrUndefined(action.payload.nextApiBaseUrl)) {
-          state.analytics.nextApiBaseUrl = action.payload.nextApiBaseUrl;
-        }
-        if (!isNullOrUndefined(action.payload.trackingId)) {
-          state.analytics.trackingId = action.payload.trackingId;
-        }
-        if (!isNullOrUndefined(action.payload.analyticsMode)) {
-          state.analytics.analyticsMode = action.payload.analyticsMode;
-        }
-        if (!isNullOrUndefined(action.payload.source)) {
-          state.analytics.source = action.payload.source;
-        }
-        const magicCookie = getMagicCookie();
-        if (magicCookie) {
-          state.analytics.analyticsMode = 'next';
-          state.analytics.trackingId = magicCookie;
-        }
-        if (!isNullOrUndefined(action.payload.runtimeEnvironment)) {
-          state.analytics.runtimeEnvironment =
-            action.payload.runtimeEnvironment;
-        }
-        if (!isNullOrUndefined(action.payload.anonymous)) {
-          state.analytics.anonymous = action.payload.anonymous;
-        }
-        if (!isNullOrUndefined(action.payload.deviceId)) {
-          state.analytics.deviceId = action.payload.deviceId;
-        }
-        if (!isNullOrUndefined(action.payload.userDisplayName)) {
-          state.analytics.userDisplayName = action.payload.userDisplayName;
-        }
-        if (!isNullOrUndefined(action.payload.documentLocation)) {
-          state.analytics.documentLocation = action.payload.documentLocation;
-        }
+        handleUpdateAnalyticsConfiguration(state, action.payload);
       })
       .addCase(updateCommerceAnalyticsConfiguration, (state, action) => {
-        if (!isNullOrUndefined(action.payload.enabled)) {
-          state.analytics.enabled = action.payload.enabled;
-        }
-        if (!isNullOrUndefined(action.payload.trackingId)) {
-          state.analytics.trackingId = action.payload.trackingId;
-        }
-        if (!isNullOrUndefined(action.payload.source)) {
-          state.analytics.source = action.payload.source;
-        }
+        handleUpdateCommerceAnalyticsConfiguration(state, action.payload);
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
@@ -176,18 +89,158 @@ function handleUpdateBasicConfiguration(
   state: ConfigurationState,
   payload: UpdateBasicConfigurationActionCreatorPayload
 ) {
-  if (payload.accessToken) {
+  if (!isNullOrUndefined(payload.accessToken)) {
     state.accessToken = payload.accessToken;
   }
-  if (payload.organizationId) {
+
+  state.environment = payload.environment ?? 'prod';
+
+  if (!isNullOrUndefined(payload.organizationId)) {
     state.organizationId = payload.organizationId;
   }
-  if (payload.platformUrl) {
-    state.platformUrl = payload.platformUrl;
-    state.search.apiBaseUrl = `${payload.platformUrl}${searchAPIEndpoint}`;
-    state.analytics.apiBaseUrl = legacyAnalyticsUrlFromPlatformUrl(
-      payload.platformUrl,
-      state.organizationId
+
+  if (
+    !isNullOrUndefined(payload.organizationId) ||
+    !isNullOrUndefined(payload.environment)
+  ) {
+    const organizationId = payload.organizationId ?? state.organizationId;
+    const environment = payload.environment ?? state.environment;
+
+    state.platformUrl = getDefaultOrganizationEndpointBaseUrl(
+      organizationId,
+      'platform',
+      environment
     );
+
+    if (
+      state.search.apiBaseUrl.length === 0 ||
+      matchCoveoOrganizationEndpointUrlAnyOrganization(state.search.apiBaseUrl)
+    ) {
+      state.search.apiBaseUrl = getDefaultSearchEndpointBaseUrl(
+        organizationId,
+        environment
+      );
+    }
+
+    if (
+      state.analytics.apiBaseUrl.length === 0 ||
+      matchCoveoOrganizationEndpointUrlAnyOrganization(
+        state.analytics.apiBaseUrl
+      )
+    ) {
+      state.analytics.apiBaseUrl = getDefaultOrganizationEndpointBaseUrl(
+        organizationId,
+        'analytics',
+        environment
+      );
+    }
+
+    if (
+      state.analytics.nextApiBaseUrl.length === 0 ||
+      matchCoveoOrganizationEndpointUrlAnyOrganization(
+        state.analytics.nextApiBaseUrl
+      )
+    ) {
+      state.analytics.nextApiBaseUrl = getDefaultAnalyticsNextEndpointBaseUrl(
+        organizationId,
+        environment
+      );
+    }
+  }
+}
+
+function handleUpdateSearchConfiguration(
+  state: ConfigurationState,
+  payload: UpdateSearchConfigurationActionCreatorPayload
+) {
+  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+    state.search.apiBaseUrl = payload.proxyBaseUrl;
+  }
+  if (!isNullOrUndefined(payload.locale)) {
+    state.search.locale = payload.locale;
+  }
+  if (!isNullOrUndefined(payload.timezone)) {
+    state.search.timezone = payload.timezone;
+  }
+  if (!isNullOrUndefined(payload.authenticationProviders)) {
+    state.search.authenticationProviders = payload.authenticationProviders;
+  }
+}
+
+function handleUpdateCommerceProxyBaseUrl(
+  state: ConfigurationState,
+  payload: UpdateProxyBaseUrlPayload
+) {
+  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+    state.commerce.apiBaseUrl = payload.proxyBaseUrl;
+  }
+}
+
+function handleUpdateAnalyticsConfiguration(
+  state: ConfigurationState,
+  payload: UpdateAnalyticsConfigurationActionCreatorPayload
+) {
+  if (!isNullOrUndefined(payload.enabled)) {
+    state.analytics.enabled = payload.enabled;
+  }
+  if (!isNullOrUndefined(payload.originContext)) {
+    state.analytics.originContext = payload.originContext;
+  }
+  if (!isNullOrUndefined(payload.originLevel2)) {
+    state.analytics.originLevel2 = payload.originLevel2;
+  }
+  if (!isNullOrUndefined(payload.originLevel3)) {
+    state.analytics.originLevel3 = payload.originLevel3;
+  }
+  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+    state.analytics.apiBaseUrl = payload.proxyBaseUrl;
+    state.analytics.nextApiBaseUrl = payload.proxyBaseUrl;
+  }
+  if (!isNullOrUndefined(payload.trackingId)) {
+    state.analytics.trackingId = payload.trackingId;
+  }
+  if (!isNullOrUndefined(payload.analyticsMode)) {
+    state.analytics.analyticsMode = payload.analyticsMode;
+  }
+  if (!isNullOrUndefined(payload.source)) {
+    state.analytics.source = payload.source;
+  }
+  const magicCookie = getMagicCookie();
+  if (magicCookie) {
+    state.analytics.analyticsMode = 'next';
+    state.analytics.trackingId = magicCookie;
+  }
+  if (!isNullOrUndefined(payload.runtimeEnvironment)) {
+    state.analytics.runtimeEnvironment = payload.runtimeEnvironment;
+  }
+  if (!isNullOrUndefined(payload.anonymous)) {
+    state.analytics.anonymous = payload.anonymous;
+  }
+  if (!isNullOrUndefined(payload.deviceId)) {
+    state.analytics.deviceId = payload.deviceId;
+  }
+  if (!isNullOrUndefined(payload.userDisplayName)) {
+    state.analytics.userDisplayName = payload.userDisplayName;
+  }
+  if (!isNullOrUndefined(payload.documentLocation)) {
+    state.analytics.documentLocation = payload.documentLocation;
+  }
+}
+
+function handleUpdateCommerceAnalyticsConfiguration(
+  state: ConfigurationState,
+  payload: UpdateCommerceAnalyticsConfigurationPayload
+) {
+  if (!isNullOrUndefined(payload.enabled)) {
+    state.analytics.enabled = payload.enabled;
+  }
+  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+    state.analytics.nextApiBaseUrl = payload.proxyBaseUrl;
+  }
+  if (!isNullOrUndefined(payload.source)) {
+    state.analytics.source = payload.source;
+  }
+  if (!isNullOrUndefined(payload.trackingId)) {
+    state.analytics.trackingId = payload.trackingId;
   }
 }

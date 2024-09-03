@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {isUndefined} from '@coveo/bueno';
 import {type Relay} from '@coveo/relay';
 import {
   Dispatch,
@@ -24,7 +23,6 @@ import {
 import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
 import {isBrowser} from '../utils/runtime';
-import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {configuration} from './common-reducers';
@@ -115,6 +113,7 @@ export interface CoreEngine<
 export type CoreEngineNext<
   State extends object = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+  Configuration extends EngineConfiguration = EngineConfiguration,
 > = Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> & {
   /**
    * The readonly internal state of the headless engine.
@@ -126,7 +125,7 @@ export type CoreEngineNext<
   /**
    * The readonly global headless engine configuration
    */
-  readonly configuration: EngineConfiguration;
+  readonly configuration: Configuration;
 };
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
@@ -188,15 +187,15 @@ function getUpdateAnalyticsConfigurationPayload(
   configuration: EngineConfiguration,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
-  const apiBaseUrl =
-    configuration.organizationEndpoints?.analytics || undefined;
-  const {analyticsClientMiddleware: _, ...payload} =
-    configuration.analytics ?? {};
+  const {analytics} = configuration;
+  const {analyticsClientMiddleware: _, ...payload} = analytics ?? {};
 
   const payloadWithURL = {
     ...payload,
-    nextApiBaseUrl: `${apiBaseUrl}/rest/organizations/${configuration.organizationId}/events/v1`,
-    apiBaseUrl,
+    ...(analytics?.proxyBaseUrl && {
+      apiBaseUrl: analytics.proxyBaseUrl,
+      nexApiBaseUrl: analytics.proxyBaseUrl,
+    }),
   };
 
   // TODO KIT-2844
@@ -228,25 +227,13 @@ export function buildEngine<
   CoreExtraArguments & ExtraArguments
 > {
   const engine = buildCoreEngine(options, thunkExtraArguments);
-  const {accessToken, organizationId} = options.configuration;
-  const {organizationEndpoints} = options.configuration;
-  const platformUrl = organizationEndpoints.platform;
-
-  if (
-    shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-      options.configuration
-    )
-  ) {
-    engine.logger.warn(
-      `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
-    );
-  }
+  const {accessToken, environment, organizationId} = options.configuration;
 
   engine.dispatch(
     updateBasicConfiguration({
       accessToken,
+      environment,
       organizationId,
-      platformUrl,
     })
   );
 
@@ -393,19 +380,6 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
   ].concat(answerApi.middleware, options.middlewares || []);
-}
-
-function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-  configuration: EngineConfiguration
-) {
-  const {platform} = configuration.organizationEndpoints!;
-
-  if (isUndefined(platform)) {
-    return false;
-  }
-
-  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
-  return match && match.organizationId !== configuration.organizationId;
 }
 
 class InvalidEngineConfiguration extends Error {

@@ -127,24 +127,41 @@ export class PlatformClient {
   }
 }
 
-/**
- * Returns the unique endpoint(s) for a given organization identifier.
- * @param orgId The organization identifier.
- * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Defaults to `prod`.
- * @returns
- */
-export function getOrganizationEndpoints(
-  orgId: string,
-  env: PlatformEnvironment = 'prod'
+export function getDefaultOrganizationEndpointBaseUrl(
+  organizationId: string,
+  endpointType: 'admin' | 'analytics' | 'platform',
+  environment: PlatformEnvironment = 'prod'
 ) {
-  const envSuffix = env === 'prod' ? '' : env;
+  const envSuffix = environment === 'prod' ? '' : environment;
+  const typeSuffix = endpointType === 'platform' ? '' : `.${endpointType}`;
 
-  const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
-  const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com`;
-  const search = `${platform}/rest/search/v2`;
-  const admin = `https://${orgId}.admin.org${envSuffix}.coveo.com`;
+  return `https://${organizationId}${typeSuffix}.org${envSuffix}.coveo.com`;
+}
 
-  return {platform, analytics, search, admin};
+export function getDefaultSearchEndpointBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const baseUrl = getDefaultOrganizationEndpointBaseUrl(
+    organizationId,
+    'platform',
+    environment
+  );
+
+  return `${baseUrl}/rest/search/v2`;
+}
+
+export function getDefaultAnalyticsNextEndpointBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const baseUrl = getDefaultOrganizationEndpointBaseUrl(
+    organizationId,
+    'analytics',
+    environment
+  );
+
+  return `${baseUrl}/rest/organizations/${organizationId}/events/v1`;
 }
 
 function buildDefaultRequestOptions(

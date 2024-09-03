@@ -586,7 +586,6 @@ export type {
   ResultTemplate,
   ResultTemplateCondition,
 } from './features/result-templates/result-templates-manager';
-export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
 export type {
   CategoryFacetValueRequest,
