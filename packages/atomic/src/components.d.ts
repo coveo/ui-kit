@@ -1600,6 +1600,20 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
@@ -4413,6 +4427,16 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsSessionElement: {
+        prototype: HTMLAtomicInsightUserActionsSessionElement;
+        new (): HTMLAtomicInsightUserActionsSessionElement;
+    };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
     }
@@ -5699,6 +5723,7 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -7265,6 +7290,20 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
+    }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
     }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
@@ -9213,6 +9252,7 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -9588,6 +9628,11 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            /**
+             * @category Insight Panel
+             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+             */
+            "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
