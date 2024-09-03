@@ -1,3 +1,10 @@
+# 0.8.0 (2024-09-03)
+
+### Features
+
+- Changed deployments notification Slack channel [UA-9208] (#98) ([0f362bd](/commits/0f362bd254e0982631038130248255fa1be6f5cf)), closes [#98](/issues/98)
+- Removed Jenkins [UA-9213] (#97) ([0367b23](/commits/0367b2349255c26c980b458708f2e8ca918ce085)), closes [#97](/issues/97)
+
 ## 0.7.10 (2024-07-09)
 
 ### Bug Fixes
