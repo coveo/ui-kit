@@ -4,6 +4,7 @@ export {
   InsightEngine,
   InsightEngineConfiguration,
   buildInsightEngine,
+  getSampleInsightEngineConfiguration,
   ResultList as InsightResultList,
   ResultListState as InsightResultListState,
   buildResultList as buildInsightResultList,
@@ -100,4 +101,10 @@ export {
   GeneratedAnswerState as InsightGeneratedAnswerState,
   GeneratedAnswerStyle as InsightGeneratedAnswerStyle,
   Suggestion as InsightSuggestion,
+  UserActionsState,
+  UserActionsProps,
+  UserActions,
+  UserSession,
+  UserAction,
+  buildUserActions,
 } from '@coveo/headless/insight';

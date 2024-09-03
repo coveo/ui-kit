@@ -18,29 +18,37 @@ export class UserActionsTimelinePageObject extends BasePageObject<'atomic-insigh
     return this.page.locator('[data-testid="preceding-session"]');
   }
 
-  get showFollowingSessionsButton() {
-    return this.page.locator('[data-testid="show-following-sessions"]');
+  get showFollowingSessionsbutton() {
+    return this.page.locator('[data-testid="show-following-sessions"] button');
   }
 
-  get hideFollowingSessionsButton() {
-    return this.page.locator('[data-testid="hide-following-sessions"]');
+  get hideFollowingSessionsbutton() {
+    return this.page.locator('[data-testid="hide-following-sessions"] button');
   }
 
-  get showPrecedingSessionsButton() {
-    return this.page.locator('[data-testid="show-preceding-sessions"]');
+  get showPrecedingSessionsbutton() {
+    return this.page.locator('[data-testid="show-preceding-sessions"] button');
   }
 
-  get hidePrecedingSessionsButton() {
-    return this.page.locator('[data-testid="hide-preceding-sessions"]');
+  get hidePrecedingSessionsbutton() {
+    return this.page.locator('[data-testid="hide-preceding-sessions"] button');
   }
 
   get userActionsError() {
     return this.page.locator('[data-testid="user-actions-error"]');
   }
 
+  get showMoreActionsButton() {
+    return this.page.locator('[data-testid="show-more-actions-button"] button');
+  }
+
+  get moreActionsSection() {
+    return this.page.locator('[data-testid="more-actions-section"]');
+  }
+
   async mockUserActions(
     page: Page,
-    userActions: Array<{name: string; value: string; time: string}>
+    userActions: Array<{name: string; value: string; time: number}>
   ) {
     await page.route('**/user/actions', async (route) => {
       const body = {value: userActions};

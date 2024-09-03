@@ -18,7 +18,6 @@ import {MagnifyingGlass} from '../../../common/no-items/magnifying-glass';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * @internal
  * This component displays all the actions performed by a user around the time they created a case.
  * The actions are grouped into multiple sessions, including the session during which the case was created,
  * the sessions preceding the case creation and the sessions following the case creation.
@@ -102,18 +101,20 @@ export class AtomicInsightUserActionsTimeline
     const icon = this.followingSessionsAreVisible ? ArrowDownIcon : ArrowUpIcon;
 
     return (
-      <div class="flex justify-center p-2">
+      <div
+        class="flex justify-center p-2"
+        data-testid={
+          this.followingSessionsAreVisible
+            ? 'hide-following-sessions'
+            : 'show-following-sessions'
+        }
+      >
         <Button
           style="text-primary"
           part="toggle-following-sessions"
           class={btnClasses}
           ariaLabel={label}
           onClick={this.toggleFollowingSessions.bind(this)}
-          data-testid={
-            this.followingSessionsAreVisible
-              ? 'hide-following-sessions'
-              : 'show-following-sessions'
-          }
         >
           <atomic-icon
             part="toggle-following-sessions-icon"
@@ -135,18 +136,20 @@ export class AtomicInsightUserActionsTimeline
     const icon = this.precedingSessionsAreVisible ? ArrowUpIcon : ArrowDownIcon;
 
     return (
-      <div class="flex justify-center p-2">
+      <div
+        class="flex justify-center p-2"
+        data-testid={
+          this.precedingSessionsAreVisible
+            ? 'hide-preceding-sessions'
+            : 'show-preceding-sessions'
+        }
+      >
         <Button
           style="text-primary"
           part="toggle-preceding-sessions"
           class={btnClasses}
           ariaLabel={label}
           onClick={this.togglePrecedingSessions.bind(this)}
-          data-testid={
-            this.precedingSessionsAreVisible
-              ? 'hide-preceding-sessions'
-              : 'show-preceding-sessions'
-          }
         >
           <atomic-icon
             part="toggle-preceding-sessions-icon"
