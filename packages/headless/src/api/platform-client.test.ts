@@ -4,8 +4,11 @@ import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
 import {ExpiredTokenError} from '../utils/errors';
+import {PlatformEnvironment} from '../utils/url-utils';
 import {
+  getDefaultAnalyticsNextEndpointBaseUrl,
   getDefaultOrganizationEndpointBaseUrl,
+  getDefaultSearchEndpointBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
 } from './platform-client';
@@ -20,7 +23,85 @@ jest.mock('@coveo/please-give-me-fetch');
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
-// TODO test new url helpers
+it.each([
+  {
+    orgId: 'foo',
+    env: 'dev',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.orgdev.coveo.com',
+      analytics: 'https://foo.analytics.orgdev.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.orgdev.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.orgdev.coveo.com',
+      search: 'https://foo.orgdev.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'stg',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.orgstg.coveo.com',
+      analytics: 'https://foo.analytics.orgstg.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.orgstg.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.orgstg.coveo.com',
+      search: 'https://foo.orgstg.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'prod',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.org.coveo.com',
+      analytics: 'https://foo.analytics.org.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.org.coveo.com',
+      search: 'https://foo.org.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'hipaa',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.orghipaa.coveo.com',
+      analytics: 'https://foo.analytics.orghipaa.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.orghipaa.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.orghipaa.coveo.com',
+      search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
+    },
+  },
+] as Array<{
+  orgId: string;
+  env: PlatformEnvironment;
+  organizationEndpoints: {
+    admin: string;
+    analytics: string;
+    platform: string;
+    analyticsNext: string;
+    search: string;
+  };
+}>)(
+  'return the correct #getOrganizationEndpoints()',
+  ({orgId, env, organizationEndpoints}) => {
+    expect(getDefaultOrganizationEndpointBaseUrl(orgId, 'admin', env)).toEqual(
+      organizationEndpoints.admin
+    );
+    expect(
+      getDefaultOrganizationEndpointBaseUrl(orgId, 'analytics', env)
+    ).toEqual(organizationEndpoints.analytics);
+    expect(getDefaultAnalyticsNextEndpointBaseUrl(orgId, env)).toEqual(
+      organizationEndpoints.analyticsNext
+    );
+    expect(
+      getDefaultOrganizationEndpointBaseUrl(orgId, 'platform', env)
+    ).toEqual(organizationEndpoints.platform);
+    expect(getDefaultSearchEndpointBaseUrl(orgId, env)).toEqual(
+      organizationEndpoints.search
+    );
+  }
+);
 
 describe('PlatformClient call', () => {
   let platformUrl: string;
