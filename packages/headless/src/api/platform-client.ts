@@ -132,10 +132,11 @@ export function getDefaultOrganizationEndpointBaseUrl(
   endpointType: 'admin' | 'analytics' | 'platform',
   environment: PlatformEnvironment = 'prod'
 ) {
-  const envSuffix = environment === 'prod' ? '' : environment;
-  const typeSuffix = endpointType === 'platform' ? '' : `.${endpointType}`;
+  const environmentSuffix = environment === 'prod' ? '' : environment;
+  const endpointTypePart =
+    endpointType === 'platform' ? '' : `.${endpointType}`;
 
-  return `https://${organizationId}${typeSuffix}.org${envSuffix}.coveo.com`;
+  return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }
 
 export function getDefaultSearchEndpointBaseUrl(
