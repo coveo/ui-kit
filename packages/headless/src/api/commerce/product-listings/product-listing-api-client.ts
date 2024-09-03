@@ -1,6 +1,5 @@
 import {Logger} from 'pino';
 import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {FacetSearchRequest} from '../../search/facet-search/facet-search-request';
@@ -16,9 +15,7 @@ import {
   ProductListingSuccessResponse,
 } from './product-listing-request';
 
-export interface AsyncThunkProductListingOptions<
-  T extends Partial<ProductListingAppState>,
-> {
+export interface AsyncThunkProductListingOptions<T> {
   state: T;
   rejectValue: ProductListingAPIErrorStatusResponse;
   extra: ProductListingThunkExtraArguments;
