@@ -1,9 +1,9 @@
 import {Component, h, State, Prop} from '@stencil/core';
 import {
-  buildUserActions,
-  UserActions,
-  UserActionsState,
-  UserSession,
+  buildInsightUserActions,
+  InsightUserActions,
+  InsightUserActionsState,
+  InsightUserSession,
 } from '../..';
 import ArrowDownIcon from '../../../../images/arrow-full-down.svg';
 import ArrowUpIcon from '../../../../images/arrow-up.svg';
@@ -36,11 +36,11 @@ export class AtomicInsightUserActionsTimeline
   implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
-  public userActions!: UserActions;
+  public userActions!: InsightUserActions;
 
   @BindStateToController('userActions')
   @State()
-  public userActionsState!: UserActionsState;
+  public userActionsState!: InsightUserActionsState;
   public error!: Error;
 
   /**
@@ -53,7 +53,7 @@ export class AtomicInsightUserActionsTimeline
   @Prop() public ticketCreationDate!: string;
 
   public initialize() {
-    this.userActions = buildUserActions(this.bindings.engine, {
+    this.userActions = buildInsightUserActions(this.bindings.engine, {
       options: {ticketCreationDate: this.ticketCreationDate},
     });
 
@@ -72,7 +72,7 @@ export class AtomicInsightUserActionsTimeline
   }
 
   private renderSessions(
-    sessions: Array<UserSession> | undefined,
+    sessions: Array<InsightUserSession> | undefined,
     renderSeparator?: Function,
     testId?: string
   ) {
