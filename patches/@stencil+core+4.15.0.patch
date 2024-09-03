@@ -1,0 +1,59 @@
+diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
+index d4ea871..4faf84b 100644
+--- a/node_modules/@stencil/core/compiler/stencil.js
++++ b/node_modules/@stencil/core/compiler/stencil.js
+@@ -276940,7 +276940,7 @@ const visitClassDeclaration = (config, diagnostics, typeChecker, program, classN
+     // We call the `handleClassFields` method which handles transforming any
+     // class fields, removing them from the class and adding statements to the
+     // class' constructor which instantiate them there instead.
+-    const updatedClassFields = handleClassFields(classNode, filteredMethodsAndFields, typeChecker, importAliasMap);
++    const updatedClassFields = handleClassFields(classNode, decoratedMembers, typeChecker, importAliasMap, filteredMethodsAndFields);
+     validateMethods(diagnostics, classMembers);
+     const currentDecorators = retrieveTsDecorators(classNode);
+     return ts$1.factory.updateClassDeclaration(classNode, [
+@@ -276975,19 +276975,8 @@ const removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap
+                 return ts$1.factory.updateMethodDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...((_a = retrieveTsModifiers(member)) !== null && _a !== void 0 ? _a : [])], member.asteriskToken, member.name, member.questionToken, member.typeParameters, member.parameters, member.type, member.body);
+             }
+             else if (ts$1.isPropertyDeclaration(member)) {
+-                if (shouldInitializeInConstructor(member, importAliasMap)) {
+-                    // if the current class member is decorated with either 'State' or
+-                    // 'Prop' we need to modify the property declaration to transform it
+-                    // from a class field but we handle this in the `handleClassFields`
+-                    // method below, so we just want to return the class member here
+-                    // untouched.
+-                    return member;
+-                }
+-                else {
+-                    // update the property to remove decorators
+-                    const modifiers = retrieveTsModifiers(member);
+-                    return ts$1.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
+-                }
++              const modifiers = retrieveTsModifiers(member);
++              return ts$1.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
+             }
+             else {
+                 const err = buildError(diagnostics);
+@@ -277127,10 +277116,9 @@ const filterDecorators = (decorators, excludeList) => {
+  * @param importAliasMap a map of Stencil decorator names to their import names
+  * @returns a list of updated class elements which can be inserted into the class
+  */
+-function handleClassFields(classNode, classMembers, typeChecker, importAliasMap) {
++function handleClassFields(classNode, classMembers, typeChecker, importAliasMap, updatedClassMembers) {
+     var _a;
+     const statements = [];
+-    const updatedClassMembers = [];
+     for (const member of classMembers) {
+         if (shouldInitializeInConstructor(member, importAliasMap) && ts$1.isPropertyDeclaration(member)) {
+             const memberName = tsPropDeclNameAsString(member, typeChecker);
+@@ -277141,11 +277129,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
+             // just 'undefined'
+             (_a = member.initializer) !== null && _a !== void 0 ? _a : ts$1.factory.createIdentifier('undefined'))));
+         }
+-        else {
+-            // if it's not a class field that is decorated with a Stencil decorator then
+-            // we just push it onto our class member list
+-            updatedClassMembers.push(member);
+-        }
+     }
+     if (statements.length === 0) {
+         // we didn't encounter any class fields we need to update, so we can
