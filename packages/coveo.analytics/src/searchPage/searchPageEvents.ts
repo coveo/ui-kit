@@ -539,41 +539,48 @@ export interface SmartSnippetDocumentIdentifier {
 
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;
 
-export interface GeneratedAnswerBaseMeta {
+interface AnswerGeneratedWithAnswerAPI {
+    answerAPIStreamId: string;
+    generativeQuestionAnsweringId?: never;
+}
+
+interface AnswerGeneratedWithSearchAPI {
+    answerAPIStreamId?: never;
     generativeQuestionAnsweringId: string;
 }
 
-export interface GeneratedAnswerStreamEndMeta extends GeneratedAnswerBaseMeta {
+export type GeneratedAnswerBaseMeta = AnswerGeneratedWithAnswerAPI | AnswerGeneratedWithSearchAPI;
+
+export type GeneratedAnswerStreamEndMeta = GeneratedAnswerBaseMeta & {
     answerGenerated: boolean;
     answerTextIsEmpty?: boolean;
-}
+};
 
-export interface GeneratedAnswerCitationMeta {
-    generativeQuestionAnsweringId: string;
+export type GeneratedAnswerCitationMeta = GeneratedAnswerBaseMeta & {
     permanentId: string;
     citationId: string;
-}
+};
 
 export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful' | 'other';
 
 export type GeneratedAnswerRephraseFormat = 'step' | 'bullet' | 'concise' | 'default';
 
-export interface GeneratedAnswerSourceHoverMeta extends GeneratedAnswerCitationMeta {
+export type GeneratedAnswerSourceHoverMeta = GeneratedAnswerCitationMeta & {
     citationHoverTimeMs: number;
-}
+};
 
-export interface GeneratedAnswerRephraseMeta extends GeneratedAnswerBaseMeta {
+export type GeneratedAnswerRephraseMeta = GeneratedAnswerBaseMeta & {
     rephraseFormat: GeneratedAnswerRephraseFormat;
-}
+};
 
-export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {
+export type GeneratedAnswerFeedbackMeta = GeneratedAnswerBaseMeta & {
     reason: GeneratedAnswerFeedbackReason;
     details?: string;
-}
+};
 
 export type GeneratedAnswerFeedbackReasonOption = 'yes' | 'unknown' | 'no';
 
-export interface GeneratedAnswerFeedbackMetaV2 extends GeneratedAnswerBaseMeta {
+export type GeneratedAnswerFeedbackMetaV2 = GeneratedAnswerBaseMeta & {
     helpful: boolean;
     readable: GeneratedAnswerFeedbackReasonOption;
     documented: GeneratedAnswerFeedbackReasonOption;
@@ -581,4 +588,4 @@ export interface GeneratedAnswerFeedbackMetaV2 extends GeneratedAnswerBaseMeta {
     hallucinationFree: GeneratedAnswerFeedbackReasonOption;
     details?: string;
     documentUrl?: string;
-}
+};
