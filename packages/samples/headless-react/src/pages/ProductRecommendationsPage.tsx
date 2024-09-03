@@ -1,4 +1,3 @@
-import {getOrganizationEndpoints} from '@coveo/headless';
 import {
   buildProductRecommendationEngine,
   buildFrequentlyViewedTogetherList,
@@ -17,7 +16,6 @@ export function ProductRecommendationsPage() {
         configuration: {
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
           organizationId,
-          organizationEndpoints: getOrganizationEndpoints(organizationId),
           searchHub: 'UI_KIT_E2E',
         },
       }),
