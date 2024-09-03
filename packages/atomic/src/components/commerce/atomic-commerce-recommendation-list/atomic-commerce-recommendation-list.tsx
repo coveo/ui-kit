@@ -351,6 +351,7 @@ export class AtomicCommerceRecommendationList
     const {interactiveProduct} = propsForAtomicProduct;
     return (
       <DisplayGrid
+        selectorForItem="atomic-product"
         item={{
           ...product,
           clickUri: product.clickUri,
