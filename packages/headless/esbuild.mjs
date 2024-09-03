@@ -167,7 +167,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
  */
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+  const packageJson = require(packageJsonPath);
   return resolve(
     dirname(packageJsonPath),
     packageJson['module'] || packageJson['main']
