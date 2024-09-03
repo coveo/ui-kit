@@ -1262,7 +1262,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
+          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
          */
         "initialize": (options: InsightInitializationOptions) => Promise<void>;
         /**
@@ -2328,7 +2328,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
          */
         "initialize": (options: RecsInitializationOptions) => Promise<void>;
         /**
@@ -3146,7 +3146,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
+          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**

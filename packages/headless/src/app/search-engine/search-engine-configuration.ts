@@ -14,10 +14,6 @@ import {
   getSampleEngineConfiguration,
 } from '../engine-configuration';
 
-export interface SearchEngineOrganizationEndpoints {
-  search?: string;
-}
-
 /**
  * The search engine configuration.
  */

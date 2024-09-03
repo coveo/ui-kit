@@ -1142,7 +1142,7 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
 
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations', 'getOrganizationEndpoints']
+  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
 })
 @Component({
   selector: 'atomic-recs-interface',
@@ -2047,7 +2047,7 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
+  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
 })
 @Component({
   selector: 'atomic-search-interface',

@@ -173,7 +173,7 @@ export class AtomicInsightInterface
   }
 
   /**
-   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `organizationEndpoints` (required), and `renewAccessToken`.
+   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
   @Method() public initialize(options: InsightInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
