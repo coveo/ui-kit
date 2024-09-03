@@ -26,6 +26,18 @@ const mockFetch = fetch as jest.Mock;
 it.each([
   {
     orgId: 'foo',
+    env: undefined,
+    organizationEndpoints: {
+      admin: 'https://foo.admin.org.coveo.com',
+      analytics: 'https://foo.analytics.org.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.org.coveo.com',
+      search: 'https://foo.org.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
     env: 'dev',
     organizationEndpoints: {
       admin: 'https://foo.admin.orgdev.coveo.com',
