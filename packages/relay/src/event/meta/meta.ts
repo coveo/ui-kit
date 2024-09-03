@@ -8,7 +8,7 @@ import { version } from "../../version";
  */
 export interface EventConfig {
   /**
-   * The unique identifier of a web property. See [Tracking ID](https://docs.coveo.com/en/n8tg0567/).
+   * The unique identifier of a web property. See [What's a tracking ID?](https://docs.coveo.com/en/n8tg0567/).
    */
   trackingId: string;
 }
