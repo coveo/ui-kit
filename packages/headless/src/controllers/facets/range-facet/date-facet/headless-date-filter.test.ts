@@ -99,6 +99,8 @@ describe('date filter', () => {
   it('registers a date facet with the passed options', () => {
     expect(registerDateFacet).toHaveBeenCalledWith({
       facetId,
+      activeTab: '',
+      tabs: {},
       generateAutomaticRanges: false,
       currentValues: initialState?.range
         ? [{...initialState.range, endInclusive: true, state: 'selected'}]

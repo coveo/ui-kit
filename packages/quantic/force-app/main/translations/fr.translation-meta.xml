@@ -609,10 +609,6 @@
     <name>quantic_NoRelatedItems</name>
   </customLabels>
   <customLabels>
-    <label>Ouvre dans un sous-onglet Salesforce</label>
-    <name>quantic_OpensInSalesforceSubTab</name>
-  </customLabels>
-  <customLabels>
     <label>Naviguer vers l'enregistrement</label>
     <name>quantic_NavigateToRecord</name>
   </customLabels>

@@ -23,6 +23,10 @@ export default function HomePage(props: IHomePageProps) {
   });
 
   useEffect(() => {
+    /**
+     * It is important to call the `Context` controller's `setView` method with the current URL when a page is loaded,
+     * as the Commerce API requires this information to function properly.
+     */
     contextController.setView({url});
 
     if (
