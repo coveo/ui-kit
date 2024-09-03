@@ -46,36 +46,41 @@ export const UserAction: FunctionalComponent<UserAction> = ({
   };
 
   const renderActionTitle = () => {
-    if (action.actionType === 'TICKET_CREATION') {
-      return (
-        <div class="ticket-creation-action__text text-xs font-semibold">
-          {bindings.i18n.t('ticket-created')}
-        </div>
-      );
-    } else if (action.actionType === 'CUSTOM') {
-      return (
-        <div class="text-xs font-semibold">
-          {action.eventData?.value ?? action.eventData?.type}
-        </div>
-      );
-    } else if (action.actionType === 'SEARCH') {
-      return (
-        <div class="text-xs font-semibold">
-          {action.query || bindings.i18n.t('empty-search')}
-        </div>
-      );
-    } else if (action.actionType === 'VIEW') {
-      return (
-        <a
-          href={action.document?.contentIdValue}
-          class="text-primary text-xs font-semibold"
-          target="_blank"
-        >
-          {action.document?.title}
-        </a>
-      );
-    } else if (action.actionType === 'CLICK') {
-      return <div class="text-xs font-semibold">{action.document?.title}</div>;
+    switch (action.actionType) {
+      case 'TICKET_CREATION':
+        return (
+          <div class="ticket-creation-action__text text-xs font-semibold">
+            a{bindings.i18n.t('ticket-created')}
+          </div>
+        );
+      case 'CUSTOM':
+        return (
+          <div class="text-xs font-semibold">
+            {action.eventData?.value ?? action.eventData?.type}
+          </div>
+        );
+      case 'SEARCH':
+        return (
+          <div class="text-xs font-semibold">
+            {action.query || bindings.i18n.t('empty-search')}
+          </div>
+        );
+      case 'VIEW':
+        return (
+          <a
+            href={action.document?.contentIdValue}
+            class="text-primary text-xs font-semibold"
+            target="_blank"
+          >
+            {action.document?.title}
+          </a>
+        );
+      case 'CLICK':
+        return (
+          <div class="text-xs font-semibold">{action.document?.title}</div>
+        );
+      default:
+        return null;
     }
   };
 
