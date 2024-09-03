@@ -29,7 +29,7 @@ describe('buildCommerceEngine', () => {
     expect(engine[stateKey]).toBeTruthy();
   });
 
-  it('when proxyBaseUrl is specified in the configuration, sets the apiBaseUrl', () => {
+  it('when #proxyBaseUrl is specified in the configuration, sets the #commerce.apiBaseUrl', () => {
     options.configuration.proxyBaseUrl = 'https://example.com/commerce';
     initEngine();
 
@@ -38,13 +38,13 @@ describe('buildCommerceEngine', () => {
     );
   });
 
-  it('sets the context', () => {
+  it('sets the #commerceContext to the #context specified in the configuration', () => {
     expect(engine[stateKey].commerceContext).toEqual(
       options.configuration.context
     );
   });
 
-  it('sets the cart if specified in configuration', () => {
+  it('when #cart is specified in the configuration, sets the #cart.cartItems accordingly', () => {
     const items = [
       {
         productId: 'product-id',
