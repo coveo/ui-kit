@@ -386,6 +386,7 @@ jobs:
       - 'e2e-headless-ssr-test-pages-prod'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: Determine conclusion
         run: |
           success="${{ contains(needs.*.result, 'success')}}"
@@ -407,6 +408,7 @@ jobs:
       - 'is-valid-merge-queue'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: Determine conclusion
         run: |
           success="${{ contains(needs.*.result, 'success')}}"
