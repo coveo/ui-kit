@@ -163,7 +163,13 @@ export class AtomicResultChildren
       buildCustomEvent('atomic/loadCollection', this.collection)
     );
   }
+  private toggleShowInitialChildren = () => {
+    this.showInitialChildren
+      ? this.foldedResultList.logShowMoreFoldedResults(this.result.result)
+      : this.foldedResultList.logShowLessFoldedResults();
 
+    this.showInitialChildren = !this.showInitialChildren;
+  };
   private renderCollection() {
     const collection = this.collection!;
 
@@ -185,15 +191,7 @@ export class AtomicResultChildren
           moreResultsAvailable={collection.moreResultsAvailable}
           loadFullCollection={() => this.loadFullCollection()}
           showInitialChildren={this.showInitialChildren}
-          toggleShowInitialChildren={() => {
-            this.showInitialChildren
-              ? this.foldedResultList.logShowMoreFoldedResults(
-                  this.result.result
-                )
-              : this.foldedResultList.logShowLessFoldedResults();
-
-            this.showInitialChildren = !this.showInitialChildren;
-          }}
+          toggleShowInitialChildren={this.toggleShowInitialChildren}
           loadAllResults={this.bindings.i18n.t('load-all-results')}
           collapseResults={this.bindings.i18n.t('collapse-results')}
         ></ShowHideButton>
