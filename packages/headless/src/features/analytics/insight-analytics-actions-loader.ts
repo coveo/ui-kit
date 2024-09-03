@@ -27,6 +27,7 @@ import {logNumericFacetBreadcrumb} from '../facets/range-facets/numeric-facet-se
 import {
   logInsightCreateArticle,
   CreateArticleMetadata,
+  logOpenUserActions,
 } from '../insight-search/insight-analytics-actions';
 import {
   logInsightInterfaceChange,
@@ -253,6 +254,13 @@ export interface InsightAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logFeedItemTextPost(result: Result): InsightAction;
+
+  /**
+   * The event to log when opening the user actions panel.
+   *
+   * @returns A dispatchable action.
+   */
+  logOpenUserActions(): InsightAction;
 }
 
 /**
@@ -289,5 +297,6 @@ export function loadInsightAnalyticsActions(
     logCopyToClipboard,
     logCaseSendEmail,
     logFeedItemTextPost,
+    logOpenUserActions,
   };
 }

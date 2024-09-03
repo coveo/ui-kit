@@ -46,6 +46,11 @@ export interface NumericFacetOptions {
   field: string;
 
   /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
+
+  /**
    * Whether the index should automatically create range values.
    *
    * Tip: If you set this parameter to true, you should ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1982/#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
@@ -129,6 +134,15 @@ export const numericFacetOptionsSchema = new Schema<
   Required<NumericFacetOptions>
 >({
   facetId,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   field,
   generateAutomaticRanges,
   filterFacetCount,

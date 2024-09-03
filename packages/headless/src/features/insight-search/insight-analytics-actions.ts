@@ -15,8 +15,6 @@ export interface CreateArticleMetadata {
 }
 
 export const logExpandToFullUI = (
-  _caseId: string,
-  _caseNumber: string,
   fullSearchComponentName: string,
   triggeredBy: string
 ): InsightAction =>
@@ -77,5 +75,15 @@ export const logInsightCreateArticle = (
           caseNumber: metadata.caseNumber,
         } as InsightPanel.Context,
       };
+    },
+  });
+
+export const logOpenUserActions = (): InsightAction =>
+  makeInsightAnalyticsActionFactory('openUserActions')({
+    prefix: 'analytics/insight/openUserActions',
+    __legacy__getBuilder: (client, state) => {
+      return client.logOpenUserActions(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     },
   });

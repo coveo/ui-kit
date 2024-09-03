@@ -17,6 +17,7 @@ import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/ra
 import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {searchReducer as search} from '../../../../../features/search/search-slice';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors';
 import {
   ConfigurationSection,
   DateFacetSection,
@@ -45,6 +46,11 @@ export interface DateFilterOptions {
    * By default, a unique random identifier is generated.
    */
   facetId?: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * Whether to exclude folded result parents when estimating the result count for each facet value.
@@ -164,6 +170,8 @@ export function buildCoreDateFilter(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterDateFacetActionCreatorPayload = {
     ...props.options,
     currentValues: props.initialState?.range
@@ -171,6 +179,8 @@ export function buildCoreDateFilter(
       : [],
     generateAutomaticRanges: false,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateDateFacetOptions(engine, options);

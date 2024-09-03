@@ -66,6 +66,7 @@ describe('facet', () => {
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
     expect(registerFacet).toHaveBeenCalledWith({
+      activeTab: '',
       facetId,
       field: 'author',
       sortCriteria: 'score',
@@ -73,6 +74,7 @@ describe('facet', () => {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
+      tabs: {},
     });
   });
 

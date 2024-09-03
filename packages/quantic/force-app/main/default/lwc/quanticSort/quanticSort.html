@@ -1,16 +1,31 @@
 <template>
-  <template lwc:if={hasInitializationError}>
-    <c-quantic-component-error component-name={template.host.localName}>
-    </c-quantic-component-error>
+  <template lwc:if={hasError}>
+    <c-quantic-component-error
+      component-name={template.host.localName}
+      message={errorMessage}
+    ></c-quantic-component-error>
   </template>
   <template lwc:else>
+    <slot name="sortOption"><!-- Custom sort options --></slot>
     <template if:true={hasResults}>
       <div class="sort__container">
         <lightning-layout-item class="sort__header slds-var-p-right_small">
-          <lightning-formatted-text value={labels.sortBy}></lightning-formatted-text>
+          <lightning-formatted-text
+            value={labels.sortBy}
+          ></lightning-formatted-text>
         </lightning-layout-item>
         <lightning-layout-item>
-          <lightning-combobox name="sort" value={value} variant="label-hidden" label={labels.sortBy} placeholder={labels.relevancy} options={options} onchange={handleChange}>
+          <lightning-combobox
+            name="sort"
+            value={value}
+            variant="label-hidden"
+            label={labels.sortBy}
+            placeholder={value}
+            options={options}
+            dropdown-alignment="auto"
+            onchange={handleChange}
+            data-cy="sort-dropdown"
+          >
           </lightning-combobox>
         </lightning-layout-item>
       </div>

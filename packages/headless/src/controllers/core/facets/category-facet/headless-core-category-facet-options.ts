@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   categoryFacetSortCriteria,
   CategoryFacetSortCriterion,
@@ -20,6 +20,11 @@ export interface CategoryFacetOptions {
    * The field whose values you want to display in the facet.
    * */
   field: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * The base path shared by all values for the facet.
@@ -110,6 +115,15 @@ export const categoryFacetOptionsSchema = new Schema<
   Required<CategoryFacetOptions>
 >({
   field,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   basePath,
   delimitingCharacter,
   facetId,

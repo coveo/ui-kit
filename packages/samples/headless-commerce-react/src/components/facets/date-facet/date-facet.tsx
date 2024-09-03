@@ -17,52 +17,65 @@ export default function DateFacet(props: IDateFacetProps) {
   const renderFacetValues = () => {
     return (
       <ul className="FacetValues">
-        {state.values.map((value, index) => (
-          <li className="FacetValue" key={index}>
-            <input
-              className="FacetValueCheckbox"
-              type="checkbox"
-              checked={value.state !== 'idle'}
-              onChange={() => controller.toggleSelect(value)}
-            ></input>
-            <label className="FacetValueLabel">
-              {value.start} to {value.end}
-            </label>
-            <span className="FacetValueNumberOfResults">
-              {' '}
-              ({value.numberOfResults})
-            </span>
-          </li>
-        ))}
+        {state.values.map((value) => {
+          const id = `${value.start}-${value.end}-${value.endInclusive}`;
+          return (
+            <li className="FacetValue" key={id}>
+              <input
+                checked={value.state !== 'idle'}
+                className="FacetValueCheckbox"
+                disabled={state.isLoading}
+                id={id}
+                onChange={() => controller.toggleSelect(value)}
+                type="checkbox"
+              ></input>
+              <label className="FacetValueLabel" htmlFor={id}>
+                {value.start} to {value.end}
+              </label>
+              <span className="FacetValueNumberOfResults">
+                {' '}
+                ({value.numberOfResults})
+              </span>
+            </li>
+          );
+        })}
       </ul>
     );
   };
 
   return (
-    <li className="DateFacet">
-      <h3 className="FacetDisplayName">{state.displayName ?? state.facetId}</h3>
+    <fieldset className="DateFacet">
+      <legend className="FacetDisplayName">
+        {state.displayName ?? state.facetId}
+      </legend>
       <button
+        aria-label="Clear selected facet values"
         className="FacetClear"
-        disabled={!state.hasActiveValues}
+        disabled={state.isLoading || !state.hasActiveValues}
         onClick={controller.deselectAll}
       >
-        Clear
+        X
       </button>
+      {state.isLoading && (
+        <span className="FacetLoading"> Facet is loading...</span>
+      )}
       {renderFacetValues()}
       <button
+        aria-label="Show more facet values"
         className="FacetShowMore"
-        disabled={!state.canShowMoreValues}
+        disabled={state.isLoading || !state.canShowMoreValues}
         onClick={controller.showMoreValues}
       >
-        Show more
+        +
       </button>
       <button
+        aria-label="Show less facet values"
         className="FacetShowLess"
-        disabled={!state.canShowLessValues}
+        disabled={state.isLoading || !state.canShowLessValues}
         onClick={controller.showLessValues}
       >
-        Show less
+        -
       </button>
-    </li>
+    </fieldset>
   );
 }

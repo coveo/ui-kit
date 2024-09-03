@@ -701,7 +701,7 @@
     "zh-CN": "排除过滤器在 {{value}}; {{count}}个结果",
     "zh-TW": "排除過濾器在 {{value}}; {{count}}個結果"
   },
-  "remove-filter-on": {
+  "remove-inclusion-filter-on": {
     "en": "Remove inclusion filter on {{value}}",
     "fr": "Enlever le filtre d'inclusion sur {{value}}",
     "cs": "Odstranit filtr inkluze na {{value}}",

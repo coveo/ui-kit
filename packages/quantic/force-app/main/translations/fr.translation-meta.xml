@@ -609,10 +609,6 @@
     <name>quantic_NoRelatedItems</name>
   </customLabels>
   <customLabels>
-    <label>Ouvre dans un sous-onglet Salesforce</label>
-    <name>quantic_OpensInSalesforceSubTab</name>
-  </customLabels>
-  <customLabels>
     <label>Naviguer vers l'enregistrement</label>
     <name>quantic_NavigateToRecord</name>
   </customLabels>
@@ -811,6 +807,10 @@
   <customLabels>
     <label>Voir moins</label>
     <name>quantic_GeneratedAnswerShowLess</name>
+  </customLabels>
+  <customLabels>
+    <label>La configuration des options de tri personnalisées est invalide.</label>
+    <name>quantic_InvalidCustomSortConfiguration</name>
   </customLabels>
   <customLabels>
     <label>Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée.</label>

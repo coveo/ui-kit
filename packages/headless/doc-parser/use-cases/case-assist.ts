@@ -12,7 +12,7 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildCaseAssistQuickview',
+    initializer: 'buildQuickview',
     samplePaths: {},
   },
   {
@@ -24,7 +24,7 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {},
   },
   {
-    initializer: 'buildCaseAssistInteractiveResult',
+    initializer: 'buildInteractiveResult',
     samplePaths: {},
   },
 ];
