@@ -21,7 +21,7 @@ import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVe
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition } from "./components/insight";
+import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
@@ -52,7 +52,7 @@ export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVe
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition } from "./components/insight";
+export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
@@ -979,7 +979,7 @@ export namespace Components {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults": number;
         /**
@@ -1588,6 +1588,20 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
@@ -1739,15 +1753,6 @@ export namespace Components {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label": string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -4394,6 +4399,16 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsSessionElement: {
+        prototype: HTMLAtomicInsightUserActionsSessionElement;
+        new (): HTMLAtomicInsightUserActionsSessionElement;
+    };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
     }
@@ -4501,15 +4516,6 @@ declare global {
     var HTMLAtomicLayoutSectionElement: {
         prototype: HTMLAtomicLayoutSectionElement;
         new (): HTMLAtomicLayoutSectionElement;
-    };
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
-    }
-    var HTMLAtomicLoadMoreChildrenResultsElement: {
-        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
-        new (): HTMLAtomicLoadMoreChildrenResultsElement;
     };
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -5680,6 +5686,7 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -5691,7 +5698,6 @@ declare global {
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
-        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -6671,7 +6677,7 @@ declare namespace LocalJSX {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults"?: number;
         /**
@@ -7247,6 +7253,20 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
@@ -7384,15 +7404,6 @@ declare namespace LocalJSX {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label"?: string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -9194,6 +9205,7 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -9205,7 +9217,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
-        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -9569,6 +9580,11 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            /**
+             * @category Insight Panel
+             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+             */
+            "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
@@ -9589,10 +9605,6 @@ declare module "@stencil/core" {
              * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
              */
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
-            /**
-             * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-             */
-            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             /**
              * The `atomic-load-more-results` component allows the user to load additional results if more are available.
              */
