@@ -22,7 +22,7 @@ import {DocumentSuggestionExpectations as Expect} from './document-suggestion-ex
 interface DocumentSuggestionOptions {
   maxDocuments: number;
   fetchOnInit: boolean;
-  hideQuickview: boolean;
+  withoutQuickview: boolean;
   numberOfAutoOpenedDocuments: number;
 }
 
@@ -150,11 +150,11 @@ describe('quantic-document-suggestion', () => {
         });
       });
 
-      describe('when hideQuickView is set to true', () => {
+      describe('when withoutQuickview is set to true', () => {
         it('should not render quick view button', () => {
           const exampleResponseId = crypto.randomUUID();
           visitDocumentSuggestion({
-            hideQuickview: true,
+            withoutQuickview: true,
           });
 
           scope('when loading the page', () => {
