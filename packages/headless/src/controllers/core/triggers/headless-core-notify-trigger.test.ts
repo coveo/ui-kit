@@ -8,7 +8,7 @@ import {createMockState} from '../../../test/mock-state';
 import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger';
 import {buildCoreNotifyTrigger} from './headless-core-notify-trigger';
 
-jest.mock('../../features/triggers/trigger-analytics-actions');
+jest.mock('../../../features/triggers/trigger-analytics-actions');
 
 describe('NotifyTrigger', () => {
   let engine: MockedSearchEngine;
