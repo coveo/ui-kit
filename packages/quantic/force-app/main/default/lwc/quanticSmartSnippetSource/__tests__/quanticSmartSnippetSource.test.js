@@ -1,6 +1,5 @@
 import {
-  // @ts-ignore
-  getNavigateCalledWith, // @ts-ignore
+  getNavigateCalledWith,
   getGenerateUrlCalledWith,
 } from 'lightning/navigation';
 // @ts-ignore
