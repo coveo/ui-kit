@@ -8,23 +8,148 @@
   },
   "main": "./dist/headless.js",
   "module": "./dist/headless.esm.js",
-  "browser": {
-    "./dist/headless.esm.js": "./dist/browser/headless.esm.js",
-    "./dist/headless.js": "./dist/browser/headless.js"
-  },
   "types": "./dist/definitions/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/definitions/index.d.ts",
+      "node": {
+        "types": "./dist/definitions/index.d.ts",
+        "import": "./dist/headless.esm.js",
+        "require": "./dist/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/index.d.ts",
+        "import": "./dist/browser/headless.esm.js",
+        "require": "./dist/browser/headless.js"
+      },
+      "import": "./dist/browser/headless.esm.js",
+      "require": "./dist/browser/headless.js"
+    },
+    "./case-assist": {
+      "types": "./dist/definitions/case-assist.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/case-assist.index.d.ts",
+        "import": "./dist/case-assist/headless.esm.js",
+        "require": "./dist/case-assist/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/case-assist.index.d.ts",
+        "import": "./dist/browser/case-assist/headless.esm.js",
+        "require": "./dist/browser/case-assist/headless.js"
+      },
+      "import": "./dist/browser/case-assist/headless.esm.js",
+      "require": "./dist/browser/case-assist/headless.js"
+    },
+    "./commerce": {
+      "types": "./dist/definitions/commerce.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/commerce.index.d.ts",
+        "import": "./dist/commerce/headless.esm.js",
+        "require": "./dist/commerce/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/commerce.index.d.ts",
+        "import": "./dist/browser/commerce/headless.esm.js",
+        "require": "./dist/browser/commerce/headless.js"
+      },
+      "import": "./dist/browser/commerce/headless.esm.js",
+      "require": "./dist/browser/commerce/headless.js"
+    },
+    "./insight": {
+      "types": "./dist/definitions/insight.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/insight.index.d.ts",
+        "import": "./dist/insight/headless.esm.js",
+        "require": "./dist/insight/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/insight.index.d.ts",
+        "import": "./dist/browser/insight/headless.esm.js",
+        "require": "./dist/browser/insight/headless.js"
+      },
+      "import": "./dist/browser/insight/headless.esm.js",
+      "require": "./dist/browser/insight/headless.js"
+    },
+    "./product-listing": {
+      "types": "./dist/definitions/product-listing.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/product-listing.index.d.ts",
+        "import": "./dist/product-listing/headless.esm.js",
+        "require": "./dist/product-listing/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/product-listing.index.d.ts",
+        "import": "./dist/browser/product-listing/headless.esm.js",
+        "require": "./dist/browser/product-listing/headless.js"
+      },
+      "import": "./dist/browser/product-listing/headless.esm.js",
+      "require": "./dist/browser/product-listing/headless.js"
+    },
+    "./product-recommendation": {
+      "types": "./dist/definitions/product-recommendation.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/product-recommendation.index.d.ts",
+        "import": "./dist/product-recommendation/headless.esm.js",
+        "require": "./dist/product-recommendation/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/product-recommendation.index.d.ts",
+        "import": "./dist/browser/product-recommendation/headless.esm.js",
+        "require": "./dist/browser/product-recommendation/headless.js"
+      },
+      "import": "./dist/browser/product-recommendation/headless.esm.js",
+      "require": "./dist/browser/product-recommendation/headless.js"
+    },
+    "./recommendation": {
+      "types": "./dist/definitions/recommendation.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/recommendation.index.d.ts",
+        "import": "./dist/recommendation/headless.esm.js",
+        "require": "./dist/recommendation/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/recommendation.index.d.ts",
+        "import": "./dist/browser/recommendation/headless.esm.js",
+        "require": "./dist/browser/recommendation/headless.js"
+      },
+      "import": "./dist/browser/recommendation/headless.esm.js",
+      "require": "./dist/browser/recommendation/headless.js"
+    },
+    "./ssr": {
+      "types": "./dist/definitions/ssr.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/ssr.index.d.ts",
+        "import": "./dist/ssr/headless.esm.js",
+        "require": "./dist/ssr/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/ssr.index.d.ts",
+        "import": "./dist/browser/ssr/headless.esm.js",
+        "require": "./dist/browser/ssr/headless.js"
+      },
+      "import": "./dist/browser/ssr/headless.esm.js",
+      "require": "./dist/browser/ssr/headless.js"
+    },
+    "./ssr-commerce": {
+      "types": "./dist/definitions/ssr-commerce.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/ssr-commerce.index.d.ts",
+        "import": "./dist/ssr-commerce/headless.esm.js",
+        "require": "./dist/ssr-commerce/headless.js"
+      },
+      "browser": {
+        "types": "./dist/definitions/ssr-commerce.index.d.ts",
+        "import": "./dist/browser/ssr-commerce/headless.esm.js",
+        "require": "./dist/browser/ssr-commerce/headless.js"
+      },
+      "import": "./dist/browser/ssr-commerce/headless.esm.js",
+      "require": "./dist/browser/ssr-commerce/headless.js"
+    }
+  },
   "license": "Apache-2.0",
   "version": "2.80.0",
   "files": [
-    "dist/",
-    "recommendation/",
-    "product-recommendation/",
-    "product-listing/",
-    "insight/",
-    "case-assist/",
-    "ssr/",
-    "ssr-commerce/",
-    "commerce/"
+    "dist/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",

@@ -2,11 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "isolatedModules": true,
-    "declaration": false,
-    "lib": ["DOM", "ES2019", "ES2022"],
+    "lib": ["DOM", "ES2023"],
     "module": "ESNext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "types": ["node", "jest"]
