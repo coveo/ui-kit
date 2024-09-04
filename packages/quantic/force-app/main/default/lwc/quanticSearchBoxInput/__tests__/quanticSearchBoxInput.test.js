@@ -36,6 +36,7 @@ const selectors = {
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
   suggestionOption: '[data-cy="suggestions-option"]',
+  suggestionOptionText: '[data-cy="suggestions-option-text"]',
   clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
 };
 
@@ -193,6 +194,9 @@ describe('c-quantic-search-box-input', () => {
       describe('when the suggestions list is not empty', () => {
         describe('when only query suggestions are displayed', () => {
           it('should display the suggestions in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -219,11 +223,31 @@ describe('c-quantic-search-box-input', () => {
               );
             expect(suggestionsListItems).not.toBeNull();
             expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsLength = mockSuggestions.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(suggestionsLength);
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
           });
         });
 
         describe('with both query suggestions and recent queries available', () => {
           it('should display the query suggestions and the recent queries in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...exampleRecentQueries,
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
+
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -259,6 +283,24 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionsListItems.length).toEqual(
               mockSuggestions.length + exampleRecentQueries.length
             );
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsAndRecentQueriesLength =
+              mockSuggestions.length + exampleRecentQueries.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(
+              suggestionsAndRecentQueriesLength
+            );
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
           });
 
           describe('when pressing the DOWN to select a suggestion', () => {

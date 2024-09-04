@@ -99,6 +99,9 @@ export default class QuanticSearchInterface extends LightningElement {
                   locale: LOCALE,
                   timezone: TIMEZONE,
                 },
+                analytics: {
+                  ...(document.referrer && {originLevel3: document.referrer}),
+                },
               },
             };
             setEngineOptions(
