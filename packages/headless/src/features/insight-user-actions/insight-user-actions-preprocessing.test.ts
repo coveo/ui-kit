@@ -503,6 +503,16 @@ describe('insight user actions preprocessing', () => {
           );
 
           expect(timeline).toEqual(expectedTimeline);
+          expect(timeline.session).not.toBeUndefined();
+          expect(timeline.followingSessions.length).toEqual(
+            expectedTimeline.followingSessions.length
+          );
+          expect(timeline.precedingSessions.length).toEqual(
+            expectedTimeline.precedingSessions.length
+          );
+          expect(timeline.session?.actions[2].actionType).toEqual(
+            UserActionType.TICKET_CREATION
+          );
         });
       });
     });
@@ -990,6 +1000,9 @@ describe('insight user actions preprocessing', () => {
         );
         expect(preprocessedTimeline.followingSessions.length).toEqual(
           expectedTimeline.followingSessions.length
+        );
+        expect(preprocessedTimeline.session?.actions[2].actionType).toEqual(
+          UserActionType.TICKET_CREATION
         );
       });
     });
