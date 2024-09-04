@@ -13,7 +13,7 @@ runs:
     - name: Add GitHub check
       uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
       with:
-        github-token: ${{ input.github-token }}
+        github-token: ${{ inputs.github-token }}
         script: |
           const conclusion = '${{ inputs.check_conclusion }}'; // Get the conclusion input
 
