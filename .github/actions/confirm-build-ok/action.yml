@@ -15,7 +15,7 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const conclusion = '${{ inputs.check_conclusion }}'; // Get the conclusion input
+          const conclusion = '${{ inputs.conclusion }}'; // Get the conclusion input
 
           const checkOptions = {
             owner: context.repo.owner,
