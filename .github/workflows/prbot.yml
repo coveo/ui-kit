@@ -358,9 +358,9 @@ jobs:
         run: |
           success="${{ contains(needs.*.result, 'success')}}"
           if [[ $success == "true" ]]; then
-              echo "conclusion=success" >> $GITHUB_OUTPUT
+              echo "conclusion=success" >> "$GITHUB_OUTPUT"
           else
-              echo "conclusion=failure" >> $GITHUB_OUTPUT
+              echo "conclusion=failure" >> "$GITHUB_OUTPUT"
           fi
         id: determine-conclusion
       - uses: ./.github/actions/confirm-build-ok
@@ -396,9 +396,9 @@ jobs:
         run: |
           success="${{ contains(needs.*.result, 'success')}}"
           if [[ $success == "true" ]]; then
-              echo "conclusion=success" >> $GITHUB_OUTPUT
+              echo "conclusion=success" >> "$GITHUB_OUTPUT"
           else
-              echo "conclusion=failure" >> $GITHUB_OUTPUT
+              echo "conclusion=failure" >> "$GITHUB_OUTPUT"
           fi
         id: determine-conclusion
       - uses: ./.github/actions/confirm-build-ok
