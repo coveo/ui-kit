@@ -313,9 +313,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.sendInputValueChangeEvent('');
     this.input.value = '';
     this.input.focus();
-    if (this.textarea) {
-      this.adjustTextAreaHeight();
-    }
   }
 
   handleSuggestionListEvent = (event) => {
