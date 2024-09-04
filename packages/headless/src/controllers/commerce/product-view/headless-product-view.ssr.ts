@@ -1,5 +1,5 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   buildController,
   Controller,
@@ -10,7 +10,7 @@ import {
 } from './headless-product-view';
 
 export interface ProductViewDefinition
-  extends SharedControllerDefinitionWithoutProps<ProductView> {}
+  extends UniversalControllerDefinitionWithoutProps<ProductView> {}
 
 /**
  * Defines a `ProductView` controller instance.
@@ -27,6 +27,7 @@ export function defineProductView(): ProductViewDefinition {
   return {
     listing: true,
     search: true,
+    standalone: true,
     build: (engine) => buildSSRProductView(engine),
   };
 }

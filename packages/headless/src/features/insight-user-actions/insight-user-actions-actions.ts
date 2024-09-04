@@ -10,7 +10,7 @@ import {
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
 import {buildFetchUserActionsRequest} from './insight-user-actions-request';
 
-interface RegisterUserActionsPayload {
+export interface RegisterUserActionsPayload {
   ticketCreationDate: string;
   excludedCustomActions?: string[];
 }
