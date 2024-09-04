@@ -1,5 +1,4 @@
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
 // Main App
@@ -102,6 +101,12 @@ export {defineProductList} from './controllers/commerce/product-listing/headless
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+
+export type {
+  RecommendationsState,
+  Recommendations,
+} from './controllers/commerce/recommendations/headless-recommendations.ssr';
+export {defineRecommendations} from './controllers/commerce/recommendations/headless-recommendations.ssr';
 
 export type {
   Cart,
