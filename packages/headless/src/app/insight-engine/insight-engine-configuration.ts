@@ -6,6 +6,7 @@ import {
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
+  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
 /**
@@ -49,3 +50,15 @@ export const insightEngineConfigurationSchema =
       },
     }),
   });
+
+/**
+ * Creates a sample search engine configuration.
+ *
+ * @returns The sample search engine configuration.
+ */
+export function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
+  return {
+    ...getSampleEngineConfiguration(),
+    insightId: 'beba713f-c286-438b-a869-db39fad5391d',
+  };
+}
