@@ -39,7 +39,7 @@ export class AtomicInsightUserActionsModal
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created..
+   * The date and time when the case was created.
    */
   @Prop() public ticketCreationDate!: string;
 
