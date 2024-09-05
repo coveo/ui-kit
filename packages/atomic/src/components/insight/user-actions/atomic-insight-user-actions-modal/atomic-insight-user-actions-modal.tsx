@@ -12,7 +12,9 @@ const exportparts =
   'container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
 
 /**
- * @internal
+ * The `atomic-insight-user-actions-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
+ *
+ * When the modal is opened, the CSS class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
  */
 @Component({
   tag: 'atomic-insight-user-actions-modal',
@@ -31,6 +33,7 @@ export class AtomicInsightUserActionsModal
 
   @Prop({mutable: true}) openButton?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
+
   /**
    * The ID of the user whose actions are being displayed.
    */
@@ -82,7 +85,7 @@ export class AtomicInsightUserActionsModal
       return (
         <div slot="header" class="contents">
           <div part="title" class="truncate font-light">
-          {this.bindings.i18n.t('user-actions')}
+            {this.bindings.i18n.t('user-actions')}
           </div>
           <Button
             style="text-transparent"

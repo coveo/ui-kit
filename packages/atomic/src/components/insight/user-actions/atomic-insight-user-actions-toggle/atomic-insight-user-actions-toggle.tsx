@@ -3,7 +3,6 @@ import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * @internal
  * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
  */
 @Component({
@@ -21,7 +20,7 @@ export class AtomicInsightUserActionsToggle {
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created..
+   * The date and time when the case was created.
    */
   @Prop() public ticketCreationDate!: string;
 
@@ -39,10 +38,7 @@ export class AtomicInsightUserActionsToggle {
 
     this.modalRef = document.createElement('atomic-insight-user-actions-modal');
 
-    this.host.parentElement?.insertAdjacentElement(
-      'beforebegin',
-      this.modalRef
-    );
+    this.host.insertAdjacentElement('beforebegin', this.modalRef);
     this.modalRef.openButton = this.buttonRef;
     this.modalRef.userId = this.userId;
     this.modalRef.ticketCreationDate = this.ticketCreationDate;
