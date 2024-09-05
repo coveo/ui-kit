@@ -60,8 +60,8 @@ describe('resultContext method', () => {
   it("revolves the bindings when it's a child of an atomic-result element", async () => {
     const engine = buildSearchEngine({
       configuration: {
-        accessToken: 'access_token',
-        organizationId: 'organization_id',
+        accessToken: 'accessToken',
+        organizationId: 'organizationId',
       },
     });
     const mockResult = jest.mocked({} as Result);

@@ -107,8 +107,8 @@ describe('InitializeBindings decorator', () => {
       component['bindings'] = {
         engine: buildSearchEngine({
           configuration: {
-            accessToken: 'access_token',
-            organizationId: 'organization_id',
+            accessToken: 'accessToken',
+            organizationId: 'organizationId',
           },
         }),
         i18n: i18next,
@@ -134,8 +134,8 @@ describe('BindStateToController decorator', () => {
       bindings: {
         engine: buildSearchEngine({
           configuration: {
-            accessToken: 'access_token',
-            organizationId: 'organization_id',
+            accessToken: 'accessToken',
+            organizationId: 'organizationId',
           },
         }),
         i18n: i18next,
