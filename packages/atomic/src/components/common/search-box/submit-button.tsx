@@ -14,7 +14,7 @@ export const SubmitButton: FunctionalComponent<Props> = ({
 }) => (
   <div
     part="submit-button-wrapper"
-    class="mr-2 flex items-start items-center justify-center py-2"
+    class="mr-2 flex items-center justify-center py-2"
   >
     <Button
       style="text-primary"
