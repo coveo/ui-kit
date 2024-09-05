@@ -32,7 +32,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  * A facet is a list of values for a certain field occurring in the results.
  * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-timeframe-facet',

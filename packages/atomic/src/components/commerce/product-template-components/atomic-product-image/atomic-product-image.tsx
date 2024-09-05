@@ -16,7 +16,7 @@ type Image = {
 
 /**
  * The `atomic-product-image` component renders an image from a product field.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product-image',
