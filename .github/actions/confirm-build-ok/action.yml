@@ -19,7 +19,7 @@ runs:
           const commitSha =
             context.eventName === 'pull_request' ?
               context.payload.pull_request.head.sha
-            : content.eventName === 'merge_group' ?
+            : context.eventName === 'merge_group' ?
               context.payload.merge_group.head_sha
             : context.sha;
 
