@@ -58,7 +58,7 @@ describe('resultContext method', () => {
   });
 
   it("revolves the bindings when it's a child of an atomic-result element", async () => {
-    const mockEngine = buildSearchEngine({
+    const engine = buildSearchEngine({
       configuration: {
         accessToken: 'access_token',
         organizationId: 'organization_id',
@@ -72,7 +72,7 @@ describe('resultContext method', () => {
         <atomic-result
           content={document.createElement('div')}
           result={mockResult}
-          interactiveResult={buildInteractiveResult(mockEngine, {
+          interactiveResult={buildInteractiveResult(engine, {
             options: {result: mockResult},
           })}
           store={createAtomicStore()}
