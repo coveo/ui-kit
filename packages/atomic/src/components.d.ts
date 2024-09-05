@@ -21,7 +21,7 @@ import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVe
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
+import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
 import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
@@ -54,7 +54,7 @@ export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVe
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
+export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
 export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
@@ -483,6 +483,9 @@ export namespace Components {
          */
         "previousButtonIcon": string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -495,6 +498,7 @@ export namespace Components {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -597,6 +601,7 @@ export namespace Components {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -984,7 +989,7 @@ export namespace Components {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults": number;
         /**
@@ -996,6 +1001,14 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -1594,31 +1607,17 @@ export namespace Components {
     }
     /**
      * @category Insight Panel
-     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-     */
-    interface AtomicInsightUserAction {
-        "actionTitle": string;
-        "origin": string;
-        "timestamp": number;
-        "type": UserActionType;
-    }
-    interface AtomicInsightUserActionsModal {
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
      */
     interface AtomicInsightUserActionsSession {
-        "isActiveSession": boolean;
-        "startDate": number;
-        "userActions": UserActions;
-    }
-    interface AtomicInsightUserActionsTimeline {
-    }
-    interface AtomicInsightUserActionsToggle {
-        "tooltip": string;
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
     }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
@@ -1671,6 +1670,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget1;
         /**
@@ -1770,15 +1770,6 @@ export namespace Components {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label": string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -1962,6 +1953,11 @@ export namespace Components {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -2406,6 +2402,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2577,6 +2574,11 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -2756,6 +2758,7 @@ export namespace Components {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget": ItemTarget;
         /**
@@ -2767,6 +2770,14 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -2956,8 +2967,6 @@ export namespace Components {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -3843,6 +3852,9 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceProductListElement: {
@@ -4413,41 +4425,13 @@ declare global {
     };
     /**
      * @category Insight Panel
-     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-     */
-    interface HTMLAtomicInsightUserActionElement extends Components.AtomicInsightUserAction, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionElement: {
-        prototype: HTMLAtomicInsightUserActionElement;
-        new (): HTMLAtomicInsightUserActionElement;
-    };
-    interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsModalElement: {
-        prototype: HTMLAtomicInsightUserActionsModalElement;
-        new (): HTMLAtomicInsightUserActionsModalElement;
-    };
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
      */
     interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
     }
     var HTMLAtomicInsightUserActionsSessionElement: {
         prototype: HTMLAtomicInsightUserActionsSessionElement;
         new (): HTMLAtomicInsightUserActionsSessionElement;
-    };
-    interface HTMLAtomicInsightUserActionsTimelineElement extends Components.AtomicInsightUserActionsTimeline, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsTimelineElement: {
-        prototype: HTMLAtomicInsightUserActionsTimelineElement;
-        new (): HTMLAtomicInsightUserActionsTimelineElement;
-    };
-    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsToggleElement: {
-        prototype: HTMLAtomicInsightUserActionsToggleElement;
-        new (): HTMLAtomicInsightUserActionsToggleElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -4556,15 +4540,6 @@ declare global {
     var HTMLAtomicLayoutSectionElement: {
         prototype: HTMLAtomicLayoutSectionElement;
         new (): HTMLAtomicLayoutSectionElement;
-    };
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
-    }
-    var HTMLAtomicLoadMoreChildrenResultsElement: {
-        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
-        new (): HTMLAtomicLoadMoreChildrenResultsElement;
     };
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -5309,8 +5284,6 @@ declare global {
     };
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -5737,11 +5710,7 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-insight-user-action": HTMLAtomicInsightUserActionElement;
-        "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
-        "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
-        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -5753,7 +5722,6 @@ declare global {
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
-        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -6253,6 +6221,9 @@ declare namespace LocalJSX {
          */
         "previousButtonIcon"?: string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -6265,6 +6236,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -6353,6 +6325,7 @@ declare namespace LocalJSX {
         /**
           * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -6728,7 +6701,7 @@ declare namespace LocalJSX {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults"?: number;
         /**
@@ -6736,6 +6709,14 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
+        /**
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -7299,31 +7280,17 @@ declare namespace LocalJSX {
     }
     /**
      * @category Insight Panel
-     * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-     */
-    interface AtomicInsightUserAction {
-        "actionTitle": string;
-        "origin"?: string;
-        "timestamp": number;
-        "type": UserActionType;
-    }
-    interface AtomicInsightUserActionsModal {
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
      */
     interface AtomicInsightUserActionsSession {
-        "isActiveSession"?: boolean;
-        "startDate": number;
-        "userActions"?: UserActions;
-    }
-    interface AtomicInsightUserActionsTimeline {
-    }
-    interface AtomicInsightUserActionsToggle {
-        "tooltip"?: string;
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
     }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
@@ -7379,6 +7346,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget1;
         /**
@@ -7461,15 +7429,6 @@ declare namespace LocalJSX {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label"?: string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -7655,6 +7614,11 @@ declare namespace LocalJSX {
           * The InteractiveProduct item.
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -8071,6 +8035,7 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
@@ -8226,6 +8191,11 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -8401,12 +8371,21 @@ declare namespace LocalJSX {
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
           * @defaultValue `_self`
+          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
          */
         "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -8596,8 +8575,6 @@ declare namespace LocalJSX {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -9253,11 +9230,7 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-insight-user-action": AtomicInsightUserAction;
-        "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
-        "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
-        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -9269,7 +9242,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
-        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -9460,6 +9432,9 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            /**
+             * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+             */
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -9632,17 +9607,9 @@ declare module "@stencil/core" {
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
              * @category Insight Panel
-             * @example <atomic-insight-user-action type="view" actionTitle="atlas data lake" timestamp="1723035731" origin="mySearchHub"></atomic-user-action>
-             */
-            "atomic-insight-user-action": LocalJSX.AtomicInsightUserAction & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionElement>;
-            "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
-            /**
-             * @category Insight Panel
-             * @example <atomic-insight-user-actions-session userActions={actions} startDate="1723035731"></atomic-insight-user-actions-session>
+             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
-            "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
@@ -9663,10 +9630,6 @@ declare module "@stencil/core" {
              * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
              */
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
-            /**
-             * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-             */
-            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             /**
              * The `atomic-load-more-results` component allows the user to load additional results if more are available.
              */
@@ -10009,8 +9972,6 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */

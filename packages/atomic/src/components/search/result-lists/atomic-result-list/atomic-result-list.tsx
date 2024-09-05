@@ -7,14 +7,18 @@ import {
   buildResultsPerPage,
   buildInteractiveResult,
   Result,
+  TabManager,
+  TabManagerState,
+  buildTabManager,
 } from '@coveo/headless';
-import {Component, Element, State, Prop, Method, h} from '@stencil/core';
+import {Component, Element, State, Prop, Method, h, Watch} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {ArrayProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
@@ -38,13 +42,13 @@ import {
   ItemTarget,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
+import {TabGuard} from '../../../common/tab-manager/tab-guard';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
  * @slot default - The default slot where the result templates are inserted.
- *
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
@@ -82,7 +86,11 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultsPerPage')
   @State()
   private resultsPerPageState!: ResultsPerPageState;
-  @State() private resultTemplateRegistered = false;
+  public tabManager!: TabManager;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
+  @State() private resultTemplateRegistered = true;
   @State() public error!: Error;
   @State() private templateHasError = false;
 
@@ -99,6 +107,7 @@ export class AtomicResultList implements InitializableComponent {
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_self`
+   * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
 
@@ -107,6 +116,32 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop({reflect: true, mutable: true})
   public imageSize: ItemDisplayImageSize = 'icon';
+
+  /**
+   * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet>
+   * ```
+   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list>
+   * ```
+   * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -135,23 +170,27 @@ export class AtomicResultList implements InitializableComponent {
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.itemTemplateProvider = new ItemTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
-      ),
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
+    this.itemTemplateProvider = new ItemTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-result-template')
+        ),
+        getResultTemplateRegistered: () => this.resultTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.resultTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
+        bindings: this.bindings,
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-      bindings: this.bindings,
-    });
+      this.gridCellLinkTarget
+    );
 
     this.resultListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -164,38 +203,54 @@ export class AtomicResultList implements InitializableComponent {
     });
   }
 
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
+      this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+    }
+  }
+
   public render() {
     this.resultListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
     return (
-      <ItemListGuard
-        hasError={this.resultListState.hasError}
-        hasTemplate={this.resultTemplateRegistered}
-        templateHasError={this.itemTemplateProvider.hasError}
-        firstRequestExecuted={this.resultListState.firstSearchExecuted}
-        hasItems={this.resultListState.hasResults}
+      <TabGuard
+        tabsIncluded={this.tabsIncluded}
+        tabsExcluded={this.tabsExcluded}
+        activeTab={this.tabManagerState.activeTab}
       >
-        <DisplayWrapper display={this.display} listClasses={listClasses}>
-          <ResultsPlaceholdersGuard
-            density={this.density}
-            display={this.display}
-            imageSize={this.imageSize}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
-            numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
-          ></ResultsPlaceholdersGuard>
-          <ItemDisplayGuard
-            firstRequestExecuted={this.resultListState.firstSearchExecuted}
-            hasItems={this.resultListState.hasResults}
-          >
-            {this.display === 'table'
-              ? this.renderAsTable()
-              : this.display === 'grid'
-                ? this.renderAsGrid()
-                : this.renderAsList()}
-          </ItemDisplayGuard>
-        </DisplayWrapper>
-      </ItemListGuard>
+        <ItemListGuard
+          hasError={this.resultListState.hasError}
+          hasTemplate={this.resultTemplateRegistered}
+          templateHasError={this.itemTemplateProvider.hasError}
+          firstRequestExecuted={this.resultListState.firstSearchExecuted}
+          hasItems={this.resultListState.hasResults}
+        >
+          <DisplayWrapper display={this.display} listClasses={listClasses}>
+            <ResultsPlaceholdersGuard
+              density={this.density}
+              display={this.display}
+              imageSize={this.imageSize}
+              displayPlaceholders={!this.bindings.store.isAppLoaded()}
+              numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
+            ></ResultsPlaceholdersGuard>
+            <ItemDisplayGuard
+              firstRequestExecuted={this.resultListState.firstSearchExecuted}
+              hasItems={this.resultListState.hasResults}
+            >
+              {this.display === 'table'
+                ? this.renderAsTable()
+                : this.display === 'grid'
+                  ? this.renderAsGrid()
+                  : this.renderAsList()}
+            </ItemDisplayGuard>
+          </DisplayWrapper>
+        </ItemListGuard>
+      </TabGuard>
     );
   }
 
@@ -214,6 +269,7 @@ export class AtomicResultList implements InitializableComponent {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(result),
+      linkContent: this.itemTemplateProvider.getLinkTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -239,8 +295,8 @@ export class AtomicResultList implements InitializableComponent {
       const propsForAtomicResult = this.getPropsForAtomicResult(result);
       return (
         <DisplayGrid
+          selectorForItem="atomic-result"
           item={result}
-          gridTarget={this.gridCellLinkTarget}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
             element && this.resultListCommon.setNewResultRef(element, i)

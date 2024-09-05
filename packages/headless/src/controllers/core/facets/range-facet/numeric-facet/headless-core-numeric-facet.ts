@@ -18,6 +18,7 @@ import {
 import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchReducer as search} from '../../../../../features/search/search-slice';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -168,10 +169,14 @@ export function buildCoreNumericFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterNumericFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateNumericFacetOptions(engine, options);

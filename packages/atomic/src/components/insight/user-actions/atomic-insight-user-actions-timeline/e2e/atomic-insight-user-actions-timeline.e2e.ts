@@ -1,54 +1,66 @@
 import {test, expect} from './fixture';
 
-const followingSessionActions = [
+const followingSessionsActions = [
   {
     name: 'CUSTOM',
     value:
       '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
-    time: '1823680000000',
+    time: new Date('2024-09-02T15:30:00Z').valueOf(),
   },
-];
-
-const caseCreationSessionActions = [
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"errors","event_value":"play","origin_level_1":"default","origin_level_2":"default"}',
-    time: '1723680000001',
-  },
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"errors","event_value":"play","origin_level_1":"default","origin_level_2":"default"}',
-    time: '1723680000002',
-  },
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"errors","event_value":"play","origin_level_1":"default","origin_level_2":"default"}',
-    time: '1723679999999',
-  },
-];
-
-const precedingSessionActions = [
   {
     name: 'CUSTOM',
     value:
       '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
-    time: '1623680000000',
+    time: new Date('2024-09-01T15:30:00Z').valueOf(),
+  },
+];
+
+const ticketCreationSessionActions = [
+  {
+    name: 'CUSTOM',
+    value:
+      '{"event_type":"errors","event_value":"One","origin_level_1":"default","origin_level_2":"default"}',
+    time: new Date('2024-08-30T00:10:00Z').valueOf(),
+  },
+  {
+    name: 'CUSTOM',
+    value:
+      '{"event_type":"errors","event_value":"Two","origin_level_1":"default","origin_level_2":"default"}',
+    time: new Date('2024-08-30T00:12:00Z').valueOf(),
+  },
+  {
+    name: 'CUSTOM',
+    value:
+      '{"event_type":"errors","event_value":"Three","origin_level_1":"default","origin_level_2":"default"}',
+    time: new Date('2024-08-29T23:45:00Z').valueOf(),
+  },
+];
+
+const precedingSessionsActions = [
+  {
+    name: 'CUSTOM',
+    value:
+      '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
+    time: new Date('2024-08-29T15:40:00Z').valueOf(),
+  },
+  {
+    name: 'CUSTOM',
+    value:
+      '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
+    time: new Date('2024-08-28T15:40:00Z').valueOf(),
   },
 ];
 
 const exampleUserActions = [
-  ...followingSessionActions,
-  ...caseCreationSessionActions,
-  ...precedingSessionActions,
+  ...followingSessionsActions,
+  ...ticketCreationSessionActions,
+  ...precedingSessionsActions,
 ];
 
 const exampleUserId = 'exampleUserId';
-const exampleTicketCreationDate = encodeURIComponent('2024-08-15');
+const exampleTicketCreationDate = encodeURIComponent('2024-08-30');
 
-test.describe('default', () => {
+test.describe('user actions timeline', () => {
   test.describe('when user actions data is found', () => {
     test.beforeEach(async ({userActionsTimeline, page}) => {
       await userActionsTimeline.load({
@@ -60,12 +72,10 @@ test.describe('default', () => {
       await userActionsTimeline.mockUserActions(page, exampleUserActions);
     });
 
-    test.only('should display the case creation session', async ({
+    test('should display the ticket creation session', async ({
       userActionsTimeline,
-      page,
     }) => {
       await expect(userActionsTimeline.activeSession).toBeVisible();
-      await page.waitForTimeout(35000);
     });
 
     test('should display the show following sessions button', async ({
@@ -94,6 +104,21 @@ test.describe('default', () => {
       userActionsTimeline,
     }) => {
       await expect(userActionsTimeline.followingSession).not.toBeVisible();
+    });
+
+    test.describe('when clicking the show more actions button', () => {
+      test('should properly show more actions', async ({
+        userActionsTimeline,
+      }) => {
+        await expect(userActionsTimeline.showMoreActionsButton).toBeVisible();
+        await expect(userActionsTimeline.moreActionsSection).not.toBeVisible();
+        await userActionsTimeline.showMoreActionsButton.click();
+        await userActionsTimeline.showMoreActionsButton.waitFor({
+          state: 'hidden',
+        });
+
+        await expect(userActionsTimeline.moreActionsSection).toBeVisible();
+      });
     });
 
     test.describe('when toggling the following sessions', () => {
@@ -160,7 +185,7 @@ test.describe('default', () => {
 
   test.describe('when an error occurs while fetching user actions', () => {
     test.beforeEach(async ({userActionsTimeline, page}) => {
-     await userActionsTimeline.mockUserActionsError(page);
+      await userActionsTimeline.mockUserActionsError(page);
       await userActionsTimeline.load();
     });
 

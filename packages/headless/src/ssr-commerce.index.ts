@@ -1,5 +1,4 @@
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
 // Main App
@@ -60,6 +59,24 @@ export type {
 export {defineDidYouMean} from './controllers/commerce/search/did-you-mean/headless-did-you-mean.ssr';
 
 export type {
+  BaseFacetSearchResult,
+  CategoryFacet,
+  CategoryFacetState,
+  CategoryFacetValue,
+  CategoryFacetSearchResult,
+  DateFacet,
+  DateFacetState,
+  FacetGenerator,
+  FacetGeneratorState,
+  NumericFacet,
+  NumericFacetState,
+  RegularFacet,
+  RegularFacetState,
+  RegularFacetValue,
+} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr';
+export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr';
+
+export type {
   Pagination,
   PaginationProps,
   PaginationState,
@@ -84,6 +101,12 @@ export {defineProductList} from './controllers/commerce/product-listing/headless
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+
+export type {
+  RecommendationsState,
+  Recommendations,
+} from './controllers/commerce/recommendations/headless-recommendations.ssr';
+export {defineRecommendations} from './controllers/commerce/recommendations/headless-recommendations.ssr';
 
 export type {
   Cart,

@@ -17,6 +17,7 @@ import {
 import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchReducer as search} from '../../../../../features/search/search-slice';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -39,6 +40,11 @@ export interface NumericFilterOptions {
    * The field whose values you want to display in the filter.
    */
   field: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * A unique identifier for the controller.
@@ -162,6 +168,8 @@ export function buildCoreNumericFilter(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterNumericFacetActionCreatorPayload = {
     ...props.options,
     currentValues: props.initialState?.range
@@ -169,6 +177,8 @@ export function buildCoreNumericFilter(
       : [],
     generateAutomaticRanges: false,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateNumericFacetOptions(engine, options);

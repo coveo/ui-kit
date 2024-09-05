@@ -1,5 +1,4 @@
 import {Middleware, Action} from '@reduxjs/toolkit';
-import {btoa as btoashim} from 'abab';
 
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
@@ -30,9 +29,7 @@ export function removeDuplicates<T>(arr: T[], predicate: (value: T) => string) {
 }
 
 export function encodedBtoa(stringToEncode: string) {
-  return (typeof btoa !== 'undefined' ? btoa : btoashim)(
-    encodeURI(stringToEncode)
-  )!;
+  return btoa(encodeURI(stringToEncode))!;
 }
 
 export function omit<T>(key: keyof T, obj: T) {

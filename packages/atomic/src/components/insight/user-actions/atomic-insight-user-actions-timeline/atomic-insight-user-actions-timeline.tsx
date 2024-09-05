@@ -1,9 +1,9 @@
 import {Component, h, State, Prop} from '@stencil/core';
 import {
-  buildUserActions,
-  UserActions,
-  UserActionsState,
-  UserSession,
+  buildInsightUserActions,
+  InsightUserActions,
+  InsightUserActionsState,
+  InsightUserSession,
 } from '../..';
 import ArrowDownIcon from '../../../../images/arrow-full-down.svg';
 import ArrowUpIcon from '../../../../images/arrow-up.svg';
@@ -12,6 +12,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
+import {Button} from '../../../common/button';
 import {NoItemsContainer} from '../../../common/no-items/container';
 import {MagnifyingGlass} from '../../../common/no-items/magnifying-glass';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
@@ -19,7 +20,7 @@ import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-int
 /**
  * This component displays all the actions performed by a user around the time they created a case.
  * The actions are grouped into multiple sessions, including the session during which the case was created,
- * the sessions preceding the case creation, and the sessions following the case creation.
+ * the sessions preceding the case creation and the sessions following the case creation.
  *
  * @component
  * @example
@@ -35,11 +36,11 @@ export class AtomicInsightUserActionsTimeline
   implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
-  public userActions!: UserActions;
+  public userActions!: InsightUserActions;
 
   @BindStateToController('userActions')
   @State()
-  public userActionsState!: UserActionsState;
+  public userActionsState!: InsightUserActionsState;
   public error!: Error;
 
   /**
@@ -47,32 +48,31 @@ export class AtomicInsightUserActionsTimeline
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created..
+   * The date and time when the case was created.
    */
   @Prop() public ticketCreationDate!: string;
 
   public initialize() {
-    this.userActions = buildUserActions(this.bindings.engine, {
+    this.userActions = buildInsightUserActions(this.bindings.engine, {
       options: {ticketCreationDate: this.ticketCreationDate},
     });
 
     this.userActions.fetchUserActions(this.userId);
   }
 
-  @State() followingSessionsShouldBeVisible = false;
-  @State() precedingShouldBeVisible = false;
+  @State() followingSessionsAreVisible = false;
+  @State() precedingSessionsAreVisible = false;
 
   private toggleFollowingSessions() {
-    this.followingSessionsShouldBeVisible =
-      !this.followingSessionsShouldBeVisible;
+    this.followingSessionsAreVisible = !this.followingSessionsAreVisible;
   }
 
   private togglePrecedingSessions() {
-    this.precedingShouldBeVisible = !this.precedingShouldBeVisible;
+    this.precedingSessionsAreVisible = !this.precedingSessionsAreVisible;
   }
 
   private renderSessions(
-    sessions: Array<UserSession> | undefined,
+    sessions: Array<InsightUserSession> | undefined,
     renderSeparator?: Function,
     testId?: string
   ) {
@@ -93,53 +93,71 @@ export class AtomicInsightUserActionsTimeline
   }
 
   private renderToggleFollowingSessionsButton() {
+    const btnClasses = 'flex items-center text-left p-2 text-sm max-w-full';
+    const iconClasses = 'h-3 w-3 mr-1';
+    const label = this.followingSessionsAreVisible
+      ? this.bindings.i18n.t('hide-following-sessions')
+      : this.bindings.i18n.t('show-following-sessions');
+    const icon = this.followingSessionsAreVisible ? ArrowDownIcon : ArrowUpIcon;
+
     return (
-      <div class="flex justify-center p-2">
-        <button
+      <div
+        class="flex justify-center p-2"
+        data-testid={
+          this.followingSessionsAreVisible
+            ? 'hide-following-sessions'
+            : 'show-following-sessions'
+        }
+      >
+        <Button
+          style="text-primary"
+          part="toggle-following-sessions"
+          class={btnClasses}
+          ariaLabel={label}
           onClick={this.toggleFollowingSessions.bind(this)}
-          class="btn-text-primary flex items-center p-2"
-          data-testid={
-            this.followingSessionsShouldBeVisible
-              ? 'hide-following-sessions'
-              : 'show-following-sessions'
-          }
         >
           <atomic-icon
-            class="mr-1.5 h-3 w-3"
-            icon={
-              this.followingSessionsShouldBeVisible
-                ? ArrowDownIcon
-                : ArrowUpIcon
-            }
+            part="toggle-following-sessions-icon"
+            class={iconClasses}
+            icon={icon}
           ></atomic-icon>
-          {this.followingSessionsShouldBeVisible
-            ? 'Hide following sessions'
-            : 'Show following sessions'}
-        </button>
+          <span class="truncate">{label}</span>
+        </Button>
       </div>
     );
   }
 
   private renderTogglePrecedingSessionsButton() {
+    const btnClasses = 'flex items-center text-left p-2 text-sm max-w-full';
+    const iconClasses = 'h-3 w-3 mr-1';
+    const label = this.precedingSessionsAreVisible
+      ? this.bindings.i18n.t('hide-preceding-sessions')
+      : this.bindings.i18n.t('show-preceding-sessions');
+    const icon = this.precedingSessionsAreVisible ? ArrowUpIcon : ArrowDownIcon;
+
     return (
-      <div class="flex justify-center p-2">
-        <button
+      <div
+        class="flex justify-center p-2"
+        data-testid={
+          this.precedingSessionsAreVisible
+            ? 'hide-preceding-sessions'
+            : 'show-preceding-sessions'
+        }
+      >
+        <Button
+          style="text-primary"
+          part="toggle-preceding-sessions"
+          class={btnClasses}
+          ariaLabel={label}
           onClick={this.togglePrecedingSessions.bind(this)}
-          class="btn-text-primary flex items-center p-2"
-          data-testid={
-            this.precedingShouldBeVisible
-              ? 'hide-preceding-sessions'
-              : 'show-preceding-sessions'
-          }
         >
           <atomic-icon
-            class="mr-1.5 h-3 w-3"
-            icon={this.precedingShouldBeVisible ? ArrowUpIcon : ArrowDownIcon}
+            part="toggle-preceding-sessions-icon"
+            class={iconClasses}
+            icon={icon}
           ></atomic-icon>
-          {this.precedingShouldBeVisible
-            ? 'Hide preceding sessions'
-            : 'Show preceding sessions'}
-        </button>
+          <span class="truncate">{label}</span>
+        </Button>
       </div>
     );
   }
@@ -151,7 +169,7 @@ export class AtomicInsightUserActionsTimeline
     return [
       this.renderToggleFollowingSessionsButton(),
       <div class="separator mx-1 rounded"></div>,
-      this.followingSessionsShouldBeVisible
+      this.followingSessionsAreVisible
         ? this.renderSessions(
             this.userActionsState.timeline?.followingSessions,
             () => <div class="separator mx-1 mt-4 rounded"></div>,
@@ -167,7 +185,7 @@ export class AtomicInsightUserActionsTimeline
     }
     return [
       <div class="separator mx-1 mt-4 rounded"></div>,
-      this.precedingShouldBeVisible
+      this.precedingSessionsAreVisible
         ? this.renderSessions(
             this.userActionsState.timeline?.precedingSessions,
             () => <div class="separator mx-1 mt-4 rounded"></div>,
@@ -184,7 +202,9 @@ export class AtomicInsightUserActionsTimeline
         {this.renderFollowingSessionsSection()}
         <div class="mt-4">
           <atomic-insight-user-actions-session
-            startTimestamp={this.userActionsState?.timeline?.session?.start!}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            startTimestamp={this.userActionsState.timeline?.session?.start!}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             userActions={this.userActionsState?.timeline?.session?.actions!}
             data-testid="active-session"
           ></atomic-insight-user-actions-session>

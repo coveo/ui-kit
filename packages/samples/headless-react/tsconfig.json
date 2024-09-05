@@ -1,16 +1,13 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
     "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src", "server"]
 }
