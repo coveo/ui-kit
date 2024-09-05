@@ -174,9 +174,6 @@ function resolveEsm(moduleName) {
   );
 }
 
-/**
- * @param {string} moduleName
- */
 function resolveBrowser(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
@@ -267,6 +264,12 @@ async function buildNodeConfig(options, outDir) {
     metafile: true,
     platform: 'node',
     treeShaking: true,
+    plugins: [
+      alias({
+        'coveo.analytics': resolveEsm('coveo.analytics'),
+        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
+      }),
+    ],
     ...options,
   });
 
