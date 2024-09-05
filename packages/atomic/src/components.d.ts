@@ -1625,7 +1625,7 @@ export namespace Components {
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
-        "ticketCreationDate": string;
+        "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
          */
@@ -7347,7 +7347,7 @@ declare namespace LocalJSX {
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
-        "ticketCreationDate": string;
+        "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
          */

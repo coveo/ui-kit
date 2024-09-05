@@ -50,11 +50,11 @@ export class AtomicInsightUserActionsTimeline
   /**
    * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
-  @Prop() public ticketCreationDate!: string;
+  @Prop() public ticketCreationDateTime!: string;
 
   public initialize() {
     this.userActions = buildInsightUserActions(this.bindings.engine, {
-      options: {ticketCreationDate: this.ticketCreationDate},
+      options: {ticketCreationDate: this.ticketCreationDateTime},
     });
 
     this.userActions.fetchUserActions(this.userId);
