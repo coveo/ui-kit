@@ -27,7 +27,7 @@
                     ">
                     <p class="excerpt">{it.value.excerpt}</p>
                     <div class="row slds-var-p-top_medium">
-                      <template if:true={showQuickview}>
+                      <template lwc:if={quickviewIsVisible}>
                         <c-quantic-result-quickview engine-id={engineId}
                           preview-button-icon="utility:new_window" preview-button-label={labels.readMore}
                           preview-button-variant="outline-brand" result={it.value}>
