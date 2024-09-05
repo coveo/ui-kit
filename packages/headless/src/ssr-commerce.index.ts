@@ -74,6 +74,8 @@ export type {
   RegularFacet,
   RegularFacetState,
   RegularFacetValue,
+  MappedFacetStates,
+  MappedFacetState,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr';
 
