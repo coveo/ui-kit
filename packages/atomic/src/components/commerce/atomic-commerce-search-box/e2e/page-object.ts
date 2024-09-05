@@ -15,7 +15,7 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-
   }
 
   get searchInput() {
-    return this.page.getByRole('textbox', {name: 'Search'});
+    return this.page.getByPlaceholder('Search');
   }
 
   get clearButton() {
