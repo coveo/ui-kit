@@ -155,7 +155,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       [...this.tabsExcluded].length > 0
     ) {
       console.warn(
-        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
       );
     }
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
