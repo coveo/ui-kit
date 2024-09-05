@@ -985,7 +985,7 @@ export namespace Components {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults": number;
         /**
@@ -1765,15 +1765,6 @@ export namespace Components {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label": string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -4546,15 +4537,6 @@ declare global {
         new (): HTMLAtomicLayoutSectionElement;
     };
     /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
-    }
-    var HTMLAtomicLoadMoreChildrenResultsElement: {
-        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
-        new (): HTMLAtomicLoadMoreChildrenResultsElement;
-    };
-    /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
      */
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
@@ -5735,7 +5717,6 @@ declare global {
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
-        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -6715,7 +6696,7 @@ declare namespace LocalJSX {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults"?: number;
         /**
@@ -7442,15 +7423,6 @@ declare namespace LocalJSX {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label"?: string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -9264,7 +9236,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
-        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -9653,10 +9624,6 @@ declare module "@stencil/core" {
              * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
              */
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
-            /**
-             * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-             */
-            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             /**
              * The `atomic-load-more-results` component allows the user to load additional results if more are available.
              */
