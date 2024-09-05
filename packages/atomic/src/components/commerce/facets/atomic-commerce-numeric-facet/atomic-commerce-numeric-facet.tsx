@@ -88,7 +88,7 @@ export class AtomicCommerceNumericFacet
     return this.headerFocus;
   }
 
-  private unsubscribeFacetController!: () => void;
+  private unsubscribeFacetController?: () => void | undefined;
 
   public initialize() {
     if (!this.facet) {
@@ -96,16 +96,17 @@ export class AtomicCommerceNumericFacet
     }
 
     this.context = buildContext(this.bindings.engine);
-
-    this.unsubscribeFacetController = this.facet.subscribe(
-      () => (this.facetState = this.facet.state)
-    );
-
+    this.ensureSubscribed();
     this.registerFacetToStore();
   }
 
+  public connectedCallback() {
+    this.ensureSubscribed();
+  }
+
   public disconnectedCallback() {
-    this.unsubscribeFacetController();
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
   }
 
   private get formatter() {
@@ -278,5 +279,14 @@ export class AtomicCommerceNumericFacet
     }
 
     return !!this.valuesToRender.length;
+  }
+
+  private ensureSubscribed() {
+    if (this.unsubscribeFacetController) {
+      return;
+    }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
+    );
   }
 }
