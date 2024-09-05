@@ -131,11 +131,11 @@ export default class QuanticRecommendationInterface extends LightningElement {
 
   bindAriaLiveEvents() {
     this.template.addEventListener(
-      'arialivemessage',
+      'quantic__arialivemessage',
       this.handleAriaLiveMessage.bind(this)
     );
     this.template.addEventListener(
-      'registerregion',
+      'quantic__registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
     this.ariaLiveEventsBound = true;

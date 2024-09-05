@@ -84,7 +84,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     this.validateProps();
     if (!this.hasInitializationError) {
       registerComponentForInit(this, this.engineId);
-      this.template.addEventListener('rating', this.onRating);
+      this.template.addEventListener('quantic__rating', this.onRating);
     }
   }
 
@@ -118,7 +118,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeDocumentSuggestion?.();
-    this.template.removeEventListener('rating', this.onRating);
+    this.template.removeEventListener('quantic__rating', this.onRating);
   }
 
   validateProps() {
