@@ -21,14 +21,10 @@ runs:
           const checkOptions = {
             owner: context.repo.owner,
             repo: context.repo.repo,
-            name: 'Confirm Build OK',
-            head_sha: commitSha,
-            status: 'completed',
-            conclusion: conclusion, // Use the conclusion input
-            output: {
-            title: 'Build Confirmation',
-            summary: `The build was ${conclusion}.`
-            }
+            sha: commitSha,
+            state: conclusion, // Use the conclusion input
+            description: `Build is a ${conclusion}`,
+            context: 'probot/conclusion',
           };
 
-          github.rest.checks.create(checkOptions);
+          github.rest.repos.createCommitStatus
