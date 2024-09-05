@@ -760,6 +760,28 @@ export declare interface AtomicIcon extends Components.AtomicIcon {}
 
 
 @ProxyCmp({
+  inputs: ['isOpen', 'openButton', 'ticketCreationDate', 'userId']
+})
+@Component({
+  selector: 'atomic-insight-user-actions-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['isOpen', 'openButton', 'ticketCreationDate', 'userId'],
+})
+export class AtomicInsightUserActionsModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightUserActionsModal extends Components.AtomicInsightUserActionsModal {}
+
+
+@ProxyCmp({
   inputs: ['ticketCreationDate', 'userId']
 })
 @Component({
@@ -779,6 +801,28 @@ export class AtomicInsightUserActionsTimeline {
 
 
 export declare interface AtomicInsightUserActionsTimeline extends Components.AtomicInsightUserActionsTimeline {}
+
+
+@ProxyCmp({
+  inputs: ['ticketCreationDate', 'userId']
+})
+@Component({
+  selector: 'atomic-insight-user-actions-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['ticketCreationDate', 'userId'],
+})
+export class AtomicInsightUserActionsToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightUserActionsToggle extends Components.AtomicInsightUserActionsToggle {}
 
 
 @ProxyCmp({

@@ -1601,6 +1601,10 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    /**
+     * The `atomic-insight-user-actions-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
+     * When the modal is opened, the CSS class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
+     */
     interface AtomicInsightUserActionsModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
@@ -1644,9 +1648,12 @@ export namespace Components {
          */
         "userId": string;
     }
+    /**
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface AtomicInsightUserActionsToggle {
         /**
-          * The date and time when the case was created..
+          * The date and time when the case was created.
          */
         "ticketCreationDate": string;
         /**
@@ -4458,6 +4465,10 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    /**
+     * The `atomic-insight-user-actions-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
+     * When the modal is opened, the CSS class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
+     */
     interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
     }
     var HTMLAtomicInsightUserActionsModalElement: {
@@ -4487,6 +4498,9 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
+    /**
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightUserActionsToggleElement: {
@@ -7341,6 +7355,10 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    /**
+     * The `atomic-insight-user-actions-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
+     * When the modal is opened, the CSS class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
+     */
     interface AtomicInsightUserActionsModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
@@ -7384,9 +7402,12 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
+    /**
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface AtomicInsightUserActionsToggle {
         /**
-          * The date and time when the case was created..
+          * The date and time when the case was created.
          */
         "ticketCreationDate": string;
         /**
@@ -9710,6 +9731,10 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            /**
+             * The `atomic-insight-user-actions-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
+             * When the modal is opened, the CSS class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
+             */
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
              * @category Insight Panel
@@ -9724,6 +9749,9 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
+            /**
+             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+             */
             "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
