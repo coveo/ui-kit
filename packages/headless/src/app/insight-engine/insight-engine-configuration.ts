@@ -51,6 +51,8 @@ export const insightEngineConfigurationSchema =
     }),
   });
 
+const sampleInsightId = 'beba713f-c286-438b-a869-db39fad5391d';
+
 /**
  * Creates a sample search engine configuration.
  *
@@ -59,6 +61,6 @@ export const insightEngineConfigurationSchema =
 export function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
     ...getSampleEngineConfiguration(),
-    insightId: 'beba713f-c286-438b-a869-db39fad5391d',
+    insightId: sampleInsightId,
   };
 }

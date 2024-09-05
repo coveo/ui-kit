@@ -19,19 +19,19 @@ export class UserActionsTimelinePageObject extends BasePageObject<'atomic-insigh
   }
 
   get showFollowingSessionsbutton() {
-    return this.page.locator('[data-testid="show-following-sessions"] button');
+    return this.page.getByLabel('Show following sessions');
   }
 
   get hideFollowingSessionsbutton() {
-    return this.page.locator('[data-testid="hide-following-sessions"] button');
+    return this.page.getByLabel('Hide following sessions');
   }
 
   get showPrecedingSessionsbutton() {
-    return this.page.locator('[data-testid="show-preceding-sessions"] button');
+    return this.page.getByLabel('Show preceding sessions');
   }
 
   get hidePrecedingSessionsbutton() {
-    return this.page.locator('[data-testid="hide-preceding-sessions"] button');
+    return this.page.getByLabel('Hide preceding sessions');
   }
 
   get userActionsError() {

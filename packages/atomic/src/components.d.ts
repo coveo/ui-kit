@@ -1623,11 +1623,11 @@ export namespace Components {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
-          * The date and time when the case was created.
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDate": string;
         /**
-          * The ID of the user whose actions are being displayed.
+          * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
          */
         "userId": string;
     }
@@ -7345,11 +7345,11 @@ declare namespace LocalJSX {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
-          * The date and time when the case was created.
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDate": string;
         /**
-          * The ID of the user whose actions are being displayed.
+          * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
          */
         "userId": string;
     }
