@@ -174,6 +174,15 @@ function resolveEsm(moduleName) {
   );
 }
 
+function resolveBrowser(moduleName) {
+  const packageJsonPath = require.resolve(`${moduleName}/package.json`);
+  const packageJson = require(packageJsonPath);
+  return resolve(
+    dirname(packageJsonPath),
+    packageJson['browser'] || packageJson['main']
+  );
+}
+
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
@@ -190,6 +199,7 @@ async function buildBrowserConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
+        pino: resolveBrowser('pino'),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
       ...(options.plugins || []),
@@ -223,6 +233,7 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       entryPoints: [entryPoint],
       outfile,
       format: 'esm',
+      external: ['pino'],
     },
     dir
   );
@@ -240,7 +251,7 @@ async function buildNodeConfig(options, outDir) {
     treeShaking: true,
     plugins: [
       alias({
-        'coveo.analytics': require.resolve('coveo.analytics'),
+        'coveo.analytics': resolveEsm('coveo.analytics'),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],
