@@ -163,11 +163,14 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   sendSuggestionListIdToInput() {
     const listboxId = this.template.querySelector('ul').getAttribute('id');
-    const suggestionListEvent = new CustomEvent('suggestionlistrender', {
-      detail: listboxId,
-      bubbles: true,
-      composed: true,
-    });
+    const suggestionListEvent = new CustomEvent(
+      'quantic__suggestionlistrender',
+      {
+        detail: listboxId,
+        bubbles: true,
+        composed: true,
+      }
+    );
     this.dispatchEvent(suggestionListEvent);
   }
 

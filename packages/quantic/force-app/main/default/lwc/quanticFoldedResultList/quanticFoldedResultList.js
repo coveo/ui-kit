@@ -16,7 +16,7 @@ import {LightningElement, api} from 'lwc';
 /**
  * The `QuanticFoldedResultList` component is responsible for displaying query results by applying one or more result templates.
  * This component can display query results that have a parent-child relationship with any level of nesting.
- * @fires CustomEvent#registerresulttemplates
+ * @fires CustomEvent#quantic__registerresulttemplates
  * @category Search
  * @example
  * <c-quantic-folded-result-list engine-id={engineId} fields-to-include="objecttype,gdfiletitle" collection-field="foldingcollection" parent-field="foldingparent" child-field="foldingchild" number-of-folded-results="2"></c-quantic-folded-result-list>
@@ -134,7 +134,7 @@ export default class QuanticFoldedResultList extends LightningElement {
 
   registerTemplates() {
     this.dispatchEvent(
-      new CustomEvent('registerresulttemplates', {
+      new CustomEvent('quantic__registerresulttemplates', {
         bubbles: true,
         detail: this.resultTemplatesManager,
       })

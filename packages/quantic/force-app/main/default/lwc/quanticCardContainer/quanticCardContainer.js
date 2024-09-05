@@ -29,14 +29,14 @@ export default class QuanticCardContainer extends LightningElement {
 
   handleHeaderClick(evt) {
     evt.preventDefault();
-    const headerClickEvent = new CustomEvent('headerclick', {});
+    const headerClickEvent = new CustomEvent('quantic__headerclick', {});
     this.dispatchEvent(headerClickEvent);
   }
 
   handleHeaderKeyDown(evt) {
     if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
-      const headerKeyDownEvent = new CustomEvent('headerkeydown', {});
+      const headerKeyDownEvent = new CustomEvent('quantic__headerkeydown', {});
       this.dispatchEvent(headerKeyDownEvent);
     }
   }

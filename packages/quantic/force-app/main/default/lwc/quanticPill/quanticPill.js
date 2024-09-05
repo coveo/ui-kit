@@ -2,7 +2,7 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticPill` component is used internally to display a deselectable button.
- * @fires CustomEvent#deselect
+ * @fires CustomEvent#quantic__deselect
  * @category Utility
  * @example
  * <c-quantic-pill label="Case" alt-text="Remove Case filter" ondeselect={myDeselectFunction}></c-quantic-pill>
@@ -34,7 +34,7 @@ export default class QuanticPill extends LightningElement {
   @api actionName;
 
   deselect() {
-    this.dispatchEvent(new CustomEvent('deselect'));
+    this.dispatchEvent(new CustomEvent('quantic__deselect'));
   }
 
   get alternativeText() {

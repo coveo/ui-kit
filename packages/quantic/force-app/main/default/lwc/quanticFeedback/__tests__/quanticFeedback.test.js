@@ -51,10 +51,13 @@ const defaultOptions = {
 };
 
 function setupEventListeners(element) {
-  element.addEventListener('like', functionsMocks.exampleHandleLike);
-  element.addEventListener('dislike', functionsMocks.exampleHandleDislike);
+  element.addEventListener('quantic__like', functionsMocks.exampleHandleLike);
   element.addEventListener(
-    'pressexplainwhy',
+    'quantic__dislike',
+    functionsMocks.exampleHandleDislike
+  );
+  element.addEventListener(
+    'quantic__pressexplainwhy',
     functionsMocks.exampleHandleExplainWhy
   );
 }

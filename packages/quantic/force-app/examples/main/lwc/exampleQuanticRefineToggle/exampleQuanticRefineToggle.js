@@ -13,17 +13,17 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
   facetWithoutInputs = false;
 
   connectedCallback() {
-    this.addEventListener('addFacets', this.handleAddFacets);
+    this.addEventListener('quantic__addFacets', this.handleAddFacets);
     this.addEventListener(
-      'addFacetsWithoutInputs',
+      'quantic__addFacetsWithoutInputs',
       this.handleAddFacetsWithoutInputs
     );
   }
 
   disconnectedCallback() {
-    this.removeEventListener('addFacets', this.handleAddFacets);
+    this.removeEventListener('quantic__addFacets', this.handleAddFacets);
     this.removeEventListener(
-      'addFacetsWithoutInputs',
+      'quantic__addFacetsWithoutInputs',
       this.handleAddFacetsWithoutInputs
     );
   }
