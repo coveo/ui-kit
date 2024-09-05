@@ -33,7 +33,7 @@ export const Default: Story = {
       await canvas.findAllByShadowTitle('Search field with suggestions.', {
         exact: false,
       })
-    )?.find((el) => el.role === 'textbox');
+    )?.find((el) => el.getAttribute('part') === 'textarea');
     await step('Search for test', async () => {
       await userEvent.click(searchBox!);
       await userEvent.type(searchBox!, 'test{enter}');

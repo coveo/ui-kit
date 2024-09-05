@@ -34,7 +34,7 @@ export const Default: Story = {
           exact: false,
         })
       )
-        ?.find((el) => el.role === 'textbox')
+        ?.find((el) => el.getAttribute('part') === 'textarea')
         ?.focus();
     });
   },
