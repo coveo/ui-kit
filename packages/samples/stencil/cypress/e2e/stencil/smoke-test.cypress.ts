@@ -93,7 +93,7 @@ describe('smoke test', () => {
       setup();
 
       cy.get('a#home').click({force: true});
-      cy.get('a#search').click();
+      cy.get('a#search').click({force: true});
       cy.wait('@analytics');
     });
 
