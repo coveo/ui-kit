@@ -20,14 +20,12 @@ interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 function getPopupAttributes(props: Required<Props>['popup']) {
   return {
-    role: 'textbox',
     autocomplete: 'off',
     autocapitalize: 'off',
     autocorrect: 'off',
     ...(props.activeDescendant && {
       'aria-activedescendant': props.activeDescendant,
     }),
-    'aria-expanded': `${props.hasSuggestions && props.expanded}`,
     'aria-autocomplete': 'both',
     'aria-haspopup': 'true',
     'aria-controls': props.id,
