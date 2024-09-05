@@ -28,7 +28,6 @@ export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.Atomi
 export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
-export const AtomicLoadMoreChildrenResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreChildrenResults, HTMLAtomicLoadMoreChildrenResultsElement>('atomic-load-more-children-results');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
 export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoResults, HTMLAtomicNoResultsElement>('atomic-no-results');
 export const AtomicNotifications = /*@__PURE__*/createReactComponent<JSX.AtomicNotifications, HTMLAtomicNotificationsElement>('atomic-notifications');
