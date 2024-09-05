@@ -51,8 +51,7 @@
     "publint": "0.2.9",
     "rimraf": "5.0.9",
     "ts-jest": "29.2.3",
-    "typescript": "5.4.5",
-    "undici": "5.28.4"
+    "typescript": "5.4.5"
   },
   "peerDependencies": {
     "react": "^18",

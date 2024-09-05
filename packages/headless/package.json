@@ -179,7 +179,6 @@
     "@coveo/relay-event-types": "9.4.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.7",
-    "abab": "2.0.6",
     "abortcontroller-polyfill": "1.7.5",
     "coveo.analytics": "2.30.26",
     "dayjs": "1.11.12",
@@ -189,8 +188,7 @@
     "node-abort-controller": "^3.0.0",
     "pino": "8.21.0",
     "redux-thunk": "3.1.0",
-    "ts-debounce": "4.0.0",
-    "undici": "5.28.4"
+    "ts-debounce": "4.0.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
