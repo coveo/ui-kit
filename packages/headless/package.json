@@ -63,8 +63,7 @@
     "node-abort-controller": "^3.0.0",
     "pino": "8.21.0",
     "redux-thunk": "3.1.0",
-    "ts-debounce": "4.0.0",
-    "undici": "5.28.4"
+    "ts-debounce": "4.0.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
