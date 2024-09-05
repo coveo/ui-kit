@@ -15,7 +15,9 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
   }
 
   get searchInput() {
-    return this.page.getByPlaceholder('Search');
+    return this.page.getByLabel(
+      'Search field with suggestions. Suggestions may be available under this field. To send, press Enter.'
+    );
   }
 
   get clearButton() {
