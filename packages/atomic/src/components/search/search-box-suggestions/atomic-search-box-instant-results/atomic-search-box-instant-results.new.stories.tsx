@@ -104,7 +104,7 @@ export const Default: Story = {
           exact: false,
         })
       )
-        ?.find((el) => el.role === 'combobox')
+        ?.find((el) => el.role === 'textbox')
         ?.focus();
     });
   },

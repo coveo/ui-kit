@@ -20,7 +20,7 @@ interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 function getPopupAttributes(props: Required<Props>['popup']) {
   return {
-    role: 'combobox',
+    role: 'textbox',
     autocomplete: 'off',
     autocapitalize: 'off',
     autocorrect: 'off',

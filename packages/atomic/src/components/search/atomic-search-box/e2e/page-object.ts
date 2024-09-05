@@ -15,7 +15,7 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
   }
 
   get searchInput() {
-    return this.page.getByRole('combobox', {name: 'Search'});
+    return this.page.getByRole('textbox', {name: 'Search'});
   }
 
   get clearButton() {
