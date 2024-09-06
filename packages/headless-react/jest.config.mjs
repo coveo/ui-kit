@@ -9,6 +9,7 @@ export default {
       'ts-jest',
       {
         tsconfig: 'tsconfig.test.json',
+        isolatedModules: true,
       },
     ],
   },
