@@ -11,7 +11,6 @@ import {
  */
 @Component({
   tag: 'atomic-format-currency',
-  styleUrl: 'atomic-format-currency.pcss',
   shadow: true,
 })
 export class AtomicFormatCurrency {
