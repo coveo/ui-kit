@@ -5,7 +5,6 @@ export const searchBoxComponent = 'atomic-search-box';
 export const SearchBoxSelectors = {
   host: () => cy.get(searchBoxComponent),
   shadow: () => cy.get(searchBoxComponent).shadow(),
-  inputBox: () => SearchBoxSelectors.shadow().find('[part="input"]'),
   textArea: () => SearchBoxSelectors.shadow().find('[part="textarea"]'),
   submitButton: () =>
     SearchBoxSelectors.shadow().find('[part="submit-button"]'),
