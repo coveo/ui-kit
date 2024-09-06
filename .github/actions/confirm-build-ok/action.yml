@@ -1,0 +1,35 @@
+name: 'Confirm build is valid'
+description: 'Confirm build is valid'
+inputs:
+  github-token:
+    description: The GitHub token
+    required: true
+  conclusion:
+    description: The conclusion of the check. failure or success
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Add GitHub check
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const conclusion = '${{ inputs.conclusion }}'; // Get the conclusion input
+          const commitSha =
+            context.eventName === 'pull_request' ?
+              context.payload.pull_request.head.sha
+            : context.eventName === 'merge_group' ?
+              context.payload.merge_group.head_sha
+            : context.sha;
+
+          const restOptions = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: commitSha,
+            state: conclusion, // Use the conclusion input
+            description: `Build is a ${conclusion}`,
+            context: 'probot/conclusion',
+          };
+
+          github.rest.repos.createCommitStatus(restOptions)
