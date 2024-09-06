@@ -14,6 +14,7 @@ const USE_CASES = {
 const BASE_CONFIG = {
   bundle: true,
   banner: {js: apacheLicense()},
+  external: ['react', 'react-dom', '@coveo/headless'],
 };
 
 /**
