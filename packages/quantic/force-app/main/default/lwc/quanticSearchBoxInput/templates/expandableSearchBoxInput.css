@@ -25,7 +25,7 @@
 }
 
 .z-index-high {
-  z-index: 20;
+  z-index: 5;
 }
 
 textarea.searchbox__input {
@@ -48,7 +48,6 @@ textarea.searchbox__input {
 .searchbox__container-wrapper {
   position: relative;
   min-height: 3.125rem;
-  min-width: 300px;
 }
 
 .searchbox_floating-container {

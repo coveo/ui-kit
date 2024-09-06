@@ -1,6 +1,6 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator, play} = wrapInSearchInterface({
@@ -74,7 +74,6 @@ export const Default: Story = {
             </atomic-result-fields-list>
           </atomic-result-section-bottom-metadata>
           <atomic-result-section-children>
-            <atomic-load-more-children-results></atomic-load-more-children-results>
             <atomic-result-children image-size="icon">
               <!-- CHILD -->
               <atomic-result-children-template>

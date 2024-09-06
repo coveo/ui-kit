@@ -7,7 +7,6 @@ const functionsMocks = {
   exampleHandleSubmitSearch: jest.fn(() => {}),
   exampleShowSuggestions: jest.fn(() => {}),
   exampleSelectSuggestion: jest.fn(() => {}),
-  exampleHandleKeyup: jest.fn(() => {}),
 };
 
 const defaultPlaceholder = 'Search...';
@@ -17,6 +16,7 @@ const mockSuggestions = [
   {key: '2', value: 'suggestion2', rawValue: 'suggestion2'},
   {key: '3', value: 'suggestion3', rawValue: 'suggestion3'},
 ];
+const exampleRecentQueries = ['foo', 'bar'];
 
 const defaultOptions = {
   withoutSubmitButton: false,
@@ -31,9 +31,13 @@ const selectors = {
   searchBoxSubmitBtn: '.searchbox__submit-button',
   searchBoxClearIcon: '.searchbox__clear-button',
   searchBoxSuggestionsList: 'c-quantic-search-box-suggestions-list',
+  SuggestionsListBox: '[role="listbox"]',
   searchBoxContainer: '.searchbox__container',
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
+  suggestionOption: '[data-cy="suggestions-option"]',
+  suggestionOptionText: '[data-cy="suggestions-option-text"]',
+  clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
 };
 
 function setupEventListeners(element) {
@@ -53,7 +57,6 @@ function setupEventListeners(element) {
     'quantic__selectsuggestion',
     functionsMocks.exampleSelectSuggestion
   );
-  element.addEventListener('keyup', functionsMocks.exampleHandleKeyup);
 }
 
 function createTestComponent(options = defaultOptions) {
@@ -81,12 +84,21 @@ describe('c-quantic-search-box-input', () => {
     }
   }
 
+  beforeAll(() => {
+    // @ts-ignore
+    global.CoveoHeadless = {
+      HighlightUtils: {
+        highlightString: () => {},
+      },
+    };
+  });
+
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
   });
 
-  [true, false].forEach((textareaValue) => {
+  [false, true].forEach((textareaValue) => {
     describe(`when the textarea property is set to ${textareaValue}`, () => {
       it(`should display the ${
         textareaValue ? 'expandable' : 'default'
@@ -180,24 +192,192 @@ describe('c-quantic-search-box-input', () => {
       });
 
       describe('when the suggestions list is not empty', () => {
-        it('should display the suggestions in the suggestions list', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            suggestions: mockSuggestions,
-            textarea: textareaValue,
+        describe('when only query suggestions are displayed', () => {
+          it('should display the suggestions in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+            });
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const suggestionsListItems =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOption
+              );
+            expect(suggestionsListItems).not.toBeNull();
+            expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsLength = mockSuggestions.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(suggestionsLength);
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
           });
-          await flushPromises();
+        });
 
-          const suggestionsList = element.shadowRoot.querySelector(
-            selectors.searchBoxSuggestionsList
-          );
-          expect(suggestionsList).not.toBeNull();
+        describe('with both query suggestions and recent queries available', () => {
+          it('should display the query suggestions and the recent queries in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...exampleRecentQueries,
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
 
-          const suggestionsListItems =
-            suggestionsList.shadowRoot.querySelectorAll('li');
-          expect(suggestionsListItems).not.toBeNull();
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              recentQueries: exampleRecentQueries,
+              textarea: textareaValue,
+              inputValue: '',
+            });
+            await flushPromises();
 
-          expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const suggestionsListItems =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOption
+              );
+            const clearRecentQueriesButton =
+              suggestionsList.shadowRoot.querySelector(
+                selectors.clearRecentQueryButton
+              );
+            expect(suggestionsListItems).not.toBeNull();
+            expect(clearRecentQueriesButton).not.toBeNull();
+            expect(suggestionsListItems.length).toEqual(
+              mockSuggestions.length + exampleRecentQueries.length
+            );
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsAndRecentQueriesLength =
+              mockSuggestions.length + exampleRecentQueries.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(
+              suggestionsAndRecentQueriesLength
+            );
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
+          });
+
+          describe('when pressing the DOWN to select a suggestion', () => {
+            it('should persist the value of the suggestion on blur', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                suggestions: mockSuggestions,
+                recentQueries: exampleRecentQueries,
+                textarea: textareaValue,
+                inputValue: '',
+              });
+              await flushPromises();
+
+              const input = element.shadowRoot.querySelector(
+                textareaValue
+                  ? selectors.searchBoxTextArea
+                  : selectors.searchBoxInput
+              );
+              expect(input).not.toBeNull();
+
+              await input.focus();
+              // First keydown to navigate to the clear recent queries option.
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowDown'})
+              );
+              // Second keydown to navigate to the first recent query option.
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowDown'})
+              );
+              await flushPromises();
+
+              expect(input.value).toBe(exampleRecentQueries[0]);
+
+              await input.blur();
+              await flushPromises();
+
+              expect(input.value).toBe(exampleRecentQueries[0]);
+            });
+
+            it('should persist the value of the suggestion when pressing the Escape key', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                suggestions: mockSuggestions,
+                recentQueries: exampleRecentQueries,
+                textarea: textareaValue,
+                inputValue: '',
+              });
+              await flushPromises();
+
+              const input = element.shadowRoot.querySelector(
+                textareaValue
+                  ? selectors.searchBoxTextArea
+                  : selectors.searchBoxInput
+              );
+              expect(input).not.toBeNull();
+
+              await input.focus();
+              // First keydown to navigate to the clear recent queries option.
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowDown'})
+              );
+              // Second keydown to navigate to the first recent query option.
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowDown'})
+              );
+              await flushPromises();
+
+              expect(input.value).toBe(exampleRecentQueries[0]);
+
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'Escape'})
+              );
+              await flushPromises();
+
+              expect(input.value).toBe(exampleRecentQueries[0]);
+            });
+          });
         });
       });
 
@@ -250,27 +430,147 @@ describe('c-quantic-search-box-input', () => {
             setupEventListeners(element);
             await flushPromises();
 
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
             const suggestionsList = element.shadowRoot.querySelector(
               selectors.searchBoxSuggestionsList
             );
             expect(suggestionsList).not.toBeNull();
 
-            const firstSuggestion =
-              suggestionsList.shadowRoot.querySelectorAll('li')[0];
+            const querySuggestionIndex = 0;
+            const firstSuggestion = suggestionsList.shadowRoot.querySelectorAll(
+              selectors.suggestionOption
+            )[querySuggestionIndex];
             expect(firstSuggestion).not.toBeNull();
 
-            firstSuggestion.click();
-
+            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
             expect(
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
 
+            /** @type{{detail: {selectedSuggestion: object}}} */
             const eventData =
-              functionsMocks.exampleSelectSuggestion.mock.calls[0][0] &&
               functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
-            const expectedFirstSuggestionSelected = mockSuggestions[0].rawValue;
+            const expectedFirstSuggestionSelected = {
+              isClearRecentQueryButton: undefined,
+              isRecentQuery: undefined,
+              value: mockSuggestions[querySuggestionIndex].rawValue,
+            };
 
-            // @ts-ignore
+            expect(eventData.detail.selectedSuggestion).toEqual(
+              expectedFirstSuggestionSelected
+            );
+          });
+        });
+
+        describe('when selecting the clear recent query option from the suggestions list', () => {
+          it('should dispatch a #quantic__selectsuggestion event with the selected suggestion as payload', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+              recentQueries: exampleRecentQueries,
+              inputValue: '',
+            });
+            setupEventListeners(element);
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const clearRecentQueriesOption =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.clearRecentQueryButton
+              )[0];
+            expect(clearRecentQueriesOption).not.toBeNull();
+
+            clearRecentQueriesOption.dispatchEvent(
+              new CustomEvent('mousedown')
+            );
+            expect(
+              functionsMocks.exampleSelectSuggestion
+            ).toHaveBeenCalledTimes(1);
+
+            /** @type{{detail: {selectedSuggestion: object}}} */
+            const eventData =
+              functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
+            const expectedFirstSuggestionSelected = {
+              isClearRecentQueryButton: true,
+              isRecentQuery: undefined,
+              value: undefined,
+            };
+
+            expect(eventData.detail.selectedSuggestion).toEqual(
+              expectedFirstSuggestionSelected
+            );
+          });
+        });
+
+        describe('when selecting a recent query from the suggestions list', () => {
+          it('should dispatch a #quantic__selectsuggestion event with the selected recent query as payload', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+              recentQueries: exampleRecentQueries,
+              inputValue: '',
+            });
+            setupEventListeners(element);
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const recentQueryIndex = 0;
+            const firstRecentQuery =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOption
+              )[recentQueryIndex];
+            expect(firstRecentQuery).not.toBeNull();
+
+            firstRecentQuery.dispatchEvent(new CustomEvent('mousedown'));
+            expect(
+              functionsMocks.exampleSelectSuggestion
+            ).toHaveBeenCalledTimes(1);
+
+            /** @type{{detail: {selectedSuggestion: object}}} */
+            const eventData =
+              functionsMocks.exampleSelectSuggestion.mock.calls[0][0];
+            const expectedFirstSuggestionSelected = {
+              isClearRecentQueryButton: undefined,
+              isRecentQuery: true,
+              value: exampleRecentQueries[recentQueryIndex],
+            };
+
             expect(eventData.detail.selectedSuggestion).toEqual(
               expectedFirstSuggestionSelected
             );
@@ -283,11 +583,10 @@ describe('c-quantic-search-box-input', () => {
           const element = createTestComponent({
             ...defaultOptions,
             textarea: textareaValue,
+            inputValue: mockInputValue,
           });
           setupEventListeners(element);
           await flushPromises();
-
-          element.inputValue = mockInputValue;
 
           const input = element.shadowRoot.querySelector(
             textareaValue
@@ -296,16 +595,15 @@ describe('c-quantic-search-box-input', () => {
           );
           expect(input).not.toBeNull();
 
-          input.dispatchEvent(new KeyboardEvent('keyup', {key: 'a'}));
+          input.dispatchEvent(new KeyboardEvent('input'));
           expect(
             functionsMocks.exampleHandleInputValueChange
           ).toHaveBeenCalledTimes(1);
 
-          // @ts-ignore
+          /** @type{{detail: {value: string}}} */
           const eventData =
             functionsMocks.exampleHandleInputValueChange.mock.calls[0][0];
-          // @ts-ignore
-          expect(eventData.detail.newInputValue).toEqual(mockInputValue);
+          expect(eventData.detail.value).toEqual(mockInputValue);
         });
 
         describe('when clicking on the submit button', () => {
@@ -347,7 +645,7 @@ describe('c-quantic-search-box-input', () => {
             expect(input).not.toBeNull();
 
             await input.focus();
-            input.dispatchEvent(new KeyboardEvent('keyup', {key: 'Enter'}));
+            input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
             expect(
               functionsMocks.exampleHandleSubmitSearch
@@ -373,12 +671,102 @@ describe('c-quantic-search-box-input', () => {
 
             await input.focus();
             input.dispatchEvent(
-              new KeyboardEvent('keyup', {key: 'Enter', shiftKey: true})
+              new KeyboardEvent('keydown', {key: 'Enter', shiftKey: true})
             );
 
             expect(
               functionsMocks.exampleHandleSubmitSearch
             ).toHaveBeenCalledTimes(textareaValue ? 0 : 1);
+          });
+        });
+
+        describe('accessibility', () => {
+          describe('when pressing the DOWN and UP arrow keys', () => {
+            it('should set the aria-activedescendant attribute of the input according to the currently active suggestion', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                suggestions: mockSuggestions,
+                textarea: textareaValue,
+              });
+              await flushPromises();
+
+              const input = element.shadowRoot.querySelector(
+                textareaValue
+                  ? selectors.searchBoxTextArea
+                  : selectors.searchBoxInput
+              );
+              expect(input).not.toBeNull();
+
+              await input.focus();
+              const suggestionsList = element.shadowRoot.querySelector(
+                selectors.searchBoxSuggestionsList
+              );
+              const suggestionsListItems = Array.from(
+                suggestionsList.shadowRoot.querySelectorAll(
+                  selectors.suggestionOption
+                )
+              );
+              expect(suggestionsList).not.toBeNull();
+              expect(suggestionsListItems).not.toBeNull();
+
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowDown'})
+              );
+              await flushPromises();
+
+              const firstSuggestionId = suggestionsListItems[0].id;
+
+              expect(input.getAttribute('aria-activedescendant')).toBe(
+                firstSuggestionId
+              );
+
+              input.dispatchEvent(
+                new KeyboardEvent('keydown', {key: 'ArrowUp'})
+              );
+              await flushPromises();
+
+              const lastSuggestionId = suggestionsListItems.at(-1).id;
+
+              expect(input.getAttribute('aria-activedescendant')).toBe(
+                lastSuggestionId
+              );
+
+              await input.blur();
+              expect(input.getAttribute('aria-activedescendant')).toBeNull();
+            });
+          });
+
+          describe('when the search box input is rendered', () => {
+            it('should set the aria-controls attribute of the input according to the id of the suggestions listbox', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                suggestions: mockSuggestions,
+                textarea: textareaValue,
+              });
+              await flushPromises();
+
+              const input = element.shadowRoot.querySelector(
+                textareaValue
+                  ? selectors.searchBoxTextArea
+                  : selectors.searchBoxInput
+              );
+              expect(input).not.toBeNull();
+
+              await input.focus();
+              const suggestionsList = element.shadowRoot.querySelector(
+                selectors.searchBoxSuggestionsList
+              );
+              const suggestionsListBox =
+                suggestionsList.shadowRoot.querySelector(
+                  selectors.SuggestionsListBox
+                );
+              expect(suggestionsList).not.toBeNull();
+              expect(suggestionsListBox).not.toBeNull();
+
+              expect(input.getAttribute('aria-controls')).toBe(
+                suggestionsListBox.id
+              );
+            });
           });
         });
       });

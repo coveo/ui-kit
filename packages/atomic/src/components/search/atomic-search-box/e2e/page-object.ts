@@ -1,21 +1,37 @@
-import type {Page} from '@playwright/test';
+import {Page} from '@playwright/test';
 import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-box'> {
+export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
   constructor(page: Page) {
-    super(page, 'atomic-commerce-search-box');
+    super(page, 'atomic-search-box');
+  }
+
+  get component() {
+    return this.page.locator('atomic-search-box');
   }
 
   get submitButton() {
-    return this.page.getByLabel('Search', {exact: true});
+    return this.component.getByLabel('Search', {exact: true});
   }
 
   get searchInput() {
-    return this.page.getByRole('combobox', {name: 'Search'});
+    return this.component.getByPlaceholder('Search');
+  }
+
+  get clearButton() {
+    return this.component.getByLabel('Clear', {exact: true});
+  }
+
+  get ariaLive() {
+    return this.page.locator('atomic-aria-live');
   }
 
   get clearRecentQueriesButton() {
-    return this.page.getByLabel('Clear recent searches.');
+    return this.component.getByLabel('Clear recent searches.');
+  }
+
+  get numberOfQueries() {
+    return this.component.getAttribute('number-of-queries');
   }
 
   searchSuggestions({

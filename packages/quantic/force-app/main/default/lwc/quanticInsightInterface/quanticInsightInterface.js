@@ -1,5 +1,6 @@
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHeadlessConfiguration';
+import LOCALE from '@salesforce/i18n/locale';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -64,6 +65,12 @@ export default class QuanticInsightInterface extends LightningElement {
               configuration: {
                 ...JSON.parse(data),
                 insightId: this.insightId,
+                search: {
+                  locale: LOCALE,
+                },
+                analytics: {
+                  ...(document.referrer && {originLevel3: document.referrer}),
+                },
               },
             };
             setEngineOptions(

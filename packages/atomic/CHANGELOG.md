@@ -1,3 +1,66 @@
+# 2.78.0 (2024-08-27)
+
+### Bug Fixes
+
+- **atomic:** Facets don't update correctly in the refine modal when changing tabs ([#4280](https://github.com/coveo/ui-kit/issues/4280)) ([221e1bc](https://github.com/coveo/ui-kit/commits/221e1bcce68f5d74e092edf561dd6b401178c3e3))
+- **atomic:** prevent item click when carousel buttons are clicked ([#4297](https://github.com/coveo/ui-kit/issues/4297)) ([67d0416](https://github.com/coveo/ui-kit/commits/67d0416470b8b1fa77488da4bd8e534ffcc715eb))
+- **atomic:** search-box suggestions should be resilient to search-box redirection-url changes ([#4289](https://github.com/coveo/ui-kit/issues/4289)) ([19cabeb](https://github.com/coveo/ui-kit/commits/19cabeb2665a21a71f883c731ef4d5167cb1841d))
+
+### Features
+
+- **atomic:** allow user to customize grid card click behavior/links ([#4287](https://github.com/coveo/ui-kit/issues/4287)) ([e5961ca](https://github.com/coveo/ui-kit/commits/e5961ca33490499a2916bb9eb8818d360ff85c18)), closes [#4267](https://github.com/coveo/ui-kit/issues/4267)
+- **headless commerce ssr:** add SSR FacetGenerator ([#4290](https://github.com/coveo/ui-kit/issues/4290)) ([3f957f9](https://github.com/coveo/ui-kit/commits/3f957f9334708501a5fbaf73720e1646e6ea4611))
+
+## 2.77.1 (2024-08-20)
+
+### Bug Fixes
+
+- **refine-modal:** include facets from atomic-external ([#4219](https://github.com/coveo/ui-kit/issues/4219)) ([107c56b](https://github.com/coveo/ui-kit/commits/107c56b2d4a1467847210db05b1726b36ad4b50c))
+
+# 2.77.0 (2024-08-14)
+
+### Bug Fixes
+
+- **atomic:** use the hrefTemplate value in atomic-product-link ([#4259](https://github.com/coveo/ui-kit/issues/4259)) ([03513ee](https://github.com/coveo/ui-kit/commits/03513ee97ca0b62fbda75846866d116052bf6acc))
+
+### Features
+
+- **atomic:** add tab support for atomic-smart-snippet ([#4221](https://github.com/coveo/ui-kit/issues/4221)) ([9f228d3](https://github.com/coveo/ui-kit/commits/9f228d3e5948cc0a265c32500781e92dc53a42ae))
+- **atomic:** add tab support for atomic-sort-dropdown ([#4222](https://github.com/coveo/ui-kit/issues/4222)) ([f7a9061](https://github.com/coveo/ui-kit/commits/f7a90615d80967d63669231c4a4b00e4f96e9864))
+- **genqa:** add rephrase buttons as an option ([#4246](https://github.com/coveo/ui-kit/issues/4246)) ([03d065b](https://github.com/coveo/ui-kit/commits/03d065b17b21bf97c8639585d460f9c11d0ee56c))
+- **genqa:** update citations ([#4243](https://github.com/coveo/ui-kit/issues/4243)) ([54948d8](https://github.com/coveo/ui-kit/commits/54948d800c1b77bd0edce8fd297d5d7aa03a7733))
+
+## 2.76.1 (2024-08-07)
+
+# 2.76.0 (2024-08-07)
+
+### Bug Fixes
+
+- **atomic:** clear min/max for atomic-timeframe-facet when clearing filters ([#4240](https://github.com/coveo/ui-kit/issues/4240)) ([d97b04d](https://github.com/coveo/ui-kit/commits/d97b04de97e3b0fb45943249e330054179ff892a))
+
+### Features
+
+- **atomic:** add tab-manager support for facet components ([#4210](https://github.com/coveo/ui-kit/issues/4210)) ([600ee80](https://github.com/coveo/ui-kit/commits/600ee803edd1ae2e87c5aa75524fbd0bab96ca96))
+
+# 2.75.0 (2024-07-31)
+
+### Features
+
+- **atomic-commerce:** products-per-page ([#4107](https://github.com/coveo/ui-kit/issues/4107)) ([81e31cf](https://github.com/coveo/ui-kit/commits/81e31cff63c19f19b12babd4b10aa5b2e60c19e6))
+- **atomic:** add atomic-tab-manager component ([#4196](https://github.com/coveo/ui-kit/issues/4196)) ([523ab9b](https://github.com/coveo/ui-kit/commits/523ab9be9ba9bf8d14ef304d98726680bea63b71))
+
+# 2.74.0 (2024-07-24)
+
+### Bug Fixes
+
+- enhance focus handling for search-box components ([#4027](https://github.com/coveo/ui-kit/issues/4027)) ([d5f04b7](https://github.com/coveo/ui-kit/commits/d5f04b70ee32ecd1879496448471c408c281ed6d))
+- ensure quickview minimize ([#4193](https://github.com/coveo/ui-kit/issues/4193)) ([c366764](https://github.com/coveo/ui-kit/commits/c366764255de30b29bb14bb5f6439bca8164c97a))
+
+### Features
+
+- answerapi-generated-answer ([#4157](https://github.com/coveo/ui-kit/issues/4157)) ([aafe3fe](https://github.com/coveo/ui-kit/commits/aafe3fed4a9ba3962a3edd73288a59ed1ecb5b1e))
+- **atomic:** format commerce numeric facet for price with currency by default ([#4201](https://github.com/coveo/ui-kit/issues/4201)) ([bf6e2de](https://github.com/coveo/ui-kit/commits/bf6e2de55692d31808ea031eb6e2d90eb70ac3b5))
+
 # 2.73.0 (2024-07-17)
 
 ### Bug Fixes

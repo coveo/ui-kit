@@ -146,10 +146,7 @@ export const fetchPage = createAsyncThunk<
   ) => {
     const state = config.getState();
 
-    if (
-      state.configuration.analytics.analyticsMode === 'legacy' ||
-      !analyticsAction.next
-    ) {
+    if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyFetchPage(state, config, analyticsAction.legacy);
     }
 
@@ -159,7 +156,9 @@ export const fetchPage = createAsyncThunk<
       ...config,
     });
 
-    const eventDescription = buildEventDescription(analyticsAction.next);
+    const eventDescription = analyticsAction.next
+      ? buildEventDescription(analyticsAction.next)
+      : undefined;
     const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 

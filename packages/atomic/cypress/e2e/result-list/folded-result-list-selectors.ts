@@ -7,7 +7,6 @@ import {
 } from './result-list-selectors';
 
 export const foldedResultListComponent = 'atomic-folded-result-list';
-export const loadMoreChildrenComponent = 'atomic-load-more-children-results';
 export const resultChildrenComponent = 'atomic-result-children';
 export const resultChildrenTemplateComponent =
   'atomic-result-children-template';
@@ -24,10 +23,10 @@ export const FoldedResultListSelectors = {
     FoldedResultListSelectors.result().shadow().eq(index),
   firstResult: () => FoldedResultListSelectors.result().first().shadow(),
   loadMoreChildren: () =>
-    FoldedResultListSelectors.firstResult()
-      .find(loadMoreChildrenComponent)
-      .shadow()
-      .find('button'),
+    FoldedResultListSelectors.shadow().find('[part~="show-hide-button"]', {
+      includeShadowDom: true,
+    }),
+
   firstResultRoot: () =>
     FoldedResultListSelectors.firstResult().find(resultRoot),
   resultChildren: (resultIndex = 0) =>

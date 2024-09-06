@@ -47,6 +47,7 @@ export interface FacetGenerator extends Controller {
 
   /**
    * The facet sub-controllers created by the facet generator.
+   * Array of [RegularFacet](./regular-facet), [DateRangeFacet](./date-range-facet), [NumericFacet](./numeric-facet), and [CategoryFacet](./category-facet).
    */
   facets: GeneratedFacetControllers;
 
@@ -69,7 +70,7 @@ export type GeneratedFacetControllers = Array<
   MappedGeneratedFacetController[FacetType]
 >;
 
-type MappedGeneratedFacetController = {
+export type MappedGeneratedFacetController = {
   [T in FacetType]: T extends 'numericalRange'
     ? NumericFacet
     : T extends 'regular'

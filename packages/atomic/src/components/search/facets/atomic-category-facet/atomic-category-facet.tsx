@@ -12,8 +12,19 @@ import {
   FacetConditionsManager,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  TabManagerState,
+  TabManager,
+  buildTabManager,
 } from '@coveo/headless';
-import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Element,
+  Fragment,
+  Watch,
+} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -51,6 +62,7 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -105,6 +117,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
   private dependenciesManager?: FacetConditionsManager;
   private resultIndexToFocusOnShowMore = 0;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -113,6 +126,9 @@ export class AtomicCategoryFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -128,6 +144,32 @@ export class AtomicCategoryFacet implements InitializableComponent {
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field!: string;
+  /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
@@ -224,7 +266,16 @@ export class AtomicCategoryFacet implements InitializableComponent {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     const options: CategoryFacetOptions = {
       facetId: this.facetId,
       field: this.field,
@@ -295,6 +346,21 @@ export class AtomicCategoryFacet implements InitializableComponent {
       !this.facet.state.enabled ||
       (!this.facet.state.values.length && !this.facet.state.parents.length)
     );
+  }
+
+  @Watch('tabManagerState')
+  watchTabManagerState(
+    newValue: {activeTab: string},
+    oldValue: {activeTab: string}
+  ) {
+    if (newValue?.activeTab !== oldValue?.activeTab) {
+      updateFacetVisibilityForActiveTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab,
+        this.facet
+      );
+    }
   }
 
   public componentShouldUpdate(

@@ -53,12 +53,12 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
   const {i18n} = props;
   return (
     <div part="rephrase-buttons" class="shrink-0">
-      <p part="rephrase-label" class="mb-2 text-neutral-dark shrink-0">
+      <p part="rephrase-label" class="text-neutral-dark mb-2 shrink-0">
         {i18n.t('rephrase')}
       </p>
       <div
         part="rephrase-buttons-container"
-        class="flex flex-wrap gap-2 ml-auto border border-solid rounded-md p-1"
+        class="ml-auto flex flex-wrap gap-2 rounded-md border border-solid p-1"
       >
         {options.map((option) => {
           const isActive = props.answerStyle === option.value;
@@ -73,12 +73,12 @@ export const RephraseButtons: FunctionalComponent<RephraseButtonProps> = (
               }}
               ariaPressed={String(isActive)}
             >
-              <div class="icon-container text-neutral-dark h-full mx-auto shrink-0 relative">
+              <div class="icon-container text-neutral-dark relative mx-auto h-full shrink-0">
                 <atomic-icon icon={option.icon}></atomic-icon>
               </div>
               <div
                 part="rephrase-button-label"
-                class="hidden text-neutral-dark"
+                class="text-neutral-dark hidden"
               >
                 {i18n.t(option.titleKey)}
               </div>

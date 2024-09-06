@@ -2,6 +2,7 @@ import {Relay} from '@coveo/relay';
 import pino, {Logger} from 'pino';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
+import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr';
 import type {CoreEngine, CoreEngineNext} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider';
@@ -193,5 +194,15 @@ export function buildMockSSRSearchEngine(
   return {
     ...engine,
     waitForSearchCompletedAction: jest.fn(),
+  };
+}
+
+export function buildMockSSRCommerceEngine(
+  initialState: StateFromEngineNext<CommerceEngine>
+): SSRCommerceEngine {
+  const engine = buildMockCommerceEngine(initialState);
+  return {
+    ...engine,
+    waitForRequestCompletedAction: jest.fn(),
   };
 }
