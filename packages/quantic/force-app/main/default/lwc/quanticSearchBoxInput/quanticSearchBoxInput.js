@@ -311,8 +311,14 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   clearInput() {
     this.sendInputValueChangeEvent('');
-    this.input.value = '';
+    this.setDisplayedInputValue('');
+    this.onBlur();
     this.input.focus();
+  }
+
+  // Prevents the blur event from being triggered when clearing the input. This allows us to clear the input value before collapsing the input.
+  preventBlur(event) {
+    event.preventDefault();
   }
 
   handleSuggestionListEvent = (event) => {
