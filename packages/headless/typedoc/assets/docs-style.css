@@ -71,9 +71,12 @@ body {
   }
   .has-menu #tsd-search {
     display: block;
-    width: 15rem;
+    width: 90%;
   }
   .has-menu .coveo-logo-cell {
     display: none;
+  }
+  .tsd-widget.active {
+    background-color: inherit;
   }
 }
