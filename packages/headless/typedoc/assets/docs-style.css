@@ -7,6 +7,7 @@
   --dark-color-background-secondary: #333357;
   --dark-color-text: #f1f2ff;
   --dark-color-text-aside: #399ffe;
+  --header-height: 5.5rem;
 }
 
 body {
@@ -19,18 +20,12 @@ body {
   font-weight: 400;
 }
 
-@media (max-width: 768px) {
-  #tsd-search {
-    display: none;
-  }
-}
-
 #tsd-search {
   width: 27rem;
 }
 
 .tsd-page-toolbar {
-  height: 5.5rem;
+  height: var(--header-height);
   border-bottom: none;
 }
 .tsd-page-toolbar .tsd-toolbar-contents {
@@ -62,6 +57,23 @@ body {
 
 @media (max-width: 769px) {
   .feedback {
+    display: none;
+  }
+  .has-menu .overlay {
+    top: var(--header-height);
+  }
+  html .col-sidebar {
+    display: none;
+    top: var(--header-height) !important;
+  }
+  #tsd-search {
+    display: none;
+  }
+  .has-menu #tsd-search {
+    display: block;
+    width: 15rem;
+  }
+  .has-menu .coveo-logo-cell {
     display: none;
   }
 }

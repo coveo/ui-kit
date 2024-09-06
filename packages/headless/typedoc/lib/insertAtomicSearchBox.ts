@@ -3,6 +3,8 @@ interface AtomicSearchInterfaceElement extends HTMLElement {
     organizationId: string;
     organizationEndpoints: OrganizationEndpoints;
     accessToken: string;
+    search: {searchHub: string};
+    analytics: {originLevel2: string};
   }): Promise<void>;
   getOrganizationEndpoints(
     organizationId: string
@@ -49,6 +51,8 @@ export function insertAtomicSearchBox() {
                 'coveosearch'
               ),
             accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
+            search: {searchHub: 'Coveo Docs Unified Search'},
+            analytics: {originLevel2: 'All'},
           });
         }
       })();
