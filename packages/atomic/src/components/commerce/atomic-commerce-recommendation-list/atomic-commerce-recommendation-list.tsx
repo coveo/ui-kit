@@ -46,7 +46,7 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
- * @internal
+ * @alpha
  *
  * @part result-list - The element containing the list of product recommendations.
  * @part result-list-grid-clickable-container - The parent of a recommended product and the clickable link encompassing it.

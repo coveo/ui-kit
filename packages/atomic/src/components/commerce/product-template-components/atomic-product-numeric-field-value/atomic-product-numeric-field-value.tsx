@@ -9,7 +9,7 @@ import {
 import {ProductContext} from '../product-template-decorators';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-product-numeric-field-value` component renders the value of a number product field.
  *
  * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
