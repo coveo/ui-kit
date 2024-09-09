@@ -18,7 +18,7 @@
       ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:prod", "npm run build:doc"],
+        "commands": ["npm run build:prod"],
         "parallel": false,
         "cwd": "packages/headless"
       }
