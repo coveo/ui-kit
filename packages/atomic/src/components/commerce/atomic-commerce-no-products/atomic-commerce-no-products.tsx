@@ -78,6 +78,7 @@ export class AtomicCommerceNoProducts
           <NoItems
             query={'query' in this.summaryState ? this.summaryState.query : ''}
             i18n={i18n}
+            label="no-products"
           />
           <SearchTips i18n={i18n} />
         </NoItemsContainer>
