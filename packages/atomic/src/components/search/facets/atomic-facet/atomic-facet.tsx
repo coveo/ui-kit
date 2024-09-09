@@ -81,7 +81,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
- * @part search-highlight - The  highlighted query inside the facet values.
+ * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
