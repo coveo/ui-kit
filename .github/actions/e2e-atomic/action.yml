@@ -34,7 +34,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         SPLIT: ${{ inputs.SPLIT }}
         SPLIT_INDEX: ${{ inputs.SPLIT_INDEX }}
-    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+    - uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3
       if: failure()
       with:
         name: atomic-e2e-screenshots-${{ inputs.spec }}
