@@ -57,6 +57,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part values - The facet values container.
  * @part value-count - The facet value count, common for all displays.
  * @part value-rating - The facet value rating, common for all displays.
+ * @part value-rating-icon - Represents the individual star icon used in the rating display.
+ *
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
