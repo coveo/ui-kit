@@ -3,7 +3,10 @@ import type {Result} from '@coveo/headless/recommendation';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicRecsList, AtomicResultLink} from '../stencil-generated/search';
+import {
+  AtomicRecsList,
+  AtomicResultLink,
+} from '../stencil-generated/search/components';
 
 interface Template {
   contentTemplate: JSX.Element;

@@ -1,4 +1,4 @@
-export * from '../stencil-generated/commerce/index';
+export * from '../stencil-generated/commerce/components';
 export * from '@coveo/headless/commerce';
 export {CommerceBindings, i18n} from '@coveo/atomic';
 

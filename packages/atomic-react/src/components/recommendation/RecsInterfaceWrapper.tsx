@@ -4,7 +4,7 @@ import {
   buildRecommendationEngine,
 } from '@coveo/headless/recommendation';
 import React, {useEffect, useRef} from 'react';
-import {AtomicRecsInterface} from '../stencil-generated/search';
+import {AtomicRecsInterface} from '../stencil-generated/search/components';
 
 type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
 /**

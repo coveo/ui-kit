@@ -3,7 +3,7 @@ import type {FoldedResult, Result} from '@coveo/headless';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicSearchBoxInstantResults} from '../stencil-generated/search';
+import {AtomicSearchBoxInstantResults} from '../stencil-generated/search/components';
 
 /**
  * The properties of the AtomicSearchBoxInstantResults component

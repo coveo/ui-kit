@@ -7,6 +7,7 @@ export {
   JSX,
   AtomicSearchBoxCustomEvent,
   AtomicCommerceSearchBoxCustomEvent,
+  AtomicProductChildrenCustomEvent,
 } from './components';
 export type {i18n} from 'i18next';
 

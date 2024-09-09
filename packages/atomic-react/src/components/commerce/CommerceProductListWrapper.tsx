@@ -6,7 +6,7 @@ import {renderToString} from 'react-dom/server';
 import {
   AtomicCommerceProductList,
   AtomicProductLink,
-} from '../stencil-generated/commerce';
+} from '../stencil-generated/commerce/components';
 
 interface Template {
   contentTemplate: JSX.Element;
