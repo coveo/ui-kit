@@ -18,7 +18,6 @@ import {ProductContext} from '../product-template-decorators';
  * @part value-rating - The wrapper that contains the row of inactive stars and the row of active stars.
  * @part value-rating-icon - Represents the individual star icon used in the rating display.
  *
- *
  * @internal
  */
 @Component({
