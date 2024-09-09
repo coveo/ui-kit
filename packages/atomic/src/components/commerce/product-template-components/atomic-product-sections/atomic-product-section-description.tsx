@@ -2,7 +2,7 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * @internal
+ * @alpha
  *
  * This section is intended to render an informative summary of the product's description.
  *
