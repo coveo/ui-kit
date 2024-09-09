@@ -1,5 +1,4 @@
-import {SearchResponseSuccess} from '@coveo/headless/dist/definitions/api/search/search/search-response';
-import {NumericFacetValue} from '@coveo/headless/dist/definitions/product-listing.index';
+import {NumericFacetValue} from '@coveo/headless';
 import {getQueryAlias, InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {
@@ -103,8 +102,7 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
     },
     displayEqualRange: (useCase: string) => {
       cy.wait(getQueryAlias(useCase)).then((interception) => {
-        const values = (interception.response?.body as SearchResponseSuccess)
-          .facets[0].values;
+        const values = interception.response?.body.facets[0].values;
         const fixedRange = getEvenRangeValue(values[0] as NumericFacetValue);
         values.forEach((element) => {
           expect(getEvenRangeValue(element as NumericFacetValue)).to.eq(

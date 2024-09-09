@@ -1,4 +1,4 @@
-import {ResultWithFolding} from '@coveo/headless/dist/definitions/features/folding/folding-slice';
+import {Result} from '@coveo/headless';
 import {
   TestFixture,
   generateComponentHTML,
@@ -13,6 +13,10 @@ import {
 } from './result-list-selectors';
 import {resultTemplateComponent} from './result-template-selectors';
 
+interface ResultWithFolding extends Result {
+  parentResult: ResultWithFolding | null;
+  childResults: ResultWithFolding[];
+}
 export function buildTemplateWithoutSections(
   nodes: Node | Node[],
   props: TagProps = {},

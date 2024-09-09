@@ -5,7 +5,6 @@ import {
   DateFacetValue,
   BreadcrumbManager as HeadlessBreadcrumbManager,
 } from '@coveo/headless/commerce';
-import {AnyFacetValueResponse} from '@coveo/headless/dist/definitions/features/commerce/facets/facet-set/interfaces/response';
 import {useEffect, useState} from 'react';
 
 interface BreadcrumbManagerProps {
@@ -25,10 +24,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
     return null;
   }
 
-  const renderBreadcrumbValue = (
-    value: AnyFacetValueResponse,
-    type: string
-  ) => {
+  const renderBreadcrumbValue = (value: unknown, type: string) => {
     switch (type) {
       case 'hierarchical':
         return (value as CategoryFacetValue).path.join(' > ');
