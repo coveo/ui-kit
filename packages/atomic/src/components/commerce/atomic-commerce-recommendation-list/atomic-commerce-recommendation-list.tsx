@@ -93,6 +93,12 @@ export class AtomicCommerceRecommendationList
   public slotId = 'Recommendation';
 
   /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  @Prop({reflect: true})
+  public productId?: string;
+
+  /**
    * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself.
    * To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
    */
@@ -168,6 +174,7 @@ export class AtomicCommerceRecommendationList
     this.recommendations = buildRecommendations(this.bindings.engine, {
       options: {
         slotId: this.slotId,
+        productId: this.productId,
       },
     });
 

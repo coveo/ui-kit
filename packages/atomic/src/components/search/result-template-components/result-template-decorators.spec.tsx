@@ -1,4 +1,8 @@
-import {buildInteractiveResult, TestUtils} from '@coveo/headless';
+import {
+  buildInteractiveResult,
+  buildSearchEngine,
+  Result,
+} from '@coveo/headless';
 import {h} from '@stencil/core';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {MissingParentError} from '../../common/item-list/item-decorators';
@@ -54,18 +58,21 @@ describe('resultContext method', () => {
   });
 
   it("revolves the bindings when it's a child of an atomic-result element", async () => {
-    const mockEngine = TestUtils.buildMockSearchEngine(
-      TestUtils.createMockState()
-    );
-    const mockResult = TestUtils.buildMockResult();
+    const engine = buildSearchEngine({
+      configuration: {
+        accessToken: 'accessToken',
+        organizationId: 'organizationId',
+      },
+    });
+    const mockResult = jest.mocked({} as Result);
 
     const page = await newSpecPage({
       components: [AtomicResult],
       template: () => (
         <atomic-result
           content={document.createElement('div')}
-          result={TestUtils.buildMockResult()}
-          interactiveResult={buildInteractiveResult(mockEngine, {
+          result={mockResult}
+          interactiveResult={buildInteractiveResult(engine, {
             options: {result: mockResult},
           })}
           store={createAtomicStore()}
