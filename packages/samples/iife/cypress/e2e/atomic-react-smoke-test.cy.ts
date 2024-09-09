@@ -22,7 +22,7 @@ describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
     cy.get('atomic-search-box')
       .should('exist')
       .shadow()
-      .find('input')
+      .find('textarea[part="textarea"]')
       .type('test{enter}');
 
     cy.get('atomic-facet').should('exist');

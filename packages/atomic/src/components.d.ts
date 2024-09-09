@@ -617,6 +617,10 @@ export namespace Components {
          */
         "previousPage": () => Promise<void>;
         /**
+          * The unique identifier of the product to use for seeded recommendations.
+         */
+        "productId"?: string;
+        /**
           * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
          */
         "productsPerPage"?: number;
@@ -3059,10 +3063,6 @@ export namespace Components {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout": number;
-        /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
-         */
-        "textarea": boolean;
     }
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -6332,6 +6332,10 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ItemDisplayImageSize;
         /**
+          * The unique identifier of the product to use for seeded recommendations.
+         */
+        "productId"?: string;
+        /**
           * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
          */
         "productsPerPage"?: number;
@@ -8667,10 +8671,6 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
-        /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
-         */
-        "textarea"?: boolean;
     }
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
