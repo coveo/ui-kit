@@ -14,7 +14,7 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
 import {ProductContext} from '../product-template-decorators';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-product-price` component renders the price of a product.
  */
 @Component({

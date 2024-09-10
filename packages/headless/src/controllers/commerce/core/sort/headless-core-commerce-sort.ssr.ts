@@ -20,10 +20,10 @@ export type {Sort, SortProps, SortState};
  */
 export function defineSort<
   TOptions extends ControllerDefinitionOption | undefined,
->(props?: SortProps, options?: TOptions) {
-  ensureAtLeastOneSolutionType(options);
+>(props?: SortProps & TOptions) {
+  ensureAtLeastOneSolutionType(props);
   return {
-    ...options,
+    ...props,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).sort(props)

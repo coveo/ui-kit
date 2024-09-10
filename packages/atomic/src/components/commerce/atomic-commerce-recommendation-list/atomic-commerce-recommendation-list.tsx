@@ -45,7 +45,7 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
- * @internal
+ * @alpha
  *
  * @part result-list - The element containing the list of product recommendations.
  * @part result-list-grid-clickable-container - The parent of a recommended product and the clickable link encompassing it.
@@ -90,6 +90,12 @@ export class AtomicCommerceRecommendationList
    */
   @Prop({reflect: true})
   public slotId = 'Recommendation';
+
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  @Prop({reflect: true})
+  public productId?: string;
 
   /**
    * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself.
@@ -160,6 +166,7 @@ export class AtomicCommerceRecommendationList
     this.recommendations = buildRecommendations(this.bindings.engine, {
       options: {
         slotId: this.slotId,
+        productId: this.productId,
       },
     });
 
