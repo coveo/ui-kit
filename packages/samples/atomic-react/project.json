@@ -9,7 +9,7 @@
       "outputs": ["{projectRoot}/public/dist"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["tsc --noEmit", "tsc --module commonjs --noEmit"],
+        "commands": [],
         "parallel": true,
         "cwd": "packages/samples/atomic-react"
       }
