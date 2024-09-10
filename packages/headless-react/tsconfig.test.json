@@ -4,8 +4,6 @@
     // TODO: Remove override after bug is fixed https://github.com/kulshekhar/ts-jest/issues/4198
     "moduleResolution": "Node",
     "module": "CommonJS",
-    "types": ["jest", "react", "react-dom"],
-    "jsx": "react-jsx",
-    "esModuleInterop": true
+    "types": ["jest", "react", "react-dom"]
   }
 }
