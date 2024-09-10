@@ -177,9 +177,9 @@ export interface Result {
    * Whether the result item has been previously viewed by one of the users specified in the `canSeeUserProfileOf` section of the [search token](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/token) generated to perform the search request.
    */
   isUserActionView: boolean;
-  /**
-   * TODO:
-   */
 
+  /**
+   * Represents the unique identifier of the search that returned this result.
+   */
   searchUid: string;
 }
