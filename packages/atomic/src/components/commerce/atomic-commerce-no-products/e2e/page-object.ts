@@ -21,7 +21,7 @@ export class NoProductsPageObject extends BasePageObject<'atomic-commerce-no-pro
   message(query?: string) {
     return this.page.locator('[part="no-results"]', {
       hasText: query
-        ? `We couldn't find any product for ${query}}"`
+        ? `We couldn't find any product for ${query}"`
         : 'No products',
     });
   }
