@@ -523,7 +523,7 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
 })
 @Component({
@@ -531,7 +531,7 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
 })
 export class AtomicCommerceRecommendationList {
   protected el: HTMLElement;
