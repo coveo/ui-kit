@@ -10,8 +10,10 @@ export const getSummary = (
     return '';
   }
 
+  const labelFor = `${label}-for`;
+
   return query
-    ? i18n.t(`${label}-for`, {
+    ? i18n.t(labelFor, {
         interpolation: {escapeValue: false},
         query,
       })

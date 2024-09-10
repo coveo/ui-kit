@@ -12,10 +12,11 @@ export const NoItems: FunctionalComponent<NoItemsProps> = ({
   query,
   label,
 }) => {
+  const labelFor = `${label}-for`;
   const content = query ? (
     <LocalizedString
       i18n={i18n}
-      key={`${label}-for`}
+      key={labelFor}
       params={{
         query: (
           <span
