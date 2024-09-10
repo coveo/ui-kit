@@ -1,6 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer, Reducer} from '@reduxjs/toolkit';
-import {atob as atobShim} from 'abab';
 import P, {Logger} from 'pino';
 import {
   updateAnalyticsConfiguration,
@@ -70,10 +69,9 @@ const shouldReconcileValues = (
 
 const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
   try {
-    const atobImplementation = typeof atob !== 'undefined' ? atob : atobShim;
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const base64decoded = atobImplementation(base64);
+    const base64decoded = atob(base64);
     if (!base64decoded) {
       return false;
     }

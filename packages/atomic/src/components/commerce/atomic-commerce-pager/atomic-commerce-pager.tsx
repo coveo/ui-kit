@@ -161,7 +161,7 @@ export class AtomicCommercePager
           </PagerPageButtons>
           <PagerNextButton
             icon={this.nextButtonIcon}
-            disabled={this.pagerState.page >= this.pagerState.totalPages}
+            disabled={this.pagerState.page + 1 >= this.pagerState.totalPages}
             i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.nextPage();

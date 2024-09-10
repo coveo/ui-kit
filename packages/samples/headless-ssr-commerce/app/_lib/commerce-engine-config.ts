@@ -19,7 +19,8 @@ import {
   defineSort,
   defineProductView,
   getSampleCommerceEngineConfiguration,
-  defineDidYouMean, //defineParameterManager,
+  defineDidYouMean,
+  defineRecommendations, //defineParameterManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -41,6 +42,16 @@ export default {
   controllers: {
     summary: defineSummary(),
     productList: defineProductList(),
+    popularViewedRecs: defineRecommendations({
+      options: {
+        slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
+      },
+    }),
+    popularBoughtRecs: defineRecommendations({
+      options: {
+        slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+      },
+    }),
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),

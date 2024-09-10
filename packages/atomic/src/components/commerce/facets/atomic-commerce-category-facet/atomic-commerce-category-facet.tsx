@@ -123,7 +123,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
-  private unsubscribeFacetController!: () => void;
+  private unsubscribeFacetController?: () => void | undefined;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -133,10 +133,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
       return;
     }
 
-    this.unsubscribeFacetController = this.facet.subscribe(
-      () => (this.facetState = this.facet.state)
-    );
-
+    this.ensureSubscribed();
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.displayName,
@@ -188,7 +185,12 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
     if (this.host.isConnected) {
       return;
     }
-    this.unsubscribeFacetController();
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
+  }
+
+  public connectedCallback(): void {
+    this.ensureSubscribed();
   }
 
   private get isHidden() {
@@ -503,6 +505,15 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
           </FacetContainer>
         }
       </FacetGuard>
+    );
+  }
+
+  private ensureSubscribed() {
+    if (this.unsubscribeFacetController) {
+      return;
+    }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
     );
   }
 }

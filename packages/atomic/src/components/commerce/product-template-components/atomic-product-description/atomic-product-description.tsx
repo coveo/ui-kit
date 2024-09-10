@@ -12,7 +12,7 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
 import {ProductContext} from '../product-template-decorators';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-product-description` component renders the description of a product.
  */
 @Component({
