@@ -33,7 +33,7 @@ exports[`#logRecommendationOpen when analyticsMode is \`next\` should call relay
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "",
+    "searchUid": "example searchUid",
   },
 ]
 `;

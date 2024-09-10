@@ -13,7 +13,7 @@ jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');
 
 describe('#logRecommendationOpen', () => {
-  const testResult = buildMockNonEmptyResult();
+  const testResult = buildMockNonEmptyResult({searchUid: 'example searchUid'});
   let engine: SearchEngine;
   const makeDocumentOpen = jest.fn();
   const emit = jest.fn();
