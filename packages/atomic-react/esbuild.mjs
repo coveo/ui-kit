@@ -1,3 +1,4 @@
+import {globalExternals} from '@fal-works/esbuild-plugin-global-externals';
 import {build} from 'esbuild';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
@@ -5,6 +6,27 @@ const USE_CASES = {
   search: 'src/components/search/index.ts',
   recommendation: 'src/components/recommendation/index.ts',
   commerce: 'src/components/commerce/index.ts',
+};
+/**
+ * Defined global variables for external modules. This is required for IIFE format.
+ * Have to specify the named exports for each module. (https://github.com/fal-works/esbuild-plugin-global-externals/issues/4)
+ * @type {Record<string, import('@fal-works/esbuild-plugin-global-externals').ModuleInfo}
+ */
+const globals = {
+  react: {
+    varName: 'React',
+    namedExports: ['useEffect', 'useRef'],
+  },
+  'react-dom/client': {varName: 'ReactDOMClient', namedExports: ['createRoot']},
+  'react-dom/server': {
+    varName: 'ReactDOMServer',
+    namedExports: ['renderToString'],
+  },
+  '@coveo/atomic': {varName: 'CoveoAtomic'},
+  '@coveo/headless': {
+    varName: 'CoveoHeadless',
+    namedExports: ['getSampleSearchEngineConfiguration', 'buildSearchEngine'],
+  },
 };
 
 /**
@@ -14,7 +36,7 @@ const USE_CASES = {
 const BASE_CONFIG = {
   bundle: true,
   banner: {js: apacheLicense()},
-  external: ['react', 'react-dom', '@coveo/headless'],
+  external: ['react', 'react-dom', '@coveo/headless', '@coveo/atomic'],
 };
 
 /**
@@ -74,7 +96,8 @@ async function iife(entryPoint, useCaseName) {
     outfile: `dist/${useCaseName}/atomic-react.iife.js`,
     format: 'iife',
     platform: 'browser',
-    globalName: 'AtomicReact',
+    globalName: `CoveoAtomicReact${useCaseName == 'search' ? '' : useCaseName}`,
+    plugins: [globalExternals(globals)],
   });
 }
 

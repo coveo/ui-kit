@@ -5,6 +5,7 @@
   "scripts": {
     "clean": "rimraf www/cdn",
     "dev": "npm run build && npm run prod",
+    "build": "nx build",
     "prod": "serve www",
     "build:assets": "node build-assets.mjs",
     "e2e:watch": "cypress open --browser chrome --e2e",
