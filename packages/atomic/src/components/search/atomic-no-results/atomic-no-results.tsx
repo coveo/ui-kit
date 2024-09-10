@@ -76,7 +76,8 @@ export class AtomicNoResults {
     this.ariaMessage = getSummary(
       i18n,
       this.querySummaryState.query,
-      this.searchStatusState.hasResults
+      this.searchStatusState.hasResults,
+      'no-results'
     );
 
     return (
