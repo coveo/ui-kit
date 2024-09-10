@@ -12,15 +12,13 @@
     "build": "nx build",
     "clean": "rimraf -rf dist",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
-    "build:bundles:cjs": "tsc -p tsconfig.cjs.json",
     "build:bundles:iife": "rollup --config rollup.config.mjs",
-    "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:cjs\"  \"npm run build:bundles:iife\"",
+    "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:iife\"",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
-  "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
