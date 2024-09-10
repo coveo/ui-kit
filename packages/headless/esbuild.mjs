@@ -200,6 +200,7 @@ async function buildBrowserConfig(options, outDir) {
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
+        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
       ...(options.plugins || []),
     ],
@@ -251,6 +252,7 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
+        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],
     ...options,
