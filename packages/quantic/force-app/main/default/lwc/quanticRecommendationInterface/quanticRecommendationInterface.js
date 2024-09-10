@@ -9,6 +9,7 @@ import {
   setInitializedCallback,
   HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
+import {getOrganizationEndpoints} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").RecommendationEngine} RecommendationEngine */
@@ -67,16 +68,21 @@ export default class QuanticRecommendationInterface extends LightningElement {
       if (!getHeadlessBindings(this.engineId)?.engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
+            const {organizationId, accessToken, ...rest} = JSON.parse(data);
             this.engineOptions = {
               configuration: {
-                ...JSON.parse(data),
+                organizationId,
+                accessToken,
+                organizationEndpoints: getOrganizationEndpoints(organizationId),
                 searchHub: this.searchHub,
                 pipeline: this.pipeline,
                 locale: LOCALE,
                 timezone: TIMEZONE,
                 analytics: {
+                  analyticsMode: 'legacy',
                   originContext: this.analyticsOriginContext,
                 },
+                ...rest,
               },
             };
             setEngineOptions(

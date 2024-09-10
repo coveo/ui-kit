@@ -1,12 +1,14 @@
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+// @ts-ignore
+import {getOrganizationEndpoints} from 'c/organizationUtils';
 
 export async function getCaseAssistId(configName) {
   try {
     let data = await getHeadlessConfiguration();
-    data = JSON.parse(data);
-    const {accessToken, organizationId, platformUrl} = data;
-    const url = `${platformUrl}/rest/organizations/${organizationId}/caseassists`;
+    const {accessToken, organizationId} = JSON.parse(data);
+    const platform = getOrganizationEndpoints(organizationId).platform;
+    const url = `${platform}/rest/organizations/${organizationId}/caseassists`;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
