@@ -237,6 +237,7 @@ export const config: Config = {
             },
           ],
         }),
+      !isDevWatch && externalizeDependenciesPlugin(),
       html({
         include: 'src/templates/**/*.html',
       }),
@@ -247,3 +248,18 @@ export const config: Config = {
     enableImportInjection: true,
   },
 };
+
+function externalizeDependenciesPlugin() {
+  return {
+    name: 'externalize-dependencies',
+    resolveId(source) {
+      // replace the following regex w/ one that matches the names of dependencies you want to keep external
+      if (/headless/.test(source)) {
+        // this tells rollup to treat the module as external
+        return false;
+      }
+      // this tells rollup to perform the default module resolution
+      return null;
+    },
+  };
+}
