@@ -192,7 +192,7 @@ export const analyticsConfigurationSchema: SchemaDefinition<
   analyticsMode: new StringValue<'legacy' | 'next'>({
     constrainTo: ['legacy', 'next'],
     required: false,
-    default: 'legacy',
+    default: 'next',
   }),
   source: new RecordValue({
     options: {required: false},

@@ -118,8 +118,10 @@ describe('#configureLegacyAnalytics', () => {
   });
 
   describe('search analytics provider', () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const getBaseState = (): StateNeededBySearchAnalyticsProvider => ({
-      configuration: getConfigurationInitialState(),
+      configuration,
     });
 
     it('should properly return the pipeline from the state', () => {

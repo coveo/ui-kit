@@ -49,7 +49,7 @@ describe('configuration slice', () => {
       userDisplayName: 'Someone',
       documentLocation: 'http://hello.world.com',
       trackingId: 'someTrackingId',
-      analyticsMode: 'legacy',
+      analyticsMode: 'next',
       source: {},
     },
   };
@@ -171,7 +171,7 @@ describe('configuration slice', () => {
           userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
           trackingId: 'someTrackingId',
-          analyticsMode: 'legacy',
+          analyticsMode: 'next',
           source: {},
         },
       };
@@ -210,7 +210,7 @@ describe('configuration slice', () => {
           userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
           trackingId: 'someTrackingId',
-          analyticsMode: 'legacy',
+          analyticsMode: 'next',
           source: {},
         },
       };
@@ -275,7 +275,7 @@ describe('configuration slice', () => {
           ...existingState.analytics,
           enabled: false,
           trackingId: 'someTrackingId',
-          analyticsMode: 'legacy',
+          analyticsMode: 'next',
           source: {'@coveo/atomic': '3.0.0'},
         },
       };

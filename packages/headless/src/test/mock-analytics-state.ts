@@ -15,7 +15,7 @@ export function buildMockAnalyticsState(
     userDisplayName: '',
     documentLocation: '',
     trackingId: '',
-    analyticsMode: 'legacy',
+    analyticsMode: 'next',
     source: {},
     ...config,
   };

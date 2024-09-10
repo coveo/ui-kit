@@ -92,7 +92,6 @@ const nextInsightEngine = buildInsightEngine({
   configuration: {
     ...getSampleInsightEngineConfiguration(),
     analytics: {
-      analyticsMode: 'next',
       trackingId: 'alex',
     },
   },
@@ -101,6 +100,9 @@ const nextInsightEngine = buildInsightEngine({
 const legacyInsightEngine = buildInsightEngine({
   configuration: {
     ...getSampleInsightEngineConfiguration(),
+    analytics: {
+      analyticsMode: 'legacy',
+    },
   },
 });
 

@@ -138,7 +138,8 @@ export interface AnalyticsState {
   trackingId: string;
   /**
    * Specifies the analytics mode to use.
-   * By default, `legacy`.
+   *
+   * By default, `next`.
    * @internal
    */
   analyticsMode: 'legacy' | 'next';
@@ -178,7 +179,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     userDisplayName: '',
     documentLocation: '',
     trackingId: '',
-    analyticsMode: 'legacy',
+    analyticsMode: 'next',
     source: {},
   },
   knowledge: {
