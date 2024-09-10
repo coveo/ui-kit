@@ -1,5 +1,4 @@
 import {Logger} from 'pino';
-import {createAbortController} from '../../utils/abort-controller-polyfill';
 
 export class APICallsQueue {
   private currentAbortController: AbortController | null = null;
@@ -13,7 +12,7 @@ export class APICallsQueue {
   ) {
     const lastAbortController = this.currentAbortController;
     const abortController = (this.currentAbortController =
-      createAbortController());
+      new AbortController());
     if (lastAbortController) {
       if (options.warnOnAbort) {
         options.logger.warn('Cancelling current pending search query');

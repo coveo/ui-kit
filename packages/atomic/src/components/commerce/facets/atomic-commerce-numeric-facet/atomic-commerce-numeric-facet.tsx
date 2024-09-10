@@ -34,7 +34,7 @@ import type {Range} from '../facet-number-input/atomic-commerce-facet-number-inp
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-numeric-facet',
