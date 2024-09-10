@@ -3,6 +3,7 @@
   "name": "commerce",
   "type": "module",
   "description": "Atomic React Commerce Module",
+  "main": "../dist/commerce.index.js",
   "module": "../dist/commerce.index.js",
   "types": "../dist/commerce.index.d.ts",
   "license": "Apache-2.0"
