@@ -269,7 +269,10 @@ export class AtomicResultList implements InitializableComponent {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(result),
-      linkContent: this.itemTemplateProvider.getLinkTemplateContent(result),
+      linkContent:
+        this.display === 'grid'
+          ? this.itemTemplateProvider.getLinkTemplateContent(result)
+          : this.itemTemplateProvider.getEmptyLinkTemplateContent(),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -295,6 +298,7 @@ export class AtomicResultList implements InitializableComponent {
       const propsForAtomicResult = this.getPropsForAtomicResult(result);
       return (
         <DisplayGrid
+          selectorForItem="atomic-result"
           item={result}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
