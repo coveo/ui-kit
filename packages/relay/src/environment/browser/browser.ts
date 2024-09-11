@@ -2,6 +2,7 @@ import { createExplorerMessenger } from "@coveo/explorer-messenger";
 import { Environment } from "../environment";
 import { createBrowserStorage } from "./storage/storage";
 import { RelayEvent } from "../../event/relay-event";
+import { v4 as uuidv4 } from "uuid";
 
 function getReferrer() {
   const referrer = document.referrer;
@@ -32,7 +33,7 @@ export function buildBrowserEnvironment(): Environment {
     getReferrer: () => getReferrer(),
     getLocation: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
-    generateUUID: () => crypto.randomUUID(),
+    generateUUID: () => uuidv4(),
     storage: createBrowserStorage(),
   };
 }

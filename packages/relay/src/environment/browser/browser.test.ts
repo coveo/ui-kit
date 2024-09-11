@@ -6,12 +6,9 @@ import messenger from "@coveo/explorer-messenger";
 import { buildBrowserEnvironment } from "./browser";
 import { createMockEvent } from "../../__mocks__/event";
 
-// Should be replace by a jest.spy once jest-environment-jsdom updates to jsdom 22
-Object.defineProperty(window, "crypto", {
-  value: {
-    randomUUID: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
-  },
-});
+jest.mock("uuid", () => ({
+  v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
+}));
 
 describe("buildBrowserEnvironment", () => {
   Object.defineProperty(window.document, "referrer", {

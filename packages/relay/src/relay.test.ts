@@ -5,6 +5,10 @@
 import { createMockConfig } from "./__mocks__/config";
 import { createRelay } from "./relay";
 
+jest.mock("uuid", () => ({
+  v4: () => "da3248bd-48f3-4dbf-b898-6fee32069b53",
+}));
+
 describe("relay", () => {
   const relay = createRelay({
     token: "",
@@ -28,18 +32,11 @@ describe("relay", () => {
   });
 
   it("updates the clientId to an empty string when disconnecting to its environment on disabled mode", () => {
-    const mockedUUID = "1234-1234-1234-1234-1234";
-
-    Object.defineProperty(window, "crypto", {
-      writable: true,
-      value: {
-        randomUUID: () => mockedUUID,
-      },
-    });
-
     const relay = createRelay(createMockConfig());
 
-    expect(relay.getMeta("type").clientId).toEqual(mockedUUID);
+    expect(relay.getMeta("type").clientId).toEqual(
+      "da3248bd-48f3-4dbf-b898-6fee32069b53"
+    );
     relay.updateConfig({ mode: "disabled" });
 
     expect(relay.getMeta("type").clientId).toEqual("");
