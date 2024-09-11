@@ -2,7 +2,7 @@
   "private": true,
   "name": "recommendation",
   "description": "Atomic React Recommendation Module",
-  "main": "../dist/recommendation.index.js",
+  "main": "../dist/cjs/recommendation/atomic-react.js",
   "module": "../dist/recommendation.index.js",
   "types": "../dist/recommendation.index.d.ts",
   "license": "Apache-2.0"
