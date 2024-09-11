@@ -86,7 +86,12 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   const engine = useMemo(
     () =>
       buildSearchEngine({
-        configuration: getConfigurationForSample(sample),
+        configuration: {
+          ...getConfigurationForSample(sample),
+          analytics: {
+            analyticsMode: 'legacy',
+          },
+        },
       }),
     [sample]
   );
