@@ -8,7 +8,7 @@ export type Range = {start: number; end: number};
 
 /**
  * Internal component made to be integrated in a NumericFacet.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-facet-number-input',

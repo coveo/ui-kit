@@ -20,7 +20,7 @@ describe('Did You Mean Test Suites', () => {
   }
 
   function search() {
-    SearchBoxSelectors.inputBox().type(`${originalQuery}{enter}`, {
+    SearchBoxSelectors.textArea().type(`${originalQuery}{enter}`, {
       force: true,
       delay: 200,
     });

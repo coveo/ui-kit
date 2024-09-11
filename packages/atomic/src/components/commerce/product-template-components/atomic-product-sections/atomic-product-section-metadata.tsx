@@ -2,7 +2,7 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * @internal
+ * @alpha
  *
  * This section is intended to display some fields that are directly related to the name of the product.
  * In commerce, this could be the product rating, which is tied to the nature of the product itself,

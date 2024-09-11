@@ -7,7 +7,7 @@
 
     <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={config.engineId} search-hub="test origin" slot="preview">
       <c-quantic-document-suggestion engine-id={config.engineId} search-engine-id={config.searchEngineId}
-        max-documents={config.maxDocuments} fetch-on-init={config.fetchOnInit} show-quickview={config.showQuickview}
+        max-documents={config.maxDocuments} fetch-on-init={config.fetchOnInit} without-quickview={config.withoutQuickview}
         number-of-auto-opened-documents={config.numberOfAutoOpenedDocuments}>
         <c-action-send-rating slot="actions"></c-action-send-rating>
       </c-quantic-document-suggestion>

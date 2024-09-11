@@ -37,7 +37,7 @@ import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {isFocusingOut, once, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
-import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
+import {SubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   SearchBoxSuggestionElement,
@@ -695,7 +695,7 @@ export class AtomicCommerceSearchBox
     this.updateBreakpoints();
 
     const searchLabel = this.getSearchInputLabel(this.minimumQueryLength);
-    const Submit = TextAreaSubmitButton;
+    const Submit = SubmitButton;
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
@@ -709,7 +709,6 @@ export class AtomicCommerceSearchBox
         {[
           <SearchBoxWrapper
             disabled={isDisabled}
-            textArea={true}
             onFocusout={(event) => {
               if (!isFocusingOut(event)) {
                 return;

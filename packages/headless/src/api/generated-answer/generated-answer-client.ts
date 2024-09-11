@@ -4,7 +4,6 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions';
 import {SearchAppState} from '../../state/search-app-state';
-import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
@@ -99,7 +98,7 @@ export class GeneratedAnswerAPIClient {
       timeoutStateManager.add(timeout);
     };
 
-    const abortController = createAbortController();
+    const abortController = new AbortController();
 
     const stream = () =>
       fetchEventSource(buildStreamingUrl(url, organizationId, streamId), {
