@@ -7,6 +7,7 @@ import {
     DocumentIdentifier,
     FacetStateMetadata,
     GeneratedAnswerBaseMeta,
+    GeneratedAnswerCitationClickMeta,
     GeneratedAnswerCitationMeta,
     GeneratedAnswerFeedbackMeta,
     GeneratedAnswerFeedbackMetaV2,
@@ -517,6 +518,19 @@ export class CoveoInsightClient {
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerSourceMetadata}
                 : generatedAnswerSourceMetadata
+        );
+    }
+
+    public logGeneratedAnswerCitationClick(
+        info: PartialDocumentInformation,
+        citation: GeneratedAnswerCitationClickMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.generatedAnswerCitationClick,
+            {...info, documentPosition: 1},
+            {contentIDKey: citation.documentId.contentIdKey, contentIDValue: citation.documentId.contentIdValue},
+            metadata ? {...generateMetadataToSend(metadata, false), ...citation} : citation
         );
     }
 

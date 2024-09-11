@@ -1494,6 +1494,35 @@ describe('SearchPageClient', () => {
         expectMatchDescription(built.description, SearchPageEvents.openGeneratedAnswerSource, meta);
     });
 
+    it('should send proper payload for #logGeneratedAnswerCitationClick', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            citationId: 'some-document-id',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        };
+
+        await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta);
+        expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, {
+            ...meta,
+            contentIDKey: meta.documentId.contentIdKey,
+            contentIDValue: meta.documentId.contentIdValue,
+        });
+    });
+
+    it('should send proper payload for #makeGeneratedAnswerCitationClick', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            citationId: 'some-document-id',
+            contentIDKey: 'permanentid',
+            contentIDValue: 'foo',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        };
+        const built = await client.makeGeneratedAnswerCitationClick(fakeDocInfo, meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCitationClick, meta);
+    });
+
     it('should send proper payload for #logGeneratedAnswerStreamEnd', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId, answerGenerated: true, answerTextIsEmpty: false};
         await client.logGeneratedAnswerStreamEnd(meta);
