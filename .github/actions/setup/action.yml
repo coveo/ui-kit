@@ -46,3 +46,7 @@ runs:
     # - if: steps.nx-cache.outputs.cache-hit != 'true'
     - run: npm run build
       shell: bash
+    - name: Run step only if DEPLOYMENT_ENVIRONMENT is CDN
+      if: env.DEPLOYMENT_ENVIRONMENT == 'CDN'
+      run: npm run prepare-for-cdn
+      shell: bash

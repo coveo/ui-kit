@@ -20,10 +20,11 @@
     "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3",
     "nx:graph": "nx graph --file=topology.json",
     "release:phase0": "npm run-script -w=@coveo/release git-lock",
-    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream && nx run -w @coveo/atomic build:replace-headless",
+    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
     "release:phase2": "npm run-script -w=@coveo/release reify",
     "release:phase3": "npm run-script -w=@coveo/release git-publish-all",
-    "release:phase4": "nx run-many --targets=release:phase4 --all"
+    "release:phase4": "nx run-many --targets=release:phase4 --all",
+    "release:prepare-cdn": "node ./scripts/replace-external-deps-with-cdn.mjs"
   },
   "devDependencies": {
     "@actions/core": "1.10.1",
