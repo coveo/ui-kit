@@ -501,7 +501,7 @@ export declare interface AtomicCommerceQuerySummary extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'scrollContainer'],
-  methods: ['initializeWithEngine', 'getOrganizationEndpoints']
+  methods: ['initializeWithEngine']
 })
 @Component({
   selector: 'atomic-commerce-recommendation-interface',
