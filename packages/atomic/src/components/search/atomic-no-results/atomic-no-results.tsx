@@ -87,7 +87,7 @@ export class AtomicNoResults {
           <NoItems
             query={this.querySummaryState.query}
             i18n={i18n}
-            label="no-results"
+            i18nKey="no-results"
           />
           <SearchTips i18n={i18n} />
           {this.enableCancelLastAction && this.historyState.past.length ? (

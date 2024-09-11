@@ -4,18 +4,18 @@ export const getSummary = (
   i18n: i18n,
   query: string,
   hasResults: boolean,
-  label: 'no-products' | 'no-results'
+  i18nKey: 'no-products' | 'no-results'
 ) => {
   if (hasResults) {
     return '';
   }
 
-  const labelFor = `${label}-for`;
+  const labelFor = `${i18nKey}-for`;
 
   return query
     ? i18n.t(labelFor, {
         interpolation: {escapeValue: false},
         query,
       })
-    : i18n.t(label);
+    : i18n.t(i18nKey);
 };

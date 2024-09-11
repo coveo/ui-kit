@@ -5,18 +5,17 @@ import {LocalizedString} from '../../../utils/jsx-utils';
 interface NoItemsProps {
   query: string;
   i18n: i18n;
-  label: 'no-results' | 'no-products';
+  i18nKey: 'no-results' | 'no-products';
 }
 export const NoItems: FunctionalComponent<NoItemsProps> = ({
   i18n,
   query,
-  label,
+  i18nKey,
 }) => {
-  const labelFor = `${label}-for`;
   const content = query ? (
     <LocalizedString
       i18n={i18n}
-      key={labelFor}
+      key={`${i18nKey}-for`}
       params={{
         query: (
           <span
@@ -33,7 +32,7 @@ export const NoItems: FunctionalComponent<NoItemsProps> = ({
       }}
     />
   ) : (
-    i18n.t(label)
+    i18n.t(i18nKey)
   );
   return (
     <div
