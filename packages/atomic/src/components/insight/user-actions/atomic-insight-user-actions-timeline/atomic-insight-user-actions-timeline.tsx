@@ -5,8 +5,8 @@ import {
   InsightUserActionsState,
   InsightUserSession,
 } from '../..';
-import ArrowDownIcon from '../../../../images/arrow-full-down.svg';
-import ArrowUpIcon from '../../../../images/arrow-up.svg';
+import ArrowDownIcon from '../../../../images/big-arrow-down.svg';
+import ArrowUpIcon from '../../../../images/big-arrow-up.svg';
 import {
   InitializableComponent,
   InitializeBindings,
