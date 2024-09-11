@@ -61,7 +61,7 @@ type AnyFacetValue =
  * @part label - The "Filters" label.
  * @part clear - The button to clear all filters.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-breadbox',

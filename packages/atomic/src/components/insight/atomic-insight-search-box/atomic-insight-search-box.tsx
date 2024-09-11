@@ -333,7 +333,6 @@ export class AtomicInsightSearchBox {
     return (
       <SearchBoxWrapper
         disabled={this.disableSearch}
-        textArea
         onFocusout={(event) => {
           if (!isFocusingOut(event)) {
             return;

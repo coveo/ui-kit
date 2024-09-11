@@ -1,7 +1,4 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as HighlightUtils from './utils/highlight';
-
-polyfillCryptoNode();
 
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';

@@ -18,20 +18,22 @@ export function resultListExpectations(selector: ResultListSelector) {
         .logDetail(`${should(display)} display results`);
     },
     resultsEqual: (resultsAlias: string) => {
-      cy.get(resultsAlias).then((results) => {
-        selector
-          .resultLinks()
-          .then((elements) => {
-            return Cypress.$.makeArray(elements).map(
-              (element) => element.innerText
-            );
-          })
-          .should(
-            'deep.equal',
-            results.map((result) => result.Title)
-          )
-          .logDetail('should render the received results');
-      });
+      cy.get<Array<{Title: string; clickUri: string}>>(resultsAlias).then(
+        (results) => {
+          selector
+            .resultLinks()
+            .then((elements) => {
+              return Cypress.$.makeArray(elements).map(
+                (element) => element.innerText
+              );
+            })
+            .should(
+              'deep.equal',
+              results.map((result) => result.Title || result.clickUri)
+            )
+            .logDetail('should render the received results');
+        }
+      );
     },
     requestFields: (expectedFieldsToInclude: string[], useCase: string) => {
       cy.wait(getQueryAlias(useCase))

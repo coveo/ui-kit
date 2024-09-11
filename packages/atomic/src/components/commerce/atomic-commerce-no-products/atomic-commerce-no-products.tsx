@@ -21,7 +21,7 @@ import {getSummary} from '../../common/no-items/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @internal
+ * @alpha
  *
  * The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
  *

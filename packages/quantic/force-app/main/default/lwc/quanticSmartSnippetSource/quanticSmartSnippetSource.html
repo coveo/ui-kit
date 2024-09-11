@@ -1,15 +1,16 @@
 <template>
   <div class="smart-snippet__source">
-    <template lwc:if={uri}>
+    <template lwc:if={sourceUri}>
       <div class="slds-truncate">
-        <a data-cy="smart-snippet__source-uri" class="slds-text-title_bold smart-snippet__source-uri" title={uri}
-          href={uri} target="_blank">{uri}</a>
+        <a href={hrefValue} aria-label={ariaLabelValue} onclick={handleClick} data-cy="smart-snippet__source-uri"
+          class="slds-text-title_bold smart-snippet__source-uri" title={sourceUri} target="_blank">{sourceUri}</a>
       </div>
     </template>
-    <template lwc:if={title}>
+    <template lwc:if={sourceTitle}>
       <div class="slds-var-m-top_xx-small">
-        <a data-cy="smart-snippet__source-title" class="smart-snippet__source-title slds-text-heading_small" href={uri}
-          title={title} target="_blank">{title}</a>
+        <a href={hrefValue} aria-label={ariaLabelValue} onclick={handleClick} data-cy="smart-snippet__source-title"
+          class="smart-snippet__source-title slds-text-heading_small" title={sourceTitle}
+          target="_blank">{sourceTitle}</a>
       </div>
     </template>
   </div>
