@@ -35,11 +35,17 @@
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
           organizationId: 'electronicscoveodemocomo0n2fu8v',
           organizationEndpoints: await searchInterface1.getOrganizationEndpoints('electronicscoveodemocomo0n2fu8v'),
+          analytics: {
+            analyticsMode: 'legacy',
+          },
         }),
         searchInterface2.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
           organizationEndpoints: await searchInterface2.getOrganizationEndpoints('searchuisamples'),
+          analytics: {
+            analyticsMode: 'legacy',
+          },
         }),
       ]);
 
