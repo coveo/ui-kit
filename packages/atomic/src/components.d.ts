@@ -10111,8 +10111,8 @@ declare module "@stencil/core" {
              * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
-            /** 
-            * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
+            /**
+             * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
              * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
              */
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
