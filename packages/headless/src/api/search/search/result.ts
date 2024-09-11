@@ -179,7 +179,7 @@ export interface Result {
   isUserActionView: boolean;
 
   /**
-   * Represents the unique identifier of the search that returned this result.
+   * The unique identifier of the search that returned this result.
    */
   searchUid: string;
 }
