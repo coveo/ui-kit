@@ -202,21 +202,23 @@ export default class QuanticSearchBox extends LightningElement {
   };
 
   /**
-   * Handles the selection of a suggestion.
+   * Handles the selection of a suggestion or a recent query.
    */
   selectSuggestion = (event) => {
     event.stopPropagation();
     const {value, isRecentQuery, isClearRecentQueryButton} =
       event.detail.selectedSuggestion;
+
     if (isClearRecentQueryButton) {
       this.recentQueriesList.clear();
-    } else if (isRecentQuery) {
+    }
+
+    if (isRecentQuery) {
       this.recentQueriesList.executeRecentQuery(
         this.recentQueries.indexOf(value)
       );
-    } else {
-      this.searchBox?.selectSuggestion(value);
     }
+    this.searchBox?.selectSuggestion(value);
   };
 
   /**
