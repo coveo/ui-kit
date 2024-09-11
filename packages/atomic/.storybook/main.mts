@@ -19,12 +19,6 @@ const config: StorybookConfig = {
   viteFinal: async (config) =>
     mergeConfig(config, {
       plugins: [nxViteTsPaths()],
-      build: {
-        rollupOptions: {
-          entryFileNames: '[name].js',
-          chunkFileNames: '[name].js',
-        },
-      },
     }),
 };
 
