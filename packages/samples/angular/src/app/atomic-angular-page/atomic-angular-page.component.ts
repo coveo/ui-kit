@@ -20,6 +20,9 @@ export class AtomicAngularPageComponent implements AfterViewInit {
           await this.searchInterface.getOrganizationEndpoints(
             'electronicscoveodemocomo0n2fu8v'
           ),
+        analytic: {
+          analyticsMode: 'legacy',
+        },
       })
       .then(() => {
         this.searchInterface.executeFirstSearch();
