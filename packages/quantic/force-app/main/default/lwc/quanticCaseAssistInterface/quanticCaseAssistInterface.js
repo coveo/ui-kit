@@ -55,6 +55,10 @@ export default class QuanticCaseAssistInterface extends LightningElement {
                 ...JSON.parse(data),
                 caseAssistId: this.caseAssistId,
                 searchHub: this.searchHub,
+                analytics: {
+                  analyticsMode: 'legacy',
+                  ...(document.referrer && {originLevel3: document.referrer}),
+                },
               },
             };
             setEngineOptions(

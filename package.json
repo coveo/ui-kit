@@ -51,6 +51,7 @@
     "@swc/core": "~1.7.0",
     "@swc/helpers": "~0.5.2",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
+    "@tsconfig/node20": "20.1.4",
     "@types/execa": "^2.0.0",
     "@types/jest": "29.5.12",
     "@types/node": "20.14.12",
@@ -64,7 +65,7 @@
     "cspell": "8.12.1",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
-    "esbuild": "0.23.0",
+    "esbuild": "0.23.1",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "2.0.3",
     "eslint": "8.57.0",
@@ -131,7 +132,7 @@
     ]
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": "^20.9.0",
     "npm": ">=8.6.0"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
+import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   AtomicCommonStore,
@@ -23,7 +24,7 @@ import {
 
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product',
@@ -47,13 +48,13 @@ export class AtomicProduct {
 
   /**
    * The InteractiveProduct item.
-   * @internal
+   * @alpha
    */
   @Prop() interactiveProduct!: InteractiveProduct;
 
   /**
    * Global Atomic state.
-   * @internal
+   * @alpha
    */
   @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
 
@@ -61,6 +62,13 @@ export class AtomicProduct {
    * The product content to display.
    */
   @Prop() content?: ParentNode;
+
+  /**
+   * The product link to use when the product is clicked in a grid layout.
+   *
+   * @default - An `atomic-result-link` without any customization.
+   */
+  @Prop() linkContent: ParentNode = new DocumentFragment();
 
   /**
    * How products should be displayed.
@@ -85,7 +93,7 @@ export class AtomicProduct {
   @Prop() classes = '';
 
   /**
-   * @internal
+   * @alpha
    */
   @Prop() loadingFlag?: string;
 
@@ -93,11 +101,12 @@ export class AtomicProduct {
    * Internal function used in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
-   * @internal
+   * @alpha
    */
   @Prop() renderingFunction: ItemRenderingFunction;
 
   private productRootRef?: HTMLElement;
+  private linkContainerRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
 
   @Listen('atomic/resolveResult')
@@ -147,9 +156,23 @@ export class AtomicProduct {
   }
 
   private getContentHTML() {
-    return Array.from(this.content!.children)
-      .map((child) => child.outerHTML)
-      .join('');
+    return parentNodeToString(this.content!);
+  }
+
+  private getLinkHTML() {
+    return parentNodeToString(this.linkContent ?? new HTMLElement());
+  }
+
+  @Listen('click')
+  public handleClick(event: MouseEvent) {
+    if (this.stopPropagation) {
+      event.stopPropagation();
+    }
+    this.host
+      .shadowRoot!.querySelector<HTMLAnchorElement>(
+        '.link-container > atomic-product-link a:not([slot])'
+      )
+      ?.click();
   }
 
   private shouldExecuteRenderFunction() {
@@ -168,11 +191,14 @@ export class AtomicProduct {
             class="result-root"
             ref={(ref) => (this.productRootRef = ref)}
           ></div>
+          <div
+            class="link-container"
+            ref={(ref) => (this.linkContainerRef = ref)}
+          ></div>
         </Host>
       );
     }
     return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
         <div
           class={`result-root ${this.layout
@@ -181,6 +207,7 @@ export class AtomicProduct {
             .join(' ')}`}
           innerHTML={this.getContentHTML()}
         ></div>
+        <div class="link-container" innerHTML={this.getLinkHTML()}></div>
       </Host>
     );
   }
@@ -196,7 +223,8 @@ export class AtomicProduct {
     if (this.shouldExecuteRenderFunction()) {
       const customRenderOutputAsString = this.renderingFunction!(
         this.product,
-        this.productRootRef!
+        this.productRootRef!,
+        this.linkContainerRef!
       );
 
       this.productRootRef!.className += ` ${this.layout

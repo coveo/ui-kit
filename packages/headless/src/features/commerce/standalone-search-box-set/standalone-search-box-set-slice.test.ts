@@ -3,6 +3,7 @@ import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
+  updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions';
 import {commerceStandaloneSearchBoxSetReducer} from './standalone-search-box-set-slice';
 import {CommerceStandaloneSearchBoxSetState} from './standalone-search-box-set-state';
@@ -43,6 +44,43 @@ describe('commerce standalone search box slice', () => {
       const finalState = commerceStandaloneSearchBoxSetReducer(state, action);
 
       expect(state[id]).toEqual(finalState[id]);
+    });
+
+    it('when the id exists and the overwrite option is true, it registers the payload', () => {
+      const action = registerStandaloneSearchBox({
+        id,
+        redirectionUrl: 'url',
+        overwrite: true,
+      });
+      const finalState = commerceStandaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState[id]).toEqual(
+        buildMockCommerceStandaloneSearchBoxEntry({
+          defaultRedirectionUrl: 'url',
+        })
+      );
+    });
+  });
+
+  describe('#updateStandaloneSearchBoxRedirectionUrl', () => {
+    it('when the id exists, it sets the default redirection url', () => {
+      const action = updateStandaloneSearchBoxRedirectionUrl({
+        id,
+        redirectionUrl: '/newpage',
+      });
+      const finalState = commerceStandaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState[id]!.defaultRedirectionUrl).toBe('/newpage');
+    });
+
+    it('when the id does not exist, it does not edit the state', () => {
+      const action = updateStandaloneSearchBoxRedirectionUrl({
+        id: 'invalid',
+        redirectionUrl: '/newpage',
+      });
+      const finalState = commerceStandaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState).toBe(state);
     });
   });
 

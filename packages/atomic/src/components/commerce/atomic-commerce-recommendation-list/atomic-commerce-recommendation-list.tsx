@@ -46,7 +46,7 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
- * @internal
+ * @alpha
  *
  * @part result-list - The element containing the list of product recommendations.
  * @part result-list-grid-clickable-container - The parent of a recommended product and the clickable link encompassing it.
@@ -93,6 +93,12 @@ export class AtomicCommerceRecommendationList
   public slotId = 'Recommendation';
 
   /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  @Prop({reflect: true})
+  public productId?: string;
+
+  /**
    * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself.
    * To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
    */
@@ -101,6 +107,7 @@ export class AtomicCommerceRecommendationList
    * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link.
    * This property is ignored unless the `display` property is set to `grid`.
    * @defaultValue `_self`
+   * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
    */
   @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
@@ -167,25 +174,29 @@ export class AtomicCommerceRecommendationList
     this.recommendations = buildRecommendations(this.bindings.engine, {
       options: {
         slotId: this.slotId,
+        productId: this.productId,
       },
     });
 
     this.recommendations.refresh();
 
-    this.productTemplateProvider = new ProductTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-template')
-      ),
-      getResultTemplateRegistered: () => this.productTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.productTemplateRegistered = value;
+    this.productTemplateProvider = new ProductTemplateProvider(
+      {
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-product-template')
+        ),
+        getResultTemplateRegistered: () => this.productTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setResultTemplateRegistered: (value: boolean) => {
+          this.productTemplateRegistered = value;
+        },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
       },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-    });
+      this.gridCellLinkTarget
+    );
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -319,6 +330,10 @@ export class AtomicCommerceRecommendationList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
+      linkContent:
+        this.display === 'grid'
+          ? this.productTemplateProvider.getLinkTemplateContent(product)
+          : this.productTemplateProvider.getEmptyLinkTemplateContent(),
       store: this.bindings.store,
       density: this.density,
       display: this.display,
@@ -343,12 +358,12 @@ export class AtomicCommerceRecommendationList
     const {interactiveProduct} = propsForAtomicProduct;
     return (
       <DisplayGrid
+        selectorForItem="atomic-product"
         item={{
           ...product,
           clickUri: product.clickUri,
           title: product.ec_name ?? '',
         }}
-        gridTarget={this.gridCellLinkTarget}
         select={() => {
           this.logWarningIfNeeded(interactiveProduct.warningMessage);
           interactiveProduct.select();

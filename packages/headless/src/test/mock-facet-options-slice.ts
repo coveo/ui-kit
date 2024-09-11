@@ -5,6 +5,7 @@ export function buildFacetOptionsSlice(
 ): FacetOptionsSlice {
   return {
     enabled: true,
+    tabs: {},
     ...config,
   };
 }

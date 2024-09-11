@@ -1128,13 +1128,6 @@
     <shortDescription>Navigate to the record</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_OpensInSalesforceSubTab</fullName>
-    <value>Opens in a Salesforce subtab</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Opens in a Salesforce subtab</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_OpensInBrowserTab</fullName>
     <value>Opens in the browser tab</value>
     <language>en_US</language>
@@ -1469,6 +1462,13 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Show less</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_InvalidCustomSortConfiguration</fullName>
+    <value>Custom sort options configuration is invalid.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Invalid custom sort option</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_SearchFieldWithSuggestions</fullName>

@@ -85,26 +85,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @defaultValue 7
    */
   @api maxNumberOfSuggestions = 7;
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * The blur function.
-   * @deprecated
-   * @api
-   * @type {VoidFunction}
-   */
-  @api blur() {
-    this.input.blur();
-  }
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * The reset selection function.
-   * @deprecated
-   * @api
-   * @type {VoidFunction}
-   */
-  @api resetSelection() {
-    this.suggestionListElement?.resetSelection();
-  }
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
@@ -331,10 +311,20 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   clearInput() {
     this.sendInputValueChangeEvent('');
+    this.setDisplayedInputValue('');
+    this.input.removeAttribute('aria-activedescendant');
+    this.collapseTextArea();
     this.input.focus();
-    if (this.textarea) {
-      this.adjustTextAreaHeight();
-    }
+  }
+
+  /**
+   * Prevents the blur event from being triggered when clearing the input.
+   * This allows us to clear the input value before collapsing the input.
+   * @param {event} event
+   * @returns {void}
+   */
+  preventBlur(event) {
+    event.preventDefault();
   }
 
   handleSuggestionListEvent = (event) => {

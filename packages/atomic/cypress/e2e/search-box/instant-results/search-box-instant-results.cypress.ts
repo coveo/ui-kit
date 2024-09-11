@@ -107,7 +107,7 @@ describe('Instant Results Test Suites', () => {
       )
       .init();
 
-    SearchBoxSelectors.inputBox().type(`${downKeys(2)}`, delay());
+    SearchBoxSelectors.textArea().type(`${downKeys(2)}`, delay());
     InstantResultsSelectors.results()
       .find(resultTextComponent, {includeShadowDom: true})
       .should(($els) => expect($els.text().trim().length).to.greaterThan(0));
@@ -143,7 +143,7 @@ describe('Instant Results Test Suites', () => {
   it('with keyboard navigation, it should function correctly', () => {
     setupWithSuggestionsAndRecentQueries();
     interceptRedirectionToExampleDotCom();
-    SearchBoxSelectors.inputBox().type(`${downKeys(1)}{rightArrow}`, delay());
+    SearchBoxSelectors.textArea().type(`${downKeys(1)}{rightArrow}`, delay());
 
     SearchBoxAssertions.assertHasSuggestionsCountWithoutIt(
       maxRecentQueriesWithoutQuery
@@ -159,7 +159,7 @@ describe('Instant Results Test Suites', () => {
     SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
 
     cy.log('when navigating back from result to query');
-    SearchBoxSelectors.inputBox().type(
+    SearchBoxSelectors.textArea().type(
       `${downKeys(2)}{leftArrow}{downArrow}`,
       delay()
     );
@@ -168,10 +168,10 @@ describe('Instant Results Test Suites', () => {
     SearchBoxAssertions.assertHasTextWithoutIt('Recent query 0');
 
     cy.log('when navigating to first suggestion and back with up arrow');
-    SearchBoxSelectors.inputBox().type(`${downKeys(3)}{upArrow}`, delay());
-    SearchBoxSelectors.inputBox().clear({force: true});
+    SearchBoxSelectors.textArea().type(`${downKeys(3)}{upArrow}`, delay());
+    SearchBoxSelectors.textArea().clear({force: true});
 
-    SearchBoxSelectors.inputBox().type(
+    SearchBoxSelectors.textArea().type(
       'Rec{downArrow}{upArrow}{leftArrow}{del}',
       delay()
     );
@@ -180,32 +180,32 @@ describe('Instant Results Test Suites', () => {
     SearchBoxAssertions.assertHasTextWithoutIt('Re');
 
     cy.log('when navigating with the down arrow only');
-    SearchBoxSelectors.inputBox().clear({force: true});
-    SearchBoxSelectors.inputBox().type(downKeys(6), delay());
+    SearchBoxSelectors.textArea().clear({force: true});
+    SearchBoxSelectors.textArea().type(downKeys(6), delay());
     SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
 
     cy.log('when navigating up from results');
-    SearchBoxSelectors.inputBox().type(`${downKeys(2)}{upArrow}`, delay());
-    SearchBoxSelectors.inputBox().clear({force: true});
+    SearchBoxSelectors.textArea().type(`${downKeys(2)}{upArrow}`, delay());
+    SearchBoxSelectors.textArea().clear({force: true});
 
-    SearchBoxSelectors.inputBox().type('{moveToStart}');
+    SearchBoxSelectors.textArea().type('{moveToStart}');
 
     cy.log('when navigating up from input');
-    SearchBoxSelectors.inputBox().type('{moveToStart}{upArrow}', delay());
+    SearchBoxSelectors.textArea().type('{moveToStart}{upArrow}', delay());
 
     SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(2);
 
     cy.log('when typing when a query is selected');
-    SearchBoxSelectors.inputBox().type(`${downKeys(1)}{downArrow}`, delay());
+    SearchBoxSelectors.textArea().type(`${downKeys(1)}{downArrow}`, delay());
 
-    SearchBoxSelectors.inputBox().type(`${downKeys(2)}{backspace}`, delay());
+    SearchBoxSelectors.textArea().type(`${downKeys(2)}{backspace}`, delay());
 
     SearchBoxAssertions.assertNoSuggestionIsSelected();
 
     SearchBoxAssertions.assertHasTextWithoutIt('Recent query ');
 
     cy.wait(1000);
-    SearchBoxSelectors.inputBox().type(
+    SearchBoxSelectors.textArea().type(
       `${downKeys(2)}{rightArrow}{enter}`,
       delay()
     );
@@ -218,21 +218,21 @@ describe('Instant Results Test Suites', () => {
     interceptRedirectionToExampleDotCom();
 
     cy.log('when hovering over a query');
-    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.textArea().click();
     SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
 
     SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
     SearchBoxAssertions.assertHasTextWithoutIt('');
 
     cy.log('when hovering over an instant result');
-    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.textArea().click();
     InstantResultsSelectors.results().eq(1).trigger('mouseover');
 
     InstantResultsAssertions.assertHasResultCount(4);
 
     SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
 
-    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.textArea().click();
     InstantResultsSelectors.results().eq(1).trigger('mouseover');
     SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
 
@@ -252,19 +252,19 @@ describe('Instant Results Test Suites', () => {
     interceptRedirectionToExampleDotCom();
 
     cy.log('when hovering over a query');
-    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.textArea().click();
     SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
 
     SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
     SearchBoxAssertions.assertHasTextWithoutIt('');
 
     cy.log('when hovering over an instant result');
-    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.textArea().click();
     InstantResultsSelectors.results().eq(1).trigger('mouseover');
 
     InstantResultsAssertions.assertHasResultCount(4);
 
-    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.textArea().click();
     InstantResultsSelectors.results().eq(1).trigger('mouseover');
     SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
 

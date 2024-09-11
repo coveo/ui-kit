@@ -12,6 +12,8 @@ import {
   destroyEngine,
   registerToStore,
   getFromStore,
+  registerSortOptionsToStore,
+  getAllSortOptionsFromStore,
 } from '../quanticHeadlessLoader';
 
 jest.mock('lightning/alert');
@@ -565,10 +567,85 @@ describe('c/quanticHeadlessLoader', () => {
         state: {someFacets: {label: 'label', facetId: 'facetId'}},
       });
       const data = getFromStore(testId, 'someFacets');
-
       expect(data).toBeDefined();
       expect(data.label).toBe('label');
       expect(data.facetId).toBe('facetId');
+    });
+  });
+
+  describe('registerSortOptionsToStore', () => {
+    beforeEach(() => {
+      window.coveoHeadless = {
+        [testId]: {
+          bindings: {},
+        },
+      };
+    });
+
+    it('should register the sort options data in the store', () => {
+      initQuanticStoreTest(testId, {state: {someSortOptions: []}});
+      registerSortOptionsToStore(testId, [
+        {label: 'sortLabel', value: 'sortValue', criterion: {by: 'relevancy'}},
+      ]);
+
+      const sortStore = window.coveoHeadless[testId].bindings.store.state.sort;
+      expect(sortStore).toBeDefined();
+      expect(sortStore[0].value).toBe('sortValue');
+      expect(sortStore[0].label).toBe('sortLabel');
+      expect(sortStore[0].criterion.by).toBe('relevancy');
+      expect(mockedConsoleError.mock.calls.length).toBe(0);
+    });
+
+    it('should log an error when store is empty', () => {
+      initQuanticStoreTest(testId, {});
+      registerSortOptionsToStore(testId, [
+        {label: '', value: '', criterion: {by: 'relevancy'}},
+      ]);
+
+      expect(window.coveoHeadless[testId].bindings.store).toStrictEqual({});
+      expect(mockedConsoleError.mock.calls.length).toBe(1);
+    });
+  });
+
+  describe('getAllSortOptionsFromStore', () => {
+    beforeEach(() => {
+      window.coveoHeadless = {
+        [testId]: {
+          bindings: {},
+        },
+      };
+    });
+
+    it('should log an error and return undefined when store is empty', () => {
+      initQuanticStoreTest(testId, {});
+      const data = getAllSortOptionsFromStore(testId);
+
+      expect(data).not.toBeDefined();
+      expect(mockedConsoleError.mock.calls.length).toBe(1);
+    });
+
+    it('should return sort options data from store', () => {
+      const sortOptions = [
+        {label: 'label', value: 'value', criterion: {by: 'relevancy'}},
+        {
+          label: 'label2',
+          value: 'value2',
+          criterion: {by: 'date', order: 'ascending'},
+        },
+      ];
+      initQuanticStoreTest(testId, {state: {sort: sortOptions}});
+      const data = getAllSortOptionsFromStore(testId);
+
+      expect(data).toBeDefined();
+      for (let i = 0; i < sortOptions.length; i++) {
+        expect(data[i].label).toBe(sortOptions[i].label);
+        expect(data[i].value).toBe(sortOptions[i].value);
+        expect(data[i].criterion.by).toBe(sortOptions[i].criterion.by);
+        if (data[i].criterion.order) {
+          // eslint-disable-next-line jest/no-conditional-expect
+          expect(data[i].criterion.order).toBe(sortOptions[i].criterion.order);
+        }
+      }
     });
   });
 });

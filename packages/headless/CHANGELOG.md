@@ -1,3 +1,38 @@
+# 2.80.0 (2024-08-27)
+
+### Bug Fixes
+
+- **atomic:** search-box suggestions should be resilient to search-box redirection-url changes ([#4289](https://github.com/coveo/ui-kit/issues/4289)) ([19cabeb](https://github.com/coveo/ui-kit/commits/19cabeb2665a21a71f883c731ef4d5167cb1841d))
+- **genqa:** ensure preloaded state can be used w/ rga ([#4299](https://github.com/coveo/ui-kit/issues/4299)) ([a88c5b3](https://github.com/coveo/ui-kit/commits/a88c5b34c05a3e75fcffae16f200561fb3e3d096))
+- **headless:** typo fixed in the insight user actions state declaration ([#4295](https://github.com/coveo/ui-kit/issues/4295)) ([5b4b253](https://github.com/coveo/ui-kit/commits/5b4b253d3c27917ca52473fb7b8d1345d3fc9de3))
+- **headless:** undefined error when query suggestions adds a new facet without values ([#4257](https://github.com/coveo/ui-kit/issues/4257)) ([8b5dd42](https://github.com/coveo/ui-kit/commits/8b5dd42592dc37ff3285bb2c0305c8de036e20b7)), closes [/github.com/coveo/ui-kit/blob/87ef80c648225ce21b002282060958cef9556fc8/packages/headless/src/features/commerce/facets/facet-set/facet-set-slice.ts#L488](https://github.com//github.com/coveo/ui-kit/blob/87ef80c648225ce21b002282060958cef9556fc8/packages/headless/src/features/commerce/facets/facet-set/facet-set-slice.ts/issues/L488) [/github.com/coveo/ui-kit/blob/5730c4afa8eedca06ef4f83c019465d9264166c2/packages/headless/src/features/commerce/facets/facet-set/facet-set-slice.ts#L492](https://github.com//github.com/coveo/ui-kit/blob/5730c4afa8eedca06ef4f83c019465d9264166c2/packages/headless/src/features/commerce/facets/facet-set/facet-set-slice.ts/issues/L492)
+
+### Features
+
+- **atomic:** allow user to customize grid card click behavior/links ([#4287](https://github.com/coveo/ui-kit/issues/4287)) ([e5961ca](https://github.com/coveo/ui-kit/commits/e5961ca33490499a2916bb9eb8818d360ff85c18)), closes [#4267](https://github.com/coveo/ui-kit/issues/4267)
+- **commerce:** expose emitCartAction action and decouple purchase and emitPurchase ([#4227](https://github.com/coveo/ui-kit/issues/4227)) ([d1b5110](https://github.com/coveo/ui-kit/commits/d1b51101c91f6539ee80a7d0fe68449fd88532a6))
+- **headless commerce ssr:** add SSR FacetGenerator ([#4290](https://github.com/coveo/ui-kit/issues/4290)) ([3f957f9](https://github.com/coveo/ui-kit/commits/3f957f9334708501a5fbaf73720e1646e6ea4611))
+- **headless commerce:** add totalCount to InstantProducts controller state ([#4321](https://github.com/coveo/ui-kit/issues/4321)) ([d6570ac](https://github.com/coveo/ui-kit/commits/d6570ac9f850d1ab83c63ddd381db753de27f7b2))
+- **headless SSR:** add define function for pagination, parameter manager, sort, summary, productView, and didYouMean ([#4266](https://github.com/coveo/ui-kit/issues/4266)) ([23b4d59](https://github.com/coveo/ui-kit/commits/23b4d59f66fa412151813ea4bac68439db19749b))
+- **headless:** add define functions for ProductListing, Cart, Context, SearchBox,RecentQueriesList, FieldSuggestionsGenerator, Triggers, StandaloneSearchBox, InstantProducts in commerce SSR ([#4241](https://github.com/coveo/ui-kit/issues/4241)) ([7f4fcfe](https://github.com/coveo/ui-kit/commits/7f4fcfe0519a55c85bd5c36cb302e004dde64172))
+
+# 2.79.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
+# 2.78.0 (2024-08-20)
+
+### Bug Fixes
+
+- **answerApi:** search context trigger new request ([#4293](https://github.com/coveo/ui-kit/issues/4293)) ([49b33a6](https://github.com/coveo/ui-kit/commits/49b33a66d55f1823029e51c58ce72e696fb56f01))
+- **rga:** state reset keep configid ([#4286](https://github.com/coveo/ui-kit/issues/4286)) ([a822cea](https://github.com/coveo/ui-kit/commits/a822ceab6f6fd9866a261c73248f0d580eb8b05d))
+
+### Features
+
+- **headless SSR:** support both search and listing solution types ([#4249](https://github.com/coveo/ui-kit/issues/4249)) ([dcd35d8](https://github.com/coveo/ui-kit/commits/dcd35d87e674a7d95e72800ae5b5dfc56d8ddcb8))
+
 # 2.77.0 (2024-08-14)
 
 ### Bug Fixes
