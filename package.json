@@ -24,7 +24,7 @@
     "release:phase2": "npm run-script -w=@coveo/release reify",
     "release:phase3": "npm run-script -w=@coveo/release git-publish-all",
     "release:phase4": "nx run-many --targets=release:phase4 --all",
-    "release:prepare-cdn": "node ./scripts/replace-external-deps-with-cdn.mjs"
+    "release:prepare-cdn": "node ./scripts/deploy/replace-external-deps-with-cdn.mjs"
   },
   "devDependencies": {
     "@actions/core": "1.10.1",
