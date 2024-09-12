@@ -100,6 +100,7 @@ export default class QuanticSearchInterface extends LightningElement {
                   timezone: TIMEZONE,
                 },
                 analytics: {
+                  analyticsMode: 'legacy',
                   ...(document.referrer && {originLevel3: document.referrer}),
                 },
               },

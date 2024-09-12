@@ -18,7 +18,7 @@ import {ProductContext} from '../product-template-decorators';
  * @part value-rating - The wrapper that contains the row of inactive stars and the row of active stars.
  * @part value-rating-icon - The individual star icons used in the rating display.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product-rating',

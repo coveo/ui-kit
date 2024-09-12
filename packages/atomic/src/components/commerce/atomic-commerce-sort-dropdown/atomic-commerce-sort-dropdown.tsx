@@ -31,7 +31,7 @@ import {CommerceSortOption, getSortByLabel} from '../sort/option';
  * @part select-separator - The element separating the select from the icon.
  * @part placeholder - The dropdown placeholder for while the interface is initializing.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-sort-dropdown',
