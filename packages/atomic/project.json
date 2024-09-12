@@ -53,7 +53,6 @@
         "validate:definitions",
         "build-storybook"
       ],
-
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"
@@ -74,13 +73,6 @@
           "node ./scripts/copy-dayjs-locales.mjs"
         ],
         "parallel": false,
-        "cwd": "{projectRoot}"
-      }
-    },
-    "build:replace-headless": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["node ./scripts/replace-headless-with-cdn.mjs"],
         "cwd": "{projectRoot}"
       }
     },
