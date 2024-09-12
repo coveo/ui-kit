@@ -20,13 +20,12 @@ const optionCSSClass =
 
 /**
  * The `QuanticSearchBoxSuggestionsList` is used internally by search box components to display the query suggestions in an omnibox.
- * @fires CustomEvent#highlightchange
- * @fires CustomEvent#suggestionselected
+ * @fires CustomEvent#quantic__selection
  * @fires CustomEvent#quantic__clearrecentqueries
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-search-box-suggestions-list suggestions={suggestions} onhighlightchange={handleHighlightChange} onsuggestionselected={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
+ * <c-quantic-search-box-suggestions-list suggestions={suggestions} onquantic__selection={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
  */
 export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
@@ -253,7 +252,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       isClearRecentQueryButton: isClearRecentQueryButton,
       isRecentQuery: isRecentQuery,
     };
-    const suggestionSelectedEvent = new CustomEvent('selection', {
+    const suggestionSelectedEvent = new CustomEvent('quantic__selection', {
       detail: {selection},
     });
     this.dispatchEvent(suggestionSelectedEvent);

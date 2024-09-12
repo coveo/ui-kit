@@ -21,7 +21,7 @@ import {LightningElement, api, track} from 'lwc';
  * @category Result Template
  * @fires CustomEvent#quantic__haspreview
  * @example
- * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
+ * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100" onquantic__haspreview={handleHasPreview}></c-quantic-result-quickview>
  */
 export default class QuanticResultQuickview extends LightningElement {
   /**

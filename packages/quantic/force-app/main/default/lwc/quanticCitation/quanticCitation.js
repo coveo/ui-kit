@@ -12,7 +12,7 @@ const debounceDurationBeforeHoverMs = 200;
  * @fires CustomEvent#quantic__citationhover
  * @category Internal
  * @example
- * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
+ * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
  */
 export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
