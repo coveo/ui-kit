@@ -17,7 +17,7 @@ import {LightningElement, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
+ * <c-quantic-facet-value onquantic__selectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
  */
 export default class QuanticFacetValue extends LightningElement {
   /**

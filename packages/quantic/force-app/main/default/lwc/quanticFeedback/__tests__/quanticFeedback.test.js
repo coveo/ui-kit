@@ -143,7 +143,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the like button is clicked', () => {
-      it('should dispatch the "like" event', async () => {
+      it('should dispatch the quantic__like" event', async () => {
         const element = createTestComponent();
         setupEventListeners(element);
         await flushPromises();
@@ -159,7 +159,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the dislike button is clicked', () => {
-      it('should dispatch the "dislike" event', async () => {
+      it('should dispatch the "quantic__dislike" event', async () => {
         const element = createTestComponent();
         setupEventListeners(element);
         await flushPromises();
@@ -270,7 +270,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the explain why button is clicked', () => {
-      it('should dispatch the "pressexplainwhy" event', async () => {
+      it('should dispatch the "quantic__pressexplainwhy" event', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           state: 'liked',
@@ -349,7 +349,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the explain why button is clicked', () => {
-      it('should dispatch the "pressexplainwhy" event', async () => {
+      it('should dispatch the "quantic__pressexplainwhy" event', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           state: 'disliked',

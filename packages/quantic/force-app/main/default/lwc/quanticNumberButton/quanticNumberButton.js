@@ -5,7 +5,7 @@ import {LightningElement, api} from 'lwc';
  * @fires CustomEvent#quantic__select
  * @category Utility
  * @example
- * <c-quantic-number-button number="1" selected onselect={select}></c-quantic-number-button>
+ * <c-quantic-number-button number="1" selected onquantic__select={select}></c-quantic-number-button>
  */
 export default class QuanticNumberButton extends LightningElement {
   /**

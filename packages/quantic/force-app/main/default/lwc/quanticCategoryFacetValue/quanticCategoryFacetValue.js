@@ -14,7 +14,7 @@ import {api, LightningElement} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
+ * <c-quantic-category-facet-value onquantic__selectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
  */
 export default class QuanticCategoryFacetValue extends LightningElement {
   /**
