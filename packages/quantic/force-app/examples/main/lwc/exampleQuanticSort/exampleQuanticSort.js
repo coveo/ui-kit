@@ -14,14 +14,14 @@ export default class ExampleQuanticSort extends LightningElement {
 
   connectedCallback() {
     this.addEventListener(
-      'quantic__addCustomSortOptions',
+      'addCustomSortOptions',
       this.handleAddCustomSortOptions
     );
   }
 
   disconnectedCallback() {
     this.removeEventListener(
-      'quantic__addCustomSortOptions',
+      'addCustomSortOptions',
       this.handleAddCustomSortOptions
     );
   }

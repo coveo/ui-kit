@@ -6,16 +6,13 @@ export default class ActionAddCustomSortOptions extends LightningElement {
   @api label;
 
   handleAddCustomSortOptions() {
-    const addCustomSortOptionsEvent = new CustomEvent(
-      'quantic__addCustomSortOptions',
-      {
-        detail: {
-          withInvalidOptions: this.withInvalidOptions,
-        },
-        bubbles: true,
-        composed: true,
-      }
-    );
+    const addCustomSortOptionsEvent = new CustomEvent('addCustomSortOptions', {
+      detail: {
+        withInvalidOptions: this.withInvalidOptions,
+      },
+      bubbles: true,
+      composed: true,
+    });
     this.dispatchEvent(addCustomSortOptionsEvent);
   }
 }

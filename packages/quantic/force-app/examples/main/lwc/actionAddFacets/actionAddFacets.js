@@ -10,8 +10,8 @@ export default class ActionAddFacets extends LightningElement {
 
   handleAddFacets() {
     const eventName = this.withoutInputs
-      ? 'quantic__addFacetsWithoutInputs'
-      : 'quantic__addFacets';
+      ? 'addFacetsWithoutInputs'
+      : 'addFacets';
     const addFacetsEvent = new CustomEvent(eventName, {
       bubbles: true,
       composed: true,
