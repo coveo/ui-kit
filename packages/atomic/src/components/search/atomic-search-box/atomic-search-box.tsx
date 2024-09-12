@@ -33,7 +33,12 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isFocusingOut, once, randomID} from '../../../utils/utils';
+import {
+  isFocusingOut,
+  once,
+  randomID,
+  spreadProperties,
+} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
@@ -358,11 +363,11 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   private get suggestionBindings(): SearchBoxSuggestionsBindings<
     SearchBox | StandaloneSearchBox
   > {
-    return {
-      ...this.bindings,
-      ...this.suggestionManager.partialSuggestionBindings,
-      ...this.partialSuggestionBindings,
-    };
+    return spreadProperties(
+      this.bindings,
+      this.suggestionManager.partialSuggestionBindings,
+      this.partialSuggestionBindings
+    );
   }
 
   private get partialSuggestionBindings(): Pick<
@@ -373,14 +378,38 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     | 'numberOfQueries'
     | 'clearFilters'
   > {
-    return {
-      ...this.bindings,
-      id: this.id,
-      isStandalone: () => !!this.redirectionUrl,
-      searchBoxController: () => this.searchBox,
-      numberOfQueries: this.numberOfQueries,
-      clearFilters: this.clearFilters,
-    };
+    return Object.defineProperties(
+      {...this.bindings},
+      {
+        id: {
+          get: () => this.id,
+          enumerable: true,
+        },
+        searchBoxController: {
+          get: () => this.searchBox,
+          enumerable: true,
+        },
+        isStandalone: {
+          get: () => !!this.redirectionUrl,
+          enumerable: true,
+        },
+        numberOfQueries: {
+          get: () => this.numberOfQueries,
+          enumerable: true,
+        },
+        clearFilters: {
+          get: () => this.clearFilters,
+          enumerable: true,
+        },
+      }
+    ) as unknown as Pick<
+      SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>,
+      | 'id'
+      | 'isStandalone'
+      | 'searchBoxController'
+      | 'numberOfQueries'
+      | 'clearFilters'
+    >;
   }
 
   private get searchBoxOptions(): SearchBoxOptions {

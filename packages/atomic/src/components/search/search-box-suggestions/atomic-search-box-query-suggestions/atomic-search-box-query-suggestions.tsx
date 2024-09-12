@@ -92,16 +92,15 @@ export class AtomicSearchBoxQuerySuggestions {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    const hasQuery = this.bindings.searchBoxController().state.value !== '';
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
-    return this.bindings
-      .searchBoxController()
-      .state.suggestions.slice(0, max)
+    return this.bindings.searchBoxController.state.suggestions
+      .slice(0, max)
       .map((suggestion) => this.renderItem(suggestion));
   }
 
   private renderItem(suggestion: Suggestion) {
-    const hasQuery = this.bindings.searchBoxController().state.value !== '';
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const partialItem = getPartialSearchBoxSuggestionElement(
       suggestion,
       this.bindings.i18n
@@ -120,9 +119,7 @@ export class AtomicSearchBoxQuerySuggestions {
         </QuerySuggestionContainer>
       ),
       onSelect: () => {
-        this.bindings
-          .searchBoxController()
-          .selectSuggestion(suggestion.rawValue);
+        this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },
     };
   }
