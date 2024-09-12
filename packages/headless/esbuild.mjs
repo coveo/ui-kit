@@ -174,6 +174,15 @@ function resolveEsm(moduleName) {
   );
 }
 
+function resolveBrowser(moduleName) {
+  const packageJsonPath = require.resolve(`${moduleName}/package.json`);
+  const packageJson = require(packageJsonPath);
+  return resolve(
+    dirname(packageJsonPath),
+    packageJson['browser'] || packageJson['main']
+  );
+}
+
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
@@ -190,10 +199,7 @@ async function buildBrowserConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve(
-          './ponyfills',
-          'fetch-ponyfill-browser.js'
-        ),
+        pino: resolveBrowser('pino'),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
       ...(options.plugins || []),
@@ -227,6 +233,8 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       entryPoints: [entryPoint],
       outfile,
       format: 'esm',
+      external: ['pino'],
+      mainFields: ['module', 'main'],
     },
     dir
   );
@@ -244,11 +252,7 @@ async function buildNodeConfig(options, outDir) {
     treeShaking: true,
     plugins: [
       alias({
-        'coveo.analytics': require.resolve('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve(
-          './ponyfills',
-          'fetch-ponyfill-node.js'
-        ),
+        'coveo.analytics': resolveEsm('coveo.analytics'),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],
@@ -258,30 +262,6 @@ async function buildNodeConfig(options, outDir) {
   outputMetafile(`node.${options.format}`, outDir, out.metafile);
 
   return out;
-}
-
-// https://github.com/coveo/ui-kit/issues/1616
-function adjustRequireImportsInNodeEsmBundles() {
-  const paths = getNodeEsmBundlePaths();
-
-  return paths.map(async (filePath) => {
-    const resolvedPath = resolve(filePath);
-
-    const content = await promises.readFile(resolvedPath, {
-      encoding: 'utf-8',
-    });
-    const modified = content.replace(/__require\(/g, 'require(');
-
-    await promises.writeFile(resolvedPath, modified);
-  });
-}
-
-function getNodeEsmBundlePaths() {
-  return Object.entries(useCaseEntries).map((entry) => {
-    const [useCase] = entry;
-    const dir = getUseCaseDir('dist/', useCase);
-    return `${dir}/headless.esm.js`;
-  });
 }
 
 function outputMetafile(platform, outDir, metafile) {
@@ -298,7 +278,6 @@ async function main() {
     ...nodeCjs,
     ...quanticUmd,
   ]);
-  await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }
 
 main();

@@ -29,6 +29,14 @@ export const Default: Story = {
         label="most-recent"
         expression="date descending"
       ></atomic-sort-expression>
+      <atomic-sort-expression
+        label="Price ascending"
+        expression="sncost ascending"
+      ></atomic-sort-expression>
+      <atomic-sort-expression
+        label="Price ascending & Most recent"
+        expression="sncost ascending, date descending"
+      ></atomic-sort-expression>
     `,
   },
 };

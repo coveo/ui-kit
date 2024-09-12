@@ -11,6 +11,8 @@ const functionsMocks = {
 
 const defaultPlaceholder = 'Search...';
 const mockInputValue = 'Test input value';
+const mockLongInputValue =
+  'Test input value that is longer than the default input value length to test the textarea expanding feature';
 const mockSuggestions = [
   {key: '1', value: 'suggestion1', rawValue: 'suggestion1'},
   {key: '2', value: 'suggestion2', rawValue: 'suggestion2'},
@@ -768,6 +770,36 @@ describe('c-quantic-search-box-input', () => {
               );
             });
           });
+        });
+      });
+
+      describe('when clicking on the clear icon after typing something', () => {
+        it('should properly clear the input value', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            textarea: textareaValue,
+          });
+          await flushPromises();
+
+          element.inputValue = mockLongInputValue;
+          await flushPromises();
+
+          const clearIcon = element.shadowRoot.querySelector(
+            selectors.searchBoxClearIcon
+          );
+          const input = element.shadowRoot.querySelector(
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
+          );
+
+          expect(input).not.toBeNull();
+          expect(input.value).toEqual(mockLongInputValue);
+
+          clearIcon.click();
+          expect(input.value).toEqual('');
+          const expectedCollapsedInputHeight = textareaValue ? '0px' : '';
+          expect(input.style.height).toEqual(expectedCollapsedInputHeight);
         });
       });
     });

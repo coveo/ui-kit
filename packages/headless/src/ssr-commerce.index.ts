@@ -1,5 +1,4 @@
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
 // Main App
