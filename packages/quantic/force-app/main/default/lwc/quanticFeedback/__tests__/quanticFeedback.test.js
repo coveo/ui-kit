@@ -151,7 +151,7 @@ describe('c-quantic-feedback', () => {
         const likeButton = element.shadowRoot.querySelector(
           selectors.likeButton
         );
-        likeButton.dispatchEvent(new CustomEvent('select'));
+        likeButton.dispatchEvent(new CustomEvent('quantic__select'));
 
         expect(likeButton).not.toBeNull();
         expect(functionsMocks.exampleHandleLike).toHaveBeenCalledTimes(1);
@@ -167,7 +167,7 @@ describe('c-quantic-feedback', () => {
         const dislikeButton = element.shadowRoot.querySelector(
           selectors.dislikeButton
         );
-        dislikeButton.dispatchEvent(new CustomEvent('select'));
+        dislikeButton.dispatchEvent(new CustomEvent('quantic__select'));
 
         expect(dislikeButton).not.toBeNull();
         expect(functionsMocks.exampleHandleDislike).toHaveBeenCalledTimes(1);
