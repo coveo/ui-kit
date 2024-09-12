@@ -273,7 +273,7 @@ export class TestFixture {
 
         if (this.execFirstSearch && this.firstIntercept) {
           cy.wait(TestFixture.interceptAliases.Search);
-          if (!this.disabledAnalytics || this.doNotTrack) {
+          if (!(this.disabledAnalytics || this.doNotTrack)) {
             cy.wait(TestFixture.interceptAliases.UA);
           }
         }
