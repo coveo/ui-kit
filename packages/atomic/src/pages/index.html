@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic</title>
-
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="icon" href="data:," />
@@ -20,6 +19,7 @@
         organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
       });
 
+      // Trigger a first search
       // Trigger a first search
       searchInterface.executeFirstSearch();
 
