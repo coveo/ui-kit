@@ -124,16 +124,6 @@ describe('searchapi-generated-answer', () => {
     expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
-  // it('dispatches a send feedback action', () => {
-  //   const generatedAnswer = createGeneratedAnswer();
-  //   const feedback: GeneratedAnswerFeedback = 'harmful';
-  //   generatedAnswer.sendFeedback(feedback);
-  //   expect(
-  //     generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
-  //   ).toHaveBeenCalledWith(feedback);
-  //   expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
-  // });
-
   it('dispatches a sendFeedback action', () => {
     const generatedAnswer = createGeneratedAnswer();
     const feedback: GeneratedAnswerFeedback = {
