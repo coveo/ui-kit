@@ -39,9 +39,9 @@ export class AtomicInsightUserActionsModal
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created..
+   * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
-  @Prop() public ticketCreationDate!: string;
+  @Prop() public ticketCreationDateTime!: string;
 
   public componentDidLoad() {
     this.host.style.display = '';
@@ -113,7 +113,7 @@ export class AtomicInsightUserActionsModal
         >
           <atomic-insight-user-actions-timeline
             userId={this.userId}
-            ticketCreationDate={this.ticketCreationDate}
+            ticketCreationDateTime={this.ticketCreationDateTime}
             class="flex-1"
           ></atomic-insight-user-actions-timeline>
         </aside>

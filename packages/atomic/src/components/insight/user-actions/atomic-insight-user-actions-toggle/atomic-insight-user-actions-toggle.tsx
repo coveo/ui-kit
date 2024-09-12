@@ -20,9 +20,9 @@ export class AtomicInsightUserActionsToggle {
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created.
+   * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
-  @Prop() public ticketCreationDate!: string;
+  @Prop() public ticketCreationDateTime!: string;
 
   private buttonRef?: HTMLButtonElement;
   private modalRef?: HTMLAtomicInsightUserActionsModalElement;
@@ -41,7 +41,7 @@ export class AtomicInsightUserActionsToggle {
     this.host.insertAdjacentElement('beforebegin', this.modalRef);
     this.modalRef.openButton = this.buttonRef;
     this.modalRef.userId = this.userId;
-    this.modalRef.ticketCreationDate = this.ticketCreationDate;
+    this.modalRef.ticketCreationDateTime = this.ticketCreationDateTime;
   }
 
   public render() {
