@@ -40,15 +40,68 @@ try {
   process.exit(1);
 }
 
+const replacements = [
+  {
+    search: '@coveo/headless/commerce',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/commerce/headless.esm.js`,
+  },
+  {
+    search: '@coveo/headless/insight',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/insight/headless.esm.js`,
+  },
+  {
+    search: '@coveo/headless/product-recommendations',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/product-recommendations/headless.esm.js`,
+  },
+  {
+    search: '@coveo/headless/recommendation',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/recommendation/headless.esm.js`,
+  },
+  {
+    search: '@coveo/headless/case-assist',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/case-assist/headless.esm.js`,
+  },
+  {
+    search: '@coveo/atomic',
+    replace: `https://static.cloud.coveo.com/atomic/${atomicVersion}/atomic.esm.js`,
+  },
+  {
+    search: '@coveo/headless',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
+  },
+  {
+    search: '/build/headless/headless.esm.js',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
+  },
+  {
+    search: '/build/headless/commerce/headless.esm.js',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/commerce/headless.esm.js`,
+  },
+  {
+    search: '/build/headless/insight/headless.esm.js',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/insight/headless.esm.js`,
+  },
+  {
+    search: '/build/headless/product-recommendations/headless.esm.js',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/product-recommendations/headless.esm.js`,
+  },
+  {
+    search: '/build/headless/recommendation/headless.esm.js',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/recommendation/headless.esm.js`,
+  },
+  {
+    search: '/build/headless/case-assist/headless.esm.js',
+    replace: `https://static.cloud.coveo.com/headless/${headlessVersion}/case-assist/headless.esm.js`,
+  },
+];
+
+const sedCommands = replacements
+  .map(({search, replace}) => `-e 's|${search}|${replace}|g'`)
+  .join(' ');
+
 const command = `
-  find ./packages/atomic/www/build ./packages/atomic/dist ./packages/atomic-react/dist -type f -exec sed -i '' \
-  -e 's/@coveo\\/atomic/https:\\/\\/static.cloud.coveo.com\\/atomic\\/${atomicVersion}\\/atomic.esm.js/g' \
-  -e 's/@coveo\\/headless\\/commerce/https:\\/\\/static.cloud.coveo.com\\/headless\\/${headlessVersion}\\/commerce\\/headless.esm.js/g' \
-  -e 's/@coveo\\/headless\\/insight/https:\\/\\/static.cloud.coveo.com\\/headless\\/${headlessVersion}\\/insight\\/headless.esm.js/g' \
-  -e 's/@coveo\\/headless\\/product-recommendations/https:\\/\\/static.cloud.coveo.com\\/headless\\/${headlessVersion}\\/product-recommendations\\/headless.esm.js/g' \
-  -e 's/@coveo\\/headless\\/recommendation/https:\\/\\/static.cloud.coveo.com\\/headless\\/${headlessVersion}\\/recommendation\\/headless.esm.js/g' \
-  -e 's/@coveo\\/headless\\/case-assist/https:\\/\\/static.cloud.coveo.com\\/headless\\/${headlessVersion}\\/case-assist\\/headless.esm.js/g' \
-  -e 's/@coveo\\/headless/https:\\/\\/static.cloud.coveo.com\\/headless\\/${headlessVersion}\\/headless.esm.js/g' {} +`;
+  find ./packages/atomic/www ./packages/atomic/dist ./packages/atomic-react/dist -type f -exec sed -i '' ${sedCommands} {} +
+`;
 
 exec(command, (error, stdout, stderr) => {
   if (error) {
