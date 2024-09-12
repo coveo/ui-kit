@@ -117,7 +117,7 @@ describe('category facet', () => {
   });
 
   describe('when the search response is empty', () => {
-    it('#state.values is an empty array', () => {
+    it('#state.valuesAsTrees and #state.selectedValueAncestry are empty arrays', () => {
       expect(state.search.response.facets).toEqual([]);
       expect(categoryFacet.state.valuesAsTrees).toEqual([]);
       expect(categoryFacet.state.selectedValueAncestry).toEqual([]);
