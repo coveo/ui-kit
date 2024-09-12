@@ -358,5 +358,22 @@ describe('Search Interface Component', () => {
         );
       });
     });
+
+    describe('with doNotTrack', () => {
+      beforeEach(() => {
+        fixture.withDoNotTrack().init();
+      });
+
+      it('should not call the analytics server', () => {
+        cy.wait(TestFixture.interceptAliases.Search);
+        cy.shouldBeCalled(TestFixture.interceptAliases.UA, 0);
+      });
+
+      it('should not include analytics in the search request', () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) =>
+          expect(firstSearch.request.body).not.to.have.property('analytics')
+        );
+      });
+    });
   });
 });
