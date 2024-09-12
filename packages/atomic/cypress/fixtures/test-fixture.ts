@@ -58,6 +58,7 @@ export class TestFixture {
   private language?: string;
   private localizationCompatibilityVersion: i18nCompatibilityVersion = 'v4';
   private disabledAnalytics = false;
+  private doNotTrack = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private translations: Record<string, string> = {};
@@ -135,6 +136,11 @@ export class TestFixture {
     return this;
   }
 
+  public withDoNotTrack() {
+    this.doNotTrack = true;
+    return this;
+  }
+
   public withRedirection() {
     this.redirected = true;
     return this;
@@ -204,6 +210,13 @@ export class TestFixture {
     setupIntercept();
     spyConsole();
 
+    cy.window().then((win) => {
+      Object.defineProperty(win.navigator, 'doNotTrack', {
+        get: () => (this.doNotTrack ? '1' : '0'),
+        configurable: true,
+      });
+    });
+
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
       doc.body.appendChild(this.searchInterface);
@@ -260,7 +273,7 @@ export class TestFixture {
 
         if (this.execFirstSearch && this.firstIntercept) {
           cy.wait(TestFixture.interceptAliases.Search);
-          if (!this.disabledAnalytics) {
+          if (!this.disabledAnalytics || this.doNotTrack) {
             cy.wait(TestFixture.interceptAliases.UA);
           }
         }
