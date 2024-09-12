@@ -1,5 +1,6 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {i18n} from 'i18next';
+import {FieldValueIsNaNError} from '../../commerce/product-template-components/error';
 
 interface RatingProps {
   i18n: i18n;
@@ -71,9 +72,7 @@ export const computeNumberOfStars = (
   }
   const valueAsNumber = parseFloat(`${value}`);
   if (Number.isNaN(valueAsNumber)) {
-    throw new Error(
-      `Could not parse "${value}" from field "${field}" as a number.`
-    );
+    throw new FieldValueIsNaNError(field, value);
   }
   return valueAsNumber;
 };
