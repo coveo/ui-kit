@@ -9,10 +9,8 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   dislikeButton: () => CypressSelector;
   citations: () => CypressSelector;
   citationTitle: (index: number) => CypressSelector;
-  citationIndex: (index: number) => CypressSelector;
   citationLink: (index: number) => CypressSelector;
   retryButton: () => CypressSelector;
-  toggleGeneratedAnswerButton: () => CypressSelector;
   generatedAnswerContent: () => CypressSelector;
   generatedAnswerContentContainer: () => CypressSelector;
   feedbackModal: () => CypressSelector;
@@ -67,10 +65,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   retryButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__retry-button"]'
-    ),
-  toggleGeneratedAnswerButton: () =>
-    GeneratedAnswerSelectors.get().find(
-      'c-quantic-generated-answer-toggle [data-cy="generated-answer__toggle-button"]'
     ),
   generatedAnswerContent: () =>
     GeneratedAnswerSelectors.get().find(

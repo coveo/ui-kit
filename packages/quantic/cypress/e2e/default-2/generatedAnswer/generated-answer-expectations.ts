@@ -38,13 +38,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the dislike button`);
     },
 
-    displayToggleGeneratedAnswerButton: (display: boolean) => {
-      selector
-        .toggleGeneratedAnswerButton()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the generated answer toggle button`);
-    },
-
     displayGeneratedAnswerContent: (display: boolean) => {
       selector
         .generatedAnswerContent()
@@ -99,15 +92,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           'stateful-button--unselected'
         )
         .log(`the dislike button ${should(selected)} be in a disliked state`);
-    },
-
-    toggleGeneratedAnswerButtonIsChecked: (checked: boolean) => {
-      selector
-        .toggleGeneratedAnswerButton()
-        .should(checked ? 'have.attr' : 'not.have.attr', 'checked', 'checked')
-        .log(
-          `the generated answer toggle button ${should(checked)} be checked`
-        );
     },
 
     generatedAnswerFooterRowsIsOnMultiline: (multilineDisplay: boolean) => {
