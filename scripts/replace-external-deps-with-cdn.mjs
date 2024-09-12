@@ -100,10 +100,15 @@ const sedCommands = replacements
   .join(' ');
 
 const command = `
-  find ./packages/atomic/www ./packages/atomic/dist ./packages/atomic-react/dist -type f -exec sed -i '' ${sedCommands} {} +
+  find ./packages/atomic/www ./packages/atomic/dist ./packages/atomic-react/dist -type f -exec sed -i '' ${sedCommands} {} + -print
 `;
 
+const startTime = Date.now();
+
 exec(command, (error, stdout, stderr) => {
+  const endTime = Date.now();
+  const timeTaken = (endTime - startTime) / 1000; // in seconds
+
   if (error) {
     console.error(`Error: ${error.message}`);
     return;
@@ -112,5 +117,8 @@ exec(command, (error, stdout, stderr) => {
     console.error(`Stderr: ${stderr}`);
     return;
   }
-  console.log(`Stdout: ${stdout}`);
+
+  const processedFiles = stdout.split('\n').filter(Boolean).length;
+  console.log(`Processed ${processedFiles} files.`);
+  console.log(`Total time taken: ${timeTaken} seconds.`);
 });
