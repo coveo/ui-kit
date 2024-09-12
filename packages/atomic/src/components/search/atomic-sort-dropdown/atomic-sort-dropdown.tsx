@@ -123,10 +123,13 @@ export class AtomicSortDropdown implements InitializableComponent {
     );
     option && this.sort.sortBy(option.criteria);
   }
+
   public componentShouldUpdate(): void {
     if (
       this.options.some(
-        (option) => option.expression === this.sortState.sortCriteria
+        (option) =>
+          option.expression.trim().replace(/\s*,\s*/g, ',') ===
+          this.sortState.sortCriteria.replace(/@/g, '')
       )
     ) {
       return;

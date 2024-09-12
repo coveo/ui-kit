@@ -56,12 +56,6 @@ export const addSearchBox =
     env.withElement(searchBox);
   };
 
-export function typeSearchInput(query: string, verifyInput = '') {
-  SearchBoxSelectors.inputBox().click();
-  SearchBoxSelectors.inputBox().type(`${query}{enter}`, {force: true});
-  SearchBoxAssertions.assertHasText(verifyInput || query);
-}
-
 export function typeSearchTextArea(query: string, verifyInput = '') {
   SearchBoxSelectors.textArea().click();
   SearchBoxSelectors.textArea().type(`${query}{enter}`, {force: true});

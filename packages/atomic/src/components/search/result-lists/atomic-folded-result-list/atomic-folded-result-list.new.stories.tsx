@@ -74,7 +74,6 @@ export const Default: Story = {
             </atomic-result-fields-list>
           </atomic-result-section-bottom-metadata>
           <atomic-result-section-children>
-            <atomic-load-more-children-results></atomic-load-more-children-results>
             <atomic-result-children image-size="icon">
               <!-- CHILD -->
               <atomic-result-children-template>

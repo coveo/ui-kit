@@ -102,6 +102,8 @@ describe('category facet', () => {
       ...defaultCategoryFacetOptions,
       ...options,
       facetId,
+      activeTab: '',
+      tabs: {},
     });
   });
 

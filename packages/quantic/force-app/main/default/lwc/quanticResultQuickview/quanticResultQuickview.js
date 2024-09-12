@@ -21,7 +21,7 @@ import {LightningElement, api, track} from 'lwc';
  * @category Result Template
  * @fires CustomEvent#haspreview
  * @example
- * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100" use-case="search"></c-quantic-result-quickview>
+ * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
  */
 export default class QuanticResultQuickview extends LightningElement {
   /**
@@ -64,14 +64,6 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `undefined`
    */
   @api previewButtonVariant;
-  /**
-   * Indicates the use case where this quickview component is used.
-   * @api
-   * @type {'search'|'case-assist'}
-   * @deprecated The component uses the same Headless bundle as the interface it is bound to.
-   * @defaultValue `'search'`
-   */
-  @api useCase = 'search';
   /**
    * The label displayed in the tooltip of the quick view button.
    * @api

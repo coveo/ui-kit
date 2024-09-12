@@ -106,6 +106,8 @@ describe('facet', () => {
   it('registers a facet with the passed options and the default values of unspecified options', () => {
     expect(registerFacet).toHaveBeenCalledWith({
       field: 'author',
+      activeTab: '',
+      tabs: {},
       sortCriteria: 'score',
       resultsMustMatch: 'atLeastOneValue',
       facetId,

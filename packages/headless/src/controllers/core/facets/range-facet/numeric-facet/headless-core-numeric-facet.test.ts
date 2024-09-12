@@ -109,6 +109,8 @@ describe('numeric facet', () => {
   it('registers a numeric facet with the passed options', () => {
     expect(registerNumericFacet).toHaveBeenCalledWith({
       facetId,
+      activeTab: '',
+      tabs: {},
       currentValues: [],
       ...options,
     });

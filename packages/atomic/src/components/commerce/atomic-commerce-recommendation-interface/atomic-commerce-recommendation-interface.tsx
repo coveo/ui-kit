@@ -38,7 +38,7 @@ export type CommerceBindings = CommonBindings<
   NonceBindings;
 
 /**
- * @internal
+ * @alpha
  * The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
  */
 @Component({

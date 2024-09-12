@@ -12,7 +12,7 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
 import {ProductContext} from '../product-template-decorators';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-product-description` component renders the description of a product.
  */
 @Component({
@@ -81,7 +81,11 @@ export class AtomicProductDescription
     }
   }
 
-  private onToggleExpand() {
+  private onToggleExpand(e?: MouseEvent) {
+    if (e) {
+      e.stopPropagation();
+    }
+
     this.isExpanded = !this.isExpanded;
   }
 
@@ -124,7 +128,7 @@ export class AtomicProductDescription
         part="label-button"
         class={`my-2 p-1 text-xs ${this.isExpanded || !this.isTruncated || this.truncateAfter === 'none' ? 'invisible' : ''}`}
         title={this.bindings.i18n.t('show-more')}
-        onClick={() => this.onToggleExpand()}
+        onClick={(e) => this.onToggleExpand(e)}
       >
         <atomic-icon
           icon={PlusIcon}

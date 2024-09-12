@@ -19,7 +19,7 @@ import {TriggerCorrection} from '../../common/query-correction/trigger-correctio
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @internal
+ * @alpha
  *
  * The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
