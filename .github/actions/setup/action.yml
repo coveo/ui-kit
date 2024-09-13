@@ -44,9 +44,10 @@ runs:
       shell: bash
     # TODO KIT-3483: Move to artifact
     # - if: steps.nx-cache.outputs.cache-hit != 'true'
-    - run: npm run build
-      shell: bash
-    - name: Run step only if DEPLOYMENT_ENVIRONMENT is CDN
-      if: env.DEPLOYMENT_ENVIRONMENT == 'CDN'
-      run: npm run prepare-for-cdn
+    - run: |
+        if [ "${{ env.DEPLOYMENT_ENVIRONMENT }}" == "CDN" ]; then
+          BUILD_TARGET=CDN npm run build
+        else
+          npm run build
+        fi
       shell: bash

@@ -20,7 +20,7 @@ import replaceWithASTPlugin from './rollup-plugins/replace-with-ast-plugin';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
-const isCDN = process.env.BUILD === 'CDN';
+const isCDN = process.env.BUILD_TARGET === 'CDN';
 
 if (isCDN) {
   console.log('Building for CDN');
