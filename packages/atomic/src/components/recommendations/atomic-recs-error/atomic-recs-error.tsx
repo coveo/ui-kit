@@ -68,11 +68,7 @@ export class AtomicRecsError implements InitializableComponent<RecsBindings> {
         },
       },
     } = this;
-    const url = getOrganizationEndpoint(
-      organizationId,
-      'platform',
-      environment
-    );
+    const url = getOrganizationEndpoint(organizationId, environment);
     const hasError = !isNullOrUndefined(error);
 
     if (hasError) {

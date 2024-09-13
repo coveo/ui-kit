@@ -36,7 +36,7 @@ export const validateOptions = (
 export const extractPlatformUrl = (options: InitializationOptions) => {
   return getOrganizationEndpoint(
     options.organizationId,
-    'admin',
-    options.environment
+    options.environment,
+    'admin'
   );
 };

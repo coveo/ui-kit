@@ -66,11 +66,7 @@ export class AtomicQueryError implements InitializableComponent {
         },
       },
     } = this;
-    const url = getOrganizationEndpoint(
-      organizationId,
-      'platform',
-      environment
-    );
+    const url = getOrganizationEndpoint(organizationId, environment);
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,

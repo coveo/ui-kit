@@ -60,7 +60,7 @@ export class AtomicRelevanceInspector {
     const {organizationId, environment} =
       this.bindings.engine.state.configuration;
 
-    const admin = getOrganizationEndpoint(organizationId, 'admin', environment);
+    const admin = getOrganizationEndpoint(organizationId, environment, 'admin');
     const {searchResponseId} = this.bindings.engine.state.search;
     return `${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`;
   }
