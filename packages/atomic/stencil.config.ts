@@ -49,10 +49,6 @@ try {
 }
 
 const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
-  '@coveo/headless': {
-    devWatch: path.resolve(__dirname, './src/external-builds/headless.esm.js'),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
-  },
   '@coveo/headless/commerce': {
     devWatch: path.resolve(
       __dirname,
@@ -87,6 +83,10 @@ const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
       './src/external-builds/case-assist/headless.esm.js'
     ),
     cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/case-assist/headless.esm.js`,
+  },
+  '@coveo/headless': {
+    devWatch: path.resolve(__dirname, './src/external-builds/headless.esm.js'),
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
   },
   /*   '@coveo/bueno': {
     devWatch: path.resolve(__dirname, './src/external-builds/bueno.esm.js'),
@@ -286,7 +286,7 @@ export const config: Config = {
       html({
         include: 'src/templates/**/*.html',
       }),
-      replaceHeadlessMap(),
+      isDevWatch && replaceHeadlessMap(),
       externalizeDependenciesPlugin(),
     ],
   },
