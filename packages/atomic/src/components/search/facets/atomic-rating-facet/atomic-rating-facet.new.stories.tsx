@@ -34,3 +34,13 @@ export const Default: Story = {
   },
   decorators: [facetDecorator],
 };
+
+export const DisplayAsLink: Story = {
+  name: 'atomic-rating-facet',
+  tags: ['test'],
+  args: {
+    'attributes-display-values-as': 'link',
+    'attributes-field': 'snrating',
+  },
+  decorators: [facetDecorator],
+};

@@ -371,6 +371,7 @@ export class AtomicRatingFacet implements InitializableComponent {
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
+    const shouldBeDimmed = this.facetState.hasActiveValues && !isSelected;
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
@@ -392,6 +393,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            class={shouldBeDimmed ? 'opacity-50' : undefined}
           >
             {this.ratingContent(facetValue)}
           </FacetValueLink>
