@@ -184,11 +184,7 @@ export function getCommerceApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'
 ) {
-  const platformEndpoint = getOrganizationEndpoint(
-    organizationId,
-    'platform',
-    environment
-  );
+  const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
   return `${platformEndpoint}/rest/organizations/${organizationId}/commerce/v2`;
 }

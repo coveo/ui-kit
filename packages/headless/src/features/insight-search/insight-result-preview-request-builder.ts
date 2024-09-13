@@ -21,7 +21,7 @@ export async function buildInsightResultPreviewRequest(
 
   const q = state.query?.q || '';
   const url = baseInsightUrl({
-    url: getOrganizationEndpoint(organizationId, 'platform', environment),
+    url: getOrganizationEndpoint(organizationId, environment),
     accessToken,
     organizationId,
     insightId,

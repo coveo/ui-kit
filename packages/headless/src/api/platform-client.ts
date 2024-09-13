@@ -126,8 +126,8 @@ export class PlatformClient {
 
 export function getOrganizationEndpoint(
   organizationId: string,
-  endpointType: 'admin' | 'analytics' | 'platform',
-  environment: PlatformEnvironment = 'prod'
+  environment: PlatformEnvironment = 'prod',
+  endpointType: 'admin' | 'analytics' | 'platform' = 'platform'
 ) {
   const environmentSuffix = environment === 'prod' ? '' : environment;
   const endpointTypePart =
@@ -140,7 +140,7 @@ export function getAdministrationOrganizationEndpoint(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'
 ) {
-  return getOrganizationEndpoint(organizationId, 'admin', environment);
+  return getOrganizationEndpoint(organizationId, environment, 'admin');
 }
 
 export function getSearchApiBaseUrl(
@@ -149,7 +149,6 @@ export function getSearchApiBaseUrl(
 ) {
   const organizationEndpoint = getOrganizationEndpoint(
     organizationId,
-    'platform',
     environment
   );
 
@@ -162,8 +161,8 @@ export function getAnalyticsNextApiBaseUrl(
 ) {
   const organizationEndpoint = getOrganizationEndpoint(
     organizationId,
-    'analytics',
-    environment
+    environment,
+    'analytics'
   );
 
   return `${organizationEndpoint}/rest/organizations/${organizationId}/events/v1`;

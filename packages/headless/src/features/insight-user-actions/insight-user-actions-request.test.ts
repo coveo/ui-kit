@@ -31,7 +31,6 @@ describe('insight user actions request', () => {
     expect(params.url).toBe(
       getOrganizationEndpoint(
         state.configuration.organizationId,
-        'platform',
         state.configuration.environment
       )
     );

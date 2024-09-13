@@ -24,7 +24,6 @@ export const buildInsightQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url: getOrganizationEndpoint(
       s.configuration.organizationId,
-      'platform',
       s.configuration.environment
     ),
     count: s.querySuggest![id]!.count,

@@ -27,7 +27,6 @@ export const buildInsightBaseRequest = async (
     organizationId: state.configuration.organizationId,
     url: getOrganizationEndpoint(
       state.configuration.organizationId,
-      'platform',
       state.configuration.environment
     ),
     locale: state.configuration.search.locale,

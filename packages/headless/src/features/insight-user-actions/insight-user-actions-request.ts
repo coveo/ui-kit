@@ -11,7 +11,6 @@ export const buildFetchUserActionsRequest = async (
     organizationId: state.configuration.organizationId,
     url: getOrganizationEndpoint(
       state.configuration.organizationId,
-      'platform',
       state.configuration.environment
     ),
     userId,

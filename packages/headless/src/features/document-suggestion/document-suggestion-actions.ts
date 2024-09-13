@@ -57,7 +57,6 @@ export const buildFetchDocumentSuggestionsRequest = async (
   organizationId: state.configuration.organizationId,
   url: getOrganizationEndpoint(
     state.configuration.organizationId,
-    'platform',
     state.configuration.environment
   ),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,

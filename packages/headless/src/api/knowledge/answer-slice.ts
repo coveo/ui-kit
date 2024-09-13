@@ -36,7 +36,6 @@ const dynamicBaseQuery: BaseQueryFn<
   try {
     const platformEndpoint = getOrganizationEndpoint(
       organizationId,
-      'platform',
       environment
     );
     const data = fetchBaseQuery({

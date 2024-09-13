@@ -93,16 +93,19 @@ it.each([
 }>)(
   'return the correct #getOrganizationEndpoints()',
   ({orgId, env, organizationEndpoints}) => {
-    expect(getOrganizationEndpoint(orgId, 'admin', env)).toEqual(
+    expect(getOrganizationEndpoint(orgId, env, 'admin')).toEqual(
       organizationEndpoints.admin
     );
-    expect(getOrganizationEndpoint(orgId, 'analytics', env)).toEqual(
+    expect(getOrganizationEndpoint(orgId, env, 'analytics')).toEqual(
       organizationEndpoints.analytics
     );
     expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(
       organizationEndpoints.analyticsNext
     );
-    expect(getOrganizationEndpoint(orgId, 'platform', env)).toEqual(
+    expect(getOrganizationEndpoint(orgId, env, 'platform')).toEqual(
+      organizationEndpoints.platform
+    );
+    expect(getOrganizationEndpoint(orgId, env)).toEqual(
       organizationEndpoints.platform
     );
     expect(getSearchApiBaseUrl(orgId, env)).toEqual(
@@ -121,7 +124,7 @@ describe('PlatformClient call', () => {
       requestParams: {
         test: 123,
       },
-      url: getOrganizationEndpoint('', 'platform'),
+      url: getOrganizationEndpoint(''),
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
       origin: 'searchApiFetch',
@@ -130,7 +133,7 @@ describe('PlatformClient call', () => {
   }
 
   beforeEach(() => {
-    url = getOrganizationEndpoint('', 'platform');
+    url = getOrganizationEndpoint('');
     mockFetch.mockClear();
   });
 

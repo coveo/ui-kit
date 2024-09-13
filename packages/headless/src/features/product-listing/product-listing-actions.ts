@@ -132,7 +132,6 @@ export const buildProductListingRequest = async (
     organizationId: state.configuration.organizationId,
     platformUrl: getOrganizationEndpoint(
       state.configuration.organizationId,
-      'platform',
       state.configuration.environment
     ),
     url: state.productListing?.url,

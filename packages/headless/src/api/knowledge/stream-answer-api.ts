@@ -190,7 +190,6 @@ export const answerApi = answerSlice.injectEndpoints({
         const {organizationId, environment, accessToken} = configuration;
         const platformEndpoint = getOrganizationEndpoint(
           organizationId,
-          'platform',
           environment
         );
         await fetchEventSource(

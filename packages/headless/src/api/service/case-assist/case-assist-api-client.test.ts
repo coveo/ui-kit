@@ -8,7 +8,7 @@ import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-docu
 
 describe('case assist api client', () => {
   const orgId = 'some org id';
-  const url = getOrganizationEndpoint(orgId, 'platform', 'dev');
+  const url = getOrganizationEndpoint(orgId, 'dev');
   const accessToken = 'some access token';
   const locale = 'en-CA';
   const caseAssistId = 'some case assist id';

@@ -50,7 +50,6 @@ const buildGetInsightInterfaceRequest = (
   organizationId: state.configuration.organizationId,
   url: getOrganizationEndpoint(
     state.configuration.organizationId,
-    'platform',
     state.configuration.environment
   ),
   insightId: state.insightConfiguration.insightId,

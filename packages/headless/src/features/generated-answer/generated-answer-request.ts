@@ -17,7 +17,6 @@ export const buildStreamingRequest = async (
   organizationId: state.configuration.organizationId,
   url: getOrganizationEndpoint(
     state.configuration.organizationId,
-    'platform',
     state.configuration.environment
   ),
   streamId: state.search.extendedResults?.generativeQuestionAnsweringId,
