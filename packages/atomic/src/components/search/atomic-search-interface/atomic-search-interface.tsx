@@ -12,8 +12,6 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
   loadFieldActions,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-  PlatformEnvironment,
 } from '@coveo/headless';
 import {
   Component,
@@ -328,7 +326,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
   @Method() public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -392,18 +390,6 @@ export class AtomicSearchInterface
     const {value, enableQuerySyntax, analytics} = standaloneSearchBoxData;
     this.engine!.dispatch(updateQuery({q: value, enableQuerySyntax}));
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
-  }
-
-  /**
-   * Returns the unique, organization-specific endpoint(s).
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
   public get bindings(): Bindings {

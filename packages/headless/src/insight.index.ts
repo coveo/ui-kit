@@ -385,5 +385,9 @@ export type {
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';
 
-export {getOrganizationEndpoints} from './api/platform-client';
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
 export type {PlatformEnvironment} from './utils/url-utils';

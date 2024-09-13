@@ -1,5 +1,6 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getOrganizationEndpoint} from '../../api/platform-client';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';
@@ -85,7 +86,10 @@ export const buildFetchClassificationRequest = async (
 ): Promise<GetCaseClassificationsRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: state.configuration.platformUrl,
+  url: getOrganizationEndpoint(
+    state.configuration.organizationId,
+    state.configuration.environment
+  ),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
     clientId: await getVisitorID(state.configuration.analytics),

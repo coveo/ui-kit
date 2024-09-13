@@ -6,8 +6,6 @@ import {
   buildRecommendationEngine,
   loadRecommendationActions,
   loadSearchConfigurationActions,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-  PlatformEnvironment,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -186,7 +184,7 @@ export class AtomicRecsInterface
   }
 
   /**
-   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
   @Method() public initialize(options: RecsInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -235,13 +233,6 @@ export class AtomicRecsInterface
     this.engine!.dispatch(
       loadRecommendationActions(this.engine!).getRecommendations()
     );
-  }
-
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
   @Watch('iconAssetsPath')

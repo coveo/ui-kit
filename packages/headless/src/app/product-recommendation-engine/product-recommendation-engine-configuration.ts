@@ -5,6 +5,7 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
+import {PlatformEnvironment} from '../../utils/url-utils';
 import {
   nonEmptyString,
   requiredNonEmptyString,
@@ -52,10 +53,6 @@ const engineConfigurationDefinitions: SchemaDefinition<ProductRecommendationEngi
   {
     organizationId: requiredNonEmptyString,
     accessToken: requiredNonEmptyString,
-    platformUrl: new StringValue({
-      required: false,
-      emptyAllowed: false,
-    }),
     name: new StringValue({
       required: false,
       emptyAllowed: false,
@@ -81,11 +78,19 @@ const engineConfigurationDefinitions: SchemaDefinition<ProductRecommendationEngi
           constrainTo: ['legacy'],
           required: false,
         }),
+        proxyBaseUrl: new StringValue({
+          required: false,
+          url: true,
+        }),
       },
     }),
     searchHub: nonEmptyString,
     locale: nonEmptyString,
     timezone: nonEmptyString,
+    environment: new StringValue<PlatformEnvironment>({
+      required: false,
+      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+    }),
   };
 
 export const productRecommendationEngineConfigurationSchema =

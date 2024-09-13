@@ -1,8 +1,4 @@
 import {StringValue} from '@coveo/bueno';
-import {
-  PlatformEnvironment,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-} from '@coveo/headless';
 import {Component, ComponentInterface, Method, Element} from '@stencil/core';
 import {processHostedPage} from '../atomic-hosted-page/hosted-pages';
 import {
@@ -57,17 +53,5 @@ export class AtomicSimpleBuilder implements ComponentInterface {
     } catch (e) {
       console.error(e);
     }
-  }
-
-  /**
-   * Returns the unique, organization-specific endpoint(s)
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 }

@@ -5,8 +5,6 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PlatformEnvironment } from "@coveo/headless";
-export { PlatformEnvironment } from "@coveo/headless";
 export namespace Components {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
@@ -14,12 +12,6 @@ export namespace Components {
      * @deprecated Use `<atomic-hosted-ui type="code"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicHostedPage {
-        /**
-          * Returns the unique, organization-specific endpoint(s)
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         "initialize": (options: AtomicHostedPageInitializationOptions) => Promise<void>;
     }
     /**
@@ -27,12 +19,6 @@ export namespace Components {
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
      */
     interface AtomicHostedUi {
-        /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The type of hosted search page to load.
          */
@@ -45,12 +31,6 @@ export namespace Components {
      * @deprecated Use `<atomic-hosted-ui type="trial"></atomic-hosted-ui>` instead {@link AtomicHostedUI }.
      */
     interface AtomicSimpleBuilder {
-        /**
-          * Returns the unique, organization-specific endpoint(s)
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         "initialize": (options: AtomicSimpleBuilderInitializationOptions) => Promise<void>;
     }
 }

@@ -1,4 +1,5 @@
 import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
+import {getOrganizationEndpoint} from '../../api/platform-client';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
@@ -14,6 +15,9 @@ export const buildStreamingRequest = async (
 ): Promise<GeneratedAnswerStreamRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: state.configuration.platformUrl,
+  url: getOrganizationEndpoint(
+    state.configuration.organizationId,
+    state.configuration.environment
+  ),
   streamId: state.search.extendedResults?.generativeQuestionAnsweringId,
 });

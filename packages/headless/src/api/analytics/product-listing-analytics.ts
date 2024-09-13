@@ -12,6 +12,7 @@ import {
   OldProductListingSection,
   SearchHubSection,
 } from '../../state/state-sections';
+import {getOrganizationEndpoint} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
@@ -81,7 +82,13 @@ export const configureProductListingAnalytics = ({
 }: ConfigureProductListingAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const endpoint =
+    state.configuration.analytics.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment,
+      'analytics'
+    );
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enabled = state.configuration.analytics.enabled;
 

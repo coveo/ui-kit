@@ -1,7 +1,7 @@
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
-import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils';
+import {PlatformEnvironment} from '../utils/url-utils';
 import {clone} from '../utils/utils';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {
@@ -124,76 +124,48 @@ export class PlatformClient {
   }
 }
 
-interface URLOptions<E extends PlatformEnvironment> {
-  environment?: E;
-  region?: Extract<PlatformCombination, {env: E}>['region'];
-  multiRegionSubDomain?: string;
+export function getOrganizationEndpoint(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod',
+  endpointType: 'admin' | 'analytics' | 'platform' = 'platform'
+) {
+  const environmentSuffix = environment === 'prod' ? '' : environment;
+  const endpointTypePart =
+    endpointType === 'platform' ? '' : `.${endpointType}`;
+
+  return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }
 
-function coveoCloudURL<E extends PlatformEnvironment>(
-  subdomain: string,
-  options?: URLOptions<E>
+export function getAdministrationOrganizationEndpoint(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
 ) {
-  const urlEnv =
-    !options || !options.environment || options.environment === 'prod'
-      ? ''
-      : options.environment;
-  const urlRegion =
-    !options || !options.region || options.region === 'us'
-      ? ''
-      : `-${options.region}`;
-
-  return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
+  return getOrganizationEndpoint(organizationId, environment, 'admin');
 }
 
-/**
- * Returns the unique endpoint(s) for a given organization identifier.
- * @param orgId The organization identifier.
- * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Defaults to `prod`.
- * @returns
- */
-export function getOrganizationEndpoints(
-  orgId: string,
-  env: PlatformEnvironment = 'prod'
+export function getSearchApiBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
 ) {
-  const envSuffix = env === 'prod' ? '' : env;
+  const organizationEndpoint = getOrganizationEndpoint(
+    organizationId,
+    environment
+  );
 
-  const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
-  const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com`;
-  const search = `${platform}/rest/search/v2`;
-  const admin = `https://${orgId}.admin.org${envSuffix}.coveo.com`;
-
-  return {platform, analytics, search, admin};
+  return `${organizationEndpoint}/rest/search/v2`;
 }
 
-/**
- * Returns the base Coveo platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
- *
- * @param options
- * @returns string
- */
-export function platformUrl<E extends PlatformEnvironment>(
-  options?: URLOptions<E>
+export function getAnalyticsNextApiBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
 ) {
-  if (options?.multiRegionSubDomain) {
-    return `https://${options.multiRegionSubDomain}.org.coveo.com`;
-  }
+  const organizationEndpoint = getOrganizationEndpoint(
+    organizationId,
+    environment,
+    'analytics'
+  );
 
-  return coveoCloudURL('platform', options);
-}
-
-/**
- * Returns the Coveo analytics platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
- *
- * @param options
- * @returns
- */
-export function analyticsUrl<E extends PlatformEnvironment = 'prod'>(
-  options?: URLOptions<E>
-) {
-  return coveoCloudURL('analytics', options);
+  return `${organizationEndpoint}/rest/organizations/${organizationId}/events/v1`;
 }
 
 function buildDefaultRequestOptions(

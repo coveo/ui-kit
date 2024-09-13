@@ -17,8 +17,6 @@ import {
   InsightEngineConfiguration,
   buildInsightEngine,
   buildInsightResultsPerPage,
-  getOrganizationEndpointsInsight,
-  PlatformEnvironmentInsight,
 } from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
@@ -175,19 +173,7 @@ export class AtomicInsightInterface
   }
 
   /**
-   * Returns the unique, organization-specific endpoint(s)
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironmentInsight = 'prod'
-  ) {
-    return getOrganizationEndpointsInsight(organizationId, env);
-  }
-
-  /**
-   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
   @Method() public initialize(options: InsightInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));

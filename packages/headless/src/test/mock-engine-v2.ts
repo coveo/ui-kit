@@ -152,7 +152,12 @@ export function buildMockCaseAssistEngine<
 export function buildMockCommerceEngine<
   State extends StateFromEngineNext<CommerceEngine>,
 >(initialState: State): CommerceEngine {
-  return buildMockCoreEngineNext(initialState);
+  return {
+    ...buildMockCoreEngineNext(initialState),
+    configuration: {
+      ...initialState.configuration,
+    },
+  };
 }
 
 export function buildMockInsightEngine<
