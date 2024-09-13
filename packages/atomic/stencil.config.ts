@@ -88,10 +88,10 @@ const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
     devWatch: path.resolve(__dirname, './src/external-builds/headless.esm.js'),
     cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
   },
-  /*   '@coveo/bueno': {
+  '@coveo/bueno': {
     devWatch: path.resolve(__dirname, './src/external-builds/bueno.esm.js'),
     cdn: `https://static.cloud.coveo.com/bueno/${headlessVersion}/bueno.esm.js`,
-  }, */
+  },
 };
 
 function generateAliasEntries() {
@@ -300,7 +300,7 @@ function externalizeDependenciesPlugin() {
     name: 'externalize-dependencies',
     resolveId(source: string) {
       // Externalize @coveo/headless and @coveo/bueno
-      if (/^@coveo\/(headless)/.test(source)) {
+      if (/^@coveo\/(headless|bueno)/.test(source)) {
         return false;
       }
       return null;

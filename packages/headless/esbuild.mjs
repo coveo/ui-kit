@@ -1,13 +1,16 @@
 import alias from 'esbuild-plugin-alias';
+import {aliasPath} from 'esbuild-plugin-alias-path';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
-import {readFileSync, promises, writeFileSync} from 'node:fs';
+import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import {dirname, resolve} from 'node:path';
+import path, {dirname, resolve} from 'node:path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
+
+const __dirname = dirname(new URL(import.meta.url).pathname);
 
 const useCaseEntries = {
   search: 'src/index.ts',
@@ -87,6 +90,16 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         format: 'esm',
         watch: devMode,
         minify: false,
+        plugins: [
+          aliasPath({
+            alias: {
+              '@coveo/bueno': path.resolve(
+                __dirname,
+                './src/external-builds/bueno.esm.js'
+              ),
+            },
+          }),
+        ],
       },
       outDir
     );
@@ -194,7 +207,7 @@ async function buildBrowserConfig(options, outDir) {
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto'],
+    external: ['crypto', '@coveo/bueno'],
     ...options,
     plugins: [
       alias({
@@ -234,6 +247,7 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       outfile,
       format: 'esm',
       external: ['pino'],
+      mainFields: ['module', 'main'],
     },
     dir
   );
@@ -263,30 +277,6 @@ async function buildNodeConfig(options, outDir) {
   return out;
 }
 
-// https://github.com/coveo/ui-kit/issues/1616
-function adjustRequireImportsInNodeEsmBundles() {
-  const paths = getNodeEsmBundlePaths();
-
-  return paths.map(async (filePath) => {
-    const resolvedPath = resolve(filePath);
-
-    const content = await promises.readFile(resolvedPath, {
-      encoding: 'utf-8',
-    });
-    const modified = content.replace(/__require\(/g, 'require(');
-
-    await promises.writeFile(resolvedPath, modified);
-  });
-}
-
-function getNodeEsmBundlePaths() {
-  return Object.entries(useCaseEntries).map((entry) => {
-    const [useCase] = entry;
-    const dir = getUseCaseDir('dist/', useCase);
-    return `${dir}/headless.esm.js`;
-  });
-}
-
 function outputMetafile(platform, outDir, metafile) {
   const outFile = resolve(outDir, `${platform}.stats.json`);
   writeFileSync(outFile, JSON.stringify(metafile));
@@ -301,7 +291,6 @@ async function main() {
     ...nodeCjs,
     ...quanticUmd,
   ]);
-  await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }
 
 main();
