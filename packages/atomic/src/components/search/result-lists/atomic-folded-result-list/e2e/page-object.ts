@@ -9,4 +9,8 @@ export class AtomicFoldedResultListPageObject extends BasePageObject<'atomic-fol
   get noResultsLabel() {
     return this.page.locator('[part="no-result-root"]');
   }
+
+  get loadAllResultsButton() {
+    return this.page.getByRole('button', {name: 'Load all results'});
+  }
 }

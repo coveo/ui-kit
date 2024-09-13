@@ -187,6 +187,7 @@ export class AtomicResultChildren implements InitializableComponent {
     return (
       <CollectionGuard
         isLoadingMoreResults={collection.isLoadingMoreResults}
+        moreResultsAvailable={collection.moreResultsAvailable}
         hasChildren={collection.children.length > 0}
         numberOfChildren={collection.children.length}
         density={this.displayConfig.density}

@@ -180,6 +180,7 @@ export class AtomicResultChildren
     return (
       <CollectionGuard
         isLoadingMoreResults={collection.isLoadingMoreResults}
+        moreResultsAvailable={collection.moreResultsAvailable}
         hasChildren={collection.children.length > 0}
         numberOfChildren={collection.children.length}
         density={this.displayConfig.density}

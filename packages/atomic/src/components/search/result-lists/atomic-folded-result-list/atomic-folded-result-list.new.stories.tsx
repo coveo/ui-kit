@@ -125,14 +125,6 @@ const preprocessRequest = (response: any) => {
   return response;
 };
 
-const preprocessSearchResponse = (response: any) => {
-  response.body.results.forEach((result: any) => {
-    result.childResults = [];
-    result.parentResult = null;
-  });
-  return response;
-};
-
 const {decorator, play} = wrapInSearchInterface({
   preprocessRequest,
 });
@@ -157,11 +149,15 @@ export const Default: Story = {
   },
 };
 
+const preprocessRequestNoChildrenResult = (response: any) => {
+  const parsed = JSON.parse(response.body as string);
+  parsed.aq = '@foldingcollection==("atlcontinentantarctica")';
+  response.body = JSON.stringify(parsed);
+  return response;
+};
+
 const {play: noResultChildrenPlay} = wrapInSearchInterface({
-  preprocessRequest,
-  search: {
-    preprocessSearchResponseMiddleware: preprocessSearchResponse,
-  },
+  preprocessRequest: preprocessRequestNoChildrenResult,
 });
 
 export const WithNoResultChildren: Story = {

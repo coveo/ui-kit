@@ -8,6 +8,7 @@ import {ChildrenWrapper} from './children-wrapper';
 
 interface CollectionGuardProps {
   isLoadingMoreResults: boolean;
+  moreResultsAvailable: boolean;
   hasChildren: boolean;
   numberOfChildren: number;
   density: ItemDisplayDensity;
@@ -17,6 +18,7 @@ interface CollectionGuardProps {
 export const CollectionGuard: FunctionalComponent<CollectionGuardProps> = (
   {
     isLoadingMoreResults,
+    moreResultsAvailable,
     hasChildren,
     numberOfChildren,
     density,
@@ -38,7 +40,7 @@ export const CollectionGuard: FunctionalComponent<CollectionGuardProps> = (
     );
   }
 
-  if (!hasChildren) {
+  if (!moreResultsAvailable && !hasChildren) {
     return noResultText.trim().length ? (
       <p part="no-result-root" class="no-result-root my-3">
         {noResultText}
