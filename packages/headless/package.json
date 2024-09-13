@@ -45,17 +45,17 @@
     "build:doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "peerDependencies": {
+    "@coveo/bueno": "0.46.1",
+    "coveo.analytics": "2.30.26",
     "encoding": "^0.1.13",
     "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.46.1",
     "@coveo/relay": "0.7.10",
     "@coveo/relay-event-types": "9.4.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.7",
     "abortcontroller-polyfill": "1.7.5",
-    "coveo.analytics": "2.30.26",
     "dayjs": "1.11.12",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",

@@ -207,7 +207,7 @@ async function buildBrowserConfig(options, outDir) {
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto', '@coveo/bueno'],
+    external: ['crypto', '@coveo/bueno', 'coveo.analytics'],
     ...options,
     plugins: [
       alias({
