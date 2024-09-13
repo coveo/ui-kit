@@ -10,6 +10,7 @@ import {
   ConfigurationSection,
   GeneratedAnswerSection,
 } from '../../state/state-sections';
+import {getOrganizationEndpoint} from '../platform-client';
 
 type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
 
@@ -23,7 +24,7 @@ const dynamicBaseQuery: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const state = api.getState() as StateNeededByAnswerSlice;
-  const {accessToken, organizationId, platformUrl} = state.configuration;
+  const {accessToken, environment, organizationId} = state.configuration;
   const answerConfigurationId = state.generatedAnswer.answerConfigurationId;
   const updatedArgs = {
     ...(args as FetchArgs),
@@ -33,8 +34,13 @@ const dynamicBaseQuery: BaseQueryFn<
     },
   };
   try {
+    const platformEndpoint = getOrganizationEndpoint(
+      organizationId,
+      'platform',
+      environment
+    );
     const data = fetchBaseQuery({
-      baseUrl: `${platformUrl}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
+      baseUrl: `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
     })(updatedArgs, api, extraOptions);
     return {data};
   } catch (error) {

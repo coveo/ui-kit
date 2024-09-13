@@ -20,6 +20,10 @@ import {
   UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
+import {
+  ConfigurationState,
+  CoreConfigurationState,
+} from '../features/configuration/configuration-state';
 import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
 import {isBrowser} from '../utils/runtime';
@@ -42,9 +46,12 @@ import {stateKey} from './state-key';
 import {CoreExtraArguments, Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
-const coreReducers = {configuration, version};
-type CoreState = StateFromReducersMapObject<typeof coreReducers> &
-  Partial<SearchParametersState>;
+export type CoreState<
+  Configuration extends CoreConfigurationState = CoreConfigurationState,
+> = {
+  configuration: Configuration;
+  version: string;
+} & Partial<SearchParametersState>;
 
 type EngineDispatch<
   State,
@@ -55,6 +62,7 @@ type EngineDispatch<
 export interface CoreEngine<
   State extends object = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+  Configuration extends CoreConfigurationState = CoreConfigurationState,
 > {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
@@ -64,7 +72,7 @@ export interface CoreEngine<
    *
    * @returns For convenience, the action object that was just dispatched.
    */
-  dispatch: EngineDispatch<State & CoreState, ExtraArguments>;
+  dispatch: EngineDispatch<State & CoreState<Configuration>, ExtraArguments>;
   /**
    * Adds a change listener. It will be called any time an action is
    * dispatched, and some part of the state tree may potentially have changed.
@@ -77,7 +85,7 @@ export interface CoreEngine<
   /**
    * The complete headless state tree.
    */
-  state: State & CoreState;
+  state: State & CoreState<Configuration>;
   /**
    * The Relay instance used by Headless.
    */
@@ -113,14 +121,14 @@ export interface CoreEngine<
 export type CoreEngineNext<
   State extends object = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
-  Configuration extends EngineConfiguration = EngineConfiguration,
+  Configuration extends CoreConfigurationState = CoreConfigurationState,
 > = Omit<CoreEngine<State, ExtraArguments>, 'state' | 'store'> & {
   /**
    * The readonly internal state of the headless engine.
    *
    * @internal
    */
-  readonly [stateKey]: State & CoreState;
+  readonly [stateKey]: State & CoreState<Configuration>;
 
   /**
    * The readonly global headless engine configuration
@@ -224,9 +232,19 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<
   StateFromReducersMapObject<Reducers>,
-  CoreExtraArguments & ExtraArguments
+  CoreExtraArguments & ExtraArguments,
+  ConfigurationState
 > {
-  const engine = buildCoreEngine(options, thunkExtraArguments);
+  const reducers = {
+    ...options.reducers,
+    configuration,
+    version,
+  };
+  const engine = buildCoreEngine(
+    {...options, reducers},
+    thunkExtraArguments,
+    configuration
+  );
   const {accessToken, environment, organizationId} = options.configuration;
 
   engine.dispatch(
@@ -248,16 +266,22 @@ export function buildEngine<
   return engine;
 }
 
-function buildCoreEngine<
+export function buildCoreEngine<
   Reducers extends ReducersMapObject,
   ExtraArguments extends ThunkExtraArguments,
+  Configuration extends CoreConfigurationState,
 >(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ExtraArguments
-): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+  thunkExtraArguments: ExtraArguments,
+  configurationReducer: Reducer<Configuration>
+): CoreEngine<
+  StateFromReducersMapObject<Reducers>,
+  ExtraArguments,
+  Configuration
+> {
   const {reducers} = options;
   const reducerManager = createReducerManager(
-    {...coreReducers, ...reducers},
+    {...reducers, configurationReducer},
     options.preloadedState ?? {}
   );
   if (options.crossReducer) {

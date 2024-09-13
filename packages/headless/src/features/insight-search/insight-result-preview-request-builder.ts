@@ -1,4 +1,5 @@
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getOrganizationEndpoint} from '../../api/platform-client';
 import {
   HtmlRequest,
   HtmlRequestOptions,
@@ -14,13 +15,13 @@ export async function buildInsightResultPreviewRequest(
   state: StateNeededByInsightHtmlEndpoint,
   options: HtmlRequestOptions
 ): Promise<HtmlRequest> {
-  const {platformUrl, accessToken, organizationId, analytics} =
+  const {accessToken, organizationId, analytics, environment} =
     state.configuration;
   const {insightId} = state.insightConfiguration;
 
   const q = state.query?.q || '';
   const url = baseInsightUrl({
-    url: platformUrl,
+    url: getOrganizationEndpoint(organizationId, 'platform', environment),
     accessToken,
     organizationId,
     insightId,

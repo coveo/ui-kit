@@ -1,5 +1,5 @@
 import {Schema, SchemaValue, StringValue} from '@coveo/bueno';
-import {PlatformEnvironment} from '@coveo/headless';
+import {getOrganizationEndpoint, PlatformEnvironment} from '@coveo/headless';
 
 export interface InitializationOptions {
   /**
@@ -33,5 +33,10 @@ export const validateOptions = (
   }
 };
 
-export const extractPlatformUrl = (options: InitializationOptions) =>
-  `https://${options.organizationId}.admin.org${options.environment && options.environment !== 'prod' ? `.${options.environment}` : ''}.coveo.com`;
+export const extractPlatformUrl = (options: InitializationOptions) => {
+  return getOrganizationEndpoint(
+    options.organizationId,
+    'admin',
+    options.environment
+  );
+};

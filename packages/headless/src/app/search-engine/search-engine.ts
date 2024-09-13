@@ -1,7 +1,7 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
-import {getDefaultSearchEndpointBaseUrl} from '../../api/platform-client';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -22,6 +22,7 @@ import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
 } from '../../features/configuration/configuration-actions';
+import {ConfigurationState} from '../../features/configuration/configuration-state';
 import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
@@ -61,7 +62,7 @@ function getUpdateSearchConfigurationPayload(
   const {search, organizationId, environment} = configuration;
   const apiBaseUrl = search?.proxyBaseUrl
     ? search.proxyBaseUrl
-    : getDefaultSearchEndpointBaseUrl(organizationId, environment);
+    : getSearchApiBaseUrl(organizationId, environment);
 
   const payloadWithURL = {
     ...search,
@@ -75,7 +76,11 @@ function getUpdateSearchConfigurationPayload(
  * The engine for powering search experiences.
  */
 export interface SearchEngine<State extends object = {}>
-  extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
+  extends CoreEngine<
+    State & SearchEngineState,
+    SearchThunkExtraArguments,
+    ConfigurationState
+  > {
   /**
    * Executes the first search.
    *

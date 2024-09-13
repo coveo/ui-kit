@@ -1,4 +1,3 @@
-import {getDefaultOrganizationEndpointBaseUrl} from '../../api/platform-client';
 import {HtmlRequestOptions} from '../../api/search/html/html-request';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {getQueryInitialState} from '../query/query-state';
@@ -18,18 +17,11 @@ describe('ResultPreviewRequestBuilder', () => {
 
   const configurationInitialState = getConfigurationInitialState();
 
-  const {environment} = configurationInitialState;
-
   beforeEach(() => {
     state = {
       configuration: {
         ...configurationInitialState,
         organizationId: testOrgId,
-        platformUrl: getDefaultOrganizationEndpointBaseUrl(
-          testOrgId,
-          'platform',
-          environment
-        ),
       },
       resultPreview: getResultPreviewInitialState(),
       query: getQueryInitialState(),

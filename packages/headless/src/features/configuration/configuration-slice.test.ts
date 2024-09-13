@@ -1,15 +1,3 @@
-import {
-  getDefaultAnalyticsNextEndpointBaseUrl,
-  getDefaultCommerceEndpointBaseUrl,
-  getDefaultOrganizationEndpointBaseUrl,
-  getDefaultSearchEndpointBaseUrl,
-} from '../../api/platform-client';
-import {
-  updateBasicConfiguration as updateCommerceBasicConfiguration,
-  updateAnalyticsConfiguration as updateCommerceAnalyticsConfiguration,
-  disableAnalytics as disableCommerceAnalytics,
-  enableAnalytics as enableCommerceAnalytics,
-} from '../commerce/configuration/configuration-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -31,20 +19,13 @@ jest.mock('../../api/analytics/coveo-analytics-utils');
 
 describe('configuration slice', () => {
   const initialState = getConfigurationInitialState();
-  const {environment} = initialState;
   const organizationId = 'myorg';
 
   const existingState: ConfigurationState = {
     ...initialState,
     accessToken: 'mytoken123',
     organizationId,
-    platformUrl: getDefaultOrganizationEndpointBaseUrl(
-      organizationId,
-      'platform',
-      environment
-    ),
     search: {
-      apiBaseUrl: getDefaultSearchEndpointBaseUrl(organizationId, environment),
       locale: 'en-US',
       timezone: 'Africa/Johannesburg',
       authenticationProviders: [],
@@ -54,15 +35,6 @@ describe('configuration slice', () => {
       originContext: '0',
       originLevel2: '2',
       originLevel3: '3',
-      apiBaseUrl: getDefaultOrganizationEndpointBaseUrl(
-        organizationId,
-        'analytics',
-        environment
-      ),
-      nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
-        organizationId,
-        environment
-      ),
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',
@@ -79,11 +51,7 @@ describe('configuration slice', () => {
     );
   });
 
-  const describeUpdateBasic = (
-    updateBasic:
-      | typeof updateBasicConfiguration
-      | typeof updateCommerceBasicConfiguration
-  ) => {
+  describe('updateBasicConfiguration', () => {
     it('works on initial state', () => {
       const accessToken = 'mytoken123';
       const environment = 'hipaa';
@@ -94,41 +62,17 @@ describe('configuration slice', () => {
         accessToken,
         environment: environment,
         organizationId,
-        platformUrl: getDefaultOrganizationEndpointBaseUrl(
-          organizationId,
-          'platform',
-          environment
-        ),
         analytics: {
           ...getConfigurationInitialState().analytics,
-          apiBaseUrl: getDefaultOrganizationEndpointBaseUrl(
-            organizationId,
-            'analytics',
-            environment
-          ),
-          nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
-            organizationId,
-            environment
-          ),
-        },
-        commerce: {
-          apiBaseUrl: getDefaultCommerceEndpointBaseUrl(
-            organizationId,
-            environment
-          ),
         },
         search: {
           ...getConfigurationInitialState().search,
-          apiBaseUrl: getDefaultSearchEndpointBaseUrl(
-            organizationId,
-            environment
-          ),
         },
       };
       expect(
         configurationReducer(
           undefined,
-          updateBasic({
+          updateBasicConfiguration({
             organizationId,
             accessToken,
             environment,
@@ -147,42 +91,18 @@ describe('configuration slice', () => {
         accessToken,
         environment,
         organizationId,
-        platformUrl: getDefaultOrganizationEndpointBaseUrl(
-          organizationId,
-          'platform',
-          environment
-        ),
         analytics: {
           ...existingState.analytics,
-          apiBaseUrl: getDefaultOrganizationEndpointBaseUrl(
-            organizationId,
-            'analytics',
-            environment
-          ),
-          nextApiBaseUrl: getDefaultAnalyticsNextEndpointBaseUrl(
-            organizationId,
-            environment
-          ),
-        },
-        commerce: {
-          apiBaseUrl: getDefaultCommerceEndpointBaseUrl(
-            organizationId,
-            environment
-          ),
         },
         search: {
           ...existingState.search,
-          apiBaseUrl: getDefaultSearchEndpointBaseUrl(
-            organizationId,
-            environment
-          ),
         },
       };
 
       expect(
         configurationReducer(
           existingState,
-          updateBasic({
+          updateBasicConfiguration({
             accessToken,
             environment,
             organizationId,
@@ -190,94 +110,6 @@ describe('configuration slice', () => {
         )
       ).toEqual(expectedState);
     });
-
-    it('setting organizationId updates #organizationId, #platformUrl, #analytics.apiBaseUrl, #analytics.nextApiBaseUrl, and #search.apiBaseUrl in state', () => {
-      const organizationId = 'neworganization';
-
-      const newState = configurationReducer(
-        existingState,
-        updateBasic({organizationId})
-      );
-
-      expect(newState.organizationId).toBe(organizationId);
-
-      expect(newState.platformUrl).toBe(
-        getDefaultOrganizationEndpointBaseUrl(
-          organizationId,
-          'platform',
-          existingState.environment
-        )
-      );
-      expect(newState.analytics.apiBaseUrl).toBe(
-        getDefaultOrganizationEndpointBaseUrl(
-          organizationId,
-          'analytics',
-          existingState.environment
-        )
-      );
-
-      expect(newState.analytics.nextApiBaseUrl).toBe(
-        getDefaultAnalyticsNextEndpointBaseUrl(
-          organizationId,
-          existingState.environment
-        )
-      );
-
-      expect(newState.search.apiBaseUrl).toBe(
-        getDefaultSearchEndpointBaseUrl(
-          organizationId,
-          existingState.environment
-        )
-      );
-    });
-
-    it('setting environment updates #environment #platformUrl, #analytics.apiBaseUrl, #analytics.nextApiBaseUrl, and #search.apiBaseUrl in state', () => {
-      const environment = 'dev';
-      const newState = configurationReducer(
-        existingState,
-        updateBasic({environment})
-      );
-
-      expect(newState.environment).toBe(environment);
-
-      expect(newState.platformUrl).toBe(
-        getDefaultOrganizationEndpointBaseUrl(
-          existingState.organizationId,
-          'platform',
-          environment
-        )
-      );
-
-      expect(newState.analytics.apiBaseUrl).toBe(
-        getDefaultOrganizationEndpointBaseUrl(
-          existingState.organizationId,
-          'analytics',
-          environment
-        )
-      );
-
-      expect(newState.analytics.nextApiBaseUrl).toBe(
-        getDefaultAnalyticsNextEndpointBaseUrl(
-          existingState.organizationId,
-          environment
-        )
-      );
-
-      expect(newState.search.apiBaseUrl).toBe(
-        getDefaultSearchEndpointBaseUrl(
-          existingState.organizationId,
-          environment
-        )
-      );
-    });
-  };
-
-  describe('updateBasicConfiguration', () => {
-    describeUpdateBasic(updateBasicConfiguration);
-  });
-
-  describe('updateCommerceBasicConfiguration', () => {
-    describeUpdateBasic(updateCommerceBasicConfiguration);
   });
 
   describe('updateAnalyticsConfiguration', () => {
@@ -289,7 +121,6 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
-          nextApiBaseUrl: 'https://example.com/analytics',
           apiBaseUrl: 'https://example.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
@@ -327,7 +158,6 @@ describe('configuration slice', () => {
           originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
-          nextApiBaseUrl: 'https://example.com/analytics',
           apiBaseUrl: 'https://example.com/analytics',
           anonymous: true,
           deviceId: 'fuzz',
@@ -372,55 +202,6 @@ describe('configuration slice', () => {
         proxyBaseUrl,
       });
       expect('error' in action).toBe(true);
-    });
-  });
-
-  describe('updateCommerceAnalyticsConfiguration', () => {
-    it('works on initial state', () => {
-      const initialState = getConfigurationInitialState();
-      const expectedState: ConfigurationState = {
-        ...initialState,
-        analytics: {
-          ...initialState.analytics,
-          enabled: false,
-          trackingId: 'someTrackingId',
-          source: {'@coveo/atomic': '3.0.0'},
-        },
-      };
-      expect(
-        configurationReducer(
-          undefined,
-          updateCommerceAnalyticsConfiguration({
-            enabled: false,
-            trackingId: 'someTrackingId',
-            source: {'@coveo/atomic': '3.0.0'},
-          })
-        )
-      ).toEqual(expectedState);
-    });
-
-    it('works on an existing state', () => {
-      const expectedState: ConfigurationState = {
-        ...existingState,
-        analytics: {
-          ...existingState.analytics,
-          enabled: false,
-          trackingId: 'someTrackingId',
-          analyticsMode: 'legacy',
-          source: {'@coveo/atomic': '3.0.0'},
-        },
-      };
-
-      expect(
-        configurationReducer(
-          existingState,
-          updateAnalyticsConfiguration({
-            enabled: false,
-            trackingId: 'someTrackingId',
-            source: {'@coveo/atomic': '3.0.0'},
-          })
-        )
-      ).toEqual(expectedState);
     });
   });
 
@@ -495,28 +276,11 @@ describe('configuration slice', () => {
     ).toBe(false);
   });
 
-  it('should handle disable commerce analytics', () => {
-    const state = getConfigurationInitialState();
-    state.analytics.enabled = true;
-
-    expect(
-      configurationReducer(state, disableCommerceAnalytics()).analytics.enabled
-    ).toBe(false);
-  });
-
   it('should handle enable analytics', () => {
     const state = getConfigurationInitialState();
     state.analytics.enabled = false;
     expect(
       configurationReducer(state, enableAnalytics()).analytics.enabled
-    ).toBe(true);
-  });
-
-  it('should handle enable commerce analytics', () => {
-    const state = getConfigurationInitialState();
-    state.analytics.enabled = false;
-    expect(
-      configurationReducer(state, enableCommerceAnalytics()).analytics.enabled
     ).toBe(true);
   });
 

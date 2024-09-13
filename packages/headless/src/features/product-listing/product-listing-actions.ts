@@ -7,6 +7,7 @@ import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
+import {getOrganizationEndpoint} from '../../api/platform-client';
 import {
   CategoryFacetSection,
   ConfigurationSection,
@@ -129,7 +130,11 @@ export const buildProductListingRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    platformUrl: state.configuration.platformUrl,
+    platformUrl: getOrganizationEndpoint(
+      state.configuration.organizationId,
+      'platform',
+      state.configuration.environment
+    ),
     url: state.productListing?.url,
     ...(state.configuration.analytics.enabled && visitorId
       ? {clientId: visitorId}

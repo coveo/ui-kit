@@ -86,6 +86,11 @@ export type {Result} from './api/search/search/result';
 export type {HighlightKeyword} from './utils/highlight';
 export type {Raw} from './api/search/search/raw';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
 // Features
 export type {
   ResultTemplatesManager,

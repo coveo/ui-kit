@@ -623,4 +623,9 @@ export {
   validateRelativeDate,
 } from './api/search/date/relative-date';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
 export * from './utils/query-expression/query-expression';

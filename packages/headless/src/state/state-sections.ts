@@ -5,6 +5,7 @@ import {CaseAssistConfigurationState} from '../features/case-assist-configuratio
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
+import {ConfigurationState as CommerceConfigurationState} from '../features/commerce/configuration/configuration-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state';
@@ -208,6 +209,10 @@ export interface ConfigurationSection {
    * The global headless engine configuration.
    */
   configuration: ConfigurationState;
+}
+
+export interface CommerceConfigurationSection {
+  configuration: CommerceConfigurationState;
 }
 
 export interface FacetSearchSection {

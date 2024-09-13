@@ -2,6 +2,7 @@ import {
   historyStore,
   getVisitorID,
 } from '../../api/analytics/coveo-analytics-utils';
+import {getOrganizationEndpoint} from '../../api/platform-client';
 import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request';
 import {InsightAppState} from '../../state/insight-app-state';
 import {
@@ -21,7 +22,11 @@ export const buildInsightQuerySuggestRequest = async (
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
-    url: s.configuration.platformUrl,
+    url: getOrganizationEndpoint(
+      s.configuration.organizationId,
+      'platform',
+      s.configuration.environment
+    ),
     count: s.querySuggest![id]!.count,
     insightId: s.insightConfiguration.insightId,
     q: s.querySet?.[id],

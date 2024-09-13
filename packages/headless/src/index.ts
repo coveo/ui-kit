@@ -547,6 +547,11 @@ export * from './features/analytics/generic-analytics-actions-loader';
 export * from './features/actions-history/ipx-actions-history-actions-loader';
 
 // Types & Helpers
+export {
+  getOrganizationEndpoint,
+  getSearchApiBaseUrl,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
 export {API_DATE_FORMAT} from './api/search/date/date-format';
 export {HighlightUtils};
 export type {Result} from './api/search/search/result';

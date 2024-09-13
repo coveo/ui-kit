@@ -6,23 +6,13 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
     organizationId: 'lbergeronsfdevt1z2624x',
     environment: 'dev',
     accessToken: 'x7d408c4b-5b56-40b0-9cc5-eb6e9bf7a7f8',
-    platformUrl: 'https://lbergeronsfdevt1z2624x.orgdev.coveo.com',
     search: {
-      apiBaseUrl:
-        'https://lbergeronsfdevt1z2624x.orgdev.coveo.com/rest/search/v2',
       locale: 'en',
       timezone: 'America/New_York',
       authenticationProviders: [],
     },
-    commerce: {
-      apiBaseUrl:
-        'https://lbergeronsfdevt1z2624x.orgdev.coveo.com/rest/organizations/lbergeronsfdevt1z2624x/commerce/v2',
-    },
     analytics: {
       enabled: false,
-      apiBaseUrl: 'https://lbergeronsfdevt1z2624x.analytics.orgdev.coveo.com',
-      nextApiBaseUrl:
-        'https://lbergeronsfdevt1z2624x.analytics.orgdev.coveo.com/rest/organizations/lbergeronsfdevt1z2624x/events/v1',
       originContext: 'Search',
       originLevel2: 'default',
       originLevel3: 'http://localhost:3333/examples/genqa.html',

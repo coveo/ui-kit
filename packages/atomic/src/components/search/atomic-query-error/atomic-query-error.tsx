@@ -1,4 +1,9 @@
-import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
+import {
+  QueryError,
+  QueryErrorState,
+  buildQueryError,
+  getOrganizationEndpoint,
+} from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
@@ -56,16 +61,21 @@ export class AtomicQueryError implements InitializableComponent {
         i18n,
         engine: {
           state: {
-            configuration: {organizationId, platformUrl},
+            configuration: {organizationId, environment},
           },
         },
       },
     } = this;
+    const url = getOrganizationEndpoint(
+      organizationId,
+      'platform',
+      environment
+    );
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        platformUrl,
+        url,
         error?.type
       );
     }
@@ -81,7 +91,7 @@ export class AtomicQueryError implements InitializableComponent {
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={platformUrl}
+            url={url}
             errorType={error?.type}
           />
           <QueryErrorShowMore

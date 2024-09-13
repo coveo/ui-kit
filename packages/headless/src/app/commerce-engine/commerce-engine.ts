@@ -2,7 +2,13 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {updateProxyBaseUrl} from '../../features/commerce/configuration/configuration-actions';
+import {
+  updateAnalyticsConfiguration,
+  updateBasicConfiguration,
+  updateProxyBaseUrl,
+} from '../../features/commerce/configuration/configuration-actions';
+import {configurationReducer} from '../../features/commerce/configuration/configuration-slice';
+import {ConfigurationState} from '../../features/commerce/configuration/configuration-state';
 import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
@@ -18,18 +24,16 @@ import {recommendationsReducer} from '../../features/commerce/recommendations/re
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
-import {
-  AnalyticsState as AnalyticsApiConfigurationState,
-  CommerceState as CommerceApiConfigurationState,
-} from '../../features/configuration/configuration-state';
+import {versionReducer} from '../../features/debug/version-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
-  buildEngine,
+  buildCoreEngine,
   CoreEngineNext,
+  CoreState,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
@@ -72,9 +76,9 @@ export type CommerceEngineState =
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
-    State & CommerceEngineState,
+    State & CoreState<ConfigurationState> & CommerceEngineState,
     CommerceThunkExtraArguments,
-    CommerceEngineReadonlyConfigurationState
+    ConfigurationState
   > {}
 
 /**
@@ -86,33 +90,6 @@ export interface CommerceEngineOptions
    * The commerce engine configuration options.
    */
   configuration: CommerceEngineConfiguration;
-}
-
-export interface CommerceEngineReadonlyConfigurationState
-  extends Omit<
-    CommerceEngineConfiguration,
-    'analytics' | 'cart' | 'context' | 'proxyBaseUrl'
-  > {
-  /**
-   * The global headless engine Usage Analytics API configuration.
-   */
-  analytics: Pick<
-    AnalyticsApiConfigurationState,
-    'enabled' | 'nextApiBaseUrl' | 'source' | 'trackingId'
-  >;
-  /**
-   * The global headless engine Commerce API configuration.
-   */
-  commerce: CommerceApiConfigurationState;
-  /**
-   * The base platform [organization endpoint](https://docs.coveo.com/en/mcc80216).
-   *
-   * This value is automatically resolved from the `organizationId` and `environment`.
-   *
-   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
-   * will be `https://mycoveocloudorganizationg8tp8wu3.org.coveo.com`.
-   */
-  platformUrl: string;
 }
 
 /**
@@ -135,16 +112,44 @@ export function buildCommerceEngine(
     apiClient: commerceClient,
   };
 
-  const augmentedOptions: EngineOptions<CommerceEngineReducers> = {
-    ...options,
-    reducers: commerceEngineReducers,
+  const reducers = {
+    ...commerceEngineReducers,
+    configuration: configurationReducer,
+    version: versionReducer,
   };
 
-  const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+  const augmentedOptions: EngineOptions<CommerceEngineReducers> = {
+    ...options,
+    reducers,
+  };
+
+  const internalEngine = buildCoreEngine(
+    augmentedOptions,
+    thunkArguments,
+    configurationReducer
+  );
 
   const {state: _, ...engine} = internalEngine;
 
-  const {proxyBaseUrl, context, cart} = configuration;
+  const {
+    accessToken,
+    environment,
+    organizationId,
+    analytics,
+    proxyBaseUrl,
+    context,
+    cart,
+  } = configuration;
+
+  engine.dispatch(
+    updateBasicConfiguration({
+      accessToken,
+      environment,
+      organizationId,
+    })
+  );
+
+  engine.dispatch(updateAnalyticsConfiguration(analytics));
 
   if (proxyBaseUrl !== undefined) {
     engine.dispatch(
@@ -167,7 +172,7 @@ export function buildCommerceEngine(
       return internalEngine.state;
     },
 
-    get configuration(): CommerceEngineReadonlyConfigurationState {
+    get configuration(): ConfigurationState {
       return {
         ...internalEngine.state.configuration,
       };

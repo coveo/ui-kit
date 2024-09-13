@@ -2,22 +2,6 @@ import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  getDefaultAnalyticsNextEndpointBaseUrl,
-  getDefaultCommerceEndpointBaseUrl,
-  getDefaultOrganizationEndpointBaseUrl,
-  getDefaultSearchEndpointBaseUrl,
-} from '../../api/platform-client';
-import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../../utils/url-utils';
-import {
-  updateBasicConfiguration as updateCommerceBasicConfiguration,
-  updateAnalyticsConfiguration as updateCommerceAnalyticsConfiguration,
-  disableAnalytics as disableCommerceAnalytics,
-  enableAnalytics as enableCommerceAnalytics,
-  updateProxyBaseUrl as updateCommerceProxyBaseUrl,
-  UpdateProxyBaseUrlPayload,
-} from '../commerce/configuration/configuration-actions';
-import {UpdateAnalyticsConfigurationPayload as UpdateCommerceAnalyticsConfigurationPayload} from '../commerce/configuration/configuration-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -44,31 +28,16 @@ export const configurationReducer = createReducer(
       .addCase(updateBasicConfiguration, (state, action) => {
         handleUpdateBasicConfiguration(state, action.payload);
       })
-      .addCase(updateCommerceBasicConfiguration, (state, action) => {
-        handleUpdateBasicConfiguration(state, action.payload);
-      })
       .addCase(updateSearchConfiguration, (state, action) => {
         handleUpdateSearchConfiguration(state, action.payload);
-      })
-      .addCase(updateCommerceProxyBaseUrl, (state, action) => {
-        handleUpdateCommerceProxyBaseUrl(state, action.payload);
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         handleUpdateAnalyticsConfiguration(state, action.payload);
       })
-      .addCase(updateCommerceAnalyticsConfiguration, (state, action) => {
-        handleUpdateCommerceAnalyticsConfiguration(state, action.payload);
-      })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
       })
-      .addCase(disableCommerceAnalytics, (state) => {
-        state.analytics.enabled = false;
-      })
       .addCase(enableAnalytics, (state) => {
-        state.analytics.enabled = true;
-      })
-      .addCase(enableCommerceAnalytics, (state) => {
         state.analytics.enabled = true;
       })
       .addCase(setOriginLevel2, (state, action) => {
@@ -99,67 +68,6 @@ function handleUpdateBasicConfiguration(
   if (!isNullOrUndefined(payload.organizationId)) {
     state.organizationId = payload.organizationId;
   }
-
-  if (
-    !isNullOrUndefined(payload.organizationId) ||
-    !isNullOrUndefined(payload.environment)
-  ) {
-    const organizationId = payload.organizationId ?? state.organizationId;
-    const environment = payload.environment ?? state.environment;
-
-    state.platformUrl = getDefaultOrganizationEndpointBaseUrl(
-      organizationId,
-      'platform',
-      environment
-    );
-
-    if (
-      state.search.apiBaseUrl.length === 0 ||
-      matchCoveoOrganizationEndpointUrlAnyOrganization(state.search.apiBaseUrl)
-    ) {
-      state.search.apiBaseUrl = getDefaultSearchEndpointBaseUrl(
-        organizationId,
-        environment
-      );
-    }
-
-    if (
-      state.analytics.apiBaseUrl.length === 0 ||
-      matchCoveoOrganizationEndpointUrlAnyOrganization(
-        state.analytics.apiBaseUrl
-      )
-    ) {
-      state.analytics.apiBaseUrl = getDefaultOrganizationEndpointBaseUrl(
-        organizationId,
-        'analytics',
-        environment
-      );
-    }
-
-    if (
-      state.analytics.nextApiBaseUrl.length === 0 ||
-      matchCoveoOrganizationEndpointUrlAnyOrganization(
-        state.analytics.nextApiBaseUrl
-      )
-    ) {
-      state.analytics.nextApiBaseUrl = getDefaultAnalyticsNextEndpointBaseUrl(
-        organizationId,
-        environment
-      );
-    }
-
-    if (
-      state.commerce.apiBaseUrl.length === 0 ||
-      matchCoveoOrganizationEndpointUrlAnyOrganization(
-        state.commerce.apiBaseUrl
-      )
-    ) {
-      state.commerce.apiBaseUrl = getDefaultCommerceEndpointBaseUrl(
-        organizationId,
-        environment
-      );
-    }
-  }
 }
 
 function handleUpdateSearchConfiguration(
@@ -177,15 +85,6 @@ function handleUpdateSearchConfiguration(
   }
   if (!isNullOrUndefined(payload.authenticationProviders)) {
     state.search.authenticationProviders = payload.authenticationProviders;
-  }
-}
-
-function handleUpdateCommerceProxyBaseUrl(
-  state: ConfigurationState,
-  payload: UpdateProxyBaseUrlPayload
-) {
-  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
-    state.commerce.apiBaseUrl = payload.proxyBaseUrl;
   }
 }
 
@@ -207,7 +106,6 @@ function handleUpdateAnalyticsConfiguration(
   }
   if (!isNullOrUndefined(payload.proxyBaseUrl)) {
     state.analytics.apiBaseUrl = payload.proxyBaseUrl;
-    state.analytics.nextApiBaseUrl = payload.proxyBaseUrl;
   }
   if (!isNullOrUndefined(payload.trackingId)) {
     state.analytics.trackingId = payload.trackingId;
@@ -237,23 +135,5 @@ function handleUpdateAnalyticsConfiguration(
   }
   if (!isNullOrUndefined(payload.documentLocation)) {
     state.analytics.documentLocation = payload.documentLocation;
-  }
-}
-
-function handleUpdateCommerceAnalyticsConfiguration(
-  state: ConfigurationState,
-  payload: UpdateCommerceAnalyticsConfigurationPayload
-) {
-  if (!isNullOrUndefined(payload.enabled)) {
-    state.analytics.enabled = payload.enabled;
-  }
-  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
-    state.analytics.nextApiBaseUrl = payload.proxyBaseUrl;
-  }
-  if (!isNullOrUndefined(payload.source)) {
-    state.analytics.source = payload.source;
-  }
-  if (!isNullOrUndefined(payload.trackingId)) {
-    state.analytics.trackingId = payload.trackingId;
   }
 }

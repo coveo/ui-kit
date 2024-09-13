@@ -2,6 +2,7 @@ import {
   QueryError,
   QueryErrorState,
   buildQueryError,
+  getOrganizationEndpoint,
 } from '@coveo/headless/insight';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -55,16 +56,21 @@ export class AtomicQueryError
         i18n,
         engine: {
           state: {
-            configuration: {organizationId, platformUrl},
+            configuration: {organizationId, environment},
           },
         },
       },
     } = this;
+    const url = getOrganizationEndpoint(
+      organizationId,
+      'platform',
+      environment
+    );
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        platformUrl,
+        url,
         error?.type
       );
     }
@@ -76,7 +82,7 @@ export class AtomicQueryError
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={platformUrl}
+            url={url}
           />
           <QueryErrorShowMore
             link={<QueryErrorLink i18n={i18n} errorType={error?.type} />}

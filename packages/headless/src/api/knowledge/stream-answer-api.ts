@@ -23,6 +23,7 @@ import {
 } from '../../state/state-sections';
 import {getFacets} from '../../utils/facet-utils';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload';
+import {getOrganizationEndpoint} from '../platform-client';
 import {SearchRequest} from '../search/search/search-request';
 import {answerSlice} from './answer-slice';
 
@@ -186,9 +187,14 @@ export const answerApi = answerSlice.injectEndpoints({
          */
         const {configuration, generatedAnswer} =
           getState() as unknown as StateNeededByAnswerAPI;
-        const {platformUrl, organizationId, accessToken} = configuration;
+        const {organizationId, environment, accessToken} = configuration;
+        const platformEndpoint = getOrganizationEndpoint(
+          organizationId,
+          'platform',
+          environment
+        );
         await fetchEventSource(
-          `${platformUrl}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
+          `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
           {
             method: 'POST',
             body: JSON.stringify(args),

@@ -293,4 +293,11 @@ export {
   validateRelativeDate,
 } from './api/search/date/relative-date';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
+export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client';
+
 export * from './utils/query-expression/query-expression';

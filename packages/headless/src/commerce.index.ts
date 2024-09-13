@@ -1,6 +1,11 @@
 import * as Selectors from './selectors/commerce-selectors.index';
 import * as HighlightUtils from './utils/highlight';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client';
 export type {HighlightKeyword} from './utils/highlight';
 
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';

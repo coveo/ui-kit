@@ -4,6 +4,7 @@ import {
   historyStore,
   getVisitorID,
 } from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
 import {
   AsyncThunkSearchOptions,
@@ -258,7 +259,12 @@ export const buildProductRecommendationsRequest = async (
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
-    url: s.configuration.search.apiBaseUrl,
+    url:
+      s.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        s.configuration.organizationId,
+        s.configuration.environment
+      ),
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     ...(s.configuration.analytics.enabled && {

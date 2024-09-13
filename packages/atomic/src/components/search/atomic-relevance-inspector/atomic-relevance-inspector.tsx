@@ -1,3 +1,4 @@
+import {getOrganizationEndpoint} from '@coveo/headless';
 import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
 import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -59,7 +60,7 @@ export class AtomicRelevanceInspector {
     const {organizationId, environment} =
       this.bindings.engine.state.configuration;
 
-    const admin = `https://${organizationId}.admin.org${environment === 'prod' ? '' : environment}.coveo.com`;
+    const admin = getOrganizationEndpoint(organizationId, 'admin', environment);
     const {searchResponseId} = this.bindings.engine.state.search;
     return `${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`;
   }

@@ -1,7 +1,12 @@
 import {Logger} from 'pino';
 import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments';
 import {CommerceAppState} from '../../state/commerce-app-state';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {PlatformEnvironment} from '../../utils/url-utils';
+import {
+  getOrganizationEndpoint,
+  PlatformClient,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
 import {SpecificFacetSearchResponse} from '../search/facet-search/specific-facet-search/specific-facet-search-response';
 import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response';
@@ -173,4 +178,17 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
       ? {success: body as T}
       : {error: body as CommerceAPIErrorStatusResponse};
   }
+}
+
+export function getCommerceApiBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const platformEndpoint = getOrganizationEndpoint(
+    organizationId,
+    'platform',
+    environment
+  );
+
+  return `${platformEndpoint}/rest/organizations/${organizationId}/commerce/v2`;
 }

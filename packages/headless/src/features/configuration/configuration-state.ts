@@ -8,40 +8,19 @@ import {CoveoFramework} from '../../utils/version';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export interface ConfigurationState {
-  /**
-   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
-   */
-  organizationId: string;
+export interface CoreConfigurationState<
+  Analytics extends CoreAnalyticsState = CoreAnalyticsState,
+> {
   /**
    * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
    */
   accessToken: string;
-  /**
-   * The base platform [organization endpoint](https://docs.coveo.com/en/mcc80216).
-   *
-   * This value is automatically resolved from the `organizationId` and `environment`.
-   *
-   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
-   * will be `https://mycoveocloudorganizationg8tp8wu3.org.coveo.com`.
-   */
-  platformUrl: string;
-  /**
-   * The global headless engine Search API configuration.
-   */
-  search: SearchState;
-  /**
-   * The global headless engine Commerce API configuration.
-   */
-  commerce: CommerceState;
+
   /**
    * The global headless engine Usage Analytics API configuration.
    */
-  analytics: AnalyticsState;
-  /**
-   * The global headless engine Knowledge configuration.
-   */
-  knowledge: KnowledgeState;
+  analytics: Analytics;
+
   /**
    * The environment in which the Coveo cloud organization is hosted.
    *
@@ -50,31 +29,37 @@ export interface ConfigurationState {
    * Defaults to `prod`.
    */
   environment: PlatformEnvironment;
+
+  /**
+   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
+   */
+  organizationId: string;
 }
 
-export interface CommerceState {
+export interface ConfigurationState
+  extends CoreConfigurationState<AnalyticsState> {
   /**
-   * The Commerce API base URL to use.
-   *
-   * By default, will append `/rest/organizations/{organizationId}/commerce/v2` to the automatically resolved
-   * `platformUrl` value.
-   *
-   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the configuration of your commerce
-   * engine, or in the payload of an `updateBasicCommerceConfiguration` action.
+   * The global headless engine Search API configuration.
    */
-  apiBaseUrl: string;
+  search: SearchState;
+  /**
+   * The global headless engine Knowledge configuration.
+   */
+  knowledge: KnowledgeState;
 }
 
 export interface SearchState {
   /**
    * The Search API base URL to use.
    *
-   * By default, will append `/rest/search/v2` to the automatically resolved `platformUrl` value.
+   * By default, will append `/rest/search/v2` to the automatically resolved
+   * platform [organization endpoint](https://docs.coveo.com/en/mcc80216)
+   * (i.e., `https;://<ORG_ID>.org<hipaa|dev|stg|>.coveo.com`)
    *
-   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `search` object of your search
-   * engine's configuration, or in the payload of an `updateSearchConfiguration` action.
+   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `search` object of your engine
+   * configuration, or when manually dispatching the `updateSearchConfiguration` action.
    */
-  apiBaseUrl: string;
+  apiBaseUrl?: string;
   /**
    * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    */
@@ -92,42 +77,7 @@ export interface SearchState {
   authenticationProviders: string[];
 }
 
-export interface AnalyticsState {
-  /**
-   * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
-   */
-  enabled: boolean;
-
-  /**
-   * The Analytics API base URL to use.
-   *
-   * By default, this value is automatically resolved from the `organizationId` and `environment` values in the
-   * top-level configuration state.
-   *
-   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
-   * will be `https://analytics.mycoveocloudorganizationg8tp8wu3.org.coveo.com`.
-   *
-   * If necessary, this value can be overridden by specifying a `proxyBaseUrl` in the engine configuration's analytics
-   * object, or in the payload when dispatching the `updateAnalyticsConfiguration` action.
-   */
-  apiBaseUrl: string;
-
-  /**
-   * @internal
-   * The Analytics API base URL to use.
-   *
-   * By default, this value is automatically resolved from the `organizationId` and `environment` values in the
-   * top-level configuration state.
-   *
-   * For example, if `organizationId` is `mycoveocloudorganizationg8tp8wu3` and `environment` is `prod`, `platformUrl`
-   * will be
-   * `https://analytics.mycoveocloudorganizationg8tp8wu3.org.coveo.com/rest/organizations/${organizationId}/events/v1`.
-   *
-   * If necessary, this value can be overridden by specifying a `proxyBaseUrl` in the engine configuration's analytics
-   * object, or in the payload when dispatching the `updateAnalyticsConfiguration` action.
-   */
-  nextApiBaseUrl: string;
-
+export interface AnalyticsState extends CoreAnalyticsState {
   /**
    * Sets the Origin Context dimension on the analytics events.
    *
@@ -171,34 +121,60 @@ export interface AnalyticsState {
    * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
    */
   anonymous: boolean;
+
   /**
    *  The name of the device that the end user is using. It should be explicitly configured in the context of a native mobile app.
    */
   deviceId: string;
+
   /**
    * Specifies the user display name for the usage analytics logs.
    */
   userDisplayName: string;
+
   /**
    * Specifies the URL of the current page or component.
    */
   documentLocation: string;
-  /**
-   * The unique identifier of the tracking target.
-   * @internal
-   */
-  trackingId: string;
+
   /**
    * Specifies the analytics mode to use.
    * By default, `legacy`.
    * @internal
    */
   analyticsMode: 'legacy' | 'next';
+}
+
+export interface CoreAnalyticsState {
+  /**
+   * The Analytics API base URL to use.
+   *
+   * By default, will append `/rest/organizations/${organizationId}/events/v1` (or `/rest/v15/analytics` if
+   * `analyticsMode`is set to `legacy`) to the automatically resolved analytics
+   * [organization endpoint](https://docs.coveo.com/en/mcc80216)
+   * (i.e., `https;://<ORG_ID>.analytics.org<hipaa|dev|stg|>.coveo.com`)
+   *
+   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `analytics` object of your engine
+   * configuration, or when manually dispatching the `updateAnalyticsConfiguration` action.
+   */
+  apiBaseUrl?: string;
+
+  /**
+   * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
+   */
+  enabled: boolean;
+
   /**
    * Specifies the frameworks and version used around Headless (e.g. @coveo/atomic)
    * @internal
    */
   source: Partial<Record<CoveoFramework, string>>;
+
+  /**
+   * The unique identifier of the tracking target.
+   * @internal
+   */
+  trackingId: string;
 }
 
 interface KnowledgeState {
@@ -208,17 +184,13 @@ interface KnowledgeState {
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
-  platformUrl: '',
   search: {
-    apiBaseUrl: '',
     locale: 'en-US',
     timezone: dayjs.tz.guess(),
     authenticationProviders: [],
   },
   analytics: {
     enabled: true,
-    apiBaseUrl: '',
-    nextApiBaseUrl: '',
     originContext: 'Search',
     originLevel2: 'default',
     originLevel3: 'default',
@@ -229,9 +201,6 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     trackingId: '',
     analyticsMode: 'legacy',
     source: {},
-  },
-  commerce: {
-    apiBaseUrl: '',
   },
   knowledge: {
     answerConfigurationId: '',

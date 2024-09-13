@@ -3,10 +3,9 @@ import pino from 'pino';
 import {ExpiredTokenError} from '../utils/errors';
 import {PlatformEnvironment} from '../utils/url-utils';
 import {
-  getDefaultAnalyticsNextEndpointBaseUrl,
-  getDefaultCommerceEndpointBaseUrl,
-  getDefaultOrganizationEndpointBaseUrl,
-  getDefaultSearchEndpointBaseUrl,
+  getAnalyticsNextApiBaseUrl,
+  getOrganizationEndpoint,
+  getSearchApiBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
 } from './platform-client';
@@ -29,7 +28,6 @@ it.each([
       analytics: 'https://foo.analytics.org.coveo.com',
       analyticsNext:
         'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
-      commerce: 'https://foo.org.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.org.coveo.com',
       search: 'https://foo.org.coveo.com/rest/search/v2',
     },
@@ -42,8 +40,6 @@ it.each([
       analytics: 'https://foo.analytics.orgdev.coveo.com',
       analyticsNext:
         'https://foo.analytics.orgdev.coveo.com/rest/organizations/foo/events/v1',
-      commerce:
-        'https://foo.orgdev.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.orgdev.coveo.com',
       search: 'https://foo.orgdev.coveo.com/rest/search/v2',
     },
@@ -56,8 +52,6 @@ it.each([
       analytics: 'https://foo.analytics.orgstg.coveo.com',
       analyticsNext:
         'https://foo.analytics.orgstg.coveo.com/rest/organizations/foo/events/v1',
-      commerce:
-        'https://foo.orgstg.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.orgstg.coveo.com',
       search: 'https://foo.orgstg.coveo.com/rest/search/v2',
     },
@@ -70,7 +64,6 @@ it.each([
       analytics: 'https://foo.analytics.org.coveo.com',
       analyticsNext:
         'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
-      commerce: 'https://foo.org.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.org.coveo.com',
       search: 'https://foo.org.coveo.com/rest/search/v2',
     },
@@ -83,8 +76,6 @@ it.each([
       analytics: 'https://foo.analytics.orghipaa.coveo.com',
       analyticsNext:
         'https://foo.analytics.orghipaa.coveo.com/rest/organizations/foo/events/v1',
-      commerce:
-        'https://foo.orghipaa.coveo.com/rest/organizations/foo/commerce/v2',
       platform: 'https://foo.orghipaa.coveo.com',
       search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
     },
@@ -96,36 +87,32 @@ it.each([
     admin: string;
     analytics: string;
     analyticsNext: string;
-    commerce: string;
     platform: string;
     search: string;
   };
 }>)(
   'return the correct #getOrganizationEndpoints()',
   ({orgId, env, organizationEndpoints}) => {
-    expect(getDefaultOrganizationEndpointBaseUrl(orgId, 'admin', env)).toEqual(
+    expect(getOrganizationEndpoint(orgId, 'admin', env)).toEqual(
       organizationEndpoints.admin
     );
-    expect(
-      getDefaultOrganizationEndpointBaseUrl(orgId, 'analytics', env)
-    ).toEqual(organizationEndpoints.analytics);
-    expect(getDefaultAnalyticsNextEndpointBaseUrl(orgId, env)).toEqual(
+    expect(getOrganizationEndpoint(orgId, 'analytics', env)).toEqual(
+      organizationEndpoints.analytics
+    );
+    expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(
       organizationEndpoints.analyticsNext
     );
-    expect(getDefaultCommerceEndpointBaseUrl(orgId, env)).toEqual(
-      organizationEndpoints.commerce
+    expect(getOrganizationEndpoint(orgId, 'platform', env)).toEqual(
+      organizationEndpoints.platform
     );
-    expect(
-      getDefaultOrganizationEndpointBaseUrl(orgId, 'platform', env)
-    ).toEqual(organizationEndpoints.platform);
-    expect(getDefaultSearchEndpointBaseUrl(orgId, env)).toEqual(
+    expect(getSearchApiBaseUrl(orgId, env)).toEqual(
       organizationEndpoints.search
     );
   }
 );
 
 describe('PlatformClient call', () => {
-  let platformUrl: string;
+  let url: string;
   function platformCall(options: Partial<PlatformClientCallOptions> = {}) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
@@ -134,7 +121,7 @@ describe('PlatformClient call', () => {
       requestParams: {
         test: 123,
       },
-      url: getDefaultOrganizationEndpointBaseUrl('', 'platform'),
+      url: getOrganizationEndpoint('', 'platform'),
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
       origin: 'searchApiFetch',
@@ -143,7 +130,7 @@ describe('PlatformClient call', () => {
   }
 
   beforeEach(() => {
-    platformUrl = getDefaultOrganizationEndpointBaseUrl('', 'platform');
+    url = getOrganizationEndpoint('', 'platform');
     mockFetch.mockClear();
   });
 
@@ -154,7 +141,7 @@ describe('PlatformClient call', () => {
 
     await platformCall();
 
-    expect(mockFetch).toHaveBeenCalledWith(platformUrl, {
+    expect(mockFetch).toHaveBeenCalledWith(url, {
       body: JSON.stringify({
         test: 123,
       }),
@@ -181,7 +168,7 @@ describe('PlatformClient call', () => {
     };
     await platformCall({preprocessRequest: middleware});
 
-    expect(mockFetch).toHaveBeenCalledWith(platformUrl, {
+    expect(mockFetch).toHaveBeenCalledWith(url, {
       body: JSON.stringify({
         test: 123,
       }),
@@ -206,7 +193,7 @@ describe('PlatformClient call', () => {
     };
     await platformCall({preprocessRequest});
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.objectContaining({
         headers: {
           Authorization: 'Bearer accessToken1',
@@ -224,7 +211,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -238,7 +225,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.objectContaining({body: ''})
     );
   });
@@ -248,7 +235,7 @@ describe('PlatformClient call', () => {
     await platformCall({contentType: undefined, requestParams});
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.objectContaining({body: JSON.stringify(requestParams)})
     );
   });
@@ -261,7 +248,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -274,7 +261,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -287,7 +274,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.not.objectContaining({body: expect.anything()})
     );
   });
@@ -300,7 +287,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl,
+      url,
       expect.not.objectContaining({body: expect.anything()})
     );
   });

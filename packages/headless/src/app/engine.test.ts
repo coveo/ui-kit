@@ -3,17 +3,14 @@ import {
   createAction,
   createReducer,
 } from '@reduxjs/toolkit';
-import {
-  getDefaultAnalyticsNextEndpointBaseUrl,
-  getDefaultOrganizationEndpointBaseUrl,
-  getDefaultSearchEndpointBaseUrl,
-} from '../api/platform-client';
 import * as Store from '../app/store';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions';
+import {ConfigurationState} from '../features/configuration/configuration-state';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {configuration} from './common-reducers';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {getSampleEngineConfiguration} from './engine-configuration';
+import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 jest.mock('pino', () => ({
   ...jest.requireActual('pino'),
@@ -28,7 +25,7 @@ jest.mock('pino', () => ({
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
-  let engine: CoreEngine;
+  let engine: CoreEngine<{}, ThunkExtraArguments, ConfigurationState>;
   let organizationId: string;
 
   function initEngine() {
@@ -41,8 +38,9 @@ describe('engine', () => {
     organizationId = 'orgId';
     options = {
       configuration: {
-        organizationId,
         accessToken: 'token',
+        environment: 'hipaa',
+        organizationId,
       },
       reducers: {},
     };
@@ -52,28 +50,10 @@ describe('engine', () => {
     const {accessToken, environment, organizationId} = options.configuration;
     initEngine();
     expect(engine.state.configuration.accessToken).toBe(accessToken);
-    expect(engine.state.configuration.environment).toBe('prod');
+    expect(engine.state.configuration.environment).toBe(environment);
     expect(engine.state.configuration.organizationId).toBe(organizationId);
-    expect(engine.state.configuration.platformUrl).toBe(
-      getDefaultOrganizationEndpointBaseUrl(
-        organizationId,
-        'platform',
-        environment
-      )
-    );
-    expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
-      getDefaultOrganizationEndpointBaseUrl(
-        organizationId,
-        'analytics',
-        environment
-      )
-    );
-    expect(engine.state.configuration.analytics.nextApiBaseUrl).toBe(
-      getDefaultAnalyticsNextEndpointBaseUrl(organizationId, environment)
-    );
-    expect(engine.state.configuration.search.apiBaseUrl).toBe(
-      getDefaultSearchEndpointBaseUrl(organizationId, environment)
-    );
+    expect(engine.state.configuration.analytics.apiBaseUrl).toBeUndefined();
+    expect(engine.state.configuration.search.apiBaseUrl).toBeUndefined();
   });
 
   it('when no reducers are specified, still registers the basic configuration correctly', () => {
@@ -81,28 +61,10 @@ describe('engine', () => {
     const {accessToken, environment, organizationId} = options.configuration;
     initEngine();
     expect(engine.state.configuration.accessToken).toBe(accessToken);
-    expect(engine.state.configuration.environment).toBe('prod');
+    expect(engine.state.configuration.environment).toBe(environment);
     expect(engine.state.configuration.organizationId).toBe(organizationId);
-    expect(engine.state.configuration.platformUrl).toBe(
-      getDefaultOrganizationEndpointBaseUrl(
-        organizationId,
-        'platform',
-        environment
-      )
-    );
-    expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
-      getDefaultOrganizationEndpointBaseUrl(
-        organizationId,
-        'analytics',
-        environment
-      )
-    );
-    expect(engine.state.configuration.analytics.nextApiBaseUrl).toBe(
-      getDefaultAnalyticsNextEndpointBaseUrl(organizationId, environment)
-    );
-    expect(engine.state.configuration.search.apiBaseUrl).toBe(
-      getDefaultSearchEndpointBaseUrl(organizationId, environment)
-    );
+    expect(engine.state.configuration.analytics.apiBaseUrl).toBeUndefined();
+    expect(engine.state.configuration.search.apiBaseUrl).toBeUndefined();
   });
 
   it('registers the analytics configuration if specified', () => {
@@ -133,7 +95,6 @@ describe('engine', () => {
     expect(analytics).toEqual({
       ...restOfAnalyticsConfiguration,
       apiBaseUrl: proxyBaseUrl,
-      nextApiBaseUrl: proxyBaseUrl,
     });
   });
 

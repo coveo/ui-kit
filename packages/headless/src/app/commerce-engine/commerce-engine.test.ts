@@ -1,4 +1,3 @@
-import {getDefaultCommerceEndpointBaseUrl} from '../../api/platform-client';
 import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart';
 import {stateKey} from '../state-key';
 import {
@@ -39,13 +38,8 @@ describe('buildCommerceEngine', () => {
     );
   });
 
-  it('when #proxyBaseUrl is not specified, #commerce.apiBaseUrl uses default commerce endpoint', () => {
-    expect(engine[stateKey].configuration.commerce.apiBaseUrl).toBe(
-      getDefaultCommerceEndpointBaseUrl(
-        options.configuration.organizationId,
-        options.configuration.environment
-      )
-    );
+  it('when #proxyBaseUrl is not specified, #commerce.apiBaseUrl is undefined', () => {
+    expect(engine[stateKey].configuration.commerce.apiBaseUrl).toBeUndefined();
   });
 
   it('sets the #commerceContext to the #context specified in the configuration', () => {

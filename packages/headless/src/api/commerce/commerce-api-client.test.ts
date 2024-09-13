@@ -1,18 +1,15 @@
 import {SortBy} from '../../features/sort/sort';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {VERSION} from '../../utils/version';
-import {
-  getDefaultCommerceEndpointBaseUrl,
-  PlatformClient,
-} from '../platform-client';
-import {CommerceAPIClient} from './commerce-api-client';
+import {PlatformClient} from '../platform-client';
+import {CommerceAPIClient, getCommerceApiBaseUrl} from './commerce-api-client';
 import {CommerceAPIRequest} from './common/request';
 import {CommerceResponse} from './common/response';
 import {CommerceRecommendationsRequest} from './recommendations/recommendations-request';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';
-  const platformUrl = getDefaultCommerceEndpointBaseUrl(organizationId);
+  const apiBaseUrl = getCommerceApiBaseUrl(organizationId);
   const accessToken = 'some-access-token';
   const trackingId = 'some-tracking-id';
 
@@ -39,7 +36,7 @@ describe('commerce api client', () => {
   ): Promise<CommerceAPIRequest> => ({
     accessToken: accessToken,
     organizationId: organizationId,
-    url: platformUrl,
+    url: apiBaseUrl,
     trackingId: trackingId,
     language: req.language ?? '',
     country: req.country ?? '',
@@ -62,7 +59,7 @@ describe('commerce api client', () => {
       slotId: 'slotId',
       accessToken: accessToken,
       organizationId: organizationId,
-      url: platformUrl,
+      url: apiBaseUrl,
       trackingId: trackingId,
       language: req.language ?? '',
       country: req.country ?? '',
@@ -94,7 +91,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/listing`,
+      url: `${getCommerceApiBaseUrl(organizationId)}/listing`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -126,7 +123,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/search`,
+      url: `${getCommerceApiBaseUrl(organizationId)}/search`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -156,7 +153,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/recommendations`,
+      url: `${getCommerceApiBaseUrl(organizationId)}/recommendations`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -188,7 +185,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/search/productSuggest`,
+      url: `${getCommerceApiBaseUrl(organizationId)}/search/productSuggest`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -221,7 +218,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/search/querySuggest`,
+      url: `${getCommerceApiBaseUrl(organizationId)}/search/querySuggest`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -259,7 +256,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `${getDefaultCommerceEndpointBaseUrl(organizationId)}/facet?type=SEARCH`,
+      url: `${getCommerceApiBaseUrl(organizationId)}/facet?type=SEARCH`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {

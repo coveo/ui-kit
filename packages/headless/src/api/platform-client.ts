@@ -124,7 +124,7 @@ export class PlatformClient {
   }
 }
 
-export function getDefaultOrganizationEndpointBaseUrl(
+export function getOrganizationEndpoint(
   organizationId: string,
   endpointType: 'admin' | 'analytics' | 'platform',
   environment: PlatformEnvironment = 'prod'
@@ -136,43 +136,37 @@ export function getDefaultOrganizationEndpointBaseUrl(
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }
 
-export function getDefaultSearchEndpointBaseUrl(
+export function getAdministrationOrganizationEndpoint(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'
 ) {
-  const baseUrl = getDefaultOrganizationEndpointBaseUrl(
+  return getOrganizationEndpoint(organizationId, 'admin', environment);
+}
+
+export function getSearchApiBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const organizationEndpoint = getOrganizationEndpoint(
     organizationId,
     'platform',
     environment
   );
 
-  return `${baseUrl}/rest/search/v2`;
+  return `${organizationEndpoint}/rest/search/v2`;
 }
 
-export function getDefaultAnalyticsNextEndpointBaseUrl(
+export function getAnalyticsNextApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'
 ) {
-  const baseUrl = getDefaultOrganizationEndpointBaseUrl(
+  const organizationEndpoint = getOrganizationEndpoint(
     organizationId,
     'analytics',
     environment
   );
 
-  return `${baseUrl}/rest/organizations/${organizationId}/events/v1`;
-}
-
-export function getDefaultCommerceEndpointBaseUrl(
-  organizationId: string,
-  environment: PlatformEnvironment = 'prod'
-) {
-  const baseUrl = getDefaultOrganizationEndpointBaseUrl(
-    organizationId,
-    'platform',
-    environment
-  );
-
-  return `${baseUrl}/rest/organizations/${organizationId}/commerce/v2`;
+  return `${organizationEndpoint}/rest/organizations/${organizationId}/events/v1`;
 }
 
 function buildDefaultRequestOptions(
