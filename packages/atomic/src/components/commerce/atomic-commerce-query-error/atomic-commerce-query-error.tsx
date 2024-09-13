@@ -78,9 +78,8 @@ export class AtomicQueryError
       },
     } = this;
 
-    const url = commerce.apiBaseUrl
-      ? commerce.apiBaseUrl
-      : getCommerceApiBaseUrl(organizationId, environment);
+    const url =
+      commerce.apiBaseUrl ?? getCommerceApiBaseUrl(organizationId, environment);
 
     const hasError = !isNullOrUndefined(error);
     if (hasError) {
