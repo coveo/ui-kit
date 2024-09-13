@@ -9,7 +9,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {loadContextActions} from 'https://static.cloud.coveo.com/headless/v2/recommendation/headless.esm.js';
+      import {loadContextActions} from '/build/headless/recommendation/headless.esm.js';
 
       (async () => {
         await customElements.whenDefined('atomic-recs-interface');
@@ -85,7 +85,6 @@
       }
     </style>
   </head>
-
   <body>
     <div class="layout">
       <!-- Tiles -->
@@ -97,12 +96,10 @@
                 div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                   height: 120px;
                 }
-
                 .rating-wrapper {
                   display: flex;
                   align-items: center;
                 }
-
                 .rating-wrapper span {
                   margin-left: 5px;
                   color: #8e959d;
@@ -143,12 +140,10 @@
                 div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                   height: 120px;
                 }
-
                 .rating-wrapper {
                   display: flex;
                   align-items: center;
                 }
-
                 .rating-wrapper span {
                   margin-left: 5px;
                   color: #8e959d;
@@ -194,12 +189,10 @@
                 div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                   height: 120px;
                 }
-
                 .rating-wrapper {
                   display: flex;
                   align-items: center;
                 }
-
                 .rating-wrapper span {
                   margin-left: 5px;
                   color: #8e959d;
