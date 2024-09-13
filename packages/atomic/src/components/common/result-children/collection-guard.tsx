@@ -48,5 +48,9 @@ export const CollectionGuard: FunctionalComponent<CollectionGuardProps> = (
     ) : null;
   }
 
+  if (!hasChildren) {
+    return;
+  }
+
   return <Fragment>{children}</Fragment>;
 };
