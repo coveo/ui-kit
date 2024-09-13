@@ -9,7 +9,6 @@ import {
   destroyEngine,
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
-import {getOrganizationEndpoints} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
@@ -69,8 +68,6 @@ export default class QuanticInsightInterface extends LightningElement {
                   configuration: {
                     organizationId,
                     accessToken,
-                    organizationEndpoints:
-                      getOrganizationEndpoints(organizationId),
                     insightId: this.insightId,
                     search: {
                       locale: LOCALE,

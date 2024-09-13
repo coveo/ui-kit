@@ -7,7 +7,6 @@ import {
   setInitializedCallback,
   HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
-import {getOrganizationEndpoints} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
@@ -58,8 +57,6 @@ export default class QuanticCaseAssistInterface extends LightningElement {
                   configuration: {
                     organizationId,
                     accessToken,
-                    organizationEndpoints:
-                      getOrganizationEndpoints(organizationId),
                     caseAssistId: this.caseAssistId,
                     searchHub: this.searchHub,
                     analytics: {

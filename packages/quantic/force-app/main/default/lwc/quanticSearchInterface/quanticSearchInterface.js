@@ -8,10 +8,7 @@ import {
   setEngineOptions,
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
-import {
-  getOrganizationEndpoints,
-  STANDALONE_SEARCH_BOX_STORAGE_KEY,
-} from 'c/quanticUtils';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -99,8 +96,6 @@ export default class QuanticSearchInterface extends LightningElement {
                 configuration: {
                   organizationId,
                   accessToken,
-                  organizationEndpoints:
-                    getOrganizationEndpoints(organizationId),
                   search: {
                     searchHub: this.searchHub,
                     pipeline: this.pipeline,
