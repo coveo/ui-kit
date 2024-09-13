@@ -9,7 +9,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {buildTab} from '/build/headless/headless.esm.js';
+      import {buildTab} from 'https://static.cloud.coveo.com/headless/v2/headless.esm.js';
 
       async function main() {
         await customElements.whenDefined('atomic-search-interface');
@@ -44,6 +44,7 @@
       main();
     </script>
   </head>
+
   <body>
     <atomic-search-interface>
       <atomic-search-layout>

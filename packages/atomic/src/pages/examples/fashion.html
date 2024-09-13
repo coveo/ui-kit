@@ -8,7 +8,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {loadPaginationActions} from '/build/headless/headless.esm.js';
+      import {loadPaginationActions} from 'https://static.cloud.coveo.com/headless/v2/headless.esm.js';
 
       function setNumberOfResults(engine) {
         const action = loadPaginationActions(engine).registerNumberOfResults(6);
@@ -54,6 +54,7 @@
         --atomic-neutral: #e7e3e3;
         --atomic-neutral-light: #f5f2f2;
       }
+
       body {
         margin: 0;
       }
@@ -98,10 +99,12 @@
                     div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                       height: 120px;
                     }
+
                     .rating-wrapper {
                       display: flex;
                       align-items: center;
                     }
+
                     .rating-wrapper span {
                       margin-left: 5px;
                       color: #8e959d;
@@ -174,10 +177,12 @@
                     div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                       height: 120px;
                     }
+
                     .rating-wrapper {
                       display: flex;
                       align-items: center;
                     }
+
                     .rating-wrapper span {
                       margin-left: 5px;
                       color: #8e959d;
@@ -221,10 +226,12 @@
                     div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                       height: 120px;
                     }
+
                     .rating-wrapper {
                       display: flex;
                       align-items: center;
                     }
+
                     .rating-wrapper span {
                       margin-left: 5px;
                       color: #8e959d;
