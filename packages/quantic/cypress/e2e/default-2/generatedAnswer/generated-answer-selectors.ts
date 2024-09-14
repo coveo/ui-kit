@@ -19,10 +19,6 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   feedbackDoneButton: () => CypressSelector;
   feedbackDocumentUrlInput: () => CypressSelector;
   feedbackDetailsInput: () => CypressSelector;
-  rephraseButtons: () => CypressSelector;
-  rephraseLabel: () => CypressSelector;
-  rephraseButtonByLabel: (label: string) => CypressSelector;
-  generatedAnswerFooterRow: () => CypressSelector;
   copyToClipboardButton: () => CypressSelector;
   citationTooltip: (index: number) => CypressSelector;
   citationTooltipUri: (index: number) => CypressSelector;
@@ -92,22 +88,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   feedbackDetailsInput: () =>
     GeneratedAnswerSelectors.feedbackModal().find(
       '[data-name="details"] textarea'
-    ),
-  rephraseButtons: () =>
-    GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__rephrase-buttons"]'
-    ),
-  rephraseLabel: () =>
-    GeneratedAnswerSelectors.get().find(
-      'legend[data-cy="radio-buttons-group__legend"]'
-    ),
-  rephraseButtonByLabel: (label: string) =>
-    GeneratedAnswerSelectors.get().find(
-      `c-quantic-radio-buttons-group [data-cy="${label}"]`
-    ),
-  generatedAnswerFooterRow: () =>
-    GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__footer-row"]'
     ),
   copyToClipboardButton: () =>
     GeneratedAnswerSelectors.get().find(

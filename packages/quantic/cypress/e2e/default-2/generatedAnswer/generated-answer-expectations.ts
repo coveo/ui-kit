@@ -94,20 +94,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`the dislike button ${should(selected)} be in a disliked state`);
     },
 
-    generatedAnswerFooterRowsIsOnMultiline: (multilineDisplay: boolean) => {
-      selector
-        .generatedAnswerFooterRow()
-        .should(
-          multilineDisplay ? 'have.class' : 'not.have.class',
-          'slds-grid_vertical'
-        )
-        .log(
-          `the generated answer footer rows ${should(
-            multilineDisplay
-          )} be displayed on multiple lines with slds-grid_vertical`
-        );
-    },
-
     generatedAnswerCollapsed: (collapsible: boolean) => {
       selector
         .generatedAnswer()
@@ -196,52 +182,11 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    sessionStorageContains: (key: string, expectedData: object) => {
-      cy.getAllSessionStorage()
-        .then((sessionStorage) => {
-          const matchingKeys = Object.values(sessionStorage).filter(
-            (val) =>
-              Object.keys(val).includes(`LSKey[c]${key}`) ||
-              Object.keys(val).includes(key)
-          );
-          const storedData = String(
-            matchingKeys?.[0]?.[`LSKey[c]${key}`] ||
-              matchingKeys?.[0]?.[key] ||
-              '{}'
-          );
-          expect(JSON.parse(storedData)).eql(expectedData);
-        })
-        .log(
-          `the key ${key} should have the value ${expectedData} in the session storage`
-        );
-    },
-
     displayFeedbackModal: (display: boolean) => {
       selector
         .feedbackModal()
         .should(display ? 'exist' : 'not.exist')
         .log(`${should(display)} display the feedback modal`);
-    },
-
-    displayRephraseButtons: (display: boolean) => {
-      selector
-        .rephraseButtons()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the rephrase buttons`);
-    },
-
-    displayRephraseLabel: (display: boolean) => {
-      selector
-        .rephraseLabel()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the rephrase label`);
-    },
-
-    displayRephraseButtonWithLabel: (label: string) => {
-      selector
-        .rephraseButtonByLabel(label)
-        .should('exist')
-        .log(`should display the rephrase button with the label ${label}`);
     },
 
     displayDisclaimer: (display: boolean) => {
@@ -256,20 +201,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .disclaimer()
         .contains(text)
         .log(`the disclaimer should contain "${text}"`);
-    },
-
-    rephraseButtonIsSelected: (name: string, selected: boolean) => {
-      selector
-        .rephraseButtonByLabel(name)
-        .should(
-          selected ? 'have.class' : 'not.have.class',
-          'radio-button--selected'
-        )
-        .should(
-          selected ? 'not.have.class' : 'have.class',
-          'radio-button--unselected'
-        )
-        .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },
 
     citationTooltipIsDisplayed: (index: number, displayed: boolean) => {
@@ -316,38 +247,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         })
         .log(
           `the citation tooltip text at the index ${index} should contain the text "${text}"`
-        );
-    },
-
-    searchQueryContainsCorrectRephraseOption: (
-      expectedAnswerStyle: string,
-      expectedActionCause: string,
-      expectedContentFormat?: string[]
-    ) => {
-      cy.get<Interception>(InterceptAliases.Search)
-        .then((interception) => {
-          const body = interception?.request?.body;
-          const answerStyle =
-            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-              ?.responseFormat?.answerStyle;
-          const contentFormat =
-            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-              ?.responseFormat?.contentFormat;
-          const analyticsSection = body.analytics;
-
-          expect(answerStyle).to.eq(expectedAnswerStyle);
-          expect(analyticsSection).to.exist;
-          expect(analyticsSection).to.have.property(
-            'actionCause',
-            expectedActionCause
-          );
-          if (expectedContentFormat) {
-            expect(contentFormat).to.exist;
-            expect(contentFormat).to.deep.equal(expectedContentFormat);
-          }
-        })
-        .log(
-          `the search query should contain the correct ${expectedAnswerStyle} parameter`
         );
     },
 
@@ -582,23 +481,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId
-          );
-        }
-      );
-    },
-
-    logRephraseGeneratedAnswer(expectedAnswerStyle: string, streamId: string) {
-      logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.RephraseGeneratedAnswer,
-        (analyticsBody: {customData: object; eventType: string}) => {
-          const customData = analyticsBody?.customData;
-          expect(customData).to.have.property(
-            'generativeQuestionAnsweringId',
-            streamId
-          );
-          expect(customData).to.have.property(
-            'rephraseFormat',
-            expectedAnswerStyle
           );
         }
       );
