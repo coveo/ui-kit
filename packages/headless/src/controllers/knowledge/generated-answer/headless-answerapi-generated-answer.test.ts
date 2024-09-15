@@ -116,15 +116,10 @@ describe('knowledge-generated-answer', () => {
     });
   });
 
-  it('dispatches a rephrase action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'step'};
-    generatedAnswer.rephrase(responseFormat);
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-  });
-
   it('initialize the format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
+    const responseFormat: GeneratedResponseFormat = {
+      contentFormat: ['text/markdown'],
+    };
     createGeneratedAnswer({
       initialState: {responseFormat},
     });

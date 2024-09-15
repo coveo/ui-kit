@@ -177,7 +177,7 @@ describe('insight search request', () => {
     });
 
     it('#buildInsightSearchRequest returns the state #generatedAnswer.responseFormat', async () => {
-      state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
+      state.generatedAnswer.responseFormat = {contentFormat: ['text/markdown']};
       const params = (await buildInsightSearchRequest(state)).request;
 
       expect(

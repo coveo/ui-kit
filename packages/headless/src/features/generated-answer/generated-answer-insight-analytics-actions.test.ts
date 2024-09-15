@@ -13,7 +13,6 @@ import {
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
   logRetryGeneratedAnswer,
-  logRephraseGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logHoverCitation,
   logLikeGeneratedAnswer,
@@ -29,7 +28,6 @@ import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
 const mockLogGeneratedAnswerFeedbackSubmit = jest.fn();
 const mockLogRetryGeneratedAnswer = jest.fn();
-const mockLogRephraseGeneratedAnswer = jest.fn();
 const mockLogOpenGeneratedAnswerSource = jest.fn();
 const mockLogHoverCitation = jest.fn();
 const mockLogLikeGeneratedAnswer = jest.fn();
@@ -59,7 +57,6 @@ jest.mock('coveo.analytics', () => {
     disable: jest.fn(),
     logGeneratedAnswerFeedbackSubmit: mockLogGeneratedAnswerFeedbackSubmit,
     logRetryGeneratedAnswer: mockLogRetryGeneratedAnswer,
-    logRephraseGeneratedAnswer: mockLogRephraseGeneratedAnswer,
     logOpenGeneratedAnswerSource: mockLogOpenGeneratedAnswerSource,
     logGeneratedAnswerSourceHover: mockLogHoverCitation,
     logLikeGeneratedAnswer: mockLogLikeGeneratedAnswer,
@@ -169,27 +166,6 @@ describe('generated answer insight analytics actions', () => {
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith(expectedCaseContext);
-    });
-
-    it('should log #logRephraseGeneratedAnswer with the right payload', async () => {
-      const exampleRephraseFormat = 'step';
-      await logRephraseGeneratedAnswer({answerStyle: exampleRephraseFormat})()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockLogRephraseGeneratedAnswer;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        rephraseFormat: exampleRephraseFormat,
-      };
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
     });
 
     it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {

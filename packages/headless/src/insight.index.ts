@@ -326,7 +326,6 @@ export type {
   InteractiveCitationOptions,
 } from './controllers/insight/generated-answer/headless-insight-interactive-citation';
 export {buildInteractiveCitation} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
-export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
 
 export type {
   UserActionsState,

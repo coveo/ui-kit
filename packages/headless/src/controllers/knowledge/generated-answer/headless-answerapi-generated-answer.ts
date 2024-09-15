@@ -28,7 +28,6 @@ import {
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-  GeneratedResponseFormat,
 } from '../../core/generated-answer/headless-core-generated-answer';
 
 export interface AnswerApiGeneratedAnswer
@@ -128,7 +127,7 @@ export function buildAnswerApiGeneratedAnswer(
     throw loadReducerError;
   }
 
-  const {rephrase: coreRephrase, ...controller} = buildCoreGeneratedAnswer(
+  const {...controller} = buildCoreGeneratedAnswer(
     engine,
     analyticsClient,
     props
@@ -156,10 +155,6 @@ export function buildAnswerApiGeneratedAnswer(
         answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',
         isAnswerGenerated: answerApiState?.generated ?? false,
       };
-    },
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      coreRephrase(responseFormat);
-      engine.dispatch(fetchAnswer(getState()));
     },
     retry() {
       engine.dispatch(fetchAnswer(getState()));

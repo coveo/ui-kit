@@ -14,7 +14,6 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
-import {GeneratedResponseFormat} from './generated-response-format';
 
 const RGAType = 'RGA';
 
@@ -26,28 +25,6 @@ export const logRetryGeneratedAnswer = (): InsightAction =>
       client.logRetryGeneratedAnswer(
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       )
-  );
-
-//TODO: SFINT-5435
-export const logRephraseGeneratedAnswer = (
-  responseFormat: GeneratedResponseFormat
-): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.rephraseGeneratedAnswer)(
-    'analytics/generatedAnswer/rephrase',
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.logRephraseGeneratedAnswer(
-        {
-          generativeQuestionAnsweringId,
-          rephraseFormat: responseFormat.answerStyle,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
-    }
   );
 
 export const logOpenGeneratedAnswerSource = (
@@ -458,7 +435,6 @@ export const generatedAnswerInsightAnalyticsClient = {
   logHoverCitation,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
-  logRephraseGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
 };

@@ -305,10 +305,6 @@ export enum SearchPageEvents {
    */
   contextChanged = 'contextChanged',
   /**
-   * Identifies the search event that gets logged when a user clicks a rephrase button in a generated answer.
-   */
-  rephraseGeneratedAnswer = 'rephraseGeneratedAnswer',
-  /**
    * Identifies the custom event that gets logged when a user hovers over a generated answer citation.
    */
   generatedAnswerSourceHover = 'generatedAnswerSourceHover',

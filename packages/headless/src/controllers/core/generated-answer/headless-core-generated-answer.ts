@@ -58,11 +58,6 @@ export interface GeneratedAnswer extends Controller {
    */
   dislike(): void;
   /**
-   * Re-executes the query to generate the answer in the specified format.
-   * @param responseFormat - The formatting options to apply to generated answers.
-   */
-  rephrase(responseFormat: GeneratedResponseFormat): void;
-  /**
    * Opens the modal to provide feedback about why the generated answer was not relevant.
    */
   openFeedbackModal(): void;
@@ -131,9 +126,6 @@ export interface GeneratedAnswerAnalyticsClient {
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
   logCopyGeneratedAnswer: () => CustomAction;
-  logRephraseGeneratedAnswer: (
-    responseFormat: GeneratedResponseFormat
-  ) => LegacySearchAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;
@@ -253,10 +245,6 @@ export function buildCoreGeneratedAnswer(
       dispatch(
         analyticsClient.logHoverCitation(citationId, citationHoverTimeMs)
       );
-    },
-
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      dispatch(updateResponseFormat(responseFormat));
     },
 
     show() {
