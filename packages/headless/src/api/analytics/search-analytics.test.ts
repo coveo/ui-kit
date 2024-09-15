@@ -5,7 +5,6 @@ import {getConfigurationInitialState} from '../../features/configuration/configu
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
 import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
 import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
@@ -230,15 +229,6 @@ describe('#configureLegacyAnalytics', () => {
       expect(
         new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
       ).toBe('pipeline-from-state');
-    });
-
-    it('should properly return the generated answer metadata from the state', () => {
-      const state = getBaseState();
-      state.generatedAnswer = getGeneratedAnswerInitialState();
-      state.generatedAnswer.isVisible = false;
-      expect(
-        new SearchAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
-      ).toEqual({showGeneratedAnswer: false});
     });
 
     it('should properly return the facet metadata from the state', () => {

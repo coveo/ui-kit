@@ -10,7 +10,6 @@ import {
   updateResponseFormat,
   openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
-  setIsVisible,
   sendGeneratedAnswerFeedback,
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
@@ -89,14 +88,6 @@ export interface GeneratedAnswer extends Controller {
    */
   logCitationClick(id: string): void;
   /**
-   * Displays the generated answer.
-   */
-  show(): void;
-  /**
-   * Hides the generated answer.
-   */
-  hide(): void;
-  /**
    * Expands the generated answer.
    */
   expand(): void;
@@ -128,8 +119,6 @@ export interface GeneratedAnswerAnalyticsClient {
     citationId: string,
     citationHoverTimeMs: number
   ) => CustomAction;
-  logGeneratedAnswerShowAnswers: () => CustomAction;
-  logGeneratedAnswerHideAnswers: () => CustomAction;
   logCopyGeneratedAnswer: () => CustomAction;
   logRephraseGeneratedAnswer: (
     responseFormat: GeneratedResponseFormat
@@ -141,10 +130,6 @@ export interface GeneratedAnswerAnalyticsClient {
 
 export interface GeneratedAnswerPropsInitialState {
   initialState?: {
-    /**
-     * Sets the component visibility state on load.
-     */
-    isVisible?: boolean;
     /**
      * The initial formatting options applied to generated answers when the controller first loads.
      */
@@ -187,10 +172,6 @@ export function buildCoreGeneratedAnswer(
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  const isVisible = props.initialState?.isVisible;
-  if (isVisible !== undefined) {
-    dispatch(setIsVisible(isVisible));
-  }
   const initialResponseFormat = props.initialState?.responseFormat;
   if (initialResponseFormat) {
     dispatch(updateResponseFormat(initialResponseFormat));
@@ -257,20 +238,6 @@ export function buildCoreGeneratedAnswer(
 
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
-    },
-
-    show() {
-      if (!this.state.isVisible) {
-        dispatch(setIsVisible(true));
-        dispatch(analyticsClient.logGeneratedAnswerShowAnswers());
-      }
-    },
-
-    hide() {
-      if (this.state.isVisible) {
-        dispatch(setIsVisible(false));
-        dispatch(analyticsClient.logGeneratedAnswerHideAnswers());
-      }
     },
 
     expand() {

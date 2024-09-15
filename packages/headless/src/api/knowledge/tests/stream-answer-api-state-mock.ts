@@ -1036,7 +1036,6 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   },
   generatedAnswer: {
     id: '',
-    isVisible: true,
     isLoading: false,
     isStreaming: false,
     citations: [],

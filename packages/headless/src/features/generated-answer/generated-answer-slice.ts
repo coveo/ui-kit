@@ -7,7 +7,6 @@ import {
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   resetAnswer,
-  setIsVisible,
   setIsLoading,
   setIsStreaming,
   updateCitations,
@@ -29,9 +28,6 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
-      .addCase(setIsVisible, (state, {payload}) => {
-        state.isVisible = payload;
-      })
       .addCase(setId, (state, {payload}) => {
         state.id = payload.id;
       })
@@ -92,7 +88,6 @@ export const generatedAnswerReducer = createReducer(
             : {}),
           responseFormat: state.responseFormat,
           fieldsToIncludeInCitations: state.fieldsToIncludeInCitations,
-          isVisible: state.isVisible,
           id: state.id,
         };
       })

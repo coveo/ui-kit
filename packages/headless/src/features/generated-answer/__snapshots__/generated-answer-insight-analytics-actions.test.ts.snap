@@ -74,32 +74,6 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
-[
-  "Qna.AnswerAction",
-  {
-    "action": "hide",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
-  },
-]
-`;
-
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
-[
-  "Qna.AnswerAction",
-  {
-    "action": "show",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
-  },
-]
-`;
-
 exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logHoverCitation with the right payload 1`] = `
 [
   "Qna.CitationHover",

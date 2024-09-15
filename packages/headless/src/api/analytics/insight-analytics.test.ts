@@ -1,7 +1,6 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
@@ -141,15 +140,6 @@ describe('insight analytics', () => {
       expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual(
         'another_id'
       );
-    });
-
-    it('should properly return the generated answer metadata from the state', () => {
-      const state = getBaseState();
-      state.generatedAnswer = getGeneratedAnswerInitialState();
-      state.generatedAnswer.isVisible = false;
-      expect(
-        new InsightAnalyticsProvider(() => state).getGeneratedAnswerMetadata()
-      ).toEqual({showGeneratedAnswer: false});
     });
   });
 });

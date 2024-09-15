@@ -7,10 +7,6 @@ import {
 export interface GeneratedAnswerState {
   id: string;
   /**
-   * Determines if the generated answer is visible.
-   */
-  isVisible: boolean;
-  /**
    * Determines if the generated answer is loading.
    */
   isLoading: boolean;
@@ -81,7 +77,6 @@ export interface GeneratedAnswerState {
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     id: '',
-    isVisible: true,
     isLoading: false,
     isStreaming: false,
     citations: [],

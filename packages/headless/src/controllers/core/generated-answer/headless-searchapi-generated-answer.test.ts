@@ -6,7 +6,6 @@ import {
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
   sendGeneratedAnswerFeedback,
-  setIsVisible,
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
@@ -163,51 +162,6 @@ describe('searchapi-generated-answer', () => {
     ).toHaveBeenCalledWith(citationId, citationHoverTimeMs);
   });
 
-  it('dispatches a show action if the component is not already visible', () => {
-    engine = buildEngineWithGeneratedAnswer({isVisible: false});
-    const generatedAnswer = createGeneratedAnswer({
-      initialState: {isVisible: false},
-    });
-    generatedAnswer.show();
-    expect(setIsVisible).toHaveBeenCalledWith(true);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerShowAnswers
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('does not dispatch a show action if the component is already visible', () => {
-    engine = buildEngineWithGeneratedAnswer({isVisible: true});
-    const generatedAnswer = createGeneratedAnswer({
-      initialState: {isVisible: true},
-    });
-    generatedAnswer.show();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerShowAnswers
-    ).not.toHaveBeenCalled();
-  });
-
-  it('dispatches a hide action if the component is visible', () => {
-    engine = buildEngineWithGeneratedAnswer({isVisible: true});
-    const generatedAnswer = createGeneratedAnswer({
-      initialState: {isVisible: true},
-    });
-    generatedAnswer.hide();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerHideAnswers
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('does not dispatch a hide action if the component is not visible', () => {
-    engine = buildEngineWithGeneratedAnswer({isVisible: false});
-    const generatedAnswer = createGeneratedAnswer({
-      initialState: {isVisible: false},
-    });
-    generatedAnswer.hide();
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerHideAnswers
-    ).not.toHaveBeenCalled();
-  });
-
   it('dispatches an expand action if the component is not already expanded', () => {
     engine = buildEngineWithGeneratedAnswer({expanded: false});
     const generatedAnswer = createGeneratedAnswer({
@@ -258,16 +212,6 @@ describe('searchapi-generated-answer', () => {
     expect(
       generatedAnswerAnalyticsClient.logCopyGeneratedAnswer
     ).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatches the setIsVisible with true when the initial state is set to true', () => {
-    createGeneratedAnswer({initialState: {isVisible: true}});
-    expect(setIsVisible).toHaveBeenCalledWith(true);
-  });
-
-  it('dispatches setIsVisible with false when the initial state is set to false', () => {
-    createGeneratedAnswer({initialState: {isVisible: false}});
-    expect(setIsVisible).toHaveBeenCalledWith(false);
   });
 
   it('dispatches the updateResponseFormat with the initial response format', () => {

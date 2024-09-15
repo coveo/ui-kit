@@ -14,8 +14,6 @@ import {
   logDislikeGeneratedAnswer,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
-  logGeneratedAnswerHideAnswers,
-  logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
   logHoverCitation,
   logLikeGeneratedAnswer,
@@ -54,12 +52,6 @@ const mockMakeDislikeGeneratedAnswer = jest.fn(() => ({
 const mockMakeGeneratedAnswerStreamEnd = jest.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerShowAnswers = jest.fn(() => ({
-  log: mockLogFunction,
-}));
-const mockMakeGeneratedAnswerHideAnswers = jest.fn(() => ({
-  log: mockLogFunction,
-}));
 const mockMakeGeneratedAnswerCopyToClipboard = jest.fn(() => ({
   log: mockLogFunction,
 }));
@@ -96,8 +88,6 @@ jest.mock('coveo.analytics', () => {
     makeLikeGeneratedAnswer: mockMakeLikeGeneratedAnswer,
     makeDislikeGeneratedAnswer: mockMakeDislikeGeneratedAnswer,
     makeGeneratedAnswerStreamEnd: mockMakeGeneratedAnswerStreamEnd,
-    makeGeneratedAnswerShowAnswers: mockMakeGeneratedAnswerShowAnswers,
-    makeGeneratedAnswerHideAnswers: mockMakeGeneratedAnswerHideAnswers,
     makeGeneratedAnswerCopyToClipboard: mockMakeGeneratedAnswerCopyToClipboard,
     makeGeneratedAnswerExpand: mockMakeGeneratedAnswerExpand,
     makeGeneratedAnswerCollapse: mockMakeGeneratedAnswerCollapse,
@@ -380,38 +370,6 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
-    it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
-      await logGeneratedAnswerShowAnswers()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockMakeGeneratedAnswerShowAnswers;
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith({
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      });
-      expect(mockLogFunction).toHaveBeenCalledTimes(1);
-    });
-
-    it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
-      await logGeneratedAnswerHideAnswers()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockMakeGeneratedAnswerHideAnswers;
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith({
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-      });
-      expect(mockLogFunction).toHaveBeenCalledTimes(1);
-    });
-
     it('should log #logGeneratedAnswerExpand with the right payload', async () => {
       await logGeneratedAnswerExpand()()(
         engine.dispatch,
@@ -537,28 +495,6 @@ describe('generated answer analytics actions', () => {
 
     it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
       await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit.mock.calls[0]).toMatchSnapshot();
-    });
-
-    it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
-      await logGeneratedAnswerShowAnswers()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit.mock.calls[0]).toMatchSnapshot();
-    });
-
-    it('should log #logGeneratedAnswerHideAnswers with the right payload', async () => {
-      await logGeneratedAnswerHideAnswers()()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

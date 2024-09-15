@@ -300,66 +300,6 @@ export const logGeneratedAnswerStreamEnd = (
     }
   );
 
-export const logGeneratedAnswerShowAnswers = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(
-    SearchPageEvents.generatedAnswerShowAnswers
-  )({
-    prefix: 'analytics/generatedAnswer/show',
-    __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.logGeneratedAnswerShowAnswers(
-        {
-          generativeQuestionAnsweringId,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
-    },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'show',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
-    },
-  });
-
-export const logGeneratedAnswerHideAnswers = (): InsightAction =>
-  makeInsightAnalyticsActionFactory(
-    SearchPageEvents.generatedAnswerHideAnswers
-  )({
-    prefix: 'analytics/generatedAnswer/hide',
-    __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.logGeneratedAnswerHideAnswers(
-        {
-          generativeQuestionAnsweringId,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
-    },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'hide',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
-    },
-  });
-
 export const logGeneratedAnswerExpand = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerExpand)({
     prefix: 'analytics/generatedAnswer/expand',
@@ -448,8 +388,6 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
 
 export const generatedAnswerInsightAnalyticsClient = {
   logCopyGeneratedAnswer,
-  logGeneratedAnswerHideAnswers,
-  logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,

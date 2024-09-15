@@ -279,56 +279,6 @@ export const logGeneratedAnswerStreamEnd = (
     }
   );
 
-export const logGeneratedAnswerShowAnswers = (): CustomAction =>
-  makeAnalyticsAction({
-    prefix: 'analytics/generatedAnswer/show',
-    __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerShowAnswers({
-        generativeQuestionAnsweringId,
-      });
-    },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'show',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
-    },
-  });
-
-export const logGeneratedAnswerHideAnswers = (): CustomAction =>
-  makeAnalyticsAction({
-    prefix: 'analytics/generatedAnswer/hide',
-    __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerHideAnswers({
-        generativeQuestionAnsweringId,
-      });
-    },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'hide',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
-    },
-  });
-
 export const logGeneratedAnswerExpand = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/expand',
@@ -414,8 +364,6 @@ export const rephraseGeneratedAnswer = (): SearchAction => ({
 
 export const generatedAnswerAnalyticsClient = {
   logCopyGeneratedAnswer,
-  logGeneratedAnswerHideAnswers,
-  logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,

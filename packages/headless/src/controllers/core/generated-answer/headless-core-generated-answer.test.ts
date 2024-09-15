@@ -4,7 +4,6 @@ import {
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   sendGeneratedAnswerFeedback,
-  setIsVisible,
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
@@ -16,8 +15,6 @@ import {
   logDislikeGeneratedAnswer,
   logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
-  logGeneratedAnswerHideAnswers,
-  logGeneratedAnswerShowAnswers,
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
@@ -180,67 +177,6 @@ describe('generated answer', () => {
     expect(logCopyGeneratedAnswer).toHaveBeenCalled();
   });
 
-  describe('#show', () => {
-    describe('when already visible', () => {
-      it('should not make any changes', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: true});
-        initGeneratedAnswer();
-
-        generatedAnswer.show();
-        expect(setIsVisible).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when not visible', () => {
-      it('should dispatch the setIsVisible action', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: false});
-        initGeneratedAnswer();
-
-        generatedAnswer.show();
-
-        expect(setIsVisible).toHaveBeenCalledWith(true);
-      });
-
-      it('should dispatch the analytics action', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: false});
-        initGeneratedAnswer();
-
-        generatedAnswer.show();
-        expect(logGeneratedAnswerShowAnswers).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('#hide', () => {
-    describe('when not visible', () => {
-      it('should not make any changes', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: false});
-        initGeneratedAnswer();
-
-        generatedAnswer.hide();
-        expect(setIsVisible).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when visible', () => {
-      it('should dispatch the setIsVisible action', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: true});
-        initGeneratedAnswer();
-
-        generatedAnswer.hide();
-        expect(setIsVisible).toHaveBeenCalledWith(false);
-      });
-
-      it('should dispatch the analytics action', () => {
-        engine = buildEngineWithGeneratedAnswer({isVisible: true});
-        initGeneratedAnswer();
-
-        generatedAnswer.hide();
-        expect(logGeneratedAnswerHideAnswers).toHaveBeenCalled();
-      });
-    });
-  });
-
   describe('#expand', () => {
     describe('when already expanded', () => {
       it('should not make any changes', () => {
@@ -290,19 +226,6 @@ describe('generated answer', () => {
   });
 
   describe('when passing initial state', () => {
-    describe('when #isVisible is set', () => {
-      it('should dispatch setIsVisible action when set to true', () => {
-        initGeneratedAnswer({initialState: {isVisible: true}});
-
-        expect(setIsVisible).toHaveBeenCalledWith(true);
-      });
-
-      it('should dispatch setIsVisible action when set to false', () => {
-        initGeneratedAnswer({initialState: {isVisible: false}});
-        expect(setIsVisible).toHaveBeenCalledWith(false);
-      });
-    });
-
     describe('when #responseFormat is set', () => {
       it('should dispatch updateResponseFormat action', () => {
         const responseFormat: GeneratedResponseFormat = {

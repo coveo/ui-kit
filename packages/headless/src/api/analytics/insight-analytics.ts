@@ -87,15 +87,6 @@ export class InsightAnalyticsProvider
     return baseObject;
   }
 
-  public getGeneratedAnswerMetadata() {
-    const state = this.getState();
-    return {
-      ...(state.generatedAnswer?.isVisible !== undefined && {
-        showGeneratedAnswer: state.generatedAnswer.isVisible,
-      }),
-    };
-  }
-
   private get queryText() {
     return this.state.query?.q || getQueryInitialState().q;
   }

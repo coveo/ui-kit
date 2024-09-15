@@ -4,7 +4,6 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
-  setIsVisible,
   setIsLoading,
   setIsStreaming,
   updateCitations,
@@ -220,7 +219,6 @@ describe('generated answer slice', () => {
   describe('#resetAnswer', () => {
     it('should reset the answer', () => {
       const persistentGeneratedAnswerState = {
-        isVisible: false,
         responseFormat: {
           answerStyle: 'step' as GeneratedAnswerStyle,
         },
@@ -449,26 +447,6 @@ describe('generated answer slice', () => {
       expect(finalState.fieldsToIncludeInCitations).toEqual(
         exampleFieldsToIncludeInCitations
       );
-    });
-  });
-
-  describe('#setIsVisible', () => {
-    it('should set isVisible to true when given true', () => {
-      const finalState = generatedAnswerReducer(
-        {...baseState, isVisible: false},
-        setIsVisible(true)
-      );
-
-      expect(finalState.isVisible).toEqual(true);
-    });
-
-    it('should set isVisible to false when given false', () => {
-      const finalState = generatedAnswerReducer(
-        {...baseState, isVisible: true},
-        setIsVisible(false)
-      );
-
-      expect(finalState.isVisible).toEqual(false);
     });
   });
 

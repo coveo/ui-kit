@@ -1,6 +1,5 @@
 import {buildMockCitation} from '../../test/mock-citation';
 import {
-  setIsVisible,
   setIsLoading,
   updateCitations,
   updateError,
@@ -93,12 +92,6 @@ describe('generated answer', () => {
       expect(() =>
         registerFieldsToIncludeInCitations(exampleFieldsToIncludeInCitations)
       ).not.toThrow();
-    });
-  });
-
-  describe('#setIsVisible', () => {
-    it('should accept a valid payload', () => {
-      expect(() => setIsVisible(true)).not.toThrow();
     });
   });
 

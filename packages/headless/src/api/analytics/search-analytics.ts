@@ -249,15 +249,6 @@ export class SearchAnalyticsProvider
     };
   }
 
-  public getGeneratedAnswerMetadata() {
-    const state = this.getState();
-    const formattedObject: Record<string, string | boolean> = {};
-    if (state.generatedAnswer?.isVisible !== undefined) {
-      formattedObject['showGeneratedAnswer'] = state.generatedAnswer.isVisible;
-    }
-    return formattedObject;
-  }
-
   private get resultURIs() {
     return this.results?.map((r) => ({
       documentUri: r.uri,
