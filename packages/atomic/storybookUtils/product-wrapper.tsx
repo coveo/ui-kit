@@ -20,7 +20,7 @@ export const wrapInProduct = (): {
           image-size="icon"
           style="border: 2px dashed black; padding:20px; position: relative;"
         >
-          <atomic-product-template results>
+          <atomic-product-template>
             ${unsafeHTML(
               `<template>${tempProductTemplate.innerHTML}</template>`
             )}
