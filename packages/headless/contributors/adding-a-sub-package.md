@@ -16,7 +16,6 @@ Headless provides exports through multiple sub packages. A sub-package groups to
      search: 'src/index.ts',
      recommendation: 'src/recommendation.index.ts',
      'product-recommendation': 'src/product-recommendation.index.ts',
-     'product-listing': 'src/product-listing.index.ts',
      'case-assist': 'src/case-assist.index.ts',
      // ...
    };
