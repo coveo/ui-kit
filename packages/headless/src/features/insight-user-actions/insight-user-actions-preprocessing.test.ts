@@ -27,7 +27,7 @@ const actionsToExclude = ['useless_event'];
 
 const fakeActions = [
   {
-    time: createRelativeDate(caseCreationDate, -1, 0).getTime(),
+    time: createRelativeDate(caseCreationDate, -15, 0).getTime(),
     name: 'Custom',
     value: {
       event_type: 'smartSnippetSuggestions',
@@ -36,7 +36,16 @@ const fakeActions = [
     },
   },
   {
-    time: createRelativeDate(caseCreationDate, 2, 0).getTime(),
+    time: createRelativeDate(caseCreationDate, 10, 0).getTime(),
+    name: 'Click',
+    value: {
+      title: 'title',
+      uri_hash: 'caCgiG2JPzjZfS7G',
+      origin_level_1: 'in-product-help',
+    },
+  },
+  {
+    time: createRelativeDate(caseCreationDate, 30, 0).getTime(),
     name: 'Click',
     value: {
       title: 'title',
@@ -156,7 +165,17 @@ describe('insight user actions preprocessing', () => {
         },
         {
           actionType: 'CLICK',
-          timestamp: new Date('Tue Mar 31 2022 16:32:00 GMT').valueOf(),
+          timestamp: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
+          eventData: {},
+          searchHub: 'in-product-help',
+          document: {
+            title: 'title',
+            uriHash: 'caCgiG2JPzjZfS7G',
+          },
+        },
+        {
+          actionType: 'CLICK',
+          timestamp: new Date('Tue Mar 31 2022 16:40:00 GMT').valueOf(),
           eventData: {},
           searchHub: 'in-product-help',
           document: {
@@ -166,7 +185,7 @@ describe('insight user actions preprocessing', () => {
         },
         {
           actionType: 'CUSTOM',
-          timestamp: new Date('Tue Mar 31 2022 16:29:00 GMT').valueOf(),
+          timestamp: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
           eventData: {
             type: 'smartSnippetSuggestions',
             value: 'expandSmartSnippetSuggestion',
@@ -397,12 +416,22 @@ describe('insight user actions preprocessing', () => {
               },
             ],
             session: {
-              start: new Date('Tue Mar 31 2022 16:29:00 GMT').valueOf(),
-              end: new Date('Tue Mar 31 2022 16:32:00 GMT').valueOf(),
+              start: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
+              end: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
               actions: [
                 {
                   actionType: 'CLICK',
-                  timestamp: new Date('Tue Mar 31 2022 16:32:00 GMT').valueOf(),
+                  timestamp: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
+                  eventData: {},
+                  searchHub: 'in-product-help',
+                  document: {
+                    title: 'title',
+                    uriHash: 'caCgiG2JPzjZfS7G',
+                  },
+                },
+                {
+                  actionType: 'CLICK',
+                  timestamp: new Date('Tue Mar 31 2022 16:40:00 GMT').valueOf(),
                   eventData: {},
                   searchHub: 'in-product-help',
                   document: {
@@ -417,7 +446,7 @@ describe('insight user actions preprocessing', () => {
                 },
                 {
                   actionType: 'CUSTOM',
-                  timestamp: new Date('Tue Mar 31 2022 16:29:00 GMT').valueOf(),
+                  timestamp: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
                   eventData: {
                     type: 'smartSnippetSuggestions',
                     value: 'expandSmartSnippetSuggestion',
@@ -481,7 +510,7 @@ describe('insight user actions preprocessing', () => {
           expect(timeline.precedingSessions.length).toEqual(
             expectedTimeline.precedingSessions.length
           );
-          expect(timeline.session?.actions[1].actionType).toEqual(
+          expect(timeline.session?.actions[2].actionType).toEqual(
             UserActionType.TICKET_CREATION
           );
         });
@@ -610,13 +639,25 @@ describe('insight user actions preprocessing', () => {
                 ],
               },
               {
-                start: new Date('Tue Mar 31 2022 16:29:00 GMT').valueOf(),
-                end: new Date('Tue Mar 31 2022 16:32:00 GMT').valueOf(),
+                start: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
+                end: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
                 actions: [
                   {
                     actionType: 'CLICK',
                     timestamp: new Date(
-                      'Tue Mar 31 2022 16:32:00 GMT'
+                      'Tue Mar 31 2022 17:00:00 GMT'
+                    ).valueOf(),
+                    eventData: {},
+                    searchHub: 'in-product-help',
+                    document: {
+                      title: 'title',
+                      uriHash: 'caCgiG2JPzjZfS7G',
+                    },
+                  },
+                  {
+                    actionType: 'CLICK',
+                    timestamp: new Date(
+                      'Tue Mar 31 2022 16:40:00 GMT'
                     ).valueOf(),
                     eventData: {},
                     searchHub: 'in-product-help',
@@ -628,7 +669,7 @@ describe('insight user actions preprocessing', () => {
                   {
                     actionType: 'CUSTOM',
                     timestamp: new Date(
-                      'Tue Mar 31 2022 16:29:00 GMT'
+                      'Tue Mar 31 2022 16:15:00 GMT'
                     ).valueOf(),
                     eventData: {
                       type: 'smartSnippetSuggestions',
@@ -881,12 +922,19 @@ describe('insight user actions preprocessing', () => {
             },
           ],
           session: {
-            start: new Date('Tue Mar 31 2022 16:29:00 GMT').valueOf(),
-            end: new Date('Tue Mar 31 2022 16:32:00 GMT').valueOf(),
+            start: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
+            end: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
             actions: [
               {
                 actionType: 'CLICK',
-                timestamp: new Date('Tue Mar 31 2022 16:32:00 GMT').valueOf(),
+                timestamp: new Date('Tue Mar 31 2022 17:00:00 GMT').valueOf(),
+                eventData: {},
+                searchHub: 'in-product-help',
+                document: {title: 'title', uriHash: 'caCgiG2JPzjZfS7G'},
+              },
+              {
+                actionType: 'CLICK',
+                timestamp: new Date('Tue Mar 31 2022 16:40:00 GMT').valueOf(),
                 eventData: {},
                 searchHub: 'in-product-help',
                 document: {title: 'title', uriHash: 'caCgiG2JPzjZfS7G'},
@@ -898,7 +946,7 @@ describe('insight user actions preprocessing', () => {
               },
               {
                 actionType: 'CUSTOM',
-                timestamp: new Date('Tue Mar 31 2022 16:29:00 GMT').valueOf(),
+                timestamp: new Date('Tue Mar 31 2022 16:15:00 GMT').valueOf(),
                 eventData: {
                   type: 'smartSnippetSuggestions',
                   value: 'expandSmartSnippetSuggestion',
@@ -953,7 +1001,7 @@ describe('insight user actions preprocessing', () => {
         expect(preprocessedTimeline.followingSessions.length).toEqual(
           expectedTimeline.followingSessions.length
         );
-        expect(preprocessedTimeline.session?.actions[1].actionType).toEqual(
+        expect(preprocessedTimeline.session?.actions[2].actionType).toEqual(
           UserActionType.TICKET_CREATION
         );
       });

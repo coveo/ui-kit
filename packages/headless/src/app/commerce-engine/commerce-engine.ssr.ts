@@ -56,19 +56,43 @@ function isSearchCompletedAction(action: unknown): action is Action {
   );
 }
 
+function noSearchActionRequired(_action: unknown): _action is Action {
+  return true;
+}
+
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
   options: CommerceEngineOptions
 ): SSRCommerceEngine {
-  const {middleware, promise} = createWaitForActionMiddleware(
-    solutionType === SolutionType.listing
-      ? isListingFetchCompletedAction
-      : isSearchCompletedAction
-  );
+  let actionCompletionMiddleware: ReturnType<
+    typeof createWaitForActionMiddleware
+  >;
+
+  switch (solutionType) {
+    case SolutionType.listing:
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        isListingFetchCompletedAction
+      );
+      break;
+    case SolutionType.search:
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        isSearchCompletedAction
+      );
+      break;
+    default:
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        noSearchActionRequired
+      );
+  }
+
   const commerceEngine = buildCommerceEngine({
     ...options,
-    middlewares: [...(options.middlewares ?? []), middleware],
+    middlewares: [
+      ...(options.middlewares ?? []),
+      actionCompletionMiddleware.middleware,
+    ],
   });
+
   return {
     ...commerceEngine,
 
@@ -77,7 +101,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return promise;
+      return actionCompletionMiddleware.promise;
     },
   };
 }
@@ -113,6 +137,10 @@ export function defineCommerceEngine<
   searchEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.search
+  >;
+  standaloneEngineDefinition: CommerceEngineDefinition<
+    TControllerDefinitions,
+    SolutionType.standalone
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
@@ -200,12 +228,14 @@ export function defineCommerceEngine<
 
           if (solutionType === SolutionType.listing) {
             buildProductListing(engine).executeFirstRequest();
-          } else {
+          } else if (solutionType === SolutionType.search) {
             buildSearch(engine).executeFirstSearch();
           }
 
+          const searchAction = await engine.waitForRequestCompletedAction();
+
           return createStaticState({
-            searchAction: await engine.waitForRequestCompletedAction(),
+            searchAction,
             controllers,
           }) as EngineStaticState<
             UnknownAction,
@@ -269,5 +299,14 @@ export function defineCommerceEngine<
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    standaloneEngineDefinition: {
+      build: buildFactory(SolutionType.standalone),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.standalone),
+      hydrateStaticState: hydrateStaticStateFactory(SolutionType.standalone),
+      setNavigatorContextProvider,
+    } as CommerceEngineDefinition<
+      TControllerDefinitions,
+      SolutionType.standalone
+    >,
   };
 }

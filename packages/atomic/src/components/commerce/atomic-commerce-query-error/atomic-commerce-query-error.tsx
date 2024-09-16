@@ -35,7 +35,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  * @part more-info-btn - A button to request additional error information.
  * @part error-info - Additional error information.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-query-error',

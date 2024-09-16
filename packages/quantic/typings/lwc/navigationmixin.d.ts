@@ -41,4 +41,7 @@ declare module 'lightning/navigation' {
     | 'standard__recordPage'
     | 'standard__recordRelationshipPage'
     | 'standard__webPage';
+
+    function getNavigateCalledWith(): any;
+    function getGenerateUrlCalledWith(): any;
 }

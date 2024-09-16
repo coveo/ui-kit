@@ -1,4 +1,4 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   InstantProducts,
   InstantProductsProps,
@@ -12,7 +12,7 @@ export type {
 export type {InstantProducts, InstantProductsProps};
 
 export interface InstantProductsDefinition
-  extends SharedControllerDefinitionWithoutProps<InstantProducts> {}
+  extends SearchAndListingControllerDefinitionWithoutProps<InstantProducts> {}
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.
