@@ -22,10 +22,16 @@ function replaceWithASTPlugin(options = {}) {
       ast.body.forEach((node) => {
         if (
           node.type === 'ImportDeclaration' ||
+          node.type === 'ImportDefaultSpecifier' ||
+          node.type === 'ImportSpecifier' ||
+          node.type === 'ImportNamespaceSpecifier' ||
+          node.type === 'ExportSpecifier' ||
+          node.type === 'ExportDefaultSpecifier' ||
           node.type === 'ExportNamedDeclaration' ||
           node.type === 'ExportAllDeclaration'
         ) {
           const source = node.source;
+          console.log('source', source);
           if (
             source &&
             typeof source.value === 'string' &&

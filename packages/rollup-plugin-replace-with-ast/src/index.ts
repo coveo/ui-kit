@@ -40,6 +40,11 @@ function replaceWithASTPlugin(options: PluginOptions = {}) {
       ast.body.forEach((node: Node) => {
         if (
           node.type === 'ImportDeclaration' ||
+          node.type === 'ImportDefaultSpecifier' ||
+          node.type === 'ImportSpecifier' ||
+          node.type === 'ImportNamespaceSpecifier' ||
+          node.type === 'ExportSpecifier' ||
+          node.type === 'ExportDefaultSpecifier' ||
           node.type === 'ExportNamedDeclaration' ||
           node.type === 'ExportAllDeclaration'
         ) {
