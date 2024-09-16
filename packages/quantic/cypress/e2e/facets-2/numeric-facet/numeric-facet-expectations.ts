@@ -1,5 +1,5 @@
+import {NumericFacetValue} from '@coveo/headless';
 import {SearchResponseSuccess} from '@coveo/headless/dist/definitions/api/search/search/search-response';
-import {NumericFacetValue} from '@coveo/headless/dist/definitions/product-listing.index';
 import {getQueryAlias, InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {
