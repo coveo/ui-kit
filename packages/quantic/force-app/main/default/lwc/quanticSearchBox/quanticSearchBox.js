@@ -89,6 +89,7 @@ export default class QuanticSearchBox extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
     this.searchBox = this.headless.buildSearchBox(engine, {
       options: {
@@ -101,6 +102,10 @@ export default class QuanticSearchBox extends LightningElement {
         },
       },
     });
+
+    this.actions = {
+      ...this.headless.loadQuerySuggestActions(engine),
+    };
 
     if (!this.disableRecentQueries && this.headless.buildRecentQueriesList) {
       this.localStorageKey = `${this.engineId}_quantic-recent-queries`;
@@ -208,17 +213,20 @@ export default class QuanticSearchBox extends LightningElement {
     event.stopPropagation();
     const {value, isRecentQuery, isClearRecentQueryButton} =
       event.detail.selectedSuggestion;
-
     if (isClearRecentQueryButton) {
       this.recentQueriesList.clear();
-    }
-
-    if (isRecentQuery) {
+    } else if (isRecentQuery) {
       this.recentQueriesList.executeRecentQuery(
         this.recentQueries.indexOf(value)
       );
+      this.engine.dispatch(
+        this.actions.clearQuerySuggest({
+          id: this.searchBox.state.querySuggestionId,
+        })
+      );
+    } else {
+      this.searchBox?.selectSuggestion(value);
     }
-    this.searchBox?.selectSuggestion(value);
   };
 
   /**

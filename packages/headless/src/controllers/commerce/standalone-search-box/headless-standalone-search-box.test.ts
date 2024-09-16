@@ -102,6 +102,7 @@ describe('headless standalone searchBox', () => {
 
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
+      querySuggestionId: id,
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
