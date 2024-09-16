@@ -3,6 +3,8 @@ import {LightningElement, api} from 'lwc';
 /**
  * The `QuanticCardContainer` component is used internally as a styling container.
  * @category Utility
+ * @fires CustomEvent#quantic__headerclick
+ * @fires CustomEvent#quantic__headerkeydown
  * @example
  * <c-quantic-card-container title="Card Example"></c-quantic-card-container>
  */

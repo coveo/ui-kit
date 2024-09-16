@@ -8,7 +8,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticFeedback` component displays a question and two buttons for giving positive or negative feedback.
  * @fires CustomEvent#quantic__like
  * @fires CustomEvent#quantic__dislike
- * @fires CustomEvent#quantic__pressExplainWhy
+ * @fires CustomEvent#quantic__pressexplainwhy
  * @category Search
  * @category Insight Panel
  */
