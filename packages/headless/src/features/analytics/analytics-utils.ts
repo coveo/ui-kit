@@ -39,14 +39,12 @@ import {
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
-import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics';
 import {PreprocessRequest} from '../../api/preprocess-request';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {Raw} from '../../api/search/search/raw';
 import {Result} from '../../api/search/search/result';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
@@ -128,9 +126,6 @@ export type InsightAction =
 
 export type CaseAssistAction =
   PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
-
-export type ProductRecommendationAction =
-  PreparableAnalyticsAction<StateNeededByProductRecommendationsAnalyticsProvider>;
 
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
@@ -679,11 +674,6 @@ export const resultPartialDefinition = {
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 
-export const productRecommendationPartialDefinition = {
-  permanentid: requiredNonEmptyString,
-  documentUri: requiredNonEmptyString,
-  clickUri: requiredNonEmptyString,
-};
 function partialRawPayload(raw: Raw): Partial<Raw> {
   return Object.assign(
     {},
@@ -742,10 +732,6 @@ function findPositionWithUniqueId(
 ) {
   return results.findIndex(({uniqueId}) => uniqueId === targetResult.uniqueId);
 }
-
-export const validateProductRecommendationPayload = (
-  productRec: ProductRecommendation
-) => new Schema(productRecommendationPartialDefinition).validate(productRec);
 
 async function logNextEvent<PayloadType>(
   emitEvent: ReturnType<typeof createRelay>['emit'],
