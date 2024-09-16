@@ -18,7 +18,7 @@
     "@types/node": "20.14.12",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "eslint": "8.57.0",
+    "eslint": "9.10.0",
     "eslint-config-react-app": "7.0.1",
     "typescript": "5.4.5",
     "cypress": "13.13.1",
