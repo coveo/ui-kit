@@ -12,8 +12,6 @@ const devMode = process.argv[2] === 'dev';
 const useCaseEntries = {
   search: 'src/index.ts',
   recommendation: 'src/recommendation.index.ts',
-  'product-recommendation': 'src/product-recommendation.index.ts',
-  'product-listing': 'src/product-listing.index.ts',
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
