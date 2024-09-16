@@ -1,3 +1,9 @@
+## 2.78.2 (2024-09-16)
+
+### Bug Fixes
+
+- **atomic:** use getter instead of fn ([#4395](https://github.com/coveo/ui-kit/issues/4395)) ([547ca04](https://github.com/coveo/ui-kit/commits/547ca049554a18a93b55a885a0555feb680684a5))
+
 ## 2.78.1 (2024-08-29)
 
 ### Bug Fixes

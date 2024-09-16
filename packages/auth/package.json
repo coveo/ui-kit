@@ -1,6 +1,6 @@
 {
   "name": "@coveo/auth",
-  "version": "1.11.23",
+  "version": "1.11.24",
   "description": "Functions to help authenticate with the Coveo platform.",
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
