@@ -4,6 +4,7 @@ export {
   InsightEngine,
   InsightEngineConfiguration,
   buildInsightEngine,
+  getSampleInsightEngineConfiguration,
   ResultList as InsightResultList,
   ResultListState as InsightResultListState,
   buildResultList as buildInsightResultList,
