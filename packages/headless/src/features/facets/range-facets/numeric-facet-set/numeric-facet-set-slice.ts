@@ -2,7 +2,6 @@ import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {disableFacet} from '../../../facet-options/facet-options-actions';
 import {change} from '../../../history/history-actions';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
@@ -74,15 +73,6 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled(
-          state,
-          facets,
-          convertToNumericRangeRequests
-        );
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const facets = (action.payload.response?.facets?.results ||
-          []) as NumericFacetResponse[];
         onRangeFacetRequestFulfilled(
           state,
           facets,
