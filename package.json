@@ -32,6 +32,8 @@
     "@commitlint/lint": "19.2.2",
     "@commitlint/load": "19.2.0",
     "@coveo/release": "1.0.0",
+    "@coveo/replace-with-ast-plugin": "file:packages/rollup-plugin-replace-with-ast",
+    "@coveo/rollup-plugin-replace-with-ast": "file:packages/rollup-plugin-replace-with-ast",
     "@cspell/dict-fr-fr": "2.2.2",
     "@cspell/eslint-plugin": "8.12.1",
     "@nx/js": "19.5.3",
