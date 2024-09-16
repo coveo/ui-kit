@@ -31,7 +31,7 @@
     "@angular/cli": "17.3.9",
     "@angular/compiler-cli": "17.3.12",
     "@coveo/headless": "2.80.0",
-    "@types/node": "20.14.12",
+    "@types/node": "22.5.5",
     "jasmine-core": "5.2.0",
     "karma": "6.4.3",
     "karma-chrome-launcher": "3.2.0",

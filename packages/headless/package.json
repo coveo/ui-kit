@@ -50,7 +50,7 @@
   "dependencies": {
     "@coveo/bueno": "0.46.1",
     "@coveo/relay": "0.7.10",
-    "@coveo/relay-event-types": "9.4.0",
+    "@coveo/relay-event-types": "12.0.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.7",
     "abortcontroller-polyfill": "1.7.5",
@@ -60,7 +60,7 @@
     "fast-equals": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "^3.0.0",
-    "pino": "8.21.0",
+    "pino": "9.4.0",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
@@ -69,8 +69,8 @@
     "@microsoft/api-extractor": "7.47.3",
     "@microsoft/api-extractor-model": "7.29.3",
     "@microsoft/tsdoc": "0.15.0",
-    "eslint-plugin-canonical": "4.18.0",
-    "execa": "8.0.1",
+    "eslint-plugin-canonical": "5.0.0",
+    "execa": "9.3.1",
     "install": "0.13.0",
     "jest": "29.7.0",
     "ts-jest": "29.2.3",
