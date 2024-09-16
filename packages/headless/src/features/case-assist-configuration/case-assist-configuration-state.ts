@@ -14,7 +14,7 @@ export interface CaseAssistConfigurationState {
    */
   locale?: string;
   /**
-   * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
+   * The base URL to use to proxy Coveo case assist requests (e.g., `https://example.com/search`).
    *
    * This is an advanced option that you should only set if you need to proxy Coveo case assist through your own
    * server. In most cases, you should not set this option.
