@@ -1,16 +1,13 @@
 import alias from 'esbuild-plugin-alias';
-import {aliasPath} from 'esbuild-plugin-alias-path';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, promises, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import path, {dirname, resolve} from 'node:path';
+import {dirname, resolve} from 'node:path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
-
-const __dirname = dirname(new URL(import.meta.url).pathname);
 
 const useCaseEntries = {
   search: 'src/index.ts',
@@ -90,16 +87,6 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         format: 'esm',
         watch: devMode,
         minify: false,
-        plugins: [
-          aliasPath({
-            alias: {
-              '@coveo/bueno': path.resolve(
-                __dirname,
-                './src/external-builds/bueno.esm.js'
-              ),
-            },
-          }),
-        ],
       },
       outDir
     );
@@ -207,7 +194,7 @@ async function buildBrowserConfig(options, outDir) {
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto', '@coveo/bueno', 'coveo.analytics'],
+    external: ['crypto'],
     ...options,
     plugins: [
       alias({
@@ -247,7 +234,6 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       outfile,
       format: 'esm',
       external: ['pino'],
-      mainFields: ['module', 'main'],
     },
     dir
   );

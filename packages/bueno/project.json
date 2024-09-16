@@ -1,22 +1,10 @@
 {
   "name": "bueno",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/dist",
-      "!{workspaceRoot}/packages/atomic/src/external-builds",
-      "!{workspaceRoot}/packages/headless/src/external-builds"
-    ]
-  },
   "targets": {
     "release:phase1": {},
     "cached:build": {
       "executor": "nx:run-commands",
-      "outputs": [
-        "{projectRoot}/dist",
-        "{workspaceRoot}/packages/atomic/src/external-builds",
-        "{workspaceRoot}/packages/headless/src/external-builds"
-      ],
       "options": {
         "commands": ["npm run build:bundles", "npm run build:definitions"],
         "parallel": true,

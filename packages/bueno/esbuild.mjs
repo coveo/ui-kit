@@ -44,28 +44,6 @@ function browserEsm() {
   });
 }
 
-function browserEsmForAtomicDevelopment() {
-  const buildAtomic = build({
-    ...base,
-    platform: 'browser',
-    outfile: '../atomic/src/external-builds/bueno.esm.js',
-    format: 'esm',
-    watch: devMode,
-    minify: false,
-  });
-
-  const buildHeadless = build({
-    ...base,
-    platform: 'browser',
-    outfile: '../headless/src/external-builds/bueno.esm.js',
-    format: 'esm',
-    watch: devMode,
-    minify: false,
-  });
-
-  return Promise.all([buildAtomic, buildHeadless]);
-}
-
 function browserUmd() {
   return build({
     ...base,
@@ -80,13 +58,7 @@ function browserUmd() {
 }
 
 async function main() {
-  await Promise.all([
-    nodeCjs(),
-    nodeEsm(),
-    browserEsm(),
-    browserUmd(),
-    browserEsmForAtomicDevelopment(),
-  ]);
+  await Promise.all([nodeCjs(), nodeEsm(), browserEsm(), browserUmd()]);
 }
 
 main();
