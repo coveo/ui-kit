@@ -984,27 +984,6 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 
 @ProxyCmp({
-})
-@Component({
-  selector: 'atomic-frequently-bought-together',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicFrequentlyBoughtTogether {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicFrequentlyBoughtTogether extends Components.AtomicFrequentlyBoughtTogether {}
-
-
-@ProxyCmp({
   inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle']
 })
 @Component({
@@ -1068,6 +1047,28 @@ export class AtomicIcon {
 
 
 export declare interface AtomicIcon extends Components.AtomicIcon {}
+
+
+@ProxyCmp({
+  inputs: ['ticketCreationDateTime', 'userId']
+})
+@Component({
+  selector: 'atomic-insight-user-actions-timeline',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['ticketCreationDateTime', 'userId'],
+})
+export class AtomicInsightUserActionsTimeline {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightUserActionsTimeline extends Components.AtomicInsightUserActionsTimeline {}
 
 
 @ProxyCmp({
