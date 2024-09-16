@@ -69,36 +69,6 @@
       "import": "./dist/browser/insight/headless.esm.js",
       "require": "./dist/browser/insight/headless.js"
     },
-    "./product-listing": {
-      "types": "./dist/definitions/product-listing.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/product-listing.index.d.ts",
-        "import": "./dist/product-listing/headless.esm.js",
-        "require": "./dist/product-listing/headless.js"
-      },
-      "browser": {
-        "types": "./dist/definitions/product-listing.index.d.ts",
-        "import": "./dist/browser/product-listing/headless.esm.js",
-        "require": "./dist/browser/product-listing/headless.js"
-      },
-      "import": "./dist/browser/product-listing/headless.esm.js",
-      "require": "./dist/browser/product-listing/headless.js"
-    },
-    "./product-recommendation": {
-      "types": "./dist/definitions/product-recommendation.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/product-recommendation.index.d.ts",
-        "import": "./dist/product-recommendation/headless.esm.js",
-        "require": "./dist/product-recommendation/headless.js"
-      },
-      "browser": {
-        "types": "./dist/definitions/product-recommendation.index.d.ts",
-        "import": "./dist/browser/product-recommendation/headless.esm.js",
-        "require": "./dist/browser/product-recommendation/headless.js"
-      },
-      "import": "./dist/browser/product-recommendation/headless.esm.js",
-      "require": "./dist/browser/product-recommendation/headless.js"
-    },
     "./recommendation": {
       "types": "./dist/definitions/recommendation.index.d.ts",
       "node": {
