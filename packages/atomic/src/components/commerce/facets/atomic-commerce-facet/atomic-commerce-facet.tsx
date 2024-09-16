@@ -123,7 +123,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
-  private unsubscribeFacetController!: () => void;
+  private unsubscribeFacetController?: () => void | undefined;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -132,15 +132,18 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     if (!this.facet) {
       return;
     }
-    this.unsubscribeFacetController = this.facet.subscribe(
-      () => (this.facetState = this.facet.state)
-    );
+    this.ensureSubscribed();
     this.initAriaLive();
     this.initPopover();
   }
 
+  public connectedCallback(): void {
+    this.ensureSubscribed();
+  }
+
   public disconnectedCallback(): void {
-    this.unsubscribeFacetController();
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
   }
 
   public componentShouldUpdate(
@@ -397,6 +400,15 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     return (
       propName === 'facetState' &&
       typeof (state as RegularFacetState)?.facetId === 'string'
+    );
+  }
+
+  private ensureSubscribed() {
+    if (this.unsubscribeFacetController) {
+      return;
+    }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
     );
   }
 }

@@ -56,7 +56,6 @@ export function buildControllerDefinitions<
   TSolutionType
 > {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
-    // TODO: find a way to make it dynamic
     const unavailableInSearchSolutionType =
       'search' in definition &&
       definition['search'] === false &&
@@ -67,7 +66,16 @@ export function buildControllerDefinitions<
       definition['listing'] === false &&
       solutionType === SolutionType['listing'];
 
-    if (unavailableInSearchSolutionType || unavailableInListingSolutionType) {
+    const unavailableInStandaloneSolutionType =
+      solutionType === SolutionType['standalone'] && 'standalone' in definition
+        ? definition['standalone'] === false
+        : false;
+
+    if (
+      unavailableInSearchSolutionType ||
+      unavailableInListingSolutionType ||
+      unavailableInStandaloneSolutionType
+    ) {
       return null;
     }
 

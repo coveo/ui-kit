@@ -1,7 +1,6 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {
-  // @ts-ignore
-  getNavigateCalledWith, // @ts-ignore
+  getNavigateCalledWith,
   getGenerateUrlCalledWith,
 } from 'lightning/navigation';
 // @ts-ignore

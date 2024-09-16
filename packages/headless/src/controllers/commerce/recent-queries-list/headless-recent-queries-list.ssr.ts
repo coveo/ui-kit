@@ -1,4 +1,4 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
 import {
   RecentQueriesList,
   RecentQueriesListProps,
@@ -13,7 +13,7 @@ export type {
 export type {RecentQueriesList, RecentQueriesListProps};
 
 export interface RecentQueriesListDefinition
-  extends SharedControllerDefinitionWithoutProps<RecentQueriesList> {}
+  extends SearchAndListingControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.

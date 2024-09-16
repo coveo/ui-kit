@@ -8,10 +8,12 @@ import {getConfigurationInitialState} from '../configuration/configuration-state
 import {
   logExpandToFullUI,
   logInsightCreateArticle,
+  logOpenUserActions,
 } from './insight-analytics-actions';
 
 const mockLogCreateArticle = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();
+const mockLogOpenUserActions = jest.fn();
 const emit = jest.fn();
 
 jest.mock('@coveo/relay');
@@ -21,6 +23,7 @@ jest.mock('coveo.analytics', () => {
     disable: jest.fn(),
     logExpandToFullUI: mockLogExpandtoFullUI,
     logCreateArticle: mockLogCreateArticle,
+    logOpenUserActions: mockLogOpenUserActions,
   }));
 
   return {
@@ -104,14 +107,37 @@ describe('insight analytics actions', () => {
       });
     });
 
+    describe('logOpenUserActions', () => {
+      it('should call coveo.analytics.logOpenUserActions properly', async () => {
+        await logOpenUserActions()()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        const expectedPayload = {
+          caseContext: {
+            Case_Subject: exampleSubject,
+            Case_Description: exampleDescription,
+          },
+          caseId: exampleCaseId,
+          caseNumber: exampleCaseNumber,
+        };
+
+        expect(mockLogOpenUserActions).toHaveBeenCalledTimes(1);
+        expect(mockLogOpenUserActions.mock.calls[0][0]).toStrictEqual(
+          expectedPayload
+        );
+      });
+    });
+
     describe('logExpandToFullUI', () => {
       it('should call coveo.analytics.logExpandToFullUI properly', async () => {
-        await logExpandToFullUI(
-          exampleCaseId,
-          exampleCaseNumber,
-          'c__FullSearch',
-          'openFullSearchButton'
-        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+        await logExpandToFullUI('c__FullSearch', 'openFullSearchButton')()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         const expectedPayload = {
           caseContext: {
@@ -164,7 +190,7 @@ describe('insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call relay.emit properly', async () => {
-        await logExpandToFullUI(exampleCaseId, exampleCaseNumber, '', '')()(
+        await logExpandToFullUI('', '')()(
           engine.dispatch,
           () => engine.state,
           {} as ThunkExtraArguments

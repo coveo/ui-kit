@@ -3,7 +3,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
 import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 
 /**
- * @internal
+ * @alpha
  *
  * This section is intended to provide visual information about the product.
  * In commerce, an image is a great shorthand for a product category.

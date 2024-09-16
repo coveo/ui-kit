@@ -1,4 +1,5 @@
 import {configuration} from '../../../app/common-reducers';
+import {logOpenUserActions} from '../../../features/insight-search/insight-analytics-actions';
 import {
   fetchUserActions,
   registerUserActions,
@@ -18,6 +19,8 @@ import {
 jest.mock(
   '../../../features/insight-user-actions/insight-user-actions-actions'
 );
+
+jest.mock('../../../features/insight-search/insight-analytics-actions');
 
 describe('UserActions', () => {
   let engine: MockedInsightEngine;
@@ -70,5 +73,10 @@ describe('UserActions', () => {
     userActions.fetchUserActions(exampleUserId);
     expect(fetchUserActions).toHaveBeenCalled();
     expect(fetchUserActions).toHaveBeenCalledWith(exampleUserId);
+  });
+
+  it('#logOpenUserActions dispatches #logOpenUserActions', () => {
+    userActions.logOpenUserActions();
+    expect(logOpenUserActions).toHaveBeenCalled();
   });
 });
