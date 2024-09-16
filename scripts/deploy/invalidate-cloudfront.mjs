@@ -17,8 +17,6 @@ async function main() {
     `/atomic/v${getMajorVersion('atomic')}/*`,
     '/headless/latest/*',
     `/headless/v${getMajorVersion('headless')}/*`,
-    '/bueno/latest/*',
-    `/bueno/v${getMajorVersion('bueno')}/*`,
   ];
 
   const invalidationRequest = cloudfront.createInvalidation({

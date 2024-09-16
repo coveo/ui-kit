@@ -4,7 +4,6 @@ import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json
 import atomicReactJson from '../../packages/atomic-react/package.json' assert {type: 'json'};
 import atomicJson from '../../packages/atomic/package.json' assert {type: 'json'};
 import headlessJson from '../../packages/headless/package.json' assert {type: 'json'};
-import buenoJson from '../../packages/bueno/package.json' assert {type: 'json'};
 
 const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
 
@@ -17,16 +16,12 @@ function getVersionComposants(version) {
   };
 }
 
-const bueno = getVersionComposants(buenoJson.version);
 const headless = getVersionComposants(headlessJson.version);
 const atomic = getVersionComposants(atomicJson.version);
 const atomicReact = getVersionComposants(atomicReactJson.version);
 const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
 console.log(execSync(`
   deployment-package package create --with-deploy \
-    --resolve BUENO_MAJOR_VERSION=${bueno.major} \
-    --resolve BUENO_MINOR_VERSION=${bueno.major}.${bueno.minor} \
-    --resolve BUENO_PATCH_VERSION=${bueno.major}.${bueno.minor}.${bueno.patch} \
     --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
     --resolve HEADLESS_MINOR_VERSION=${headless.major}.${headless.minor} \
     --resolve HEADLESS_PATCH_VERSION=${headless.major}.${headless.minor}.${headless.patch} \

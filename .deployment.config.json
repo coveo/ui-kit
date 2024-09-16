@@ -16,39 +16,6 @@
   },
   "ordered_phases": [
     {
-      "id": "deploy-bueno-patch-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/bueno/v$[BUENO_PATCH_VERSION]",
-        "source": "packages/bueno/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-bueno-minor-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/bueno/v$[BUENO_MINOR_VERSION]",
-        "source": "packages/bueno/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-bueno-major-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/bueno/v$[BUENO_MAJOR_VERSION]",
-        "source": "packages/bueno/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
       "id": "deploy-headless-patch-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
