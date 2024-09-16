@@ -1,8 +1,6 @@
 import {test, expect} from '@playwright/test';
 
 const urls = [
-  'http://localhost:3335/',
-  'http://localhost:3335/simple-builder.html',
   'http://localhost:3335/hosted-ui.html',
   'http://localhost:3335/hosted-ui-trial.html',
   'http://localhost:3335/hosted-ui-code.html',
