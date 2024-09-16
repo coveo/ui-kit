@@ -39,11 +39,6 @@ import {
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
-import {
-  configureProductListingAnalytics,
-  ProductListingAnalyticsProvider,
-  StateNeededByProductListingAnalyticsProvider,
-} from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureLegacyAnalytics,
@@ -136,9 +131,6 @@ export type CaseAssistAction =
 
 export type ProductRecommendationAction =
   PreparableAnalyticsAction<StateNeededByProductRecommendationsAnalyticsProvider>;
-
-export type ProductListingAction =
-  PreparableAnalyticsAction<StateNeededByProductListingAnalyticsProvider>;
 
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
@@ -424,7 +416,6 @@ type InternalMakeAnalyticsActionOptions<
 
 type InternalLegacyStateNeeded =
   | StateNeededBySearchAnalyticsProvider
-  | StateNeededByProductListingAnalyticsProvider
   | StateNeededByCaseAssistAnalytics;
 
 interface LegacyProviderCommon {
@@ -591,17 +582,6 @@ export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
   );
   return makeInsightAnalyticsAction;
 };
-
-export const makeProductListingAnalyticsAction = makeAnalyticsActionFactory<
-  StateNeededByProductListingAnalyticsProvider,
-  StateNeededByProductListingAnalyticsProvider,
-  CoveoSearchPageClient,
-  ProductListingAnalyticsProvider
->(
-  configureProductListingAnalytics,
-  (original) => original,
-  ProductListingAnalyticsProvider
-);
 
 export const makeNoopAnalyticsAction = () =>
   makeAnalyticsAction('analytics/noop', () => null);
