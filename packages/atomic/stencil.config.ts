@@ -1,3 +1,4 @@
+import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
 import {postcss} from '@stencil-community/postcss';
@@ -6,7 +7,7 @@ import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
 import {readFileSync, readdirSync} from 'fs';
-import path, {join} from 'path';
+import path from 'path';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
 import postcssMap from 'postcss-map';
@@ -16,36 +17,17 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
-import replaceWithASTPlugin from './rollup-plugins/replace-with-ast-plugin';
+import headlessJson from '../../packages/headless/package.json';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
-if (isCDN) {
-  console.log('Building for CDN');
-} else {
-  console.log(
-    `Building for ${isProduction ? 'production' : 'development'} environment`
-  );
-}
-
-const headlessPackageJsonPath = join(
-  __dirname,
-  '../../packages/headless/package.json'
-);
-
 let headlessVersion: string;
 
-try {
-  const headlessPackageJson = JSON.parse(
-    readFileSync(headlessPackageJsonPath, 'utf8')
-  );
-  headlessVersion = 'v' + headlessPackageJson.version;
-  console.log('Using headless version from package.json:', headlessVersion);
-} catch (error) {
-  console.error('Error reading headless package.json:', error);
-  throw new Error('Error reading headless package.json');
+if (isCDN) {
+  console.log('Building for CDN');
+  headlessVersion = 'v' + headlessJson.version;
 }
 
 const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {

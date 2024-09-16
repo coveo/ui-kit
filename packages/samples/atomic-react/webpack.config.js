@@ -13,12 +13,25 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: ['@babel/plugin-syntax-dynamic-import'],
+          },
+        },
+      },
     ],
   },
+
+  experiments: {outputModule: true},
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css'],
   },
   output: {
+    environment: {module: true},
     filename: 'app.js',
     path: path.resolve(__dirname, 'public/dist'),
   },
