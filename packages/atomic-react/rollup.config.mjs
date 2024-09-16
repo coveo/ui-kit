@@ -132,10 +132,6 @@ const plugins = [
       'defineCustomElements();': '',
     },
   }),
-  isCDN &&
-    replaceWithASTPlugin({
-      replacements: generateReplaceValues(),
-    }),
 ];
 
 export default defineConfig([
