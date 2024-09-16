@@ -717,10 +717,6 @@
     <name>quantic_SearchInsteadFor</name>
   </customLabels>
   <customLabels>
-    <label>Afficher la réponse générée</label>
-    <name>quantic_ShowGeneratedAnswer</name>
-  </customLabels>
-  <customLabels>
     <label>Hors sujet</label>
     <name>quantic_Irrelevant</name>
   </customLabels>
@@ -779,14 +775,6 @@
   <customLabels>
     <label>Génération de la réponse</label>
     <name>quantic_GeneratingAnswer</name>
-  </customLabels>
-  <customLabels>
-    <label>Réponse générée ON</label>
-    <name>quantic_GeneratedAnswerOn</name>
-  </customLabels>
-  <customLabels>
-    <label>Réponse générée OFF</label>
-    <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
   <customLabels>
     <label>Le contenu généré peut contenir des erreurs. Vérifiez les informations importantes.</label>
