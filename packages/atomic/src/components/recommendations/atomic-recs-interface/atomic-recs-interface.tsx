@@ -44,6 +44,8 @@ export type RecsBindings = CommonBindings<
 
 /**
  * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
+ * @slot default - The default slot where you can add child components to the search box.
+ *
  */
 @Component({
   tag: 'atomic-recs-interface',
@@ -320,6 +322,7 @@ export class AtomicRecsInterface
   }
 
   public render() {
+    console.log(this.engine);
     return this.engine && <slot></slot>;
   }
 }
