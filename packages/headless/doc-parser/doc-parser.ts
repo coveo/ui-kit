@@ -15,7 +15,6 @@ import {
 import {caseAssistUseCase} from './use-cases/case-assist';
 import {commerceUseCase} from './use-cases/commerce';
 import {insightUseCase} from './use-cases/insight';
-import {productRecommendationUseCase} from './use-cases/product-recommendation';
 import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
 import {ssrSearchUseCase} from './use-cases/ssr-search';
@@ -44,11 +43,6 @@ export const useCases: UseCase[] = [
     name: 'recommendation',
     entryFile: 'temp/recommendation.api.json',
     config: recommendationUseCase,
-  },
-  {
-    name: 'product-recommendation',
-    entryFile: 'temp/product-recommendation.api.json',
-    config: productRecommendationUseCase,
   },
   {
     name: 'case-assist',

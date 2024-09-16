@@ -43,7 +43,6 @@ import {InsightInterfaceState} from '../features/insight-interface/insight-inter
 import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
-import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
 import {QueryState} from '../features/query/query-state';
@@ -291,13 +290,6 @@ export interface RecommendationSection {
    * The information related to the recommendation endpoint.
    */
   recommendation: RecommendationState;
-}
-
-export interface ProductRecommendationsSection {
-  /**
-   * The information related to the product recommendations endpoint.
-   */
-  productRecommendations: ProductRecommendationsState;
 }
 
 export interface CommercePaginationSection {
