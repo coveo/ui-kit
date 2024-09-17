@@ -98,6 +98,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       cause: '',
       metadata: null,
     },
+    querySuggestionId: '',
     redirectTo: null,
     suggestions: [],
     value: '',
