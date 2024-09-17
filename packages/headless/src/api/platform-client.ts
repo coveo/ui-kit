@@ -124,6 +124,14 @@ export class PlatformClient {
   }
 }
 
+/**
+ * Retrieves the endpoint URL for a specific organization.
+ *
+ * @param organizationId - The ID of the organization.
+ * @param environment - The environment of the organization. Defaults to 'prod'.
+ * @param endpointType - The type of the endpoint. Defaults to 'platform'.
+ * @returns The endpoint URL for the organization.
+ */
 export function getOrganizationEndpoint(
   organizationId: string,
   environment: PlatformEnvironment = 'prod',
