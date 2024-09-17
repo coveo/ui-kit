@@ -1,7 +1,10 @@
+import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {InsightAppState} from '../../state/insight-app-state';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockPagination} from '../../test/mock-pagination';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   logPageNext,
   logPageNumber,
@@ -26,80 +29,82 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleFirstResultValue = 1;
-const exampleNumberOfResults = 20;
-const expectedPageNumber = 1;
+describe('pagination insight analytics actions', () => {
+  let engine: InsightEngine;
 
-const insightState = {
-  pagination: buildMockPagination({
-    firstResult: exampleFirstResultValue,
-    numberOfResults: exampleNumberOfResults,
-  }),
-  insightCaseContext: {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+
+  const configurationInitialState = getConfigurationInitialState();
+  const insightState: Partial<InsightAppState> = {
+    pagination: buildMockPagination({
+      firstResult: 1,
+      numberOfResults: 20,
+    }),
+    insightCaseContext: {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+    },
+    configuration: {
+      ...configurationInitialState,
+      analytics: {
+        ...configurationInitialState.analytics,
+        analyticsMode: 'legacy',
+      },
+    },
+  };
+
+  const expectedPayload = {
     caseContext: {
       Case_Subject: exampleSubject,
       Case_Description: exampleDescription,
     },
     caseId: exampleCaseId,
     caseNumber: exampleCaseNumber,
-  },
-};
+    pagerNumber: 1,
+  };
 
-const expectedPayload = {
-  caseContext: {
-    Case_Subject: exampleSubject,
-    Case_Description: exampleDescription,
-  },
-  caseId: exampleCaseId,
-  caseNumber: exampleCaseNumber,
-  pagerNumber: expectedPageNumber,
-};
+  beforeEach(() => {
+    jest.clearAllMocks();
+    engine = buildMockInsightEngine(buildMockInsightState(insightState));
+  });
 
-describe('logPagerNumber', () => {
   it('should log #logPagerNumber with the right payload', async () => {
-    const engine = buildMockInsightEngine(buildMockInsightState(insightState));
-
     await logPageNumber()()(
       engine.dispatch,
       () => engine.state,
       {} as ThunkExtraArguments
     );
 
-    expect(mockLogPagerNumber).toBeCalledTimes(1);
+    expect(mockLogPagerNumber).toHaveBeenCalledTimes(1);
     expect(mockLogPagerNumber.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
-});
 
-describe('logPagerNext', () => {
   it('should log #logPagerNext with the right payload', async () => {
-    const engine = buildMockInsightEngine(buildMockInsightState(insightState));
-
     await logPageNext()()(
       engine.dispatch,
       () => engine.state,
       {} as ThunkExtraArguments
     );
 
-    expect(mockLogPagerNext).toBeCalledTimes(1);
+    expect(mockLogPagerNext).toHaveBeenCalledTimes(1);
     expect(mockLogPagerNext.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
-});
 
-describe('logPagerPrevious', () => {
   it('should log #logPagerPrevious with the right payload', async () => {
-    const engine = buildMockInsightEngine(buildMockInsightState(insightState));
-
     await logPagePrevious()()(
       engine.dispatch,
       () => engine.state,
       {} as ThunkExtraArguments
     );
 
-    expect(mockLogPagerPrevious).toBeCalledTimes(1);
+    expect(mockLogPagerPrevious).toHaveBeenCalledTimes(1);
     expect(mockLogPagerPrevious.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );

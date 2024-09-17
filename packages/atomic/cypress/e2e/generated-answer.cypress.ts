@@ -1,4 +1,3 @@
-import {GeneratedAnswerStyle} from '@coveo/headless';
 import {RouteAlias, TagProps} from '../fixtures/fixture-common';
 import {TestFixture, generateLongTextAnswer} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
@@ -13,13 +12,6 @@ import {
   GeneratedAnswerSelectors,
   feedbackModalSelectors,
 } from './generated-answer-selectors';
-
-const rephraseOptions: {label: string; value: GeneratedAnswerStyle}[] = [
-  {label: 'Auto', value: 'default'},
-  {label: 'Bullet', value: 'bullet'},
-  {label: 'Steps', value: 'step'},
-  {label: 'Summary', value: 'concise'},
-];
 
 const testCitation = {
   id: 'some-id-123',
@@ -84,46 +76,6 @@ describe('Generated Answer Test Suites', () => {
         .withoutFirstIntercept()
         .init();
     }
-
-    describe('when an answerStyle prop is provided', () => {
-      const streamId = crypto.randomUUID();
-      const answerStyle = rephraseOptions[0];
-
-      beforeEach(() => {
-        mockStreamResponse(streamId, testMessagePayload);
-        setupGeneratedAnswerWithoutFirstIntercept(streamId, {
-          'answer-style': answerStyle.value,
-          'with-rephrase-buttons': true,
-        });
-      });
-
-      it('should perform the first query with the provided answerStyle', () => {
-        GeneratedAnswerAssertions.assertAnswerStyle(answerStyle.value);
-      });
-
-      it('should keep the same button active when we click on the same answer style', () => {
-        const initialButtonLabel = answerStyle.label;
-
-        cy.wait(TestFixture.interceptAliases.Search);
-
-        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).click();
-
-        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).should(
-          'have.class',
-          'active'
-        );
-      });
-    });
-
-    describe('when NO answerStyle prop is provided', () => {
-      beforeEach(() => {
-        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id');
-      });
-
-      it('should perform the first query with the "default" answerStyle', () => {
-        GeneratedAnswerAssertions.assertAnswerStyle('default');
-      });
-    });
 
     describe('when no stream ID is returned', () => {
       beforeEach(() => {
@@ -345,9 +297,7 @@ describe('Generated Answer Test Suites', () => {
 
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
-          setupGeneratedAnswer(streamId, {
-            'with-rephrase-buttons': true,
-          });
+          setupGeneratedAnswer(streamId);
           cy.wait(getStreamInterceptAlias(streamId));
         });
 
@@ -371,14 +321,6 @@ describe('Generated Answer Test Suites', () => {
 
         it('should display copy button', () => {
           GeneratedAnswerSelectors.copyButton().should('exist');
-        });
-
-        it('should display rephrase options', () => {
-          rephraseOptions.forEach((option) =>
-            GeneratedAnswerSelectors.rephraseButton(option.label).should(
-              'exist'
-            )
-          );
         });
 
         it('should display the disclaimer', () => {
@@ -422,26 +364,6 @@ describe('Generated Answer Test Suites', () => {
 
             GeneratedAnswerAssertions.assertLogCopyGeneratedAnswer();
           });
-        });
-
-        describe('when a rephrase option is selected', () => {
-          rephraseOptions
-            .filter((option) => option.value !== 'default')
-            .forEach((option) => {
-              it(`should rephrase in "${option.value}" format`, () => {
-                GeneratedAnswerSelectors.rephraseButton(option.label).click();
-
-                GeneratedAnswerAssertions.assertAnswerStyle(option.value);
-              });
-
-              it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
-                GeneratedAnswerSelectors.rephraseButton(option.label).click();
-
-                GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
-                  option.value
-                );
-              });
-            });
         });
       });
 

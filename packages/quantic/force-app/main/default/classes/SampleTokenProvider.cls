@@ -12,10 +12,6 @@ global with sharing class SampleTokenProvider implements ITokenProvider {
       'accessToken',
       'xx564559b1-0045-48e1-953c-3addd1ee4457'
     );
-    headlessConfiguration.put(
-      'platformUrl',
-      'https://platform.cloud.coveo.com'
-    );
     return JSON.serialize(headlessConfiguration);
   }
 }

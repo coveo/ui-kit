@@ -5,20 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PlatformEnvironment } from "@coveo/headless";
-export { PlatformEnvironment } from "@coveo/headless";
 export namespace Components {
     /**
      * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
      * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
      */
     interface AtomicHostedUi {
-        /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The type of hosted search page to load.
          */

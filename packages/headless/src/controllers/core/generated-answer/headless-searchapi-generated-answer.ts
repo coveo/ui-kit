@@ -4,12 +4,12 @@ import {CoreEngine} from '../../../app/engine';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {ConfigurationState} from '../../../features/configuration/configuration-state';
 import {
   resetAnswer,
   setId,
   streamAnswer,
 } from '../../../features/generated-answer/generated-answer-actions';
-import {rephraseGeneratedAnswer} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
@@ -24,7 +24,6 @@ import {
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-  GeneratedResponseFormat,
 } from './headless-core-generated-answer';
 
 export interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
@@ -44,7 +43,8 @@ interface SubscribeStateManager {
   subscribeToSearchRequests: (
     engine: CoreEngine<
       GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+      ClientThunkExtraArguments<GeneratedAnswerAPIClient>,
+      ConfigurationState
     >
   ) => Unsubscribe;
 }
@@ -171,19 +171,6 @@ export function buildSearchAPIGeneratedAnswer(
       engine.dispatch(
         executeSearch({
           legacy: analyticsClient.logRetryGeneratedAnswer(),
-        })
-      );
-    },
-
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      controller.rephrase(responseFormat);
-      if (!isSearchEngine(engine)) {
-        return;
-      }
-      engine.dispatch(
-        executeSearch({
-          legacy: analyticsClient.logRephraseGeneratedAnswer(responseFormat),
-          next: rephraseGeneratedAnswer(),
         })
       );
     },

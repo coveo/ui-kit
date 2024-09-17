@@ -11,7 +11,10 @@ import {
   ContextPayload,
   ContextValue,
 } from '../../../features/context/context-state';
-import {ContextSection} from '../../../state/state-sections';
+import {
+  ConfigurationSection,
+  ContextSection,
+} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {validateInitialState} from '../../../utils/validate-payload';
 import {
@@ -161,7 +164,7 @@ const nextCoreContext = (dispatch: Dispatch<AnyAction>) => ({
 
 function loadContextReducers(
   engine: CoreEngine
-): engine is CoreEngine<ContextSection> {
+): engine is CoreEngine<ConfigurationSection & ContextSection> {
   engine.addReducers({context});
   return true;
 }

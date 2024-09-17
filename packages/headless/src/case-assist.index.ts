@@ -76,6 +76,11 @@ export type {HighlightKeyword} from './utils/highlight';
 
 export type {DocumentSuggestionResponse} from './api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
 export type {
   DocumentSuggestionList,
   DocumentSuggestionListState,

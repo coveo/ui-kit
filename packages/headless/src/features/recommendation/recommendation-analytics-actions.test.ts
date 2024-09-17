@@ -12,58 +12,56 @@ import {logRecommendationOpen} from './recommendation-analytics-actions';
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');
 
-describe('#logRecommendationOpen', () => {
-  const testResult = buildMockNonEmptyResult({searchUid: 'example searchUid'});
-  let engine: SearchEngine;
-  const makeRecommendationOpen = jest.fn();
-  const emit = jest.fn();
-
-  beforeEach(() => {
-    jest.mocked(CoveoSearchPageClient).mockReturnValue({
-      makeRecommendationOpen,
-    } as unknown as CoveoSearchPageClient);
-    jest.mocked(createRelay).mockReturnValue({
-      emit,
-      getMeta: jest.fn(),
-      on: jest.fn(),
-      off: jest.fn(),
-      updateConfig: jest.fn(),
-      version: 'foo',
+describe('recommendation analytics actions', () => {
+  describe('#logRecommendationOpen', () => {
+    const testResult = buildMockNonEmptyResult({
+      searchUid: 'example searchUid',
     });
-  });
+    let engine: SearchEngine;
+    const makeRecommendationOpen = jest.fn();
+    const emit = jest.fn();
 
-  describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildSearchEngine({
-        configuration: {
-          ...getSampleSearchEngineConfiguration(),
-        },
+      jest.mocked(CoveoSearchPageClient).mockReturnValue({
+        makeRecommendationOpen,
+      } as unknown as CoveoSearchPageClient);
+      jest.mocked(createRelay).mockReturnValue({
+        emit,
+        getMeta: jest.fn(),
+        on: jest.fn(),
+        off: jest.fn(),
+        updateConfig: jest.fn(),
+        version: 'foo',
       });
     });
 
-    it('should call coveo.analytics.makeRecommendationOpen properly', async () => {
+    it('when analyticsMode is `legacy` should call coveo.analytics.makeRecommendationOpen properly', async () => {
+      engine = buildSearchEngine({
+        configuration: {
+          ...getSampleSearchEngineConfiguration(),
+          analytics: {
+            analyticsMode: 'legacy',
+          },
+        },
+      });
+
       engine.dispatch(logRecommendationOpen(testResult));
       await clearMicrotaskQueue();
 
       expect(makeRecommendationOpen).toHaveBeenCalledTimes(1);
       expect(makeRecommendationOpen.mock.calls[0]).toMatchSnapshot();
     });
-  });
 
-  describe('when analyticsMode is `next`', () => {
-    beforeEach(() => {
+    it('when analyticsMode is `next`', async () => {
       engine = buildSearchEngine({
         configuration: {
           ...getSampleSearchEngineConfiguration(),
           analytics: {
-            analyticsMode: 'next',
             trackingId: 'alex',
           },
         },
       });
-    });
 
-    it('should call relay.emit properly', async () => {
       engine.dispatch(logRecommendationOpen(testResult));
       await clearMicrotaskQueue();
 
