@@ -15,13 +15,10 @@ module.exports = {
       },
     ],
   },
-
-  experiments: {outputModule: true},
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css'],
   },
   output: {
-    environment: {module: true},
     filename: 'app.js',
     path: path.resolve(__dirname, 'public/dist'),
   },
