@@ -13,7 +13,6 @@ import {updateFacetSearch} from '../../../../features/facets/facet-search-set/sp
 import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {
   CategoryFacetSearchSection,
-  ConfigurationSection,
   FacetSearchSection,
 } from '../../../../state/state-sections';
 
@@ -45,13 +44,11 @@ export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
 export function buildGenericFacetSearch<T extends FacetSearchState>(
   engine:
     | CoreEngine<
-        ConfigurationSection &
-          (FacetSearchSection | CategoryFacetSearchSection),
+        FacetSearchSection | CategoryFacetSearchSection,
         ClientThunkExtraArguments<FacetSearchAPIClient>
       >
     | CoreEngineNext<
-        ConfigurationSection &
-          (FacetSearchSection | CategoryFacetSearchSection),
+        FacetSearchSection | CategoryFacetSearchSection,
         ClientThunkExtraArguments<FacetSearchAPIClient>
       >,
   props: GenericFacetSearchProps<T>

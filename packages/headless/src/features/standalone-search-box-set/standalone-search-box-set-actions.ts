@@ -1,6 +1,7 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {PlanRequest} from '../../api/search/plan/plan-request';
 import {
@@ -172,7 +173,12 @@ export const buildPlanRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
     q: state.query.q,

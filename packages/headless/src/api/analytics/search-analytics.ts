@@ -20,6 +20,7 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
+import {getOrganizationEndpoint} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
 import {
@@ -303,7 +304,13 @@ export const configureLegacyAnalytics = ({
 }: LegacyConfigureAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const endpoint =
+    state.configuration.analytics.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment,
+      'analytics'
+    );
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CoveoSearchPageClient(
