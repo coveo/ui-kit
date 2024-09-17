@@ -1,8 +1,6 @@
 import pino from 'pino';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
-import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
-import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
 import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
 import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
@@ -17,19 +15,21 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice'
 import {buildMockFacetSearch} from '../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {
+  getSearchApiBaseUrl,
+  PlatformClient,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {HtmlRequest} from './html/html-request';
 import {PlanRequest} from './plan/plan-request';
-import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {
@@ -225,7 +225,11 @@ describe('search api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -267,7 +271,11 @@ describe('search api client', () => {
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
       const expectedUrl = `${
-        state.configuration.search.apiBaseUrl
+        state.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          state.configuration.organizationId,
+          state.configuration.environment
+        )
       }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
@@ -322,7 +330,11 @@ describe('search api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/plan?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -352,7 +364,11 @@ describe('search api client', () => {
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
       const expectedUrl = `${
-        state.configuration.search.apiBaseUrl
+        state.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          state.configuration.organizationId,
+          state.configuration.environment
+        )
       }/plan?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
@@ -381,7 +397,11 @@ describe('search api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -421,7 +441,11 @@ describe('search api client', () => {
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
       const expectedUrl = `${
-        state.configuration.search.apiBaseUrl
+        state.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          state.configuration.organizationId,
+          state.configuration.environment
+        )
       }/querySuggest?${getOrganizationIdQueryParam(
         req
       )}&${getAuthenticationQueryParam(req)}`;
@@ -453,7 +477,11 @@ describe('search api client', () => {
           method: 'POST',
           contentType: 'application/json',
           url: `${
-            state.configuration.search.apiBaseUrl
+            state.configuration.search.apiBaseUrl ??
+            getSearchApiBaseUrl(
+              state.configuration.organizationId,
+              state.configuration.environment
+            )
           }/facet?${getOrganizationIdQueryParam(req)}`,
           requestMetadata: {
             method: 'facetSearch',
@@ -493,7 +521,11 @@ describe('search api client', () => {
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
         const expectedUrl = `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/facet?${getOrganizationIdQueryParam(
           req
         )}&${getAuthenticationQueryParam(req)}`;
@@ -629,7 +661,11 @@ it calls PlatformClient.call with the category facet search params`, async () =>
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          recommendationState.configuration.search.apiBaseUrl
+          recommendationState.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            recommendationState.configuration.organizationId,
+            recommendationState.configuration.environment
+          )
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -671,80 +707,17 @@ it calls PlatformClient.call with the category facet search params`, async () =>
       searchAPIClient.recommendations(req);
 
       const expectedUrl = `${
-        recommendationState.configuration.search.apiBaseUrl
+        recommendationState.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          recommendationState.configuration.organizationId,
+          recommendationState.configuration.environment
+        )
       }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
       expect(request.url).toBe(expectedUrl);
-    });
-
-    it(`when calling SearchAPIClient.productRecommendations
-should call PlatformClient.call with the right options`, async () => {
-      const productRecommendationsState = buildMockProductRecommendationsState({
-        productRecommendations: {
-          ...getProductRecommendationsInitialState(),
-          skus: ['one'],
-          maxNumberOfRecommendations: 10,
-          filter: {
-            brand: 'somebrand',
-            category: 'somecategory',
-          },
-        },
-      });
-      productRecommendationsState.dictionaryFieldContext = {
-        contextValues: {price: 'fr'},
-      };
-
-      const req = await buildProductRecommendationsRequest(
-        productRecommendationsState
-      );
-
-      searchAPIClient.productRecommendations(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
-
-      const expectedRequest: PlatformClientCallOptions<
-        Omit<
-          ProductRecommendationsRequest,
-          'accessToken' | 'organizationId' | 'url'
-        >
-      > = {
-        accessToken: productRecommendationsState.configuration.accessToken,
-        method: 'POST',
-        contentType: 'application/json',
-        url: `${
-          productRecommendationsState.configuration.search.apiBaseUrl
-        }?${getOrganizationIdQueryParam(req)}`,
-        logger,
-        origin: 'searchApiFetch',
-        requestParams: {
-          recommendation: productRecommendationsState.productRecommendations.id,
-          context: productRecommendationsState.context.contextValues,
-          dictionaryFieldContext:
-            productRecommendationsState.dictionaryFieldContext.contextValues,
-          searchHub: productRecommendationsState.searchHub,
-          timezone: state.configuration.search.timezone,
-          locale: state.configuration.search.locale,
-          actionsHistory: expect.any(Array),
-          visitorId: expect.any(String),
-          numberOfResults:
-            productRecommendationsState.productRecommendations
-              .maxNumberOfRecommendations,
-          mlParameters: {
-            itemIds: productRecommendationsState.productRecommendations.skus,
-            brandFilter:
-              productRecommendationsState.productRecommendations.filter.brand,
-            categoryFilter:
-              productRecommendationsState.productRecommendations.filter
-                .category,
-          },
-        },
-        preprocessRequest: NoopPreprocessRequest,
-        requestMetadata: {method: 'productRecommendations'},
-      };
-
-      expect(request).toMatchObject(expectedRequest);
     });
 
     it(`when calling SearchAPIClient.fieldDescriptions
@@ -766,7 +739,11 @@ should call PlatformClient.call with the right options`, async () => {
         requestMetadata: {method: 'fieldDescriptions'},
         method: 'GET',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/fields?${getOrganizationIdQueryParam(req)}`,
       };
 
@@ -810,7 +787,11 @@ should call PlatformClient.call with the right options`, async () => {
           method: 'POST',
           origin: 'searchApiFetch',
           url: `${
-            state.configuration.search.apiBaseUrl
+            state.configuration.search.apiBaseUrl ??
+            getSearchApiBaseUrl(
+              state.configuration.organizationId,
+              state.configuration.environment
+            )
           }/html?${getOrganizationIdQueryParam(req)}`,
           preprocessRequest: NoopPreprocessRequest,
           requestParams: {

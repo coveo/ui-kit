@@ -278,11 +278,6 @@ export type {
 } from './features/commerce/product-templates/product-templates-manager';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
-export {
-  platformUrl,
-  analyticsUrl,
-  getOrganizationEndpoints,
-} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
@@ -297,5 +292,12 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
+
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
+export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client';
 
 export * from './utils/query-expression/query-expression';

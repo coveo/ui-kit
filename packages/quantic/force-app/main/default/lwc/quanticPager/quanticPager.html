@@ -15,11 +15,11 @@
           onclick={previous}
           aria-label={labels.previousPage}
         ></lightning-button>
-    
+
         <template for:each={currentPagesObjects} for:item="page">
-          <c-quantic-number-button key={page.number} number={page.number} selected={page.selected} onselect={goto} aria-label-value={page.ariaLabelValue}></c-quantic-number-button>
+          <c-quantic-number-button key={page.number} number={page.number} selected={page.selected} onquantic__select={goto} aria-label-value={page.ariaLabelValue}></c-quantic-number-button>
         </template>
-    
+
         <lightning-button
           disabled={nextDisabled}
           variant="base"

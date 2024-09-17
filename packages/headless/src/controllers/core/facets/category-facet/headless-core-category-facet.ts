@@ -165,19 +165,6 @@ export interface CoreCategoryFacetState {
   isHierarchical: boolean;
 
   /**
-   * The facet's parent values.
-   * @deprecated uses `valuesAsTrees` instead.
-   *
-   */
-  parents: CategoryFacetValue[];
-
-  /**
-   * The facet's values.
-   * @deprecated use `selectedValueAncestry` instead.
-   */
-  values: CategoryFacetValue[];
-
-  /**
    * The selected facet values ancestry.
    * The first element is the "root" of the selected value ancestry tree.
    * The last element is the selected value itself.

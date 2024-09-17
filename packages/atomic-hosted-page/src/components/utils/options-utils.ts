@@ -1,5 +1,5 @@
 import {Schema, SchemaValue, StringValue} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '@coveo/headless';
+import {getOrganizationEndpoint, PlatformEnvironment} from '@coveo/headless';
 
 export interface InitializationOptions {
   /**
@@ -10,24 +10,7 @@ export interface InitializationOptions {
    * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
    */
   accessToken: string;
-  /**
-   * The Platform URL to use. (e.g., https://platform.cloud.coveo.com)
-   * The platformUrl() helper method can be useful to know what url is available.
-   * @defaultValue `https://platform.cloud.coveo.com`
-   *
-   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
-   */
-  platformUrl?: string;
-  /**
-   * The endpoints to use.
-   *
-   * For example: `https://orgid.admin.org.coveo.com`
-   *
-   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
-   *
-   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
-   */
-  organizationEndpoints?: ReturnType<typeof getOrganizationEndpoints>;
+  environment?: PlatformEnvironment;
 }
 
 export const validateOptions = (
@@ -38,7 +21,11 @@ export const validateOptions = (
     new Schema({
       organizationId: new StringValue({required: true, emptyAllowed: false}),
       accessToken: new StringValue({required: true, emptyAllowed: false}),
-      platformUrl: new StringValue({required: false, emptyAllowed: false}),
+      environment: new StringValue<PlatformEnvironment>({
+        required: false,
+        default: 'prod',
+        constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+      }),
       ...additionalSchemaValidation,
     }).validate(opts);
   } catch (e) {
@@ -46,7 +33,10 @@ export const validateOptions = (
   }
 };
 
-export const extractPlatformUrl = (options: InitializationOptions) =>
-  options.platformUrl ||
-  options.organizationEndpoints?.admin ||
-  `https://${options.organizationId}.admin.org.coveo.com`;
+export const extractPlatformUrl = (options: InitializationOptions) => {
+  return getOrganizationEndpoint(
+    options.organizationId,
+    options.environment,
+    'admin'
+  );
+};

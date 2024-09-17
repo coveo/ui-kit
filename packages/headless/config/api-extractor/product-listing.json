@@ -1,8 +1,0 @@
-{
-  "extends": "./base.json",
-  "mainEntryPointFilePath": "<projectFolder>/dist/definitions/product-listing.index.d.ts",
-  "docModel": {
-    "enabled": true,
-    "apiJsonFilePath": "<projectFolder>/temp/product-listing.api.json"
-  }
-}

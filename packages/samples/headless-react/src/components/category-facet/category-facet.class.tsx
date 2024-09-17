@@ -67,8 +67,8 @@ export class CategoryFacet extends Component<
       this.state.hasActiveValues && (
         <div>
           Filtering by: {this.renderClearButton()}
-          {this.state.parents.map((parentValue, i) => {
-            const isSelectedValue = i === this.state.parents.length - 1;
+          {this.state.valuesAsTrees.map((parentValue, i) => {
+            const isSelectedValue = i === this.state.valuesAsTrees.length - 1;
 
             return (
               <span key={this.getUniqueKeyForValue(parentValue)}>
@@ -93,7 +93,7 @@ export class CategoryFacet extends Component<
   private renderActiveValues() {
     return (
       <ul>
-        {this.state.values.map((value) => (
+        {this.state.selectedValueAncestry.map((value) => (
           <li key={this.getUniqueKeyForValue(value)}>
             <button onClick={() => this.controller.toggleSelect(value)}>
               {value.value} ({value.numberOfResults}{' '}
@@ -127,7 +127,10 @@ export class CategoryFacet extends Component<
       return null;
     }
 
-    if (!this.state.hasActiveValues && this.state.values.length === 0) {
+    if (
+      !this.state.hasActiveValues &&
+      this.state.selectedValueAncestry.length === 0
+    ) {
       return <div>No facet values</div>;
     }
 

@@ -68,7 +68,7 @@ describe('c-quantic-quickview-content', () => {
       const element = createTestComponent(youtubeTestCase.options);
       await flushPromises();
 
-      setupSimulation(element, 'loadingstatechange');
+      setupSimulation(element, 'quantic__loadingstatechange');
 
       const iframe = element.shadowRoot.querySelector(
         youtubeTestCase.selectors.iframeSelector

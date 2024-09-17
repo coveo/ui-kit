@@ -1,12 +1,10 @@
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildFetchProductListingResponse} from '../../../../test/mock-old-product-listing';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {change} from '../../../history/history-actions';
 import {getHistoryInitialState} from '../../../history/history-state';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
 import * as FacetReducers from '../../generic/facet-reducer-helpers';
@@ -166,20 +164,6 @@ describe('date-facet-set slice', () => {
       executeSearch.fulfilled(search, '', {
         legacy: logSearchEvent({evt: 'foo'}),
       })
-    );
-
-    expect(
-      RangeFacetReducers.onRangeFacetRequestFulfilled
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#fetchProductListing.fulfilled calls #onRangeFacetRequestFulfilled', () => {
-    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
-
-    const productListing = buildFetchProductListingResponse();
-    dateFacetSetReducer(
-      state,
-      fetchProductListing.fulfilled(productListing, '')
     );
 
     expect(

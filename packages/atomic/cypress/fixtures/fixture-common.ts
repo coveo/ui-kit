@@ -1,4 +1,3 @@
-import {getOrganizationEndpoints} from '@coveo/headless';
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
@@ -163,7 +162,6 @@ export function modifySearchResponses(
 export const sampleConfig = {
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
-  organizationEndpoints: getOrganizationEndpoints('searchuisamples'),
   analytics: {
     analyticsMode: 'legacy',
   },

@@ -68,7 +68,9 @@ export default class QuanticTab extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    this.dispatchEvent(new CustomEvent('tab_rendered', {bubbles: true}));
+    this.dispatchEvent(
+      new CustomEvent('quantic__tabrendered', {bubbles: true})
+    );
   }
 
   /**
