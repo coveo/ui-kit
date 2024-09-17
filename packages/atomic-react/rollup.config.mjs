@@ -37,6 +37,12 @@ const outputIIFE = ({minify}) => ({
 });
 
 /** @returns {import('rollup').OutputOptions} */
+const outputCJS = ({useCase}) => ({
+  file: `dist/cjs/${useCase}atomic-react.js`,
+  format: 'cjs',
+});
+
+/** @returns {import('rollup').OutputOptions} */
 const outputIIFERecs = ({minify}) => ({
   file: `dist/iife/atomic-react/recommendation${minify ? '.min' : ''}.js`,
   format: 'iife',
@@ -71,6 +77,23 @@ const plugins = [
   }),
 ];
 
+const pluginsCJS = [
+  json(),
+  nodePolyfills(),
+  typescript(),
+  commonjs(),
+  nodeResolve(),
+  replace({
+    delimiters: ['', ''],
+    values: {
+      'process.env.NODE_ENV': JSON.stringify('dev'),
+      'util.TextEncoder();': 'TextEncoder();',
+      "import { defineCustomElements } from '@coveo/atomic/loader';": '',
+      'defineCustomElements();': '',
+    },
+  }),
+];
+
 export default defineConfig([
   {
     input: 'src/index.ts',
@@ -79,10 +102,22 @@ export default defineConfig([
     plugins,
   },
   {
+    input: 'src/index.ts',
+    output: [outputCJS({useCase: ''})],
+    external: commonExternal,
+    plugins: pluginsCJS,
+  },
+  {
     input: 'src/recommendation.index.ts',
     output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
     external: commonExternal,
     plugins,
+  },
+  {
+    input: 'src/recommendation.index.ts',
+    output: [outputCJS({useCase: 'recommendation/'})],
+    external: commonExternal,
+    plugins: pluginsCJS,
   },
   {
     input: 'src/commerce.index.ts',
@@ -92,5 +127,11 @@ export default defineConfig([
     ],
     external: commonExternal,
     plugins,
+  },
+  {
+    input: 'src/commerce.index.ts',
+    output: [outputCJS({useCase: 'commerce/'})],
+    external: commonExternal,
+    plugins: pluginsCJS,
   },
 ]);
