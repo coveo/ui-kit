@@ -40,7 +40,7 @@ describe('configuration slice', () => {
       userDisplayName: 'Someone',
       documentLocation: 'http://hello.world.com',
       trackingId: 'someTrackingId',
-      analyticsMode: 'legacy',
+      analyticsMode: 'next',
       source: {},
     },
   };
@@ -114,21 +114,14 @@ describe('configuration slice', () => {
 
   describe('updateAnalyticsConfiguration', () => {
     it('works on initial state', () => {
+      const initialState = getConfigurationInitialState();
       const expectedState: ConfigurationState = {
-        ...getConfigurationInitialState(),
+        ...initialState,
         analytics: {
+          ...initialState.analytics,
           enabled: false,
-          originContext: 'fizz',
-          originLevel2: 'bar',
-          originLevel3: 'buzz',
-          apiBaseUrl: 'https://example.com/analytics',
-          anonymous: true,
-          deviceId: 'fuzz',
-          userDisplayName: 'displayName',
-          documentLocation: 'http://somewhere.com',
           trackingId: 'someTrackingId',
-          analyticsMode: 'legacy',
-          source: {},
+          source: {'@coveo/atomic': '3.0.0'},
         },
       };
       expect(
@@ -136,36 +129,21 @@ describe('configuration slice', () => {
           undefined,
           updateAnalyticsConfiguration({
             enabled: false,
-            originContext: 'fizz',
-            originLevel2: 'bar',
-            originLevel3: 'buzz',
-            proxyBaseUrl: 'https://example.com/analytics',
-            anonymous: true,
-            deviceId: 'fuzz',
-            userDisplayName: 'displayName',
-            documentLocation: 'http://somewhere.com',
             trackingId: 'someTrackingId',
+            source: {'@coveo/atomic': '3.0.0'},
           })
         )
       ).toEqual(expectedState);
     });
-
     it('works on an existing state', () => {
       const expectedState: ConfigurationState = {
         ...existingState,
         analytics: {
-          enabled: true,
-          originContext: 'fizz',
-          originLevel2: 'bar',
-          originLevel3: 'buzz',
-          apiBaseUrl: 'https://example.com/analytics',
-          anonymous: true,
-          deviceId: 'fuzz',
-          userDisplayName: 'displayName',
-          documentLocation: 'http://somewhere.com',
+          ...existingState.analytics,
+          enabled: false,
           trackingId: 'someTrackingId',
-          analyticsMode: 'legacy',
-          source: {},
+          analyticsMode: 'next',
+          source: {'@coveo/atomic': '3.0.0'},
         },
       };
 
@@ -173,16 +151,9 @@ describe('configuration slice', () => {
         configurationReducer(
           existingState,
           updateAnalyticsConfiguration({
-            enabled: true,
-            originContext: 'fizz',
-            originLevel2: 'bar',
-            originLevel3: 'buzz',
-            proxyBaseUrl: 'https://example.com/analytics',
-            anonymous: true,
-            deviceId: 'fuzz',
-            userDisplayName: 'displayName',
-            documentLocation: 'http://somewhere.com',
+            enabled: false,
             trackingId: 'someTrackingId',
+            source: {'@coveo/atomic': '3.0.0'},
           })
         )
       ).toEqual(expectedState);
@@ -195,7 +166,6 @@ describe('configuration slice', () => {
       });
       expect('error' in action).toBe(false);
     });
-
     it('setting proxyBaseUrl to a non-URL returns an error', () => {
       const proxyBaseUrl = '/analytics';
       const action = updateAnalyticsConfiguration({

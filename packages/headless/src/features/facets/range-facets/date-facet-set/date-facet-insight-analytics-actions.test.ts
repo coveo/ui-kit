@@ -4,6 +4,7 @@ import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockInsightEngine} from '../../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
+import {getConfigurationInitialState} from '../../../configuration/configuration-state';
 import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions';
 
 const mockLogBreadcrumbFacet = jest.fn();
@@ -20,18 +21,20 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleFacetId = 'exampleFacetId';
-const exampleField = 'exampleField';
-const exampleEndInclusiveValue = true;
-const exampleStartValue = 'start';
-const exampleEndValue = 'end';
+describe('date facet insight analytics actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleFacetId = 'exampleFacetId';
+  const exampleField = 'exampleField';
+  const exampleEndInclusiveValue = true;
+  const exampleStartValue = 'start';
+  const exampleEndValue = 'end';
 
-describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         dateFacetSet: {
@@ -50,6 +53,7 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
 

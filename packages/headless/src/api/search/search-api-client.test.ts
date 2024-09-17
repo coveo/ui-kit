@@ -210,9 +210,11 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.search
     should call PlatformClient.call with the right options`, async () => {
-      const req = (
-        await buildSearchRequest(state, buildMockNavigatorContextProvider()())
-      ).request;
+      const navigatorContextProvier = buildMockNavigatorContextProvider({
+        referrer: 'example.com',
+      });
+      const req = (await buildSearchRequest(state, navigatorContextProvier()))
+        .request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -232,7 +234,7 @@ describe('search api client', () => {
         logger,
         origin: 'searchApiFetch',
         requestParams: {
-          referrer: state.configuration.analytics.originLevel3,
+          referrer: navigatorContextProvier().referrer,
           tab: state.configuration.analytics.originLevel2,
           q: state.query.q,
           debug: false,
@@ -249,7 +251,6 @@ describe('search api client', () => {
           pipeline: state.pipeline,
           searchHub: state.searchHub,
           visitorId: expect.any(String),
-          actionsHistory: expect.any(Array),
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'search'},

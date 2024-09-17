@@ -26,7 +26,7 @@ export const configurationReducer = createReducer(
         handleUpdateCommerceProxyBaseUrl(state, action.payload);
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
-        handleUpdateCommerceAnalyticsConfiguration(state, action.payload);
+        handleupdateAnalyticsConfiguration(state, action.payload);
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
@@ -60,7 +60,7 @@ function handleUpdateCommerceProxyBaseUrl(
   }
 }
 
-function handleUpdateCommerceAnalyticsConfiguration(
+function handleupdateAnalyticsConfiguration(
   state: ConfigurationState,
   payload: UpdateAnalyticsConfigurationPayload
 ) {
