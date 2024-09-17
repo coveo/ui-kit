@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "lib": ["dom", "es2015"],
+    "lib": ["dom", "ES2023"],
     "moduleResolution": "Bundler",
     "module": "ES2022",
     "noImplicitAny": true,
@@ -16,7 +16,7 @@
     "removeComments": false,
     "sourceMap": true,
     "jsx": "react",
-    "target": "es2015"
+    "target": "ES2022"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["**/__tests__/**"],
