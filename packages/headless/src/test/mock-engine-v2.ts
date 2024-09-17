@@ -6,7 +6,6 @@ import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr';
 import type {CoreEngine, CoreEngineNext} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider';
-import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
 import {SearchEngine} from '../app/search-engine/search-engine';
 import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr';
@@ -120,7 +119,6 @@ export type MockedSearchEngine = SearchEngine &
 
 export type MockedCaseAssistEngine = CaseAssistEngine;
 export type MockedRecommendationEngine = RecommendationEngine;
-export type MockedProductRecommendationEngine = ProductRecommendationEngine;
 export type MockedCommerceEngine = CommerceEngine;
 export type MockedInsightEngine = InsightEngine;
 
@@ -159,14 +157,6 @@ export function buildMockInsightEngine<
   return {
     ...buildMockCoreEngine(initialState),
     executeFirstSearch: jest.fn(),
-  };
-}
-
-export function buildMockProductRecommendationEngine<
-  State extends StateFromEngine<ProductRecommendationEngine>,
->(initialState: State): ProductRecommendationEngine {
-  return {
-    ...buildMockCoreEngine(initialState),
   };
 }
 
