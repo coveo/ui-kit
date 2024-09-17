@@ -32,7 +32,7 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
   /**
    * The base URL to use to proxy Coveo case assist requests (e.g., `https://example.com/case-assist`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo case assist through your own
+   * This is an advanced option that you should only set if you need to proxy Coveo case assist requests through your own
    * server. In most cases, you should not set this option.
    *
    * By default, no proxy is used and the Coveo Customer Service requests are sent directly to the Coveo platform through the
