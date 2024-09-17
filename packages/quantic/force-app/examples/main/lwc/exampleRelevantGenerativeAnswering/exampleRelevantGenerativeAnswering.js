@@ -13,8 +13,4 @@ export default class ExampleRelevantGenerativeAnswering extends LightningElement
   @api disableStateInUrl = false;
   /** @type {boolean} */
   @api skipFirstSearch = false;
-  /** @type {string} */
-  @api answerStyle = 'default';
-  /** @type {boolean} */
-  @api multilineFooter = false;
 }

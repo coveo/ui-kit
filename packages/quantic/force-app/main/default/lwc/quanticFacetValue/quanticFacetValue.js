@@ -13,11 +13,11 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticFacetValue` component is used by a facet component to display a formatted facet value and the number of results with that value.
- * @fires CustomEvent#selectvalue
+ * @fires CustomEvent#quantic__selectvalue
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
+ * <c-quantic-facet-value onquantic__selectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
  */
 export default class QuanticFacetValue extends LightningElement {
   /**
@@ -113,7 +113,7 @@ export default class QuanticFacetValue extends LightningElement {
   onSelect(evt) {
     evt.preventDefault();
     this.dispatchEvent(
-      new CustomEvent('selectvalue', {
+      new CustomEvent('quantic__selectvalue', {
         detail: {
           value: this.formattedFacetValue,
         },
@@ -128,7 +128,7 @@ export default class QuanticFacetValue extends LightningElement {
     if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
       this.dispatchEvent(
-        new CustomEvent('selectvalue', {
+        new CustomEvent('quantic__selectvalue', {
           detail: {
             value: this.formattedFacetValue,
           },

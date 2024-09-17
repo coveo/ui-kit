@@ -1,0 +1,31 @@
+diff --git a/node_modules/coveo.analytics/dist/browser.mjs b/node_modules/coveo.analytics/dist/browser.mjs
+index 78efccc..115b8d3 100644
+--- a/node_modules/coveo.analytics/dist/browser.mjs
++++ b/node_modules/coveo.analytics/dist/browser.mjs
+@@ -1135,8 +1135,6 @@ class NoopAnalyticsClient {
+     }
+ }
+ 
+-const fetch$1 = window.fetch;
+-
+ class AnalyticsFetchClient {
+     constructor(opts) {
+         this.opts = opts;
+@@ -1156,7 +1154,7 @@ class AnalyticsFetchClient {
+             const _a = Object.assign(Object.assign({}, defaultOptions), (preprocessRequest ? yield preprocessRequest(defaultOptions, 'analyticsFetch') : {})), { url } = _a, fetchData = __rest(_a, ["url"]);
+             let response;
+             try {
+-                response = yield fetch$1(url, fetchData);
++                response = yield fetch(url, fetchData);
+             }
+             catch (error) {
+                 console.error('An error has occured when sending the event.', error);
+@@ -1184,7 +1182,7 @@ class AnalyticsFetchClient {
+         return __awaiter(this, void 0, void 0, function* () {
+             const { baseUrl } = this.opts;
+             const url = `${baseUrl}/analytics/visit`;
+-            yield fetch$1(url, { headers: this.getHeaders(), method: 'DELETE' });
++            yield fetch(url, { headers: this.getHeaders(), method: 'DELETE' });
+         });
+     }
+     shouldAppendVisitorId(eventType) {

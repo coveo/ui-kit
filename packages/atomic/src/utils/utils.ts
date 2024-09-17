@@ -250,3 +250,23 @@ export function aggregate<V, K extends PropertyKey>(
     <Record<K, V[] | undefined>>{}
   );
 }
+
+/**
+ * Similar as a classic spread, but preserve all characteristics of properties (e.g. getter/setter).
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#description
+ * for an explanation why (spread & assign work similarly).
+ * @param objects the objects to "spread" together
+ * @returns the spread result
+ */
+export function spreadProperties<Output extends object = {}>(
+  ...objects: object[]
+) {
+  const returnObject = {};
+  for (const obj of objects) {
+    Object.defineProperties(
+      returnObject,
+      Object.getOwnPropertyDescriptors(obj)
+    );
+  }
+  return returnObject as Output;
+}

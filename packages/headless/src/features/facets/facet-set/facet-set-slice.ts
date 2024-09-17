@@ -5,7 +5,6 @@ import {
 } from '../../breadcrumb/breadcrumb-actions';
 import {disableFacet} from '../../facet-options/facet-options-actions';
 import {change} from '../../history/history-actions';
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {
@@ -187,15 +186,6 @@ export const facetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
-        facets.forEach((facetResponse) =>
-          mutateStateFromFacetResponse(
-            state[facetResponse.facetId]?.request,
-            facetResponse
-          )
-        );
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const facets = action.payload.response?.facets?.results || [];
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,

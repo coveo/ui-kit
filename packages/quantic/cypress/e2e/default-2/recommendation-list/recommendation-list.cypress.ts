@@ -35,7 +35,7 @@ describe('quantic-recommendation-list', () => {
   const defaultHeadingLevel = 1;
 
   const registerRecommendationTemplatesEvent =
-    'registerrecommendationtemplates';
+    'quantic__registerrecommendationtemplates';
 
   const recommendationsAlias = '@recommendations';
 
