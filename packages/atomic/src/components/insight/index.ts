@@ -99,7 +99,6 @@ export {
   buildInteractiveCitation as buildInsightInteractiveCitation,
   GeneratedAnswer as InsightGeneratedAnswer,
   GeneratedAnswerState as InsightGeneratedAnswerState,
-  GeneratedAnswerStyle as InsightGeneratedAnswerStyle,
   Suggestion as InsightSuggestion,
   UserActionsState as InsightUserActionsState,
   UserActionsProps as InsightUserActionsProps,

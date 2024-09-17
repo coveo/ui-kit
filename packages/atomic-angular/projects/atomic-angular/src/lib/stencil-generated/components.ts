@@ -1005,14 +1005,14 @@ export declare interface AtomicFrequentlyBoughtTogether extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle']
+  inputs: ['collapsible', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle'],
+  inputs: ['collapsible', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
