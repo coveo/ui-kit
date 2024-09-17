@@ -215,13 +215,6 @@ export const config: Config = {
               ),
             },
             {
-              find: '@coveo/headless/product-recommendation',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/product-recommendation/headless.esm.js'
-              ),
-            },
-            {
               find: '@coveo/headless/insight',
               replacement: path.resolve(
                 __dirname,

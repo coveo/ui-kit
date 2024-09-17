@@ -22,7 +22,6 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {RecsLogLevel} from '..';
-import {i18nCompatibilityVersion} from '../../../components';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
@@ -101,12 +100,6 @@ export class AtomicRecsInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: RecsLogLevel;
-
-  /**
-   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-   */
-  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
-    'v3';
 
   /**
    * The recommendation interface language.
