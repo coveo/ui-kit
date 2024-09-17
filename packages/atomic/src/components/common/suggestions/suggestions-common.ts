@@ -141,11 +141,11 @@ export type SearchBoxSuggestionsBindings<
   /**
    * Whether the search box is [standalone](https://docs.coveo.com/en/atomic/latest/usage/ssb/).
    */
-  isStandalone(): boolean;
+  isStandalone: boolean;
   /**
    * The search box headless controller.
    */
-  searchBoxController(): SearchBoxController;
+  searchBoxController: SearchBoxController;
   /**
    * The number of queries to display when the user interacts with the search box.
    */

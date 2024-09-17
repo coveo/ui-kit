@@ -35,7 +35,6 @@ import {
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
-import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -126,12 +125,6 @@ export class AtomicSearchInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: LogLevel;
-
-  /**
-   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-   */
-  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
-    'v3';
 
   /**
    * The search interface i18next instance.
@@ -369,12 +362,6 @@ export class AtomicSearchInterface
       return;
     }
 
-    if (this.localizationCompatibilityVersion !== 'v4') {
-      this.engine.logger.warn(
-        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface localization-compatibility-version="v4" ...></atomic-search-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
-      );
-    }
-
     const safeStorage = new SafeStorage();
     const standaloneSearchBoxData =
       safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
@@ -600,13 +587,6 @@ export class AtomicSearchInterface
     deep?: boolean,
     overwrite?: boolean
   ) {
-    const hasV3Keys = Object.keys(resources).some((k) => k.includes('_plural'));
-    if (hasV3Keys && ns === 'translation') {
-      this.engine &&
-        this.engine.logger.warn(
-          `Translation keys using the v3 JSON compatibility format have been detected. As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update your translation JSON keys to v4 format: { my-key_other: 'My translations!' } For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
-        );
-    }
     return this.i18nClone.addResourceBundle(
       lng,
       ns,

@@ -118,23 +118,21 @@ describe('searchapi-generated-answer', () => {
     expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
-  it('dispatches a send feedback action', () => {
+  it('dispatches a sendFeedback action', () => {
     const generatedAnswer = createGeneratedAnswer();
-    const feedback: GeneratedAnswerFeedback = 'harmful';
+    const feedback: GeneratedAnswerFeedback = {
+      readable: 'unknown',
+      correctTopic: 'unknown',
+      documented: 'yes',
+      hallucinationFree: 'no',
+      helpful: false,
+      details: 'some details',
+    };
     generatedAnswer.sendFeedback(feedback);
+
     expect(
       generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
     ).toHaveBeenCalledWith(feedback);
-    expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatches a send detailed feedback action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const details = 'details';
-    generatedAnswer.sendDetailedFeedback(details);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerDetailedFeedback
-    ).toHaveBeenCalledWith(details);
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
   });
 
