@@ -1,7 +1,6 @@
 import {
   AtomicFormatCurrency,
   AtomicRecsInterface,
-  buildRecommendationEngine,
   AtomicResultImage,
   AtomicResultSectionTitle,
   AtomicResultLink,
@@ -20,9 +19,12 @@ import {
   AtomicResultPrintableUri,
   AtomicResultMultiValueText,
   AtomicResultText,
-  Result,
   AtomicRecsList,
 } from '@coveo/atomic-react/recommendation';
+import {
+  buildRecommendationEngine,
+  Result,
+} from '@coveo/headless/recommendation';
 import React, {FunctionComponent, useMemo} from 'react';
 
 export const RecsPage: FunctionComponent = () => {
