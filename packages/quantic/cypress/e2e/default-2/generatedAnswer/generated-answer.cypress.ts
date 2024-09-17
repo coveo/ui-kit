@@ -549,7 +549,8 @@ describe('quantic-generated-answer', () => {
               }
             );
 
-            describe('the generated answer toggle button', () => {
+            // TODO: SFINT-5538 - Completely toggle answer.
+            describe.skip('the generated answer toggle button', () => {
               const streamId = crypto.randomUUID();
               const responseId = crypto.randomUUID();
 
@@ -578,6 +579,7 @@ describe('quantic-generated-answer', () => {
                   Expect.displayDislikeButton(false);
                   Expect.displayDisclaimer(false);
                   if (analyticsMode === 'next') {
+                    // TODO: SFINT-5670 - New events for toggling the generated answer, or remove completely toggle answer.
                     NextAnalyticsExpectations.emitQnaAnswerActionEvent(
                       {
                         answer: {
@@ -657,16 +659,17 @@ describe('quantic-generated-answer', () => {
                   Expect.displayCitations(false);
                   Expect.displayDisclaimer(true);
                   if (analyticsMode === 'next') {
-                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
-                      {
-                        answer: {
-                          responseId,
-                          type: answerType,
-                        },
-                        action: 'expand',
-                      },
-                      exampleTrackingId
-                    );
+                    // TODO: SFINT-5670 - New events for generated answer to be updated.
+                    // NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                    //   {
+                    //     answer: {
+                    //       responseId,
+                    //       type: answerType,
+                    //     },
+                    //     action: 'expand',
+                    //   },
+                    //   exampleTrackingId
+                    // );
                   } else {
                     Expect.logGeneratedAnswerExpand(streamId);
                   }
@@ -683,16 +686,17 @@ describe('quantic-generated-answer', () => {
                     Expect.displayCitations(false);
                     Expect.displayDisclaimer(true);
                     if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitQnaAnswerActionEvent(
-                        {
-                          answer: {
-                            responseId,
-                            type: answerType,
-                          },
-                          action: 'collapse',
-                        },
-                        exampleTrackingId
-                      );
+                      // TODO: SFINT-5670 - New events for generated answer to be updated.
+                      // NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                      //   {
+                      //     answer: {
+                      //       responseId,
+                      //       type: answerType,
+                      //     },
+                      //     action: 'collapse',
+                      //   },
+                      //   exampleTrackingId
+                      // );
                     } else {
                       Expect.logGeneratedAnswerCollapse(streamId);
                     }

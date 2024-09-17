@@ -6,6 +6,7 @@ import {
   ProductListingState,
   buildProductListing,
   buildSearch,
+  getCommerceApiBaseUrl,
 } from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -72,18 +73,20 @@ export class AtomicQueryError
       bindings: {
         i18n,
         engine: {
-          configuration: {organizationId, organizationEndpoints, platformUrl},
+          configuration: {organizationId, environment, commerce},
         },
       },
     } = this;
+
+    const url =
+      commerce.apiBaseUrl ?? getCommerceApiBaseUrl(organizationId, environment);
+
     const hasError = !isNullOrUndefined(error);
-    const actualPlatformUrl =
-      organizationEndpoints?.platform || platformUrl || '';
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        actualPlatformUrl,
+        url,
         error?.type
       );
     }
@@ -99,7 +102,7 @@ export class AtomicQueryError
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={organizationEndpoints?.platform || platformUrl || ''}
+            url={url}
             errorType={error?.type}
           />
           <QueryErrorShowMore

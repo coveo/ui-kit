@@ -3,6 +3,7 @@ import {
   getVisitorID,
   historyStore,
 } from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,
@@ -85,7 +86,12 @@ export const buildRecommendationRequest = async (
 ): Promise<RecommendationRequest> => ({
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
-  url: s.configuration.search.apiBaseUrl,
+  url:
+    s.configuration.search.apiBaseUrl ??
+    getSearchApiBaseUrl(
+      s.configuration.organizationId,
+      s.configuration.environment
+    ),
   recommendation: s.recommendation.id,
   tab: s.configuration.analytics.originLevel2,
   referrer: s.configuration.analytics.originLevel3,

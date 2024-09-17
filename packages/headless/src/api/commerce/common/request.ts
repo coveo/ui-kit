@@ -77,8 +77,8 @@ export const baseRequest = (
   | 'origin'
   | 'requestMetadata'
 > => {
-  const {url, organizationId, accessToken} = req;
-  const baseUrl = `${url}/rest/organizations/${organizationId}/commerce/v2/${path}`;
+  const {url, accessToken} = req;
+  const baseUrl = `${url}/${path}`;
 
   return {
     accessToken,

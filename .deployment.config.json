@@ -159,15 +159,40 @@
       }
     },
     {
+      "id": "invalidate-cloudfront-cache",
+      "terraform": {
+        "terragrunt_path": "",
+        "source": "infrastructure/terraform",
+        "auto_approve": true,
+        "auto_approve_in_production": true,
+        "run_strategy": "always"
+      }
+    },
+    {
+      "id": "smoke",
+      "github": {
+        "workflow_file": "smoke.yml",
+        "workflow_reference": "main",
+        "workflow_repository": "coveo-platform/ui-kit-cd",
+        "extra_parameters": {
+          "atomic-major": "$[ATOMIC_MAJOR_VERSION]",
+          "atomic-minor": "$[ATOMIC_MINOR_VERSION]",
+          "atomic-patch": "$[ATOMIC_PATCH_VERSION]"
+        }
+      }
+    },
+    {
       "id": "production-release",
-      "team_jenkins": {
+      "github": {
         "disabled": true,
-        "job_name": "ui-kit-production-release",
+        "workflow_file": "prod.yml",
+        "workflow_reference": "main",
+        "workflow_repository": "coveo-platform/ui-kit-cd",
         "prd": {
           "disabled": false
         },
         "extra_parameters": {
-          "GITHUB_RUN_ID": "$[GITHUB_RUN_ID]"
+          "run-id": "$[GITHUB_RUN_ID]"
         }
       }
     }

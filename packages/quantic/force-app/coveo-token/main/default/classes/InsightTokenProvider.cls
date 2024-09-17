@@ -61,10 +61,6 @@ global with sharing class InsightTokenProvider implements ITokenProvider {
         (String) coveoEndpointData.get('organization')
       );
       headlessConfiguration.put('accessToken', token);
-      headlessConfiguration.put(
-        'platformUrl',
-        (String) coveoEndpointData.get('clientUri')
-      );
       return JSON.serialize(headlessConfiguration);
     } catch (Exception ex) {
       return JSON.serialize(

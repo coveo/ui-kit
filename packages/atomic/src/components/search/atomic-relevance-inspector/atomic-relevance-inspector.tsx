@@ -1,4 +1,4 @@
-import {PlatformEnvironment, getOrganizationEndpoints} from '@coveo/headless';
+import {getOrganizationEndpoint} from '@coveo/headless';
 import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
 import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -56,41 +56,11 @@ export class AtomicRelevanceInspector {
     );
   }
 
-  private extractEnvironmentFromPlatformURL(): PlatformEnvironment {
-    const {platformUrl} = this.bindings.engine.state.configuration;
-    const fallbackEnv = 'prod';
-
-    const platformUrlMatch = platformUrl.match(
-      /^https:\/\/platform(?<env>dev|stg|hipaa)/
-    );
-
-    if (platformUrlMatch) {
-      return (
-        (platformUrlMatch.groups?.env as PlatformEnvironment) ?? fallbackEnv
-      );
-    }
-
-    const organizationEndpointMatch = platformUrl.match(
-      /^https:\/\/[a-z0-9]+\.org(?<env>dev|stg|hipaa)/
-    );
-
-    if (organizationEndpointMatch) {
-      return (
-        (organizationEndpointMatch.groups?.env as PlatformEnvironment) ??
-        fallbackEnv
-      );
-    }
-
-    return fallbackEnv;
-  }
-
   private get adminHref() {
-    const {organizationId} = this.bindings.engine.state.configuration;
+    const {organizationId, environment} =
+      this.bindings.engine.state.configuration;
 
-    const {admin} = getOrganizationEndpoints(
-      organizationId,
-      this.extractEnvironmentFromPlatformURL() as PlatformEnvironment
-    );
+    const admin = getOrganizationEndpoint(organizationId, environment, 'admin');
     const {searchResponseId} = this.bindings.engine.state.search;
     return `${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`;
   }

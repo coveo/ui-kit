@@ -19,23 +19,18 @@ import {
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
-  logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
   GeneratedAnswerFeedback,
 } from './generated-answer-analytics-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
-import {generatedAnswerStyle} from './generated-response-format';
 
 const mockLogFunction = jest.fn();
 const mockMakeGeneratedAnswerFeedbackSubmit = jest.fn(() => ({
   log: mockLogFunction,
 }));
 const mockMakeRetryGeneratedAnswer = jest.fn(() => ({
-  log: mockLogFunction,
-}));
-const mockMakeRephraseGeneratedAnswer = jest.fn(() => ({
   log: mockLogFunction,
 }));
 const mockMakeOpenGeneratedAnswerSource = jest.fn(() => ({
@@ -89,7 +84,6 @@ jest.mock('coveo.analytics', () => {
     disable: jest.fn(),
     makeGeneratedAnswerFeedbackSubmit: mockMakeGeneratedAnswerFeedbackSubmit,
     makeRetryGeneratedAnswer: mockMakeRetryGeneratedAnswer,
-    makeRephraseGeneratedAnswer: mockMakeRephraseGeneratedAnswer,
     makeOpenGeneratedAnswerSource: mockMakeOpenGeneratedAnswerSource,
     makeGeneratedAnswerSourceHover: mockMakeGeneratedAnswerSourceHover,
     makeLikeGeneratedAnswer: mockMakeLikeGeneratedAnswer,
@@ -174,27 +168,6 @@ describe('generated answer analytics actions', () => {
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
-    });
-
-    generatedAnswerStyle.map((answerStyle) => {
-      it(`should log #logRephraseGeneratedAnswer with "${answerStyle}" answer style`, async () => {
-        const expectedFormat = {answerStyle};
-
-        await logRephraseGeneratedAnswer(expectedFormat)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
-
-        const mockToUse = mockMakeRephraseGeneratedAnswer;
-
-        expect(mockToUse).toHaveBeenCalledTimes(1);
-        expect(mockToUse).toHaveBeenCalledWith({
-          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-          rephraseFormat: answerStyle,
-        });
-        expect(mockLogFunction).toHaveBeenCalledTimes(1);
-      });
     });
 
     it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {

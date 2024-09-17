@@ -3,7 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
-import terser from '@rollup/plugin-terser';
+// import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import {readFileSync} from 'fs';
 import {join, dirname} from 'path';
@@ -66,15 +66,15 @@ const packageMappings = {
   },
 };
 
-/** @type {import("rollup").GlobalsOption} */
-const globals = {
-  react: 'React',
-  'react-dom': 'ReactDOM',
-  'react-dom/client': 'ReactDOM',
-  'react-dom/server': 'ReactDOMServer',
-  '@coveo/atomic': 'CoveoAtomic',
-  '@coveo/headless': 'CoveoHeadless',
-};
+// /** @type {import("rollup").GlobalsOption} */
+// const globals = {
+//   react: 'React',
+//   'react-dom': 'ReactDOM',
+//   'react-dom/client': 'ReactDOM',
+//   'react-dom/server': 'ReactDOMServer',
+//   '@coveo/atomic': 'CoveoAtomic',
+//   '@coveo/headless': 'CoveoHeadless',
+// };
 
 /** @type {import('rollup').ExternalOption} */
 const commonExternal = [
@@ -86,14 +86,14 @@ const commonExternal = [
   '@coveo/headless',
 ];
 
-/** @returns {import('rollup').OutputOptions} */
-const outputIIFE = ({minify}) => ({
-  file: `dist/iife/atomic-react${minify ? '.min' : ''}.js`,
-  format: 'iife',
-  name: 'CoveoAtomicReact',
-  globals,
-  plugins: minify ? [terser()] : [],
-});
+// /** @returns {import('rollup').OutputOptions} */
+// const outputIIFE = ({minify}) => ({
+//   file: `dist/iife/atomic-react${minify ? '.min' : ''}.js`,
+//   format: 'iife',
+//   name: 'CoveoAtomicReact',
+//   globals,
+//   plugins: minify ? [terser()] : [],
+// });
 
 /** @returns {import('rollup').OutputOptions} */
 const outputCJS = ({useCase}) => ({
@@ -101,23 +101,23 @@ const outputCJS = ({useCase}) => ({
   format: 'cjs',
 });
 
-/** @returns {import('rollup').OutputOptions} */
-const outputIIFERecs = ({minify}) => ({
-  file: `dist/iife/atomic-react/recommendation${minify ? '.min' : ''}.js`,
-  format: 'iife',
-  name: 'CoveoAtomicReactRecommendation',
-  globals,
-  plugins: minify ? [terser()] : [],
-});
+// /** @returns {import('rollup').OutputOptions} */
+// const outputIIFERecs = ({minify}) => ({
+//   file: `dist/iife/atomic-react/recommendation${minify ? '.min' : ''}.js`,
+//   format: 'iife',
+//   name: 'CoveoAtomicReactRecommendation',
+//   globals,
+//   plugins: minify ? [terser()] : [],
+// });
 
-/** @returns {import('rollup').OutputOptions} */
-const outputIIFECommerce = ({minify}) => ({
-  file: `dist/iife/atomic-react/commerce${minify ? '.min' : ''}.js`,
-  format: 'iife',
-  name: 'CoveoAtomicReactCommerce',
-  globals,
-  plugins: minify ? [terser()] : [],
-});
+// /** @returns {import('rollup').OutputOptions} */
+// const outputIIFECommerce = ({minify}) => ({
+//   file: `dist/iife/atomic-react/commerce${minify ? '.min' : ''}.js`,
+//   format: 'iife',
+//   name: 'CoveoAtomicReactCommerce',
+//   globals,
+//   plugins: minify ? [terser()] : [],
+// });
 
 const plugins = [
   isCDN &&
@@ -158,39 +158,39 @@ const pluginsCJS = [
 ];
 
 export default defineConfig([
-  {
-    input: 'src/index.ts',
-    output: [outputIIFE({minify: true}), outputIIFE({minify: false})],
-    external: commonExternal,
-    plugins,
-  },
+  // {
+  //   input: 'src/index.ts',
+  //   output: [outputIIFE({minify: true}), outputIIFE({minify: false})],
+  //   external: commonExternal,
+  //   plugins,
+  // },
   {
     input: 'src/index.ts',
     output: [outputCJS({useCase: ''})],
     external: commonExternal,
     plugins: pluginsCJS,
   },
-  {
-    input: 'src/recommendation.index.ts',
-    output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
-    external: commonExternal,
-    plugins,
-  },
+  // {
+  //   input: 'src/recommendation.index.ts',
+  //   output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
+  //   external: commonExternal,
+  //   plugins,
+  // },
   {
     input: 'src/recommendation.index.ts',
     output: [outputCJS({useCase: 'recommendation/'})],
     external: commonExternal,
     plugins: pluginsCJS,
   },
-  {
-    input: 'src/commerce.index.ts',
-    output: [
-      outputIIFECommerce({minify: true}),
-      outputIIFECommerce({minify: false}),
-    ],
-    external: commonExternal,
-    plugins,
-  },
+  // {
+  //   input: 'src/commerce.index.ts',
+  //   output: [
+  //     outputIIFECommerce({minify: true}),
+  //     outputIIFECommerce({minify: false}),
+  //   ],
+  //   external: commonExternal,
+  //   plugins,
+  // },
   {
     input: 'src/commerce.index.ts',
     output: [outputCJS({useCase: 'commerce/'})],
