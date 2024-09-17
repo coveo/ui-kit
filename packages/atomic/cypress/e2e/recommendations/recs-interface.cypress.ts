@@ -5,7 +5,8 @@ import {
 } from '../common-assertions';
 import {setLanguage, getRecommendations} from './recs-interface-utils';
 
-describe('Recs Interface Component', () => {
+// TODO: https://coveord.atlassian.net/browse/KIT-3540 - rewrite in playwright
+describe.skip('Recs Interface Component', () => {
   const engineError =
     'You have to call "initialize" on the atomic-recs-interface component before modifying the props or calling other public methods.';
 

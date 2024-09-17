@@ -9,7 +9,7 @@
     </template>
     <template if:false={showPlaceholder}>
       <template lwc:if={shouldDisplayRecentResultsCard}>
-        <c-quantic-card-container data-cy="recent-results-card" title={label} onheaderclick={toggleVisibility} onheaderkeydown={toggleVisibility}>
+        <c-quantic-card-container data-cy="recent-results-card" title={label} onquantic__headerclick={toggleVisibility} onquantic__headerkeydown={toggleVisibility}>
           <lightning-button-icon class="slds-p-bottom_small" slot="actions" icon-name={actionButtonIcon}
             alternative-text={actionButtonLabel} variant="bare" tabindex="-1" aria-hidden="true">
           </lightning-button-icon>
