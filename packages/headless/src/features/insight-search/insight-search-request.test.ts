@@ -32,13 +32,11 @@ describe('insight search request', () => {
         ...getConfigurationInitialState(),
         accessToken: '123',
         organizationId: 'foo',
-        platformUrl: 'bar',
       };
       const params = (await buildInsightSearchRequest(state)).request;
 
       expect(params.accessToken).toBe(state.configuration.accessToken);
       expect(params.organizationId).toBe(state.configuration.organizationId);
-      expect(params.url).toBe(state.configuration.platformUrl);
       expect(params.locale).toBe(state.configuration.search.locale);
     });
 
@@ -254,7 +252,6 @@ describe('insight search request', () => {
         ...getConfigurationInitialState(),
         accessToken: '123',
         organizationId: 'foo',
-        platformUrl: 'bar',
       };
       const params = (
         await buildInsightLoadCollectionRequest(state, collectionId)
@@ -262,7 +259,6 @@ describe('insight search request', () => {
 
       expect(params.accessToken).toBe(state.configuration.accessToken);
       expect(params.organizationId).toBe(state.configuration.organizationId);
-      expect(params.url).toBe(state.configuration.platformUrl);
     });
 
     it('#buildInsightLoadCollectionRequest returns the state #insightId', async () => {

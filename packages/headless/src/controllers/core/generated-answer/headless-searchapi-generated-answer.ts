@@ -4,6 +4,7 @@ import {CoreEngine} from '../../../app/engine';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {ConfigurationState} from '../../../features/configuration/configuration-state';
 import {
   resetAnswer,
   setId,
@@ -42,7 +43,8 @@ interface SubscribeStateManager {
   subscribeToSearchRequests: (
     engine: CoreEngine<
       GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+      ClientThunkExtraArguments<GeneratedAnswerAPIClient>,
+      ConfigurationState
     >
   ) => Unsubscribe;
 }

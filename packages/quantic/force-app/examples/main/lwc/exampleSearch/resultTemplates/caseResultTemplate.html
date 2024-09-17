@@ -8,9 +8,9 @@
     </div>
     <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
       <div class="slds-m-right_xx-small">
-        <c-quantic-result-badge variant="recommended" result={result}></c-quantic-result-badge>
+        <c-quantic-result-tag variant="recommended" result={result}></c-quantic-result-tag>
       </div>
-      <c-quantic-result-badge variant="featured" result={result}></c-quantic-result-badge>
+      <c-quantic-result-tag variant="featured" result={result}></c-quantic-result-tag>
     </div>
     <template if:true={resultHasPreview}>
       <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
