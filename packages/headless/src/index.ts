@@ -639,6 +639,5 @@ export * from './utils/query-expression/query-expression';
 
 export type {
   GeneratedAnswerFeedback,
-  GeneratedAnswerFeedbackV2,
   GeneratedAnswerFeedbackOption,
 } from './features/generated-answer/generated-answer-analytics-actions';

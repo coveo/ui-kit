@@ -81,12 +81,6 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .type(text)
         .logAction('When typing in the feedback details input'),
 
-    clickRephraseButton: (name: string) =>
-      selector
-        .rephraseButtonByLabel(name)
-        .click({force: true})
-        .logAction(`When clicking on the ${name} rephrase button`),
-
     hoverOverCitation: (index: number) =>
       selector
         .citationLink(index)

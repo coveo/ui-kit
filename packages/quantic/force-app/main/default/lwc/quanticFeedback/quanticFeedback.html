@@ -3,10 +3,10 @@
     <span class="slds-var-p-right_small slds-text-color_weak feedback__question"
       id="feedback__question">{question}</span>
     <c-quantic-stateful-button selected={liked} data-cy="feedback__like-button" tooltip={likeLabel}
-      icon-name={likeIconName} onselect={handleLike} ondeselect={handleLike} without-borders selected-state-color="#2e844a"
+      icon-name={likeIconName} onquantic__select={handleLike} onquantic__deselect={handleLike} without-borders selected-state-color="#2e844a"
       label={likeButtonLabel} icon-size={size}></c-quantic-stateful-button>
     <c-quantic-stateful-button selected={disliked} data-cy="feedback__dislike-button" tooltip={dislikeLabel}
-      icon-name={dislikeIconName} onselect={handleDislike} ondeselect={handleDislike} without-borders selected-state-color="#ea001e"
+      icon-name={dislikeIconName} onquantic__select={handleDislike} onquantic__deselect={handleDislike} without-borders selected-state-color="#ea001e"
       label={dislikeButtonLabel} icon-size={size}></c-quantic-stateful-button>
   </div>
   <template if:true={displaySuccessMessage}>

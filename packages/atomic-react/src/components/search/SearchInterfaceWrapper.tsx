@@ -28,14 +28,6 @@ interface WrapperProps
    *
    */
   localization?: (i18n: i18n) => void;
-  /**
-   * @deprecated This option has no effect. Rather, set the pipeline through the `engine` `search` configuration.
-   */
-  pipeline?: string;
-  /**
-   * @deprecated This option has no effect. Rather, set the search hub through the `engine` `search` configuration.
-   */
-  searchHub?: string;
 }
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
