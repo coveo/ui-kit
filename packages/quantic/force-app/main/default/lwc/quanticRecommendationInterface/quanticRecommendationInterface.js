@@ -105,9 +105,12 @@ export default class QuanticRecommendationInterface extends LightningElement {
 
   disconnectedCallback() {
     if (this.ariaLiveEventsBound) {
-      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
       this.removeEventListener(
-        'registerregion',
+        'quantic__arialivemessage',
+        this.handleAriaLiveMessage
+      );
+      this.removeEventListener(
+        'quantic__registerregion',
         this.handleRegisterAriaLiveRegion
       );
     }
@@ -129,11 +132,11 @@ export default class QuanticRecommendationInterface extends LightningElement {
 
   bindAriaLiveEvents() {
     this.template.addEventListener(
-      'arialivemessage',
+      'quantic__arialivemessage',
       this.handleAriaLiveMessage.bind(this)
     );
     this.template.addEventListener(
-      'registerregion',
+      'quantic__registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
     this.ariaLiveEventsBound = true;
