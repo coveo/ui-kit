@@ -11,7 +11,7 @@ import {
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
   generatedAnswerAnalyticsClient,
-  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedback,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state';
 import {queryReducer} from '../../../features/query/query-slice';
@@ -149,7 +149,7 @@ describe('knowledge-generated-answer', () => {
       query: {q: 'this est une question', enableQuerySyntax: false},
     });
     const generatedAnswer = createGeneratedAnswer();
-    const feedback: GeneratedAnswerFeedbackV2 = {
+    const feedback: GeneratedAnswerFeedback = {
       readable: 'unknown',
       correctTopic: 'unknown',
       documented: 'yes',
