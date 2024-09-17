@@ -1,6 +1,7 @@
 import {RouteAlias, setupIntercept} from '../fixtures/fixture-common';
 
-describe('External Test Suite', () => {
+// TODO: https://coveord.atlassian.net/browse/KIT-3540 - rewrite in playwright
+describe.skip('External Test Suite', () => {
   describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
     beforeEach(() => {
       setupIntercept();

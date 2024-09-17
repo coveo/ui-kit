@@ -40,7 +40,7 @@ export type AriaLabelGenerator = (
  * This component is not supported on mobile.
  *
  * @slot default - The default slot where the instant products are rendered.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-search-box-instant-products',
@@ -107,7 +107,9 @@ export class AtomicCommerceSearchBoxInstantProducts
         : el?.querySelector('atomic-product');
 
     return (
-      atomicProduct?.shadowRoot?.querySelector('atomic-product-link a') || null
+      atomicProduct?.shadowRoot?.querySelector(
+        'atomic-product-link a:not([slot])'
+      ) || null
     );
   }
 

@@ -43,8 +43,6 @@ import {InsightInterfaceState} from '../features/insight-interface/insight-inter
 import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
-import {OldProductListingState} from '../features/product-listing/old-product-listing-state';
-import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
 import {QueryState} from '../features/query/query-state';
@@ -294,20 +292,6 @@ export interface RecommendationSection {
   recommendation: RecommendationState;
 }
 
-export interface ProductRecommendationsSection {
-  /**
-   * The information related to the product recommendations endpoint.
-   */
-  productRecommendations: ProductRecommendationsState;
-}
-
-export interface OldProductListingSection {
-  /**
-   * The information related to the product listing endpoint.
-   */
-  productListing: OldProductListingState;
-}
-
 export interface CommercePaginationSection {
   /**
    * The information related to the commerce pagination.
@@ -505,11 +489,11 @@ export interface GeneratedAnswerSection {
   generatedAnswer: GeneratedAnswerState;
 }
 
-export interface InsightUserActionSection {
+export interface InsightUserActionsSection {
   /**
-   * The insight user action state.
+   * The insight user actions state.
    */
-  insightUserAction: UserActionsState;
+  insightUserActions: UserActionsState;
 }
 
 export interface ManualRangeSection {

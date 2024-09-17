@@ -94,7 +94,7 @@ export const InASearchBoxInstantProducts: Story = {
     commerceInterfaceDecorator,
   ],
   play: async (context) => {
-    initializeCommerceInterface(context);
+    await initializeCommerceInterface(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await step('Click Searchbox', async () => {
@@ -103,7 +103,7 @@ export const InASearchBoxInstantProducts: Story = {
           exact: false,
         })
       )
-        ?.find((el) => el.role === 'combobox')
+        ?.find((el) => el.getAttribute('part') === 'textarea')
         ?.focus();
     });
   },

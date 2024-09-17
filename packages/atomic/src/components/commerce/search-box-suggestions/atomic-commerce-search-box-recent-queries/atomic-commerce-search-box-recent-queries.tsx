@@ -29,7 +29,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  * @part recent-query-title - The 'Recent queries' title.
  * @part recent-query-clear - The 'Clear' button for clearing recent queries.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-search-box-recent-queries',

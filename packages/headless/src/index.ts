@@ -1,22 +1,7 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import {buildMockSearchEngine} from './test/mock-engine-v2';
-import {buildMockRaw} from './test/mock-raw';
-import {buildMockResult} from './test/mock-result';
-import {createMockState} from './test/mock-state';
 import * as HighlightUtils from './utils/highlight';
-
-const TestUtils = {
-  buildMockRaw,
-  buildMockSearchEngine,
-  buildMockResult,
-  createMockState,
-};
-
-polyfillCryptoNode();
 
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 export type {Relay} from '@coveo/relay';
 
@@ -563,7 +548,7 @@ export * from './features/actions-history/ipx-actions-history-actions-loader';
 
 // Types & Helpers
 export {API_DATE_FORMAT} from './api/search/date/date-format';
-export {TestUtils, HighlightUtils};
+export {HighlightUtils};
 export type {Result} from './api/search/search/result';
 export type {FieldDescription} from './api/search/fields/fields-response';
 export type {Raw} from './api/search/search/raw';
@@ -654,6 +639,5 @@ export * from './utils/query-expression/query-expression';
 
 export type {
   GeneratedAnswerFeedback,
-  GeneratedAnswerFeedbackV2,
   GeneratedAnswerFeedbackOption,
 } from './features/generated-answer/generated-answer-analytics-actions';

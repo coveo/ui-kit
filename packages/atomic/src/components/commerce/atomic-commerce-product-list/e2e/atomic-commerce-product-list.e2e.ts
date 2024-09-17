@@ -41,21 +41,4 @@ test.describe('when interface load yields no products', () => {
   });
 });
 
-test.describe('when gridCellLinkTarget is set to _blank', async () => {
-  test.beforeEach(async ({productList}) => {
-    await productList.load({story: 'open-in-new-tab'});
-    await productList.hydrated.waitFor();
-  });
-
-  test('should open product in new tab', async ({context, productList}) => {
-    const [newTab] = await Promise.all([
-      context.waitForEvent('page'),
-      productList.products.first().click(),
-    ]);
-    await newTab.waitForLoadState();
-
-    expect(newTab.url()).toMatch(/sports\.barca\.group\/pdp\/.*$/);
-  });
-});
-
 // TODO: KIT-3247 add the rest of E2E tests

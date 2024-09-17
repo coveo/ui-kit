@@ -36,10 +36,6 @@ jest.mock(
 jest.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
-  it('should be tested', () => {
-    expect(true).toBe(true);
-  });
-
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
@@ -128,23 +124,21 @@ describe('searchapi-generated-answer', () => {
     expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
-  it('dispatches a send feedback action', () => {
+  it('dispatches a sendFeedback action', () => {
     const generatedAnswer = createGeneratedAnswer();
-    const feedback: GeneratedAnswerFeedback = 'harmful';
+    const feedback: GeneratedAnswerFeedback = {
+      readable: 'unknown',
+      correctTopic: 'unknown',
+      documented: 'yes',
+      hallucinationFree: 'no',
+      helpful: false,
+      details: 'some details',
+    };
     generatedAnswer.sendFeedback(feedback);
+
     expect(
       generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
     ).toHaveBeenCalledWith(feedback);
-    expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatches a send detailed feedback action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const details = 'details';
-    generatedAnswer.sendDetailedFeedback(details);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerDetailedFeedback
-    ).toHaveBeenCalledWith(details);
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
   });
 
@@ -289,5 +283,26 @@ describe('searchapi-generated-answer', () => {
     expect(registerFieldsToIncludeInCitations).toHaveBeenCalledWith(
       exampleFieldsToIncludeInCitations
     );
+  });
+
+  describe('when used with a preloaded state', () => {
+    beforeEach(() => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          id: 'some-id',
+        },
+      });
+      state.search.requestId = 'some-request-id';
+      state.search.extendedResults.generativeQuestionAnsweringId =
+        'some-stream-id';
+      engine = buildMockSearchEngine(state);
+    });
+
+    it('should not trigger any actions on initialization', () => {
+      engine.dispatch.mockClear();
+      createGeneratedAnswer();
+      expect(engine.dispatch).not.toHaveBeenCalled();
+    });
   });
 });

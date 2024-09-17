@@ -1,5 +1,4 @@
 import {Middleware, Action} from '@reduxjs/toolkit';
-import {btoa as btoashim} from 'abab';
 
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
@@ -30,9 +29,7 @@ export function removeDuplicates<T>(arr: T[], predicate: (value: T) => string) {
 }
 
 export function encodedBtoa(stringToEncode: string) {
-  return (typeof btoa !== 'undefined' ? btoa : btoashim)(
-    encodeURI(stringToEncode)
-  )!;
+  return btoa(encodeURI(stringToEncode))!;
 }
 
 export function omit<T>(key: keyof T, obj: T) {
@@ -50,7 +47,7 @@ const doNotTrackValues = new Set(['1', 1, 'yes', true]);
 /**
  * Logic copied from coveo.analytics.
  *
- * @deprecated Starting with Event Protocol, Coveo will no longer respect the DNT standard.
+ * @deprecated V4 - Starting with Event Protocol, Coveo will no longer respect the DNT standard.
  * Instead, we will provide implementers with documentation on privacy best-practices, letting
  * them decide which standards to respect.
  * For more context behind the decision, see: https://coveord.atlassian.net/browse/LENS-1502
@@ -101,6 +98,17 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
       predicate(value as TInitialValue, key as TKey),
     ])
   ) as Record<TKey, TNewValue>;
+}
+
+export function filterObject<TKey extends string, TValue>(
+  obj: Record<TKey, TValue>,
+  predicate: (value: TValue, key: TKey) => boolean
+): Record<TKey, TValue> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key, value]) =>
+      predicate(value as TValue, key as TKey)
+    )
+  ) as Record<TKey, TValue>;
 }
 
 // TODO: Could eventually be replaced with `structuredClone`.

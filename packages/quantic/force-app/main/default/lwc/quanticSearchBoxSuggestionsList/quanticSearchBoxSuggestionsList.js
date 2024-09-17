@@ -20,13 +20,12 @@ const optionCSSClass =
 
 /**
  * The `QuanticSearchBoxSuggestionsList` is used internally by search box components to display the query suggestions in an omnibox.
- * @fires CustomEvent#highlightchange
- * @fires CustomEvent#suggestionselected
+ * @fires CustomEvent#quantic__selection
  * @fires CustomEvent#quantic__clearrecentqueries
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-search-box-suggestions-list suggestions={suggestions} onhighlightchange={handleHighlightChange} onsuggestionselected={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
+ * <c-quantic-search-box-suggestions-list suggestions={suggestions} onquantic__selection={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
  */
 export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
@@ -116,16 +115,6 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     return null;
   }
 
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * @deprecated
-   * Reset the current selection.
-   */
-  @api
-  resetSelection() {
-    this.selectionIndex = -1;
-  }
-
   /** @type {number} */
   selectionIndex = -1;
   /** @type {boolean} */
@@ -173,11 +162,14 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   sendSuggestionListIdToInput() {
     const listboxId = this.template.querySelector('ul').getAttribute('id');
-    const suggestionListEvent = new CustomEvent('suggestionlistrender', {
-      detail: listboxId,
-      bubbles: true,
-      composed: true,
-    });
+    const suggestionListEvent = new CustomEvent(
+      'quantic__suggestionlistrender',
+      {
+        detail: listboxId,
+        bubbles: true,
+        composed: true,
+      }
+    );
     this.dispatchEvent(suggestionListEvent);
   }
 
@@ -260,7 +252,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       isClearRecentQueryButton: isClearRecentQueryButton,
       isRecentQuery: isRecentQuery,
     };
-    const suggestionSelectedEvent = new CustomEvent('selection', {
+    const suggestionSelectedEvent = new CustomEvent('quantic__selection', {
       detail: {selection},
     });
     this.dispatchEvent(suggestionSelectedEvent);

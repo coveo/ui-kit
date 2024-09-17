@@ -52,7 +52,7 @@ describe('cart-slice', () => {
         [someItemKey]: someItem,
         [secondItemKey]: secondItem,
       };
-      const fakePurchaseAction = createAction(purchase.fulfilled.type);
+      const fakePurchaseAction = createAction(purchase.type);
       const updatedState = cartReducer(state, fakePurchaseAction());
       expect(updatedState.cartItems).toEqual([]);
       expect(updatedState.cart).toEqual({});
@@ -64,7 +64,7 @@ describe('cart-slice', () => {
         [someItemKey]: someItem,
         [secondItemKey]: secondItem,
       };
-      const fakePurchaseAction = createAction(purchase.fulfilled.type);
+      const fakePurchaseAction = createAction(purchase.type);
       const updatedState = cartReducer(state, fakePurchaseAction());
       expect(updatedState.purchasedItems).toEqual([someItemKey, secondItemKey]);
       expect(updatedState.purchased).toEqual({
@@ -85,7 +85,7 @@ describe('cart-slice', () => {
         [secondItemKey]: secondItem,
       };
 
-      const fakePurchaseAction = createAction(purchase.fulfilled.type);
+      const fakePurchaseAction = createAction(purchase.type);
       const updatedState = cartReducer(state, fakePurchaseAction());
       expect(updatedState.purchasedItems).toEqual([someItemKey, secondItemKey]);
       expect(updatedState.purchased).toEqual({
@@ -110,7 +110,7 @@ describe('cart-slice', () => {
         [someItemKey]: someItem,
       };
 
-      const fakePurchaseAction = createAction(purchase.fulfilled.type);
+      const fakePurchaseAction = createAction(purchase.type);
       const updatedState = cartReducer(state, fakePurchaseAction());
       expect(updatedState.purchasedItems).toEqual([someItemKey, secondItemKey]);
       expect(updatedState.purchased).toEqual({

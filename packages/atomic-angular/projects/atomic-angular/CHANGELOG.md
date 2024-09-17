@@ -1,3 +1,23 @@
+# 2.28.0 (2024-08-27)
+
+### Features
+
+- **atomic:** allow user to customize grid card click behavior/links ([#4287](https://github.com/coveo/ui-kit/issues/4287)) ([e5961ca](https://github.com/coveo/ui-kit/commits/e5961ca33490499a2916bb9eb8818d360ff85c18)), closes [#4267](https://github.com/coveo/ui-kit/issues/4267)
+
+## 2.27.1 (2024-08-20)
+
+### Bug Fixes
+
+- **refine-modal:** include facets from atomic-external ([#4219](https://github.com/coveo/ui-kit/issues/4219)) ([107c56b](https://github.com/coveo/ui-kit/commits/107c56b2d4a1467847210db05b1726b36ad4b50c))
+
+# 2.27.0 (2024-08-14)
+
+### Features
+
+- **atomic:** add tab support for atomic-smart-snippet ([#4221](https://github.com/coveo/ui-kit/issues/4221)) ([9f228d3](https://github.com/coveo/ui-kit/commits/9f228d3e5948cc0a265c32500781e92dc53a42ae))
+- **atomic:** add tab support for atomic-sort-dropdown ([#4222](https://github.com/coveo/ui-kit/issues/4222)) ([f7a9061](https://github.com/coveo/ui-kit/commits/f7a90615d80967d63669231c4a4b00e4f96e9864))
+- **genqa:** add rephrase buttons as an option ([#4246](https://github.com/coveo/ui-kit/issues/4246)) ([03d065b](https://github.com/coveo/ui-kit/commits/03d065b17b21bf97c8639585d460f9c11d0ee56c))
+
 # 2.26.0 (2024-08-07)
 
 ### Bug Fixes

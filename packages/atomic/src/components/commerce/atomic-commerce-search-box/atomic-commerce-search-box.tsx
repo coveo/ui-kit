@@ -34,10 +34,15 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isFocusingOut, once, randomID} from '../../../utils/utils';
+import {
+  isFocusingOut,
+  once,
+  randomID,
+  spreadProperties,
+} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
-import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
+import {SubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   SearchBoxSuggestionElement,
@@ -203,22 +208,46 @@ export class AtomicCommerceSearchBox
 
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
+  public disconnectedCallback = () => {};
+
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'redirectTo' in searchBox;
+  }
 
   public initialize() {
-    this.id = randomID('atomic-commerce-search-box-');
+    this.id ??= randomID('atomic-commerce-search-box-');
 
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
+  }
+
+  private updateRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
+    }
+  }
+
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private initializeSearchboxController() {
     this.searchBox = this.redirectionUrl
       ? buildStandaloneSearchBox(this.bindings.engine, {
           options: {
             ...this.searchBoxOptions,
             redirectionUrl: this.redirectionUrl,
+            overwrite: true,
           },
         })
       : buildSearchBox(this.bindings.engine, {
           options: this.searchBoxOptions,
         });
-
-    this.initializeSuggestionManager();
   }
 
   public componentWillUpdate() {
@@ -271,7 +300,7 @@ export class AtomicCommerceSearchBox
     this.suggestionManager.forceUpdate();
   }
 
-  public componentWillRender() {
+  private registerSearchboxSuggestionEvents() {
     this.searchBoxSuggestionEventsQueue.forEach((evt) => {
       this.suggestionManager.registerSuggestionsFromEvent(
         evt,
@@ -283,7 +312,7 @@ export class AtomicCommerceSearchBox
 
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.initialize();
+    this.updateRedirectionUrl();
   }
 
   private initializeSuggestionManager() {
@@ -306,11 +335,11 @@ export class AtomicCommerceSearchBox
   private get suggestionBindings(): SearchBoxSuggestionsBindings<
     SearchBox | StandaloneSearchBox
   > {
-    return {
-      ...this.bindings,
-      ...this.suggestionManager.partialSuggestionBindings,
-      ...this.partialSuggestionBindings,
-    };
+    return spreadProperties(
+      this.bindings,
+      this.suggestionManager.partialSuggestionBindings,
+      this.partialSuggestionBindings
+    );
   }
 
   private get partialSuggestionBindings(): Pick<
@@ -321,14 +350,38 @@ export class AtomicCommerceSearchBox
     | 'numberOfQueries'
     | 'clearFilters'
   > {
-    return {
-      ...this.bindings,
-      id: this.id,
-      isStandalone: !!this.redirectionUrl,
-      searchBoxController: this.searchBox,
-      numberOfQueries: this.numberOfQueries,
-      clearFilters: this.clearFilters,
-    };
+    return Object.defineProperties(
+      {...this.bindings},
+      {
+        id: {
+          get: () => this.id,
+          enumerable: true,
+        },
+        searchBoxController: {
+          get: () => this.searchBox,
+          enumerable: true,
+        },
+        isStandalone: {
+          get: () => !!this.redirectionUrl,
+          enumerable: true,
+        },
+        numberOfQueries: {
+          get: () => this.numberOfQueries,
+          enumerable: true,
+        },
+        clearFilters: {
+          get: () => this.clearFilters,
+          enumerable: true,
+        },
+      }
+    ) as unknown as Pick<
+      SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>,
+      | 'id'
+      | 'isStandalone'
+      | 'searchBoxController'
+      | 'numberOfQueries'
+      | 'clearFilters'
+    >;
   }
 
   private get searchBoxOptions(): SearchBoxOptions {
@@ -671,10 +724,13 @@ export class AtomicCommerceSearchBox
     this.updateBreakpoints();
 
     const searchLabel = this.getSearchInputLabel(this.minimumQueryLength);
-    const Submit = TextAreaSubmitButton;
+    const Submit = SubmitButton;
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
+    if (!this.suggestionManager.suggestions.length) {
+      this.registerSearchboxSuggestionEvents();
+    }
 
     return (
       <Host>
@@ -682,7 +738,6 @@ export class AtomicCommerceSearchBox
         {[
           <SearchBoxWrapper
             disabled={isDisabled}
-            textArea={true}
             onFocusout={(event) => {
               if (!isFocusingOut(event)) {
                 return;

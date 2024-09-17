@@ -10,11 +10,11 @@ import {api, LightningElement} from 'lwc';
 
 /**
  * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and the number of results with that value.
- * @fires CustomEvent#selectvalue
+ * @fires CustomEvent#quantic__selectvalue
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
+ * <c-quantic-category-facet-value onquantic__selectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
  */
 export default class QuanticCategoryFacetValue extends LightningElement {
   /**
@@ -113,7 +113,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   onSelect(evt) {
     evt.preventDefault();
     this.dispatchEvent(
-      new CustomEvent('selectvalue', {
+      new CustomEvent('quantic__selectvalue', {
         detail: {
           value: this.facetValue,
         },
@@ -128,7 +128,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
       this.dispatchEvent(
-        new CustomEvent('selectvalue', {
+        new CustomEvent('quantic__selectvalue', {
           detail: {
             value: this.facetValue,
           },

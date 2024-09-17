@@ -13,9 +13,10 @@ import {
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   resetAnswer,
+  sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedAnswerFeedbackV2} from '../../../features/generated-answer/generated-answer-analytics-actions';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   GeneratedAnswerSection,
@@ -40,7 +41,7 @@ export interface AnswerApiGeneratedAnswer
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
-  sendFeedback(feedback: GeneratedAnswerFeedbackV2): void;
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
 }
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
@@ -49,7 +50,7 @@ export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
 
 interface ParseEvaluationArgumentsParams {
-  feedback: GeneratedAnswerFeedbackV2;
+  feedback: GeneratedAnswerFeedback;
   answerApiState: GeneratedAnswerStream;
   query: string;
 }
@@ -95,13 +96,14 @@ const subscribeToSearchRequest = (
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
-    if (triggerParams.requestId === undefined) {
+    if (triggerParams.q.length === 0 || triggerParams.requestId.length === 0) {
       return;
     }
-    if (JSON.stringify(triggerParams) === JSON.stringify(lastTriggerParams)) {
+    if (triggerParams?.requestId === lastTriggerParams?.requestId) {
       return;
     }
     lastTriggerParams = triggerParams;
+    engine.dispatch(resetAnswer());
     engine.dispatch(fetchAnswer(state));
   };
   engine.subscribe(strictListener);
@@ -172,6 +174,7 @@ export function buildAnswerApiGeneratedAnswer(
         answerApiState: selectAnswer(engine.state).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
+      engine.dispatch(sendGeneratedAnswerFeedback());
     },
   };
 }

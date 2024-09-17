@@ -99,6 +99,10 @@ export default class QuanticSearchInterface extends LightningElement {
                   locale: LOCALE,
                   timezone: TIMEZONE,
                 },
+                analytics: {
+                  analyticsMode: 'legacy',
+                  ...(document.referrer && {originLevel3: document.referrer}),
+                },
               },
             };
             setEngineOptions(
@@ -129,9 +133,12 @@ export default class QuanticSearchInterface extends LightningElement {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
     if (this.ariaLiveEventsBound) {
-      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
       this.removeEventListener(
-        'registerregion',
+        'quantic__arialivemessage',
+        this.handleAriaLiveMessage
+      );
+      this.removeEventListener(
+        'quantic__registerregion',
         this.handleRegisterAriaLiveRegion
       );
     }
@@ -198,11 +205,11 @@ export default class QuanticSearchInterface extends LightningElement {
 
   bindAriaLiveEvents() {
     this.template.addEventListener(
-      'arialivemessage',
+      'quantic__arialivemessage',
       this.handleAriaLiveMessage.bind(this)
     );
     this.template.addEventListener(
-      'registerregion',
+      'quantic__registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
     this.ariaLiveEventsBound = true;

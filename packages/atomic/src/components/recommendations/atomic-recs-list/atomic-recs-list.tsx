@@ -38,7 +38,6 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayBasicLayout,
-  ItemTarget,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
@@ -91,12 +90,6 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ItemDisplayBasicLayout = 'list';
-  /**
-   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
-   * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_self`
-   */
-  @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -355,8 +348,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       this.getPropsForAtomicRecsResult(recommendation);
     return (
       <DisplayGrid
+        selectorForItem="atomic-recs-result"
         item={recommendation}
-        gridTarget={this.gridCellLinkTarget}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>
           element && this.itemListCommon.setNewResultRef(element, i)

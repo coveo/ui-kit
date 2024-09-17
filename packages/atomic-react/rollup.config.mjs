@@ -1,4 +1,5 @@
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import terser from '@rollup/plugin-terser';
@@ -36,6 +37,12 @@ const outputIIFE = ({minify}) => ({
 });
 
 /** @returns {import('rollup').OutputOptions} */
+const outputCJS = ({useCase}) => ({
+  file: `dist/cjs/${useCase}atomic-react.js`,
+  format: 'cjs',
+});
+
+/** @returns {import('rollup').OutputOptions} */
 const outputIIFERecs = ({minify}) => ({
   file: `dist/iife/atomic-react/recommendation${minify ? '.min' : ''}.js`,
   format: 'iife',
@@ -54,8 +61,26 @@ const outputIIFECommerce = ({minify}) => ({
 });
 
 const plugins = [
+  json(),
   nodePolyfills(),
   typescript({tsconfig: 'tsconfig.iife.json'}),
+  commonjs(),
+  nodeResolve(),
+  replace({
+    delimiters: ['', ''],
+    values: {
+      'process.env.NODE_ENV': JSON.stringify('dev'),
+      'util.TextEncoder();': 'TextEncoder();',
+      "import { defineCustomElements } from '@coveo/atomic/loader';": '',
+      'defineCustomElements();': '',
+    },
+  }),
+];
+
+const pluginsCJS = [
+  json(),
+  nodePolyfills(),
+  typescript(),
   commonjs(),
   nodeResolve(),
   replace({
@@ -77,10 +102,22 @@ export default defineConfig([
     plugins,
   },
   {
+    input: 'src/index.ts',
+    output: [outputCJS({useCase: ''})],
+    external: commonExternal,
+    plugins: pluginsCJS,
+  },
+  {
     input: 'src/recommendation.index.ts',
     output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
     external: commonExternal,
     plugins,
+  },
+  {
+    input: 'src/recommendation.index.ts',
+    output: [outputCJS({useCase: 'recommendation/'})],
+    external: commonExternal,
+    plugins: pluginsCJS,
   },
   {
     input: 'src/commerce.index.ts',
@@ -90,5 +127,11 @@ export default defineConfig([
     ],
     external: commonExternal,
     plugins,
+  },
+  {
+    input: 'src/commerce.index.ts',
+    output: [outputCJS({useCase: 'commerce/'})],
+    external: commonExternal,
+    plugins: pluginsCJS,
   },
 ]);

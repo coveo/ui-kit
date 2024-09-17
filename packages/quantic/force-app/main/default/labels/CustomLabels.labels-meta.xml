@@ -1128,13 +1128,6 @@
     <shortDescription>Navigate to the record</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_OpensInSalesforceSubTab</fullName>
-    <value>Opens in a Salesforce subtab</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Opens in a Salesforce subtab</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_OpensInBrowserTab</fullName>
     <value>Opens in the browser tab</value>
     <language>en_US</language>
@@ -1359,62 +1352,6 @@
     <shortDescription>Tell us why the generated answer was not helpful.</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_Rephrase</fullName>
-    <value>Rephrase</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Rephrase</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Auto</fullName>
-    <value>Auto</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Auto rephrase</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Automatic</fullName>
-    <value>Automatic</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Automatic rephrase tooltip</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_StepByStepInstructions</fullName>
-    <value>Step-by-step instructions</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Step-by-step instructions</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Steps</fullName>
-    <value>Steps</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Steps</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_BulletPointSummary</fullName>
-    <value>Bullet-point summary</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Bullet-point summary</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Bullets</fullName>
-    <value>Bullets</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Bullets</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Summary</fullName>
-    <value>Summary</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Summary</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_GeneratedAnswerIsHidden</fullName>
     <value>Generated answer is hidden</value>
     <language>en_US</language>
@@ -1469,6 +1406,13 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Show less</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_InvalidCustomSortConfiguration</fullName>
+    <value>Custom sort options configuration is invalid.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Invalid custom sort option</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_SearchFieldWithSuggestions</fullName>
