@@ -20,9 +20,11 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
-  getSampleCommerceEngineConfiguration,
 } from '@coveo/atomic-react/commerce';
-import {buildCommerceEngine} from '@coveo/headless/commerce';
+import {
+  buildCommerceEngine,
+  getSampleCommerceEngineConfiguration,
+} from '@coveo/headless/commerce';
 import React, {useMemo} from 'react';
 
 export const CommerceSearchPage = () => {
