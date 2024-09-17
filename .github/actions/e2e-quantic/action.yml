@@ -15,6 +15,8 @@ runs:
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
+    - run: npx cypress install
+      shell: bash
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:

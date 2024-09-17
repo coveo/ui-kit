@@ -8,9 +8,8 @@ import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {GeneratedAnswerFeedbackV2} from './generated-answer-analytics-actions';
+import {GeneratedAnswerFeedback} from './generated-answer-analytics-actions';
 import {
-  logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
   logRetryGeneratedAnswer,
   logRephraseGeneratedAnswer,
@@ -79,8 +78,7 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleFeedback = 'irrelevant';
-const exampleFeedbackV2: GeneratedAnswerFeedbackV2 = {
+const exampleFeedback: GeneratedAnswerFeedback = {
   helpful: true,
   documented: 'yes',
   correctTopic: 'no',
@@ -89,7 +87,6 @@ const exampleFeedbackV2: GeneratedAnswerFeedbackV2 = {
 };
 const exampleGenerativeQuestionAnsweringId = '123';
 const exampleSearchUid = '456';
-const exampleDetails = 'example details';
 const exampleCitationId = 'citation_id';
 const exampleCitationPermanentid = 'citation_permanentid';
 const exampleSubject = 'example subject';
@@ -274,28 +271,8 @@ describe('generated answer insight analytics actions', () => {
       );
     });
 
-    it('should log #logGeneratedAnswerFeedback with V1 payload', async () => {
-      await logGeneratedAnswerFeedback(exampleFeedback)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        reason: exampleFeedback,
-      };
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
-    });
-
     it('should log #logGeneratedAnswerFeedback with V2 payload', async () => {
-      await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
+      await logGeneratedAnswerFeedback(exampleFeedback)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -304,28 +281,7 @@ describe('generated answer insight analytics actions', () => {
       const mockToUse = mockLogGeneratedAnswerFeedbackSubmitV2;
       const expectedMetadata = {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        ...exampleFeedbackV2,
-      };
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
-    });
-
-    it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-      await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockLogGeneratedAnswerFeedbackSubmit;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        reason: 'other',
-        details: exampleDetails,
+        ...exampleFeedback,
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -512,19 +468,8 @@ describe('generated answer insight analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
-    it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-      await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      expect(emit).toHaveBeenCalledTimes(0);
-      expect(emit.mock.calls[0]).toMatchSnapshot();
-    });
-
     it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
-      await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
+      await logGeneratedAnswerFeedback(exampleFeedback)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

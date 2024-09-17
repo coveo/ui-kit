@@ -16,7 +16,7 @@ import {LightningElement, api, track} from 'lwc';
 
 /**
  * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
- * @fires CustomEvent#registerresulttemplates
+ * @fires CustomEvent#quantic__registerresulttemplates
  * @category Search
  * @category Insight Panel
  * @example
@@ -113,7 +113,7 @@ export default class QuanticResultList extends LightningElement {
 
   registerTemplates() {
     this.dispatchEvent(
-      new CustomEvent('registerresulttemplates', {
+      new CustomEvent('quantic__registerresulttemplates', {
         bubbles: true,
         detail: this.resultTemplatesManager,
       })

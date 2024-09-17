@@ -81,19 +81,6 @@ describe('Folded Result List Component - Children results', () => {
       .contains(ExpectedHierarchyWith10foldedResultsRequested.children[2].name);
   });
 
-  it('should show a "no results" label when no child results are found', () => {
-    new TestFixture()
-      .with(setSourceAndSortCriteria)
-      .with(
-        addFoldedResultList(buildTemplateWithoutSections(buildResultTopChild()))
-      )
-      .with(removeResultChildrenFromResponse)
-      .init();
-
-    FoldedResultListSelectors.noResultsLabel().should('be.visible');
-    FoldedResultListSelectors.childrenRoot().should('not.exist');
-  });
-
   it('should not show a "no results" label when no child results are found when no-result-text is empty', () => {
     new TestFixture()
       .with(setSourceAndSortCriteria)

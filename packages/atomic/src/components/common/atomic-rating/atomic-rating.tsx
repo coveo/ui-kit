@@ -22,6 +22,7 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
         icon={props.icon}
         class={`shrink-0 ${active ? 'icon-active' : 'icon-inactive'}`}
         style={{width: iconSize, height: iconSize}}
+        part="value-rating-icon"
       ></atomic-icon>
     );
   };
