@@ -1,10 +1,18 @@
-import {test} from './fixture';
+import {test, expect} from './fixture';
 
 test.describe('before being initialized', () => {
-  // console error
-});
+  test('should return error if request is executed', async ({
+    page,
+    recsInterface,
+  }) => {
+    await recsInterface.load({story: 'recs-before-init'});
 
-test.describe('after being initialized', () => {
-  // should set locales for search request
-  // should set language for
+    const errorMessage = await page.waitForEvent('console', (msg) => {
+      return msg.type() === 'error';
+    });
+
+    expect(errorMessage.text()).toContain(
+      'You have to call "initialize" on the atomic-recs-interface component before modifying the props or calling other public methods.'
+    );
+  });
 });
