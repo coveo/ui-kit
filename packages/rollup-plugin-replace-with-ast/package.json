@@ -28,9 +28,7 @@
     "build": "nx build",
     "build:bundles": "rollup -c",
     "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
-    "clean": "rimraf -rf dist/*",
-    "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache"
+    "clean": "rimraf -rf dist/*"
   },
   "peerDependencies": {
     "rollup": "^1.20.0||^2.0.0||^3.0.0||^4.0.0"
@@ -50,14 +48,5 @@
     "magic-string": "^0.30.11",
     "rollup": "^4.0.0-24",
     "typescript": "^4.8.3"
-  },
-  "ava": {
-    "files": [
-      "!**/fixtures/**",
-      "!**/output/**",
-      "!**/helpers/**",
-      "!**/recipes/**",
-      "!**/types.ts"
-    ]
   }
 }
