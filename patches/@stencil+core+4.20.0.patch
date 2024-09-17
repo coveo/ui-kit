@@ -1,7 +1,18 @@
 diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
-index 05c98c9..652dffe 100644
+index 05c98c9..1ae35e5 100644
 --- a/node_modules/@stencil/core/compiler/stencil.js
 +++ b/node_modules/@stencil/core/compiler/stencil.js
+@@ -234904,8 +234904,8 @@ var getTsOptionsToExtend = (config) => {
+     // if the `DIST_TYPES` output target is present then we'd like to emit
+     // declaration files
+     declaration: config.outputTargets.some(isOutputTargetDistTypes),
+-    module: import_typescript.default.ModuleKind.ESNext,
+-    moduleResolution: import_typescript.default.ModuleResolutionKind.NodeJs,
++    module: import_typescript.default.ModuleKind.ES2022,
++    moduleResolution: import_typescript.default.ModuleResolutionKind.Bundler,
+     noEmitOnError: false,
+     outDir: config.cacheDir || config.sys.tmpDirSync(),
+     sourceMap: config.sourceMap,
 @@ -259592,7 +259592,7 @@ var visitClassDeclaration = (config, diagnostics, typeChecker, program, classNod
        importAliasMap.get("AttachInternals")
      );

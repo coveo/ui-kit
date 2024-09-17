@@ -38,7 +38,7 @@ describe('quantic-folded-result-list', () => {
   const defaultParentField = 'foldingchild';
   const defaultChildField = 'foldingparent';
   const defaultNumberOfFoldedResults = 2;
-  const registerResultTemplatesEvent = 'registerresulttemplates';
+  const registerResultTemplatesEvent = 'quantic__registerresulttemplates';
 
   function visitFoldedResultList(
     options: Partial<FoldedResultListOptions> = {},

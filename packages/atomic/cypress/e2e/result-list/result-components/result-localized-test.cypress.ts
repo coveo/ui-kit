@@ -74,7 +74,6 @@ describe('Result Localized Text Component', () => {
         )
         .withTranslation({
           foo: 'foo {{replace_me}}',
-          foo_plural: 'foo plural {{replace_me}}',
           foo_other: 'foo v4 plural {{replace_me}}',
         });
 
@@ -86,28 +85,13 @@ describe('Result Localized Text Component', () => {
       );
     });
 
-    describe('using jsonCompatibility v3', () => {
-      it('output the plural key', () => {
-        setup({'field-count': 'countplural'})
-          .withLocalizationCompatibilityVersion('v3')
-          .init();
+    it('output the plural key', () => {
+      setup({'field-count': 'countplural'}).init();
 
-        ResultLocalizedTextSelectors.firstInResult().should(
-          'have.text',
-          'foo plural somevalue'
-        );
-      });
-    });
-
-    describe('using jsonCompatibility v4', () => {
-      it('output the plural key', () => {
-        setup({'field-count': 'countplural'}).init();
-
-        ResultLocalizedTextSelectors.firstInResult().should(
-          'have.text',
-          'foo v4 plural somevalue'
-        );
-      });
+      ResultLocalizedTextSelectors.firstInResult().should(
+        'have.text',
+        'foo v4 plural somevalue'
+      );
     });
   });
 });
