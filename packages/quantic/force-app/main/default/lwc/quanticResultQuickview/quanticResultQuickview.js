@@ -19,9 +19,9 @@ import {LightningElement, api, track} from 'lwc';
 /**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
  * @category Result Template
- * @fires CustomEvent#haspreview
+ * @fires CustomEvent#quantic__haspreview
  * @example
- * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
+ * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100" onquantic__haspreview={handleHasPreview}></c-quantic-result-quickview>
  */
 export default class QuanticResultQuickview extends LightningElement {
   /**
@@ -121,7 +121,10 @@ export default class QuanticResultQuickview extends LightningElement {
       );
       this.dispatchEvent(resultActionRegister);
     }
-    this.addEventListener('loadingstatechange', this.handleLoadingStateChange);
+    this.addEventListener(
+      'quantic__loadingstatechange',
+      this.handleLoadingStateChange
+    );
   }
 
   renderedCallback() {
@@ -196,7 +199,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(
-      new CustomEvent('haspreview', {
+      new CustomEvent('quantic__haspreview', {
         detail: {
           hasPreview,
         },

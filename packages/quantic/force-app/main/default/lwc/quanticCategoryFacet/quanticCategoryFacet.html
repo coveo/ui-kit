@@ -9,7 +9,7 @@
     </template>
     <template if:true={hasParentsOrValues}>
       <div class="slds-size_1-of-1 slds-var-m-bottom_large">
-        <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
+        <c-quantic-card-container title={label} onquantic__headerclick={toggleFacetVisibility} onquantic__headerkeydown={toggleFacetVisibility}>
           <lightning-button-icon
             class={actionButtonCssClasses}
             slot="actions"
@@ -53,7 +53,7 @@
                 <template for:each={nonActiveParents} for:item="v">
                   <li class="slds-grid facet__non-active-parent" key={v.value}>
                     <c-quantic-category-facet-value
-                      onselectvalue={onSelectValue}
+                      onquantic__selectvalue={onSelectValue}
                       item={v}
                       non-active-parent="true"
                       formatting-function={remoteGetValueCaption}
@@ -83,7 +83,7 @@
                             item={v}
                             active-parent={activeParent}
                             formatting-function={remoteGetValueCaption}
-                            onselectvalue={onSelectValue}>
+                            onquantic__selectvalue={onSelectValue}>
                           </c-quantic-category-facet-value>
                         </li>
                       </template>
@@ -99,7 +99,7 @@
                       item={result}
                       is-search-result="true"
                       formatting-function={remoteGetValueCaption}
-                      onselectvalue={onSelectValue}>
+                      onquantic__selectvalue={onSelectValue}>
                     </c-quantic-category-facet-value>
                   </template>
                 </template>
