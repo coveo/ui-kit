@@ -21,7 +21,6 @@ import {
   AtomicSortExpression,
   AtomicTimeframe,
   AtomicTimeframeFacet,
-  buildSearchEngine,
   AtomicFormatCurrency,
   AtomicResultBadge,
   AtomicResultFieldsList,
@@ -42,9 +41,12 @@ import {
   AtomicResultSectionVisual,
   AtomicResultText,
   AtomicText,
-  Result,
-  getOrganizationEndpoints,
 } from '@coveo/atomic-react';
+import {
+  buildSearchEngine,
+  getOrganizationEndpoints,
+  Result,
+} from '@coveo/headless';
 import type {NextPage} from 'next';
 import dynamic from 'next/dynamic';
 import {useMemo} from 'react';
