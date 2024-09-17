@@ -1,5 +1,4 @@
 import {Action} from '@reduxjs/toolkit';
-import {buildFetchProductListingResponse} from '../../test/mock-old-product-listing';
 import {buildMockSearch} from '../../test/mock-search';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
@@ -26,7 +25,6 @@ import {
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {executeSearch} from '../search/search-actions';
@@ -185,20 +183,6 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(state, action);
     expect(finalState.totalCountFiltered).toBe(
       search.response.totalCountFiltered
-    );
-  });
-
-  it('fetchProductListing.fulfilled updates totalCountFiltered to the response value', () => {
-    const response = buildFetchProductListingResponse({
-      pagination: {
-        totalCount: 100,
-      },
-    });
-    const action = fetchProductListing.fulfilled(response, '');
-
-    const finalState = paginationReducer(state, action);
-    expect(finalState.totalCountFiltered).toBe(
-      response.response.pagination.totalCount
     );
   });
 

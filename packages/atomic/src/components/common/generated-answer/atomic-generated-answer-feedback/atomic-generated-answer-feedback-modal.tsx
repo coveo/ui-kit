@@ -1,6 +1,6 @@
 import {
   GeneratedAnswer,
-  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedback,
   GeneratedAnswerFeedbackOption,
 } from '@coveo/headless';
 import {
@@ -55,7 +55,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   @Prop({reflect: true, mutable: true}) helpful = false;
 
   @State() public error!: Error;
-  @State() private currentAnswer: Partial<GeneratedAnswerFeedbackV2> =
+  @State() private currentAnswer: Partial<GeneratedAnswerFeedback> =
     this.getInitialAnswerState();
   @State() feedbackSubmitted: boolean = false;
   @State() answerEvaluationRequired: boolean = false;
@@ -78,7 +78,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private static options: {
     localeKey: string;
-    correspondingAnswer: keyof GeneratedAnswerFeedbackV2;
+    correspondingAnswer: keyof GeneratedAnswerFeedback;
   }[] = [
     {
       localeKey: 'feedback-correct-topic',
@@ -98,7 +98,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     },
   ];
 
-  private getInitialAnswerState(): Partial<GeneratedAnswerFeedbackV2> {
+  private getInitialAnswerState(): Partial<GeneratedAnswerFeedback> {
     return {
       documented: undefined,
       correctTopic: undefined,
@@ -132,7 +132,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private setCurrentAnswer(
-    key: keyof GeneratedAnswerFeedbackV2,
+    key: keyof GeneratedAnswerFeedback,
     value: GeneratedAnswerFeedbackOption | string
   ) {
     this.currentAnswer = {
@@ -142,8 +142,8 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   public sendFeedback() {
-    const feedback: GeneratedAnswerFeedbackV2 = {
-      ...(this.currentAnswer as GeneratedAnswerFeedbackV2),
+    const feedback: GeneratedAnswerFeedback = {
+      ...(this.currentAnswer as GeneratedAnswerFeedback),
       helpful: this.helpful,
     };
     this.generatedAnswer.sendFeedback(feedback);
@@ -194,7 +194,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderFeedbackOption(
     option: GeneratedAnswerFeedbackOption,
-    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
+    correspondingAnswer: keyof GeneratedAnswerFeedback
   ) {
     const buttonClasses = [
       'min-w-20',
@@ -229,7 +229,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderAnswerEvaluation(
     label: string,
-    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
+    correspondingAnswer: keyof GeneratedAnswerFeedback
   ) {
     const labelClasses = ['text-error-red', 'text-sm', 'hidden'];
     const isRequired =
