@@ -289,7 +289,7 @@ describe('generated answer', () => {
     describe('when #responseFormat is set', () => {
       it('should dispatch updateResponseFormat action', () => {
         const responseFormat: GeneratedResponseFormat = {
-          answerStyle: 'concise',
+          contentFormat: ['text/markdown'],
         };
         initGeneratedAnswer({initialState: {responseFormat}});
         expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);

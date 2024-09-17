@@ -284,7 +284,7 @@ describe('search request', () => {
   });
 
   it('#searchRequest returns the state #generatedAnswer.responseFormat', async () => {
-    state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
+    state.generatedAnswer.responseFormat = {contentFormat: ['text/markdown']};
     const params = (
       await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
