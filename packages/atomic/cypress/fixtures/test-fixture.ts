@@ -124,13 +124,6 @@ export class TestFixture {
     return this;
   }
 
-  public withLocalizationCompatibilityVersion(
-    localizationCompatibilityVersion: i18nCompatibilityVersion
-  ) {
-    this.localizationCompatibilityVersion = localizationCompatibilityVersion;
-    return this;
-  }
-
   public withoutAnalytics() {
     this.disabledAnalytics = true;
     return this;
