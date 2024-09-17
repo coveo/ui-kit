@@ -5,7 +5,6 @@ import {
   AtomicProductText,
   AtomicProductPrice,
   AtomicProductDescription,
-  buildCommerceEngine,
   AtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts,
   AtomicCommerceSearchBoxQuerySuggestions,
@@ -22,6 +21,7 @@ import {
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
 } from '@coveo/atomic-react/commerce';
+import {buildCommerceEngine} from '@coveo/headless/commerce';
 import React, {useMemo} from 'react';
 
 export const CommerceSearchPage = () => {
