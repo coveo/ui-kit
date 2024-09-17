@@ -11,7 +11,7 @@ import {
   CartSection,
   CommerceContextSection,
   CommerceQuerySection,
-  ConfigurationSection,
+  CommerceConfigurationSection,
 } from '../../../state/state-sections';
 import {
   requiredNonEmptyString,
@@ -19,7 +19,7 @@ import {
 } from '../../../utils/validate-payload';
 import {buildBaseCommerceAPIRequest} from '../common/actions';
 
-export type StateNeededForRedirect = ConfigurationSection &
+export type StateNeededForRedirect = CommerceConfigurationSection &
   CommerceContextSection &
   CommerceQuerySection &
   CartSection;
