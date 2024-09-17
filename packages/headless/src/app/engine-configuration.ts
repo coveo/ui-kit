@@ -8,40 +8,15 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
-import {getOrganizationEndpoints} from '../api/platform-client';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {PlatformEnvironment} from '../utils/url-utils';
 import {requiredNonEmptyString} from '../utils/validate-payload';
 import {CoveoFramework} from '../utils/version';
 
 /**
- * The endpoints to use.
- *
- * For example: `https://orgid.org.coveo.com`
- *
- * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
- */
-export interface CoreEngineOrganizationEndpoints {
-  /**
-   * The base platform endpoint.
-   *
-   * For example: `https://{orgid}.org.coveo.com`
-   */
-  platform: string;
-  /**
-   * The base analytics service endpoint.
-   *
-   * For example: `https://{orgid}.analytics.org.coveo.com`
-   */
-  analytics: string;
-}
-
-/**
  * The global headless engine configuration options.
  */
-export interface EngineConfiguration<
-  OrganizationEndpoints extends
-    CoreEngineOrganizationEndpoints = CoreEngineOrganizationEndpoints,
-> {
+export interface EngineConfiguration {
   /**
    * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
    */
@@ -63,13 +38,6 @@ export interface EngineConfiguration<
    */
   preprocessRequest?: PreprocessRequest;
   /**
-   * The Platform URL to use. (e.g., https://platform.cloud.coveo.com)
-   * The platformUrl() helper method can be useful to know what url is available.
-   *
-   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
-   */
-  platformUrl?: string;
-  /**
    * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
    * @defaultValue 'coveo-headless'
    */
@@ -79,15 +47,13 @@ export interface EngineConfiguration<
    */
   analytics?: AnalyticsConfiguration;
   /**
-   * The endpoints to use.
+   * The environment in which the organization is hosted.
    *
-   * For example: `https://orgid.org.coveo.com`
+   * The `dev` and `stg` environments are only available internally for Coveo employees (e.g., Professional Services).
    *
-   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
-   *
-   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.  See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
+   * Defaults to `prod`.
    */
-  organizationEndpoints?: OrganizationEndpoints;
+  environment?: PlatformEnvironment;
 }
 
 /**
@@ -173,6 +139,44 @@ export interface AnalyticsConfiguration {
    * @internal
    */
   source?: Partial<Record<CoveoFramework, string>>;
+  /**
+   * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
+   *
+   * This is an advanced option that you should only set if you need to proxy Coveo analytics requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, no proxy is used and the Coveo analytics requests are sent directly to the Coveo platform through the
+   * analytics [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
+   * `environment` values provided in your engine configuration (i.e.,
+   * `https://<organizationId>.analytics.org.coveo.com` or
+   * `https://<organizationId>.analytics.org<environment>.coveo.com`, if the `environment` values is specified and
+   * different from `prod`).
+   *
+   * If you set this option, you must also implement the correct proxy endpoints on your server, depending on the
+   * `analyticsMode` you are using.
+   *
+   * If you are using the `next` analytics mode, you must implement the following proxy endpoints:
+   *
+   * - `POST` `/` to proxy requests to [`POST https://<organizationId>.analytics.org<environment|>.coveo.com/rest/organizations/{organizationId}/events/v1`](https://platform.cloud.coveo.com/docs?urls.primaryName=Event#/Event%20API/rest_organizations_paramId_events_v1_post)
+   * - `POST` `/validate` to proxy requests to [`POST https://<organizationId>.analytics.org<environment|>.coveo.com/rest/organizations/{organizationId}/events/v1/validate`](https://platform.cloud.coveo.com/docs?urls.primaryName=Event#/Event%20API/rest_organizations_paramId_events_v1_validate_post)
+   *
+   * The [Event Protocol Reference](https://docs.coveo.com/en/n9da0377) provides documentation on the analytics event
+   * schemas that can be passed as request bodies to the above endpoints.
+   *
+   * If your are using the `legacy` analytics mode, your `proxyBaseUrl` must end with `/rest/v15/analytics`, and you must implement the following proxy endpoints:
+   *
+   * - `POST` `/click` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/click`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_click)
+   * - `POST` `/collect` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/collect`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_collect)
+   * - `POST` `/custom` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/custom`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_custom)
+   * - `GET` `/monitoring/health` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/monitoring/health`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_monitoring_health)
+   * - `POST` `/search` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/search`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_search)
+   * - `POST` `/searches` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/searches`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_searches)
+   * - `GET` `/status` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/status`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_status)
+   * - `POST` `/view` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/view`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_view)
+   * - `DELETE` `/visit` to proxy requests to [`DELETE` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/visit`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/delete__v15_analytics_visit)
+   * - `GET` `/visit` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/visit`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_visit)
+   */
+  proxyBaseUrl?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -181,10 +185,6 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
   {
     organizationId: requiredNonEmptyString,
     accessToken: requiredNonEmptyString,
-    platformUrl: new StringValue({
-      required: false,
-      emptyAllowed: false,
-    }),
     name: new StringValue({
       required: false,
       emptyAllowed: false,
@@ -210,7 +210,16 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
           constrainTo: ['legacy', 'next'],
           required: false,
         }),
+        proxyBaseUrl: new StringValue({
+          required: false,
+          url: true,
+        }),
       },
+    }),
+    environment: new StringValue<PlatformEnvironment>({
+      required: false,
+      default: 'prod',
+      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
     }),
   };
 
@@ -219,6 +228,5 @@ export function getSampleEngineConfiguration(): EngineConfiguration {
     organizationId: 'searchuisamples',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    organizationEndpoints: getOrganizationEndpoints('searchuisamples'),
   };
 }

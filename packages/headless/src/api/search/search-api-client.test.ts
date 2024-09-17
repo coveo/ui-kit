@@ -21,7 +21,11 @@ import {createMockRecommendationState} from '../../test/mock-recommendation-stat
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {
+  getSearchApiBaseUrl,
+  PlatformClient,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {HtmlRequest} from './html/html-request';
@@ -219,7 +223,11 @@ describe('search api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -262,7 +270,11 @@ describe('search api client', () => {
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
       const expectedUrl = `${
-        state.configuration.search.apiBaseUrl
+        state.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          state.configuration.organizationId,
+          state.configuration.environment
+        )
       }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
@@ -317,7 +329,11 @@ describe('search api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/plan?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -347,7 +363,11 @@ describe('search api client', () => {
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
       const expectedUrl = `${
-        state.configuration.search.apiBaseUrl
+        state.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          state.configuration.organizationId,
+          state.configuration.environment
+        )
       }/plan?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
@@ -376,7 +396,11 @@ describe('search api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -416,7 +440,11 @@ describe('search api client', () => {
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
       const expectedUrl = `${
-        state.configuration.search.apiBaseUrl
+        state.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          state.configuration.organizationId,
+          state.configuration.environment
+        )
       }/querySuggest?${getOrganizationIdQueryParam(
         req
       )}&${getAuthenticationQueryParam(req)}`;
@@ -448,7 +476,11 @@ describe('search api client', () => {
           method: 'POST',
           contentType: 'application/json',
           url: `${
-            state.configuration.search.apiBaseUrl
+            state.configuration.search.apiBaseUrl ??
+            getSearchApiBaseUrl(
+              state.configuration.organizationId,
+              state.configuration.environment
+            )
           }/facet?${getOrganizationIdQueryParam(req)}`,
           requestMetadata: {
             method: 'facetSearch',
@@ -488,7 +520,11 @@ describe('search api client', () => {
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
         const expectedUrl = `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/facet?${getOrganizationIdQueryParam(
           req
         )}&${getAuthenticationQueryParam(req)}`;
@@ -624,7 +660,11 @@ it calls PlatformClient.call with the category facet search params`, async () =>
         method: 'POST',
         contentType: 'application/json',
         url: `${
-          recommendationState.configuration.search.apiBaseUrl
+          recommendationState.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            recommendationState.configuration.organizationId,
+            recommendationState.configuration.environment
+          )
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
         origin: 'searchApiFetch',
@@ -666,7 +706,11 @@ it calls PlatformClient.call with the category facet search params`, async () =>
       searchAPIClient.recommendations(req);
 
       const expectedUrl = `${
-        recommendationState.configuration.search.apiBaseUrl
+        recommendationState.configuration.search.apiBaseUrl ??
+        getSearchApiBaseUrl(
+          recommendationState.configuration.organizationId,
+          recommendationState.configuration.environment
+        )
       }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
@@ -694,7 +738,11 @@ should call PlatformClient.call with the right options`, async () => {
         requestMetadata: {method: 'fieldDescriptions'},
         method: 'GET',
         url: `${
-          state.configuration.search.apiBaseUrl
+          state.configuration.search.apiBaseUrl ??
+          getSearchApiBaseUrl(
+            state.configuration.organizationId,
+            state.configuration.environment
+          )
         }/fields?${getOrganizationIdQueryParam(req)}`,
       };
 
@@ -738,7 +786,11 @@ should call PlatformClient.call with the right options`, async () => {
           method: 'POST',
           origin: 'searchApiFetch',
           url: `${
-            state.configuration.search.apiBaseUrl
+            state.configuration.search.apiBaseUrl ??
+            getSearchApiBaseUrl(
+              state.configuration.organizationId,
+              state.configuration.environment
+            )
           }/html?${getOrganizationIdQueryParam(req)}`,
           preprocessRequest: NoopPreprocessRequest,
           requestParams: {

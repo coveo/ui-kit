@@ -37,7 +37,6 @@ import {
 import {
   buildSearchEngine,
   Result,
-  getOrganizationEndpoints,
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
   loadAdvancedSearchQueryActions,
@@ -66,7 +65,6 @@ function getElectronicsConfiguration(): SearchEngineConfiguration {
   return {
     accessToken,
     organizationId,
-    organizationEndpoints: getOrganizationEndpoints(organizationId),
     search: {pipeline, searchHub},
   };
 }

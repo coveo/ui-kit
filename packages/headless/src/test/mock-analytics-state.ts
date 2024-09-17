@@ -5,7 +5,6 @@ export function buildMockAnalyticsState(
 ): AnalyticsState {
   return {
     apiBaseUrl: '',
-    nextApiBaseUrl: '',
     enabled: false,
     originLevel2: '',
     originLevel3: '',

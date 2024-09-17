@@ -1,4 +1,3 @@
-import {getOrganizationEndpoints} from '../../api/platform-client';
 import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart';
 import {stateKey} from '../state-key';
 import {
@@ -30,13 +29,26 @@ describe('buildCommerceEngine', () => {
     expect(engine[stateKey]).toBeTruthy();
   });
 
-  it('sets the context', () => {
+  it('when #proxyBaseUrl is specified in the configuration, sets the #commerce.apiBaseUrl', () => {
+    options.configuration.proxyBaseUrl = 'https://example.com/commerce';
+    initEngine();
+
+    expect(engine[stateKey].configuration.commerce.apiBaseUrl).toBe(
+      options.configuration.proxyBaseUrl
+    );
+  });
+
+  it('when #proxyBaseUrl is not specified, #commerce.apiBaseUrl is undefined', () => {
+    expect(engine[stateKey].configuration.commerce.apiBaseUrl).toBeUndefined();
+  });
+
+  it('sets the #commerceContext to the #context specified in the configuration', () => {
     expect(engine[stateKey].commerceContext).toEqual(
       options.configuration.context
     );
   });
 
-  it('sets the cart if specified in configuration', () => {
+  it('when #cart is specified in the configuration, sets the #cart.cartItems accordingly', () => {
     const items = [
       {
         productId: 'product-id',
@@ -64,38 +76,5 @@ describe('buildCommerceEngine', () => {
       [createCartKey(items[0])]: items[0],
       [createCartKey(items[1])]: items[1],
     });
-  });
-
-  it('uses organization endpoints when manually configured', () => {
-    options.configuration.organizationEndpoints = getOrganizationEndpoints(
-      'my-org-id',
-      'hipaa'
-    );
-    initEngine();
-
-    expect(engine.configuration.platformUrl).toBe(
-      'https://my-org-id.orghipaa.coveo.com'
-    );
-  });
-
-  it('uses organization endpoints when not manually specified', () => {
-    options.configuration.organizationEndpoints = undefined;
-    options.configuration.environment = 'hipaa';
-    options.configuration.organizationId = 'my-org-id';
-    initEngine();
-
-    expect(engine.configuration.platformUrl).toBe(
-      'https://my-org-id.orghipaa.coveo.com'
-    );
-  });
-
-  it('uses organization endpoints defaulting to prod when not manually specified', () => {
-    options.configuration.organizationEndpoints = undefined;
-    options.configuration.organizationId = 'my-org-id';
-    initEngine();
-
-    expect(engine.configuration.platformUrl).toBe(
-      'https://my-org-id.org.coveo.com'
-    );
   });
 });

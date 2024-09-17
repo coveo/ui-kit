@@ -42,11 +42,7 @@ import {
   AtomicResultText,
   AtomicText,
 } from '@coveo/atomic-react';
-import {
-  buildSearchEngine,
-  getOrganizationEndpoints,
-  Result,
-} from '@coveo/headless';
+import {buildSearchEngine, Result} from '@coveo/headless';
 import type {NextPage} from 'next';
 import dynamic from 'next/dynamic';
 import {useMemo} from 'react';
@@ -58,9 +54,6 @@ const SearchPage: NextPage = () => {
         configuration: {
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
           organizationId: 'electronicscoveodemocomo0n2fu8v',
-          organizationEndpoints: getOrganizationEndpoints(
-            'electronicscoveodemocomo0n2fu8v'
-          ),
           search: {
             pipeline: 'UI_KIT_E2E',
             searchHub: 'UI_KIT_E2E',
