@@ -121,7 +121,7 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
     }
     this._value = value;
     this.dispatchEvent(
-      new CustomEvent('change', {
+      new CustomEvent('quantic__change', {
         detail: {
           value,
         },
@@ -145,7 +145,7 @@ export default class QuanticRadioButtonsGroup extends LightningElement {
     this._value = value;
 
     this.dispatchEvent(
-      new CustomEvent('change', {
+      new CustomEvent('quantic__change', {
         detail: {
           value,
         },
