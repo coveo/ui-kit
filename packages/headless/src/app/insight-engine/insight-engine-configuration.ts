@@ -38,7 +38,7 @@ export interface InsightEngineSearchConfigurationOptions {
   /**
    * The base URL to use to proxy Coveo insight requests (e.g., `https://example.com/insight`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo searchrequests through your own
+   * This is an advanced option that you should only set if you need to proxy Coveo insight requests through your own
    * server. In most cases, you should not set this option.
    *
    * By default, no proxy is used and the Coveo Customer Service API requests are sent directly to the Coveo platform through the
