@@ -21,7 +21,7 @@ export interface SetCaseAssistConfigurationActionCreatorPayload {
    * This is an advanced option that you should only set if you need to proxy Coveo case assist through your own
    * server. In most cases, you should not set this option.
    *
-   * By default, no proxy is used and the Coveo Customer Service requests are sent directly to the Coveo platform through the
+   * By default, no proxy is used and the Coveo case assist requests are sent directly to the Coveo platform through the
    * [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
    * `environment` values provided in your engine configuration (i.e., `https://<organizationId>.org.coveo.com` or
    * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and different from
