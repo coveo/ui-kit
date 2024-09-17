@@ -16,7 +16,7 @@ import {
   sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedAnswerFeedbackV2} from '../../../features/generated-answer/generated-answer-analytics-actions';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   GeneratedAnswerSection,
@@ -41,7 +41,7 @@ export interface AnswerApiGeneratedAnswer
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
-  sendFeedback(feedback: GeneratedAnswerFeedbackV2): void;
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
 }
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
@@ -50,7 +50,7 @@ export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
 
 interface ParseEvaluationArgumentsParams {
-  feedback: GeneratedAnswerFeedbackV2;
+  feedback: GeneratedAnswerFeedback;
   answerApiState: GeneratedAnswerStream;
   query: string;
 }

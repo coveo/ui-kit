@@ -12,12 +12,12 @@ import { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AtomicInterface } from "./utils/initialization-utils";
-import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1 } from "./components";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
@@ -43,12 +43,12 @@ export { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AtomicInterface } from "./utils/initialization-utils";
-export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1 } from "./components";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
@@ -504,12 +504,6 @@ export namespace Components {
          */
         "display": ItemDisplayLayout;
         /**
-          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
-         */
-        "gridCellLinkTarget": ItemTarget;
-        /**
           * The expected size of the image displayed for products.
          */
         "imageSize": ItemDisplayImageSize;
@@ -605,12 +599,6 @@ export namespace Components {
           * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
          */
         "display": ItemDisplayBasicLayout;
-        /**
-          * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
-         */
-        "gridCellLinkTarget": ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -1075,11 +1063,6 @@ export namespace Components {
           * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
-    }
-    /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface AtomicFrequentlyBoughtTogether {
     }
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -1693,12 +1676,6 @@ export namespace Components {
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display": ItemDisplayBasicLayout1;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-         */
-        "gridCellLinkTarget": ItemTarget1;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -2523,12 +2500,6 @@ export namespace Components {
          */
         "display": ItemDisplayBasicLayout;
         /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-         */
-        "gridCellLinkTarget": ItemTarget;
-        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel": number;
@@ -2878,12 +2849,6 @@ export namespace Components {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display": ItemDisplayLayout;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-         */
-        "gridCellLinkTarget": ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -4293,15 +4258,6 @@ declare global {
     var HTMLAtomicFormatUnitElement: {
         prototype: HTMLAtomicFormatUnitElement;
         new (): HTMLAtomicFormatUnitElement;
-    };
-    /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
-    }
-    var HTMLAtomicFrequentlyBoughtTogetherElement: {
-        prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
-        new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -5916,7 +5872,6 @@ declare global {
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
-        "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
@@ -6487,12 +6442,6 @@ declare namespace LocalJSX {
          */
         "display"?: ItemDisplayLayout;
         /**
-          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
-         */
-        "gridCellLinkTarget"?: ItemTarget;
-        /**
           * The expected size of the image displayed for products.
          */
         "imageSize"?: ItemDisplayImageSize;
@@ -6580,12 +6529,6 @@ declare namespace LocalJSX {
           * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
          */
         "display"?: ItemDisplayBasicLayout;
-        /**
-          * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
-         */
-        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -7034,11 +6977,6 @@ declare namespace LocalJSX {
           * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
-    }
-    /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface AtomicFrequentlyBoughtTogether {
     }
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -7626,12 +7564,6 @@ declare namespace LocalJSX {
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display"?: ItemDisplayBasicLayout1;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-         */
-        "gridCellLinkTarget"?: ItemTarget1;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -8414,12 +8346,6 @@ declare namespace LocalJSX {
          */
         "display"?: ItemDisplayBasicLayout;
         /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-         */
-        "gridCellLinkTarget"?: ItemTarget;
-        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel"?: number;
@@ -8749,12 +8675,6 @@ declare namespace LocalJSX {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display"?: ItemDisplayLayout;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-          * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-         */
-        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -9573,7 +9493,6 @@ declare namespace LocalJSX {
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
-        "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
@@ -9955,10 +9874,6 @@ declare module "@stencil/core" {
              * The numerical format of compatible parents will be set according to the properties of this component.
              */
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
-            /**
-             * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-             */
-            "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             /**
              * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
