@@ -983,9 +983,6 @@ export class AtomicFormatUnit {
 export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 
-export declare interface AtomicFrequentlyBoughtTogether extends Components.AtomicFrequentlyBoughtTogether {}
-
-
 @ProxyCmp({
   inputs: ['collapsible', 'withToggle']
 })
