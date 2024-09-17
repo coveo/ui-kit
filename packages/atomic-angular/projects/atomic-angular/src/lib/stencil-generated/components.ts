@@ -982,23 +982,6 @@ export class AtomicFormatUnit {
 
 export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
-@ProxyCmp({
-})
-@Component({
-  selector: 'atomic-frequently-bought-together',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicFrequentlyBoughtTogether {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
 
 export declare interface AtomicFrequentlyBoughtTogether extends Components.AtomicFrequentlyBoughtTogether {}
 
