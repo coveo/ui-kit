@@ -64,12 +64,12 @@
     },
     "./commerce": {
       "types": "./dist/commerce.index.d.ts",
-      "import": "./dist/commerce/index.js",
+      "import": "./dist/commerce.index.js",
       "require": "./dist/cjs/commerce/atomic-react.js"
     },
     "./recommendation": {
       "types": "./dist/recommendation.index.d.ts",
-      "import": "./dist/recommendation/index.js",
+      "import": "./dist/recommendation.index.js",
       "require": "./dist/cjs/recommendation/atomic-react.js"
     }
   }
