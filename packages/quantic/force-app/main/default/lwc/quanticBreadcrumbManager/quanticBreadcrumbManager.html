@@ -14,7 +14,7 @@
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                     <li key={breadcrumbValue.value.value} class="breadcrumb__container">
-                      <c-quantic-pill label={breadcrumbValue.formattedValue} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
+                      <c-quantic-pill label={breadcrumbValue.formattedValue} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
                   <template if:true={breadcrumb.showMoreButton}>
@@ -31,7 +31,7 @@
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                     <li key={breadcrumbValue.value} class="breadcrumb__container">
-                      <c-quantic-pill label={breadcrumbValue.formattedValue} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
+                      <c-quantic-pill label={breadcrumbValue.formattedValue} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
                   <template if:true={breadcrumb.showMoreButton}>
@@ -47,7 +47,7 @@
                 <span class="slds-col breadcrumb-manager__field-name">{breadcrumbValue.label}{labels.colon} </span>
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <li class="breadcrumb__container">
-                    <c-quantic-pill label={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect} group-name={breadcrumbValue.label} action-name={labels.clearFilter}></c-quantic-pill>
+                    <c-quantic-pill label={breadcrumbValue.value} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumbValue.label} action-name={labels.clearFilter}></c-quantic-pill>
                   </li>
                 </ul>
               </li>
@@ -58,7 +58,7 @@
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                     <li key={breadcrumbValue.value} class="breadcrumb__container">
-                      <c-quantic-pill label={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
+                      <c-quantic-pill label={breadcrumbValue.value} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
                   <template if:true={breadcrumb.showMoreButton}>
