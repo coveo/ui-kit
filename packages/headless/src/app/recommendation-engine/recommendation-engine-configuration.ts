@@ -57,7 +57,7 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
    * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and different from
    * `prod`).
    *
-   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the search
+   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the recommendation
    * engine will not work properly:
    *
    * - `POST` `/` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/searchUsingPost)
