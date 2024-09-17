@@ -57,36 +57,54 @@ export default class QuanticInsightInterface extends LightningElement {
   }
 
   connectedCallback() {
-    loadDependencies(this, HeadlessBundleNames.insight).then(() => {
-      if (!getHeadlessBindings(this.engineId)?.engine) {
-        getHeadlessConfiguration().then((data) => {
-          if (data) {
-            this.engineOptions = {
-              configuration: {
-                ...JSON.parse(data),
-                insightId: this.insightId,
-                search: {
-                  locale: LOCALE,
-                },
-                analytics: {
-                  analyticsMode: 'legacy',
-                  ...(document.referrer && {originLevel3: document.referrer}),
-                },
-              },
-            };
-            setEngineOptions(
-              this.engineOptions,
-              CoveoHeadlessInsight.buildInsightEngine,
-              this.engineId,
-              this,
-              CoveoHeadlessInsight
-            );
-            this.input.setAttribute('is-initialized', 'true');
-            setInitializedCallback(this.initialize, this.engineId);
-          }
-        });
-      }
-    });
+    loadDependencies(this, HeadlessBundleNames.insight)
+      .then(() => {
+        if (!getHeadlessBindings(this.engineId)?.engine) {
+          getHeadlessConfiguration()
+            .then((data) => {
+              if (data) {
+                const {organizationId, accessToken, ...rest} = JSON.parse(data);
+                this.engineOptions = {
+                  configuration: {
+                    organizationId,
+                    accessToken,
+                    insightId: this.insightId,
+                    search: {
+                      locale: LOCALE,
+                    },
+                    analytics: {
+                      analyticsMode: 'legacy',
+                      ...(document.referrer && {
+                        originLevel3: document.referrer,
+                      }),
+                    },
+                    ...rest,
+                  },
+                };
+                setEngineOptions(
+                  this.engineOptions,
+                  CoveoHeadlessInsight.buildInsightEngine,
+                  this.engineId,
+                  this,
+                  CoveoHeadlessInsight
+                );
+                this.input.setAttribute('is-initialized', 'true');
+                setInitializedCallback(this.initialize, this.engineId);
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'Error loading Headless endpoint configuration',
+                error
+              );
+            });
+        } else {
+          setInitializedCallback(this.initialize, this.engineId);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading Headless dependencies', error);
+      });
   }
 
   renderedCallback() {

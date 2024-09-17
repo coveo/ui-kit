@@ -85,7 +85,8 @@
       ],
       "c/quanticGeneratedAnswerContent": [
         "quanticGeneratedAnswerContent/quanticGeneratedAnswerContent.js"
-      ]
+      ],
+      "c/*": ["*"]
     }
   },
   "include": [

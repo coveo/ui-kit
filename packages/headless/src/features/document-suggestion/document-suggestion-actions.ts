@@ -55,10 +55,12 @@ export const buildFetchDocumentSuggestionsRequest = async (
 ): Promise<GetDocumentSuggestionsRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: getOrganizationEndpoint(
-    state.configuration.organizationId,
-    state.configuration.environment
-  ),
+  url:
+    state.caseAssistConfiguration.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment
+    ),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
     clientId: await getVisitorID(state.configuration.analytics),
