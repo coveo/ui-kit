@@ -44,6 +44,8 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
+const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
+
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Search
@@ -71,6 +73,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api collapsible = false;
+  /**
+   * Whether the generated answer can be toggled on or off.
+   * @api
+   * @type {boolean}
+   * @default {false}
+   */
+  @api withToggle = false;
 
   labels = {
     generatedAnswerForYou,
@@ -125,6 +134,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
+    if (this.withToggle) {
+      this.template.addEventListener(
+        'quantic__generatedanswertoggle',
+        this.handleGeneratedAnswerToggle
+      );
+    }
   }
 
   renderedCallback() {
@@ -158,8 +173,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   buildHeadlessGeneratedAnswerController(engine) {
+    let initialVisibility = true;
+    if (this.withToggle) {
+      const storedGeneratedAnswerData = this.readStoredData();
+      if (storedGeneratedAnswerData?.isVisible === false) {
+        initialVisibility = false;
+      }
+    }
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
+        isVisible: initialVisibility,
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -174,6 +197,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
+    if (this.withToggle) {
+      this.template.removeEventListener(
+        'quantic__generatedanswertoggle',
+        this.handleGeneratedAnswerToggle
+      );
+    }
   }
 
   updateState() {
@@ -296,11 +325,37 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.logCopyToClipboard();
   };
 
+  handleGeneratedAnswerToggle = (event) => {
+    event.stopPropagation();
+    if (!this.withToggle) {
+      return;
+    }
+    if (this.isVisible) {
+      this.generatedAnswer.hide();
+      this.writeStoredDate({isVisible: false});
+    } else {
+      this.generatedAnswer.show();
+      this.writeStoredDate({isVisible: true});
+    }
+  };
+
   handleToggleCollapseAnswer() {
     this.state?.expanded
       ? this.generatedAnswer.collapse()
       : this.generatedAnswer.expand();
     this.updateGeneratedAnswerCSSVariables();
+  }
+
+  readStoredData() {
+    try {
+      return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
+    } catch {
+      return {};
+    }
+  }
+
+  writeStoredDate(data) {
+    sessionStorage?.setItem(GENERATED_ANSWER_DATA_KEY, JSON.stringify(data));
   }
 
   /**

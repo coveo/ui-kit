@@ -26,11 +26,14 @@ interface GeneratedAnswerOptions {
   fieldsToIncludeInCitations: string;
   useCase: string;
   collapsible: boolean;
+  withToggle: boolean;
 }
 
 let analyticsMode: 'legacy' | 'next' = 'legacy';
 const exampleTrackingId = 'tracking_id_123';
 const answerType = 'RGA';
+
+const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 const defaultFieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
 
@@ -120,7 +123,9 @@ describe('quantic-generated-answer', () => {
 
           it('should display the generated answer content', () => {
             Expect.displayGeneratedAnswerContent(true);
+            Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {});
             Expect.generatedAnswerCollapsed(false);
+            Expect.displayToggleGeneratedAnswerButton(false);
           });
 
           it('should display the correct message', () => {
@@ -543,6 +548,80 @@ describe('quantic-generated-answer', () => {
                 });
               }
             );
+
+            describe('the generated answer toggle button', () => {
+              const streamId = crypto.randomUUID();
+              const responseId = crypto.randomUUID();
+
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  responseId
+                );
+                mockStreamResponse(streamId, genQaMessageTypePayload);
+                visitGeneratedAnswer({
+                  useCase: param.useCase,
+                  withToggle: true,
+                });
+              });
+
+              it('should display the toggle generated answer button', () => {
+                Expect.displayToggleGeneratedAnswerButton(true);
+                Expect.toggleGeneratedAnswerButtonIsChecked(true);
+
+                scope('when toggling off the generated answer', () => {
+                  Actions.clickToggleGeneratedAnswerButton();
+                  Expect.toggleGeneratedAnswerButtonIsChecked(false);
+                  Expect.displayGeneratedAnswerContent(false);
+                  Expect.displayLikeButton(false);
+                  Expect.displayDislikeButton(false);
+                  Expect.displayDisclaimer(false);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                      {
+                        answer: {
+                          responseId,
+                          type: answerType,
+                        },
+                        action: 'hide',
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logHideGeneratedAnswer(streamId);
+                  }
+                  Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
+                    isVisible: false,
+                  });
+                });
+
+                scope('when toggling on the generated answer', () => {
+                  Actions.clickToggleGeneratedAnswerButton();
+                  Expect.toggleGeneratedAnswerButtonIsChecked(true);
+                  Expect.displayGeneratedAnswerContent(true);
+                  Expect.displayLikeButton(true);
+                  Expect.displayDislikeButton(true);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitQnaAnswerActionEvent(
+                      {
+                        answer: {
+                          responseId,
+                          type: answerType,
+                        },
+                        action: 'show',
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logShowGeneratedAnswer(streamId);
+                  }
+                  Expect.sessionStorageContains(GENERATED_ANSWER_DATA_KEY, {
+                    isVisible: true,
+                  });
+                });
+              });
+            });
 
             describe('the collapsible option', () => {
               const streamId = crypto.randomUUID();

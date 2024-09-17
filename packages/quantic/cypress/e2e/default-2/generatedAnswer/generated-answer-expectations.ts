@@ -38,6 +38,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the dislike button`);
     },
 
+    displayToggleGeneratedAnswerButton: (display: boolean) => {
+      selector
+        .toggleGeneratedAnswerButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the generated answer toggle button`);
+    },
+
     displayGeneratedAnswerContent: (display: boolean) => {
       selector
         .generatedAnswerContent()
@@ -92,6 +99,15 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           'stateful-button--unselected'
         )
         .log(`the dislike button ${should(selected)} be in a disliked state`);
+    },
+
+    toggleGeneratedAnswerButtonIsChecked: (checked: boolean) => {
+      selector
+        .toggleGeneratedAnswerButton()
+        .should(checked ? 'have.attr' : 'not.have.attr', 'checked', 'checked')
+        .log(
+          `the generated answer toggle button ${should(checked)} be checked`
+        );
     },
 
     generatedAnswerCollapsed: (collapsible: boolean) => {
@@ -194,6 +210,26 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .disclaimer()
         .should(display ? 'exist' : 'not.exist')
         .log(`${should(display)} display the disclaimer`);
+    },
+
+    sessionStorageContains: (key: string, expectedData: object) => {
+      cy.getAllSessionStorage()
+        .then((sessionStorage) => {
+          const matchingKeys = Object.values(sessionStorage).filter(
+            (val) =>
+              Object.keys(val).includes(`LSKey[c]${key}`) ||
+              Object.keys(val).includes(key)
+          );
+          const storedData = String(
+            matchingKeys?.[0]?.[`LSKey[c]${key}`] ||
+              matchingKeys?.[0]?.[key] ||
+              '{}'
+          );
+          expect(JSON.parse(storedData)).eql(expectedData);
+        })
+        .log(
+          `the key ${key} should have the value ${expectedData} in the session storage`
+        );
     },
 
     disclaimerContains: (text: string) => {
