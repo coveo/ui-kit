@@ -162,6 +162,9 @@ export function modifySearchResponses(
 export const sampleConfig = {
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
+  analytics: {
+    analyticsMode: 'legacy',
+  },
 };
 
 export function configureI18n(

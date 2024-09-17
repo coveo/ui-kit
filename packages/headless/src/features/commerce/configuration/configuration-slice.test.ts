@@ -99,7 +99,7 @@ describe('commerce configuration slice', () => {
     });
   });
 
-  describe('updateCommerceAnalyticsConfiguration', () => {
+  describe('updateAnalyticsConfiguration', () => {
     it('works on initial state', () => {
       expect(
         configurationReducer(

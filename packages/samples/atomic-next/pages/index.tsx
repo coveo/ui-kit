@@ -59,6 +59,9 @@ const SearchPage: NextPage = () => {
             pipeline: 'UI_KIT_E2E',
             searchHub: 'UI_KIT_E2E',
           },
+          analytics: {
+            analyticsMode: 'legacy',
+          },
         },
       }),
     []

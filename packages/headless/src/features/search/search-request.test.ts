@@ -483,13 +483,24 @@ describe('search request', () => {
     ).toBe(originLevel2);
   });
 
-  it('#searchRequest.referrer holds the #originLevel3', async () => {
+  it('when analyticsMode is `legacy`, #searchRequest.referrer holds the #originLevel3', async () => {
     const originLevel3 = 'www.coveo.com';
+    state.configuration.analytics.analyticsMode = 'legacy';
     state.configuration.analytics.originLevel3 = originLevel3;
     expect(
       (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
         .request.referrer
     ).toBe(originLevel3);
+  });
+
+  it('when analyticsMode is `next`, #searchRequest.referrer holds the referrer from the navigator context provider', async () => {
+    const navigatorContextProvider = buildMockNavigatorContextProvider({
+      referrer: 'www.coveo.com',
+    });
+    expect(
+      (await buildSearchRequest(state, navigatorContextProvider())).request
+        .referrer
+    ).toBe(navigatorContextProvider().referrer);
   });
 
   it('#searchRequest.fieldsToInclude holds the #fieldsToInclude', async () => {

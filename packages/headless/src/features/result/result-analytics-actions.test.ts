@@ -12,58 +12,54 @@ import {logDocumentOpen} from './result-analytics-actions';
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');
 
-describe('#logDocumentOpen', () => {
-  const testResult = buildMockNonEmptyResult();
-  let engine: SearchEngine;
-  const makeDocumentOpen = jest.fn();
-  const emit = jest.fn();
+describe('result analytics actions', () => {
+  describe('#logDocumentOpen', () => {
+    const testResult = buildMockNonEmptyResult();
+    let engine: SearchEngine;
+    const makeDocumentOpen = jest.fn();
+    const emit = jest.fn();
 
-  beforeEach(() => {
-    jest.mocked(CoveoSearchPageClient).mockReturnValue({
-      makeDocumentOpen,
-    } as unknown as CoveoSearchPageClient);
-    jest.mocked(createRelay).mockReturnValue({
-      emit,
-      getMeta: jest.fn(),
-      on: jest.fn(),
-      off: jest.fn(),
-      updateConfig: jest.fn(),
-      version: 'foo',
-    });
-  });
-
-  describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
-      engine = buildSearchEngine({
-        configuration: {
-          ...getSampleSearchEngineConfiguration(),
-        },
+      jest.mocked(CoveoSearchPageClient).mockReturnValue({
+        makeDocumentOpen,
+      } as unknown as CoveoSearchPageClient);
+      jest.mocked(createRelay).mockReturnValue({
+        emit,
+        getMeta: jest.fn(),
+        on: jest.fn(),
+        off: jest.fn(),
+        updateConfig: jest.fn(),
+        version: 'foo',
       });
     });
 
-    it('should call coveo.analytics.makeDocumentOpen properly', async () => {
+    it('when analyticsMode is `legacy` should call coveo.analytics.makeDocumentOpen properly', async () => {
+      engine = buildSearchEngine({
+        configuration: {
+          ...getSampleSearchEngineConfiguration(),
+          analytics: {
+            analyticsMode: 'legacy',
+          },
+        },
+      });
+
       engine.dispatch(logDocumentOpen(testResult));
       await clearMicrotaskQueue();
 
       expect(makeDocumentOpen).toHaveBeenCalledTimes(1);
       expect(makeDocumentOpen.mock.calls[0]).toMatchSnapshot();
     });
-  });
 
-  describe('when analyticsMode is `next`', () => {
-    beforeEach(() => {
+    it('when analyticsMode is `next` should call relay.emit properly', async () => {
       engine = buildSearchEngine({
         configuration: {
           ...getSampleSearchEngineConfiguration(),
           analytics: {
-            analyticsMode: 'next',
             trackingId: 'alex',
           },
         },
       });
-    });
 
-    it('should call relay.emit properly', async () => {
       engine.dispatch(logDocumentOpen(testResult));
       await clearMicrotaskQueue();
 

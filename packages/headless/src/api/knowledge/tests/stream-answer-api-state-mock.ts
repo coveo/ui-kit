@@ -22,7 +22,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       documentLocation:
         'http://localhost:3333/examples/genqa.html#q=what%20is%20the%20hardest%20wood',
       trackingId: '',
-      analyticsMode: 'legacy',
+      analyticsMode: 'next',
       source: {
         '@coveo/atomic': '2.77.0',
       },
