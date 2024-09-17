@@ -24,7 +24,7 @@ interface ResultQuickviewOptions {
 describe('quantic-result-quickview', () => {
   const pageUrl = 's/quantic-result-quickview';
 
-  const haspreview = 'haspreview';
+  const haspreview = 'quantic__haspreview';
   const resultActionRegister = 'quantic__resultactionregister';
 
   function visitResultQuickview(options: Partial<ResultQuickviewOptions> = {}) {

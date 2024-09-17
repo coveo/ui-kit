@@ -51,10 +51,13 @@ const defaultOptions = {
 };
 
 function setupEventListeners(element) {
-  element.addEventListener('like', functionsMocks.exampleHandleLike);
-  element.addEventListener('dislike', functionsMocks.exampleHandleDislike);
+  element.addEventListener('quantic__like', functionsMocks.exampleHandleLike);
   element.addEventListener(
-    'pressexplainwhy',
+    'quantic__dislike',
+    functionsMocks.exampleHandleDislike
+  );
+  element.addEventListener(
+    'quantic__pressexplainwhy',
     functionsMocks.exampleHandleExplainWhy
   );
 }
@@ -140,7 +143,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the like button is clicked', () => {
-      it('should dispatch the "like" event', async () => {
+      it('should dispatch the quantic__like" event', async () => {
         const element = createTestComponent();
         setupEventListeners(element);
         await flushPromises();
@@ -148,7 +151,7 @@ describe('c-quantic-feedback', () => {
         const likeButton = element.shadowRoot.querySelector(
           selectors.likeButton
         );
-        likeButton.dispatchEvent(new CustomEvent('select'));
+        likeButton.dispatchEvent(new CustomEvent('quantic__select'));
 
         expect(likeButton).not.toBeNull();
         expect(functionsMocks.exampleHandleLike).toHaveBeenCalledTimes(1);
@@ -156,7 +159,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the dislike button is clicked', () => {
-      it('should dispatch the "dislike" event', async () => {
+      it('should dispatch the "quantic__dislike" event', async () => {
         const element = createTestComponent();
         setupEventListeners(element);
         await flushPromises();
@@ -164,7 +167,7 @@ describe('c-quantic-feedback', () => {
         const dislikeButton = element.shadowRoot.querySelector(
           selectors.dislikeButton
         );
-        dislikeButton.dispatchEvent(new CustomEvent('select'));
+        dislikeButton.dispatchEvent(new CustomEvent('quantic__select'));
 
         expect(dislikeButton).not.toBeNull();
         expect(functionsMocks.exampleHandleDislike).toHaveBeenCalledTimes(1);
@@ -267,7 +270,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the explain why button is clicked', () => {
-      it('should dispatch the "pressexplainwhy" event', async () => {
+      it('should dispatch the "quantic__pressexplainwhy" event', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           state: 'liked',
@@ -346,7 +349,7 @@ describe('c-quantic-feedback', () => {
     });
 
     describe('when the explain why button is clicked', () => {
-      it('should dispatch the "pressexplainwhy" event', async () => {
+      it('should dispatch the "quantic__pressexplainwhy" event', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           state: 'disliked',
