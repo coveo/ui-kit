@@ -39,8 +39,8 @@ export const CategoryFacet: FunctionComponent<CategoryFacetProps> = (props) => {
       state.hasActiveValues && (
         <div>
           Filtering by: {renderClearButton()}
-          {state.parents.map((parentValue, i) => {
-            const isSelectedValue = i === state.parents.length - 1;
+          {state.valuesAsTrees.map((parentValue, i) => {
+            const isSelectedValue = i === state.valuesAsTrees.length - 1;
 
             return (
               <span key={getUniqueKeyForValue(parentValue)}>
@@ -63,7 +63,7 @@ export const CategoryFacet: FunctionComponent<CategoryFacetProps> = (props) => {
   function renderActiveValues() {
     return (
       <ul>
-        {state.values.map((value) => (
+        {state.selectedValueAncestry.map((value) => (
           <li key={getUniqueKeyForValue(value)}>
             <button onClick={() => controller.toggleSelect(value)}>
               {value.value} ({value.numberOfResults}{' '}
@@ -88,7 +88,7 @@ export const CategoryFacet: FunctionComponent<CategoryFacetProps> = (props) => {
     );
   }
 
-  if (!state.hasActiveValues && state.values.length === 0) {
+  if (!state.hasActiveValues && state.selectedValueAncestry.length === 0) {
     return <div>No facet values</div>;
   }
 

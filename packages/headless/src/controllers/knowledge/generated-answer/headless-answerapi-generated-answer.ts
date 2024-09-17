@@ -96,10 +96,10 @@ const subscribeToSearchRequest = (
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
-    if (triggerParams.requestId === undefined) {
+    if (triggerParams.q.length === 0 || triggerParams.requestId.length === 0) {
       return;
     }
-    if (JSON.stringify(triggerParams) === JSON.stringify(lastTriggerParams)) {
+    if (triggerParams?.requestId === lastTriggerParams?.requestId) {
       return;
     }
     lastTriggerParams = triggerParams;
