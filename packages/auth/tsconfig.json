@@ -2,9 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": ["DOM"],
+    "lib": ["DOM", "ES2023"],
+    "module": "Node16",
+    "target": "ES2022",
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

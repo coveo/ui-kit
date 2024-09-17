@@ -5,14 +5,14 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").Result} Result */
 
 /**
- * The `QuanticResultBadge` component displays a badge to be used in result templates.
+ * The `QuanticResultTag` component displays a tag to be used in result templates.
  * @category Result Template
  * @example
- * <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
+ * <c-quantic-result-tag variant="recommended"></c-quantic-result-tag>
  */
-export default class QuanticResultBadge extends LightningElement {
+export default class QuanticResultTag extends LightningElement {
   /**
-   * The badge variant.
+   * The tag variant.
    * @api
    * @type {'featured'|'recommended'}
    */
@@ -60,13 +60,11 @@ export default class QuanticResultBadge extends LightningElement {
   }
 
   renderedCallback() {
-    this.setBadgeClass();
+    this.setTagClass();
   }
 
-  setBadgeClass() {
-    this.template
-      .querySelector('.result-badge')
-      ?.classList.add(this.badgeClass);
+  setTagClass() {
+    this.template.querySelector('.result-tag')?.classList.add(this.tagClass);
   }
 
   get label() {
@@ -77,8 +75,8 @@ export default class QuanticResultBadge extends LightningElement {
     return this.variants[this.variant].icon;
   }
 
-  get badgeClass() {
-    return `${this.variant}-badge`;
+  get tagClass() {
+    return `${this.variant}-tag`;
   }
 
   get shouldDisplayBadge() {
