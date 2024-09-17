@@ -23,7 +23,6 @@ import {
   AtomicTimeframe,
   AtomicTimeframeFacet,
   AtomicSearchBoxInstantResults,
-  buildSearchEngine,
   AtomicSearchBoxRecentQueries,
   AtomicResultSectionVisual,
   AtomicResultImage,
@@ -32,14 +31,17 @@ import {
   AtomicResultSectionTitleMetadata,
   AtomicResultRating,
   AtomicResultNumber,
-  Result,
   Bindings,
   AtomicSearchBoxQuerySuggestions,
+} from '@coveo/atomic-react';
+import {
+  buildSearchEngine,
+  Result,
   getOrganizationEndpoints,
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
   loadAdvancedSearchQueryActions,
-} from '@coveo/atomic-react';
+} from '@coveo/headless';
 import React, {FunctionComponent, useMemo} from 'react';
 
 type Sample = 'service' | 'electronics';
