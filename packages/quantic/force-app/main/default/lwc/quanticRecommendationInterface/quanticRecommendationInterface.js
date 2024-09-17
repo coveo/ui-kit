@@ -75,6 +75,7 @@ export default class QuanticRecommendationInterface extends LightningElement {
                 locale: LOCALE,
                 timezone: TIMEZONE,
                 analytics: {
+                  analyticsMode: 'legacy',
                   originContext: this.analyticsOriginContext,
                 },
               },

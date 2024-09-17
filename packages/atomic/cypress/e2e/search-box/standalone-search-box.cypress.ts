@@ -39,7 +39,7 @@ describe('Standalone Search Box Test Suites', () => {
   it('should redirect to the default url when a search is submitted', () => {
     const url = 'https://www.google.com';
     setupStandaloneSearchBox({url});
-    SearchBoxSelectors.inputBox().type('test');
+    SearchBoxSelectors.textArea().type('test');
     SearchBoxSelectors.submitButton().click();
     cy.location('href').should('contain', url);
   });
@@ -47,7 +47,7 @@ describe('Standalone Search Box Test Suites', () => {
   it('should redirect to the trigger url when there is a redirect trigger', () => {
     const url = 'https://platformstg.cloud.coveo.com';
     setupStandaloneSearchBox({url});
-    SearchBoxSelectors.inputBox().type('redirect testing');
+    SearchBoxSelectors.textArea().type('redirect testing');
     SearchBoxSelectors.submitButton().click();
     cy.location('href').should('contain', url);
   });
@@ -57,10 +57,10 @@ describe('Standalone Search Box Test Suites', () => {
 
     it(`should contain "${query}" and log a proper analytics event`, () => {
       setupStandaloneSearchBox();
-      SearchBoxSelectors.inputBox().type(query);
+      SearchBoxSelectors.textArea().type(query);
       SearchBoxSelectors.submitButton().click();
       setupStandardSearchBoxAfterStandaloneRedirect();
-      SearchBoxSelectors.inputBox().should('have.value', query);
+      SearchBoxSelectors.textArea().should('have.value', query);
       cy.expectSearchEvent('searchFromLink').then((analyticsBody) => {
         expect(analyticsBody).to.have.property('queryText', query);
       });
@@ -71,7 +71,7 @@ describe('Standalone Search Box Test Suites', () => {
     const query = 'how';
     beforeEach(() => {
       setupStandaloneSearchBox();
-      SearchBoxSelectors.inputBox().type(query);
+      SearchBoxSelectors.textArea().type(query);
       SearchBoxSelectors.querySuggestions().eq(0).click();
       setupStandardSearchBoxAfterStandaloneRedirect();
     });
@@ -84,7 +84,7 @@ describe('Standalone Search Box Test Suites', () => {
     const query = '@urihash=Wl1SZoqFsR8bpsbG';
     beforeEach(() => {
       setupStandaloneSearchBox({enableQuerySyntax: true});
-      SearchBoxSelectors.inputBox().type(query);
+      SearchBoxSelectors.textArea().type(query);
       SearchBoxSelectors.submitButton().click();
       cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
       new TestFixture()

@@ -1,7 +1,5 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as HighlightUtils from './utils/highlight';
 
-polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
@@ -13,7 +11,10 @@ export type {
   InsightEngineConfiguration,
   InsightEngineSearchConfigurationOptions,
 } from './app/insight-engine/insight-engine';
-export {buildInsightEngine} from './app/insight-engine/insight-engine';
+export {
+  buildInsightEngine,
+  getSampleInsightEngineConfiguration,
+} from './app/insight-engine/insight-engine';
 
 export type {CoreEngine, ExternalEngineOptions} from './app/engine';
 export type {

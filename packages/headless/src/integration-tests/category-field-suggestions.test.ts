@@ -28,7 +28,7 @@ describe('category field suggestions', () => {
     let categoryFieldSuggestions: CategoryFieldSuggestions;
 
     function getSelectedValue() {
-      return categoryFacet.state.parents.slice(-1)[0];
+      return categoryFacet.state.selectedValueAncestry.slice(-1)[0];
     }
 
     beforeEach(async () => {

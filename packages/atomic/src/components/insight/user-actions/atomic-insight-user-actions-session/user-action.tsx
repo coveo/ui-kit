@@ -50,7 +50,7 @@ export const UserAction: FunctionalComponent<UserAction> = ({
       case 'TICKET_CREATION':
         return (
           <div class="ticket-creation-action__text text-xs font-semibold">
-            a{bindings.i18n.t('ticket-created')}
+            {bindings.i18n.t('ticket-created')}
           </div>
         );
       case 'CUSTOM':

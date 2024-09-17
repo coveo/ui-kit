@@ -35,12 +35,12 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api engineId;
   /**
-   * Whether or not we want to display the quick view for the document suggestions.
+   * Whether or not we want to hide the quick view for the document suggestions.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api showQuickview = false;
+  @api withoutQuickview = false;
   /**
    * Whether or not we want to fetch suggestions when initializing this component.
    * @api
@@ -209,5 +209,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   get hasSuggestions() {
     return !!this.suggestions.length;
+  }
+
+  get quickviewIsVisible() {
+    return !this.withoutQuickview;
   }
 }
