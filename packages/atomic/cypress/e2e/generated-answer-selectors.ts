@@ -1,4 +1,4 @@
-import {GeneratedAnswerFeedbackV2} from '@coveo/headless';
+import {GeneratedAnswerFeedback} from '@coveo/headless';
 
 export const generatedAnswerComponent = 'atomic-generated-answer';
 export const feedbackModal = 'atomic-generated-answer-feedback-modal';
@@ -52,7 +52,7 @@ export const feedbackModalSelectors = {
     feedbackModalSelectors.atomicModal().find('[part="modal-footer"]'),
   other: () => feedbackModalSelectors.atomicModal().find('.other'),
   feedbackOption: (
-    feedback: keyof GeneratedAnswerFeedbackV2,
+    feedback: keyof GeneratedAnswerFeedback,
     optionText: 'No' | 'Yes' | 'Not sure'
   ) =>
     feedbackModalSelectors
