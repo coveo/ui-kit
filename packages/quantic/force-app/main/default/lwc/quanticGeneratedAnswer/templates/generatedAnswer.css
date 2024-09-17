@@ -15,12 +15,6 @@
   gap: 1rem;
 }
 
-.generated-answer__rephrase--width {
-  width: 100%;
-  /** Absolute maximum width for the rephrase buttons including labels. */
-  max-width: 425px;
-}
-
 .generated-answer__answer--collapsed {
   max-height: var(--maxHeight, 250px);
 }

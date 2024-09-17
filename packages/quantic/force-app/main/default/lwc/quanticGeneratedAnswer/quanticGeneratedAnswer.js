@@ -50,7 +50,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Search
  * @example
- * <c-quantic-generated-answer engine-id={engineId} answer-style="step" with-toggle collapsible></c-quantic-generated-answer>
+ * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
   /**
@@ -60,31 +60,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   @api engineId;
   /**
-   * The answer style to apply when the component first loads.
-   * Options:
-   *   - `default`: Generates the answer without additional formatting instructions.
-   *   - `bullet`: Requests the answer to be generated in bullet-points.
-   *   - `step`: Requests the answer to be generated in step-by-step instructions.
-   *   - `concise`: Requests the answer to be generated as concisely as possible.
-   * @api
-   * @type {'default' | 'step' | 'bullet' | 'concise'}
-   * @default {'default'}
-   */
-  @api answerStyle = 'default';
-  /**
    * A list of fields to fetch with the citations used to generate the answer.
    * @api
    * @type {string}
    * @defaultValue `'sfid,sfkbid,sfkavid'`
    */
   @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
-  /**
-   * Indicates whether footer sections should be displayed on multiple lines.
-   * @api
-   * @type {boolean}
-   * @default {false}
-   */
-  @api multilineFooter;
   /**
    * Whether the generated answer should be collapsible when it exceeds the maximum height of 250px.
    * @api
@@ -99,14 +80,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api withToggle = false;
-
-  /**
-   * Whether the component should display the rephrase buttons.
-   * @api
-   * @type {boolean}
-   * @default {false}
-   */
-  @api withRephraseButtons = false;
 
   labels = {
     generatedAnswerForYou,
@@ -158,10 +131,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
     this.template.addEventListener(
-      'quantic__generatedanswerrephrase',
-      this.handleGeneratedAnswerRephrase
-    );
-    this.template.addEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
@@ -211,12 +180,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         initialVisibility = false;
       }
     }
-
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
         isVisible: initialVisibility,
         responseFormat: {
-          answerStyle: this.answerStyle,
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },
@@ -226,10 +193,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
-    this.template.removeEventListener(
-      'quantic__generatedanswerrephrase',
-      this.handleGeneratedAnswerRephrase
-    );
     this.template.removeEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
@@ -357,14 +320,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.retry();
   }
 
-  handleGeneratedAnswerRephrase = (event) => {
-    event.stopPropagation();
-    this.generatedAnswer.rephrase({
-      ...this.state?.responseFormat,
-      answerStyle: event?.detail,
-    });
-  };
-
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
     this.generatedAnswer.logCopyToClipboard();
@@ -451,15 +406,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.isStreaming;
   }
 
-  get shouldDisplayRephraseButtons() {
-    return (
-      this.withRephraseButtons &&
-      this.isVisible &&
-      !this.isStreaming &&
-      !this.isAnswerCollapsed
-    );
-  }
-
   get shouldDisplayActions() {
     return this.isVisible && !this.isStreaming && !this.isAnswerCollapsed;
   }
@@ -527,20 +473,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ];
   }
 
-  get responseFormat() {
-    return this.state?.responseFormat.answerStyle;
-  }
-
   get generatedAnswerFooterCssClass() {
-    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer ${this.multilineFooter ? 'slds-grid_vertical' : ''}`;
+    return 'slds-grid slds-wrap slds-grid_align-spread generated-answer__footer';
   }
 
   get generatedAnswerFooterRowClass() {
-    return `generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread ${this.multilineFooter ? 'slds-grid_vertical' : ''}`;
-  }
-
-  get shouldHideRephraseLabels() {
-    return this.multilineFooter ? false : true;
+    return 'generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread';
   }
 
   get citationFields() {
@@ -548,14 +486,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       ?.split(',')
       .map((field) => field.trim())
       .filter((field) => field.length > 0);
-  }
-
-  get rephraseButtonsCssClass() {
-    return `slds-var-m-top_small slds-grid ${
-      this.multilineFooter
-        ? 'generated-answer__rephrase--width'
-        : 'slds-grid_align-end'
-    }`;
   }
 
   get shouldShowDisclaimer() {

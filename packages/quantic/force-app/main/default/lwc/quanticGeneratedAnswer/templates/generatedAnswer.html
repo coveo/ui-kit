@@ -67,15 +67,6 @@
                   ></c-quantic-source-citations>
                 </div>
               </template>
-              <template lwc:if={shouldDisplayRephraseButtons}>
-                <div class={rephraseButtonsCssClass}>
-                  <c-quantic-generated-answer-rephrase-buttons
-                    data-cy="generated-answer__rephrase-buttons"
-                    value={responseFormat}
-                    hide-labels={shouldHideRephraseLabels}
-                  ></c-quantic-generated-answer-rephrase-buttons>
-                </div>
-              </template>
             </div>
             <div class={generatedAnswerFooterRowClass} data-cy="generated-answer__footer-row">
               <template lwc:if={shouldShowCollapseGeneratingMessage}>

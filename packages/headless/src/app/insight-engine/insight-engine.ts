@@ -30,12 +30,14 @@ import {
   InsightEngineConfiguration,
   insightEngineConfigurationSchema,
   InsightEngineSearchConfigurationOptions,
+  getSampleInsightEngineConfiguration,
 } from './insight-engine-configuration';
 
 export type {
   InsightEngineConfiguration,
   InsightEngineSearchConfigurationOptions,
 };
+export {getSampleInsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,

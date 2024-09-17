@@ -111,7 +111,10 @@ export class AtomicInsightUserActionsSession {
       count: this.userActionsAfterCaseCreation.length,
     });
     return (
-      <div class="flex items-center px-3 pb-3">
+      <div
+        data-testid="show-more-actions-button"
+        class="flex items-center px-3 pb-3"
+      >
         <div class="flex justify-center pr-2">
           <atomic-icon icon={ThreeDotsIcon} class="h-3 w-3"></atomic-icon>
         </div>
@@ -139,8 +142,11 @@ export class AtomicInsightUserActionsSession {
       <div>
         {this.renderSessionStartDate()}
 
-        {this.areActionsAfterCaseCreationVisible &&
-          this.renderActions(this.userActionsAfterCaseCreation)}
+        {this.areActionsAfterCaseCreationVisible && (
+          <div data-testid="more-actions-section">
+            {this.renderActions(this.userActionsAfterCaseCreation)}
+          </div>
+        )}
 
         {isShowMoreActionsButtonVisible && this.renderShowMoreActionsButton()}
 

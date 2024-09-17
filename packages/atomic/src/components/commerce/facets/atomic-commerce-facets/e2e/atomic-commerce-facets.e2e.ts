@@ -16,24 +16,28 @@ test.describe('default', async () => {
     await expect(facets.categoryFacets.first()).toBeVisible();
   });
 
-  test('should collapse facets when set to 1', async ({facets}) => {
+  test('should collapse facets when collapseFacetsAfter is set to 1', async ({
+    facets,
+  }) => {
     await facets.load({
       args: {
         collapseFacetsAfter: 1,
       },
     });
     await expect(facets.expandedFacets).toHaveCount(1);
-    await expect(facets.collapsedFacets).toHaveCount(7);
+    await expect(facets.collapsedFacets).toHaveCount(8);
   });
 
-  test('should disable collapse facets when set to -1', async ({facets}) => {
+  test('should disable collapse facets when collapseFacetsAfter is set to -1', async ({
+    facets,
+  }) => {
     await facets.load({
       args: {
         collapseFacetsAfter: -1,
       },
     });
     await expect(facets.collapsedFacets).toHaveCount(0);
-    await expect(facets.expandedFacets).toHaveCount(8);
+    await expect(facets.expandedFacets).toHaveCount(9);
   });
 });
 

@@ -1,5 +1,0 @@
-:host {
-  width: 100%;
-  /** The following 160px is absolute minimum width for the buttons with only icons. */
-  min-width: 160px;
-}
