@@ -1,4 +1,5 @@
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {
   HtmlRequest,
   HtmlRequestOptions,
@@ -21,7 +22,12 @@ export async function buildResultPreviewRequest(
   const q = state.query?.q || '';
 
   return {
-    url: search.apiBaseUrl,
+    url:
+      search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     accessToken,
     organizationId,
     enableNavigation: false,

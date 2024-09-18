@@ -1,6 +1,7 @@
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {logResultsSort} from './sort-criteria-insight-analytics-actions';
 
 const mockLogResultsSort = jest.fn();
@@ -17,14 +18,16 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleSortCriteria = 'exampleSortCriteria';
+describe('sort criteria insight analytics actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleSortCriteria = 'exampleSortCriteria';
 
-describe('logResultsSort', () => {
   it('should log #logResultsSort with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         sortCriteria: exampleSortCriteria,
@@ -36,6 +39,7 @@ describe('logResultsSort', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
     await logResultsSort()()(

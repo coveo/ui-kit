@@ -86,6 +86,11 @@ export type {Result} from './api/search/search/result';
 export type {HighlightKeyword} from './utils/highlight';
 export type {Raw} from './api/search/search/raw';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
 // Features
 export type {
   ResultTemplatesManager,
@@ -102,5 +107,4 @@ export {
   EcommerceDefaultFieldsToInclude,
 } from './features/fields/fields-state';
 
-export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';

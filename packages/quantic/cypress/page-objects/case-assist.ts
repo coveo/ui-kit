@@ -18,7 +18,7 @@ export const InterceptAliases = {
 };
 
 export const routeMatchers = {
-  analytics: '**/rest/ua/v15/analytics/*',
+  analytics: new RegExp(/\/rest(\/ua)?\/v15\/analytics\//i),
   nextAnalytics: '**/events/v1?*',
   documentSuggestion: '**/rest/organizations/*/caseassists/*/documents/suggest',
   caseClassification: '**/rest/organizations/*/caseassists/*/classify',

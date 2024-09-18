@@ -4,6 +4,7 @@ import {
   getVisitorID,
   historyStore,
 } from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {
@@ -162,7 +163,12 @@ export const buildQuerySuggestRequest = async (
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
-    url: s.configuration.search.apiBaseUrl,
+    url:
+      s.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        s.configuration.organizationId,
+        s.configuration.environment
+      ),
     count: s.querySuggest[id]!.count,
     q: s.querySet[id],
     locale: s.configuration.search.locale,

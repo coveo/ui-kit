@@ -18,10 +18,6 @@ global with sharing class CoveoTokenProvider implements ITokenProvider {
       (String) coveoEndpointData.get('organization')
     );
     headlessConfiguration.put('accessToken', searchToken);
-    headlessConfiguration.put(
-      'platformUrl',
-      (String) coveoEndpointData.get('clientUri')
-    );
     return JSON.serialize(headlessConfiguration);
   }
 }
