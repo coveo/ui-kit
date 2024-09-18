@@ -25,12 +25,12 @@ export const wrapInRecommendationInterface = ({
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
     const canvas = within(canvasElement);
-    const searchInterface =
+    const recsInterface =
       await canvas.findByTestId<HTMLAtomicRecsInterfaceElement>(
         'root-interface'
       );
     await step('Render the Recs Interface', async () => {
-      await searchInterface!.initialize({
+      await recsInterface!.initialize({
         ...getSampleRecommendationEngineConfiguration(),
         ...config,
       });
@@ -39,7 +39,7 @@ export const wrapInRecommendationInterface = ({
       return;
     }
     await step('Execute the first search', async () => {
-      await searchInterface!.getRecommendations();
+      await recsInterface.getRecommendations();
     });
   },
 });
