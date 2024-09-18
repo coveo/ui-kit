@@ -4,15 +4,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Atomic in Stencil</title>
-    <link rel="stylesheet" href="/build/atomic/themes/coveo.css" />
+    <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module" src="/build/app.esm.js"></script>
-
-    <script>
-      const script = document.createElement('script');
-      script.type = 'module';
-      script.src = '/build/atomic/atomic.esm.js';
-      document.head.appendChild(script);
-    </script>
 
     <script type="module">
       await customElements.whenDefined('atomic-search-interface');
@@ -22,7 +15,9 @@
       await searchInterface.initialize({
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
-        organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
+        analytics: {
+          analyticsMode: 'legacy',
+        },
       });
 
       // Trigger a first search

@@ -1,19 +1,32 @@
 import {createRelay} from '@coveo/relay';
 import {createSelector} from '@reduxjs/toolkit';
+import {
+  CommerceConfigurationSection,
+  ConfigurationSection,
+} from '../../state/state-sections';
+import {getAnalyticsNextApiBaseUrl} from '../platform-client';
 import {getAnalyticsSource} from './analytics-selectors';
-import {StateNeededBySearchAnalyticsProvider} from './search-analytics';
+
+type StateNeededByRelay = ConfigurationSection | CommerceConfigurationSection;
 
 export const getRelayInstanceFromState = createSelector(
-  (state: StateNeededBySearchAnalyticsProvider) =>
-    state.configuration.accessToken,
-  (state: StateNeededBySearchAnalyticsProvider) =>
-    state.configuration.analytics,
-  (state: StateNeededBySearchAnalyticsProvider) =>
+  (state: StateNeededByRelay) => state.configuration.organizationId,
+  (state: StateNeededByRelay) => state.configuration.environment,
+  (state: StateNeededByRelay) => state.configuration.accessToken,
+  (state: StateNeededByRelay) => state.configuration.analytics,
+  (state: StateNeededByRelay) =>
     getAnalyticsSource(state.configuration.analytics),
-  (token, {trackingId, nextApiBaseUrl, enabled}, source) =>
+  (
+    organizationId,
+    environment,
+    token,
+    {trackingId, apiBaseUrl, enabled},
+    source
+  ) =>
     createRelay({
       mode: enabled ? 'emit' : 'disabled',
-      url: nextApiBaseUrl,
+      url:
+        apiBaseUrl ?? getAnalyticsNextApiBaseUrl(organizationId, environment),
       token,
       trackingId,
       source: source,

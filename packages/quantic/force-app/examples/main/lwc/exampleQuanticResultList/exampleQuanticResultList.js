@@ -25,7 +25,7 @@ export default class ExampleQuanticResultList extends LightningElement {
       defaultValue: 'search',
     },
   ];
-  expectedEvents = ['registerresulttemplates'];
+  expectedEvents = ['quantic__registerresulttemplates'];
 
   handleTryItNow(evt) {
     this.config = evt.detail;

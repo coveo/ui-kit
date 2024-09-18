@@ -23,7 +23,6 @@ import {
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {
-  GeneratedAnswerStyle,
   GeneratedContentFormat,
   GeneratedResponseFormat,
   generatedContentFormat,
@@ -219,11 +218,12 @@ describe('generated answer slice', () => {
 
   describe('#resetAnswer', () => {
     it('should reset the answer', () => {
+      const responseFormat: GeneratedResponseFormat = {
+        contentFormat: ['text/markdown'],
+      };
       const persistentGeneratedAnswerState = {
         isVisible: false,
-        responseFormat: {
-          answerStyle: 'step' as GeneratedAnswerStyle,
-        },
+        responseFormat,
         fieldsToIncludeInCitations: ['foo'],
       };
       const state = {
@@ -249,7 +249,7 @@ describe('generated answer slice', () => {
 
     it('should not reset the response format', () => {
       const responseFormat: GeneratedResponseFormat = {
-        answerStyle: 'step',
+        contentFormat: ['text/markdown'],
       };
       const state = {
         ...baseState,
@@ -419,13 +419,13 @@ describe('generated answer slice', () => {
   describe('#updateResponseFormat', () => {
     it('should set the given response format', () => {
       const newResponseFormat: GeneratedResponseFormat = {
-        answerStyle: 'step',
+        contentFormat: ['text/markdown'],
       };
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
           responseFormat: {
-            answerStyle: 'default',
+            contentFormat: ['text/plain'],
           },
         },
         updateResponseFormat(newResponseFormat)

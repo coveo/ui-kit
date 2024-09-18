@@ -84,12 +84,13 @@ export function buildCaseAssistEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {caseAssistId, locale, searchHub} = options.configuration;
+  const {caseAssistId, locale, searchHub, proxyBaseUrl} = options.configuration;
 
   engine.dispatch(
     setCaseAssistConfiguration({
       caseAssistId,
       locale,
+      proxyBaseUrl,
     })
   );
 

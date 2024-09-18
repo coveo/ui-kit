@@ -1,3 +1,31 @@
+## 3.0.0 (2024-09-18)
+
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(atomic-react)!: add exports field in package.json (#4424) ([9a54cac](https://github.com/coveo/ui-kit/commits/9a54cac)), closes [#4424](https://github.com/coveo/ui-kit/issues/4424)
+- chore(atomic)!: externalize dependencies (#4393) ([b599477](https://github.com/coveo/ui-kit/commits/b599477)), closes [#4393](https://github.com/coveo/ui-kit/issues/4393)
+- chore(headless, atomic, quantic)!: remove deprecated functions/properties (#4350) ([8de5406](https://github.com/coveo/ui-kit/commits/8de5406)), closes [#4350](https://github.com/coveo/ui-kit/issues/4350)
+- chore(headless, atomic)!: remove deprecated product recommendations (#4349) ([475a217](https://github.com/coveo/ui-kit/commits/475a217)), closes [#4349](https://github.com/coveo/ui-kit/issues/4349)
+- chore(headless)!: add export field in package.json (#4392) ([a834c2f](https://github.com/coveo/ui-kit/commits/a834c2f)), closes [#4392](https://github.com/coveo/ui-kit/issues/4392)
+- chore(headless)!: remove headless fetch & crypto polyfills (#4358) ([583e30a](https://github.com/coveo/ui-kit/commits/583e30a)), closes [#4358](https://github.com/coveo/ui-kit/issues/4358)
+- feat(atomic)!: delete atomic-load-more-children-results and put functionality in atomic-result-child ([b12331f](https://github.com/coveo/ui-kit/commits/b12331f)), closes [#4341](https://github.com/coveo/ui-kit/issues/4341)
+- fix(atomic-react)!: remove analytics from atomic search interface (#4348) ([27828af](https://github.com/coveo/ui-kit/commits/27828af)), closes [#4348](https://github.com/coveo/ui-kit/issues/4348)
+- chore: update tsconfigs to match node version (#4402) ([e5bf6b8](https://github.com/coveo/ui-kit/commits/e5bf6b8)), closes [#4402](https://github.com/coveo/ui-kit/issues/4402)
+- chore(atomic-react): disable iife output (#4428) ([47debe7](https://github.com/coveo/ui-kit/commits/47debe7)), closes [#4428](https://github.com/coveo/ui-kit/issues/4428)
+- chore(atomic): replace @internal tags with @alpha tags in commerce components JS doc annotations (#4 ([1060eb5](https://github.com/coveo/ui-kit/commits/1060eb5)), closes [#4382](https://github.com/coveo/ui-kit/issues/4382)
+- feat(atomic): user actions timeline component created (#4272) ([7c110bc](https://github.com/coveo/ui-kit/commits/7c110bc)), closes [#4272](https://github.com/coveo/ui-kit/issues/4272)
+
+### BREAKING CHANGE
+
+- add export field in package.json (#4392)
+- add exports field in package.json (#4424)
+- delete atomic-load-more-children-results and put functionality in atomic-result-children (#4341)
+- externalize dependencies (#4393)
+- remove analytics from atomic search interface (#4348)
+- remove deprecated functions/properties (#4350)
+- remove deprecated product recommendations (#4349)
+- remove headless fetch & crypto polyfills (#4358)
+- update node engine definition in all exported packages (#4330)
+
 # 2.14.0 (2024-08-27)
 
 ### Features

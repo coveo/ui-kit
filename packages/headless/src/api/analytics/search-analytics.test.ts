@@ -1,10 +1,10 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
-import {DateFacetValue} from '../../controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
 import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
@@ -118,8 +118,10 @@ describe('#configureLegacyAnalytics', () => {
   });
 
   describe('search analytics provider', () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const getBaseState = (): StateNeededBySearchAnalyticsProvider => ({
-      configuration: getConfigurationInitialState(),
+      configuration,
     });
 
     it('should properly return the pipeline from the state', () => {

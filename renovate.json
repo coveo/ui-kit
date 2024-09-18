@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "extends": [
     ":semanticPrefixFixDepsChoreOthers",
     "helpers:pinGitHubActionDigests",

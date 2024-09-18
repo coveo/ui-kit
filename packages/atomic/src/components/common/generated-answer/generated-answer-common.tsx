@@ -2,7 +2,6 @@ import {
   GeneratedAnswer,
   GeneratedAnswerCitation,
   GeneratedAnswerState,
-  GeneratedAnswerStyle,
   InteractiveCitation,
   InteractiveCitationProps,
   SearchStatusState,
@@ -19,7 +18,6 @@ import {Switch} from '../switch';
 import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
-import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {ShowButton} from './show-button';
 import {SourceCitations} from './source-citations';
@@ -28,7 +26,6 @@ interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
   withToggle?: boolean;
   collapsible?: boolean;
-  withRephraseButtons?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -299,38 +296,6 @@ export class GeneratedAnswerCommon {
     this.openFeedbackModal();
   }
 
-  private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
-    if (
-      this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
-      answerStyle
-    ) {
-      this.props.getGeneratedAnswer()?.rephrase({
-        ...this.props.getGeneratedAnswerState()?.responseFormat,
-        answerStyle,
-      });
-    }
-  }
-
-  private renderRephraseButtons() {
-    const {getGeneratedAnswerState, getBindings, withRephraseButtons} =
-      this.props;
-    const {i18n} = getBindings();
-    const {isStreaming, responseFormat} = getGeneratedAnswerState() ?? {};
-    const {answerStyle} = responseFormat ?? {};
-    const canRender = withRephraseButtons && !isStreaming;
-
-    if (!canRender) {
-      return null;
-    }
-    return (
-      <RephraseButtons
-        answerStyle={answerStyle ?? 'default'}
-        i18n={i18n}
-        onChange={(answerStyle) => this.onChangeAnswerStyle(answerStyle)}
-      />
-    );
-  }
-
   private renderDisclaimer() {
     const {getGeneratedAnswerState, getBindings} = this.props;
     const {i18n} = getBindings();
@@ -439,8 +404,6 @@ export class GeneratedAnswerCommon {
             >
               {this.renderCitations()}
             </SourceCitations>
-
-            {this.renderRephraseButtons()}
           </GeneratedContentContainer>
         ) : null}
 

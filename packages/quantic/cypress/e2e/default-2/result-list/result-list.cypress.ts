@@ -25,7 +25,7 @@ describe('quantic-resultlist', () => {
 
   const defaultFieldsToInclude =
     'date,author,source,language,filetype,parents,sfknowledgearticleid';
-  const registerResultTemplatesEvent = 'registerresulttemplates';
+  const registerResultTemplatesEvent = 'quantic__registerresulttemplates';
 
   const indexResultsAlias = '@indexResults';
 

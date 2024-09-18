@@ -5,16 +5,11 @@ import {
 } from '../analytics/analytics-utils';
 import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {
-  GeneratedAnswerFeedback,
-  GeneratedAnswerFeedbackV2,
-  isGeneratedAnswerFeedbackV2,
-} from './generated-answer-analytics-actions';
+import {GeneratedAnswerFeedback} from './generated-answer-analytics-actions';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
-import {GeneratedResponseFormat} from './generated-response-format';
 
 const RGAType = 'RGA';
 
@@ -28,28 +23,6 @@ export const logRetryGeneratedAnswer = (): InsightAction =>
       )
   );
 
-//TODO: SFINT-5435
-export const logRephraseGeneratedAnswer = (
-  responseFormat: GeneratedResponseFormat
-): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.rephraseGeneratedAnswer)(
-    'analytics/generatedAnswer/rephrase',
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.logRephraseGeneratedAnswer(
-        {
-          generativeQuestionAnsweringId,
-          rephraseFormat: responseFormat.answerStyle,
-        },
-        getCaseContextAnalyticsMetadata(state.insightCaseContext)
-      );
-    }
-  );
-
 export const logOpenGeneratedAnswerSource = (
   citationId: string
 ): InsightAction =>
@@ -57,16 +30,18 @@ export const logOpenGeneratedAnswerSource = (
     {
       prefix: 'analytics/generatedAnswer/openAnswerSource',
       __legacy__getBuilder: (client, state) => {
-        const generativeQuestionAnsweringId =
+        const {id: rgaID, answerAPIEnabled} =
           generativeQuestionAnsweringIdSelector(state);
         const citation = citationSourceSelector(state, citationId);
 
-        if (!generativeQuestionAnsweringId || !citation) {
+        if (!rgaID || !citation) {
           return null;
         }
         return client.logOpenGeneratedAnswerSource(
           {
-            generativeQuestionAnsweringId,
+            ...(answerAPIEnabled
+              ? {answerAPIStreamId: rgaID}
+              : {generativeQuestionAnsweringId: rgaID}),
             permanentId: citation.permanentid,
             citationId: citation.id,
           },
@@ -99,16 +74,18 @@ export const logHoverCitation = (
   )({
     prefix: 'analytics/generatedAnswer/hoverCitation',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
 
-      if (!generativeQuestionAnsweringId || !citation) {
+      if (!rgaID || !citation) {
         return null;
       }
       return client.logGeneratedAnswerSourceHover(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
           permanentId: citation.permanentid,
           citationId: citation.id,
           citationHoverTimeMs: citationHoverTimeInMs,
@@ -137,14 +114,16 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.likeGeneratedAnswer)({
     prefix: 'analytics/generatedAnswer/like',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logLikeGeneratedAnswer(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -165,14 +144,16 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.dislikeGeneratedAnswer)({
     prefix: 'analytics/generatedAnswer/dislike',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logDislikeGeneratedAnswer(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -190,91 +171,56 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
   });
 
 export const logGeneratedAnswerFeedback = (
-  feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
+  feedback: GeneratedAnswerFeedback
 ): InsightAction =>
   makeInsightAnalyticsActionFactory(
     SearchPageEvents.generatedAnswerFeedbackSubmit
   )({
     prefix: 'analytics/generatedAnswer/sendFeedback',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
-      return isGeneratedAnswerFeedbackV2(feedback)
-        ? client.logGeneratedAnswerFeedbackSubmitV2(
-            {
-              generativeQuestionAnsweringId,
-              ...feedback,
-            },
-            getCaseContextAnalyticsMetadata(state.insightCaseContext)
-          )
-        : client.logGeneratedAnswerFeedbackSubmit(
-            {
-              generativeQuestionAnsweringId,
-              reason: feedback,
-            },
-            getCaseContextAnalyticsMetadata(state.insightCaseContext)
-          );
-    },
-    analyticsType: isGeneratedAnswerFeedbackV2(feedback)
-      ? 'Qna.SubmitRgaFeedback'
-      : undefined,
-    analyticsPayloadBuilder: isGeneratedAnswerFeedbackV2(feedback)
-      ? (state): Qna.SubmitRgaFeedback => {
-          const {search} = state;
-          const {response} = search || {};
-          const responseId = response?.searchUid || '';
-          const {
-            helpful,
-            readable,
-            documented,
-            details,
-            hallucinationFree: hallucination_free,
-            correctTopic: correct_topic,
-            documentUrl: document_url,
-          } = feedback;
-          return {
-            answer: {
-              responseId,
-            },
-            feedback: {
-              helpful,
-              readable,
-              documented,
-              details,
-              hallucination_free,
-              correct_topic,
-              document_url,
-            },
-          };
-        }
-      : undefined,
-  });
-
-//Method deprecated after v3, EP event no longer available, TODO: SFINT-5585
-export const logGeneratedAnswerDetailedFeedback = (
-  details: string
-): InsightAction =>
-  makeInsightAnalyticsActionFactory(
-    SearchPageEvents.generatedAnswerFeedbackSubmit
-  )({
-    prefix: 'analytics/generatedAnswer/sendFeedback',
-    __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.logGeneratedAnswerFeedbackSubmit(
+      return client.logGeneratedAnswerFeedbackSubmitV2(
         {
-          generativeQuestionAnsweringId,
-          reason: 'other',
-          details,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
+          ...feedback,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
+    },
+    analyticsType: 'Qna.SubmitRgaFeedback',
+    analyticsPayloadBuilder: (state): Qna.SubmitRgaFeedback => {
+      const {search} = state;
+      const {response} = search || {};
+      const responseId = response?.searchUid || '';
+      const {
+        helpful,
+        readable,
+        documented,
+        details,
+        hallucinationFree: hallucination_free,
+        correctTopic: correct_topic,
+        documentUrl: document_url,
+      } = feedback;
+      return {
+        answer: {
+          responseId,
+        },
+        feedback: {
+          helpful,
+          readable,
+          documented,
+          details,
+          hallucination_free,
+          correct_topic,
+          document_url,
+        },
+      };
     },
   });
 
@@ -285,14 +231,16 @@ export const logGeneratedAnswerStreamEnd = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerStreamEnd)(
     'analytics/generatedAnswer/streamEnd',
     (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logGeneratedAnswerStreamEnd(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
           answerGenerated,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
@@ -306,14 +254,16 @@ export const logGeneratedAnswerShowAnswers = (): InsightAction =>
   )({
     prefix: 'analytics/generatedAnswer/show',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logGeneratedAnswerShowAnswers(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -336,14 +286,16 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
   )({
     prefix: 'analytics/generatedAnswer/hide',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logGeneratedAnswerHideAnswers(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -364,14 +316,16 @@ export const logGeneratedAnswerExpand = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerExpand)({
     prefix: 'analytics/generatedAnswer/expand',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logGeneratedAnswerExpand(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -392,14 +346,16 @@ export const logGeneratedAnswerCollapse = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerCollapse)({
     prefix: 'analytics/generatedAnswer/collapse',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logGeneratedAnswerCollapse(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -422,14 +378,16 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
   )({
     prefix: 'analytics/generatedAnswer/copy',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
+      const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      if (!rgaID) {
         return null;
       }
       return client.logGeneratedAnswerCopyToClipboard(
         {
-          generativeQuestionAnsweringId,
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
@@ -451,14 +409,12 @@ export const generatedAnswerInsightAnalyticsClient = {
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
-  logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
-  logRephraseGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
 };

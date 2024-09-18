@@ -231,8 +231,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-iife
+      # TODO: KIT-3537 - https://coveord.atlassian.net/browse/KIT-3538
+      # - uses: ./.github/actions/setup
+      # - uses: ./.github/actions/e2e-iife
   e2e-atomic-angular-test:
     name: 'Run e2e tests on Atomic Angular'
     needs: build
