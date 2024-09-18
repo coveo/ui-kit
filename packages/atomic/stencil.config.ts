@@ -1,4 +1,3 @@
-import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
 import {postcss} from '@stencil-community/postcss';
@@ -23,8 +22,7 @@ import {generateAngularModuleDefinition as angularModule} from './stencil-plugin
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
-let headlessVersion: string;
-
+let headlessVersion: string = '';
 if (isCDN) {
   console.log('Building for CDN');
   headlessVersion = 'v' + headlessJson.version;
@@ -72,7 +70,7 @@ const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
   },
   /*   '@coveo/bueno': {
     devWatch: path.resolve(__dirname, './src/external-builds/bueno.esm.js'),
-    cdn: `/bueno/${headlessVersion}/bueno.esm.js`,
+    cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
   }, */
 };
 
@@ -83,15 +81,6 @@ function generateAliasEntries() {
   }));
 }
 
-function generateReplaceValues(): {[key: string]: string} {
-  return Object.entries(packageMappings).reduce(
-    (acc: {[key: string]: string}, [find, paths]) => {
-      acc[find] = paths.cdn;
-      return acc;
-    },
-    {}
-  );
-}
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
   return readdirSync(useCasePath, {
     recursive: true,
@@ -254,10 +243,6 @@ export const config: Config = {
       ],
     }),
     replace(),
-    isCDN &&
-      replaceWithASTPlugin({
-        replacements: generateReplaceValues(),
-      }),
   ],
   rollupPlugins: {
     before: [
@@ -276,15 +261,21 @@ export const config: Config = {
     enableImportInjection: true,
   },
 };
-
 function externalizeDependenciesPlugin() {
   return {
     name: 'externalize-dependencies',
     resolveId(source: string) {
-      // Externalize @coveo/headless and @coveo/bueno
-      if (/^@coveo\/(headless)/.test(source)) {
-        return false;
+      if (packageMappings[source]) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMappings[source].cdn,
+          external: 'absolute',
+        };
       }
+
       return null;
     },
   };
