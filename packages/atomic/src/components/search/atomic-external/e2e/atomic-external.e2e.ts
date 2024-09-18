@@ -1,25 +1,21 @@
-import {test, expect} from '@playwright/test';
+import {test, expect} from './fixture';
 
 test.describe('External Test Suite', () => {
   test.describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
-    test.beforeEach(async ({page}) => {
-      await page.goto('http://localhost:3333/examples/external.html');
+    test.beforeEach(async ({external}) => {
+      await external.load();
 
-      const searchBox = page.locator('atomic-external > atomic-search-box');
-      await searchBox
+      await external.searchBox
         .locator('[part="textarea"]')
         .fill('hello', {timeout: 1000});
 
-      await searchBox.press('Enter');
+      await external.searchBox.press('Enter');
     });
 
     test("other components' state under the same atomic-external should be affected", async ({
-      page,
+      external,
     }) => {
-      const querySummary = page.locator(
-        'atomic-external > atomic-query-summary'
-      );
-      await expect(querySummary).toHaveText(/hello/);
+      await expect(external.querySummary).toHaveText(/hello/);
     });
 
     test("other components' state under the linked atomic-search-interface should be affected", async ({
