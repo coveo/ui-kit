@@ -315,7 +315,6 @@ export class AtomicRecsInterface
   }
 
   public render() {
-    console.log(this.engine);
     return this.engine && <slot></slot>;
   }
 }

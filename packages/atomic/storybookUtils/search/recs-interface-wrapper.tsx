@@ -7,9 +7,13 @@ import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import type * as _ from '../../src/components';
 
-export const wrapInRecommendationInterface = (
-  config?: Partial<RecommendationEngineConfiguration>
-): {
+export const wrapInRecommendationInterface = ({
+  config,
+  skipFirstQuery = false,
+}: {
+  config?: Partial<RecommendationEngineConfiguration>;
+  skipFirstQuery?: boolean;
+} = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
@@ -31,6 +35,9 @@ export const wrapInRecommendationInterface = (
         ...config,
       });
     });
+    if (skipFirstQuery) {
+      return;
+    }
     await step('Execute the first search', async () => {
       await searchInterface!.getRecommendations();
     });
