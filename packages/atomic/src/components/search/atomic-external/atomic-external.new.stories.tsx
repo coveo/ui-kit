@@ -27,7 +27,7 @@ const meta: Meta = {
       <div>
         <h1>External components of interface #2</h1>
         <atomic-external selector="#interface-2">
-          <atomic-search-box textarea></atomic-search-box>
+          <atomic-search-box></atomic-search-box>
           <atomic-query-summary></atomic-query-summary>
           <atomic-facet field="author" label="Author"></atomic-facet>
         </atomic-external>
@@ -48,7 +48,7 @@ const meta: Meta = {
           >
             <atomic-format-currency currency="USD"></atomic-format-currency>
           </atomic-numeric-facet>
-          <atomic-search-box textarea></atomic-search-box>
+          <atomic-search-box></atomic-search-box>
           <atomic-result-list></atomic-result-list>
         </atomic-search-interface>
       </div>
