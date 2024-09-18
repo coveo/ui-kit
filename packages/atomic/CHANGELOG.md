@@ -1,3 +1,7 @@
+## <small>3.1.1 (2024-09-18)</small>
+
+- chore: ensure absolute paths are not resolved as local when building for the CDN (#4434) ([b9ee6e1](https://github.com/coveo/ui-kit/commits/b9ee6e1)), closes [#4434](https://github.com/coveo/ui-kit/issues/4434)
+
 ## 3.1.0 (2024-09-18)
 
 - fix(atomic, atomic-react): use root-relative URL for CDN (#4431) ([39313ea](https://github.com/coveo/ui-kit/commits/39313ea)), closes [#4431](https://github.com/coveo/ui-kit/issues/4431)
