@@ -1,4 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {FieldDescription} from '../../api/search/fields/fields-response';
 import {
   AsyncThunkSearchOptions,
@@ -25,12 +26,12 @@ export const fetchFieldsDescription = createAsyncThunk<
   AsyncThunkSearchOptions<ConfigurationSection>
 >('fields/fetchDescription', async (_, {extra, getState, rejectWithValue}) => {
   const state = getState();
-  const {accessToken, organizationId} = state.configuration;
+  const {accessToken, environment, organizationId} = state.configuration;
   const {apiBaseUrl} = state.configuration.search;
   const descriptions = await extra.apiClient.fieldDescriptions({
     accessToken,
     organizationId,
-    url: apiBaseUrl,
+    url: apiBaseUrl ?? getSearchApiBaseUrl(organizationId, environment),
   });
   if (isErrorResponse(descriptions)) {
     return rejectWithValue(descriptions.error);

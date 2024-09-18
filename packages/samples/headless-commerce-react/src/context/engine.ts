@@ -6,10 +6,12 @@ export const getEngine = () => {
     return _engine;
   }
 
+  const organizationId = 'searchuisamples';
+
   _engine = buildCommerceEngine({
     configuration: {
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-      organizationId: 'searchuisamples',
+      organizationId,
       analytics: {
         trackingId: 'sports-ui-samples',
       },

@@ -9,7 +9,7 @@ export default class ActionSendRating extends LightningElement {
     }, 0);
   }
   handleSendRating() {
-    const customEvent = new CustomEvent('rating', {
+    const customEvent = new CustomEvent('quantic__rating', {
       detail: {
         id: this._id,
         score: 1,

@@ -39,7 +39,7 @@ export default class QuanticTabBar extends LightningElement {
   connectedCallback() {
     window.addEventListener('click', this.closeDropdown);
     window.addEventListener('resize', this.updateTabsDisplay);
-    this.addEventListener('tab_rendered', this.updateTabsDisplay);
+    this.addEventListener('quantic__tabrendered', this.updateTabsDisplay);
   }
 
   renderedCallback() {

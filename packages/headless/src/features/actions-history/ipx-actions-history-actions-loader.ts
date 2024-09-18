@@ -5,7 +5,6 @@ import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions';
 /**
  * Internal and experimental actions loader for the IPX.
  * @internal
- * @deprecated
  */
 export interface IPXActionsHistoryActionCreators {
   addPageViewEntryInActionsHistory(

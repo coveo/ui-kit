@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "2.14.0",
+  "version": "3.0.0",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -12,15 +12,14 @@
     "build": "nx build",
     "clean": "rimraf -rf dist",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
-    "build:bundles:cjs": "tsc -p tsconfig.cjs.json",
-    "build:bundles:iife": "rollup --config rollup.config.mjs",
-    "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:cjs\"  \"npm run build:bundles:iife\"",
+    "build:bundles:iife-cjs": "rollup --config rollup.config.mjs --bundleConfigAsCjs",
+    "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:iife-cjs\"",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/cjs/atomic-react.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -29,10 +28,10 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "2.78.0"
+    "@coveo/atomic": "3.0.0"
   },
   "devDependencies": {
-    "@coveo/headless": "2.80.0",
+    "@coveo/rollup-plugin-replace-with-ast": "1.0.0",
     "@coveo/release": "1.0.0",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-json": "6.1.0",
@@ -50,11 +49,28 @@
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.80.0",
+    "@coveo/headless": "3.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
   "engines": {
     "node": "^20.9.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/atomic-react.js"
+    },
+    "./commerce": {
+      "types": "./dist/commerce.index.d.ts",
+      "import": "./dist/commerce.index.js",
+      "require": "./dist/cjs/commerce/atomic-react.js"
+    },
+    "./recommendation": {
+      "types": "./dist/recommendation.index.d.ts",
+      "import": "./dist/recommendation.index.js",
+      "require": "./dist/cjs/recommendation/atomic-react.js"
+    }
   }
 }

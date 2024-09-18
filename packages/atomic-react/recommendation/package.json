@@ -1,9 +1,0 @@
-{
-  "private": true,
-  "name": "recommendation",
-  "description": "Atomic React Recommendation Module",
-  "main": "../dist/cjs/recommendation.index.js",
-  "module": "../dist/recommendation.index.esm.js",
-  "types": "../dist/recommendation.index.d.ts",
-  "license": "Apache-2.0"
-}

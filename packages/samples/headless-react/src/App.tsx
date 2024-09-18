@@ -3,7 +3,6 @@ import {BrowserRouter, NavLink, Routes, Route} from 'react-router-dom';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
 import {DependentFacetPage} from './pages/DependentFacetPage';
-import {ProductRecommendationsPage} from './pages/ProductRecommendationsPage';
 import {RecommendationPage} from './pages/RecommendationPage';
 import {SamlPage} from './pages/SamlPage';
 import {SearchPage, SearchPageProps} from './pages/SearchPage';
@@ -79,14 +78,6 @@ function App(props: SearchPageProps) {
           </button>
           <button>
             <NavLink
-              to="/product-recommendations"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Product Recommendations
-            </NavLink>
-          </button>
-          <button>
-            <NavLink
               to="/commerce"
               style={({isActive}) => (isActive ? activeNavLink : {})}
             >
@@ -104,10 +95,6 @@ function App(props: SearchPageProps) {
           <Route path="/saml" element={<SamlPage />} />
           <Route path="/dependent-facet" element={<DependentFacetPage />} />
           <Route path="/analyticshooks" element={<AnalyticsHook />} />
-          <Route
-            path="/product-recommendations"
-            element={<ProductRecommendationsPage />}
-          />
           <Route path="/commerce" element={<CommerceApp />}>
             <Route path="search" element={<CommerceSearchPage />} />
             <Route path="product-listing" element={<ProductListingPage />} />
