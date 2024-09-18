@@ -1,4 +1,3 @@
-import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
 import {postcss} from '@stencil-community/postcss';
@@ -17,17 +16,19 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
+import buenoJson from '../../packages/bueno/package.json';
 import headlessJson from '../../packages/headless/package.json';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
-let headlessVersion: string;
-
+let headlessVersion: string = '';
+let buenoVersion: string = '';
 if (isCDN) {
   console.log('Building for CDN');
   headlessVersion = 'v' + headlessJson.version;
+  buenoVersion = buenoJson.version;
 }
 
 const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
@@ -70,10 +71,10 @@ const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
     devWatch: path.resolve(__dirname, './src/external-builds/headless.esm.js'),
     cdn: `/headless/${headlessVersion}/headless.esm.js`,
   },
-  /*   '@coveo/bueno': {
+  '@coveo/bueno': {
     devWatch: path.resolve(__dirname, './src/external-builds/bueno.esm.js'),
-    cdn: `/bueno/${headlessVersion}/bueno.esm.js`,
-  }, */
+    cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
+  },
 };
 
 function generateAliasEntries() {
@@ -83,15 +84,6 @@ function generateAliasEntries() {
   }));
 }
 
-function generateReplaceValues(): {[key: string]: string} {
-  return Object.entries(packageMappings).reduce(
-    (acc: {[key: string]: string}, [find, paths]) => {
-      acc[find] = paths.cdn;
-      return acc;
-    },
-    {}
-  );
-}
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
   return readdirSync(useCasePath, {
     recursive: true,
@@ -254,10 +246,6 @@ export const config: Config = {
       ],
     }),
     replace(),
-    isCDN &&
-      replaceWithASTPlugin({
-        replacements: generateReplaceValues(),
-      }),
   ],
   rollupPlugins: {
     before: [
@@ -276,15 +264,21 @@ export const config: Config = {
     enableImportInjection: true,
   },
 };
-
 function externalizeDependenciesPlugin() {
   return {
     name: 'externalize-dependencies',
     resolveId(source: string) {
-      // Externalize @coveo/headless and @coveo/bueno
-      if (/^@coveo\/(headless)/.test(source)) {
-        return false;
+      if (packageMappings[source]) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMappings[source].cdn,
+          external: 'absolute',
+        };
       }
+
       return null;
     },
   };
