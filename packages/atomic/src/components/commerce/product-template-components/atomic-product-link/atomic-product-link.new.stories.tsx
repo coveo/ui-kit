@@ -49,7 +49,7 @@ export const Default: Story = {
 export const WithSlotsAttributes: Story = {
   name: 'opens in a new browser tab',
   decorators: [
-    (_) => {
+    () => {
       return html`
         <atomic-product-link>
           <a slot="attributes" target="_blank"></a>
