@@ -17,7 +17,7 @@ export const ClearButton: FunctionalComponent<Props> = ({
   <Button
     style="text-transparent"
     part="clear-button"
-    class="w-8 h-8 mr-1.5 text-neutral-dark shrink-0"
+    class="text-neutral-dark mr-1.5 h-8 w-8 shrink-0"
     onClick={() => {
       onClick?.();
       inputRef?.focus();
@@ -28,7 +28,7 @@ export const ClearButton: FunctionalComponent<Props> = ({
     <atomic-icon
       part="clear-icon"
       icon={ClearIcon}
-      class="w-3 h-3"
+      class="h-3 w-3"
     ></atomic-icon>
   </Button>
 );

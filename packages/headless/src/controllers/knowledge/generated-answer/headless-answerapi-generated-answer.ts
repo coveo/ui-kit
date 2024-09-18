@@ -1,6 +1,11 @@
 import {
+  answerEvaluation,
+  AnswerEvaluationPOSTParams,
+} from '../../../api/knowledge/post-answer-evaluation';
+import {
   answerApi,
   fetchAnswer,
+  GeneratedAnswerStream,
   selectAnswer,
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
@@ -8,8 +13,10 @@ import {
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   resetAnswer,
+  sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {queryReducer as query} from '../../../features/query/query-slice';
 import {
   GeneratedAnswerSection,
@@ -21,20 +28,65 @@ import {
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-  GeneratedResponseFormat,
 } from '../../core/generated-answer/headless-core-generated-answer';
 
-export interface AnswerApiGeneratedAnswer extends GeneratedAnswer {
+export interface AnswerApiGeneratedAnswer
+  extends Omit<GeneratedAnswer, 'sendFeedback'> {
   /**
    * Resets the last answer.
    */
   reset(): void;
+  /**
+   * Sends feedback about why the generated answer was not relevant.
+   * @param feedback - The feedback that the end user wishes to send.
+   */
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
 }
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
 
 export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
+
+interface ParseEvaluationArgumentsParams {
+  feedback: GeneratedAnswerFeedback;
+  answerApiState: GeneratedAnswerStream;
+  query: string;
+}
+
+const parseEvaluationDetails = (
+  detail: 'yes' | 'no' | 'unknown'
+): Boolean | null => {
+  if (detail === 'yes') {
+    return true;
+  }
+  if (detail === 'no') {
+    return false;
+  }
+  return null;
+};
+
+const parseEvaluationArguments = ({
+  answerApiState,
+  feedback,
+  query,
+}: ParseEvaluationArgumentsParams): AnswerEvaluationPOSTParams => ({
+  additionalNotes: feedback.details ?? null,
+  answer: {
+    text: answerApiState.answer!,
+    responseId: answerApiState.answerId!,
+    format: answerApiState.contentFormat ?? 'text/plain',
+  },
+  correctAnswerUrl: feedback.documentUrl ?? null,
+  details: {
+    correctTopic: parseEvaluationDetails(feedback.correctTopic),
+    documented: parseEvaluationDetails(feedback.documented),
+    hallucinationFree: parseEvaluationDetails(feedback.hallucinationFree),
+    readable: parseEvaluationDetails(feedback.readable),
+  },
+  helpful: feedback.helpful,
+  question: query,
+});
 
 const subscribeToSearchRequest = (
   engine: SearchEngine<StateNeededByAnswerAPI>
@@ -43,13 +95,14 @@ const subscribeToSearchRequest = (
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
-    if (triggerParams.requestId === undefined) {
+    if (triggerParams.q.length === 0 || triggerParams.requestId.length === 0) {
       return;
     }
-    if (JSON.stringify(triggerParams) === JSON.stringify(lastTriggerParams)) {
+    if (triggerParams?.requestId === lastTriggerParams?.requestId) {
       return;
     }
     lastTriggerParams = triggerParams;
+    engine.dispatch(resetAnswer());
     engine.dispatch(fetchAnswer(state));
   };
   engine.subscribe(strictListener);
@@ -74,7 +127,7 @@ export function buildAnswerApiGeneratedAnswer(
     throw loadReducerError;
   }
 
-  const {rephrase: coreRephrase, ...controller} = buildCoreGeneratedAnswer(
+  const {...controller} = buildCoreGeneratedAnswer(
     engine,
     analyticsClient,
     props
@@ -103,15 +156,20 @@ export function buildAnswerApiGeneratedAnswer(
         isAnswerGenerated: answerApiState?.generated ?? false,
       };
     },
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      coreRephrase(responseFormat);
-      engine.dispatch(fetchAnswer(getState()));
-    },
     retry() {
       engine.dispatch(fetchAnswer(getState()));
     },
     reset() {
       engine.dispatch(resetAnswer());
+    },
+    async sendFeedback(feedback) {
+      const args = parseEvaluationArguments({
+        query: getState().query.q,
+        feedback,
+        answerApiState: selectAnswer(engine.state).data!,
+      });
+      engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
+      engine.dispatch(sendGeneratedAnswerFeedback());
     },
   };
 }

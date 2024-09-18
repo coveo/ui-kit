@@ -36,10 +36,6 @@ jest.mock(
 jest.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
-  it('should be tested', () => {
-    expect(true).toBe(true);
-  });
-
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
@@ -81,14 +77,6 @@ describe('searchapi-generated-answer', () => {
     expect(generatedAnswer.state).toEqual(engine.state.generatedAnswer);
   });
 
-  it('dispatches a rephrase action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'step'};
-    generatedAnswer.rephrase(responseFormat);
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-    expect(executeSearch).toHaveBeenCalled();
-  });
-
   it('dispatches a retry action', () => {
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
@@ -96,7 +84,9 @@ describe('searchapi-generated-answer', () => {
   });
 
   it('initialize the format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
+    const responseFormat: GeneratedResponseFormat = {
+      contentFormat: ['text/markdown'],
+    };
     createGeneratedAnswer({
       initialState: {responseFormat},
     });
@@ -128,23 +118,21 @@ describe('searchapi-generated-answer', () => {
     expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
-  it('dispatches a send feedback action', () => {
+  it('dispatches a sendFeedback action', () => {
     const generatedAnswer = createGeneratedAnswer();
-    const feedback: GeneratedAnswerFeedback = 'harmful';
+    const feedback: GeneratedAnswerFeedback = {
+      readable: 'unknown',
+      correctTopic: 'unknown',
+      documented: 'yes',
+      hallucinationFree: 'no',
+      helpful: false,
+      details: 'some details',
+    };
     generatedAnswer.sendFeedback(feedback);
+
     expect(
       generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
     ).toHaveBeenCalledWith(feedback);
-    expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatches a send detailed feedback action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const details = 'details';
-    generatedAnswer.sendDetailedFeedback(details);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerDetailedFeedback
-    ).toHaveBeenCalledWith(details);
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
   });
 
@@ -274,12 +262,6 @@ describe('searchapi-generated-answer', () => {
     expect(setIsVisible).toHaveBeenCalledWith(false);
   });
 
-  it('dispatches the updateResponseFormat with the initial response format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
-    createGeneratedAnswer({initialState: {responseFormat}});
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-  });
-
   it('should dispatch registerFieldsToIncludeInCitations to register the fields to include in citations', () => {
     const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
 
@@ -289,5 +271,26 @@ describe('searchapi-generated-answer', () => {
     expect(registerFieldsToIncludeInCitations).toHaveBeenCalledWith(
       exampleFieldsToIncludeInCitations
     );
+  });
+
+  describe('when used with a preloaded state', () => {
+    beforeEach(() => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          id: 'some-id',
+        },
+      });
+      state.search.requestId = 'some-request-id';
+      state.search.extendedResults.generativeQuestionAnsweringId =
+        'some-stream-id';
+      engine = buildMockSearchEngine(state);
+    });
+
+    it('should not trigger any actions on initialization', () => {
+      engine.dispatch.mockClear();
+      createGeneratedAnswer();
+      expect(engine.dispatch).not.toHaveBeenCalled();
+    });
   });
 });

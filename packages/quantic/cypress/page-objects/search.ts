@@ -2,7 +2,7 @@ import {
   CyHttpMessages,
   HttpResponseInterceptor,
   RouteMatcher,
-  StaticResponse, // eslint-disable-next-line node/no-unpublished-import
+  StaticResponse,
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
@@ -84,7 +84,6 @@ export const InterceptAliases = {
       GeneratedAnswerFeedbackSubmitV2: uaAlias(
         'generatedAnswerFeedbackSubmitV2'
       ),
-      RephraseGeneratedAnswer: uaAlias('rephraseGeneratedAnswer'),
       GeneratedAnswerSourceHover: uaAlias('generatedAnswerSourceHover'),
       GeneratedAnswerCopyToClipboard: uaAlias('generatedAnswerCopyToClipboard'),
       GeneratedAnswerCollapse: uaAlias('generatedAnswerCollapse'),
@@ -142,7 +141,7 @@ export const InterceptAliases = {
 };
 
 export const routeMatchers = {
-  analytics: '**/rest/ua/v15/analytics/*',
+  analytics: new RegExp(/\/rest(\/ua)?\/v15\/analytics\//i),
   nextAnalytics: '**/events/v1?*',
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',

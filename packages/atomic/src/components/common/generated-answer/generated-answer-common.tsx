@@ -2,7 +2,6 @@ import {
   GeneratedAnswer,
   GeneratedAnswerCitation,
   GeneratedAnswerState,
-  GeneratedAnswerStyle,
   InteractiveCitation,
   InteractiveCitationProps,
   SearchStatusState,
@@ -19,7 +18,6 @@ import {Switch} from '../switch';
 import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
-import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {ShowButton} from './show-button';
 import {SourceCitations} from './source-citations';
@@ -298,36 +296,6 @@ export class GeneratedAnswerCommon {
     this.openFeedbackModal();
   }
 
-  private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
-    if (
-      this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
-      answerStyle
-    ) {
-      this.props.getGeneratedAnswer()?.rephrase({
-        ...this.props.getGeneratedAnswerState()?.responseFormat,
-        answerStyle,
-      });
-    }
-  }
-
-  private renderRephraseButtons() {
-    const {getGeneratedAnswerState, getBindings} = this.props;
-    const {i18n} = getBindings();
-    const {isStreaming, responseFormat} = getGeneratedAnswerState() ?? {};
-    const {answerStyle} = responseFormat ?? {};
-
-    if (isStreaming) {
-      return null;
-    }
-    return (
-      <RephraseButtons
-        answerStyle={answerStyle ?? 'default'}
-        i18n={i18n}
-        onChange={(answerStyle) => this.onChangeAnswerStyle(answerStyle)}
-      />
-    );
-  }
-
   private renderDisclaimer() {
     const {getGeneratedAnswerState, getBindings} = this.props;
     const {i18n} = getBindings();
@@ -376,7 +344,7 @@ export class GeneratedAnswerCommon {
     return (
       <div
         part="is-generating"
-        class="hidden text-primary font-light text-base"
+        class="text-primary hidden text-base font-light"
       >
         {i18n.t('generating-answer')}...
       </div>
@@ -396,11 +364,11 @@ export class GeneratedAnswerCommon {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
           >
             {i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex h-9 items-center ml-auto">
+          <div class="ml-auto flex h-9 items-center">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -436,13 +404,11 @@ export class GeneratedAnswerCommon {
             >
               {this.renderCitations()}
             </SourceCitations>
-
-            {this.renderRephraseButtons()}
           </GeneratedContentContainer>
         ) : null}
 
         {!this.hasRetryableError && this.isAnswerVisible && (
-          <div part="generated-answer-footer" class="flex justify-end mt-6">
+          <div part="generated-answer-footer" class="mt-6 flex justify-end">
             {this.renderGeneratingAnswerLabel()}
             {this.renderShowButton()}
             {this.renderDisclaimer()}

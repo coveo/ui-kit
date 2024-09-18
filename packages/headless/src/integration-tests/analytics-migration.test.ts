@@ -48,10 +48,7 @@ import {
   logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
-import {
-  breadcrumbResetAll,
-  logClearBreadcrumbs,
-} from '../features/facets/generic/facet-generic-analytics-actions';
+import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   dateBreadcrumbFacet,
@@ -277,14 +274,13 @@ describe('Analytics Search Migration', () => {
   it('analytics/facet/deselectAllBreadcrumbs', async () => {
     const action = executeSearch({
       legacy: logClearBreadcrumbs(),
-      next: breadcrumbResetAll(),
     });
 
     legacySearchEngine.dispatch(action);
     nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
-    assertNextEqualsLegacy(callSpy);
+    assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
   });
 
   it('analytics/facet/exclude', async () => {

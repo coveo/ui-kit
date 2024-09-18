@@ -30,6 +30,7 @@ describe('RegularFacet', () => {
   let state: CommerceAppState;
   let options: RegularFacetOptions;
   let facet: RegularFacet;
+  const facetResponseSelector = jest.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -47,6 +48,9 @@ describe('RegularFacet', () => {
       buildMockCommerceRegularFacetResponse({facetId}),
     ];
     state.facetSearchSet[facetId] = buildMockFacetSearch();
+    facetResponseSelector.mockReturnValue(
+      buildMockCommerceRegularFacetResponse({facetId})
+    );
   }
 
   beforeEach(() => {
@@ -55,7 +59,7 @@ describe('RegularFacet', () => {
     options = {
       facetId,
       fetchProductsActionCreator: jest.fn(),
-      facetResponseSelector: jest.fn(),
+      facetResponseSelector,
       isFacetLoadingResponseSelector: jest.fn(),
       facetSearch: {type: 'SEARCH'},
     };

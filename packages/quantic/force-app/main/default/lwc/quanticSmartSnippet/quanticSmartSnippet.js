@@ -20,6 +20,7 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").SmartSnippetState} SmartSnippetState */
 /** @typedef {import("coveo").SmartSnippetFeedback} SmartSnippetFeedback */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").Result} Result */
 
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
@@ -332,19 +333,11 @@ export default class QuanticSmartSnippet extends LightningElement {
   }
 
   /**
-   * Returns the smart snippet source title.
-   * @returns {string}
+   * Returns the smart snippet source.
+   * @returns {Result}
    */
-  get sourceTitle() {
-    return this?.state?.source?.title;
-  }
-
-  /**
-   * Returns the smart snippet source uri.
-   * @returns {string}
-   */
-  get sourceUri() {
-    return this?.state?.source?.clickUri;
+  get source() {
+    return this?.state?.source;
   }
 
   /**

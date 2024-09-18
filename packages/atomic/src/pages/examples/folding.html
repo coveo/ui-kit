@@ -26,7 +26,6 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         const engine = searchInterface.engine;
@@ -123,7 +122,6 @@
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
                   <atomic-result-section-children>
-                    <atomic-load-more-children-results></atomic-load-more-children-results>
                     <atomic-result-children image-size="icon">
                       <!-- CHILD -->
                       <atomic-result-children-template>

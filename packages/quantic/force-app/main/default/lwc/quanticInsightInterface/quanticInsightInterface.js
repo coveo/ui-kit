@@ -1,5 +1,6 @@
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHeadlessConfiguration';
+import LOCALE from '@salesforce/i18n/locale';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -47,38 +48,66 @@ export default class QuanticInsightInterface extends LightningElement {
   disconnectedCallback() {
     destroyEngine(this.engineId);
     if (this.ariaLiveEventsBound) {
-      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
       this.removeEventListener(
-        'registerregion',
+        'quantic__arialivemessage',
+        this.handleAriaLiveMessage
+      );
+      this.removeEventListener(
+        'quantic__registerregion',
         this.handleRegisterAriaLiveRegion
       );
     }
   }
 
   connectedCallback() {
-    loadDependencies(this, HeadlessBundleNames.insight).then(() => {
-      if (!getHeadlessBindings(this.engineId)?.engine) {
-        getHeadlessConfiguration().then((data) => {
-          if (data) {
-            this.engineOptions = {
-              configuration: {
-                ...JSON.parse(data),
-                insightId: this.insightId,
-              },
-            };
-            setEngineOptions(
-              this.engineOptions,
-              CoveoHeadlessInsight.buildInsightEngine,
-              this.engineId,
-              this,
-              CoveoHeadlessInsight
-            );
-            this.input.setAttribute('is-initialized', 'true');
-            setInitializedCallback(this.initialize, this.engineId);
-          }
-        });
-      }
-    });
+    loadDependencies(this, HeadlessBundleNames.insight)
+      .then(() => {
+        if (!getHeadlessBindings(this.engineId)?.engine) {
+          getHeadlessConfiguration()
+            .then((data) => {
+              if (data) {
+                const {organizationId, accessToken, ...rest} = JSON.parse(data);
+                this.engineOptions = {
+                  configuration: {
+                    organizationId,
+                    accessToken,
+                    insightId: this.insightId,
+                    search: {
+                      locale: LOCALE,
+                    },
+                    analytics: {
+                      analyticsMode: 'legacy',
+                      ...(document.referrer && {
+                        originLevel3: document.referrer,
+                      }),
+                    },
+                    ...rest,
+                  },
+                };
+                setEngineOptions(
+                  this.engineOptions,
+                  CoveoHeadlessInsight.buildInsightEngine,
+                  this.engineId,
+                  this,
+                  CoveoHeadlessInsight
+                );
+                this.input.setAttribute('is-initialized', 'true');
+                setInitializedCallback(this.initialize, this.engineId);
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'Error loading Headless endpoint configuration',
+                error
+              );
+            });
+        } else {
+          setInitializedCallback(this.initialize, this.engineId);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading Headless dependencies', error);
+      });
   }
 
   renderedCallback() {
@@ -114,11 +143,11 @@ export default class QuanticInsightInterface extends LightningElement {
 
   bindAriaLiveEvents() {
     this.template.addEventListener(
-      'arialivemessage',
+      'quantic__arialivemessage',
       this.handleAriaLiveMessage.bind(this)
     );
     this.template.addEventListener(
-      'registerregion',
+      'quantic__registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
     this.ariaLiveEventsBound = true;

@@ -5,6 +5,7 @@ import {
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
 } from '../../../../features/commerce/facets/core-facet/core-facet-actions';
+import {facetRequestSelector} from '../../../../features/commerce/facets/facet-set/facet-set-selector';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
 import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
 import {
@@ -164,12 +165,14 @@ export function buildCoreCommerceFacet<
 
   const facetId = props.options.facetId;
 
+  const getEngineState = () => engine[stateKey];
+
   const getRequest = (): AnyFacetRequest | undefined =>
-    engine[stateKey].commerceFacetSet[facetId]?.request;
+    facetRequestSelector(getEngineState(), facetId);
   const getResponse = () =>
-    props.options.facetResponseSelector(engine[stateKey], facetId);
+    props.options.facetResponseSelector(getEngineState(), facetId);
   const getIsLoading = () =>
-    props.options.isFacetLoadingResponseSelector(engine[stateKey]);
+    props.options.isFacetLoadingResponseSelector(getEngineState());
 
   const getNumberOfActiveValues = () => {
     return getRequest()?.values?.filter((v) => v.state !== 'idle').length ?? 0;
@@ -183,14 +186,15 @@ export function buildCoreCommerceFacet<
         props.options.toggleSelectActionCreator({
           selection,
           facetId,
+          ...('retrieveCount' in selection
+            ? {retrieveCount: selection.retrieveCount}
+            : {}),
         })
       );
       dispatch(props.options.fetchProductsActionCreator());
-      // TODO: analytics
     },
 
     toggleExclude: (selection: ValueRequest) => {
-      // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-409: Rework facet type definitions
       if (!props.options.toggleExcludeActionCreator) {
         engine.logger.warn(
@@ -201,7 +205,6 @@ export function buildCoreCommerceFacet<
 
       dispatch(props.options.toggleExcludeActionCreator({selection, facetId}));
       dispatch(props.options.fetchProductsActionCreator());
-      // TODO: analytics
     },
 
     // Must use a function here to properly support inheritance with `this`.
@@ -215,7 +218,6 @@ export function buildCoreCommerceFacet<
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleExclude: function (selection: ValueRequest) {
-      // eslint-disable-next-line @cspell/spellchecker
       // TODO CAPI-409: Rework facet type definitions
       if (!props.options.toggleExcludeActionCreator) {
         engine.logger.warn(
@@ -278,23 +280,7 @@ export function buildCoreCommerceFacet<
     },
 
     get state(): CoreCommerceFacetState<ValueResponse> {
-      const response = getResponse();
-      const canShowMoreValues = response?.moreValuesAvailable ?? false;
-
-      const values = (response?.values ?? []) as ValueResponse[];
-      const hasActiveValues = values.some((v) => v.state !== 'idle');
-
-      return {
-        facetId,
-        type: response?.type ?? 'regular',
-        field: response?.field ?? '',
-        displayName: response?.displayName ?? '',
-        values,
-        isLoading: getIsLoading(),
-        canShowMoreValues,
-        canShowLessValues: canShowLessValues(getRequest()),
-        hasActiveValues,
-      };
+      return getCoreFacetState(getRequest(), getResponse(), getIsLoading());
     },
   };
 }
@@ -318,4 +304,25 @@ const canShowLessValues = (request: AnyFacetRequest | undefined) => {
     (initialNumberOfValues ?? 0) < (request.numberOfValues ?? 0) &&
     hasIdleValues
   );
+};
+
+export const getCoreFacetState = <T extends AnyFacetValueResponse>(
+  request: AnyFacetRequest | undefined,
+  response: AnyFacetResponse | undefined,
+  isLoading: boolean
+): CoreCommerceFacetState<T> => {
+  return {
+    canShowLessValues: canShowLessValues(request),
+    canShowMoreValues: response?.moreValuesAvailable ?? false,
+    displayName: response?.displayName ?? '',
+    facetId: response?.facetId ?? '',
+    field: response?.field ?? '',
+    hasActiveValues:
+      !response || response.type === 'hierarchical'
+        ? false
+        : response.values.some((v) => v.state !== 'idle'),
+    isLoading,
+    type: response?.type ?? 'regular',
+    values: response?.values ? (response.values as T[]) : [],
+  };
 };

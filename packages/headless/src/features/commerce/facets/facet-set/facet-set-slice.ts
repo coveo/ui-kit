@@ -40,7 +40,10 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions';
-import {executeCommerceFieldSuggest} from '../facet-search-set/commerce-facet-search-actions';
+import {
+  executeCommerceFieldSuggest,
+  getFacetIdWithCommerceFieldSuggestionNamespace,
+} from '../facet-search-set/commerce-facet-search-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -81,7 +84,10 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, handleQueryFulfilled)
       .addCase(executeSearch.fulfilled, handleQueryFulfilled)
       .addCase(executeCommerceFieldSuggest.fulfilled, (state, action) =>
-        handleFieldSuggestionsFulfilled(state, action.payload.facetId)
+        handleFieldSuggestionsFulfilled(
+          state,
+          getFacetIdWithCommerceFieldSuggestionNamespace(action.payload.facetId)
+        )
       )
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
         if (!action.payload.fieldSuggestionsFacets) {
@@ -89,7 +95,10 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         for (const {facetId} of action.payload.fieldSuggestionsFacets) {
-          handleFieldSuggestionsFulfilled(state, facetId);
+          handleFieldSuggestionsFulfilled(
+            state,
+            getFacetIdWithCommerceFieldSuggestionNamespace(facetId)
+          );
         }
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
@@ -485,6 +494,7 @@ function handleFieldSuggestionsFulfilled(
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
     facetRequest.initialNumberOfValues = 10;
+    facetRequest.values = [];
   }
 }
 

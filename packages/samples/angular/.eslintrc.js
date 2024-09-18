@@ -8,7 +8,4 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: [gtsPath],
   ignorePatterns: ['**/*.js', 'dist'],
-  rules: {
-    'node/no-unpublished-import': 'off',
-  },
 };

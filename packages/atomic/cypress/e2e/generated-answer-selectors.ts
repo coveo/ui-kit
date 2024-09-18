@@ -1,4 +1,4 @@
-import {GeneratedAnswerFeedbackV2} from '@coveo/headless';
+import {GeneratedAnswerFeedback} from '@coveo/headless';
 
 export const generatedAnswerComponent = 'atomic-generated-answer';
 export const feedbackModal = 'atomic-generated-answer-feedback-modal';
@@ -20,8 +20,6 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.shadow().find('[part="citations-label"]'),
   citationTitle: () =>
     GeneratedAnswerSelectors.citation().find('.citation-title'),
-  citationIndex: () =>
-    GeneratedAnswerSelectors.citation().find('[part="citation-index"]'),
   citationCard: () =>
     GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
@@ -29,11 +27,6 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
   retryButton: () => GeneratedAnswerSelectors.retryContainer().find('button'),
   toggle: () => GeneratedAnswerSelectors.shadow().find('[part="toggle"]'),
-  rephraseButton: (answerStyle: string) =>
-    GeneratedAnswerSelectors.shadow()
-      .find('[part="rephrase-button"]')
-      .contains(answerStyle)
-      .parent(),
   copyButton: () =>
     GeneratedAnswerSelectors.shadow().find('[part="copy-button"]'),
   disclaimer: () =>
@@ -59,7 +52,7 @@ export const feedbackModalSelectors = {
     feedbackModalSelectors.atomicModal().find('[part="modal-footer"]'),
   other: () => feedbackModalSelectors.atomicModal().find('.other'),
   feedbackOption: (
-    feedback: keyof GeneratedAnswerFeedbackV2,
+    feedback: keyof GeneratedAnswerFeedback,
     optionText: 'No' | 'Yes' | 'Not sure'
   ) =>
     feedbackModalSelectors

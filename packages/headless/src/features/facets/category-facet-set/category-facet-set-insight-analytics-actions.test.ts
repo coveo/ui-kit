@@ -2,6 +2,7 @@ import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockInsightEngine} from '../../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
+import {getConfigurationInitialState} from '../../configuration/configuration-state';
 import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions';
 
 const mockLogBreadcrumbFacet = jest.fn();
@@ -18,16 +19,18 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleFacetId = 'exampleFacetId';
-const exampleField = 'exampleField';
-const examplePath = ['one', 'two'];
+describe('category facet set insight analytics actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleFacetId = 'exampleFacetId';
+  const exampleField = 'exampleField';
+  const examplePath = ['one', 'two'];
 
-describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         categoryFacetSet: {
@@ -47,6 +50,7 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
 
@@ -68,7 +72,7 @@ describe('logBreadcrumbFacet', () => {
       categoryFacetTitle: `${exampleField}_${exampleFacetId}`,
     };
 
-    expect(mockLogBreadcrumbFacet).toBeCalledTimes(1);
+    expect(mockLogBreadcrumbFacet).toHaveBeenCalledTimes(1);
     expect(mockLogBreadcrumbFacet.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );

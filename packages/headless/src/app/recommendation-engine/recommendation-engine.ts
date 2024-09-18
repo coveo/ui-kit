@@ -91,9 +91,10 @@ export function buildRecommendationEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {pipeline, searchHub, timezone, locale} = options.configuration;
+  const {pipeline, searchHub, timezone, locale, proxyBaseUrl} =
+    options.configuration;
 
-  engine.dispatch(updateSearchConfiguration({timezone, locale}));
+  engine.dispatch(updateSearchConfiguration({timezone, locale, proxyBaseUrl}));
 
   if (!isNullOrUndefined(pipeline)) {
     engine.dispatch(setPipeline(pipeline));

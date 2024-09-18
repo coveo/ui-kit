@@ -36,6 +36,7 @@
                 aria-haspopup="listbox"
                 style="white-space: nowrap"
                 data-cy="search-box-textarea"
+                data-value={inputValue}
               >
               </textarea>
 
@@ -45,6 +46,7 @@
                 >
                   <lightning-button-icon
                     onclick={clearInput}
+                    onmousedown={preventBlur}
                     icon-name="utility:close"
                     variant="bare"
                     class="slds-grid searchbox__clear-button"
@@ -79,7 +81,7 @@
           </div>
           <template if:true={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
-              onselection={handleSelection}
+              onquantic__selection={handleSelection}
               suggestions={suggestions}
               query={inputValue}
               recent-queries={recentQueries}

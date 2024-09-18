@@ -78,7 +78,7 @@ describe('Sort Dropdown Component', () => {
   it('should be invisible when there is no result', () => {
     cy.get(searchbox)
       .shadow()
-      .find('[part="input"]')
+      .find('[part="textarea"]')
       .type('lskdfjghsjdgfjsdgfhkjsdhfgkjsdgfksjdhgfkjsdgkjgdsfjh');
     cy.get(searchbox).shadow().find('[part="submit-button"]').click();
     cy.get(sortDropdownComponent).should('not.be.visible');

@@ -1,3 +1,20 @@
+## 1.0.0 (2024-09-18)
+
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(headless, atomic, quantic)!: remove deprecated functions/properties (#4350) ([8de5406](https://github.com/coveo/ui-kit/commits/8de5406)), closes [#4350](https://github.com/coveo/ui-kit/issues/4350)
+- feat!: remove the organizationEndpoints configuration option (#4339) ([d3e1041](https://github.com/coveo/ui-kit/commits/d3e1041)), closes [#4339](https://github.com/coveo/ui-kit/issues/4339)
+- chore: update tsconfigs to match node version (#4402) ([e5bf6b8](https://github.com/coveo/ui-kit/commits/e5bf6b8)), closes [#4402](https://github.com/coveo/ui-kit/issues/4402)
+
+### BREAKING CHANGE
+
+- remove deprecated functions/properties (#4350)
+- remove the organizationEndpoints configuration option (#4339)
+- update node engine definition in all exported packages (#4330)
+
+## 0.6.3 (2024-08-07)
+
+## 0.6.2 (2024-07-31)
+
 # 0.6.0 (2024-07-17)
 
 ### Bug Fixes

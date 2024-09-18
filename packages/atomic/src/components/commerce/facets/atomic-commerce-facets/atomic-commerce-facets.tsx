@@ -133,9 +133,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
                 ></atomic-commerce-category-facet>
               );
             default: {
-              this.bindings.engine.logger.warn(
-                `Unexpected facet type ${facet.state.type}.`
-              );
+              this.bindings.engine.logger.warn('Unexpected facet type.');
               return;
             }
           }

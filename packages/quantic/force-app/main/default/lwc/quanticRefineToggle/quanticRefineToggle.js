@@ -106,7 +106,7 @@ export default class QuanticRefineToggle extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.addEventListener('renderfacet', this.handleRenderFacetEvent);
+    this.addEventListener('quantic__renderfacet', this.handleRenderFacetEvent);
   }
 
   /**
@@ -165,7 +165,10 @@ export default class QuanticRefineToggle extends LightningElement {
     this.unsubscribeQuerySummary?.();
     this.unsubscribeBreadcrumbManager?.();
     this.unsubscribeSearchStatus?.();
-    this.removeEventListener('renderfacet', this.handleRenderFacetEvent);
+    this.removeEventListener(
+      'quantic__renderfacet',
+      this.handleRenderFacetEvent
+    );
   }
 
   get isContentEmpty() {

@@ -1,6 +1,6 @@
 import {
   GeneratedAnswer,
-  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedback,
   GeneratedAnswerFeedbackOption,
 } from '@coveo/headless';
 import {
@@ -55,7 +55,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   @Prop({reflect: true, mutable: true}) helpful = false;
 
   @State() public error!: Error;
-  @State() private currentAnswer: Partial<GeneratedAnswerFeedbackV2> =
+  @State() private currentAnswer: Partial<GeneratedAnswerFeedback> =
     this.getInitialAnswerState();
   @State() feedbackSubmitted: boolean = false;
   @State() answerEvaluationRequired: boolean = false;
@@ -78,7 +78,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private static options: {
     localeKey: string;
-    correspondingAnswer: keyof GeneratedAnswerFeedbackV2;
+    correspondingAnswer: keyof GeneratedAnswerFeedback;
   }[] = [
     {
       localeKey: 'feedback-correct-topic',
@@ -98,7 +98,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     },
   ];
 
-  private getInitialAnswerState(): Partial<GeneratedAnswerFeedbackV2> {
+  private getInitialAnswerState(): Partial<GeneratedAnswerFeedback> {
     return {
       documented: undefined,
       correctTopic: undefined,
@@ -132,7 +132,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private setCurrentAnswer(
-    key: keyof GeneratedAnswerFeedbackV2,
+    key: keyof GeneratedAnswerFeedback,
     value: GeneratedAnswerFeedbackOption | string
   ) {
     this.currentAnswer = {
@@ -142,8 +142,8 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   public sendFeedback() {
-    const feedback: GeneratedAnswerFeedbackV2 = {
-      ...(this.currentAnswer as GeneratedAnswerFeedbackV2),
+    const feedback: GeneratedAnswerFeedback = {
+      ...(this.currentAnswer as GeneratedAnswerFeedback),
       helpful: this.helpful,
     };
     this.generatedAnswer.sendFeedback(feedback);
@@ -172,11 +172,11 @@ export class AtomicGeneratedAnswerFeedbackModal
       <div
         slot="header"
         part="modal-header"
-        class="w-full flex justify-between items-center"
+        class="flex w-full items-center justify-between"
       >
         <h1>
           <span>{this.bindings.i18n.t('feedback-modal-title')}</span>
-          <span class="ml-0.5 hide">
+          <span class="hide ml-0.5">
             {this.bindings.i18n.t('additional-feedback')}
           </span>
         </h1>
@@ -194,7 +194,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderFeedbackOption(
     option: GeneratedAnswerFeedbackOption,
-    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
+    correspondingAnswer: keyof GeneratedAnswerFeedback
   ) {
     const buttonClasses = [
       'min-w-20',
@@ -229,7 +229,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderAnswerEvaluation(
     label: string,
-    correspondingAnswer: keyof GeneratedAnswerFeedbackV2
+    correspondingAnswer: keyof GeneratedAnswerFeedback
   ) {
     const labelClasses = ['text-error-red', 'text-sm', 'hidden'];
     const isRequired =
@@ -263,7 +263,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           ({localeKey, correspondingAnswer}) => (
             <FieldsetGroup label={this.bindings.i18n.t(localeKey)}>
               <div
-                class={`answer-evaluation flex items-center justify-between mt-3 ${String(correspondingAnswer)}`}
+                class={`answer-evaluation mt-3 flex items-center justify-between ${String(correspondingAnswer)}`}
                 key={String(correspondingAnswer)}
               >
                 {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
@@ -293,7 +293,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           type="text"
           ref={(linkInputRef) => (this.linkInputRef = linkInputRef)}
           placeholder="https://URL"
-          class="input-primary mt-4 w-full h-9 rounded-md px-4 placeholder-neutral-dark"
+          class="input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4"
           onChange={(e) =>
             this.setCurrentAnswer(
               'documentUrl',
@@ -314,7 +314,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         <textarea
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="mt-4 px-4 py-2 w-full placeholder-neutral-dark leading-5 border border-neutral resize-none rounded-md hover:border-primary-light focus-visible:border-primary focus:outline-none focus-visible:ring-2 "
+          class="placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-none focus-visible:ring-2"
           rows={4}
           placeholder={this.bindings.i18n.t('add-notes')}
           onChange={(e) =>
@@ -346,7 +346,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderSuccessMessage() {
     return (
-      <div slot="body" class="flex flex-col items-center gap-4 my-4">
+      <div slot="body" class="my-4 flex flex-col items-center gap-4">
         <atomic-icon icon={Success} class="w-48" />
         <p class="text-base">
           {this.bindings.i18n.t('generated-answer-feedback-success')}
@@ -370,7 +370,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     return (
       <div slot="footer" part="modal-footer">
         <div class="flex items-center justify-between">
-          <div class="text-base required-label">
+          <div class="required-label text-base">
             <span class="text-error mr-0.5">*</span>
             {this.bindings.i18n.t('required-fields')}
           </div>
@@ -408,7 +408,7 @@ export class AtomicGeneratedAnswerFeedbackModal
             part="cancel-button"
             style="primary"
             onClick={() => this.close()}
-            class="flex justify-center text-sm leading-4 p-2"
+            class="flex justify-center p-2 text-sm leading-4"
             ariaLabel={this.bindings.i18n.t('modal-done')}
           >
             {this.bindings.i18n.t('modal-done')}

@@ -1,46 +1,31 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {LinkWithItemAnalytics} from '../item-link/item-link';
-import {ItemTarget} from '../layout/display-options';
 
 export interface DisplayGridProps {
+  selectorForItem: string;
   item: {clickUri: string; title: string};
   setRef: (element?: HTMLElement) => void;
   select: () => void;
   beginDelayedSelect: () => void;
   cancelPendingSelect: () => void;
-  gridTarget?: ItemTarget;
 }
 
 export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
-  {item, setRef, select, gridTarget, beginDelayedSelect, cancelPendingSelect},
+  {setRef, selectorForItem},
   children
 ) => {
+  let ref: HTMLElement | undefined;
   return (
     <div
       part="result-list-grid-clickable-container outline"
-      ref={(element) => setRef(element)}
+      ref={(element) => {
+        ref = element;
+        setRef(element);
+      }}
       onClick={(event) => {
         event.preventDefault();
-        select();
-        window.open(
-          item.clickUri,
-          event.ctrlKey || event.metaKey ? '_blank' : gridTarget,
-          'noopener'
-        );
+        (ref?.querySelector(selectorForItem) as HTMLElement)?.click();
       }}
     >
-      <LinkWithItemAnalytics
-        part="result-list-grid-clickable"
-        onSelect={() => select()}
-        onBeginDelayedSelect={() => beginDelayedSelect()}
-        onCancelPendingSelect={() => cancelPendingSelect()}
-        href={item.clickUri}
-        title={item.title}
-        target={gridTarget}
-        rel="noopener"
-      >
-        {item.title}
-      </LinkWithItemAnalytics>
       {...children}
     </div>
   );

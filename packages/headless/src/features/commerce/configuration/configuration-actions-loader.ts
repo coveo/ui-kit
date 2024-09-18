@@ -4,10 +4,12 @@ import {configurationReducer as configuration} from '../../configuration/configu
 import {
   UpdateAnalyticsConfigurationPayload,
   UpdateBasicConfigurationPayload,
+  UpdateProxyBaseUrlPayload,
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
+  updateProxyBaseUrl,
 } from './configuration-actions';
 
 export type {
@@ -52,6 +54,16 @@ export interface ConfigurationActionCreators {
   updateBasicConfiguration(
     payload: UpdateBasicConfigurationPayload
   ): PayloadAction<UpdateBasicConfigurationPayload>;
+
+  /**
+   * Updates the commerce configuration.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateProxyBaseUrl(
+    payload: UpdateProxyBaseUrlPayload
+  ): PayloadAction<UpdateProxyBaseUrlPayload>;
 }
 
 /**
@@ -65,9 +77,10 @@ export function loadConfigurationActions(
 ): ConfigurationActionCreators {
   engine.addReducers({configuration});
   return {
-    updateBasicConfiguration,
-    updateAnalyticsConfiguration,
     disableAnalytics,
     enableAnalytics,
+    updateAnalyticsConfiguration,
+    updateBasicConfiguration,
+    updateProxyBaseUrl,
   };
 }

@@ -43,7 +43,7 @@ export type CategoryFacetSearch = ReturnType<
 export function buildCoreCategoryFacetSearch(
   engine:
     | CoreEngine<CategoryFacetSearchSection & ConfigurationSection>
-    | CoreEngineNext<CategoryFacetSearchSection & ConfigurationSection>,
+    | CoreEngineNext<CategoryFacetSearchSection>,
   props: CategoryFacetSearchProps
 ) {
   const {dispatch} = engine;

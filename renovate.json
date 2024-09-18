@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "extends": [
     ":semanticPrefixFixDepsChoreOthers",
     "helpers:pinGitHubActionDigests",
@@ -41,7 +41,7 @@
       "rangeStrategy": "replace"
     },
     {
-      "matchPackagePatterns": ["^@storybook/*"],
+      "matchPackagePatterns": ["^@storybook/*", "^storybook$"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
       "rangeStrategy": "replace"
@@ -124,17 +124,6 @@
       "rangeStrategy": "replace",
       "allowedVersions": "5.1.x",
       "description": "@angular/compiler-cli choke with TS > 5.1"
-    },
-    {
-      "matchFileNames": [
-        "packages/headless/package.json",
-        "packages/headless-react/package.json"
-      ],
-      "matchPackagePatterns": ["^undici$"],
-      "groupSlug": "undici",
-      "rangeStrategy": "replace",
-      "allowedVersions": "5.x",
-      "description": "undici 6.x drops support for Node 16"
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],

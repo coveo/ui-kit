@@ -1,3 +1,14 @@
+## 1.0.0 (2024-09-18)
+
+- chore: update tsconfigs to match node version (#4402) ([e5bf6b8](https://github.com/coveo/ui-kit/commits/e5bf6b8)), closes [#4402](https://github.com/coveo/ui-kit/issues/4402)
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+
+### BREAKING CHANGE
+
+- update node engine definition in all exported packages (#4330)
+
+## 0.46.1 (2024-07-31)
+
 # 0.46.0 (2024-07-24)
 
 ### Features

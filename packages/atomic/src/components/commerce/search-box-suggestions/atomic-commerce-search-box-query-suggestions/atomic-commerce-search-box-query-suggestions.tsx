@@ -21,7 +21,7 @@ import {
 
 /**
  * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-search-box-query-suggestions',
