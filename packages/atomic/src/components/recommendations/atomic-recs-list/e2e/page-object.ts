@@ -27,4 +27,22 @@ export class AtomicCommerceRecsListPageObject extends BasePageObject<'atomic-rec
   get prevButton() {
     return this.page.getByLabel('Previous');
   }
+
+  async noRecommendations() {
+    await this.page.route(
+      '**/search/v2?organizationId=searchuisamples',
+      async (route) => {
+        const response = await route.fetch();
+        const body = await response.json();
+        console.log(body);
+        body.results = [];
+        await route.fulfill({
+          response,
+          json: body,
+        });
+      }
+    );
+
+    return this;
+  }
 }

@@ -84,3 +84,13 @@ test.describe('with a carousel', () => {
     );
   });
 });
+
+test('with no recommendations returned by the API, should render placeholders', async ({
+  recsList,
+}) => {
+  await recsList.noRecommendations();
+  await recsList.load({story: 'default'});
+  await recsList.hydrated.waitFor();
+
+  await expect(recsList.placeholder.first()).toBeVisible();
+});
