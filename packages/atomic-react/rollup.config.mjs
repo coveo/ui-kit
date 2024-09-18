@@ -1,11 +1,70 @@
+import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 // import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
+import {readFileSync} from 'fs';
+import {join, dirname} from 'path';
 import {defineConfig} from 'rollup';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
+let headlessVersion;
+
+if (isCDN) {
+  console.log('Building for CDN');
+
+  const headlessPackageJsonPath = join(
+    __dirname,
+    '../../packages/headless/package.json'
+  );
+
+  try {
+    const headlessPackageJson = JSON.parse(
+      readFileSync(headlessPackageJsonPath, 'utf8')
+    );
+    headlessVersion = 'v' + headlessPackageJson.version;
+    console.log('Using headless version from package.json:', headlessVersion);
+  } catch (error) {
+    console.error('Error reading headless package.json:', error);
+    throw new Error('Error reading headless package.json');
+  }
+}
+
+function generateReplaceValues() {
+  return Object.entries(packageMappings).reduce((acc, [find, paths]) => {
+    acc[find] = paths.cdn;
+    return acc;
+  }, {});
+}
+
+const packageMappings = {
+  '@coveo/headless/commerce': {
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/commerce/headless.esm.js`,
+  },
+  '@coveo/headless/insight': {
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/insight/headless.esm.js`,
+  },
+  '@coveo/headless/product-recommendation': {
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
+  },
+  '@coveo/headless/recommendation': {
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/recommendation/headless.esm.js`,
+  },
+  '@coveo/headless/case-assist': {
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/case-assist/headless.esm.js`,
+  },
+  '@coveo/headless': {
+    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
+  },
+};
 
 // /** @type {import("rollup").GlobalsOption} */
 // const globals = {
@@ -61,6 +120,10 @@ const outputCJS = ({useCase}) => ({
 // });
 
 const plugins = [
+  isCDN &&
+    replaceWithASTPlugin({
+      replacements: generateReplaceValues(),
+    }),
   json(),
   nodePolyfills(),
   typescript({tsconfig: 'tsconfig.iife.json'}),
