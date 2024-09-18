@@ -16,6 +16,39 @@
   },
   "ordered_phases": [
     {
+      "id": "deploy-bueno-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_PATCH_VERSION]",
+        "source": "packages/bueno/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-bueno-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_MINOR_VERSION]",
+        "source": "packages/bueno/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-bueno-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_MAJOR_VERSION]",
+        "source": "packages/bueno/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-headless-patch-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
@@ -76,39 +109,6 @@
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-atomic-headless-patch-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/headless",
-        "source": "packages/headless/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-atomic-headless-minor-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/headless",
-        "source": "packages/headless/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-atomic-headless-major-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/headless",
-        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
