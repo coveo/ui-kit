@@ -160,7 +160,7 @@ export function buildSearchBox(
         : false;
 
       return {
-        querySuggestionId: id,
+        searchBoxId: id,
         value: getValue(),
         suggestions,
         isLoading: getState().commerceSearch.isLoading,

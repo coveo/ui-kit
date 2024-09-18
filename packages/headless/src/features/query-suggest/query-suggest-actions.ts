@@ -42,7 +42,7 @@ export interface QuerySuggestionID {
 
 export interface RegisterQuerySuggestActionCreatorPayload {
   /**
-   * A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 
@@ -70,7 +70,7 @@ export const unregisterQuerySuggest = createAction(
 
 export interface SelectQuerySuggestionActionCreatorPayload {
   /**
-   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 
@@ -91,7 +91,7 @@ export const selectQuerySuggestion = createAction(
 
 export interface ClearQuerySuggestActionCreatorPayload {
   /**
-   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 }
@@ -104,7 +104,7 @@ export const clearQuerySuggest = createAction(
 
 export interface FetchQuerySuggestionsActionCreatorPayload {
   /**
-   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 }

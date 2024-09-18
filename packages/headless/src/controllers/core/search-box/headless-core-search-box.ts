@@ -139,9 +139,9 @@ export interface SearchBoxState {
   isLoadingSuggestions: boolean;
 
   /**
-   * The query suggestions id.
+   * The search box ID.
    */
-  querySuggestionId: string;
+  searchBoxId: string;
 }
 
 export interface Suggestion {
@@ -311,7 +311,7 @@ export function buildCoreSearchBox(
         : false;
 
       return {
-        querySuggestionId: id,
+        searchBoxId: id,
         value: getValue(),
         suggestions,
         isLoading: state.search.isLoading,
