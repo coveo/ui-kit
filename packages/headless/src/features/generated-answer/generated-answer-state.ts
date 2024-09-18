@@ -88,7 +88,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     liked: false,
     disliked: false,
     responseFormat: {
-      answerStyle: 'default',
       contentFormat: ['text/plain'],
     },
     feedbackModalOpen: false,

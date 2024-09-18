@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "lib": ["ES2023"],
+    "module": "node16",
+    "target": "ES2022",
     "declaration": false,
-    "module": "ESNext",
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

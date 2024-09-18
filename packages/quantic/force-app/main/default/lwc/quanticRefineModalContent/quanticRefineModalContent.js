@@ -92,7 +92,7 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.addEventListener('renderfacet', this.handleRenderFacetEvent);
+    this.addEventListener('quantic__renderfacet', this.handleRenderFacetEvent);
   }
 
   renderedCallback() {
@@ -102,7 +102,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeSearchStatus?.();
     this.unsubscribeBreadcrumbManager?.();
-    this.removeEventListener('renderfacet', this.handleRenderFacetEvent);
+    this.removeEventListener(
+      'quantic__renderfacet',
+      this.handleRenderFacetEvent
+    );
   }
 
   /**

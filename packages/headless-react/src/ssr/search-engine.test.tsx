@@ -1,3 +1,4 @@
+import {NavigatorContextProvider} from '@coveo/headless/dist/definitions/app/navigatorContextProvider.js';
 import {
   getSampleSearchEngineConfiguration,
   InferStaticState,
@@ -12,7 +13,14 @@ import {defineSearchEngine} from './search-engine.js';
 
 describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
-  const mockedNavigatorContextProvider = jest.fn();
+  const mockedNavigatorContextProvider: NavigatorContextProvider = () => {
+    return {
+      clientId: '123',
+      location: 'https://www.example.com',
+      referrer: 'https://www.google.com',
+      userAgent: 'Mozilla/5.0',
+    };
+  };
   const sampleConfig = {
     ...getSampleSearchEngineConfiguration(),
     analytics: {enabled: false}, // TODO: KIT-2585 Remove after analytics SSR support is added
@@ -111,7 +119,7 @@ describe('Headless react SSR utils', () => {
       renderFunction: CallableFunction,
       expectedErrMsg: string
     ) {
-      let err = undefined;
+      let err: Error | undefined = undefined;
       // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = jest
         .spyOn(console, 'error')
@@ -119,7 +127,7 @@ describe('Headless react SSR utils', () => {
       try {
         renderFunction();
       } catch (e) {
-        err = e as Error;
+        err = e! as Error;
       } finally {
         consoleErrorStub.mockReset();
       }

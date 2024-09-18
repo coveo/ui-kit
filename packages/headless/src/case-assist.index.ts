@@ -1,6 +1,3 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-
-polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
@@ -72,13 +69,17 @@ export type {
   CaseAssistQuickviewProps,
 } from './controllers/quickview/case-assist-headless-quickview';
 export {buildCaseAssistQuickview as buildQuickview} from './controllers/quickview/case-assist-headless-quickview';
-export {buildCaseAssistQuickview} from './controllers/quickview/case-assist-headless-quickview';
 
 export type {Result} from './api/search/search/result';
 export type {Raw} from './api/search/search/raw';
 export type {HighlightKeyword} from './utils/highlight';
 
 export type {DocumentSuggestionResponse} from './api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
 
 export type {
   DocumentSuggestionList,
@@ -98,7 +99,6 @@ export type {
   CaseAssistInteractiveResultOptions,
   CaseAssistInteractiveResultProps,
 } from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
-export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
 
 // Features
 export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers';

@@ -463,10 +463,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
-   * Fires the 'renderfacet' custom event.
+   * Fires the 'quantic__renderfacet' custom event.
    */
   sendFacetRenderEvent() {
-    const renderFacetEvent = new CustomEvent('renderfacet', {
+    const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
       detail: {
         id: this.facetId ?? this.field,
         shouldRenderFacet: this.showFacet,

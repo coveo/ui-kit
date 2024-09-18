@@ -4,13 +4,11 @@
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": ["dom", "es2020"],
-    "moduleResolution": "node",
+    "lib": ["DOM", "ES2023"],
     "resolveJsonModule": true,
-    "module": "esnext",
-    // create-react-app compatibility
-    // https://github.com/facebook/create-react-app/issues/9468#issuecomment-692963920
-    "target": "es2019",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "target": "ES2021",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",

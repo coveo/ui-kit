@@ -1,10 +1,14 @@
 import {render} from '@testing-library/react';
+import {vi, MockInstance} from 'vitest';
 import App from './App';
 
-let errorSpy: jest.SpyInstance;
+let errorSpy: MockInstance<{
+  (...data: unknown[]): void;
+  (message?: unknown, ...optionalParams: unknown[]): void;
+}>;
 
 beforeEach(() => {
-  errorSpy = jest.spyOn(global.console, 'error');
+  errorSpy = vi.spyOn(global.console, 'error');
 });
 
 test('renders without error', async () => {

@@ -232,7 +232,7 @@ export const splitActionsIntoTimelineSessions = (
   };
 
   actions.forEach((action) => {
-    if (isActionWithinSessionThreshold(action, currentSession.end)) {
+    if (isActionWithinSessionThreshold(action, currentSession.start)) {
       currentSession.actions.push(action);
       currentSession.start = action.timestamp;
       return;

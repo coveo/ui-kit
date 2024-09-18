@@ -1,5 +1,4 @@
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
 // Main App
@@ -102,6 +101,12 @@ export {defineProductList} from './controllers/commerce/product-listing/headless
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr';
+
+export type {
+  RecommendationsState,
+  Recommendations,
+} from './controllers/commerce/recommendations/headless-recommendations.ssr';
+export {defineRecommendations} from './controllers/commerce/recommendations/headless-recommendations.ssr';
 
 export type {
   Cart,
@@ -273,11 +278,6 @@ export type {
 } from './features/commerce/product-templates/product-templates-manager';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers';
 
-export {
-  platformUrl,
-  analyticsUrl,
-  getOrganizationEndpoints,
-} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
 
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
@@ -292,5 +292,12 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
+
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
+export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client';
 
 export * from './utils/query-expression/query-expression';

@@ -1,0 +1,31 @@
+<template>
+  <c-quantic-result-template is-any-preview-open={isAnyPreviewOpen} result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}>
+    <div slot="label" class="slds-grid slds-grid_vertical-align-center">
+      <div class="slds-m-right_xx-small">
+        <c-quantic-result-label result={result}></c-quantic-result-label>
+      </div>
+      <div style="font-size: 10px; color: grey">[{result.raw.sfcasenumber}]</div>
+    </div>
+    <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
+      <div class="slds-m-right_xx-small">
+        <c-quantic-result-tag variant="recommended" result={result}></c-quantic-result-tag>
+      </div>
+      <c-quantic-result-tag variant="featured" result={result}></c-quantic-result-tag>
+    </div>
+    <template if:true={resultHasPreview}>
+      <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
+    </template>
+    <p slot="date" class="slds-size_xx-small">
+      <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+    </p>
+    <div slot="title" class="slds-truncate">
+      <span style="color: #157E19">{result.raw.sfstatus} |</span>
+      <span class="slds-m-left_xx-small">
+        <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+      </span>
+    </div>
+    <div slot="excerpt">
+      <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
+    </div>
+  </c-quantic-result-template>
+</template>

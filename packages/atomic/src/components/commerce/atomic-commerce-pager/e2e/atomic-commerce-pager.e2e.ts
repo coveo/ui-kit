@@ -145,6 +145,25 @@ test.describe('Default', () => {
       );
     });
   });
+
+  test.describe('with 2 pages of products', () => {
+    test('it should disable next button when reaching last page', async ({
+      page,
+      pager,
+    }) => {
+      await page.route(/commerce\/v2\/search/, async (route) => {
+        const response = await route.fetch();
+        const body = await response.json();
+        body['pagination']['totalPages'] = 2;
+        body['pagination']['page'] = 1;
+        await route.fulfill({
+          response,
+          body: JSON.stringify(body),
+        });
+      });
+      await expect(pager.nextButton).toBeDisabled();
+    });
+  });
 });
 
 test.describe('with a valid page in the hash', () => {

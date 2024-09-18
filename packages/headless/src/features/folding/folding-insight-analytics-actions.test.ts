@@ -7,6 +7,7 @@ import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockRaw} from '../../test/mock-raw';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   logShowMoreFoldedResults,
   logShowLessFoldedResults,
@@ -29,63 +30,65 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const examplePermanentId = 'example permanent id';
-
-const expectedDocumentInfo = {
-  queryPipeline: '',
-  documentUri: 'example documentUri',
-  documentUriHash: 'example documentUriHash',
-  collectionName: 'example collectionName',
-  sourceName: 'example sourceName',
-  documentPosition: 1,
-  documentTitle: 'example documentTitle',
-  documentUrl: 'example documentUrl',
-  rankingModifier: 'example rankingModifier',
-  documentAuthor: 'unknown',
-};
-
-const resultParams = {
-  title: 'example documentTitle',
-  uri: 'example documentUri',
-  printableUri: 'printable-uri',
-  clickUri: 'example documentUrl',
-  uniqueId: 'unique-id',
-  excerpt: 'excerpt',
-  firstSentences: 'first-sentences',
-  flags: 'flags',
-  rankingModifier: 'example rankingModifier',
-  raw: buildMockRaw({
-    urihash: 'example documentUriHash',
-    source: 'example sourceName',
-    collection: 'example collectionName',
-    permanentid: examplePermanentId,
-  }),
-};
-const exampleResult = buildMockResult(resultParams);
-
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-
-const expectedCaseContext = {
-  caseContext: {
-    Case_Subject: exampleSubject,
-    Case_Description: exampleDescription,
-  },
-  caseId: exampleCaseId,
-  caseNumber: exampleCaseNumber,
-};
-
-const expectedDocumentIdentifier = {
-  contentIDKey: 'permanentid',
-  contentIDValue: examplePermanentId,
-};
-
-describe('the analytics related to the folding feature in the insight use case', () => {
+describe('folding insight analytics actions', () => {
   let engine: MockedInsightEngine;
 
+  const examplePermanentId = 'example permanent id';
+
+  const expectedDocumentInfo = {
+    queryPipeline: '',
+    documentUri: 'example documentUri',
+    documentUriHash: 'example documentUriHash',
+    collectionName: 'example collectionName',
+    sourceName: 'example sourceName',
+    documentPosition: 1,
+    documentTitle: 'example documentTitle',
+    documentUrl: 'example documentUrl',
+    rankingModifier: 'example rankingModifier',
+    documentAuthor: 'unknown',
+  };
+
+  const resultParams = {
+    title: 'example documentTitle',
+    uri: 'example documentUri',
+    printableUri: 'printable-uri',
+    clickUri: 'example documentUrl',
+    uniqueId: 'unique-id',
+    excerpt: 'excerpt',
+    firstSentences: 'first-sentences',
+    flags: 'flags',
+    rankingModifier: 'example rankingModifier',
+    raw: buildMockRaw({
+      urihash: 'example documentUriHash',
+      source: 'example sourceName',
+      collection: 'example collectionName',
+      permanentid: examplePermanentId,
+    }),
+  };
+  const exampleResult = buildMockResult(resultParams);
+
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+
+  const expectedCaseContext = {
+    caseContext: {
+      Case_Subject: exampleSubject,
+      Case_Description: exampleDescription,
+    },
+    caseId: exampleCaseId,
+    caseNumber: exampleCaseNumber,
+  };
+
+  const expectedDocumentIdentifier = {
+    contentIDKey: 'permanentid',
+    contentIDValue: examplePermanentId,
+  };
+
   beforeEach(() => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     engine = buildMockInsightEngine(
       buildMockInsightState({
         insightCaseContext: {
@@ -102,6 +105,7 @@ describe('the analytics related to the folding feature in the insight use case',
         search: buildMockSearchState({
           results: [exampleResult],
         }),
+        configuration,
       })
     );
   });

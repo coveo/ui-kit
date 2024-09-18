@@ -43,7 +43,6 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-  ItemTarget,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -108,14 +107,6 @@ export class AtomicCommerceProductList
   @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'small';
 
   /**
-   * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
-   * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_self`
-   * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
-   */
-  @Prop() gridCellLinkTarget: ItemTarget = '_self';
-
-  /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering products.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
@@ -145,23 +136,20 @@ export class AtomicCommerceProductList
       this.summary = this.search.summary();
     }
 
-    this.productTemplateProvider = new ProductTemplateProvider(
-      {
-        includeDefaultTemplate: true,
-        templateElements: Array.from(
-          this.host.querySelectorAll('atomic-product-template')
-        ),
-        getResultTemplateRegistered: () => this.resultTemplateRegistered,
-        getTemplateHasError: () => this.templateHasError,
-        setResultTemplateRegistered: (value: boolean) => {
-          this.resultTemplateRegistered = value;
-        },
-        setTemplateHasError: (value: boolean) => {
-          this.templateHasError = value;
-        },
+    this.productTemplateProvider = new ProductTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-product-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
       },
-      this.gridCellLinkTarget
-    );
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+    });
 
     this.productListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -263,7 +251,10 @@ export class AtomicCommerceProductList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
-      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
+      linkContent:
+        this.display === 'grid'
+          ? this.productTemplateProvider.getLinkTemplateContent(product)
+          : this.productTemplateProvider.getEmptyLinkTemplateContent(),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -277,6 +268,7 @@ export class AtomicCommerceProductList
       const {interactiveProduct} = propsForAtomicProduct;
       return (
         <DisplayGrid
+          selectorForItem="atomic-product"
           item={{
             ...product,
             clickUri: product.clickUri,

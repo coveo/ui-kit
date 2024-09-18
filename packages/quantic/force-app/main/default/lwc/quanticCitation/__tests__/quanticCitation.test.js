@@ -1,6 +1,5 @@
 import {
-  // @ts-ignore
-  getNavigateCalledWith, // @ts-ignore
+  getNavigateCalledWith,
   getGenerateUrlCalledWith,
 } from 'lightning/navigation';
 // @ts-ignore
@@ -155,7 +154,7 @@ describe('c-quantic-citation', () => {
     it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms debounce duration before hover + 1000ms minimum hover duration', async () => {
       const element = createTestComponent();
       await flushPromises();
-      setupEventDispatchTest('citationhover');
+      setupEventDispatchTest('quantic__citationhover');
 
       const citationLink = element.shadowRoot.querySelector(
         selectors.citationLink
@@ -179,7 +178,7 @@ describe('c-quantic-citation', () => {
     it('should not dispatch a citation hover event after hovering over the the citation for more than 1200ms', async () => {
       const element = createTestComponent();
       await flushPromises();
-      setupEventDispatchTest('citationhover');
+      setupEventDispatchTest('quantic__citationhover');
 
       const citationLink = element.shadowRoot.querySelector(
         selectors.citationLink

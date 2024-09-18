@@ -5,9 +5,8 @@ global with sharing class InsightController {
   /**
    * Get the configuration object (serialized) for the initialization of Coveo Headless through a class implementing `ITokenProvider`.
    * @return {String} A serialized object containing the following keys:
-   *                      - `platformUrl`: the endpoint to contact Coveo.
-   *                      - `accessToken`: an access token (see https://docs.coveo.com/en/123/apis/get-your-coveo-access-token).
-   *                      - `organizationId`: the ID of the organization to query (see https://docs.coveo.com/en/148/manage-an-organization/retrieve-the-organization-id).
+   *    - `accessToken`: an access token (see https://docs.coveo.com/en/123/apis/get-your-coveo-access-token).
+   *    - `organizationId`: the ID of the organization to query (see https://docs.coveo.com/en/148/manage-an-organization/retrieve-the-organization-id).
    */
   @AuraEnabled(cacheable=true)
   public static String getHeadlessConfiguration() {
