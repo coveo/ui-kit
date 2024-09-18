@@ -221,7 +221,7 @@ export default class QuanticSearchBox extends LightningElement {
       );
       this.engine.dispatch(
         this.actions.clearQuerySuggest({
-          id: this.searchBox.state.querySuggestionId,
+          id: this.state.querySuggestionId,
         })
       );
     } else {
