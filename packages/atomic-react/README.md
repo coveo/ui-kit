@@ -193,9 +193,11 @@ import {
   AtomicResultLink,
   AtomicSearchInterface,
   AtomicResultList,
+} from '@coveo/atomic-react';
+import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-} from '@coveo/atomic-react';
+} from '@coveo/headless';
 import {useMemo} from 'react';
 
 const MyStyledResultLink: React.FC<
@@ -242,12 +244,14 @@ The following is an example that makes the text of an `AtomicResultBadge` pink:
 
 ```tsx
 import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
   AtomicSearchInterface,
   AtomicResultList,
   AtomicResultBadge,
 } from '@coveo/atomic-react';
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from '@coveo/headless';
 import {useMemo} from 'react';
 
 const myStyles = `
