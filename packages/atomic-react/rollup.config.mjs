@@ -47,22 +47,22 @@ function generateReplaceValues() {
 
 const packageMappings = {
   '@coveo/headless/commerce': {
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/commerce/headless.esm.js`,
+    cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
   },
   '@coveo/headless/insight': {
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/insight/headless.esm.js`,
+    cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
   },
   '@coveo/headless/product-recommendation': {
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
+    cdn: `/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
   },
   '@coveo/headless/recommendation': {
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/recommendation/headless.esm.js`,
+    cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
   },
   '@coveo/headless/case-assist': {
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/case-assist/headless.esm.js`,
+    cdn: `/headless/${headlessVersion}/case-assist/headless.esm.js`,
   },
   '@coveo/headless': {
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
+    cdn: `/headless/${headlessVersion}/headless.esm.js`,
   },
 };
 
