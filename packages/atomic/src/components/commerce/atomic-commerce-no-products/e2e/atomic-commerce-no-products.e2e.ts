@@ -46,8 +46,8 @@ test.describe('when there are results', () => {
 });
 
 test.describe('when there are no products', () => {
-  test.beforeEach(async ({noProducts}) => {
-    await noProducts.noProducts();
+  test.beforeEach(async ({noProducts, searchBox}) => {
+    await searchBox.noProducts();
     await noProducts.load({story: 'default'});
     await expect(noProducts.hydrated).toBeVisible();
   });

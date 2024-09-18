@@ -46,8 +46,8 @@ test.describe('load more products with products returned by the API', () => {
 });
 
 test.describe('load more products when there are no products', () => {
-  test('should be hidden', async ({loadMore, page}) => {
-    await loadMore.noProducts();
+  test('should be hidden', async ({loadMore, searchBox, page}) => {
+    await searchBox.noProducts();
     await loadMore.load({story: 'in-page'});
     await page.waitForLoadState('networkidle');
     await expect(loadMore.button).not.toBeVisible();

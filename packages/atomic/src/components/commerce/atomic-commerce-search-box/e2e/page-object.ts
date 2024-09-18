@@ -70,6 +70,25 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-
     );
   }
 
+  async noProducts() {
+    await this.page.route('**/commerce/v2/search', async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body.products = [];
+      if (body.pagination) {
+        body.pagination.totalEntries = 0;
+        body.pagination.totalPages = 0;
+      }
+      body.facets = [];
+      await route.fulfill({
+        response,
+        json: body,
+      });
+    });
+
+    return this;
+  }
+
   private listSideAffix(listSide?: 'Left' | 'Right') {
     return listSide ? ` In ${listSide} list\\.` : '';
   }

@@ -25,8 +25,8 @@ test.describe('after searching for kayak', () => {
 });
 
 test.describe('when search yields no products', () => {
-  test.beforeEach(async ({querySummary, page}) => {
-    await querySummary.noProducts();
+  test.beforeEach(async ({querySummary, searchBox, page}) => {
+    await searchBox.noProducts();
     await querySummary.load({story: 'default '});
     await page.waitForLoadState('networkidle');
   });
