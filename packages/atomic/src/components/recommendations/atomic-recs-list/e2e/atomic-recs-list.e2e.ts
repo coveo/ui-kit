@@ -87,10 +87,12 @@ test.describe('with a carousel', () => {
 
 test('with no recommendations returned by the API, should render placeholders', async ({
   recsList,
+  page,
 }) => {
   await recsList.noRecommendations();
   await recsList.load({story: 'default'});
   await recsList.hydrated.waitFor();
 
+  await page.waitForLoadState('networkidle');
   await expect(recsList.placeholder.first()).toBeVisible();
 });

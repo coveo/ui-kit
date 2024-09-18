@@ -34,7 +34,6 @@ export class AtomicCommerceRecsListPageObject extends BasePageObject<'atomic-rec
       async (route) => {
         const response = await route.fetch();
         const body = await response.json();
-        console.log(body);
         body.results = [];
         await route.fulfill({
           response,
