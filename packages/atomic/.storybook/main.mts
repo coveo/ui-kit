@@ -4,7 +4,7 @@ import path from 'node:path';
 import {mergeConfig} from 'vite';
 import headlessJson from '../../../packages/headless/package.json';
 
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN' || true;
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.new.stories.@(js|jsx|ts|tsx|mdx)'],
@@ -24,7 +24,7 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       plugins: [
         nxViteTsPaths(),
-        configType === 'PRODUCTION' && externalizeDependencies(),
+        configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     }),
 };
