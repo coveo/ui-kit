@@ -10,7 +10,6 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
-import {GeneratedResponseFormat} from './generated-response-format';
 
 export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
 
@@ -30,24 +29,6 @@ export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
     client.makeRetryGeneratedAnswer()
   );
-
-//TODO: KIT-2859
-export const logRephraseGeneratedAnswer = (
-  responseFormat: GeneratedResponseFormat
-): LegacySearchAction =>
-  makeAnalyticsAction('analytics/generatedAnswer/rephrase', (client, state) => {
-    const {id: rgaID, answerAPIEnabled} =
-      generativeQuestionAnsweringIdSelector(state);
-    if (!rgaID) {
-      return null;
-    }
-    return client.makeRephraseGeneratedAnswer({
-      ...(answerAPIEnabled
-        ? {answerAPIStreamId: rgaID}
-        : {generativeQuestionAnsweringId: rgaID}),
-      rephraseFormat: responseFormat.answerStyle,
-    });
-  });
 
 export const logOpenGeneratedAnswerSource = (
   citationId: string
@@ -392,10 +373,6 @@ export const retryGeneratedAnswer = (): SearchAction => ({
   actionCause: SearchPageEvents.retryGeneratedAnswer,
 });
 
-export const rephraseGeneratedAnswer = (): SearchAction => ({
-  actionCause: SearchPageEvents.rephraseGeneratedAnswer,
-});
-
 export const generatedAnswerAnalyticsClient = {
   logCopyGeneratedAnswer,
   logGeneratedAnswerHideAnswers,
@@ -407,7 +384,6 @@ export const generatedAnswerAnalyticsClient = {
   logHoverCitation,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
-  logRephraseGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
 };

@@ -29,8 +29,10 @@ class TestProvider extends BaseAnalyticsProvider<StateNeededByBaseAnalyticsProvi
 }
 
 describe('base analytics provider', () => {
+  const configuration = getConfigurationInitialState();
+  configuration.analytics.analyticsMode = 'legacy';
   const baseState: StateNeededByBaseAnalyticsProvider = {
-    configuration: getConfigurationInitialState(),
+    configuration,
   };
 
   it('when analyticMode=next, #getBaseMetadata returns an object without coveoHeadlessVersion', () => {
