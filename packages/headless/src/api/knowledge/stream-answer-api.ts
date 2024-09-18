@@ -4,21 +4,23 @@ import {
 } from '@microsoft/fetch-event-source';
 import {createSelector} from '@reduxjs/toolkit';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors';
-import {
-  GeneratedAnswerStyle,
-  GeneratedContentFormat,
-} from '../../features/generated-answer/generated-response-format';
+import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format';
+import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants';
 import {selectPipeline} from '../../features/pipeline/select-pipeline';
 import {selectQuery} from '../../features/query/query-selectors';
 import {selectSearchHub} from '../../features/search-hub/search-hub-selectors';
 import {
+  initialSearchMappings,
+  mapFacetRequest,
+} from '../../features/search/search-mappings';
+import {SearchAppState} from '../../state/search-app-state';
+import {
   ConfigurationSection,
-  DebugSection,
   GeneratedAnswerSection,
-  QuerySection,
-  SearchSection,
 } from '../../state/state-sections';
+import {getFacets} from '../../utils/facet-utils';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload';
+import {getOrganizationEndpoint} from '../platform-client';
 import {SearchRequest} from '../search/search/search-request';
 import {answerSlice} from './answer-slice';
 
@@ -27,13 +29,11 @@ export type StateNeededByAnswerAPI = {
   pipeline: string;
   answer: ReturnType<typeof answerApi.reducer>;
 } & ConfigurationSection &
-  QuerySection &
-  SearchSection &
-  DebugSection &
+  Partial<SearchAppState> &
   GeneratedAnswerSection;
 
-interface GeneratedAnswerStream {
-  answerStyle?: GeneratedAnswerStyle;
+export interface GeneratedAnswerStream {
+  answerId?: string;
   contentFormat?: GeneratedContentFormat;
   answer?: string;
   citations?: GeneratedAnswerCitation[];
@@ -44,10 +44,7 @@ interface GeneratedAnswerStream {
 }
 
 interface StreamPayload
-  extends Pick<
-    GeneratedAnswerStream,
-    'answerStyle' | 'contentFormat' | 'citations'
-  > {
+  extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
@@ -61,10 +58,9 @@ type PayloadType =
 
 const handleHeaderMessage = (
   draft: GeneratedAnswerStream,
-  payload: Pick<GeneratedAnswerStream, 'answerStyle' | 'contentFormat'>
+  payload: Pick<GeneratedAnswerStream, 'contentFormat'>
 ) => {
-  const {answerStyle, contentFormat} = payload;
-  draft.answerStyle = answerStyle;
+  const {contentFormat} = payload;
   draft.contentFormat = contentFormat;
   draft.isStreaming = true;
   draft.isLoading = false;
@@ -133,7 +129,7 @@ const updateCacheWithEvent = (
 
   switch (message.payloadType) {
     case 'genqa.headerMessageType':
-      if (parsedPayload.answerStyle && parsedPayload.contentFormat) {
+      if (parsedPayload.contentFormat) {
         handleHeaderMessage(draft, parsedPayload);
       }
       break;
@@ -148,7 +144,7 @@ const updateCacheWithEvent = (
       }
       break;
     case 'genqa.endOfStreamType':
-      if (parsedPayload.answerGenerated) {
+      if (draft.answer?.length || parsedPayload.answerGenerated) {
         handleEndOfStream(draft, parsedPayload);
       }
       break;
@@ -161,7 +157,6 @@ export const answerApi = answerSlice.injectEndpoints({
     getAnswer: builder.query<GeneratedAnswerStream, Partial<SearchRequest>>({
       queryFn: () => ({
         data: {
-          answerStyle: undefined,
           contentFormat: undefined,
           answer: undefined,
           citations: undefined,
@@ -183,9 +178,13 @@ export const answerApi = answerSlice.injectEndpoints({
          */
         const {configuration, generatedAnswer} =
           getState() as unknown as StateNeededByAnswerAPI;
-        const {platformUrl, organizationId, accessToken} = configuration;
+        const {organizationId, environment, accessToken} = configuration;
+        const platformEndpoint = getOrganizationEndpoint(
+          organizationId,
+          environment
+        );
         await fetchEventSource(
-          `${platformUrl}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
+          `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
           {
             method: 'POST',
             body: JSON.stringify(args),
@@ -196,6 +195,14 @@ export const answerApi = answerSlice.injectEndpoints({
               'Accept-Encoding': '*',
             },
             fetch,
+            onopen: async (res) => {
+              const answerId = res.headers.get('x-answer-id');
+              if (answerId) {
+                updateCachedData((draft) => {
+                  draft.answerId = answerId;
+                });
+              }
+            },
             onmessage: (event) => {
               updateCachedData((draft) => {
                 updateCacheWithEvent(event, draft);
@@ -217,31 +224,90 @@ export const selectAnswerTriggerParams = createSelector(
   (q, requestId) => ({q, requestId})
 );
 
-const constructAnswerQueryParams = (state: StateNeededByAnswerAPI) => {
+let generateFacetParams: Record<string, ReturnType<typeof getFacets>> = {};
+
+const getGeneratedFacetParams = (q: string, state: StateNeededByAnswerAPI) => ({
+  ...generateFacetParams,
+  [q]: getFacets(state)
+    ?.map((facetRequest) =>
+      mapFacetRequest(facetRequest, initialSearchMappings())
+    )
+    .sort((a, b) =>
+      a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
+    ),
+});
+
+const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
+  if (!state.pagination) {
+    return undefined;
+  }
+
+  const isOverIndexLimit =
+    state.pagination.firstResult + state.pagination.numberOfResults >
+    maximumNumberOfResultsFromIndex;
+
+  if (isOverIndexLimit) {
+    return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
+  }
+  return state.pagination.numberOfResults;
+};
+
+export const constructAnswerQueryParams = (
+  state: StateNeededByAnswerAPI,
+  usage: 'fetch' | 'select'
+) => {
   const q = selectQuery(state)?.q;
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
 
+  if (q && usage === 'fetch') {
+    generateFacetParams = getGeneratedFacetParams(q, state);
+  }
+
   return {
     q,
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
-        responseFormat: {
-          answerStyle: state.generatedAnswer.responseFormat.answerStyle,
-        },
+        responseFormat: state.generatedAnswer.responseFormat,
         citationsFieldToInclude,
       },
     },
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
+    ...(generateFacetParams[q!]?.length && {
+      facets: generateFacetParams[q!],
+    }),
+    ...(state.fields && {fieldsToInclude: state.fields.fieldsToInclude}),
+    ...(state.didYouMean && {
+      queryCorrection: {
+        enabled:
+          state.didYouMean.enableDidYouMean &&
+          state.didYouMean.queryCorrectionMode === 'next',
+        options: {
+          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
+            ? ('whenNoResults' as const)
+            : ('never' as const),
+        },
+      },
+      enableDidYouMean:
+        state.didYouMean.enableDidYouMean &&
+        state.didYouMean.queryCorrectionMode === 'legacy',
+    }),
+    ...(state.pagination && {
+      numberOfResults: getNumberOfResultsWithinIndexLimit(state),
+      firstResult: state.pagination.firstResult,
+    }),
+    tab: state.configuration.analytics.originLevel2,
   };
 };
 
 export const fetchAnswer = (state: StateNeededByAnswerAPI) =>
-  answerApi.endpoints.getAnswer.initiate(constructAnswerQueryParams(state));
+  answerApi.endpoints.getAnswer.initiate(
+    constructAnswerQueryParams(state, 'fetch')
+  );
 
 export const selectAnswer = (state: StateNeededByAnswerAPI) =>
-  answerApi.endpoints.getAnswer.select(constructAnswerQueryParams(state))(
-    state
-  );
+  answerApi.endpoints.getAnswer.select(
+    constructAnswerQueryParams(state, 'select')
+  )(state);

@@ -17,7 +17,7 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
   return (
     <ul
       part="indicators"
-      class="mb-1 absolute flex items-center justify-center gap-2 mt-6 bottom-2 max-w-[80%]"
+      class="absolute bottom-2 mb-1 mt-6 flex max-w-[80%] items-center justify-center gap-2"
     >
       {Array.from({length: numberOfImages}, (_, index) => {
         const isActive = index === currentImage % numberOfImages;
@@ -44,12 +44,12 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
         return (
           <li
             part={`indicator ${isActive ? 'active-indicator' : ''}`}
-            class={`rounded-md shadow cursor-pointer hover:bg-primary-light transition-all duration-200 ease-in-out ${
+            class={`hover:bg-primary-light cursor-pointer rounded-md shadow transition-all duration-200 ease-in-out ${
               isActive ? 'bg-primary' : 'bg-neutral'
-            } ${isLastDisplayed || isFirstDisplayed ? 'w-1 h-1 mobile-only:w-2 mobile-only:h-2 transform scale-75' : 'h-2 w-2 mobile-only:w-3 mobile-only:h-3 transform scale-100'} ${
+            } ${isLastDisplayed || isFirstDisplayed ? 'mobile-only:w-2 mobile-only:h-2 h-1 w-1 scale-75 transform' : 'mobile-only:w-3 mobile-only:h-3 h-2 w-2 scale-100 transform'} ${
               shouldDisplay
-                ? 'opacity-80 pointer-events-auto'
-                : 'opacity-0 pointer-events-none hidden'
+                ? 'pointer-events-auto opacity-80'
+                : 'pointer-events-none hidden opacity-0'
             }`}
             onClick={() => navigateToImage(index)}
           ></li>

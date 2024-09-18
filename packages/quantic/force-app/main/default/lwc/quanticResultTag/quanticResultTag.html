@@ -1,0 +1,11 @@
+<template>
+  <template if:true={error}>
+    <div class="error-message slds-text-color_destructive">{error}</div>
+  </template>
+  <template if:true={shouldDisplayBadge}>
+    <span class="result-tag slds-badge slds-text-color_inverse">
+      <lightning-icon icon-name={icon} size="xx-small" class="slds-current-color slds-m-right_xx-small"></lightning-icon>
+      <span>{label}</span>
+    </span>
+  </template>
+</template>

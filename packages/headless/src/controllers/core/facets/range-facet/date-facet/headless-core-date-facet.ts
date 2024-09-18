@@ -21,6 +21,7 @@ import {
 } from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {searchReducer as search} from '../../../../../features/search/search-slice';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors';
 import {
   ConfigurationSection,
   DateFacetSection,
@@ -185,10 +186,14 @@ export function buildCoreDateFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterDateFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateDateFacetOptions(engine, options);

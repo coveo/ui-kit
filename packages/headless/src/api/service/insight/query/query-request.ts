@@ -1,6 +1,7 @@
 import {
   ContextParam,
   FoldingParam,
+  LocaleParam,
   NumberOfResultsParam,
 } from '../../../platform-service-params';
 import {
@@ -36,6 +37,7 @@ export type InsightQueryRequest = InsightParam &
   TabParam &
   FoldingParam &
   ContextParam &
+  LocaleParam &
   PipelineRuleParams;
 
 interface CaseContextParam {

@@ -1,4 +1,5 @@
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
+import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
   BaseCommerceAPIRequest,
@@ -12,7 +13,7 @@ import {
   CommerceFacetSetSection,
   CommercePaginationSection,
   CommerceSortSection,
-  ConfigurationSection,
+  CommerceConfigurationSection,
   FacetOrderSection,
   ManualRangeSection,
   VersionSection,
@@ -21,7 +22,7 @@ import {getProductsFromCartState} from '../context/cart/cart-state';
 import {AnyFacetRequest} from '../facets/facet-set/interfaces/request';
 import {SortBy, SortCriterion} from '../sort/sort';
 
-export type StateNeededByQueryCommerceAPI = ConfigurationSection &
+export type StateNeededByQueryCommerceAPI = CommerceConfigurationSection &
   CommerceContextSection &
   CartSection &
   Partial<CommercePaginationSection & VersionSection>;
@@ -61,11 +62,18 @@ export const buildBaseCommerceAPIRequest = (
   const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
-    url: state.configuration.platformUrl,
+    url:
+      state.configuration.commerce.apiBaseUrl ??
+      getCommerceApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: navigatorContext.clientId,
+    ...(state.configuration.analytics.enabled
+      ? {clientId: navigatorContext.clientId}
+      : {}),
     context: {
       ...(navigatorContext.userAgent
         ? {

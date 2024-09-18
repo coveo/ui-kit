@@ -132,7 +132,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         <Button
           part={`${direction}-arrow-button`}
           style="square-neutral"
-          class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-1 h-10 w-10 top-0 bottom-0 ${
+          class={`z-1 absolute bottom-0 top-0 flex h-10 w-10 shrink-0 basis-8 items-center justify-center rounded ${
             direction === 'left' ? 'left-0' : 'right-0'
           }`}
           ariaHidden="true"
@@ -148,7 +148,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         </Button>
         <div
           part={`${direction}-fade`}
-          class={`w-20 h-10 absolute top-0 z-0 pointer-events-none from-background-60 ${
+          class={`from-background-60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
             direction === 'left'
               ? 'left-0 bg-gradient-to-r'
               : 'right-0 bg-gradient-to-l'
@@ -164,7 +164,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     }
 
     return (
-      <div part="scrollable-container" class="flex relative">
+      <div part="scrollable-container" class="relative flex">
         {this.renderArrow('left')}
         <div
           part="horizontal-scroll"

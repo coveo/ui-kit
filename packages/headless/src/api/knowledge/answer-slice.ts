@@ -6,9 +6,13 @@ import {
   FetchBaseQueryError,
   retry,
 } from '@reduxjs/toolkit/query';
-import {ConfigurationSection} from '../../state/state-sections';
+import {
+  ConfigurationSection,
+  GeneratedAnswerSection,
+} from '../../state/state-sections';
+import {getOrganizationEndpoint} from '../platform-client';
 
-type StateNeededByAnswerSlice = ConfigurationSection;
+type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
 
 /**
  * `dynamicBaseQuery` is passed to the baseQuery of the createApi,
@@ -20,7 +24,8 @@ const dynamicBaseQuery: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const state = api.getState() as StateNeededByAnswerSlice;
-  const {accessToken, organizationId, platformUrl} = state.configuration;
+  const {accessToken, environment, organizationId} = state.configuration;
+  const answerConfigurationId = state.generatedAnswer.answerConfigurationId;
   const updatedArgs = {
     ...(args as FetchArgs),
     headers: {
@@ -29,8 +34,12 @@ const dynamicBaseQuery: BaseQueryFn<
     },
   };
   try {
+    const platformEndpoint = getOrganizationEndpoint(
+      organizationId,
+      environment
+    );
     const data = fetchBaseQuery({
-      baseUrl: `${platformUrl}/rest/organizations/${organizationId}`,
+      baseUrl: `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
     })(updatedArgs, api, extraOptions);
     return {data};
   } catch (error) {

@@ -85,51 +85,39 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @defaultValue 7
    */
   @api maxNumberOfSuggestions = 7;
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * The blur function.
-   * @deprecated
-   * @api
-   * @type {VoidFunction}
-   */
-  @api blur() {
-    this.input.blur();
-  }
-  // TODO SFINT-5646: Remove deprecated method
-  /**
-   * The reset selection function.
-   * @deprecated
-   * @api
-   * @type {VoidFunction}
-   */
-  @api resetSelection() {
-    this.suggestionListElement?.resetSelection();
-  }
 
   /** @type {boolean} */
   ignoreNextEnterKeyPress = false;
   /** @type {string} */
   ariaActiveDescendant;
+  /** @type {boolean} */
   inputIsFocused = false;
+  /** @type {string} */
+  _inputValue = '';
 
   connectedCallback() {
     this.addEventListener(
-      'suggestionlistrender',
+      'quantic__suggestionlistrender',
       this.handleSuggestionListEvent
     );
   }
 
   disconnectedCallback() {
     this.removeEventListener(
-      'suggestionlistrender',
+      'quantic__suggestionlistrender',
       this.handleSuggestionListEvent
     );
   }
 
   renderedCallback() {
-    if (this.input.value !== this.inputValue) {
-      this.input.value = this.inputValue;
+    if (this._inputValue !== this.inputValue) {
+      this._inputValue = this.inputValue;
+      this.setDisplayedInputValue(this.inputValue);
     }
+  }
+
+  setDisplayedInputValue(value) {
+    this.input.value = value;
   }
 
   /**
@@ -168,6 +156,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * Sends the "quantic__submitSearch" event.
    */
   sendSubmitSearchEvent() {
+    if (this._inputValue !== this.input.value) {
+      this.sendInputValueChangeEvent(this.input.value);
+    }
+
     this.dispatchEvent(
       new CustomEvent('quantic__submitsearch', {
         bubbles: true,
@@ -234,6 +226,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
     // eslint-disable-next-line default-case
     switch (event.key) {
       case keys.ESC:
+        event.preventDefault();
         this.input.removeAttribute('aria-activedescendant');
         this.input.blur();
         break;
@@ -246,7 +239,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
         event.preventDefault();
         const {id, value} = this.suggestionListElement.selectionUp();
         if (value) {
-          this.input.value = value;
+          this.setDisplayedInputValue(value);
         }
         this.ariaActiveDescendant = id;
         this.input.setAttribute(
@@ -260,7 +253,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
         event.preventDefault();
         const {id, value} = this.suggestionListElement.selectionDown();
         if (value) {
-          this.input.value = value;
+          this.setDisplayedInputValue(value);
         }
         this.ariaActiveDescendant = id;
         this.input.setAttribute(
@@ -318,10 +311,20 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   clearInput() {
     this.sendInputValueChangeEvent('');
+    this.setDisplayedInputValue('');
+    this.input.removeAttribute('aria-activedescendant');
+    this.collapseTextArea();
     this.input.focus();
-    if (this.textarea) {
-      this.adjustTextAreaHeight();
-    }
+  }
+
+  /**
+   * Prevents the blur event from being triggered when clearing the input.
+   * This allows us to clear the input value before collapsing the input.
+   * @param {event} event
+   * @returns {void}
+   */
+  preventBlur(event) {
+    event.preventDefault();
   }
 
   handleSuggestionListEvent = (event) => {
@@ -345,7 +348,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get isQueryEmpty() {
-    return !this.inputValue?.length;
+    return !this.input?.value?.length;
   }
 
   /**

@@ -1,10 +1,13 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as Selectors from './selectors/commerce-selectors.index';
 import * as HighlightUtils from './utils/highlight';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client';
 export type {HighlightKeyword} from './utils/highlight';
 
-polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
@@ -60,7 +63,6 @@ export * from './features/commerce/triggers/triggers-actions-loader';
 export * from './features/commerce/instant-products/instant-products-actions-loader';
 export * from './features/commerce/recent-queries/recent-queries-actions-loader';
 export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader';
-// TODO: KIT-3350: Create/use/export remaining commerce actions/loaders
 
 // Selectors
 export {Selectors};
@@ -208,13 +210,13 @@ export type {
 } from './controllers/commerce/search-box/headless-search-box';
 
 export {buildRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
-export type {RecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 export type {
+  RecentQueriesList,
   RecentQueriesListOptions,
   RecentQueriesListProps,
   RecentQueriesListInitialState,
   RecentQueriesState,
-} from './controllers/recent-queries-list/headless-recent-queries-list.ts';
+} from './controllers/commerce/recent-queries-list/headless-recent-queries-list';
 
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products';
 export type {
@@ -261,8 +263,6 @@ export type {ProductListingSummaryState} from './controllers/commerce/product-li
 export type {RecommendationsSummaryState} from './controllers/commerce/recommendations/summary/headless-recommendations-summary';
 export type {Summary} from './controllers/commerce/core/summary/headless-core-summary';
 
-export {getOrganizationEndpoints} from './api/platform-client';
-
 export type {
   DidYouMean,
   DidYouMeanState,
@@ -275,20 +275,20 @@ export type {
   NotifyTrigger,
   NotifyTriggerState,
 } from './controllers/core/triggers/headless-core-notify-trigger';
-export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-commerce-notify-trigger';
+export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger';
 
 export type {
   RedirectionTrigger,
   RedirectionTriggerState,
 } from './controllers/core/triggers/headless-core-redirection-trigger';
 
-export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-commerce-redirection-trigger';
+export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger';
 
 export type {
   QueryTrigger,
   QueryTriggerState,
 } from './controllers/core/triggers/headless-core-query-trigger';
-export {buildQueryTrigger} from './controllers/commerce/triggers/headless-commerce-query-trigger';
+export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger';
 
 export type {
   FieldSuggestions,
@@ -298,7 +298,10 @@ export type {
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions';
-export type {FieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
+export type {
+  FieldSuggestionsGenerator,
+  GeneratedFieldSuggestionsControllers,
+} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator';
 

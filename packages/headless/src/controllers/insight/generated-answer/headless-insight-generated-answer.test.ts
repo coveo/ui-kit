@@ -1,5 +1,3 @@
-import {updateResponseFormat} from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
   buildMockInsightEngine,
@@ -31,22 +29,5 @@ describe('insight generated answer', () => {
   it('#retry dispatches #executeSearch', () => {
     generatedAnswer.retry();
     expect(executeSearch).toHaveBeenCalled();
-  });
-
-  describe('#rephrase', () => {
-    const responseFormat: GeneratedResponseFormat = {
-      answerStyle: 'concise',
-    };
-
-    it('dispatches the update action', () => {
-      generatedAnswer.rephrase(responseFormat);
-
-      expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-    });
-
-    it('dispatches #executeSearch', () => {
-      generatedAnswer.rephrase(responseFormat);
-      expect(executeSearch).toHaveBeenCalled();
-    });
   });
 });

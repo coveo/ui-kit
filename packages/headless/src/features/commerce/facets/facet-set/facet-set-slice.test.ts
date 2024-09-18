@@ -64,6 +64,7 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -688,16 +689,19 @@ describe('commerceFacetSetReducer', () => {
         )
       );
       expect(finalState).toEqual({
-        regular_field: {
+        [getFacetIdWithCommerceFieldSuggestionNamespace('regular_field')]: {
           request: {
             initialNumberOfValues: 10,
+            values: [],
           },
         },
-        hierarchical_field: {
-          request: {
-            initialNumberOfValues: 10,
+        [getFacetIdWithCommerceFieldSuggestionNamespace('hierarchical_field')]:
+          {
+            request: {
+              initialNumberOfValues: 10,
+              values: [],
+            },
           },
-        },
       });
     });
   });

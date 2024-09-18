@@ -29,6 +29,11 @@ import type {
   RecentQueriesListProps,
 } from '../../recent-queries-list/headless-recent-queries-list';
 
+export type {
+  RecentQueriesListProps,
+  RecentQueriesListInitialState,
+  RecentQueriesListOptions,
+};
 const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
   queries: [],
 };
@@ -85,7 +90,7 @@ export interface RecentQueriesState {
   analyticsEnabled: boolean;
 }
 
-export function validateRecentQueriesProps(
+function validateRecentQueriesProps(
   engine: CommerceEngine,
   props?: RecentQueriesListProps
 ) {

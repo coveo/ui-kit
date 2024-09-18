@@ -30,6 +30,7 @@ import pastYear from '@salesforce/label/c.quantic_PastYear';
 import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 /** @typedef {import("coveo").Result} Result */
+/** @typedef {import("coveo").SortCriterion} SortCriterion */
 
 export * from './recentQueriesUtils';
 export * from './markdownUtils';
@@ -493,6 +494,7 @@ export class Store {
         numericFacets: {},
         dateFacets: {},
         categoryFacets: {},
+        sort: {},
       },
     };
   }
@@ -509,11 +511,26 @@ export class Store {
   }
 
   /**
+   * @param {Record<String, any>} store
+   * @param {Array<{label: string; value: string; criterion: SortCriterion;}>} data
+   */
+  static registerSortOptionDataToStore(store, data) {
+    store.state.sort = data;
+  }
+
+  /**
    * @param {Record<String, unknown>} store
    * @param {string} facetType
    */
   static getFromStore(store, facetType) {
     return store.state[facetType];
+  }
+
+  /**
+   * @param {Record<String, Object>} store
+   */
+  static getSortOptionsFromStore(store) {
+    return store.state.sort;
   }
 }
 
@@ -533,7 +550,7 @@ export class Store {
  */
 export function AriaLiveRegion(regionName, elem, assertive = false) {
   function dispatchMessage(message) {
-    const ariaLiveMessageEvent = new CustomEvent('arialivemessage', {
+    const ariaLiveMessageEvent = new CustomEvent('quantic__arialivemessage', {
       bubbles: true,
       composed: true,
       detail: {
@@ -546,7 +563,7 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
   }
 
   function registerRegion() {
-    const registerRegionEvent = new CustomEvent('registerregion', {
+    const registerRegionEvent = new CustomEvent('quantic__registerregion', {
       bubbles: true,
       composed: true,
       detail: {

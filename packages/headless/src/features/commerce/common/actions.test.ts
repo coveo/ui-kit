@@ -1,4 +1,5 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client';
 import {
   BaseCommerceAPIRequest,
   CommerceAPIRequest,
@@ -44,7 +45,7 @@ describe('commerce common actions', () => {
       };
 
       expected = {
-        url: 'https://platform.cloud.coveo.com',
+        url: getCommerceApiBaseUrl('org_id'),
         accessToken: 'access_token',
         organizationId: 'org_id',
         trackingId: 'tracking_id',
@@ -73,7 +74,6 @@ describe('commerce common actions', () => {
 
       state = buildMockCommerceState();
 
-      state.configuration.platformUrl = expected.url;
       state.configuration.accessToken = expected.accessToken;
       state.configuration.organizationId = expected.organizationId;
       state.configuration.analytics.trackingId = expected.trackingId;
@@ -242,6 +242,27 @@ describe('commerce common actions', () => {
         );
 
         expect(request.context.capture).toEqual(analyticsEnabled);
+      }
+    );
+
+    it.each([true, false])(
+      'sets the clientId conditionally upon the analytics configuration',
+      (analyticsEnabled) => {
+        state.configuration.analytics.enabled = analyticsEnabled;
+
+        const request = Actions.buildCommerceAPIRequest(
+          state,
+          navigatorContext
+        );
+
+        expect(mockedBuildBaseCommerceAPIRequest).toHaveBeenCalledWith(
+          state,
+          navigatorContext
+        );
+
+        expect(request.clientId).toEqual(
+          analyticsEnabled ? 'client_id' : undefined
+        );
       }
     );
 

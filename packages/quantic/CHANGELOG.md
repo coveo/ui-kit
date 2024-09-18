@@ -1,3 +1,34 @@
+# 2.57.0 (2024-08-21)
+
+### Features
+
+- **headless:** Add locale to insight search ([#4302](https://github.com/coveo/ui-kit/issues/4302)) ([3bea5b6](https://github.com/coveo/ui-kit/commits/3bea5b6df981f514f158fc530ee2e4428421b3e6))
+
+# 2.56.0 (2024-08-20)
+
+### Features
+
+- **quantic:** Add option for rephrase buttons, remove citations numbers ([#4277](https://github.com/coveo/ui-kit/issues/4277)) ([e65b99f](https://github.com/coveo/ui-kit/commits/e65b99f2bf1b8f2fead1595942a439731dd3f623))
+- **quantic:** added support for custom options in the quanticSort component ([#4101](https://github.com/coveo/ui-kit/issues/4101)) ([ecb5e24](https://github.com/coveo/ui-kit/commits/ecb5e2484b80822356dba24130e8058deb1413a6))
+
+# 2.55.0 (2024-08-14)
+
+### Bug Fixes
+
+- **quantic:** fix issue with persisting search box suggestion value on blur ([#4279](https://github.com/coveo/ui-kit/issues/4279)) ([c4e2c7c](https://github.com/coveo/ui-kit/commits/c4e2c7c6a4a36d67499f67a858ea2b9e233e1c5f))
+- **quantic:** Issue with overflowing code markdown in generated answer ([#4263](https://github.com/coveo/ui-kit/issues/4263)) ([aab5a7f](https://github.com/coveo/ui-kit/commits/aab5a7f33524fc3526a83060a3b913eccf34ac69))
+- **quantic:** styling issue fixed with quantic facet search component ([#4265](https://github.com/coveo/ui-kit/issues/4265)) ([b94476d](https://github.com/coveo/ui-kit/commits/b94476dd746c87ffd0e9340e66d1703fb7728e7a))
+
+### Features
+
+- **genqa:** filter citations that points to same document ([#4250](https://github.com/coveo/ui-kit/issues/4250)) ([7f04f73](https://github.com/coveo/ui-kit/commits/7f04f7349ad2f25a7100d7d537686a3a06a25188))
+
+## 2.54.1 (2024-07-31)
+
+### Bug Fixes
+
+- **ep:** do not send actionCause w/ breadcrumbResetAll ([#4207](https://github.com/coveo/ui-kit/issues/4207)) ([bcecc55](https://github.com/coveo/ui-kit/commits/bcecc552b433b5da3b9940bae96c725ea731df90))
+
 # 2.54.0 (2024-07-24)
 
 ### Bug Fixes

@@ -2,10 +2,10 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "target": "es2016",
-    "module": "ES6",
     "esModuleInterop": true,
-    "lib": ["DOM"],
-    "moduleResolution": "node",
+    "lib": ["DOM", "ES2022"],
+    "moduleResolution": "Bundler",
+    "module": "ES2022",
     "outDir": "./public/dist",
     "types": ["cypress"],
     "jsx": "react"

@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import SearchIcon from '../../../images/search.svg';
+import SearchSlimIcon from '../../../images/search-slim.svg';
 import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
 
@@ -12,20 +12,25 @@ export const SubmitButton: FunctionalComponent<Props> = ({
   onClick,
   ...defaultButtonProps
 }) => (
-  <Button
-    style="primary"
-    class="flex items-center justify-center w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px shrink-0"
-    part="submit-button"
-    ariaLabel={bindings.i18n.t('search')}
-    onClick={() => {
-      onClick?.();
-    }}
-    {...defaultButtonProps}
+  <div
+    part="submit-button-wrapper"
+    class="mr-2 flex items-center justify-center py-2"
   >
-    <atomic-icon
-      part="submit-icon"
-      icon={SearchIcon}
-      class="w-4 h-4"
-    ></atomic-icon>
-  </Button>
+    <Button
+      style="text-primary"
+      class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+      part="submit-button"
+      ariaLabel={bindings.i18n.t('search')}
+      onClick={() => {
+        onClick?.();
+      }}
+      {...defaultButtonProps}
+    >
+      <atomic-icon
+        part="submit-icon"
+        icon={SearchSlimIcon}
+        class="h-4 w-4"
+      ></atomic-icon>
+    </Button>
+  </div>
 );

@@ -2,20 +2,18 @@
   "name": "@coveo/headless-commerce-react-samples",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@coveo/headless": "^2.73.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
+    "@coveo/headless": "2.80.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "dev": "vite",
     "build": "nx build",
-    "build:client": "tsc --noEmit && tsc --module commonjs --noEmit",
-    "test": "react-scripts test"
+    "build:client": "vite build",
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "browserslist": {
     "production": [
@@ -28,5 +26,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "6.5.0",
+    "@testing-library/react": "16.0.0",
+    "@vitejs/plugin-react": "4.3.1",
+    "vite": "5.4.2",
+    "vitest": "2.0.5"
   }
 }

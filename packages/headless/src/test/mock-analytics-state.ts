@@ -5,7 +5,6 @@ export function buildMockAnalyticsState(
 ): AnalyticsState {
   return {
     apiBaseUrl: '',
-    nextApiBaseUrl: '',
     enabled: false,
     originLevel2: '',
     originLevel3: '',
@@ -15,7 +14,7 @@ export function buildMockAnalyticsState(
     userDisplayName: '',
     documentLocation: '',
     trackingId: '',
-    analyticsMode: 'legacy',
+    analyticsMode: 'next',
     source: {},
     ...config,
   };

@@ -7,7 +7,6 @@ import {
   buildInsightSearchStatus,
   InsightGeneratedAnswer,
   InsightGeneratedAnswerState,
-  InsightGeneratedAnswerStyle,
 } from '..';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
@@ -32,11 +31,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
- * @part rephrase-label - The header of the rephrase options.
- * @part rephrase-buttons - The container of the rephrase buttons section.
- * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
- * @part rephrase-buttons-container - The container of the rephrase buttons.
- * @part rephrase-button-label - The label of the rephrase button.
  *
  * @part answer-code-block - The generated answer multi-line code blocks.
  * @part answer-emphasis - The generated answer emphasized text elements.
@@ -60,7 +54,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
- * @part citation-index - The content of the citation item.
  */
 @Component({
   tag: 'atomic-insight-generated-answer',
@@ -95,16 +88,6 @@ export class AtomicInsightGeneratedAnswer
 
   @State()
   copyError = false;
-
-  /**
-   * The answer style to apply when the component first loads.
-   * Options:
-   *   - `default`: Generate the answer without specific formatting instructions.
-   *   - `bullet`: Generate the answer as a bulleted list.
-   *   - `step`: Generate the answer as step-by-step instructions.
-   *   - `concise`: Generate the answer as briefly as possible.
-   */
-  @Prop() answerStyle: InsightGeneratedAnswerStyle = 'default';
 
   /**
    * Whether to render a toggle button that lets the user hide or show the answer.
@@ -146,7 +129,6 @@ export class AtomicInsightGeneratedAnswer
       initialState: {
         isVisible: this.generatedAnswerCommon.data.isVisible,
         responseFormat: {
-          answerStyle: this.answerStyle,
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },

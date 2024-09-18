@@ -1,9 +1,5 @@
 import {StringValue} from '@coveo/bueno';
 import {
-  PlatformEnvironment,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-} from '@coveo/headless';
-import {
   Component,
   ComponentInterface,
   Method,
@@ -89,17 +85,5 @@ export class AtomicHostedUI implements ComponentInterface {
     );
 
     return await pageResponse.json();
-  }
-
-  /**
-   * Returns the unique, organization-specific endpoint(s).
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 }

@@ -3,7 +3,6 @@
 @import './generated-text.pcss';
 @import '../generated-content/generated-markdown-content.pcss';
 @import './feedback-buttons.pcss';
-@import './rephrase-buttons.pcss';
 @import './typing-indicator.pcss';
 @import './copy-button.pcss';
 
@@ -15,22 +14,6 @@
   .source-citations {
     @apply mr-0;
   }
-
-  [part='rephrase-buttons'] {
-    @apply ml-0;
-  }
-
-  [part='rephrase-button'] {
-    @apply rephrase-with-text flex-auto justify-center;
-
-    .icon-container {
-      @apply mx-0;
-    }
-  }
-
-  [part='rephrase-button-label'] {
-    @apply block;
-  }
 }
 
 @define-mixin mobile-footer-xs-layout {
@@ -38,12 +21,8 @@
     @apply mt-4;
   }
 
-  [part='rephrase-button-label'] {
-    @apply hidden;
-  }
-
   .feedback-buttons {
-    @apply relative top-0 right-0;
+    @apply relative right-0 top-0;
   }
 }
 
@@ -70,10 +49,6 @@
     @apply mr-2;
   }
 
-  [part='rephrase-buttons'] {
-    @apply ml-auto;
-  }
-
   @container (max-width: 37.5rem) {
     @mixin mobile-footer-layout;
   }
@@ -97,14 +72,14 @@
 
 [part='generated-container'] {
   &.answer-collapsed {
-    @apply max-h-64 overflow-hidden relative content-[''];
+    @apply relative max-h-64 overflow-hidden content-[''];
 
     .feedback-buttons {
       @apply hidden;
     }
   }
   &.answer-collapsed:before {
-    @apply h-full w-full absolute top-0 left-0 content-[''];
+    @apply absolute left-0 top-0 h-full w-full content-[''];
     background: linear-gradient(transparent 11.25rem, var(--atomic-background));
   }
 }

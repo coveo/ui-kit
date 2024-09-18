@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "1.0.20",
+  "version": "1.1.4",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -33,32 +33,31 @@
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest"
   },
   "dependencies": {
-    "@coveo/headless": "2.74.0"
+    "@coveo/headless": "2.80.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@testing-library/react": "14.3.0",
+    "@testing-library/react": "14.3.1",
     "@types/jest": "29.5.12",
-    "@types/react": "18.2.21",
-    "@types/react-dom": "18.2.7",
-    "@typescript-eslint/eslint-plugin": "7.9.0",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@typescript-eslint/eslint-plugin": "7.17.0",
     "eslint-plugin-jest-dom": "5.4.0",
-    "eslint-plugin-react": "7.33.2",
+    "eslint-plugin-react": "7.35.0",
     "eslint-plugin-testing-library": "6.2.2",
-    "gts": "5.3.0",
+    "gts": "5.3.1",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
-    "publint": "0.2.7",
-    "rimraf": "5.0.7",
-    "ts-jest": "29.1.2",
-    "typescript": "5.4.5",
-    "undici": "5.28.4"
+    "publint": "0.2.9",
+    "rimraf": "5.0.9",
+    "ts-jest": "29.2.3",
+    "typescript": "5.4.5"
   },
   "peerDependencies": {
     "react": "^18",
     "react-dom": "^18"
   },
   "engines": {
-    "node": "^18 || ^20"
+    "node": "^20.9.0"
   }
 }

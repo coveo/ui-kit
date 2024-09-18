@@ -57,7 +57,7 @@ export default class ExampleQuanticRecommendationtList extends LightningElement 
       defaultValue: 'grid',
     },
   ];
-  expectedEvents = ['registerrecommendationtemplates'];
+  expectedEvents = ['quantic__registerrecommendationtemplates'];
 
   handleTryItNow(evt) {
     this.config = evt.detail;

@@ -21,6 +21,7 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
         icon={props.icon}
         class={`shrink-0 ${active ? 'icon-active' : 'icon-inactive'}`}
         style={{width: iconSize, height: iconSize}}
+        part="value-rating-icon"
       ></atomic-icon>
     );
   };
@@ -53,7 +54,7 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
     >
       <div class="z-0 flex gap-0.5">{emptyIconDisplay()}</div>
       <div
-        class="absolute left-0 top-0 z-1 flex gap-0.5 overflow-hidden"
+        class="z-1 absolute left-0 top-0 flex gap-0.5 overflow-hidden"
         style={{width}}
       >
         {filledIconDisplay()}

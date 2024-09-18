@@ -1,14 +1,19 @@
-import {answerApi, fetchAnswer} from '../../../api/knowledge/stream-answer-api';
+import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation';
+import {
+  answerApi,
+  fetchAnswer,
+  StateNeededByAnswerAPI,
+} from '../../../api/knowledge/stream-answer-api';
 import {
   resetAnswer,
   updateAnswerConfigurationId,
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions';
-import {generatedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {
-  GeneratedAnswerState,
-  getGeneratedAnswerInitialState,
-} from '../../../features/generated-answer/generated-answer-state';
+  generatedAnswerAnalyticsClient,
+  GeneratedAnswerFeedback,
+} from '../../../features/generated-answer/generated-answer-analytics-actions';
+import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state';
 import {queryReducer} from '../../../features/query/query-slice';
 import {
   buildMockSearchEngine,
@@ -33,8 +38,20 @@ jest.mock('../../../api/knowledge/stream-answer-api', () => {
   return {
     ...originalStreamAnswerApi,
     fetchAnswer: jest.fn(),
+    selectAnswer: () => ({
+      data: {answer: 'This est une answer', answerId: '12345_6'},
+    }),
   };
 });
+jest.mock('../../../api/knowledge/post-answer-evaluation', () => ({
+  answerEvaluation: {
+    endpoints: {
+      post: {
+        initiate: jest.fn(),
+      },
+    },
+  },
+}));
 
 describe('knowledge-generated-answer', () => {
   it('should be tested', () => {
@@ -51,12 +68,12 @@ describe('knowledge-generated-answer', () => {
     );
 
   const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<GeneratedAnswerState> = {}
+    initialState: Partial<StateNeededByAnswerAPI> = {}
   ) => {
     const state = createMockState({
+      ...initialState,
       generatedAnswer: {
         ...getGeneratedAnswerInitialState(),
-        ...initialState,
       },
     });
     return buildMockSearchEngine(state);
@@ -93,21 +110,16 @@ describe('knowledge-generated-answer', () => {
 
     expect(generatedAnswer.state).toEqual({
       ...engine.state.generatedAnswer,
-      answer: undefined,
+      answer: 'This est une answer',
       answerContentFormat: 'text/plain',
-      error: {message: undefined},
+      error: {message: undefined, statusCode: undefined},
     });
   });
 
-  it('dispatches a rephrase action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'step'};
-    generatedAnswer.rephrase(responseFormat);
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-  });
-
   it('initialize the format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
+    const responseFormat: GeneratedResponseFormat = {
+      contentFormat: ['text/markdown'],
+    };
     createGeneratedAnswer({
       initialState: {responseFormat},
     });
@@ -125,5 +137,42 @@ describe('knowledge-generated-answer', () => {
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.reset();
     expect(resetAnswer).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatches a sendFeedback action', () => {
+    engine = buildEngineWithGeneratedAnswer({
+      query: {q: 'this est une question', enableQuerySyntax: false},
+    });
+    const generatedAnswer = createGeneratedAnswer();
+    const feedback: GeneratedAnswerFeedback = {
+      readable: 'unknown',
+      correctTopic: 'unknown',
+      documented: 'yes',
+      hallucinationFree: 'no',
+      helpful: false,
+      details: 'some details',
+    };
+    const expectedArgs = {
+      additionalNotes: 'some details',
+      answer: {
+        format: 'text/plain',
+        responseId: '12345_6',
+        text: 'This est une answer',
+      },
+      correctAnswerUrl: null,
+      details: {
+        correctTopic: null,
+        documented: true,
+        hallucinationFree: false,
+        readable: null,
+      },
+      helpful: false,
+      question: 'this est une question',
+    };
+    generatedAnswer.sendFeedback(feedback);
+    expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledTimes(1);
+    expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledWith(
+      expectedArgs
+    );
   });
 });

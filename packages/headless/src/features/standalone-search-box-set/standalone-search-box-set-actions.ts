@@ -1,6 +1,7 @@
-import {StringValue} from '@coveo/bueno';
+import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {PlanRequest} from '../../api/search/plan/plan-request';
 import {
@@ -34,11 +35,38 @@ export interface RegisterStandaloneSearchBoxActionCreatorPayload {
    * The default URL to which to redirect the user.
    */
   redirectionUrl: string;
+
+  /**
+   * Whether to overwrite the existing standalone search box with the same id.
+   */
+  overwrite?: boolean;
+}
+
+export interface UpdateStandaloneSearchBoxPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+
+  /**
+   * The default URL to which to redirect the user.
+   */
+  redirectionUrl: string;
 }
 
 export const registerStandaloneSearchBox = createAction(
   'standaloneSearchBox/register',
   (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      redirectionUrl: requiredNonEmptyString,
+      overwrite: new BooleanValue({required: false}),
+    })
+);
+
+export const updateStandaloneSearchBoxRedirectionUrl = createAction(
+  'standaloneSearchBox/updateRedirectionUrl',
+  (payload: UpdateStandaloneSearchBoxPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
       redirectionUrl: requiredNonEmptyString,
@@ -145,7 +173,12 @@ export const buildPlanRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
     q: state.query.q,

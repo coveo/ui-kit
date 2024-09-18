@@ -43,7 +43,6 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-  ItemTarget,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -51,7 +50,7 @@ import {ProductTemplateProvider} from '../product-list/product-template-provider
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-commerce-product-list` component is responsible for displaying products.
  */
 @Component({
@@ -106,13 +105,6 @@ export class AtomicCommerceProductList
    * The expected size of the image displayed for products.
    */
   @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'small';
-
-  /**
-   * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
-   * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_self`
-   */
-  @Prop() gridCellLinkTarget: ItemTarget = '_self';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering products.
@@ -259,6 +251,10 @@ export class AtomicCommerceProductList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
+      linkContent:
+        this.display === 'grid'
+          ? this.productTemplateProvider.getLinkTemplateContent(product)
+          : this.productTemplateProvider.getEmptyLinkTemplateContent(),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -272,13 +268,13 @@ export class AtomicCommerceProductList
       const {interactiveProduct} = propsForAtomicProduct;
       return (
         <DisplayGrid
+          selectorForItem="atomic-product"
           item={{
             ...product,
             clickUri: product.clickUri,
             title: product.ec_name ?? 'temp',
           }}
           {...propsForAtomicProduct.interactiveProduct}
-          gridTarget={this.gridCellLinkTarget}
           setRef={(element) =>
             element && this.productListCommon.setNewResultRef(element, i)
           }

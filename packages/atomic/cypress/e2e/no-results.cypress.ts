@@ -79,7 +79,7 @@ describe('No Results Test Suites', () => {
   });
 
   function submitNoResultsSearch() {
-    SearchBoxSelectors.inputBox().type('asiufasfgasiufhsaiufgsa');
+    SearchBoxSelectors.textArea().type('asiufasfgasiufhsaiufgsa');
     SearchBoxSelectors.submitButton().click();
     cy.wait(wait);
   }

@@ -5,60 +5,60 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
 import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-import { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+import { AtomicInterface } from "./utils/initialization-utils";
+import { unknown as AnyBindings, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1 } from "./components";
 import { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
-import { i18nCompatibilityVersion } from "./components/common/interface/i18n";
+import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
-import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, GeneratedAnswerStyle, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment2, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, PlatformEnvironment, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
 export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout, ItemTarget } from "./components/common/layout/display-options";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
-export { unknown as AnyBindings, i18nCompatibilityVersion as i18nCompatibilityVersion1, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1, ItemTarget as ItemTarget1 } from "./components";
+export { AtomicInterface } from "./utils/initialization-utils";
+export { unknown as AnyBindings, ItemDisplayBasicLayout as ItemDisplayBasicLayout1, ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemRenderingFunction as ItemRenderingFunction1 } from "./components";
 export { AnyBindings as AnyBindings1 } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
-export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, GeneratedAnswerStyle as InsightGeneratedAnswerStyle, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, PlatformEnvironment as PlatformEnvironmentInsight } from "./components/insight";
-export { i18nCompatibilityVersion } from "./components/common/interface/i18n";
+export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
-export { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
+export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -177,6 +177,14 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
@@ -261,12 +269,21 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
     }
     /**
      * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * @alpha 
      */
     interface AtomicCommerceBreadbox {
         /**
@@ -298,6 +315,9 @@ export namespace Components {
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
+    /**
+     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+     */
     interface AtomicCommerceDidYouMean {
     }
     /**
@@ -324,6 +344,7 @@ export namespace Components {
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
+     * @alpha 
      */
     interface AtomicCommerceFacetNumberInput {
         "bindings": Bindings;
@@ -375,7 +396,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless commerce engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+          * Initializes the connection with the headless commerce engine using the specified options.
          */
         "initialize": (options: CommerceInitializationOptions) => Promise<void>;
         /**
@@ -408,6 +429,9 @@ export namespace Components {
         "type": | 'search'
     | 'product-listing';
     }
+    /**
+     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
+     */
     interface AtomicCommerceLayout {
         /**
           * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
@@ -420,10 +444,14 @@ export namespace Components {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    /**
+     * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+     */
     interface AtomicCommerceNoProducts {
     }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     * @alpha 
      */
     interface AtomicCommerceNumericFacet {
         /**
@@ -461,6 +489,9 @@ export namespace Components {
          */
         "previousButtonIcon": string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -470,11 +501,6 @@ export namespace Components {
           * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
         "display": ItemDisplayLayout;
-        /**
-          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget": ItemTarget;
         /**
           * The expected size of the image displayed for products.
          */
@@ -506,6 +532,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+     * @alpha 
      */
     interface AtomicCommerceQueryError {
     }
@@ -515,6 +542,9 @@ export namespace Components {
      */
     interface AtomicCommerceQuerySummary {
     }
+    /**
+     * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
+     */
     interface AtomicCommerceRecommendationInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
@@ -529,12 +559,6 @@ export namespace Components {
           * The commerce interface headless engine.
          */
         "engine": CommerceEngine;
-        /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The commerce interface i18next instance.
          */
@@ -562,6 +586,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+     * @alpha 
      */
     interface AtomicCommerceRecommendationList {
         /**
@@ -572,11 +597,6 @@ export namespace Components {
           * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
          */
         "display": ItemDisplayBasicLayout;
-        /**
-          * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget": ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -593,6 +613,10 @@ export namespace Components {
           * Moves to the previous page, when the carousel is activated.
          */
         "previousPage": () => Promise<void>;
+        /**
+          * The unique identifier of the product to use for seeded recommendations.
+         */
+        "productId"?: string;
         /**
           * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
          */
@@ -665,6 +689,7 @@ export namespace Components {
      * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
      * This component is not supported on mobile.
+     * @alpha 
      */
     interface AtomicCommerceSearchBoxInstantProducts {
         /**
@@ -687,6 +712,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+     * @alpha 
      */
     interface AtomicCommerceSearchBoxQuerySuggestions {
         /**
@@ -704,6 +730,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBoxRecentQueries {
         /**
@@ -721,6 +748,7 @@ export namespace Components {
     }
     /**
      * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     * @alpha 
      */
     interface AtomicCommerceSortDropdown {
     }
@@ -741,6 +769,7 @@ export namespace Components {
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     * @alpha 
      */
     interface AtomicCommerceTimeframeFacet {
         /**
@@ -784,6 +813,10 @@ export namespace Components {
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
      */
     interface AtomicExternal {
+        /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
         /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
@@ -854,6 +887,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -950,7 +991,7 @@ export namespace Components {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults": number;
         /**
@@ -962,6 +1003,14 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -1014,20 +1063,11 @@ export namespace Components {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface AtomicFrequentlyBoughtTogether {
-    }
-    /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
-        /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
-         */
-        "answerStyle": GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -1166,10 +1206,6 @@ export namespace Components {
     }
     interface AtomicInsightGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
-         */
-        "answerStyle": InsightGeneratedAnswerStyle;
-        /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
          */
@@ -1207,12 +1243,6 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
-          * Returns the unique, organization-specific endpoint(s)
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentInsight) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
-        /**
           * The service insight interface i18next instance.
          */
         "i18n": i18n;
@@ -1221,7 +1251,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
          */
         "initialize": (options: InsightInitializationOptions) => Promise<void>;
         /**
@@ -1236,10 +1266,6 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
-        /**
-          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-         */
-        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1547,6 +1573,37 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
+    /**
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
+     * @component 
+     * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
+     */
+    interface AtomicInsightUserActionsTimeline {
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+         */
+        "userId": string;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
@@ -1595,11 +1652,6 @@ export namespace Components {
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display": ItemDisplayBasicLayout1;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget": ItemTarget1;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -1697,15 +1749,6 @@ export namespace Components {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label": string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -1806,6 +1849,14 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
+        /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
@@ -1855,6 +1906,7 @@ export namespace Components {
     }
     /**
      * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
+     * @alpha 
      */
     interface AtomicProduct {
         /**
@@ -1879,8 +1931,17 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
         /**
           * The InteractiveProduct item.
+          * @alpha
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
+        /**
+          * @alpha
+         */
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -1888,6 +1949,7 @@ export namespace Components {
         "product": Product;
         /**
           * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+          * @alpha
          */
         "renderingFunction": ItemRenderingFunction;
         /**
@@ -1896,9 +1958,14 @@ export namespace Components {
         "stopPropagation"?: boolean;
         /**
           * Global Atomic state.
+          * @alpha
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    /**
+     * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
+     * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
+     */
     interface AtomicProductChildren {
         /**
           * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
@@ -1913,6 +1980,9 @@ export namespace Components {
          */
         "label": string;
     }
+    /**
+     * @alpha The `atomic-product-description` component renders the description of a product.
+     */
     interface AtomicProductDescription {
         /**
           * The name of the description field to use.
@@ -1926,6 +1996,7 @@ export namespace Components {
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+     * @alpha 
      */
     interface AtomicProductFieldCondition {
         /**
@@ -1939,6 +2010,7 @@ export namespace Components {
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
+     * @alpha 
      */
     interface AtomicProductImage {
         /**
@@ -1968,8 +2040,7 @@ export namespace Components {
         "previousImage": () => Promise<void>;
     }
     /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     * @alpha 
+     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface AtomicProductLink {
         /**
@@ -1977,16 +2048,24 @@ export namespace Components {
          */
         "hrefTemplate"?: string;
     }
+    /**
+     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
+     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+     */
     interface AtomicProductNumericFieldValue {
         /**
           * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
          */
         "field": string;
     }
+    /**
+     * @alpha The `atomic-product-price` component renders the price of a product.
+     */
     interface AtomicProductPrice {
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
+     * @alpha 
      */
     interface AtomicProductRating {
         /**
@@ -2006,22 +2085,90 @@ export namespace Components {
          */
         "ratingDetailsField"?: string;
     }
+    /**
+     * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
+     * In commerce interface, the user can usually add the product to their cart or wish list.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
     interface AtomicProductSectionActions {
     }
+    /**
+     * @alpha This section is meant to render badges that highlight special features of the product.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
     interface AtomicProductSectionBadges {
     }
+    /**
+     * @alpha This section is meant to render additional descriptive information about the product.
+     * Behavior:
+     * * Has a maximum height of two lines.
+     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     * * Has a font weight.
+     */
     interface AtomicProductSectionBottomMetadata {
     }
+    /**
+     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
+     * Behavior:
+     * * Shows children at the bottom of the result, indented and wrapped in a border.
+     */
     interface AtomicProductSectionChildren {
     }
+    /**
+     * @alpha This section is intended to render an informative summary of the product's description.
+     * Behavior:
+     * * Has a fixed height of one to three lines, depending on the layout and density.
+     * * Ellipses overflowing text.
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     */
     interface AtomicProductSectionDescription {
     }
+    /**
+     * @alpha This section is intended to display the field that's important for its search criteria.
+     * For example, in Commerce, a product's price is often more important than the title itself.
+     * Behavior:
+     * * Has a very large font size.
+     * * Is the second closest element beneath the name section.
+     */
     interface AtomicProductSectionEmphasized {
     }
+    /**
+     * @alpha This section is intended to display some fields that are directly related to the name of the product.
+     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
+     * rather than to the product's description.
+     * Behavior:
+     * * Has a very small font size.
+     * * Is the closest element beneath the title section.
+     */
     interface AtomicProductSectionMetadata {
     }
+    /**
+     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
+     * Behavior:
+     * * Has a fixed height of two lines on grid layouts.
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     */
     interface AtomicProductSectionName {
     }
+    /**
+     * @alpha This section is intended to provide visual information about the product.
+     * In commerce, an image is a great shorthand for a product category.
+     * Behavior:
+     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
+     * ** You should ensure that elements inside of it take the available space.
+     * * Always has a 1:1 aspect ratio.
+     */
     interface AtomicProductSectionVisual {
         /**
           * How large or small the visual section of product using this template should be.
@@ -2029,7 +2176,11 @@ export namespace Components {
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
-     * @alpha 
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicProductTemplate {
         /**
@@ -2055,6 +2206,9 @@ export namespace Components {
     string[]
   >;
     }
+    /**
+     * @alpha The `atomic-product-text` component renders the value of a string product field.
+     */
     interface AtomicProductText {
         /**
           * The locale key for the text to display when the configured field has no value.
@@ -2162,6 +2316,14 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -2217,6 +2379,14 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -2244,7 +2414,6 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -2258,7 +2427,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
          */
         "initialize": (options: RecsInitializationOptions) => Promise<void>;
         /**
@@ -2273,10 +2442,6 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
-        /**
-          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-         */
-        "localizationCompatibilityVersion": i18nCompatibilityVersion1;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -2306,11 +2471,6 @@ export namespace Components {
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display": ItemDisplayBasicLayout;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget": ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -2480,6 +2640,11 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -2657,11 +2822,6 @@ export namespace Components {
          */
         "display": ItemDisplayLayout;
         /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget": ItemTarget;
-        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ItemDisplayImageSize;
@@ -2670,6 +2830,14 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        /**
+          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -2859,8 +3027,6 @@ export namespace Components {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -2958,10 +3124,6 @@ export namespace Components {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout": number;
-        /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
-         */
-        "textarea": boolean;
     }
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -3055,12 +3217,6 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
-          * Returns the unique, organization-specific endpoint(s).
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment2) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
-        /**
           * The search interface i18next instance.
          */
         "i18n": i18n;
@@ -3069,7 +3225,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
@@ -3084,10 +3240,6 @@ export namespace Components {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
-        /**
-          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-         */
-        "localizationCompatibilityVersion": i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -3166,6 +3318,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
@@ -3206,6 +3366,14 @@ export namespace Components {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -3285,6 +3453,14 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     interface AtomicTab {
         /**
@@ -3300,6 +3476,9 @@ export namespace Components {
          */
         "name": string;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
@@ -3399,6 +3578,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria": RangeFacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
@@ -3582,6 +3769,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * @alpha 
      */
     interface HTMLAtomicCommerceBreadboxElement extends Components.AtomicCommerceBreadbox, HTMLStencilElement {
     }
@@ -3600,6 +3788,9 @@ declare global {
         prototype: HTMLAtomicCommerceCategoryFacetElement;
         new (): HTMLAtomicCommerceCategoryFacetElement;
     };
+    /**
+     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+     */
     interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
     }
     var HTMLAtomicCommerceDidYouMeanElement: {
@@ -3621,6 +3812,7 @@ declare global {
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
+     * @alpha 
      */
     interface HTMLAtomicCommerceFacetNumberInputElement extends Components.AtomicCommerceFacetNumberInput, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicCommerceFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceFacetNumberInputElement, ev: AtomicCommerceFacetNumberInputCustomEvent<HTMLAtomicCommerceFacetNumberInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3659,6 +3851,9 @@ declare global {
         prototype: HTMLAtomicCommerceInterfaceElement;
         new (): HTMLAtomicCommerceInterfaceElement;
     };
+    /**
+     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
+     */
     interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
     }
     var HTMLAtomicCommerceLayoutElement: {
@@ -3675,6 +3870,9 @@ declare global {
         prototype: HTMLAtomicCommerceLoadMoreProductsElement;
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
+    /**
+     * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+     */
     interface HTMLAtomicCommerceNoProductsElement extends Components.AtomicCommerceNoProducts, HTMLStencilElement {
     }
     var HTMLAtomicCommerceNoProductsElement: {
@@ -3683,6 +3881,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     * @alpha 
      */
     interface HTMLAtomicCommerceNumericFacetElement extends Components.AtomicCommerceNumericFacet, HTMLStencilElement {
     }
@@ -3711,6 +3910,9 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
     }
     var HTMLAtomicCommerceProductListElement: {
@@ -3740,6 +3942,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+     * @alpha 
      */
     interface HTMLAtomicCommerceQueryErrorElement extends Components.AtomicCommerceQueryError, HTMLStencilElement {
     }
@@ -3757,6 +3960,9 @@ declare global {
         prototype: HTMLAtomicCommerceQuerySummaryElement;
         new (): HTMLAtomicCommerceQuerySummaryElement;
     };
+    /**
+     * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
+     */
     interface HTMLAtomicCommerceRecommendationInterfaceElement extends Components.AtomicCommerceRecommendationInterface, HTMLStencilElement {
     }
     var HTMLAtomicCommerceRecommendationInterfaceElement: {
@@ -3765,6 +3971,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+     * @alpha 
      */
     interface HTMLAtomicCommerceRecommendationListElement extends Components.AtomicCommerceRecommendationList, HTMLStencilElement {
     }
@@ -3819,6 +4026,7 @@ declare global {
      * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
      * This component is not supported on mobile.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxInstantProductsElement extends Components.AtomicCommerceSearchBoxInstantProducts, HTMLStencilElement {
     }
@@ -3828,6 +4036,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxQuerySuggestionsElement extends Components.AtomicCommerceSearchBoxQuerySuggestions, HTMLStencilElement {
     }
@@ -3837,6 +4046,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSearchBoxRecentQueriesElement extends Components.AtomicCommerceSearchBoxRecentQueries, HTMLStencilElement {
     }
@@ -3846,6 +4056,7 @@ declare global {
     };
     /**
      * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     * @alpha 
      */
     interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
     }
@@ -3865,6 +4076,7 @@ declare global {
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     * @alpha 
      */
     interface HTMLAtomicCommerceTimeframeFacetElement extends Components.AtomicCommerceTimeframeFacet, HTMLStencilElement {
     }
@@ -4014,15 +4226,6 @@ declare global {
     var HTMLAtomicFormatUnitElement: {
         prototype: HTMLAtomicFormatUnitElement;
         new (): HTMLAtomicFormatUnitElement;
-    };
-    /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
-    }
-    var HTMLAtomicFrequentlyBoughtTogetherElement: {
-        prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
-        new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -4279,6 +4482,29 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsSessionElement: {
+        prototype: HTMLAtomicInsightUserActionsSessionElement;
+        new (): HTMLAtomicInsightUserActionsSessionElement;
+    };
+    /**
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
+     * @component 
+     * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
+     */
+    interface HTMLAtomicInsightUserActionsTimelineElement extends Components.AtomicInsightUserActionsTimeline, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsTimelineElement: {
+        prototype: HTMLAtomicInsightUserActionsTimelineElement;
+        new (): HTMLAtomicInsightUserActionsTimelineElement;
+    };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
     }
@@ -4388,15 +4614,6 @@ declare global {
         new (): HTMLAtomicLayoutSectionElement;
     };
     /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
-    }
-    var HTMLAtomicLoadMoreChildrenResultsElement: {
-        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
-        new (): HTMLAtomicLoadMoreChildrenResultsElement;
-    };
-    /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
      */
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
@@ -4493,6 +4710,7 @@ declare global {
     };
     /**
      * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
+     * @alpha 
      */
     interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
     }
@@ -4503,6 +4721,10 @@ declare global {
     interface HTMLAtomicProductChildrenElementEventMap {
         "atomic/selectChildProduct": SelectChildProductEventArgs;
     }
+    /**
+     * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
+     * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
+     */
     interface HTMLAtomicProductChildrenElement extends Components.AtomicProductChildren, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -4517,6 +4739,9 @@ declare global {
         prototype: HTMLAtomicProductChildrenElement;
         new (): HTMLAtomicProductChildrenElement;
     };
+    /**
+     * @alpha The `atomic-product-description` component renders the description of a product.
+     */
     interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
     }
     var HTMLAtomicProductDescriptionElement: {
@@ -4526,6 +4751,7 @@ declare global {
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+     * @alpha 
      */
     interface HTMLAtomicProductFieldConditionElement extends Components.AtomicProductFieldCondition, HTMLStencilElement {
     }
@@ -4535,6 +4761,7 @@ declare global {
     };
     /**
      * The `atomic-product-image` component renders an image from a product field.
+     * @alpha 
      */
     interface HTMLAtomicProductImageElement extends Components.AtomicProductImage, HTMLStencilElement {
     }
@@ -4543,8 +4770,7 @@ declare global {
         new (): HTMLAtomicProductImageElement;
     };
     /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     * @alpha 
+     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
     }
@@ -4552,12 +4778,19 @@ declare global {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
     };
+    /**
+     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
+     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+     */
     interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
     }
     var HTMLAtomicProductNumericFieldValueElement: {
         prototype: HTMLAtomicProductNumericFieldValueElement;
         new (): HTMLAtomicProductNumericFieldValueElement;
     };
+    /**
+     * @alpha The `atomic-product-price` component renders the price of a product.
+     */
     interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
     }
     var HTMLAtomicProductPriceElement: {
@@ -4566,6 +4799,7 @@ declare global {
     };
     /**
      * The `atomic-product-rating` element renders a star rating.
+     * @alpha 
      */
     interface HTMLAtomicProductRatingElement extends Components.AtomicProductRating, HTMLStencilElement {
     }
@@ -4573,54 +4807,122 @@ declare global {
         prototype: HTMLAtomicProductRatingElement;
         new (): HTMLAtomicProductRatingElement;
     };
+    /**
+     * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
+     * In commerce interface, the user can usually add the product to their cart or wish list.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
     interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionActionsElement: {
         prototype: HTMLAtomicProductSectionActionsElement;
         new (): HTMLAtomicProductSectionActionsElement;
     };
+    /**
+     * @alpha This section is meant to render badges that highlight special features of the product.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
     interface HTMLAtomicProductSectionBadgesElement extends Components.AtomicProductSectionBadges, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionBadgesElement: {
         prototype: HTMLAtomicProductSectionBadgesElement;
         new (): HTMLAtomicProductSectionBadgesElement;
     };
+    /**
+     * @alpha This section is meant to render additional descriptive information about the product.
+     * Behavior:
+     * * Has a maximum height of two lines.
+     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     * * Has a font weight.
+     */
     interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionBottomMetadataElement: {
         prototype: HTMLAtomicProductSectionBottomMetadataElement;
         new (): HTMLAtomicProductSectionBottomMetadataElement;
     };
+    /**
+     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
+     * Behavior:
+     * * Shows children at the bottom of the result, indented and wrapped in a border.
+     */
     interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionChildrenElement: {
         prototype: HTMLAtomicProductSectionChildrenElement;
         new (): HTMLAtomicProductSectionChildrenElement;
     };
+    /**
+     * @alpha This section is intended to render an informative summary of the product's description.
+     * Behavior:
+     * * Has a fixed height of one to three lines, depending on the layout and density.
+     * * Ellipses overflowing text.
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     */
     interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionDescriptionElement: {
         prototype: HTMLAtomicProductSectionDescriptionElement;
         new (): HTMLAtomicProductSectionDescriptionElement;
     };
+    /**
+     * @alpha This section is intended to display the field that's important for its search criteria.
+     * For example, in Commerce, a product's price is often more important than the title itself.
+     * Behavior:
+     * * Has a very large font size.
+     * * Is the second closest element beneath the name section.
+     */
     interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionEmphasizedElement: {
         prototype: HTMLAtomicProductSectionEmphasizedElement;
         new (): HTMLAtomicProductSectionEmphasizedElement;
     };
+    /**
+     * @alpha This section is intended to display some fields that are directly related to the name of the product.
+     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
+     * rather than to the product's description.
+     * Behavior:
+     * * Has a very small font size.
+     * * Is the closest element beneath the title section.
+     */
     interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionMetadataElement: {
         prototype: HTMLAtomicProductSectionMetadataElement;
         new (): HTMLAtomicProductSectionMetadataElement;
     };
+    /**
+     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
+     * Behavior:
+     * * Has a fixed height of two lines on grid layouts.
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     */
     interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionNameElement: {
         prototype: HTMLAtomicProductSectionNameElement;
         new (): HTMLAtomicProductSectionNameElement;
     };
+    /**
+     * @alpha This section is intended to provide visual information about the product.
+     * In commerce, an image is a great shorthand for a product category.
+     * Behavior:
+     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
+     * ** You should ensure that elements inside of it take the available space.
+     * * Always has a 1:1 aspect ratio.
+     */
     interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
     }
     var HTMLAtomicProductSectionVisualElement: {
@@ -4628,7 +4930,11 @@ declare global {
         new (): HTMLAtomicProductSectionVisualElement;
     };
     /**
-     * @alpha 
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
     }
@@ -4636,6 +4942,9 @@ declare global {
         prototype: HTMLAtomicProductTemplateElement;
         new (): HTMLAtomicProductTemplateElement;
     };
+    /**
+     * @alpha The `atomic-product-text` component renders the value of a string product field.
+     */
     interface HTMLAtomicProductTextElement extends Components.AtomicProductText, HTMLStencilElement {
     }
     var HTMLAtomicProductTextElement: {
@@ -5139,8 +5448,6 @@ declare global {
     };
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -5426,6 +5733,9 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    /**
+     * @alpha 
+     */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
     var HTMLAtomicTabManagerElement: {
@@ -5530,7 +5840,6 @@ declare global {
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
-        "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
@@ -5564,6 +5873,8 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
+        "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -5575,7 +5886,6 @@ declare global {
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
-        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -5785,6 +6095,14 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
@@ -5869,12 +6187,21 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
     }
     /**
      * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * @alpha 
      */
     interface AtomicCommerceBreadbox {
         /**
@@ -5906,6 +6233,9 @@ declare namespace LocalJSX {
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
+    /**
+     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+     */
     interface AtomicCommerceDidYouMean {
     }
     /**
@@ -5932,6 +6262,7 @@ declare namespace LocalJSX {
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
+     * @alpha 
      */
     interface AtomicCommerceFacetNumberInput {
         "bindings": Bindings;
@@ -6005,6 +6336,9 @@ declare namespace LocalJSX {
         "type"?: | 'search'
     | 'product-listing';
     }
+    /**
+     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
+     */
     interface AtomicCommerceLayout {
         /**
           * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
@@ -6017,10 +6351,14 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceLoadMoreProducts {
     }
+    /**
+     * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+     */
     interface AtomicCommerceNoProducts {
     }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+     * @alpha 
      */
     interface AtomicCommerceNumericFacet {
         /**
@@ -6059,6 +6397,9 @@ declare namespace LocalJSX {
          */
         "previousButtonIcon"?: string;
     }
+    /**
+     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+     */
     interface AtomicCommerceProductList {
         /**
           * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
@@ -6068,11 +6409,6 @@ declare namespace LocalJSX {
           * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
          */
         "display"?: ItemDisplayLayout;
-        /**
-          * The target location to open the product link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The expected size of the image displayed for products.
          */
@@ -6100,6 +6436,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+     * @alpha 
      */
     interface AtomicCommerceQueryError {
     }
@@ -6109,6 +6446,9 @@ declare namespace LocalJSX {
      */
     interface AtomicCommerceQuerySummary {
     }
+    /**
+     * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
+     */
     interface AtomicCommerceRecommendationInterface {
         /**
           * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
@@ -6146,6 +6486,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+     * @alpha 
      */
     interface AtomicCommerceRecommendationList {
         /**
@@ -6157,11 +6498,6 @@ declare namespace LocalJSX {
          */
         "display"?: ItemDisplayBasicLayout;
         /**
-          * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link. This property is ignored unless the `display` property is set to `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget"?: ItemTarget;
-        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel"?: number;
@@ -6169,6 +6505,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed on the recommended products.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The unique identifier of the product to use for seeded recommendations.
+         */
+        "productId"?: string;
         /**
           * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
          */
@@ -6240,6 +6580,7 @@ declare namespace LocalJSX {
      * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
      * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
      * This component is not supported on mobile.
+     * @alpha 
      */
     interface AtomicCommerceSearchBoxInstantProducts {
         /**
@@ -6257,6 +6598,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+     * @alpha 
      */
     interface AtomicCommerceSearchBoxQuerySuggestions {
         /**
@@ -6274,6 +6616,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+     * @alpha 
      */
     interface AtomicCommerceSearchBoxRecentQueries {
         /**
@@ -6291,6 +6634,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     * @alpha 
      */
     interface AtomicCommerceSortDropdown {
     }
@@ -6311,6 +6655,7 @@ declare namespace LocalJSX {
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+     * @alpha 
      */
     interface AtomicCommerceTimeframeFacet {
         /**
@@ -6354,6 +6699,10 @@ declare namespace LocalJSX {
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
      */
     interface AtomicExternal {
+        /**
+          * Represents the bound interface for the AtomicExternal component.
+         */
+        "boundInterface"?: AtomicInterface;
         /**
           * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
          */
@@ -6424,6 +6773,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -6522,7 +6879,7 @@ declare namespace LocalJSX {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). See the `atomic-load-more-children-results` component. For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults"?: number;
         /**
@@ -6530,6 +6887,14 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
+        /**
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -6582,20 +6947,11 @@ declare namespace LocalJSX {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     /**
-     * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-     */
-    interface AtomicFrequentlyBoughtTogether {
-    }
-    /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
-        /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
-         */
-        "answerStyle"?: GeneratedAnswerStyle;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -6731,10 +7087,6 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightGeneratedAnswer {
         /**
-          * The answer style to apply when the component first loads. Options:   - `default`: Generate the answer without specific formatting instructions.   - `bullet`: Generate the answer as a bulleted list.   - `step`: Generate the answer as step-by-step instructions.   - `concise`: Generate the answer as briefly as possible.
-         */
-        "answerStyle"?: InsightGeneratedAnswerStyle;
-        /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
          */
@@ -6783,10 +7135,6 @@ declare namespace LocalJSX {
           * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
-        /**
-          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-         */
-        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -7080,6 +7428,37 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
+    /**
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
+     * @component 
+     * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
+     */
+    interface AtomicInsightUserActionsTimeline {
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+         */
+        "userId": string;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
@@ -7131,11 +7510,6 @@ declare namespace LocalJSX {
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display"?: ItemDisplayBasicLayout1;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget"?: ItemTarget1;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -7216,15 +7590,6 @@ declare namespace LocalJSX {
           * The name of the layout section.
          */
         "section": Section;
-    }
-    /**
-     * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-     */
-    interface AtomicLoadMoreChildrenResults {
-        /**
-          * The non-localized label for the button used to load more results.
-         */
-        "label"?: string;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -7326,6 +7691,14 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
@@ -7376,6 +7749,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
+     * @alpha 
      */
     interface AtomicProduct {
         /**
@@ -7400,8 +7774,17 @@ declare namespace LocalJSX {
         "imageSize"?: ItemDisplayImageSize;
         /**
           * The InteractiveProduct item.
+          * @alpha
          */
         "interactiveProduct": InteractiveProduct;
+        /**
+          * The product link to use when the product is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
+        /**
+          * @alpha
+         */
         "loadingFlag"?: string;
         /**
           * The product item.
@@ -7409,6 +7792,7 @@ declare namespace LocalJSX {
         "product": Product;
         /**
           * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+          * @alpha
          */
         "renderingFunction"?: ItemRenderingFunction;
         /**
@@ -7417,9 +7801,14 @@ declare namespace LocalJSX {
         "stopPropagation"?: boolean;
         /**
           * Global Atomic state.
+          * @alpha
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
+    /**
+     * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
+     * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
+     */
     interface AtomicProductChildren {
         /**
           * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
@@ -7435,6 +7824,9 @@ declare namespace LocalJSX {
         "label"?: string;
         "onAtomic/selectChildProduct"?: (event: AtomicProductChildrenCustomEvent<SelectChildProductEventArgs>) => void;
     }
+    /**
+     * @alpha The `atomic-product-description` component renders the description of a product.
+     */
     interface AtomicProductDescription {
         /**
           * The name of the description field to use.
@@ -7448,6 +7840,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+     * @alpha 
      */
     interface AtomicProductFieldCondition {
         /**
@@ -7461,6 +7854,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
+     * @alpha 
      */
     interface AtomicProductImage {
         /**
@@ -7477,8 +7871,7 @@ declare namespace LocalJSX {
         "imageAltField"?: string;
     }
     /**
-     * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     * @alpha 
+     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface AtomicProductLink {
         /**
@@ -7486,16 +7879,24 @@ declare namespace LocalJSX {
          */
         "hrefTemplate"?: string;
     }
+    /**
+     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
+     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+     */
     interface AtomicProductNumericFieldValue {
         /**
           * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
          */
         "field": string;
     }
+    /**
+     * @alpha The `atomic-product-price` component renders the price of a product.
+     */
     interface AtomicProductPrice {
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
+     * @alpha 
      */
     interface AtomicProductRating {
         /**
@@ -7515,22 +7916,90 @@ declare namespace LocalJSX {
          */
         "ratingDetailsField"?: string;
     }
+    /**
+     * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
+     * In commerce interface, the user can usually add the product to their cart or wish list.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
     interface AtomicProductSectionActions {
     }
+    /**
+     * @alpha This section is meant to render badges that highlight special features of the product.
+     * Behavior:
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+     * * Is a wrapping flexbox with a gap.
+     * * May appear over, next to, or beneath the visual section.
+     */
     interface AtomicProductSectionBadges {
     }
+    /**
+     * @alpha This section is meant to render additional descriptive information about the product.
+     * Behavior:
+     * * Has a maximum height of two lines.
+     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     * * Has a font weight.
+     */
     interface AtomicProductSectionBottomMetadata {
     }
+    /**
+     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
+     * Behavior:
+     * * Shows children at the bottom of the result, indented and wrapped in a border.
+     */
     interface AtomicProductSectionChildren {
     }
+    /**
+     * @alpha This section is intended to render an informative summary of the product's description.
+     * Behavior:
+     * * Has a fixed height of one to three lines, depending on the layout and density.
+     * * Ellipses overflowing text.
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     */
     interface AtomicProductSectionDescription {
     }
+    /**
+     * @alpha This section is intended to display the field that's important for its search criteria.
+     * For example, in Commerce, a product's price is often more important than the title itself.
+     * Behavior:
+     * * Has a very large font size.
+     * * Is the second closest element beneath the name section.
+     */
     interface AtomicProductSectionEmphasized {
     }
+    /**
+     * @alpha This section is intended to display some fields that are directly related to the name of the product.
+     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
+     * rather than to the product's description.
+     * Behavior:
+     * * Has a very small font size.
+     * * Is the closest element beneath the title section.
+     */
     interface AtomicProductSectionMetadata {
     }
+    /**
+     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
+     * Behavior:
+     * * Has a fixed height of two lines on grid layouts.
+     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+     * * Has a defined CSS `color` property for text.
+     */
     interface AtomicProductSectionName {
     }
+    /**
+     * @alpha This section is intended to provide visual information about the product.
+     * In commerce, an image is a great shorthand for a product category.
+     * Behavior:
+     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
+     * ** You should ensure that elements inside of it take the available space.
+     * * Always has a 1:1 aspect ratio.
+     */
     interface AtomicProductSectionVisual {
         /**
           * How large or small the visual section of product using this template should be.
@@ -7538,7 +8007,11 @@ declare namespace LocalJSX {
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
-     * @alpha 
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
     interface AtomicProductTemplate {
         /**
@@ -7560,6 +8033,9 @@ declare namespace LocalJSX {
     string[]
   >;
     }
+    /**
+     * @alpha The `atomic-product-text` component renders the value of a string product field.
+     */
     interface AtomicProductText {
         /**
           * The locale key for the text to display when the configured field has no value.
@@ -7668,6 +8144,14 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -7723,6 +8207,14 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -7767,10 +8259,6 @@ declare namespace LocalJSX {
          */
         "languageAssetsPath"?: string;
         /**
-          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-         */
-        "localizationCompatibilityVersion"?: i18nCompatibilityVersion1;
-        /**
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: RecsLogLevel;
@@ -7799,11 +8287,6 @@ declare namespace LocalJSX {
           * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display"?: ItemDisplayBasicLayout;
-        /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget"?: ItemTarget;
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
@@ -7957,6 +8440,11 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": InteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -8130,14 +8618,17 @@ declare namespace LocalJSX {
          */
         "display"?: ItemDisplayLayout;
         /**
-          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_self`
-         */
-        "gridCellLinkTarget"?: ItemTarget;
-        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
+        /**
+          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -8327,8 +8818,6 @@ declare namespace LocalJSX {
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -8427,10 +8916,6 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
-        /**
-          * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element. The resulting component will expand to support multi-line queries. When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part. The buttons within the search box are likely to need adjusting as well.  Example: ```css <style>   atomic-search-box::part(textarea),   atomic-search-box::part(textarea-expander)::after,   atomic-search-box::part(textarea-spacer) {     font-size: x-large;   }    atomic-search-box::part(submit-button-wrapper),   atomic-search-box::part(clear-button-wrapper) {     padding-top: 0.75rem;   } </style> ```  NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
-         */
-        "textarea"?: boolean;
     }
     /**
      * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -8531,10 +9016,6 @@ declare namespace LocalJSX {
          */
         "languageAssetsPath"?: string;
         /**
-          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-         */
-        "localizationCompatibilityVersion"?: i18nCompatibilityVersion;
-        /**
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel1;
@@ -8612,6 +9093,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
@@ -8652,6 +9141,14 @@ declare namespace LocalJSX {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -8744,6 +9241,14 @@ declare namespace LocalJSX {
           * The non-localized label to display for this expression.
          */
         "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     interface AtomicTab {
         /**
@@ -8759,6 +9264,9 @@ declare namespace LocalJSX {
          */
         "name": string;
     }
+    /**
+     * @alpha 
+     */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
@@ -8859,6 +9367,14 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
@@ -8915,7 +9431,6 @@ declare namespace LocalJSX {
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
-        "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
@@ -8949,6 +9464,8 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
+        "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -8960,7 +9477,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
-        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -9104,6 +9620,7 @@ declare module "@stencil/core" {
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
              * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             * @alpha 
              */
             "atomic-commerce-breadbox": LocalJSX.AtomicCommerceBreadbox & JSXBase.HTMLAttributes<HTMLAtomicCommerceBreadboxElement>;
             /**
@@ -9112,6 +9629,9 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
+            /**
+             * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+             */
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -9120,6 +9640,7 @@ declare module "@stencil/core" {
             "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
              * Internal component made to be integrated in a NumericFacet.
+             * @alpha 
              */
             "atomic-commerce-facet-number-input": LocalJSX.AtomicCommerceFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetNumberInputElement>;
             /**
@@ -9135,15 +9656,22 @@ declare module "@stencil/core" {
              * configurations.
              */
             "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
+            /**
+             * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
+             */
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              * @alpha 
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
+            /**
+             * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+             */
             "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;
             /**
              * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+             * @alpha 
              */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
@@ -9151,6 +9679,9 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
+            /**
+             * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
+             */
             "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -9159,6 +9690,7 @@ declare module "@stencil/core" {
             "atomic-commerce-products-per-page": LocalJSX.AtomicCommerceProductsPerPage & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductsPerPageElement>;
             /**
              * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+             * @alpha 
              */
             "atomic-commerce-query-error": LocalJSX.AtomicCommerceQueryError & JSXBase.HTMLAttributes<HTMLAtomicCommerceQueryErrorElement>;
             /**
@@ -9166,9 +9698,13 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
+            /**
+             * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
+             */
             "atomic-commerce-recommendation-interface": LocalJSX.AtomicCommerceRecommendationInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationInterfaceElement>;
             /**
              * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
+             * @alpha 
              */
             "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
@@ -9192,18 +9728,22 @@ declare module "@stencil/core" {
              * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
              * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
              * This component is not supported on mobile.
+             * @alpha 
              */
             "atomic-commerce-search-box-instant-products": LocalJSX.AtomicCommerceSearchBoxInstantProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxInstantProductsElement>;
             /**
              * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+             * @alpha 
              */
             "atomic-commerce-search-box-query-suggestions": LocalJSX.AtomicCommerceSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxQuerySuggestionsElement>;
             /**
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
+             * @alpha 
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
             /**
              * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+             * @alpha 
              */
             "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             /**
@@ -9213,6 +9753,7 @@ declare module "@stencil/core" {
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+             * @alpha 
              */
             "atomic-commerce-timeframe-facet": LocalJSX.AtomicCommerceTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceTimeframeFacetElement>;
             /**
@@ -9272,10 +9813,6 @@ declare module "@stencil/core" {
              */
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             /**
-             * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
-             */
-            "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
-            /**
              * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
              */
@@ -9321,6 +9858,19 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            /**
+             * @category Insight Panel
+             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+             */
+            "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
+            /**
+             * This component displays all the actions performed by a user around the time they created a case.
+             * The actions are grouped into multiple sessions, including the session during which the case was created,
+             * the sessions preceding the case creation and the sessions following the case creation.
+             * @component 
+             * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
+             */
+            "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
@@ -9341,10 +9891,6 @@ declare module "@stencil/core" {
              * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
              */
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
-            /**
-             * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
-             */
-            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             /**
              * The `atomic-load-more-results` component allows the user to load additional results if more are available.
              */
@@ -9380,43 +9926,135 @@ declare module "@stencil/core" {
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
              * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
+             * @alpha 
              */
             "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
+            /**
+             * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
+             * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
+             */
             "atomic-product-children": LocalJSX.AtomicProductChildren & JSXBase.HTMLAttributes<HTMLAtomicProductChildrenElement>;
+            /**
+             * @alpha The `atomic-product-description` component renders the description of a product.
+             */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
+             * @alpha 
              */
             "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.
+             * @alpha 
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
             /**
-             * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-             * @alpha 
+             * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            /**
+             * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
+             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+             */
             "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
+            /**
+             * @alpha The `atomic-product-price` component renders the price of a product.
+             */
             "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
             /**
              * The `atomic-product-rating` element renders a star rating.
-             */
-            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
-            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
-            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
-            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
-            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
-            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
-            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
-            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
-            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
-            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
-            /**
              * @alpha 
              */
+            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
+            /**
+             * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
+             * In commerce interface, the user can usually add the product to their cart or wish list.
+             * Behavior:
+             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+             * * Is a wrapping flexbox with a gap.
+             * * May appear over, next to, or beneath the visual section.
+             */
+            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
+            /**
+             * @alpha This section is meant to render badges that highlight special features of the product.
+             * Behavior:
+             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+             * * Is a wrapping flexbox with a gap.
+             * * May appear over, next to, or beneath the visual section.
+             */
+            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
+            /**
+             * @alpha This section is meant to render additional descriptive information about the product.
+             * Behavior:
+             * * Has a maximum height of two lines.
+             * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
+             * * Has a defined CSS `color` property for text.
+             * * Has a font weight.
+             */
+            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
+            /**
+             * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
+             * Behavior:
+             * * Shows children at the bottom of the result, indented and wrapped in a border.
+             */
+            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
+            /**
+             * @alpha This section is intended to render an informative summary of the product's description.
+             * Behavior:
+             * * Has a fixed height of one to three lines, depending on the layout and density.
+             * * Ellipses overflowing text.
+             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+             * * Has a defined CSS `color` property for text.
+             */
+            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
+            /**
+             * @alpha This section is intended to display the field that's important for its search criteria.
+             * For example, in Commerce, a product's price is often more important than the title itself.
+             * Behavior:
+             * * Has a very large font size.
+             * * Is the second closest element beneath the name section.
+             */
+            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
+            /**
+             * @alpha This section is intended to display some fields that are directly related to the name of the product.
+             * In commerce, this could be the product rating, which is tied to the nature of the product itself,
+             * rather than to the product's description.
+             * Behavior:
+             * * Has a very small font size.
+             * * Is the closest element beneath the title section.
+             */
+            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
+            /**
+             * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
+             * Behavior:
+             * * Has a fixed height of two lines on grid layouts.
+             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+             * * Has a defined CSS `color` property for text.
+             */
+            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
+            /**
+             * @alpha This section is intended to provide visual information about the product.
+             * In commerce, an image is a great shorthand for a product category.
+             * Behavior:
+             * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
+             * ** You should ensure that elements inside of it take the available space.
+             * * Always has a 1:1 aspect ratio.
+             */
+            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
+            /**
+             * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+             * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+             */
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
+            /**
+             * @alpha The `atomic-product-text` component renders the value of a string product field.
+             */
             "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -9687,8 +10325,6 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
-             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
@@ -9789,6 +10425,9 @@ declare module "@stencil/core" {
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            /**
+             * @alpha 
+             */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.

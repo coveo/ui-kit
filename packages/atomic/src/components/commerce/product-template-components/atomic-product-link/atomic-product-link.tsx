@@ -15,13 +15,14 @@ import {
   InteractiveProductContext,
   ProductContext,
 } from '../product-template-decorators';
+import {buildStringTemplateFromProduct} from '../product-utils';
 
 /**
+ * @alpha
  * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
  * @slot default - Lets you display alternative content inside the link.
  * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes. Use only with an "a" tag, e.g., `<a slot="attributes" target="_blank" download></a>`.
  *
- * @alpha
  */
 @Component({
   tag: 'atomic-product-link',
@@ -83,7 +84,11 @@ export class AtomicProductLink
   public render() {
     const href = isUndefined(this.hrefTemplate)
       ? this.product.clickUri
-      : 'test';
+      : buildStringTemplateFromProduct(
+          this.hrefTemplate,
+          this.product,
+          this.bindings
+        );
 
     if (!this.interactiveProduct) {
       return;

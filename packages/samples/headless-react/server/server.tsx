@@ -8,6 +8,7 @@ import escape from 'escape-html';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import App from '../src/App';

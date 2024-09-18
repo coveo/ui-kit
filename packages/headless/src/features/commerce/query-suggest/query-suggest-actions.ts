@@ -3,6 +3,7 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
 import {
   AsyncThunkCommerceOptions,
+  getCommerceApiBaseUrl,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client';
 import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request';
@@ -12,7 +13,7 @@ import {
   CartSection,
   CommerceContextSection,
   CommerceQuerySection,
-  ConfigurationSection,
+  CommerceConfigurationSection,
   QuerySetSection,
   VersionSection,
 } from '../../../state/state-sections';
@@ -40,7 +41,7 @@ export const clearQuerySuggest = createAction(
 export type FetchQuerySuggestionsPayload =
   FetchQuerySuggestionsActionCreatorPayload;
 
-export type StateNeededByQuerySuggest = ConfigurationSection &
+export type StateNeededByQuerySuggest = CommerceConfigurationSection &
   CommerceContextSection &
   CartSection &
   QuerySetSection &
@@ -124,12 +125,19 @@ export const buildQuerySuggestRequest = (
   const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
-    url: state.configuration.platformUrl,
+    url:
+      state.configuration.commerce.apiBaseUrl ??
+      getCommerceApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     query: state.querySet[id],
     ...restOfContext,
-    clientId: navigatorContext.clientId,
+    ...(state.configuration.analytics.enabled
+      ? {clientId: navigatorContext.clientId}
+      : {}),
     context: {
       ...(navigatorContext.userAgent
         ? {

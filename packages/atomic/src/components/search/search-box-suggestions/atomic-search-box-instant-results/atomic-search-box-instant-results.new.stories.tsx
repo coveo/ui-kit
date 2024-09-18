@@ -1,6 +1,6 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
@@ -104,7 +104,7 @@ export const Default: Story = {
           exact: false,
         })
       )
-        ?.find((el) => el.role === 'combobox')
+        ?.find((el) => el.getAttribute('part') === 'textarea')
         ?.focus();
     });
   },
