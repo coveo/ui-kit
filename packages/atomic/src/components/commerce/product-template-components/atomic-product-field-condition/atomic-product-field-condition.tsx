@@ -10,7 +10,7 @@ import {ProductContext} from '../product-template-decorators';
 /**
  * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
  * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product-field-condition',

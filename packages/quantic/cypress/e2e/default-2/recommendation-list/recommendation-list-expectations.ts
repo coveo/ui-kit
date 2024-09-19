@@ -54,22 +54,22 @@ export function recommendationListExpectations(
     },
 
     recommendationsEqual: (recommendationsAlias: string) => {
-      cy.get<Array<{Title: string}>>(recommendationsAlias).then(
-        (recommendations) => {
-          selector
-            .recommendationLinks()
-            .then((elements) => {
-              return Cypress.$.makeArray(elements).map(
-                (element) => element.innerText
-              );
-            })
-            .should(
-              'deep.equal',
-              recommendations.map((result) => result.Title)
-            )
-            .logDetail('should render the received recommendations');
-        }
-      );
+      cy.get<Array<{Title: string; clickUri: string}>>(
+        recommendationsAlias
+      ).then((recommendations) => {
+        selector
+          .recommendationLinks()
+          .then((elements) => {
+            return Cypress.$.makeArray(elements).map(
+              (element) => element.innerText
+            );
+          })
+          .should(
+            'deep.equal',
+            recommendations.map((result) => result.Title || result.clickUri)
+          )
+          .logDetail('should render the received recommendations');
+      });
     },
 
     correctFieldsIncluded: (expectedFieldsToInclude: string[]) => {

@@ -232,7 +232,7 @@ function nextAnalyticsExpectations() {
 
           validateEventWithEventAPI(interception.request);
         })
-        .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
+        .logDetail('should emit the caseAssist.selectFieldClassification');
     },
 
     emitUpdateField: (

@@ -73,6 +73,10 @@ export abstract class TemplateProvider<ItemType> {
     return this.templateManager.selectLinkTemplate(item)!;
   }
 
+  public getEmptyLinkTemplateContent() {
+    return document.createDocumentFragment();
+  }
+
   public get templatesRegistered() {
     return this.props.getResultTemplateRegistered();
   }

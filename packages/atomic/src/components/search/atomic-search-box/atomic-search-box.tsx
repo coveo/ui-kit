@@ -33,12 +33,15 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isFocusingOut, once, randomID} from '../../../utils/utils';
+import {
+  isFocusingOut,
+  once,
+  randomID,
+  spreadProperties,
+} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
-import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
-import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   SearchBoxSuggestionElement,
@@ -107,7 +110,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
   private id!: string;
-  private inputRef!: HTMLInputElement;
   private textAreaRef!: HTMLTextAreaElement;
   private suggestionManager!: SuggestionManager<
     SearchBox | StandaloneSearchBox
@@ -184,32 +186,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
    * When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
    */
   @Prop({reflect: true}) public enableQuerySyntax = false;
-
-  /**
-   * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
-   * The resulting component will expand to support multi-line queries.
-   * When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part.
-   * The buttons within the search box are likely to need adjusting as well.
-   *
-   * Example:
-   * ```css
-   * <style>
-   *   atomic-search-box::part(textarea),
-   *   atomic-search-box::part(textarea-expander)::after,
-   *   atomic-search-box::part(textarea-spacer) {
-   *     font-size: x-large;
-   *   }
-   *
-   *   atomic-search-box::part(submit-button-wrapper),
-   *   atomic-search-box::part(clear-button-wrapper) {
-   *     padding-top: 0.75rem;
-   *   }
-   * </style>
-   * ```
-   *
-   * NB: The textarea functionality will be enforced on the next major version of Atomic (3.0.0)
-   */
-  @Prop({reflect: true}) public textarea = false;
 
   /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
@@ -358,11 +334,11 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   private get suggestionBindings(): SearchBoxSuggestionsBindings<
     SearchBox | StandaloneSearchBox
   > {
-    return {
-      ...this.bindings,
-      ...this.suggestionManager.partialSuggestionBindings,
-      ...this.partialSuggestionBindings,
-    };
+    return spreadProperties(
+      this.bindings,
+      this.suggestionManager.partialSuggestionBindings,
+      this.partialSuggestionBindings
+    );
   }
 
   private get partialSuggestionBindings(): Pick<
@@ -373,14 +349,38 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     | 'numberOfQueries'
     | 'clearFilters'
   > {
-    return {
-      ...this.bindings,
-      id: this.id,
-      isStandalone: () => !!this.redirectionUrl,
-      searchBoxController: () => this.searchBox,
-      numberOfQueries: this.numberOfQueries,
-      clearFilters: this.clearFilters,
-    };
+    return Object.defineProperties(
+      {...this.bindings},
+      {
+        id: {
+          get: () => this.id,
+          enumerable: true,
+        },
+        searchBoxController: {
+          get: () => this.searchBox,
+          enumerable: true,
+        },
+        isStandalone: {
+          get: () => !!this.redirectionUrl,
+          enumerable: true,
+        },
+        numberOfQueries: {
+          get: () => this.numberOfQueries,
+          enumerable: true,
+        },
+        clearFilters: {
+          get: () => this.clearFilters,
+          enumerable: true,
+        },
+      }
+    ) as unknown as Pick<
+      SearchBoxSuggestionsBindings<SearchBox | StandaloneSearchBox>,
+      | 'id'
+      | 'isStandalone'
+      | 'searchBoxController'
+      | 'numberOfQueries'
+      | 'clearFilters'
+    >;
   }
 
   private get searchBoxOptions(): SearchBoxOptions {
@@ -536,9 +536,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
           this.isExpanded = false;
-          if (this.textarea) {
-            this.triggerTextAreaChange(item.query ?? '');
-          }
+          this.triggerTextAreaChange(item.query ?? '');
         }}
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);
@@ -643,7 +641,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       },
     };
 
-    return this.textarea ? (
+    return (
       <SearchTextArea
         textAreaRef={this.textAreaRef}
         ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
@@ -652,12 +650,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           props.onClear();
           this.triggerTextAreaChange('');
         }}
-      />
-    ) : (
-      <SearchInput
-        inputRef={this.inputRef}
-        ref={(el) => (this.inputRef = el as HTMLInputElement)}
-        {...props}
       />
     );
   };
@@ -724,7 +716,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     this.updateBreakpoints();
 
     const searchLabel = this.getSearchInputLabel(this.minimumQueryLength);
-    const Submit = this.textarea ? TextAreaSubmitButton : SubmitButton;
     const isDisabled = this.isSearchDisabledForEndUser(
       this.searchBoxState.value
     );
@@ -734,11 +725,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
     return (
       <Host>
-        {this.textarea ? this.renderAbsolutePositionSpacer() : null}
+        {this.renderAbsolutePositionSpacer()}
         {[
           <SearchBoxWrapper
             disabled={isDisabled}
-            textArea={this.textarea}
             onFocusout={(event) => {
               if (!isFocusingOut(event)) {
                 return;
@@ -748,7 +738,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             }}
           >
             {this.renderTextBox(searchLabel)}
-            <Submit
+            <SubmitButton
               bindings={this.bindings}
               disabled={isDisabled}
               onClick={() => {

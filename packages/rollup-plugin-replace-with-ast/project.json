@@ -1,0 +1,19 @@
+{
+  "name": "rollup-plugin-replace-with-ast",
+  "private": true,
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:bundles", "npm run build:definitions"],
+        "parallel": true,
+        "cwd": "packages/rollup-plugin-replace-with-ast"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {logInsightStaticFilterDeselect} from './static-filter-set-insight-analytics-actions';
 
 const mockOriginalStaticFilterDeselect = jest.fn();
@@ -17,15 +18,17 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const examplestaticFilterId = 'examplestaticFilterId';
-const examplestaticFilterValue = {caption: 'string', expression: 'string;'};
+describe('static filter set actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const examplestaticFilterId = 'examplestaticFilterId';
+  const examplestaticFilterValue = {caption: 'string', expression: 'string;'};
 
-describe('logStaticFilterDeselect', () => {
   it('should log #logStaticFilterDeselect with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         insightCaseContext: {
@@ -36,6 +39,7 @@ describe('logStaticFilterDeselect', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
     await logInsightStaticFilterDeselect({

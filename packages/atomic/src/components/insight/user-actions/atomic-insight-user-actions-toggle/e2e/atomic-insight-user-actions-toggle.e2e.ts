@@ -13,7 +13,9 @@ test.describe('user actions toggle', () => {
     });
   });
 
-  test('should user actions toggle button', async ({userActionsToggle}) => {
+  test('should display the user actions toggle button', async ({
+    userActionsToggle,
+  }) => {
     await expect(userActionsToggle.atomicInsightHistoryToggle).toBeVisible();
   });
 

@@ -24,10 +24,10 @@ export type {Pagination, PaginationProps, PaginationState};
  */
 export function definePagination<
   TOptions extends ControllerDefinitionOption | undefined,
->(props?: PaginationProps, options?: TOptions) {
-  ensureAtLeastOneSolutionType(options);
+>(props?: PaginationProps & TOptions) {
+  ensureAtLeastOneSolutionType(props);
   return {
-    ...options,
+    ...props,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).pagination(props)

@@ -39,8 +39,6 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerDetailedFeedback with the right payload 1`] = `undefined`;
-
 exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerExpand with the right payload 1`] = `
 [
   "Qna.AnswerAction",

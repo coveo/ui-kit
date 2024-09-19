@@ -23,7 +23,8 @@ export const addRecsList =
 const numberOfRecs = 3;
 const numberOfRecsPerPage = 1;
 
-describe('Recs Interface Component', () => {
+// TODO: https://coveord.atlassian.net/browse/KIT-3540 - rewrite in playwright
+describe.skip('Recs Interface Component', () => {
   describe('before recommendation have loaded', () => {
     beforeEach(() => {
       new TestRecsFixture()

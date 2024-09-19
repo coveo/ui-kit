@@ -24,7 +24,7 @@ import {
 
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product',
@@ -48,13 +48,13 @@ export class AtomicProduct {
 
   /**
    * The InteractiveProduct item.
-   * @internal
+   * @alpha
    */
   @Prop() interactiveProduct!: InteractiveProduct;
 
   /**
    * Global Atomic state.
-   * @internal
+   * @alpha
    */
   @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
 
@@ -93,7 +93,7 @@ export class AtomicProduct {
   @Prop() classes = '';
 
   /**
-   * @internal
+   * @alpha
    */
   @Prop() loadingFlag?: string;
 
@@ -101,7 +101,7 @@ export class AtomicProduct {
    * Internal function used in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
-   * @internal
+   * @alpha
    */
   @Prop() renderingFunction: ItemRenderingFunction;
 

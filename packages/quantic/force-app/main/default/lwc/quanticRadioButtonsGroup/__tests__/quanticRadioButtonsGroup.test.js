@@ -199,7 +199,7 @@ describe('c-quantic-radio-buttons-group', () => {
   });
 
   describe('User interaction', () => {
-    it('should dispatch the "change" event when a radio button is clicked', async () => {
+    it('should dispatch the "quantic__change" event when a radio button is clicked', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -208,7 +208,7 @@ describe('c-quantic-radio-buttons-group', () => {
       );
       const radioInput = radioInputs[0];
       const changeHandler = jest.fn();
-      element.addEventListener('change', changeHandler);
+      element.addEventListener('quantic__change', changeHandler);
 
       radioInput.click();
 

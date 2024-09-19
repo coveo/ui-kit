@@ -2,7 +2,7 @@ import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
-import {GeneratedAnswerStyle} from '../../features/generated-answer/generated-response-format';
+import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format';
 import {URLPath} from '../../utils/url-utils';
 import {
   HTTPContentType,
@@ -158,7 +158,7 @@ export interface GenQAParameters {
 }
 
 export interface ResponseFormatParameters {
-  answerStyle: GeneratedAnswerStyle;
+  contentFormat?: GeneratedContentFormat[];
 }
 
 export const baseSearchRequest = (

@@ -550,7 +550,7 @@ export class Store {
  */
 export function AriaLiveRegion(regionName, elem, assertive = false) {
   function dispatchMessage(message) {
-    const ariaLiveMessageEvent = new CustomEvent('arialivemessage', {
+    const ariaLiveMessageEvent = new CustomEvent('quantic__arialivemessage', {
       bubbles: true,
       composed: true,
       detail: {
@@ -563,7 +563,7 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
   }
 
   function registerRegion() {
-    const registerRegionEvent = new CustomEvent('registerregion', {
+    const registerRegionEvent = new CustomEvent('quantic__registerregion', {
       bubbles: true,
       composed: true,
       detail: {

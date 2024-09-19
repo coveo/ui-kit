@@ -4,6 +4,6 @@ export const InsightPanelActions = {
   executeQuery: (query?: string) =>
     InsightPanelsSelectors.searchbox()
       .shadow()
-      .find('textarea')
+      .find('textarea[part="textarea"]')
       .type(`${query}{enter}`),
 };

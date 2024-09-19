@@ -66,7 +66,7 @@ test.describe('user actions timeline', () => {
       await userActionsTimeline.load({
         args: {
           userId: exampleUserId,
-          ticketCreationDate: exampleTicketCreationDate,
+          ticketCreationDateTime: exampleTicketCreationDate,
         },
       });
       await userActionsTimeline.mockUserActions(page, exampleUserActions);

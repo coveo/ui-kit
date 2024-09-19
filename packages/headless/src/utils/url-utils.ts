@@ -41,25 +41,3 @@ export type PlatformCombination =
   | {env: 'prod'; region: 'us' | 'eu' | 'au'};
 
 export type PlatformEnvironment = PlatformCombination['env'];
-
-export const isCoveoPlatformURL = (url: string) =>
-  /^https:\/\/platform(dev|stg|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
-    url
-  );
-
-export const matchCoveoOrganizationEndpointUrl = (
-  url: string,
-  organizationId: string
-): {organizationId?: string; environment?: PlatformEnvironment} | null => {
-  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(url);
-  return match && match.organizationId === organizationId ? match : null;
-};
-
-export const matchCoveoOrganizationEndpointUrlAnyOrganization = (
-  url: string
-): {organizationId?: string; environment?: PlatformEnvironment} | null => {
-  const match = url.match(
-    /^https:\/\/(?<organizationId>\w+)\.org(?<environment>dev|stg|hipaa)?\.coveo\.com/
-  );
-  return match?.groups ? match.groups : null;
-};

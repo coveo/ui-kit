@@ -5,8 +5,8 @@ import {
   InsightUserActionsState,
   InsightUserSession,
 } from '../..';
-import ArrowDownIcon from '../../../../images/arrow-full-down.svg';
-import ArrowUpIcon from '../../../../images/arrow-up.svg';
+import ArrowDownIcon from '../../../../images/big-arrow-down.svg';
+import ArrowUpIcon from '../../../../images/big-arrow-up.svg';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -44,17 +44,17 @@ export class AtomicInsightUserActionsTimeline
   public error!: Error;
 
   /**
-   * The ID of the user whose actions are being displayed.
+   * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
    */
   @Prop() public userId!: string;
   /**
-   * The date and time when the case was created.
+   * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
-  @Prop() public ticketCreationDate!: string;
+  @Prop() public ticketCreationDateTime!: string;
 
   public initialize() {
     this.userActions = buildInsightUserActions(this.bindings.engine, {
-      options: {ticketCreationDate: this.ticketCreationDate},
+      options: {ticketCreationDate: this.ticketCreationDateTime},
     });
 
     this.userActions.fetchUserActions(this.userId);
@@ -101,14 +101,7 @@ export class AtomicInsightUserActionsTimeline
     const icon = this.followingSessionsAreVisible ? ArrowDownIcon : ArrowUpIcon;
 
     return (
-      <div
-        class="flex justify-center p-2"
-        data-testid={
-          this.followingSessionsAreVisible
-            ? 'hide-following-sessions'
-            : 'show-following-sessions'
-        }
-      >
+      <div class="flex justify-center p-2">
         <Button
           style="text-primary"
           part="toggle-following-sessions"
@@ -136,14 +129,7 @@ export class AtomicInsightUserActionsTimeline
     const icon = this.precedingSessionsAreVisible ? ArrowUpIcon : ArrowDownIcon;
 
     return (
-      <div
-        class="flex justify-center p-2"
-        data-testid={
-          this.precedingSessionsAreVisible
-            ? 'hide-preceding-sessions'
-            : 'show-preceding-sessions'
-        }
-      >
+      <div class="flex justify-center p-2">
         <Button
           style="text-primary"
           part="toggle-preceding-sessions"

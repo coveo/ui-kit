@@ -4,10 +4,7 @@ import {
 } from '@microsoft/fetch-event-source';
 import {createSelector} from '@reduxjs/toolkit';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors';
-import {
-  GeneratedAnswerStyle,
-  GeneratedContentFormat,
-} from '../../features/generated-answer/generated-response-format';
+import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format';
 import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants';
 import {selectPipeline} from '../../features/pipeline/select-pipeline';
 import {selectQuery} from '../../features/query/query-selectors';
@@ -23,6 +20,7 @@ import {
 } from '../../state/state-sections';
 import {getFacets} from '../../utils/facet-utils';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload';
+import {getOrganizationEndpoint} from '../platform-client';
 import {SearchRequest} from '../search/search/search-request';
 import {answerSlice} from './answer-slice';
 
@@ -36,7 +34,6 @@ export type StateNeededByAnswerAPI = {
 
 export interface GeneratedAnswerStream {
   answerId?: string;
-  answerStyle?: GeneratedAnswerStyle;
   contentFormat?: GeneratedContentFormat;
   answer?: string;
   citations?: GeneratedAnswerCitation[];
@@ -47,10 +44,7 @@ export interface GeneratedAnswerStream {
 }
 
 interface StreamPayload
-  extends Pick<
-    GeneratedAnswerStream,
-    'answerStyle' | 'contentFormat' | 'citations'
-  > {
+  extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
@@ -64,10 +58,9 @@ type PayloadType =
 
 const handleHeaderMessage = (
   draft: GeneratedAnswerStream,
-  payload: Pick<GeneratedAnswerStream, 'answerStyle' | 'contentFormat'>
+  payload: Pick<GeneratedAnswerStream, 'contentFormat'>
 ) => {
-  const {answerStyle, contentFormat} = payload;
-  draft.answerStyle = answerStyle;
+  const {contentFormat} = payload;
   draft.contentFormat = contentFormat;
   draft.isStreaming = true;
   draft.isLoading = false;
@@ -136,7 +129,7 @@ const updateCacheWithEvent = (
 
   switch (message.payloadType) {
     case 'genqa.headerMessageType':
-      if (parsedPayload.answerStyle && parsedPayload.contentFormat) {
+      if (parsedPayload.contentFormat) {
         handleHeaderMessage(draft, parsedPayload);
       }
       break;
@@ -164,7 +157,6 @@ export const answerApi = answerSlice.injectEndpoints({
     getAnswer: builder.query<GeneratedAnswerStream, Partial<SearchRequest>>({
       queryFn: () => ({
         data: {
-          answerStyle: undefined,
           contentFormat: undefined,
           answer: undefined,
           citations: undefined,
@@ -186,9 +178,13 @@ export const answerApi = answerSlice.injectEndpoints({
          */
         const {configuration, generatedAnswer} =
           getState() as unknown as StateNeededByAnswerAPI;
-        const {platformUrl, organizationId, accessToken} = configuration;
+        const {organizationId, environment, accessToken} = configuration;
+        const platformEndpoint = getOrganizationEndpoint(
+          organizationId,
+          environment
+        );
         await fetchEventSource(
-          `${platformUrl}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
+          `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
           {
             method: 'POST',
             body: JSON.stringify(args),
