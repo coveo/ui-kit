@@ -76,14 +76,19 @@ export class AtomicNoResults {
     this.ariaMessage = getSummary(
       i18n,
       this.querySummaryState.query,
-      this.searchStatusState.hasResults
+      this.searchStatusState.hasResults,
+      'no-results'
     );
 
     return (
       <NoItemsGuard {...this.searchStatusState}>
         <NoItemsContainer>
           <MagnifyingGlass />
-          <NoItems query={this.querySummaryState.query} i18n={i18n} />
+          <NoItems
+            query={this.querySummaryState.query}
+            i18n={i18n}
+            i18nKey="no-results"
+          />
           <SearchTips i18n={i18n} />
           {this.enableCancelLastAction && this.historyState.past.length ? (
             <Cancel

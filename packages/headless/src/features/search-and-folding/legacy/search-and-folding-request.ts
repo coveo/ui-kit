@@ -4,6 +4,7 @@ import {
   getVisitorID,
   historyStore,
 } from '../../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../../api/platform-client';
 import {SearchRequest} from '../../../api/search/search/search-request';
 import {SearchAppState} from '../../../state/search-app-state';
 import {ConfigurationSection} from '../../../state/state-sections';
@@ -19,7 +20,12 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     locale: state.configuration.search.locale,
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,
