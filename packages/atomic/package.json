@@ -38,7 +38,6 @@
   },
   "files": [
     "dist/",
-    "loader/",
     "docs/",
     "licenses/"
   ],

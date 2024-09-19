@@ -104,8 +104,8 @@ The Atomic package allows you to customize your components by defining CSS varia
 It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/themes/coveo.css` and you can import them in your entry js file as follows.
 
 ```ts
-// optional!
 import {applyPolyfills, defineCustomElements} from '@coveo/atomic/loader';
+// optional!
 import '@coveo/atomic/themes/coveo.css';
 import {createApp} from 'vue';
 import App from './App.vue';
