@@ -25,6 +25,7 @@ const config: StorybookConfig = {
         nxViteTsPaths(),
 
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
+      ],
     }),
 };
 
