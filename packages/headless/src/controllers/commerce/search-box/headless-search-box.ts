@@ -160,6 +160,7 @@ export function buildSearchBox(
         : false;
 
       return {
+        searchBoxId: id,
         value: getValue(),
         suggestions,
         isLoading: getState().commerceSearch.isLoading,
