@@ -42,7 +42,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-product-link',
+  name: 'atomic-product-rating',
 };
 
 export const WithARatingDetailsField: Story = {
