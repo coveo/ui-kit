@@ -2082,6 +2082,7 @@ export namespace Components {
         "maxValueInIndex": number;
         /**
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+          * @type {string}
          */
         "ratingDetailsField"?: string;
     }
@@ -7913,6 +7914,7 @@ declare namespace LocalJSX {
         "maxValueInIndex"?: number;
         /**
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+          * @type {string}
          */
         "ratingDetailsField"?: string;
     }
