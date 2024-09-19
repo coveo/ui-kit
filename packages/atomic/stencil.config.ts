@@ -15,17 +15,19 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
-import {externalPackageMappings} from './scripts/externalPackageMappings';
+import {generateExternalPackageMappings} from './scripts/externalPackageMappings';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 function generateAliasEntries() {
-  return Object.entries(externalPackageMappings).map(([find, paths]) => ({
-    find,
-    replacement: paths.devWatch,
-  }));
+  return Object.entries(generateExternalPackageMappings(__dirname)).map(
+    ([find, paths]) => ({
+      find,
+      replacement: paths.devWatch,
+    })
+  );
 }
 
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
@@ -212,13 +214,13 @@ function externalizeDependenciesPlugin() {
   return {
     name: 'externalize-dependencies',
     resolveId: (id: string) => {
-      if (externalPackageMappings[id]) {
+      if (generateExternalPackageMappings(__dirname)[id]) {
         if (!isCDN) {
           return false;
         }
 
         return {
-          id: externalPackageMappings[id].cdn,
+          id: generateExternalPackageMappings(__dirname)[id].cdn,
           external: 'absolute',
         };
       }

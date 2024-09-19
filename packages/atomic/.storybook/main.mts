@@ -1,7 +1,7 @@
 import {nxViteTsPaths} from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import {mergeConfig} from 'vite';
-import {externalPackageMappings} from '../scripts/externalPackageMappings';
+import {generateExternalPackageMappings} from '../scripts/externalPackageMappings';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
@@ -19,12 +19,9 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  viteFinal: async (config, {configType}) =>
+  viteFinal: async (config) =>
     mergeConfig(config, {
-      plugins: [
-        nxViteTsPaths(),
-        configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
-      ],
+      plugins: [nxViteTsPaths(), externalizeDependencies()],
     }),
 };
 
@@ -36,13 +33,13 @@ function externalizeDependencies() {
       if (/^\/(headless|bueno)/.test(id)) {
         return false;
       }
-      if (externalPackageMappings[id]) {
+      if (generateExternalPackageMappings(__dirname)[id]) {
         if (!isCDN) {
           return false;
         }
 
         return {
-          id: externalPackageMappings[id].cdn,
+          id: generateExternalPackageMappings(__dirname)[id].cdn,
           external: 'absolute',
         };
       }
