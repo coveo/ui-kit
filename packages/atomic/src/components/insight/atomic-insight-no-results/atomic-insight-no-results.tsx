@@ -61,7 +61,11 @@ export class AtomicInsightNoResults
         <NoItemsGuard {...this.searchStatusState}>
           <NoItemsContainer>
             <MagnifyingGlass />
-            <NoItems query={this.querySummaryState.query} i18n={i18n} />
+            <NoItems
+              query={this.querySummaryState.query}
+              i18n={i18n}
+              i18nKey="no-results"
+            />
             <SearchTips i18n={i18n} />
           </NoItemsContainer>
         </NoItemsGuard>
