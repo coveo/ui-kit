@@ -24,7 +24,7 @@
     "collection-manifest.json"
   ],
   "scripts": {
-    "clean": "rimraf -rf dist/*",
+    "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* loader/* playwright-report/*",
     "build": "nx build",
     "build:locales": "npx nx build:locales atomic",
     "start": "nx dev atomic",

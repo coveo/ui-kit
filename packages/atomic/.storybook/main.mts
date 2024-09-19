@@ -19,9 +19,12 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  viteFinal: async (config) =>
+  viteFinal: async (config, {configType}) =>
     mergeConfig(config, {
-      plugins: [nxViteTsPaths(), externalizeDependencies()],
+      plugins: [
+        nxViteTsPaths(),
+
+        configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
     }),
 };
 
