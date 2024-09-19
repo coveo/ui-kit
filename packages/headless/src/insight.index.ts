@@ -44,6 +44,7 @@ export * from './features/analytics/generic-analytics-actions-loader';
 export * from './features/question-answering/question-answering-actions-loader';
 export * from './features/folding/folding-actions-loader';
 export * from './features/insight-user-actions/insight-user-actions-loader';
+export * from './features/query-suggest/query-suggest-actions-loader';
 
 // Controllers
 export type {
