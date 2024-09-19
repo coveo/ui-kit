@@ -6,5 +6,10 @@ export class ProductRatingPageObject extends BasePageObject<'atomic-product-rati
     super(page, 'atomic-product-rating');
   }
 
-  // get first result, check the yellow star things, check if width is 80%
+  get blueLagoonYellowIcons() {
+    return this.page
+      .getByLabel('4 stars out of', {exact: false})
+      .locator('div')
+      .nth(1);
+  }
 }

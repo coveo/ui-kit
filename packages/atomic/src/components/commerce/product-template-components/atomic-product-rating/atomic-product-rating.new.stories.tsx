@@ -56,3 +56,10 @@ export const WithAMaxValueInIndex: Story = {
     'attributes-max-value-in-index': 10,
   },
 };
+
+export const WithADifferentIcon: Story = {
+  args: {
+    'attributes-icon':
+      'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
+  },
+};

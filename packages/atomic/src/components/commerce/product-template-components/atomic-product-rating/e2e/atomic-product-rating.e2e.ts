@@ -11,8 +11,10 @@ test.describe('default', () => {
     expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
   });
 
-  test('should have the right number of stars', async ({productRating}) => {
-    await expect(productRating.blueLagoonYellowStars).toHaveAttribute(
+  test('should have the right number of yellow icons', async ({
+    productRating,
+  }) => {
+    await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
       'style',
       'width: 80%;'
     );
@@ -37,7 +39,7 @@ test.describe('with a rating details field', () => {
   });
 });
 
-test.describe('with a max value in index', () => {
+test.describe('with a max value in index of 10', () => {
   test.beforeEach(async ({productRating}) => {
     await productRating.load({story: 'with-a-max-value-in-index'});
   });
@@ -49,11 +51,30 @@ test.describe('with a max value in index', () => {
   });
 
   test('should have the right number of stars', async ({productRating}) => {
-    await expect(productRating.blueLagoonYellowStars).toHaveAttribute(
+    await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
       'style',
       'width: 40%;'
     );
   });
 });
-// test maxValueInIndex
-// test different icon
+
+test.describe('with a different icon', () => {
+  test.beforeEach(async ({productRating}) => {
+    await productRating.load({story: 'with-a-different-icon'});
+  });
+
+  test('should be accessible', async ({productRating, makeAxeBuilder}) => {
+    await expect(productRating.hydrated.first()).toBeVisible();
+
+    expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
+  });
+
+  test('should have the right number of yellow icons', async ({
+    productRating,
+  }) => {
+    await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
+      'style',
+      'width: 80%;'
+    );
+  });
+});
