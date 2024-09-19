@@ -29,10 +29,8 @@ import {
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
 import {
-  GeneratedAnswerStyle,
   GeneratedContentFormat,
   GeneratedResponseFormat,
-  generatedAnswerStyle,
   generatedContentFormat,
 } from './generated-response-format';
 
@@ -149,10 +147,6 @@ export const updateResponseFormat = createAction(
   'generatedAnswer/updateResponseFormat',
   (payload: GeneratedResponseFormat) =>
     validatePayload(payload, {
-      answerStyle: new StringValue<GeneratedAnswerStyle>({
-        required: true,
-        constrainTo: generatedAnswerStyle,
-      }),
       contentFormat: new ArrayValue<GeneratedContentFormat>({
         each: answerContentFormatSchema,
         default: ['text/plain'],

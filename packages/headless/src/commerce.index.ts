@@ -1,6 +1,11 @@
 import * as Selectors from './selectors/commerce-selectors.index';
 import * as HighlightUtils from './utils/highlight';
 
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client';
 export type {HighlightKeyword} from './utils/highlight';
 
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -257,8 +262,6 @@ export type {SearchSummaryState} from './controllers/commerce/search/summary/hea
 export type {ProductListingSummaryState} from './controllers/commerce/product-listing/summary/headless-product-listing-summary';
 export type {RecommendationsSummaryState} from './controllers/commerce/recommendations/summary/headless-recommendations-summary';
 export type {Summary} from './controllers/commerce/core/summary/headless-core-summary';
-
-export {getOrganizationEndpoints} from './api/platform-client';
 
 export type {
   DidYouMean,

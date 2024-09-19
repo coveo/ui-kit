@@ -45,6 +45,29 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
    * Allows for augmenting a search response before the state is updated.
    */
   preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
+  /**
+   * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
+   *
+   * This is an advanced option that you should only set if you need to proxy Coveo search requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, no proxy is used and the Coveo Search API requests are sent directly to the Coveo platform through the
+   * search [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
+   * `environment` values provided in your engine configuration (i.e., `https://<organizationId>.org.coveo.com` or
+   * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and different from
+   * `prod`).
+   *
+   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the recommendation
+   * engine will not work properly:
+   *
+   * - `POST` `/` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/searchUsingPost)
+   * - `POST` `/plan` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/plan`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/planSearchUsingPost)
+   * - `POST` `/querySuggest` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/querySuggest`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/querySuggestPost)
+   * - `POST` `/facet` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/facet`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/facetSearch)
+   * - `POST` `/html` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/html`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/htmlPost)
+   * - `GET` `/fields` to proxy requests to [`GET` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/fields`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/fields)
+   */
+  proxyBaseUrl?: string;
 }
 
 export const recommendationEngineConfigurationSchema =

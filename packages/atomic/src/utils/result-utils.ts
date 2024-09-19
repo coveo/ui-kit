@@ -6,6 +6,7 @@ import {
 } from '@coveo/headless';
 import {RecsBindings} from '../components/recommendations/atomic-recs-interface/atomic-recs-interface';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {readFromObject} from './object-utils';
 
 /**
  * Binds the logging of document
@@ -81,22 +82,4 @@ export function getStringValueFromResultOrNull(result: Result, field: string) {
   }
 
   return value;
-}
-
-function readFromObject<T extends object>(
-  object: T,
-  key: string
-): string | undefined {
-  const keys = key.split('.');
-  let current: unknown = object;
-
-  for (const k of keys) {
-    if (current && typeof current === 'object' && k in current) {
-      current = (current as Record<string, unknown>)[k];
-    } else {
-      return undefined;
-    }
-  }
-
-  return typeof current === 'string' ? current : undefined;
 }

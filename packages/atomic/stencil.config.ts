@@ -16,9 +16,70 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
+import headlessJson from '../../packages/headless/package.json';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
+let headlessVersion: string = '';
+if (isCDN) {
+  console.log('Building for CDN');
+  headlessVersion = 'v' + headlessJson.version;
+}
+
+const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
+  '@coveo/headless/commerce': {
+    devWatch: path.resolve(
+      __dirname,
+      './src/external-builds/commerce/headless.esm.js'
+    ),
+    cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
+  },
+  '@coveo/headless/insight': {
+    devWatch: path.resolve(
+      __dirname,
+      './src/external-builds/insight/headless.esm.js'
+    ),
+    cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
+  },
+  '@coveo/headless/product-recommendation': {
+    devWatch: path.resolve(
+      __dirname,
+      './src/external-builds/product-recommendation/headless.esm.js'
+    ),
+    cdn: `/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
+  },
+  '@coveo/headless/recommendation': {
+    devWatch: path.resolve(
+      __dirname,
+      './src/external-builds/recommendation/headless.esm.js'
+    ),
+    cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
+  },
+  '@coveo/headless/case-assist': {
+    devWatch: path.resolve(
+      __dirname,
+      './src/external-builds/case-assist/headless.esm.js'
+    ),
+    cdn: `/headless/${headlessVersion}/case-assist/headless.esm.js`,
+  },
+  '@coveo/headless': {
+    devWatch: path.resolve(__dirname, './src/external-builds/headless.esm.js'),
+    cdn: `/headless/${headlessVersion}/headless.esm.js`,
+  },
+  /*   '@coveo/bueno': {
+    devWatch: path.resolve(__dirname, './src/external-builds/bueno.esm.js'),
+    cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
+  }, */
+};
+
+function generateAliasEntries() {
+  return Object.entries(packageMappings).map(([find, paths]) => ({
+    find,
+    replacement: paths.devWatch,
+  }));
+}
 
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
   return readdirSync(useCasePath, {
@@ -56,8 +117,10 @@ function replace() {
   const env = isProduction ? 'production' : 'development';
   const version = getPackageVersion();
   return replacePlugin({
-    'process.env.NODE_ENV': JSON.stringify(env),
-    'process.env.VERSION': JSON.stringify(version),
+    values: {
+      'process.env.NODE_ENV': JSON.stringify(env),
+      'process.env.VERSION': JSON.stringify(version),
+    },
     preventAssignment: true,
   });
 }
@@ -185,58 +248,35 @@ export const config: Config = {
     before: [
       isDevWatch &&
         alias({
-          entries: [
-            {
-              find: '@coveo/headless/case-assist',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/case-assist/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless/commerce',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/commerce/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless/recommendation',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/recommendation/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless/commerce',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/commerce/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless/insight',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/insight/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/headless.esm.js'
-              ),
-            },
-          ],
+          entries: generateAliasEntries(),
         }),
       html({
         include: 'src/templates/**/*.html',
       }),
       isDevWatch && replaceHeadlessMap(),
+      externalizeDependenciesPlugin(),
     ],
   },
   extras: {
     enableImportInjection: true,
   },
 };
+function externalizeDependenciesPlugin() {
+  return {
+    name: 'externalize-dependencies',
+    resolveId(source: string) {
+      if (packageMappings[source]) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMappings[source].cdn,
+          external: 'absolute',
+        };
+      }
+
+      return null;
+    },
+  };
+}
