@@ -16,8 +16,6 @@
             <property name="pipeline" type="String" default="genqatest" label="The search interface query pipeline"/>
             <property name="disableStateInUrl" type="Boolean" default="false" label="Disable state in URL"/>
             <property name="skipFirstSearch" type="Boolean" default="false" label="Skip first search"/>
-            <property name="answerStyle" type="String" default="default" label="The format style of the generated answer"/>
-            <property name="multilineFooter" type="Boolean" default="false" label="Display footer sections on multiple lines"/>
         </targetConfig>
         <targetConfig targets="lightning__AppPage, lightning__RecordPage, lightning__HomePage">
             <property name="engineId" type="String" default="example-relevant-generative-answering" label="Enter Coveo Headless engine ID"/>
@@ -25,8 +23,6 @@
             <property name="pipeline" type="String" default="genqatest" label="The search interface query pipeline"/>
             <property name="disableStateInUrl" type="Boolean" default="false" label="Disable state in URL"/>
             <property name="skipFirstSearch" type="Boolean" default="false" label="Skip first search"/>
-            <property name="answerStyle" type="String" default="default" label="The format style of the generated answer"/>
-            <property name="multilineFooter" type="Boolean" default="false" label="Display footer sections on multiple lines"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

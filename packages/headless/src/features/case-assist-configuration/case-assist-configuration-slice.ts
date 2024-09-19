@@ -9,6 +9,7 @@ export const caseAssistConfigurationReducer = createReducer(
     builder.addCase(setCaseAssistConfiguration, (state, action) => {
       state.caseAssistId = action.payload.caseAssistId;
       state.locale = action.payload.locale;
+      state.apiBaseUrl = action.payload.proxyBaseUrl;
     });
   }
 );

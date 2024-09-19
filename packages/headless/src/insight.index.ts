@@ -1,7 +1,5 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import * as HighlightUtils from './utils/highlight';
 
-polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
@@ -13,7 +11,10 @@ export type {
   InsightEngineConfiguration,
   InsightEngineSearchConfigurationOptions,
 } from './app/insight-engine/insight-engine';
-export {buildInsightEngine} from './app/insight-engine/insight-engine';
+export {
+  buildInsightEngine,
+  getSampleInsightEngineConfiguration,
+} from './app/insight-engine/insight-engine';
 
 export type {CoreEngine, ExternalEngineOptions} from './app/engine';
 export type {
@@ -326,7 +327,6 @@ export type {
   InteractiveCitationOptions,
 } from './controllers/insight/generated-answer/headless-insight-interactive-citation';
 export {buildInteractiveCitation} from './controllers/insight/generated-answer/headless-insight-interactive-citation';
-export type {GeneratedAnswerStyle} from './features/generated-answer/generated-response-format';
 
 export type {
   UserActionsState,
@@ -388,5 +388,9 @@ export type {
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';
 
-export {getOrganizationEndpoints} from './api/platform-client';
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
+
 export type {PlatformEnvironment} from './utils/url-utils';

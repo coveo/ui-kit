@@ -1,4 +1,3 @@
-import {TestFixture} from '../fixtures/test-fixture';
 import {should} from './common-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
@@ -24,12 +23,6 @@ export function assertLogDislikeGeneratedAnswer() {
 
 export function assertLogCopyGeneratedAnswer() {
   cy.expectCustomEvent('generatedAnswer', 'generatedAnswerCopyToClipboard');
-}
-
-export function assertLogRephraseGeneratedAnswer(format: string) {
-  cy.expectSearchEvent('rephraseGeneratedAnswer').then((analyticsBody) => {
-    expect(analyticsBody.customData).to.have.property('rephraseFormat', format);
-  });
 }
 
 export function assertAnswerVisibility(isVisible: boolean) {
@@ -86,15 +79,6 @@ export function assertLogHideGeneratedAnswer() {
 export function assertLogShowGeneratedAnswer() {
   it('should log generatedAnswerShowAnswers analytics event', () => {
     cy.expectCustomEvent('generatedAnswer', 'generatedAnswerShowAnswers');
-  });
-}
-
-export function assertAnswerStyle(expected: string) {
-  cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
-    expect(
-      firstSearch.request.body.pipelineRuleParameters
-        .mlGenerativeQuestionAnswering.responseFormat
-    ).to.have.property('answerStyle', expected);
   });
 }
 

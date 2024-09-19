@@ -152,16 +152,10 @@ describe('category facet', () => {
   });
 
   describe('when the search response is empty', () => {
-    it('#state.values is an empty array', () => {
-      expect(state.search.response.facets).toEqual([]);
-      expect(categoryFacet.state.values).toEqual([]);
+    it('#state.selectedValueAncestry is an empty array', () => {
+      expect(categoryFacet.state.selectedValueAncestry).toEqual([]);
     });
-
-    it('#state.parents is an empty array', () => {
-      expect(categoryFacet.state.parents).toEqual([]);
-    });
-
-    it('#state.valuesAsTrees', () => {
+    it('#state.valuesAsTrees is an empty array', () => {
       expect(categoryFacet.state.valuesAsTrees).toEqual([]);
     });
   });
@@ -172,10 +166,6 @@ describe('category facet', () => {
     beforeEach(() => {
       const response = buildMockCategoryFacetResponse({facetId, values});
       state.search.response.facets = [response];
-    });
-
-    it('#state.values contains the same values', () => {
-      expect(categoryFacet.state.values).toBe(values);
     });
 
     it('#state.valuesAsTrees contains the same values', () => {
@@ -210,18 +200,6 @@ describe('category facet', () => {
         values: [outerValue],
       });
       state.search.response.facets = [response];
-    });
-
-    it('#state.parents contains the outer and middle values', () => {
-      expect(categoryFacet.state.parents).toEqual([outerValue, middleValue]);
-    });
-
-    it('#state.values contains the innermost values', () => {
-      expect(categoryFacet.state.values).toBe(innerValues);
-    });
-
-    it('#state.parents contains the outer and middle values', () => {
-      expect(categoryFacet.state.parents).toEqual([outerValue, middleValue]);
     });
 
     it('#state.valueAsTree contains the outer value', () => {
@@ -283,18 +261,14 @@ describe('category facet', () => {
       state.search.response.facets = [response];
     });
 
-    it('#state.parents contains the selected leaf value', () => {
-      expect(categoryFacet.state.parents).toEqual([selectedValue]);
-    });
-
     it('#state.selectedValueAncestry contains the selected leaf value', () => {
       expect(categoryFacet.state.selectedValueAncestry).toEqual([
         selectedValue,
       ]);
     });
 
-    it('#state.values is an empty array', () => {
-      expect(categoryFacet.state.values).toEqual([]);
+    it('#state.activeValue.children an empty array', () => {
+      expect(categoryFacet.state.activeValue?.children).toEqual([]);
     });
 
     it('#state.activeValue is the selected leaf value', () => {

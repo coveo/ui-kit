@@ -78,7 +78,7 @@ describe('search app', () => {
   });
 
   it('displays 5 values in the category facet', () => {
-    expect(categoryFacet.state.values.length).toBe(5);
+    expect(categoryFacet.state.valuesAsTrees.length).toBe(5);
   });
 
   describe('SearchBox: submit query', () => {
@@ -147,7 +147,7 @@ describe('search app', () => {
       initialFacetValues = facet.state.values;
       initialResults = resultList.state.results;
 
-      const [firstFacetValue] = categoryFacet.state.values;
+      const [firstFacetValue] = categoryFacet.state.valuesAsTrees;
 
       await waitForNextStateChange(facet, {
         action: () => categoryFacet.toggleSelect(firstFacetValue),

@@ -274,7 +274,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
 
-    const renderFacetEvent = new CustomEvent('renderfacet', {
+    const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
       detail: {
         id: this.facetId ?? this.field,
         shouldRenderFacet: !!this.hasParentsOrValues,
@@ -286,15 +286,23 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get values() {
-    return this.state?.values ?? [];
+    if (!this.state?.valuesAsTrees?.length) {
+      return [];
+    }
+
+    if (this.state?.selectedValueAncestry?.length > 0) {
+      return this.state?.activeValue?.children ?? [];
+    }
+
+    return this.state?.valuesAsTrees;
   }
 
   get nonActiveParents() {
-    return this.state?.parents?.slice(0, -1) ?? [];
+    return this.state?.selectedValueAncestry?.slice(0, -1) ?? [];
   }
 
   get activeParent() {
-    return this.state?.parents?.slice(-1)[0];
+    return this.state?.selectedValueAncestry?.slice(-1)[0];
   }
 
   get activeParentFormattedValue() {
@@ -314,11 +322,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get hasParents() {
-    return this.state?.parents?.length;
+    return this.state?.selectedValueAncestry?.length;
   }
 
   get hasValues() {
-    return this.state?.values?.length;
+    return this.state?.valuesAsTrees?.length;
   }
 
   get hasSearchResults() {

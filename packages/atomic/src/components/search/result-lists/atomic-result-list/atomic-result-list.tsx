@@ -39,7 +39,6 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-  ItemTarget,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
 import {TabGuard} from '../../../common/tab-manager/tab-guard';
@@ -104,14 +103,6 @@ export class AtomicResultList implements InitializableComponent {
   @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
 
   /**
-   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
-   * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_self`
-   * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-   */
-  @Prop() gridCellLinkTarget: ItemTarget = '_self';
-
-  /**
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true, mutable: true})
@@ -173,24 +164,21 @@ export class AtomicResultList implements InitializableComponent {
     this.tabManager = buildTabManager(this.bindings.engine);
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.itemTemplateProvider = new ItemTemplateProvider(
-      {
-        includeDefaultTemplate: true,
-        templateElements: Array.from(
-          this.host.querySelectorAll('atomic-result-template')
-        ),
-        getResultTemplateRegistered: () => this.resultTemplateRegistered,
-        getTemplateHasError: () => this.templateHasError,
-        setResultTemplateRegistered: (value: boolean) => {
-          this.resultTemplateRegistered = value;
-        },
-        setTemplateHasError: (value: boolean) => {
-          this.templateHasError = value;
-        },
-        bindings: this.bindings,
+    this.itemTemplateProvider = new ItemTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
       },
-      this.gridCellLinkTarget
-    );
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      bindings: this.bindings,
+    });
 
     this.resultListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -269,7 +257,10 @@ export class AtomicResultList implements InitializableComponent {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(result),
-      linkContent: this.itemTemplateProvider.getLinkTemplateContent(result),
+      linkContent:
+        this.display === 'grid'
+          ? this.itemTemplateProvider.getLinkTemplateContent(result)
+          : this.itemTemplateProvider.getEmptyLinkTemplateContent(),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,

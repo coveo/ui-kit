@@ -1,3 +1,4 @@
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {HtmlRequestOptions} from '../../api/search/html/html-request';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {getQueryInitialState} from '../query/query-state';
@@ -32,7 +33,7 @@ describe('ResultPreviewRequestBuilder', () => {
       q: '',
       requestedOutputSize: 0,
       uniqueId: '1',
-      url: 'https://platform.cloud.coveo.com/rest/search/v2',
+      url: getSearchApiBaseUrl(''),
       visitorId: expect.any(String),
     });
   });

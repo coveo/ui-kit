@@ -12,8 +12,8 @@ export class NoProductsPageObject extends BasePageObject<'atomic-commerce-no-pro
 
   ariaLive(query?: string) {
     const text = query
-      ? `We couldn't find anything for ${query}`
-      : 'No results';
+      ? `We couldn't find any product for ${query}`
+      : 'No products';
 
     return this.page.getByRole('status').filter({hasText: text});
   }
@@ -21,8 +21,8 @@ export class NoProductsPageObject extends BasePageObject<'atomic-commerce-no-pro
   message(query?: string) {
     return this.page.locator('[part="no-results"]', {
       hasText: query
-        ? `We couldn't find anything for “${query}”`
-        : 'No results',
+        ? `We couldn't find any product for “${query}”`
+        : 'No products',
     });
   }
 }

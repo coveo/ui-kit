@@ -1,4 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {getOrganizationEndpoint} from '../../api/platform-client';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {GetInsightInterfaceConfigRequest} from '../../api/service/insight/get-interface/get-interface-config-request';
 import {GetInsightInterfaceConfigResponse} from '../../api/service/insight/get-interface/get-interface-config-response';
@@ -47,6 +48,9 @@ const buildGetInsightInterfaceRequest = (
 ): GetInsightInterfaceConfigRequest => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: state.configuration.platformUrl,
+  url: getOrganizationEndpoint(
+    state.configuration.organizationId,
+    state.configuration.environment
+  ),
   insightId: state.insightConfiguration.insightId,
 });
