@@ -8,7 +8,7 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.new.stories.@(js|jsx|ts|tsx|mdx)'],
-  staticDirs: [{from: '../dist/atomic', to: './assets'}],
+  staticDirs: [{from: '../dist/atomic', to: './assets'},{from: '../dist/atomic/lang', to: './lang'}],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
@@ -24,10 +24,22 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       plugins: [
         nxViteTsPaths(),
+        resolveStorybookUtils(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     }),
 };
+
+function resolveStorybookUtils() {
+  return {
+    name: 'resolve-storybook-utils',
+    async resolveId(source: string, importer: unknown, options: unknown) {
+      if (source.startsWith('@coveo/atomic-storybook-utils')) {
+        return this.resolve(source.replace('@coveo/atomic-storybook-utils', path.resolve(__dirname, '../storybookUtils')),importer,options);
+      }
+    },
+  };
+}1
 
 function externalizeDependencies() {
   return {

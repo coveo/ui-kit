@@ -1,5 +1,6 @@
 {
   "name": "@coveo/atomic",
+  "type": "module",
   "version": "3.1.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
@@ -10,18 +11,36 @@
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
-  "es2015": "dist/esm/index.mjs",
-  "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
-  "collection": "collection-manifest.json",
-  "collection:main": "dist/index.js",
-  "unpkg": "dist/atomic/atomic.esm.js",
+  "exports": {
+    "./loader": {
+      "import": "./loader/index.js",
+      "require": "./loader/index.cjs.js",
+      "types": "./loader/index.d.ts"
+    },
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./themes/*": {
+      "import": "./dist/atomic/themes/*",
+      "require": "./dist/atomic/themes/*"
+    },
+    "./assets/*": {
+      "import": "./dist/atomic/assets/*",
+      "require": "./dist/atomic/assets/*"
+    },
+    "./lang/*": {
+      "import": "./dist/atomic/lang/*",
+      "require": "./dist/atomic/lang/*"
+    }
+  },
   "files": [
     "dist/",
     "loader/",
     "docs/",
-    "licenses/",
-    "collection-manifest.json"
+    "licenses/"
   ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
@@ -66,7 +85,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.9.1",
     "@babel/core": "7.24.9",
-    "@coveo/atomic": "file:.",
+    "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
     "@coveo/rollup-plugin-replace-with-ast": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.3",

@@ -1,5 +1,5 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {wrapInSearchInterface} from '../../../../../storybookUtils/search/search-interface-wrapper';

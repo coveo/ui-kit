@@ -101,12 +101,12 @@ scripts: {
 
 The Atomic package allows you to customize your components by defining CSS variables in your own stylesheet (see [Themes and Visual Customization](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/)).
 
-It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/dist/atomic/themes/coveo.css` and you can import them in your entry js file as follows.
+It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/themes/coveo.css` and you can import them in your entry js file as follows.
 
 ```ts
-import '@coveo/atomic/dist/atomic/themes/coveo.css';
 // optional!
 import {applyPolyfills, defineCustomElements} from '@coveo/atomic/loader';
+import '@coveo/atomic/themes/coveo.css';
 import {createApp} from 'vue';
 import App from './App.vue';
 
