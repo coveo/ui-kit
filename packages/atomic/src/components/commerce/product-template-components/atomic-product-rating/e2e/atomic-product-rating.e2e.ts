@@ -50,7 +50,9 @@ test.describe('with a max value in index of 10', () => {
     expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
   });
 
-  test('should have the right number of stars', async ({productRating}) => {
+  test('should have the right number of yellow icons', async ({
+    productRating,
+  }) => {
     await expect(productRating.blueLagoonYellowIcons).toHaveAttribute(
       'style',
       'width: 40%;'
