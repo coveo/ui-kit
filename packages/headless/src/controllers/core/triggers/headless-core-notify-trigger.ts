@@ -1,5 +1,5 @@
 import {CoreEngine} from '../../../app/engine';
-import {logNotifyTrigger} from '../../../features/triggers/insight-trigger-analytics-actions';
+import {logNotifyTrigger} from '../../../features/triggers/trigger-analytics-actions';
 import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice';
 import {TriggerSection} from '../../../state/state-sections';
 import {arrayEqual} from '../../../utils/compare-utils';
