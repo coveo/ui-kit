@@ -15,14 +15,14 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
-import {packageMappings} from './scripts/packageMappings';
+import {externalPackageMappings} from './scripts/externalPackageMappings';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 function generateAliasEntries() {
-  return Object.entries(packageMappings).map(([find, paths]) => ({
+  return Object.entries(externalPackageMappings).map(([find, paths]) => ({
     find,
     replacement: paths.devWatch,
   }));
@@ -212,13 +212,13 @@ function externalizeDependenciesPlugin() {
   return {
     name: 'externalize-dependencies',
     resolveId: (id: string) => {
-      if (packageMappings[id]) {
+      if (externalPackageMappings[id]) {
         if (!isCDN) {
           return false;
         }
 
         return {
-          id: packageMappings[id].cdn,
+          id: externalPackageMappings[id].cdn,
           external: 'absolute',
         };
       }

@@ -22,6 +22,6 @@
     ".storybook/*.jsx",
     ".storybook/register.tsx",
     ".storybook/main.mts",
-    "scripts/packageMappings.ts"
+    "scripts/externalPackageMappings.ts"
   ]
 }
