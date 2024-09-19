@@ -65,7 +65,7 @@
     "cspell": "8.12.1",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
-    "esbuild": "0.23.0",
+    "esbuild": "0.23.1",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "2.0.3",
     "eslint": "8.57.0",
@@ -110,6 +110,7 @@
     "packages/atomic-react",
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
+    "packages/rollup-plugin-replace-with-ast",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "utils/*"

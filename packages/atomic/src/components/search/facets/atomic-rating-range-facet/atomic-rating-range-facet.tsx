@@ -54,6 +54,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
+ * @part value-rating - The facet value rating, common for all displays.
+ * @part value-rating-icon - The individual star icons used in the rating display.
  *
  * @part value-link - The facet value when display is 'link'.
  * @part value-link-selected - The selected facet value when display is 'link'.

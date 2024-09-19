@@ -55,7 +55,7 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
     },
   ];
 
-  expectedEvents = ['haspreview', 'quantic__resultactionregister'];
+  expectedEvents = ['quantic__haspreview', 'quantic__resultactionregister'];
 
   handleTryItNow(evt) {
     this.config = evt.detail;

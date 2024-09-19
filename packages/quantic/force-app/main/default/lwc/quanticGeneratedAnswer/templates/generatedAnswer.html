@@ -11,8 +11,8 @@
             <div class="slds-grid flex-one slds-grid_align-end">
               <c-quantic-feedback
                 state={feedbackState}
-                onlike={handleLike}
-                ondislike={handleDislike}
+                onquantic__like={handleLike}
+                onquantic__dislike={handleDislike}
                 like-icon-name="utility:like"
                 like-label={labels.thisAnswerWasHelpful}
                 dislike-icon-name="utility:dislike"
@@ -65,15 +65,6 @@
                     citations={citations}
                     citation-hover-handler={handleCitationHover}
                   ></c-quantic-source-citations>
-                </div>
-              </template>
-              <template lwc:if={shouldDisplayRephraseButtons}>
-                <div class={rephraseButtonsCssClass}>
-                  <c-quantic-generated-answer-rephrase-buttons
-                    data-cy="generated-answer__rephrase-buttons"
-                    value={responseFormat}
-                    hide-labels={shouldHideRephraseLabels}
-                  ></c-quantic-generated-answer-rephrase-buttons>
                 </div>
               </template>
             </div>

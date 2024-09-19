@@ -68,9 +68,9 @@ export default class QuanticStatefulButton extends LightningElement {
   handleClick(event) {
     event.stopPropagation();
     if (this.selected) {
-      this.dispatchEvent(new CustomEvent('deselect'));
+      this.dispatchEvent(new CustomEvent('quantic__deselect'));
     } else {
-      this.dispatchEvent(new CustomEvent('select'));
+      this.dispatchEvent(new CustomEvent('quantic__select'));
     }
   }
 

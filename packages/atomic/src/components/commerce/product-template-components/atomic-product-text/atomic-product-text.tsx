@@ -16,7 +16,7 @@ import {ProductContext} from '../product-template-decorators';
 import {getStringValueFromProductOrNull} from '../product-utils';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-product-text` component renders the value of a string product field.
  */
 @Component({

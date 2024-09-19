@@ -42,14 +42,8 @@ import {registerNumericFacet} from '../features/facets/range-facets/numeric-face
 import {numericBreadcrumbFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {
-  rephraseGeneratedAnswer,
-  retryGeneratedAnswer,
-} from '../features/generated-answer/generated-answer-analytics-actions';
-import {
-  logRephraseGeneratedAnswer,
-  logRetryGeneratedAnswer,
-} from '../features/generated-answer/generated-answer-insight-analytics-actions';
+import {retryGeneratedAnswer} from '../features/generated-answer/generated-answer-analytics-actions';
+import {logRetryGeneratedAnswer} from '../features/generated-answer/generated-answer-insight-analytics-actions';
 import {
   executeSearch,
   fetchFacetValues,
@@ -92,7 +86,6 @@ const nextInsightEngine = buildInsightEngine({
   configuration: {
     ...getSampleInsightEngineConfiguration(),
     analytics: {
-      analyticsMode: 'next',
       trackingId: 'alex',
     },
   },
@@ -101,6 +94,9 @@ const nextInsightEngine = buildInsightEngine({
 const legacyInsightEngine = buildInsightEngine({
   configuration: {
     ...getSampleInsightEngineConfiguration(),
+    analytics: {
+      analyticsMode: 'legacy',
+    },
   },
 });
 
@@ -400,19 +396,6 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logInsightInterfaceChange(),
       next: interfaceChange(),
-    });
-
-    legacyInsightEngine.dispatch(action);
-    nextInsightEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/generatedAnswer/rephrase', async () => {
-    const action = executeSearch({
-      legacy: logRephraseGeneratedAnswer({answerStyle: 'default'}),
-      next: rephraseGeneratedAnswer(),
     });
 
     legacyInsightEngine.dispatch(action);

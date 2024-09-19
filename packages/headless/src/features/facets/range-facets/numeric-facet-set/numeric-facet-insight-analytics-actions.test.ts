@@ -4,6 +4,7 @@ import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {getConfigurationInitialState} from '../../../configuration/configuration-state';
 import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
 
 const mockLogBreadcrumbFacet = jest.fn();
@@ -20,18 +21,20 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleFacetId = 'exampleFacetId';
-const exampleField = 'exampleField';
-const exampleEndInclusiveValue = true;
-const exampleStartValue = 0;
-const exampleEndValue = 10;
+describe('numeric facet insight analytics actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleFacetId = 'exampleFacetId';
+  const exampleField = 'exampleField';
+  const exampleEndInclusiveValue = true;
+  const exampleStartValue = 0;
+  const exampleEndValue = 10;
 
-describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         numericFacetSet: {
@@ -50,6 +53,7 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
 

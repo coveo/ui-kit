@@ -23,7 +23,6 @@ import {
   AtomicTimeframe,
   AtomicTimeframeFacet,
   AtomicSearchBoxInstantResults,
-  buildSearchEngine,
   AtomicSearchBoxRecentQueries,
   AtomicResultSectionVisual,
   AtomicResultImage,
@@ -32,14 +31,16 @@ import {
   AtomicResultSectionTitleMetadata,
   AtomicResultRating,
   AtomicResultNumber,
-  Result,
   Bindings,
   AtomicSearchBoxQuerySuggestions,
-  getOrganizationEndpoints,
+} from '@coveo/atomic-react';
+import {
+  buildSearchEngine,
+  Result,
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
   loadAdvancedSearchQueryActions,
-} from '@coveo/atomic-react';
+} from '@coveo/headless';
 import React, {FunctionComponent, useMemo} from 'react';
 
 type Sample = 'service' | 'electronics';
@@ -64,7 +65,6 @@ function getElectronicsConfiguration(): SearchEngineConfiguration {
   return {
     accessToken,
     organizationId,
-    organizationEndpoints: getOrganizationEndpoints(organizationId),
     search: {pipeline, searchHub},
   };
 }
@@ -86,7 +86,12 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   const engine = useMemo(
     () =>
       buildSearchEngine({
-        configuration: getConfigurationForSample(sample),
+        configuration: {
+          ...getConfigurationForSample(sample),
+          analytics: {
+            analyticsMode: 'legacy',
+          },
+        },
       }),
     [sample]
   );

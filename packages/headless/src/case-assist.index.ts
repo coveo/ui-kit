@@ -1,6 +1,3 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-
-polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
@@ -78,6 +75,11 @@ export type {Raw} from './api/search/search/raw';
 export type {HighlightKeyword} from './utils/highlight';
 
 export type {DocumentSuggestionResponse} from './api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
 
 export type {
   DocumentSuggestionList,
