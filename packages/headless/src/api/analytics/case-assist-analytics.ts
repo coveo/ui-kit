@@ -13,6 +13,7 @@ import {
   DocumentSuggestionSection,
   SearchHubSection,
 } from '../../state/state-sections';
+import {getOrganizationEndpoint} from '../platform-client';
 import {PreprocessRequest} from '../preprocess-request';
 import {
   wrapAnalyticsClientSendEventHook,
@@ -58,7 +59,13 @@ export const configureCaseAssistAnalytics = ({
 }: ConfigureCaseAssistAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const endpoint =
+    state.configuration.analytics.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment,
+      'analytics'
+    );
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CaseAssistClient(

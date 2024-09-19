@@ -1,3 +1,4 @@
+import {getSearchApiBaseUrl} from '../../../../api/platform-client';
 import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
 import {NavigatorContext} from '../../../../app/navigatorContextProvider';
 import {buildSearchRequest} from '../../../search/search-request';
@@ -21,7 +22,12 @@ export const buildCategoryFacetSearchRequest = async (
   const newQuery = `*${query}*`;
 
   return {
-    url: state.configuration.search.apiBaseUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     ...(state.configuration.search.authenticationProviders.length && {

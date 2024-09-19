@@ -5,7 +5,6 @@ import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerState,
-  GeneratedAnswerStyle,
   buildInteractiveCitation,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Watch} from '@stencil/core';
@@ -31,11 +30,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
- * @part rephrase-label - The header of the rephrase options.
- * @part rephrase-buttons - The container of the rephrase buttons section.
- * @part rephrase-button - The button for each of the rephrase options (step-by-step instructions, bulleted list, and summary).
- * @part rephrase-buttons-container - The container of the rephrase buttons.
- * @part rephrase-button-label - The label of the rephrase button.
  *
  * @part answer-code-block - The generated answer multi-line code blocks.
  * @part answer-emphasis - The generated answer emphasized text elements.
@@ -93,16 +87,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   copyError = false;
 
   /**
-   * The answer style to apply when the component first loads.
-   * Options:
-   *   - `default`: Generate the answer without specific formatting instructions.
-   *   - `bullet`: Generate the answer as a bulleted list.
-   *   - `step`: Generate the answer as step-by-step instructions.
-   *   - `concise`: Generate the answer as briefly as possible.
-   */
-  @Prop() answerStyle: GeneratedAnswerStyle = 'default';
-
-  /**
    * Whether to render a toggle button that lets the user hide or show the answer.
    * @default false
    */
@@ -113,12 +97,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    * @default false
    */
   @Prop() collapsible?: boolean;
-
-  /**
-   * Whether to render the rephrase buttons that lets the user rephrase the answer.
-   * @default false
-   */
-  @Prop() withRephraseButtons?: boolean;
 
   /**
    * @internal
@@ -138,7 +116,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
-      withRephraseButtons: this.withRephraseButtons,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
@@ -155,7 +132,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       initialState: {
         isVisible: this.generatedAnswerCommon.data.isVisible,
         responseFormat: {
-          answerStyle: this.answerStyle,
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },

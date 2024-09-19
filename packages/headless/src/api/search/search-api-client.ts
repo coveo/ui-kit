@@ -17,7 +17,6 @@ import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
 import {HtmlRequest} from './html/html-request';
 import {PlanRequest} from './plan/plan-request';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
-import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {
   QuerySuggestSuccessResponse,
@@ -227,29 +226,6 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async html(req: HtmlRequest) {
     return getHtml(req, {...this.options});
-  }
-
-  async productRecommendations(req: ProductRecommendationsRequest) {
-    const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
-      requestParams: pickNonBaseParams(req),
-      requestMetadata: {method: 'productRecommendations'},
-      ...this.options,
-    });
-
-    if (response instanceof Error) {
-      throw response;
-    }
-
-    const body = await response.json();
-
-    if (isSuccessSearchResponse(body)) {
-      return {success: body};
-    }
-
-    return {
-      error: unwrapError({response, body}),
-    };
   }
 
   async fieldDescriptions(req: BaseParam) {

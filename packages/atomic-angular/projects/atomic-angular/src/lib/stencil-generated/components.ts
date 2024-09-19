@@ -409,7 +409,7 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'numberOfPlaceholders'],
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -417,7 +417,7 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'numberOfPlaceholders'],
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
 })
 export class AtomicCommerceProductList {
   protected el: HTMLElement;
@@ -501,7 +501,7 @@ export declare interface AtomicCommerceQuerySummary extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'scrollContainer'],
-  methods: ['initializeWithEngine', 'getOrganizationEndpoints']
+  methods: ['initializeWithEngine']
 })
 @Component({
   selector: 'atomic-commerce-recommendation-interface',
@@ -523,7 +523,7 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
 })
 @Component({
@@ -531,7 +531,7 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
 })
 export class AtomicCommerceRecommendationList {
   protected el: HTMLElement;
@@ -984,35 +984,14 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 
 @ProxyCmp({
-})
-@Component({
-  selector: 'atomic-frequently-bought-together',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicFrequentlyBoughtTogether {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicFrequentlyBoughtTogether extends Components.AtomicFrequentlyBoughtTogether {}
-
-
-@ProxyCmp({
-  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle']
+  inputs: ['collapsible', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerStyle', 'collapsible', 'withRephraseButtons', 'withToggle'],
+  inputs: ['collapsible', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -1912,15 +1891,15 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
 
 
 @ProxyCmp({
-  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations', 'getOrganizationEndpoints']
+  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
 })
 @Component({
   selector: 'atomic-recs-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
 })
 export class AtomicRecsInterface {
   protected el: HTMLElement;
@@ -1935,7 +1914,7 @@ export declare interface AtomicRecsInterface extends Components.AtomicRecsInterf
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
 })
 @Component({
@@ -1943,7 +1922,7 @@ export declare interface AtomicRecsInterface extends Components.AtomicRecsInterf
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
 })
 export class AtomicRecsList {
   protected el: HTMLElement;
@@ -2292,7 +2271,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
+  inputs: ['density', 'display', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
 })
 @Component({
@@ -2300,7 +2279,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
+  inputs: ['density', 'display', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
 })
 export class AtomicResultList {
   protected el: HTMLElement;
@@ -2817,15 +2796,15 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 
 
 @ProxyCmp({
-  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
 })
 @Component({
   selector: 'atomic-search-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'localizationCompatibilityVersion', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
 })
 export class AtomicSearchInterface {
   protected el: HTMLElement;

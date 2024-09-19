@@ -20,8 +20,14 @@ const selectors = {
 };
 
 function setupEventListeners(element) {
-  element.addEventListener('select', functionsMocks.exampleHandleSelect);
-  element.addEventListener('deselect', functionsMocks.exampleHandleDeselect);
+  element.addEventListener(
+    'quantic__select',
+    functionsMocks.exampleHandleSelect
+  );
+  element.addEventListener(
+    'quantic__deselect',
+    functionsMocks.exampleHandleDeselect
+  );
 }
 
 const exampleOptions = {

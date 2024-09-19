@@ -18,7 +18,11 @@ export class AppRoot {
     const searchInterface: HTMLAtomicSearchInterfaceElement =
       document.querySelector('atomic-search-interface')!;
 
-    await searchInterface.initialize(getSampleSearchEngineConfiguration());
+    await customElements.whenDefined('atomic-search-interface');
+    await searchInterface.initialize({
+      ...getSampleSearchEngineConfiguration(),
+      analytics: {analyticsMode: 'legacy'},
+    });
     this.engine = searchInterface.engine!;
 
     if (Router.activePath === searchPath) {

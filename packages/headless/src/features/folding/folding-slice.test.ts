@@ -6,6 +6,7 @@ import {
   MockedSearchEngine,
   buildMockSearchEngine,
 } from '../../test/mock-engine-v2';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {buildMockSearch} from '../../test/mock-search';
@@ -201,6 +202,7 @@ describe('folding slice', () => {
           () => mockEngine.state as Required<typeof mockEngine.state>,
           {
             apiClient,
+            navigatorContext: buildMockNavigatorContextProvider()(),
           } as ClientThunkExtraArguments<SearchAPIClient>
         );
       };
@@ -257,7 +259,7 @@ describe('folding slice', () => {
         );
       });
 
-      it('does not uses facets to get the full collection', async () => {
+      it('does not use facets to get the full collection', async () => {
         await doLoadCollection();
         expect(apiClient.search).toHaveBeenCalledWith(
           expect.not.objectContaining({

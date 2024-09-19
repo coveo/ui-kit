@@ -67,9 +67,11 @@ export default class QuanticRecommendationInterface extends LightningElement {
       if (!getHeadlessBindings(this.engineId)?.engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
+            const {organizationId, accessToken, ...rest} = JSON.parse(data);
             this.engineOptions = {
               configuration: {
-                ...JSON.parse(data),
+                organizationId,
+                accessToken,
                 searchHub: this.searchHub,
                 pipeline: this.pipeline,
                 locale: LOCALE,
@@ -78,6 +80,7 @@ export default class QuanticRecommendationInterface extends LightningElement {
                   analyticsMode: 'legacy',
                   originContext: this.analyticsOriginContext,
                 },
+                ...rest,
               },
             };
             setEngineOptions(
@@ -105,9 +108,12 @@ export default class QuanticRecommendationInterface extends LightningElement {
 
   disconnectedCallback() {
     if (this.ariaLiveEventsBound) {
-      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
       this.removeEventListener(
-        'registerregion',
+        'quantic__arialivemessage',
+        this.handleAriaLiveMessage
+      );
+      this.removeEventListener(
+        'quantic__registerregion',
         this.handleRegisterAriaLiveRegion
       );
     }
@@ -129,11 +135,11 @@ export default class QuanticRecommendationInterface extends LightningElement {
 
   bindAriaLiveEvents() {
     this.template.addEventListener(
-      'arialivemessage',
+      'quantic__arialivemessage',
       this.handleAriaLiveMessage.bind(this)
     );
     this.template.addEventListener(
-      'registerregion',
+      'quantic__registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
     this.ariaLiveEventsBound = true;

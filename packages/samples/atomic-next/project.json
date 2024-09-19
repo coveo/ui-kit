@@ -6,9 +6,9 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npx next build",
-          "tsc --noEmit",
-          "tsc --module commonjs --noEmit"
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npx next build; fi",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --noEmit; fi",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --module commonjs --noEmit; fi"
         ],
         "parallel": true,
         "cwd": "packages/samples/atomic-next"

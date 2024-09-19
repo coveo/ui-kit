@@ -17,13 +17,10 @@ import {
   InsightEngineConfiguration,
   buildInsightEngine,
   buildInsightResultsPerPage,
-  getOrganizationEndpointsInsight,
-  PlatformEnvironmentInsight,
 } from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
-import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -72,11 +69,7 @@ export class AtomicInsightInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: InsightLogLevel;
-  /**
-   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-   */
-  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
-    'v3';
+
   /**
    * The service insight interface language.
    */
@@ -175,19 +168,7 @@ export class AtomicInsightInterface
   }
 
   /**
-   * Returns the unique, organization-specific endpoint(s)
-   * @param {string} organizationId
-   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
-   */
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironmentInsight = 'prod'
-  ) {
-    return getOrganizationEndpointsInsight(organizationId, env);
-  }
-
-  /**
-   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
   @Method() public initialize(options: InsightInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));

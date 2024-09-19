@@ -65,7 +65,7 @@ export default class QuanticResult extends LightningElement {
   quickviewIsOpen = false;
 
   connectedCallback() {
-    this.template.addEventListener('haspreview', this.onHasPreview);
+    this.template.addEventListener('quantic__haspreview', this.onHasPreview);
     this.template.host.addEventListener('mouseenter', this.setHoverState);
     this.template.host.addEventListener('mouseleave', this.removeHoverState);
     this.template.addEventListener(
@@ -75,7 +75,7 @@ export default class QuanticResult extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.template.removeEventListener('haspreview', this.onHasPreview);
+    this.template.removeEventListener('quantic__haspreview', this.onHasPreview);
     this.template.host.removeEventListener('mouseenter', this.setHoverState);
     this.template.host.removeEventListener('mouseleave', this.removeHoverState);
     this.template.removeEventListener(

@@ -22,12 +22,10 @@ private class CustomTokenProviderTest {
   }
 
   static TokenSettings__c setupTokenSettings(
-    String platformUrl,
     String organizationId,
     String apiKey
   ) {
     TokenSettings__c settings = TokenSettings__c.getOrgDefaults();
-    settings.PlatformUrl__c = platformUrl;
     settings.OrganizationId__c = organizationId;
     settings.ApiKey__c = apiKey;
 
@@ -35,7 +33,7 @@ private class CustomTokenProviderTest {
     return settings;
   }
 
-  static final String sampleHeadlessConfiguration = '{"platformUrl":"https://platform.cloud.coveo.com","accessToken":"xx564559b1-0045-48e1-953c-3addd1ee4457","organizationId":"searchuisamples"}';
+  static final String sampleHeadlessConfiguration = '{"accessToken":"xx564559b1-0045-48e1-953c-3addd1ee4457","organizationId":"searchuisamples"}';
   static final String invalidTokenSettingsExceptionMessage = 'TokenSettings invalid. Defaulting to sample organization settings.';
 
   static void assertExceptionIsInvalidTokenSettingsException(Exception e) {
@@ -46,38 +44,9 @@ private class CustomTokenProviderTest {
   }
 
   @IsTest
-  static void withEmptyPlatformUrl() {
-    Test.startTest();
-    CustomTokenProviderTest.setupTokenSettings('', 'someOrgId', 'someToken');
-    try {
-      CustomTokenProvider.getHeadlessConfiguration();
-    } catch (Exception e) {
-      assertExceptionIsInvalidTokenSettingsException(e);
-    }
-    Test.stopTest();
-  }
-
-  @IsTest
-  static void withInvalidPlatformUrl() {
-    Test.startTest();
-    CustomTokenProviderTest.setupTokenSettings(
-      'httpsfoocom',
-      'someOrgId',
-      'someToken'
-    );
-    try {
-      CustomTokenProvider.getHeadlessConfiguration();
-    } catch (Exception e) {
-      assertExceptionIsInvalidTokenSettingsException(e);
-    }
-    Test.stopTest();
-  }
-
-  @IsTest
   static void withEmptyOrgId() {
     Test.startTest();
     CustomTokenProviderTest.setupTokenSettings(
-      'https://foo.com',
       '',
       'someToken'
     );
@@ -92,7 +61,6 @@ private class CustomTokenProviderTest {
   @IsTest
   static void withEmptyApiKey() {
     CustomTokenProviderTest.setupTokenSettings(
-      'https://foo.com',
       'someOrgId',
       ''
     );
@@ -110,14 +78,13 @@ private class CustomTokenProviderTest {
       'System Administrator'
     );
     CustomTokenProviderTest.setupTokenSettings(
-      'https://foo.com',
       'someOrgId',
       'someToken'
     );
     Test.setMock(
       HttpCalloutMock.class,
       new MockHttpTokenResponse(
-        'https://foo.com/rest/search/v2/token?organizationId=someOrgId',
+        'https://someOrgId.org.coveo.com/rest/search/v2/token?organizationId=someOrgId',
         'Bearer someToken',
         '{"userIds":[{"provider":"Email Security Provider","type":"User","name":"foo1@user.org"}]}',
         'someError',
@@ -173,10 +140,6 @@ private class CustomTokenProviderTest {
       System.assertEquals(
         'responseToken',
         (String) headlessConfiguration.get('accessToken')
-      );
-      System.assertEquals(
-        'https://foo.com',
-        (String) headlessConfiguration.get('platformUrl')
       );
     }
     Test.stopTest();

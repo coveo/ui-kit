@@ -1,6 +1,6 @@
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {InsightAppState} from '../../state/insight-app-state';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {getCaseContextInitialState} from '../case-context/case-context-state';
@@ -36,197 +36,164 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleOriginLevel2 = 'exampleOriginLevel2';
-const exampleErrorType = 'example error type';
-const exampleErrorMessage = 'example error message';
-const exampleQuery = 'test query';
-
-describe('insight search analytics events', () => {
+describe('insight search analytics actions', () => {
+  let state: InsightAppState;
   let engine: InsightEngine;
 
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleOriginLevel2 = 'exampleOriginLevel2';
+  const exampleErrorType = 'example error type';
+  const exampleErrorMessage = 'example error message';
+  const exampleQuery = 'test query';
+
   beforeEach(() => {
-    engine = buildMockInsightEngine(
-      buildMockInsightState({
-        insightCaseContext: {
-          ...getCaseContextInitialState(),
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
+    state = buildMockInsightState({
+      insightCaseContext: {
+        ...getCaseContextInitialState(),
+        caseContext: {
+          Case_Subject: exampleSubject,
+          Case_Description: exampleDescription,
         },
-      })
+        caseId: exampleCaseId,
+        caseNumber: exampleCaseNumber,
+      },
+      configuration,
+    });
+    engine = buildMockInsightEngine(state);
+  });
+
+  it('should log #logContextChanged with the right payload', async () => {
+    await logContextChanged(exampleCaseId, exampleCaseNumber)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
+
+    const expectedPayload = {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+    };
+
+    expect(mockLogContextChanged).toHaveBeenCalledTimes(1);
+    expect(mockLogContextChanged.mock.calls[0][0]).toStrictEqual(
+      expectedPayload
     );
   });
 
-  describe('logContextChanged', () => {
-    it('should log #logContextChanged with the right payload', async () => {
-      await logContextChanged(exampleCaseId, exampleCaseNumber)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+  it('should log #logFetchMoreResults with the right payload', async () => {
+    await logFetchMoreResults()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-      const expectedPayload = {
-        caseContext: {
-          Case_Subject: exampleSubject,
-          Case_Description: exampleDescription,
-        },
-        caseId: exampleCaseId,
-        caseNumber: exampleCaseNumber,
-      };
+    const expectedPayload = {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+    };
 
-      expect(mockLogContextChanged).toHaveBeenCalledTimes(1);
-      expect(mockLogContextChanged.mock.calls[0][0]).toStrictEqual(
-        expectedPayload
-      );
-    });
+    expect(mockLogFetchMoreResults).toHaveBeenCalledTimes(1);
+    expect(mockLogFetchMoreResults.mock.calls[0][0]).toStrictEqual(
+      expectedPayload
+    );
   });
 
-  describe('logFetchMoreResults', () => {
-    it('should log #logFetchMoreResults with the right payload', async () => {
-      await logFetchMoreResults()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+  it('should log #logQueryError with the right payload', async () => {
+    state.query = {
+      ...getQueryInitialState(),
+      q: exampleQuery,
+    };
+    engine = buildMockInsightEngine(state);
 
-      const expectedPayload = {
-        caseContext: {
-          Case_Subject: exampleSubject,
-          Case_Description: exampleDescription,
-        },
-        caseId: exampleCaseId,
-        caseNumber: exampleCaseNumber,
-      };
+    const exampleError = {
+      type: exampleErrorType,
+      message: exampleErrorMessage,
+      statusCode: 400,
+    };
+    await logQueryError(exampleError)()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-      expect(mockLogFetchMoreResults).toHaveBeenCalledTimes(1);
-      expect(mockLogFetchMoreResults.mock.calls[0][0]).toStrictEqual(
-        expectedPayload
-      );
-    });
+    const expectedPayload = {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+      query: exampleQuery,
+      aq: '',
+      cq: '',
+      dq: '',
+      errorType: exampleErrorType,
+      errorMessage: exampleErrorMessage,
+    };
+
+    expect(mockLogQueryError).toHaveBeenCalledTimes(1);
+    expect(mockLogQueryError.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
 
-  describe('logQueryError', () => {
-    it('should log #logQueryError with the right payload', async () => {
-      engine = buildMockInsightEngine(
-        buildMockInsightState({
-          insightCaseContext: {
-            caseContext: {
-              Case_Subject: exampleSubject,
-              Case_Description: exampleDescription,
-            },
-            caseId: exampleCaseId,
-            caseNumber: exampleCaseNumber,
-          },
-          query: {
-            ...getQueryInitialState(),
-            q: exampleQuery,
-          },
-        })
-      );
+  it('should log #logInterfaceLoad with the right payload', async () => {
+    await logInsightInterfaceLoad()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-      const exampleError = {
-        type: exampleErrorType,
-        message: exampleErrorMessage,
-        statusCode: 400,
-      };
-      await logQueryError(exampleError)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+    const expectedPayload = {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+    };
 
-      const expectedPayload = {
-        caseContext: {
-          Case_Subject: exampleSubject,
-          Case_Description: exampleDescription,
-        },
-        caseId: exampleCaseId,
-        caseNumber: exampleCaseNumber,
-        query: exampleQuery,
-        aq: '',
-        cq: '',
-        dq: '',
-        errorType: exampleErrorType,
-        errorMessage: exampleErrorMessage,
-      };
-
-      expect(mockLogQueryError).toHaveBeenCalledTimes(1);
-      expect(mockLogQueryError.mock.calls[0][0]).toStrictEqual(expectedPayload);
-    });
+    expect(mockLogInterfaceLoad).toHaveBeenCalledTimes(1);
+    expect(mockLogInterfaceLoad.mock.calls[0][0]).toStrictEqual(
+      expectedPayload
+    );
   });
 
-  describe('logInterfaceLoad', () => {
-    it('should log #logInterfaceLoad with the right payload', async () => {
-      await logInsightInterfaceLoad()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+  it('should log #logInterfaceChange with the right payload', async () => {
+    state.configuration.analytics.originLevel2 = exampleOriginLevel2;
+    state.configuration.analytics.analyticsMode = 'legacy';
+    engine = buildMockInsightEngine(state);
 
-      const expectedPayload = {
-        caseContext: {
-          Case_Subject: exampleSubject,
-          Case_Description: exampleDescription,
-        },
-        caseId: exampleCaseId,
-        caseNumber: exampleCaseNumber,
-      };
+    await logInsightInterfaceChange()()(
+      engine.dispatch,
+      () => engine.state,
+      {} as ThunkExtraArguments
+    );
 
-      expect(mockLogInterfaceLoad).toHaveBeenCalledTimes(1);
-      expect(mockLogInterfaceLoad.mock.calls[0][0]).toStrictEqual(
-        expectedPayload
-      );
-    });
-  });
+    const expectedPayload = {
+      caseContext: {
+        Case_Subject: exampleSubject,
+        Case_Description: exampleDescription,
+      },
+      caseId: exampleCaseId,
+      caseNumber: exampleCaseNumber,
+      interfaceChangeTo: exampleOriginLevel2,
+    };
 
-  describe('logInterfaceChange', () => {
-    it('should log #logInterfaceChange with the right payload', async () => {
-      engine = buildMockInsightEngine(
-        buildMockInsightState({
-          configuration: {
-            ...getConfigurationInitialState(),
-            analytics: buildMockAnalyticsState({
-              originLevel2: exampleOriginLevel2,
-            }),
-          },
-          insightCaseContext: {
-            caseContext: {
-              Case_Subject: exampleSubject,
-              Case_Description: exampleDescription,
-            },
-            caseId: exampleCaseId,
-            caseNumber: exampleCaseNumber,
-          },
-        })
-      );
-
-      await logInsightInterfaceChange()()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const expectedPayload = {
-        caseContext: {
-          Case_Subject: exampleSubject,
-          Case_Description: exampleDescription,
-        },
-        caseId: exampleCaseId,
-        caseNumber: exampleCaseNumber,
-        interfaceChangeTo: exampleOriginLevel2,
-      };
-
-      expect(mockLogInterfaceChange).toHaveBeenCalledTimes(1);
-      expect(mockLogInterfaceChange.mock.calls[0][0]).toStrictEqual(
-        expectedPayload
-      );
-    });
+    expect(mockLogInterfaceChange).toHaveBeenCalledTimes(1);
+    expect(mockLogInterfaceChange.mock.calls[0][0]).toStrictEqual(
+      expectedPayload
+    );
   });
 });
