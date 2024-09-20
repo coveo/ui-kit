@@ -1,20 +1,20 @@
-import {stateKey} from '../../../../../app/state-key';
+import {stateKey} from '../../../../../app/state-key.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
-} from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {
   RegularFacetSearch,
   buildRegularFacetSearch,
   RegularFacetSearchProps,
-} from './headless-commerce-regular-facet-search';
+} from './headless-commerce-regular-facet-search.js';
 
 jest.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'

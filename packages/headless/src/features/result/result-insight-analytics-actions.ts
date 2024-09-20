@@ -1,15 +1,15 @@
 import {InsightPanel} from '@coveo/relay-event-types';
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
   makeInsightAnalyticsActionFactory,
   analyticsEventItemMetadata,
-} from '../analytics/analytics-utils';
-import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 export const logDocumentOpen = (result: Result) =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.documentOpen)({

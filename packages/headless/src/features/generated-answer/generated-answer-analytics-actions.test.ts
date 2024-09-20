@@ -1,14 +1,14 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {createMockState} from '../../test/mock-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {createMockState} from '../../test/mock-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
@@ -23,8 +23,8 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
   GeneratedAnswerFeedback,
-} from './generated-answer-analytics-actions';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+} from './generated-answer-analytics-actions.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
 const mockLogFunction = jest.fn();
 const mockMakeGeneratedAnswerFeedbackSubmit = jest.fn(() => ({

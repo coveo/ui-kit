@@ -1,5 +1,5 @@
-import {configuration} from '../../../app/common-reducers';
-import {updatePage} from '../../../features/pagination/pagination-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {updatePage} from '../../../features/pagination/pagination-actions.js';
 import {
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
@@ -7,18 +7,18 @@ import {
   buildCriterionExpression,
   SortCriterion,
   buildFieldSortCriterion,
-} from '../../../features/sort-criteria/criteria';
+} from '../../../features/sort-criteria/criteria.js';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from '../../../features/sort-criteria/sort-criteria-actions';
-import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
+} from '../../../features/sort-criteria/sort-criteria-actions.js';
+import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import {Sort, SortProps, buildCoreSort} from './headless-core-sort';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {Sort, SortProps, buildCoreSort} from './headless-core-sort.js';
 
 jest.mock('../../../features/sort-criteria/sort-criteria-actions');
 jest.mock('../../../features/pagination/pagination-actions');

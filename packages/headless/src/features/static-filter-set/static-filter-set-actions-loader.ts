@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {
   registerStaticFilter,
   RegisterStaticFilterActionCreatorPayload,
@@ -8,7 +8,7 @@ import {
   ToggleSelectStaticFilterValueActionCreatorPayload,
   deselectAllStaticFilterValues,
   toggleExcludeStaticFilterValue,
-} from './static-filter-set-actions';
+} from './static-filter-set-actions.js';
 
 export type {
   RegisterStaticFilterActionCreatorPayload,

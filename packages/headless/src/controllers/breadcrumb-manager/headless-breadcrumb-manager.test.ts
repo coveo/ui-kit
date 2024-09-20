@@ -1,60 +1,60 @@
-import {configuration} from '../../app/common-reducers';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
-import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
-import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
+import {configuration} from '../../app/common-reducers.js';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions.js';
+import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
+import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
-} from '../../features/facets/facet-set/facet-set-actions';
-import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
+} from '../../features/facets/facet-set/facet-set-actions.js';
+import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice.js';
+import {FacetValue} from '../../features/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+} from '../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {executeSearch} from '../../features/search/search-actions';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {getSearchInitialState} from '../../features/search/search-state';
+} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {getSearchInitialState} from '../../features/search/search-state.js';
 import {
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-actions';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
-import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
-import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
-import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+} from '../../features/static-filter-set/static-filter-set-actions.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response.js';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response.js';
+import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value.js';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
+import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response.js';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
-import {createMockState} from '../../test/mock-state';
-import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
-import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+} from '../../test/mock-engine-v2.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request.js';
+import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response.js';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
 import {
   AutomaticFacetBreadcrumb,
   BreadcrumbManager,
@@ -63,7 +63,7 @@ import {
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
   buildBreadcrumbManager,
-} from './headless-breadcrumb-manager';
+} from './headless-breadcrumb-manager.js';
 
 jest.mock('../../features/breadcrumb/breadcrumb-actions');
 jest.mock(

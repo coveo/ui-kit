@@ -1,5 +1,5 @@
-import {buildLogger} from '../app/logger';
-import {ThunkExtraArguments} from '../app/thunk-extra-arguments';
+import {buildLogger} from '../app/logger.js';
+import {ThunkExtraArguments} from '../app/thunk-extra-arguments.js';
 
 export function buildMockThunkExtraArguments(
   config: Partial<ThunkExtraArguments> = {}

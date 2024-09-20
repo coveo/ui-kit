@@ -1,21 +1,21 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {
   buildMockChildProduct,
   buildMockProduct,
   buildMockBaseProduct,
-} from '../../../test/mock-product';
+} from '../../../test/mock-product.js';
 import {
   executeSearch,
   fetchMoreProducts,
   promoteChildToParent,
-} from './search-actions';
-import {commerceSearchReducer} from './search-slice';
+} from './search-actions.js';
+import {commerceSearchReducer} from './search-slice.js';
 import {
   CommerceSearchState,
   getCommerceSearchInitialState,
-} from './search-state';
+} from './search-state.js';
 
 describe('search-slice', () => {
   let state: CommerceSearchState;

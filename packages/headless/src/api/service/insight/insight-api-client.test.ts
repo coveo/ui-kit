@@ -1,7 +1,7 @@
-import pino from 'pino';
-import {PlatformClient} from '../../platform-client';
-import {NoopPreprocessRequest} from '../../preprocess-request';
-import {InsightAPIClient} from './insight-api-client';
+import {pino} from 'pino';
+import {PlatformClient} from '../../platform-client.js';
+import {NoopPreprocessRequest} from '../../preprocess-request.js';
+import {InsightAPIClient} from './insight-api-client.js';
 
 describe('insight api client', () => {
   const configuration = {

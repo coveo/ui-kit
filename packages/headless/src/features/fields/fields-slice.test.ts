@@ -1,19 +1,19 @@
-import {SearchAPIClient} from '../../api/search/search-api-client';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockFieldDescription} from '../../test/mock-field-description';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockFieldDescription} from '../../test/mock-field-description.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
   registerFieldsToInclude,
-} from './fields-actions';
-import {fieldsReducer} from './fields-slice';
-import {FieldsState, getFieldsInitialState} from './fields-state';
+} from './fields-actions.js';
+import {fieldsReducer} from './fields-slice.js';
+import {FieldsState, getFieldsInitialState} from './fields-state.js';
 
 describe('fields slice', () => {
   it('should have initial state', () => {

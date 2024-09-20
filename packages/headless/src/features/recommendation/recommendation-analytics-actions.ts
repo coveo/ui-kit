@@ -1,6 +1,6 @@
 import {ItemClick} from '@coveo/relay-event-types';
-import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
-import {Result} from '../../api/search/search/result';
+import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics.js';
+import {Result} from '../../api/search/search/result.js';
 import {
   ClickAction,
   documentIdentifier,
@@ -9,9 +9,9 @@ import {
   partialRecommendationInformation,
   LegacySearchAction,
   validateResultPayload,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {SearchAction} from '../search/search-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {SearchAction} from '../search/search-actions.js';
 
 //TODO: KIT-2859
 export const logRecommendationUpdate = (): LegacySearchAction =>

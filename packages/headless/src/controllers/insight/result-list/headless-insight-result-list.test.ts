@@ -1,11 +1,11 @@
-import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
+import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildResultList} from './headless-insight-result-list';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {buildResultList} from './headless-insight-result-list.js';
 
 jest.mock('../../../features/insight-search/insight-search-actions');
 

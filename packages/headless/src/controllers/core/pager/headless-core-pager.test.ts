@@ -1,27 +1,27 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   nextPage,
   previousPage,
   registerPage,
   updatePage,
-} from '../../../features/pagination/pagination-actions';
+} from '../../../features/pagination/pagination-actions.js';
 import {
   currentPageSelector,
   currentPagesSelector,
   maxPageSelector,
-} from '../../../features/pagination/pagination-selectors';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+} from '../../../features/pagination/pagination-selectors.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   Pager,
   PagerOptions,
   PagerInitialState,
   buildCorePager,
-} from './headless-core-pager';
+} from './headless-core-pager.js';
 
 jest.mock('../../../features/pagination/pagination-actions');
 jest.mock('../../../features/pagination/pagination-selectors');

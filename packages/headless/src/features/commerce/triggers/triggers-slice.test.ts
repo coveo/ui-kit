@@ -1,24 +1,24 @@
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildMockExecuteTrigger} from '../../../test/mock-trigger-execute';
-import {buildMockNotifyTrigger} from '../../../test/mock-trigger-notify';
-import {buildMockQueryTrigger} from '../../../test/mock-trigger-query';
-import {buildMockRedirectTrigger} from '../../../test/mock-trigger-redirect';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildMockExecuteTrigger} from '../../../test/mock-trigger-execute.js';
+import {buildMockNotifyTrigger} from '../../../test/mock-trigger-notify.js';
+import {buildMockQueryTrigger} from '../../../test/mock-trigger-query.js';
+import {buildMockRedirectTrigger} from '../../../test/mock-trigger-redirect.js';
 import {
   handleApplyQueryTriggerModification,
   handleFetchItemsFulfilled,
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
-} from '../../triggers/triggers-slice-functions';
+} from '../../triggers/triggers-slice-functions.js';
 import {
   TriggerState,
   getTriggerInitialState,
-} from '../../triggers/triggers-state';
-import {executeSearch} from '../search/search-actions';
+} from '../../triggers/triggers-state.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from './triggers-actions';
-import {commerceTriggersReducer} from './triggers-slice';
+} from './triggers-actions.js';
+import {commerceTriggersReducer} from './triggers-slice.js';
 
 describe('commerce triggers slice', () => {
   let initialState: TriggerState;

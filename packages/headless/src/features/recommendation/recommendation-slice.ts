@@ -2,8 +2,8 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   getRecommendations,
   setRecommendationId,
-} from './recommendation-actions';
-import {getRecommendationInitialState} from './recommendation-state';
+} from './recommendation-actions.js';
+import {getRecommendationInitialState} from './recommendation-state.js';
 
 export const recommendationReducer = createReducer(
   getRecommendationInitialState(),

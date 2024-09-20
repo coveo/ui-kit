@@ -1,20 +1,20 @@
 import {
   executeSearch,
   fetchQuerySuggestions,
-} from '../../../features/insight-search/insight-search-actions';
-import {InsightAppState} from '../../../state/insight-app-state';
+} from '../../../features/insight-search/insight-search-actions.js';
+import {InsightAppState} from '../../../state/insight-app-state.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {
   SearchBox,
   SearchBoxProps,
   SearchBoxOptions,
   buildSearchBox,
-} from './headless-insight-search-box';
+} from './headless-insight-search-box.js';
 
 jest.mock('../../../features/query/query-insight-analytics-actions', () => ({
   logSearchboxSubmit: jest.fn(() => () => {}),

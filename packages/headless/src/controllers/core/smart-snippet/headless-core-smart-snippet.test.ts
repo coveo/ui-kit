@@ -1,4 +1,4 @@
-import {QuestionsAnswers} from '../../../api/search/search/question-answering';
+import {QuestionsAnswers} from '../../../api/search/search/question-answering.js';
 import {
   closeFeedbackModal,
   collapseSmartSnippet,
@@ -6,27 +6,27 @@ import {
   expandSmartSnippet,
   likeSmartSnippet,
   openFeedbackModal,
-} from '../../../features/question-answering/question-answering-actions';
+} from '../../../features/question-answering/question-answering-actions.js';
 import {
   SmartSnippetFeedback,
   smartSnippetAnalyticsClient,
-} from '../../../features/question-answering/question-answering-analytics-actions';
-import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {emptyQuestionAnswer} from '../../../features/search/search-state';
-import {SearchAppState} from '../../../state/search-app-state';
+} from '../../../features/question-answering/question-answering-analytics-actions.js';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {emptyQuestionAnswer} from '../../../features/search/search-state.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockSearchResponse} from '../../../test/mock-search-response';
-import {buildMockSearchState} from '../../../test/mock-search-state';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../../test/mock-search-state.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   SmartSnippetCore,
   SmartSnippetState,
   buildCoreSmartSnippet,
-} from './headless-core-smart-snippet';
+} from './headless-core-smart-snippet.js';
 
 jest.mock('../../../features/question-answering/question-answering-actions');
 jest.mock(

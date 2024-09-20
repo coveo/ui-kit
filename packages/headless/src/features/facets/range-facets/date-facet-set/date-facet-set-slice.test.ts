@@ -1,14 +1,14 @@
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockSearch} from '../../../../test/mock-search';
-import {logSearchEvent} from '../../../analytics/analytics-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {change} from '../../../history/history-actions';
-import {getHistoryInitialState} from '../../../history/history-state';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../../search/search-actions';
-import * as FacetReducers from '../../generic/facet-reducer-helpers';
-import * as RangeFacetReducers from '../generic/range-facet-reducers';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockSearch} from '../../../../test/mock-search.js';
+import {logSearchEvent} from '../../../analytics/analytics-actions.js';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
+import {change} from '../../../history/history-actions.js';
+import {getHistoryInitialState} from '../../../history/history-state.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
+import * as FacetReducers from '../../generic/facet-reducer-helpers.js';
+import * as RangeFacetReducers from '../generic/range-facet-reducers.js';
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
@@ -16,12 +16,12 @@ import {
   deselectAllDateFacetValues,
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
-} from './date-facet-actions';
-import {dateFacetSetReducer} from './date-facet-set-slice';
+} from './date-facet-actions.js';
+import {dateFacetSetReducer} from './date-facet-set-slice.js';
 import {
   DateFacetSetState,
   getDateFacetSetInitialState,
-} from './date-facet-set-state';
+} from './date-facet-set-state.js';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;

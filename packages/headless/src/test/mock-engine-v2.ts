@@ -1,15 +1,15 @@
 import {Relay} from '@coveo/relay';
-import pino, {Logger} from 'pino';
-import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine';
-import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
-import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr';
-import type {CoreEngine, CoreEngineNext} from '../app/engine';
-import {InsightEngine} from '../app/insight-engine/insight-engine';
-import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider';
-import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
-import {SearchEngine} from '../app/search-engine/search-engine';
-import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr';
-import {stateKey} from '../app/state-key';
+import {pino, Logger} from 'pino';
+import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
+import {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
+import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr.js';
+import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
+import {InsightEngine} from '../app/insight-engine/insight-engine.js';
+import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider.js';
+import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
+import {SearchEngine} from '../app/search-engine/search-engine.js';
+import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr.js';
+import {stateKey} from '../app/state-key.js';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R

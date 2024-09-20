@@ -2,25 +2,25 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../../../../../features/commerce/facets/date-facet/date-facet-actions';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
-import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../features/commerce/facets/date-facet/date-facet-actions.js';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
+import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
-import {DateRangeRequest} from '../headless-core-commerce-facet';
+} from '../../../../../test/mock-engine-v2.js';
+import {DateRangeRequest} from '../headless-core-commerce-facet.js';
 import {
   DateFacet,
   DateFacetOptions,
   buildCommerceDateFacet,
-} from './headless-commerce-date-facet';
+} from './headless-commerce-date-facet.js';
 
 jest.mock(
   '../../../../../features/commerce/facets/date-facet/date-facet-actions'

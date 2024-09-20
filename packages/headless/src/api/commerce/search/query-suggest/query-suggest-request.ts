@@ -1,4 +1,4 @@
-import {BaseParam} from '../../../platform-service-params';
+import {BaseParam} from '../../../platform-service-params.js';
 import {
   ClientIdParam,
   CurrencyParam,
@@ -7,8 +7,8 @@ import {
   TrackingIdParam,
   ContextParam,
   CountryParam,
-} from '../../commerce-api-params';
-import {baseRequest} from '../../common/request';
+} from '../../commerce-api-params.js';
+import {baseRequest} from '../../common/request.js';
 
 export type QuerySuggestRequest = BaseParam &
   TrackingIdParam &

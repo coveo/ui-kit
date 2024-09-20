@@ -1,10 +1,10 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
-import {RecommendationsState} from '../recommendations/headless-recommendations';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {RecommendationsState} from '../recommendations/headless-recommendations.js';
 import {
   RecommendationsProps,
   Recommendations,
   buildRecommendations,
-} from './headless-recommendations';
+} from './headless-recommendations.js';
 
 export type {Recommendations, RecommendationsState};
 

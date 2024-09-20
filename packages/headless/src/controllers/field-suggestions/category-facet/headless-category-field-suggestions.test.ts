@@ -1,20 +1,20 @@
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
-import {executeFieldSuggest} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request.js';
+import {executeFieldSuggest} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCategoryFieldSuggestions,
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsOptions,
-} from './headless-category-field-suggestions';
+} from './headless-category-field-suggestions.js';
 
 jest.mock(
   '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'

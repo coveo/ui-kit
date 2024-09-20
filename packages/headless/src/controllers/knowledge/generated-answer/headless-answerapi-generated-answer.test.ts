@@ -1,30 +1,30 @@
-import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation';
+import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
   fetchAnswer,
   StateNeededByAnswerAPI,
-} from '../../../api/knowledge/stream-answer-api';
+} from '../../../api/knowledge/stream-answer-api.js';
 import {
   resetAnswer,
   updateAnswerConfigurationId,
   updateResponseFormat,
-} from '../../../features/generated-answer/generated-answer-actions';
+} from '../../../features/generated-answer/generated-answer-actions.js';
 import {
   generatedAnswerAnalyticsClient,
   GeneratedAnswerFeedback,
-} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state';
-import {queryReducer} from '../../../features/query/query-slice';
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
+import {queryReducer} from '../../../features/query/query-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
-} from '../../generated-answer/headless-generated-answer';
-import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer';
+} from '../../generated-answer/headless-generated-answer.js';
+import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer.js';
 
 jest.mock('../../../features/generated-answer/generated-answer-actions');
 jest.mock(

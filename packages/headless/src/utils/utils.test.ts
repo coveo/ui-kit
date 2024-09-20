@@ -1,4 +1,4 @@
-import {removeDuplicates} from './utils';
+import {removeDuplicates} from './utils.js';
 
 describe('removeDuplicates', () => {
   it('should return reduced array based on received predicate', () => {

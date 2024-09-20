@@ -1,10 +1,10 @@
-import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
+import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import {buildCoreTabManager} from './headless-core-tab-manager';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {buildCoreTabManager} from './headless-core-tab-manager.js';
 
 jest.mock('../../../features/tab-set/tab-set-actions');
 

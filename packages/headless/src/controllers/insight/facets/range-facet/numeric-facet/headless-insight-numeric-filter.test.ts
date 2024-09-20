@@ -1,20 +1,20 @@
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {updateNumericFacetValues} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {InsightAppState} from '../../../../../state/insight-app-state';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
+import {updateNumericFacetValues} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
+import {InsightAppState} from '../../../../../state/insight-app-state.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
-import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state.js';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value.js';
 import {
   buildNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
-} from './headless-insight-numeric-filter';
+} from './headless-insight-numeric-filter.js';
 
 jest.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'

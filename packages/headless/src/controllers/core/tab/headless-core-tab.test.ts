@@ -1,17 +1,17 @@
-import {configuration} from '../../../app/common-reducers';
-import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
+import {configuration} from '../../../app/common-reducers.js';
+import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
   registerTab,
   updateActiveTab,
-} from '../../../features/tab-set/tab-set-actions';
-import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
+} from '../../../features/tab-set/tab-set-actions.js';
+import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import {buildMockTabSlice} from '../../../test/mock-tab-state';
-import {buildCoreTab, Tab, TabProps} from './headless-core-tab';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {buildMockTabSlice} from '../../../test/mock-tab-state.js';
+import {buildCoreTab, Tab, TabProps} from './headless-core-tab.js';
 
 jest.mock('../../../features/tab-set/tab-set-actions');
 

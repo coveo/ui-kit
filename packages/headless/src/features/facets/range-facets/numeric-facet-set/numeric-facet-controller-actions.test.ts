@@ -1,17 +1,17 @@
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {createMockState} from '../../../../test/mock-state';
-import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
-import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
-import {toggleSelectNumericFacetValue} from './numeric-facet-actions';
+} from '../../../../test/mock-engine-v2.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {createMockState} from '../../../../test/mock-state.js';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
+import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions.js';
+import {toggleSelectNumericFacetValue} from './numeric-facet-actions.js';
 import {
   executeToggleNumericFacetSelect,
   executeToggleNumericFacetExclude,
-} from './numeric-facet-controller-actions';
+} from './numeric-facet-controller-actions.js';
 
 jest.mock('../generic/range-facet-controller-actions');
 jest.mock('./numeric-facet-actions');

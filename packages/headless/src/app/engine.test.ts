@@ -3,14 +3,14 @@ import {
   createAction,
   createReducer,
 } from '@reduxjs/toolkit';
-import * as Store from '../app/store';
-import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions';
-import {ConfigurationState} from '../features/configuration/configuration-state';
-import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
-import {configuration} from './common-reducers';
-import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {getSampleEngineConfiguration} from './engine-configuration';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+import * as Store from '../app/store.js';
+import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions.js';
+import {ConfigurationState} from '../features/configuration/configuration-state.js';
+import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments.js';
+import {configuration} from './common-reducers.js';
+import {getSampleEngineConfiguration} from './engine-configuration.js';
+import {buildEngine, CoreEngine, EngineOptions} from './engine.js';
+import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 jest.mock('pino', () => ({
   ...jest.requireActual('pino'),

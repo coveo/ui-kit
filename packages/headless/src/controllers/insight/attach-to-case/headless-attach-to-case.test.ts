@@ -1,27 +1,27 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   attachResult,
   detachResult,
-} from '../../../features/attached-results/attached-results-actions';
+} from '../../../features/attached-results/attached-results-actions.js';
 import {
   logCaseAttach,
   logCaseDetach,
-} from '../../../features/attached-results/attached-results-analytics-actions';
-import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice';
-import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils';
-import {InsightAppState} from '../../../state/insight-app-state';
-import {createMockAttachedResult} from '../../../test/mock-attached-results';
+} from '../../../features/attached-results/attached-results-analytics-actions.js';
+import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
+import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
+import {InsightAppState} from '../../../state/insight-app-state.js';
+import {createMockAttachedResult} from '../../../test/mock-attached-results.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {buildMockResult} from '../../../test/mock-result';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {buildMockResult} from '../../../test/mock-result.js';
 import {
   AttachToCase,
   AttachToCaseOptions,
   buildAttachToCase,
-} from './headless-attach-to-case';
+} from './headless-attach-to-case.js';
 
 jest.mock(
   '../../../features/attached-results/attached-results-analytics-actions',

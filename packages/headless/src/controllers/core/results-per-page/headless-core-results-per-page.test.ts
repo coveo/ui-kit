@@ -1,20 +1,20 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
-} from '../../../features/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+} from '../../../features/pagination/pagination-actions.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockPagination} from '../../../test/mock-pagination';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockPagination} from '../../../test/mock-pagination.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildCoreResultsPerPage,
-} from './headless-core-results-per-page';
+} from './headless-core-results-per-page.js';
 
 jest.mock('../../../features/pagination/pagination-actions');
 

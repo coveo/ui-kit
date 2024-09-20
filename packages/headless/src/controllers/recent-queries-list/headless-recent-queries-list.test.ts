@@ -1,23 +1,23 @@
 import {NumberValue} from '@coveo/bueno';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions';
-import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
-import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
-import {prepareForSearchWithQuery} from '../../features/search/search-actions';
-import {searchReducer as search} from '../../features/search/search-slice';
+} from '../../features/recent-queries/recent-queries-actions.js';
+import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
+import {prepareForSearchWithQuery} from '../../features/search/search-actions.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockQueryState} from '../../test/mock-query-state';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockQueryState} from '../../test/mock-query-state.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildRecentQueriesList,
   RecentQueriesList,
-} from './headless-recent-queries-list';
+} from './headless-recent-queries-list.js';
 
 jest.mock('../../features/recent-queries/recent-queries-actions');
 jest.mock('../../features/breadcrumb/breadcrumb-actions');

@@ -1,19 +1,19 @@
-import {configuration} from '../../../app/common-reducers';
-import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
-import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
+import {configuration} from '../../../app/common-reducers.js';
+import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
+import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants.js';
+import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   AutomaticFacetGeneratorProps,
   AutomaticFacetGenerator,
   buildAutomaticFacetGenerator,
   AutomaticFacetGeneratorOptions,
-} from './headless-automatic-facet-generator';
+} from './headless-automatic-facet-generator.js';
 
 jest.mock(
   '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'

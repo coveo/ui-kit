@@ -1,5 +1,5 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {updateActiveTab} from '../tab-set/tab-set-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -8,12 +8,12 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel3,
   setOriginLevel2,
-} from './configuration-actions';
-import {configurationReducer} from './configuration-slice';
+} from './configuration-actions.js';
+import {configurationReducer} from './configuration-slice.js';
 import {
   ConfigurationState,
   getConfigurationInitialState,
-} from './configuration-state';
+} from './configuration-state.js';
 
 jest.mock('../../api/analytics/coveo-analytics-utils');
 

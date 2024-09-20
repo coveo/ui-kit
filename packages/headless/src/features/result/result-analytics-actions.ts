@@ -1,12 +1,12 @@
 import {ItemClick} from '@coveo/relay-event-types';
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
   makeAnalyticsAction,
   ClickAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logDocumentOpen = (result: Result): ClickAction =>
   makeAnalyticsAction({

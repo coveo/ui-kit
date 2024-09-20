@@ -1,19 +1,19 @@
 import {createRelay} from '@coveo/relay';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logCaseSendEmail,
   logCopyToClipboard,
   logFeedItemTextPost,
-} from './result-actions-insight-analytics-actions';
+} from './result-actions-insight-analytics-actions.js';
 
 const mockLogCopyToClipboard = jest.fn();
 const mockLogCaseSendEmail = jest.fn();

@@ -1,26 +1,26 @@
 import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
-} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
-import {CategoryFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request';
-import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
-import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {CategoryFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request.js';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
+import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet';
+} from '../../../test/mock-engine-v2.js';
+import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
 import {
   buildCategoryFieldSuggestions,
   CategoryFieldSuggestions,
-} from './headless-category-field-suggestions';
+} from './headless-category-field-suggestions.js';
 
 jest.mock(
   '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'

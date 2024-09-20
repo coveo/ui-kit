@@ -1,21 +1,21 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
 import {
   buildMockChildProduct,
   buildMockProduct,
   buildMockBaseProduct,
-} from '../../../test/mock-product';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
+} from '../../../test/mock-product.js';
 import {
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
-} from './product-listing-actions';
-import {productListingReducer} from './product-listing-slice';
+} from './product-listing-actions.js';
+import {productListingReducer} from './product-listing-slice.js';
 import {
   getProductListingInitialState,
   ProductListingState,
-} from './product-listing-state';
+} from './product-listing-state.js';
 
 describe('product-listing-slice', () => {
   let state: ProductListingState;

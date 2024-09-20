@@ -2,29 +2,29 @@ import {
   deselectAllValuesInCoreFacet,
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
-} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {AnyFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request';
-import {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {AnyFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
-import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
+import {CommerceAppState} from '../../../../state/commerce-app-state.js';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice.js';
+import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {FacetValueState} from '../../../core/facets/facet/headless-core-facet';
+} from '../../../../test/mock-engine-v2.js';
+import {FacetValueState} from '../../../core/facets/facet/headless-core-facet.js';
 import {
   buildCoreCommerceFacet,
   CoreCommerceFacetOptions,
-} from './headless-core-commerce-facet';
+} from './headless-core-commerce-facet.js';
 
 jest.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock(

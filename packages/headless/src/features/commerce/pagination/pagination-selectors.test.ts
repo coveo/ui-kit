@@ -1,4 +1,4 @@
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   pagePrincipalSelector,
   pageRecommendationSelector,
@@ -6,7 +6,7 @@ import {
   perPageRecommendationSelector,
   totalEntriesPrincipalSelector,
   totalEntriesRecommendationSelector,
-} from './pagination-selectors';
+} from './pagination-selectors.js';
 
 describe('commerce pagination selectors', () => {
   it('#perPagePrincipalSelector should return the perPage value from the principal section', () => {

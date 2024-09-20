@@ -1,10 +1,10 @@
 import {SchemaValidationError} from '@coveo/bueno';
 import {Logger} from 'pino';
-import {serializeSchemaValidationError} from '../utils/validate-payload';
+import {serializeSchemaValidationError} from '../utils/validate-payload.js';
 import {
   logActionErrorMiddleware,
   logActionMiddleware,
-} from './logger-middlewares';
+} from './logger-middlewares.js';
 
 const createMiddlewareBoilerplate = () => {
   const logger = {error: jest.fn(), debug: jest.fn()} as unknown as Logger;

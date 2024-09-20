@@ -1,25 +1,25 @@
-import {CoreEngine} from '../../../../../app/engine';
+import {CoreEngine} from '../../../../../app/engine.js';
 import {
   registerCategoryFacetSearch,
   selectCategoryFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions';
-import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+} from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
+import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
-} from '../../../../../state/state-sections';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
+} from '../../../../../state/state-sections.js';
+import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../../../test/mock-engine-v2';
-import {createMockState} from '../../../../../test/mock-state';
+} from '../../../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../../../test/mock-state.js';
 import {
   CategoryFacetSearchProps,
   CategoryFacetSearch,
   buildCoreCategoryFacetSearch,
-} from './headless-category-facet-search';
+} from './headless-category-facet-search.js';
 
 jest.mock(
   '../../../../../features/facets/facet-search-set/category/category-facet-search-actions'

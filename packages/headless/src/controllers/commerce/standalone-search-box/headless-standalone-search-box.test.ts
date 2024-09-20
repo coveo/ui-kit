@@ -1,33 +1,33 @@
-import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/state-key';
+import {configuration} from '../../../app/common-reducers.js';
+import {stateKey} from '../../../app/state-key.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from '../../../features/commerce/query-set/query-set-actions';
-import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {updateQuery} from '../../../features/commerce/query/query-actions';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
+} from '../../../features/commerce/query-set/query-set-actions.js';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
+import {updateQuery} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
-} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
-import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
+} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions.js';
+import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
 // TODO: KIT-3127: import from commerce
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
-import {buildMockStandaloneSearchBoxEntry} from '../../../test/mock-standalone-search-box-entry';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
+import {buildMockStandaloneSearchBoxEntry} from '../../../test/mock-standalone-search-box-entry.js';
+import {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
 import {
   StandaloneSearchBox,
   buildStandaloneSearchBox,
-} from './headless-standalone-search-box';
-import {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options';
+} from './headless-standalone-search-box.js';
 
 jest.mock('../../../features/commerce/query-set/query-set-actions');
 jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');

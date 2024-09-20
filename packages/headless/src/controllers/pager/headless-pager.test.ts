@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {fetchPage} from '../../features/search/search-actions';
+import {fetchPage} from '../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   Pager,
   PagerOptions,
   PagerInitialState,
   buildPager,
-} from './headless-pager';
+} from './headless-pager.js';
 
 jest.mock('../../features/search/search-actions');
 

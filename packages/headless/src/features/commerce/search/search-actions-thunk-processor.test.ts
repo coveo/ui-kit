@@ -1,20 +1,20 @@
 import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
-import {CommerceAPIClient} from '../../../api/commerce/commerce-api-client';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockProduct} from '../../../test/mock-product';
-import {buildCommerceAPIRequest} from '../common/actions';
-import {updateQuery} from '../query/query-actions';
-import {QuerySearchCommerceAPIThunkReturn} from './search-actions';
+import {CommerceAPIClient} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockProduct} from '../../../test/mock-product.js';
+import {buildCommerceAPIRequest} from '../common/actions.js';
+import {updateQuery} from '../query/query-actions.js';
 import {
   AsyncThunkConfig,
   AsyncSearchThunkProcessor,
-} from './search-actions-thunk-processor';
+} from './search-actions-thunk-processor.js';
+import {QuerySearchCommerceAPIThunkReturn} from './search-actions.js';
 
 describe('commerce AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;

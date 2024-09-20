@@ -1,14 +1,14 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
-} from './headless-insight-generated-answer';
+} from './headless-insight-generated-answer.js';
 
 jest.mock('../../../features/generated-answer/generated-answer-actions');
 jest.mock('../../../features/insight-search/insight-search-actions');

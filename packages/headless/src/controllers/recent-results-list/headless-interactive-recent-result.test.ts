@@ -1,16 +1,16 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
+import {Result} from '../../api/search/search/result.js';
+import {configuration} from '../../app/common-reducers.js';
+import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildInteractiveRecentResult,
   InteractiveRecentResult,
-} from './headless-interactive-recent-result';
+} from './headless-interactive-recent-result.js';
 
 jest.mock('../../features/recent-results/recent-results-analytics-actions');
 

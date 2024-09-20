@@ -4,22 +4,22 @@ import {
   purchase,
   setItems,
   updateItemQuantity,
-} from '../../../../features/commerce/context/cart/cart-actions';
-import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
-import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
-import {getContextInitialState} from '../../../../features/commerce/context/context-state';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+} from '../../../../features/commerce/context/cart/cart-actions.js';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector.js';
+import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice.js';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
+import {getContextInitialState} from '../../../../features/commerce/context/context-state.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildCart, Cart, CartInitialState} from './headless-cart';
+} from '../../../../test/mock-engine-v2.js';
 import {
   itemSelector,
   totalPriceSelector,
   totalQuantitySelector,
-} from './headless-cart-selectors';
+} from './headless-cart-selectors.js';
+import {buildCart, Cart, CartInitialState} from './headless-cart.js';
 
 jest.mock('../../../../features/commerce/context/cart/cart-actions');
 jest.mock('../../../../features/commerce/context/cart/cart-selector');

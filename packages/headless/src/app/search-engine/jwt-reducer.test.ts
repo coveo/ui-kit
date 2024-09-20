@@ -3,15 +3,15 @@ import {
   updateBasicConfiguration,
   updateAnalyticsConfiguration,
   updateSearchConfiguration,
-} from '../../features/configuration/configuration-actions';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {setPipeline} from '../../features/pipeline/pipeline-actions';
-import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
-import {SearchAppState} from '../../state/search-app-state';
-import {createMockState} from '../../test/mock-state';
-import {jwtReducer} from './jwt-reducer';
+} from '../../features/configuration/configuration-actions.js';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {setPipeline} from '../../features/pipeline/pipeline-actions.js';
+import {getPipelineInitialState} from '../../features/pipeline/pipeline-state.js';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {createMockState} from '../../test/mock-state.js';
+import {jwtReducer} from './jwt-reducer.js';
 
 function cloneDeep<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));

@@ -1,22 +1,22 @@
-import {HtmlRequestOptions} from '../../../api/search/html/html-request';
-import {configuration} from '../../../app/common-reducers';
-import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
-import {buildInsightResultPreviewRequest} from '../../../features/insight-search/insight-result-preview-request-builder';
-import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {InsightAppState} from '../../../state/insight-app-state';
+import {HtmlRequestOptions} from '../../../api/search/html/html-request.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice.js';
+import {buildInsightResultPreviewRequest} from '../../../features/insight-search/insight-result-preview-request-builder.js';
+import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
+import {InsightAppState} from '../../../state/insight-app-state.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview.js';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-insight-quickview';
+} from './headless-insight-quickview.js';
 
 jest.mock('../../core/quickview/headless-core-quickview');
 jest.mock(

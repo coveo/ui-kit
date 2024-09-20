@@ -1,26 +1,26 @@
-import {configuration} from '../../app/common-reducers';
-import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
-import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {disableDebug, enableDebug} from '../../features/debug/debug-actions.js';
+import {rankingInformationSelector} from '../../features/debug/debug-selectors.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
-} from '../../features/fields/fields-actions';
-import {fieldsReducer as fields} from '../../features/fields/fields-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
+} from '../../features/fields/fields-actions.js';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockFieldDescription} from '../../test/mock-field-description';
-import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockFieldDescription} from '../../test/mock-field-description.js';
+import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildRelevanceInspector,
   RelevanceInspector,
   RelevanceInspectorProps,
-} from './headless-relevance-inspector';
+} from './headless-relevance-inspector.js';
 
 jest.mock('../../features/debug/debug-actions');
 jest.mock('../../features/fields/fields-actions');

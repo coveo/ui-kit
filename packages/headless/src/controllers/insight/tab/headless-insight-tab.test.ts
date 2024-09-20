@@ -1,15 +1,15 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildTab,
   Tab,
   TabInitialState,
   TabOptions,
-} from './headless-insight-tab';
+} from './headless-insight-tab.js';
 
 jest.mock('../../../features/insight-search/insight-search-actions');
 

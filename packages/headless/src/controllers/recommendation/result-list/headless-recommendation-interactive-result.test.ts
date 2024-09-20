@@ -1,15 +1,15 @@
-import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
+import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions.js';
 import {
   buildMockRecommendationEngine,
   MockedRecommendationEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockRecommendationState} from '../../../test/mock-recommendation-state';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildInteractiveResultCore} from '../../core/interactive-result/headless-core-interactive-result';
+} from '../../../test/mock-engine-v2.js';
+import {createMockRecommendationState} from '../../../test/mock-recommendation-state.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {buildInteractiveResultCore} from '../../core/interactive-result/headless-core-interactive-result.js';
 import {
   buildInteractiveResult,
   RecommendationInteractiveResultProps,
-} from './headless-recommendation-interactive-result';
+} from './headless-recommendation-interactive-result.js';
 
 jest.mock('../../core/interactive-result/headless-core-interactive-result');
 jest.mock('../../../features/recommendation/recommendation-analytics-actions');

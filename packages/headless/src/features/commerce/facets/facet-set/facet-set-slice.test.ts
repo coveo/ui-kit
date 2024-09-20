@@ -3,54 +3,54 @@ import {
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
-} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
-import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
-import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
+} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
+import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result.js';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
-} from '../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice';
+} from '../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice.js';
 import {
   buildMockCategoryFacetValue,
   buildMockCommerceDateFacetValue,
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
-} from '../../../../test/mock-commerce-facet-value';
-import {buildSearchResponse} from '../../../../test/mock-commerce-search';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
-import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
-import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions';
+} from '../../../../test/mock-commerce-facet-value.js';
+import {buildSearchResponse} from '../../../../test/mock-commerce-search.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result.js';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing.js';
+import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions.js';
 import {
   FacetValueState,
   facetValueStates,
-} from '../../../facets/facet-api/value';
-import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions';
+} from '../../../facets/facet-api/value.js';
+import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
-} from '../../../facets/facet-search-set/specific/specific-facet-search-actions';
-import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice';
-import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers';
-import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice';
-import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers';
-import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {setContext, setView} from '../../context/context-actions';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
+} from '../../../facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice.js';
+import * as FacetReducers from '../../../facets/generic/facet-reducer-helpers.js';
+import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers.js';
+import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {setContext, setView} from '../../context/context-actions.js';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
 import {
   fetchQuerySuggestions,
   FetchQuerySuggestionsThunkReturn,
-} from '../../query-suggest/query-suggest-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
-import {executeSearch} from '../../search/search-actions';
+} from '../../query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import {executeSearch} from '../../search/search-actions.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../category-facet/category-facet-actions';
+} from '../category-facet/category-facet-actions.js';
 import {
   deselectAllValuesInCoreFacet,
   updateCoreFacetFreezeCurrentValues,
@@ -58,34 +58,34 @@ import {
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
   clearAllCoreFacets,
-} from '../core-facet/core-facet-actions';
+} from '../core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../date-facet/date-facet-actions';
-import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions';
+} from '../date-facet/date-facet-actions.js';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
-} from '../numeric-facet/numeric-facet-actions';
+} from '../numeric-facet/numeric-facet-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../regular-facet/regular-facet-actions';
-import * as CommerceFacetReducers from './facet-set-reducer-helpers';
+} from '../regular-facet/regular-facet-actions.js';
+import * as CommerceFacetReducers from './facet-set-reducer-helpers.js';
 import {
   commerceFacetSetReducer,
   convertCategoryFacetValueToRequest,
-} from './facet-set-slice';
+} from './facet-set-slice.js';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
-} from './facet-set-state';
-import {FacetType} from './interfaces/common';
-import {CategoryFacetValueRequest} from './interfaces/request';
-import {AnyFacetResponse, CategoryFacetValue} from './interfaces/response';
+} from './facet-set-state.js';
+import {FacetType} from './interfaces/common.js';
+import {CategoryFacetValueRequest} from './interfaces/request.js';
+import {AnyFacetResponse, CategoryFacetValue} from './interfaces/response.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActionCreator = (payload: any) => Action;

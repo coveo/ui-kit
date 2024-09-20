@@ -1,13 +1,13 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
   MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2';
-import {getCaseFieldInitialState} from '../case-field/case-field-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {getDocumentSuggestionInitialState} from '../document-suggestion/document-suggestion-state';
+} from '../../test/mock-engine-v2.js';
+import {getCaseFieldInitialState} from '../case-field/case-field-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getDocumentSuggestionInitialState} from '../document-suggestion/document-suggestion-state.js';
 import {
   logCaseStart,
   logCaseNextStage,
@@ -21,7 +21,7 @@ import {
   logQuickviewDocumentSuggestionClick,
   logDocumentSuggestionOpen,
   logDocumentSuggestionRating,
-} from './case-assist-analytics-actions';
+} from './case-assist-analytics-actions.js';
 
 const mockLogEnterInterface = jest.fn();
 const mockLogMoveToNextCaseStep = jest.fn();

@@ -1,16 +1,16 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {createMockState} from '../../test/mock-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {emptyQuestionAnswer} from '../search/search-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {createMockState} from '../../test/mock-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {emptyQuestionAnswer} from '../search/search-state.js';
 import {
   logExpandSmartSnippet,
   logExpandSmartSnippetSuggestion,
@@ -26,8 +26,8 @@ import {
   logCloseSmartSnippetFeedbackModal,
   logSmartSnippetFeedback,
   logSmartSnippetDetailedFeedback,
-} from './question-answering-analytics-actions';
-import {getQuestionAnsweringInitialState} from './question-answering-state';
+} from './question-answering-analytics-actions.js';
+import {getQuestionAnsweringInitialState} from './question-answering-state.js';
 
 const mockLogFunction = jest.fn();
 const mockMakeExpandSmartSnippet = jest.fn(() => ({

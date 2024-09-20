@@ -1,9 +1,9 @@
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager';
+} from '../../../../test/mock-engine-v2.js';
+import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager.js';
 
 describe('core url manager', () => {
   let engine: MockedCommerceEngine;

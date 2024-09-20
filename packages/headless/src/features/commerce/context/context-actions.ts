@@ -1,8 +1,8 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {createAction} from '@reduxjs/toolkit';
-import {ViewParams} from '../../../api/commerce/commerce-api-params';
-import {validatePayload} from '../../../utils/validate-payload';
-import {contextDefinition, viewDefinition} from './context-validation';
+import {ViewParams} from '../../../api/commerce/commerce-api-params.js';
+import {validatePayload} from '../../../utils/validate-payload.js';
+import {contextDefinition, viewDefinition} from './context-validation.js';
 
 export interface SetContextPayload {
   language: string;

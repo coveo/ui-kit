@@ -3,21 +3,21 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
-} from '../../../api/commerce/commerce-api-client';
-import {CommerceSearchRequest} from '../../../api/commerce/search/request';
-import {isRedirectTrigger} from '../../../api/common/trigger';
-import {NavigatorContext} from '../../../app/navigatorContextProvider';
+} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceSearchRequest} from '../../../api/commerce/search/request.js';
+import {isRedirectTrigger} from '../../../api/common/trigger.js';
+import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
 import {
   CartSection,
   CommerceContextSection,
   CommerceQuerySection,
   CommerceConfigurationSection,
-} from '../../../state/state-sections';
+} from '../../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
-import {buildBaseCommerceAPIRequest} from '../common/actions';
+} from '../../../utils/validate-payload.js';
+import {buildBaseCommerceAPIRequest} from '../common/actions.js';
 
 export type StateNeededForRedirect = CommerceConfigurationSection &
   CommerceContextSection &

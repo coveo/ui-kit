@@ -1,14 +1,14 @@
 import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors.js';
 import {
   AsyncThunkCommerceOptions,
   getCommerceApiBaseUrl,
   isErrorResponse,
-} from '../../../api/commerce/commerce-api-client';
-import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request';
-import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response';
-import {NavigatorContext} from '../../../app/navigatorContextProvider';
+} from '../../../api/commerce/commerce-api-client.js';
+import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
+import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
+import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
 import {
   CartSection,
   CommerceContextSection,
@@ -16,19 +16,19 @@ import {
   CommerceConfigurationSection,
   QuerySetSection,
   VersionSection,
-} from '../../../state/state-sections';
+} from '../../../state/state-sections.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   ClearQuerySuggestActionCreatorPayload,
   FetchQuerySuggestionsActionCreatorPayload,
   RegisterQuerySuggestActionCreatorPayload,
   SelectQuerySuggestionActionCreatorPayload,
-} from '../../query-suggest/query-suggest-actions';
-import {getProductsFromCartState} from '../context/cart/cart-state';
+} from '../../query-suggest/query-suggest-actions.js';
+import {getProductsFromCartState} from '../context/cart/cart-state.js';
 
 export type ClearQuerySuggestPayload = ClearQuerySuggestActionCreatorPayload;
 

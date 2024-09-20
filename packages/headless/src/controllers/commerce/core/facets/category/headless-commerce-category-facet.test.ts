@@ -1,24 +1,24 @@
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../../../../../features/commerce/facets/category-facet/category-facet-actions';
-import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../features/commerce/facets/category-facet/category-facet-actions.js';
+import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
+import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
+} from '../../../../../test/mock-engine-v2.js';
 import {
   CategoryFacet,
   CategoryFacetOptions,
   buildCategoryFacet,
-} from './headless-commerce-category-facet';
+} from './headless-commerce-category-facet.js';
 
 jest.mock(
   '../../../../../features/commerce/facets/category-facet/category-facet-actions'

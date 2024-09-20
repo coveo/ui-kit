@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {StateNeededByAnswerAPI} from '../stream-answer-api';
+import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
 
 export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   configuration: {

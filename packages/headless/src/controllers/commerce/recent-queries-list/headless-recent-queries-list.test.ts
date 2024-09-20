@@ -1,23 +1,23 @@
 import {NumberValue} from '@coveo/bueno';
-import {stateKey} from '../../../app/state-key';
-import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions';
+import {stateKey} from '../../../app/state-key.js';
+import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../../features/commerce/recent-queries/recent-queries-actions';
-import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
-import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions';
-import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/recent-queries/recent-queries-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice.js';
+import {prepareForSearchWithQuery} from '../../../features/commerce/search/search-actions.js';
+import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockQueryState} from '../../../test/mock-query-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockQueryState} from '../../../test/mock-query-state.js';
 import {
   buildRecentQueriesList,
   RecentQueriesList,
-} from './headless-recent-queries-list';
+} from './headless-recent-queries-list.js';
 
 jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 jest.mock('../../../features/commerce/search/search-actions');

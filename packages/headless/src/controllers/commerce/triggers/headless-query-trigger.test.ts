@@ -1,15 +1,15 @@
-import {stateKey} from '../../../app/state-key';
-import {updateQuery} from '../../../features/commerce/query/query-actions';
-import {queryReducer as query} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
-import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {stateKey} from '../../../app/state-key.js';
+import {updateQuery} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as query} from '../../../features/commerce/query/query-slice.js';
+import {executeSearch} from '../../../features/commerce/search/search-actions.js';
+import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {QueryTrigger} from '../../core/triggers/headless-core-query-trigger';
-import {buildQueryTrigger} from './headless-query-trigger';
+} from '../../../test/mock-engine-v2.js';
+import {QueryTrigger} from '../../core/triggers/headless-core-query-trigger.js';
+import {buildQueryTrigger} from './headless-query-trigger.js';
 
 jest.mock('../../../features/commerce/query/query-actions');
 jest.mock('../../../features/commerce/search/search-actions');

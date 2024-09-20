@@ -1,26 +1,26 @@
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
-import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
-} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
+import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
-import {NumericRangeRequest} from '../headless-core-commerce-facet';
+} from '../../../../../test/mock-engine-v2.js';
+import {NumericRangeRequest} from '../headless-core-commerce-facet.js';
 import {
   NumericFacet,
   NumericFacetOptions,
   buildCommerceNumericFacet,
-} from './headless-commerce-numeric-facet';
+} from './headless-commerce-numeric-facet.js';
 
 jest.mock(
   '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'

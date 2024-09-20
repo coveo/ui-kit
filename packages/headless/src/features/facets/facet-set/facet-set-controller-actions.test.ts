@@ -1,19 +1,19 @@
-import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {createMockState} from '../../../test/mock-state';
-import {updateFacetOptions} from '../../facet-options/facet-options-actions';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {updateFacetOptions} from '../../facet-options/facet-options-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from './facet-set-actions';
+} from './facet-set-actions.js';
 import {
   executeToggleFacetExclude,
   executeToggleFacetSelect,
-} from './facet-set-controller-actions';
+} from './facet-set-controller-actions.js';
 
 jest.mock('./facet-set-actions');
 jest.mock('../../facet-options/facet-options-actions');

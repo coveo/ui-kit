@@ -1,14 +1,14 @@
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
-} from '../../features/did-you-mean/did-you-mean-actions';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../features/did-you-mean/did-you-mean-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
 
 jest.mock('../../features/did-you-mean/did-you-mean-actions');
 jest.mock('../../features/search/search-actions');

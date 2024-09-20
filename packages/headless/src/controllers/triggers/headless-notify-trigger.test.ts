@@ -1,12 +1,12 @@
-import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger';
-import {buildNotifyTrigger} from './headless-notify-trigger';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger.js';
+import {buildNotifyTrigger} from './headless-notify-trigger.js';
 
 jest.mock('../../features/triggers/trigger-analytics-actions');
 

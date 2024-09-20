@@ -1,15 +1,15 @@
 import {createRelay} from '@coveo/relay';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logExpandToFullUI,
   logInsightCreateArticle,
   logOpenUserActions,
-} from './insight-analytics-actions';
+} from './insight-analytics-actions.js';
 
 const mockLogCreateArticle = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();

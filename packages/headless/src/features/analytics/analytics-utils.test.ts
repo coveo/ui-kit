@@ -1,21 +1,21 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
-import {createMockState} from '../../test/mock-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
   partialRecommendationInformation,
-} from './analytics-utils';
+} from './analytics-utils.js';
 
 jest.mock('@coveo/relay');
 

@@ -1,17 +1,17 @@
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {applySort} from '../../../../features/commerce/sort/sort-actions';
-import {sortReducer} from '../../../../features/commerce/sort/sort-slice';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions.js';
+import {applySort} from '../../../../features/commerce/sort/sort-actions.js';
+import {sortReducer} from '../../../../features/commerce/sort/sort-slice.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
+} from '../../../../test/mock-engine-v2.js';
 import {
   buildRelevanceSortCriterion,
   buildCoreSort,
   Sort,
   SortBy,
-} from './headless-core-commerce-sort';
+} from './headless-core-commerce-sort.js';
 
 jest.mock('../../../../features/commerce/sort/sort-actions');
 jest.mock('../../../../features/pagination/pagination-actions');

@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -22,8 +22,8 @@ import {
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
   updateAnswerConfigurationId,
-} from './generated-answer-actions';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+} from './generated-answer-actions.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),

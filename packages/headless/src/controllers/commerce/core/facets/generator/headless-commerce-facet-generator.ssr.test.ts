@@ -1,29 +1,29 @@
-import {SolutionType} from '../../../../../app/commerce-ssr-engine/types/common';
-import {AnyFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
+import {SolutionType} from '../../../../../app/commerce-ssr-engine/types/common.js';
+import {AnyFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
-} from '../../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockSSRCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {buildProductListing} from '../../../product-listing/headless-product-listing';
-import {buildSearch} from '../../../search/headless-search';
-import {FacetType} from '../headless-core-commerce-facet';
-import {GeneratedFacetControllers} from './headless-commerce-facet-generator';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
+import {buildProductListing} from '../../../product-listing/headless-product-listing.js';
+import {buildSearch} from '../../../search/headless-search.js';
+import {FacetType} from '../headless-core-commerce-facet.js';
+import {GeneratedFacetControllers} from './headless-commerce-facet-generator.js';
 import {
   buildFacetGenerator,
   FacetGenerator,
   FacetGeneratorOptions,
-} from './headless-commerce-facet-generator.ssr';
+} from './headless-commerce-facet-generator.ssr.js';
 
 describe('SSR FacetGenerator', () => {
   let engine: MockedCommerceEngine;

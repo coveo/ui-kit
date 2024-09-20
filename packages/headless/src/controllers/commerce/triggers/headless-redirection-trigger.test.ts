@@ -1,12 +1,12 @@
-import {stateKey} from '../../../app/state-key';
-import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {stateKey} from '../../../app/state-key.js';
+import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger';
-import {buildRedirectionTrigger} from './headless-redirection-trigger';
+} from '../../../test/mock-engine-v2.js';
+import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
+import {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
 describe('RedirectionTrigger', () => {
   let engine: MockedCommerceEngine;

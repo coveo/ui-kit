@@ -9,7 +9,7 @@ import {
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
-} from '../../../features/generated-answer/generated-answer-actions';
+} from '../../../features/generated-answer/generated-answer-actions.js';
 import {
   generatedAnswerAnalyticsClient,
   logCopyGeneratedAnswer,
@@ -23,25 +23,25 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
   GeneratedAnswerFeedback,
-} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice.js';
 import {
   GeneratedAnswerState,
   getGeneratedAnswerInitialState,
-} from '../../../features/generated-answer/generated-answer-state';
-import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockCitation} from '../../../test/mock-citation';
+} from '../../../features/generated-answer/generated-answer-state.js';
+import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
+import {buildMockCitation} from '../../../test/mock-citation.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
-} from './headless-core-generated-answer';
+} from './headless-core-generated-answer.js';
 
 jest.mock('../../../features/generated-answer/generated-answer-actions');
 jest.mock(

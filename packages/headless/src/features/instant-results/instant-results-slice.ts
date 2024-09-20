@@ -6,14 +6,14 @@ import {
   fetchItemsRejected,
   registerInstantItem,
   updateInstantItemQuery,
-} from '../instant-items/instant-items-slice';
-import {fetchInstantResults} from '../search/search-actions';
+} from '../instant-items/instant-items-slice.js';
+import {fetchInstantResults} from '../search/search-actions.js';
 import {
   clearExpiredResults,
   registerInstantResults,
   updateInstantResultsQuery,
-} from './instant-results-actions';
-import {getInstantResultsInitialState} from './instant-results-state';
+} from './instant-results-actions.js';
+import {getInstantResultsInitialState} from './instant-results-state.js';
 
 export const instantResultsReducer = createReducer(
   getInstantResultsInitialState(),

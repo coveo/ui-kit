@@ -1,8 +1,8 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {
   GeneratedContentFormat,
   GeneratedResponseFormat,
-} from './generated-response-format';
+} from './generated-response-format.js';
 
 export interface GeneratedAnswerState {
   id: string;

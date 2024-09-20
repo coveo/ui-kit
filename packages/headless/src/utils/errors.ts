@@ -1,4 +1,4 @@
-import {SolutionType} from '../app/commerce-ssr-engine/types/common';
+import {SolutionType} from '../app/commerce-ssr-engine/types/common.js';
 
 export const loadReducerError = new Error('Failed to load reducers.');
 

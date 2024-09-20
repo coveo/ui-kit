@@ -1,8 +1,8 @@
 import {createRelay} from '@coveo/relay';
-import {createMockState} from '../../test/mock-state';
-import {getAnalyticsNextApiBaseUrl} from '../platform-client';
-import {getRelayInstanceFromState} from './analytics-relay-client';
-import {getAnalyticsSource} from './analytics-selectors';
+import {createMockState} from '../../test/mock-state.js';
+import {getAnalyticsNextApiBaseUrl} from '../platform-client.js';
+import {getRelayInstanceFromState} from './analytics-relay-client.js';
+import {getAnalyticsSource} from './analytics-selectors.js';
 
 jest.mock('@coveo/relay');
 jest.mock('./analytics-selectors');

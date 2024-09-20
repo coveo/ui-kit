@@ -1,20 +1,20 @@
-import {stateKey} from '../../../../../app/state-key';
+import {stateKey} from '../../../../../app/state-key.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
-} from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
+} from '../../../../../test/mock-engine-v2.js';
 import {
   CategoryFacetSearch,
   CategoryFacetSearchProps,
   buildCategoryFacetSearch,
-} from './headless-commerce-category-facet-search';
+} from './headless-commerce-category-facet-search.js';
 
 jest.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'

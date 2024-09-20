@@ -1,16 +1,16 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {configuration} from '../../../app/common-reducers';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
   totalEntriesPrincipalSelector,
-} from '../../../features/commerce/pagination/pagination-selectors';
-import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions';
-import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema';
-import * as SearchActions from '../../../features/commerce/search/search-actions';
+} from '../../../features/commerce/pagination/pagination-selectors.js';
+import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
+import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
+import * as SearchActions from '../../../features/commerce/search/search-actions.js';
 import {
   activeParametersSelector,
   enrichedParametersSelector,
@@ -20,19 +20,19 @@ import {
   numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
-} from '../../../features/commerce/search/search-selectors';
-import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/search/search-selectors.js';
+import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import * as SubControllers from '../core/sub-controller/headless-sub-controller';
+} from '../../../test/mock-engine-v2.js';
+import * as SubControllers from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
-} from './facets/headless-search-facet-options';
-import {buildSearch, Search} from './headless-search';
+} from './facets/headless-search-facet-options.js';
+import {buildSearch, Search} from './headless-search.js';
 
 describe('headless search', () => {
   let search: Search;

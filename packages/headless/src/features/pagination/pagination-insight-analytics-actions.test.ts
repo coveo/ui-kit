@@ -1,15 +1,15 @@
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {InsightAppState} from '../../state/insight-app-state';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockPagination} from '../../test/mock-pagination';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockPagination} from '../../test/mock-pagination.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logPageNext,
   logPageNumber,
   logPagePrevious,
-} from './pagination-insight-analytics-actions';
+} from './pagination-insight-analytics-actions.js';
 
 const mockLogPagerNumber = jest.fn();
 const mockLogPagerNext = jest.fn();

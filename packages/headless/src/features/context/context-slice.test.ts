@@ -1,8 +1,8 @@
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {setContext, addContext, removeContext} from './context-actions';
-import {contextReducer} from './context-slice';
-import {ContextState, getContextInitialState} from './context-state';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {setContext, addContext, removeContext} from './context-actions.js';
+import {contextReducer} from './context-slice.js';
+import {ContextState, getContextInitialState} from './context-state.js';
 
 describe('context slice', () => {
   let state: ContextState;

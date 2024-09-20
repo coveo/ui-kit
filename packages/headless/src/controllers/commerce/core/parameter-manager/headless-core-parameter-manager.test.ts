@@ -1,18 +1,18 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
-import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {buildRelevanceSortCriterion} from '../../../../features/sort/sort';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema.js';
+import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import {buildRelevanceSortCriterion} from '../../../../features/sort/sort.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
+} from '../../../../test/mock-engine-v2.js';
 import {
   buildCoreParameterManager,
   CoreParameterManagerProps,
   ParameterManager,
-} from './headless-core-parameter-manager';
+} from './headless-core-parameter-manager.js';
 
 describe('parameter manager', () => {
   let engine: MockedCommerceEngine;

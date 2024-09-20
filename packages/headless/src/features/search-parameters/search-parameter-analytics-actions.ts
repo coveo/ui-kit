@@ -1,5 +1,5 @@
-import {DateRangeRequest} from '../../controllers/core/facets/range-facet/date-facet/headless-core-date-facet';
-import {NumericRangeRequest} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+import {DateRangeRequest} from '../../controllers/core/facets/range-facet/date-facet/headless-core-date-facet.js';
+import {NumericRangeRequest} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -10,26 +10,26 @@ import {
   facetExclude,
   facetSelect,
   logFacetUnexclude,
-} from '../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logSearchboxSubmit,
   searchboxSubmit,
-} from '../../features/query/query-analytics-actions';
-import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
+} from '../../features/query/query-analytics-actions.js';
+import {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {
   logResultsSort,
   resultsSort,
-} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+} from '../../features/sort-criteria/sort-criteria-analytics-actions.js';
 import {
   interfaceChange,
   logInterfaceChange,
-} from '../analytics/analytics-actions';
-import {LegacySearchAction} from '../analytics/analytics-utils';
+} from '../analytics/analytics-actions.js';
+import {LegacySearchAction} from '../analytics/analytics-utils.js';
 import {
   logPageNumber,
   logPagerResize,
-} from '../pagination/pagination-analytics-actions';
-import {SearchAction} from '../search/search-actions';
+} from '../pagination/pagination-analytics-actions.js';
+import {SearchAction} from '../search/search-actions.js';
 
 //TODO: KIT-2859
 export function legacyLogParametersChange(

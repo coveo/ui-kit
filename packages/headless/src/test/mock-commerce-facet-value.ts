@@ -3,7 +3,7 @@ import {
   NumericFacetValue,
   DateFacetValue,
   CategoryFacetValue,
-} from '../features/commerce/facets/facet-set/interfaces/response';
+} from '../features/commerce/facets/facet-set/interfaces/response.js';
 
 export function buildMockCommerceRegularFacetValue(
   config: Partial<RegularFacetValue> = {}

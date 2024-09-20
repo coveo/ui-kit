@@ -1,17 +1,17 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../features/result/result-analytics-actions';
+import {Result} from '../../api/search/search/result.js';
+import {configuration} from '../../app/common-reducers.js';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
+import {logDocumentOpen} from '../../features/result/result-analytics-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './headless-interactive-result';
+} from './headless-interactive-result.js';
 
 jest.mock('../../features/recent-results/recent-results-actions');
 jest.mock('../../features/result/result-analytics-actions');

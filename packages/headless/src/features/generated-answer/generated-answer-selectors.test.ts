@@ -1,6 +1,6 @@
-import {streamAnswerAPIStateMock} from '../../api/knowledge/tests/stream-answer-api-state-mock';
-import {SearchAppState} from '../../state/search-app-state';
-import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors';
+import {streamAnswerAPIStateMock} from '../../api/knowledge/tests/stream-answer-api-state-mock.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
 jest.mock('../../api/knowledge/stream-answer-api', () => ({
   ...jest.requireActual<Record<string, Partial<SearchAppState>>>(

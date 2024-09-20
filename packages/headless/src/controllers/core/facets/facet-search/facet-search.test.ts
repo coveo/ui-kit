@@ -1,28 +1,28 @@
-import {CoreEngine} from '../../../../app/engine';
+import {CoreEngine} from '../../../../app/engine.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
   executeFieldSuggest,
-} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import {
   ConfigurationSection,
   FacetSearchSection,
-} from '../../../../state/state-sections';
+} from '../../../../state/state-sections.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options';
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
-import {createMockState} from '../../../../test/mock-state';
+} from '../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options.js';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
+import {createMockState} from '../../../../test/mock-state.js';
 import {
   buildGenericFacetSearch,
   GenericFacetSearch,
   GenericFacetSearchProps,
-} from './facet-search';
+} from './facet-search.js';
 
 jest.mock(
   '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions'

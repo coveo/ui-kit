@@ -1,11 +1,14 @@
-import {SortBy} from '../../features/sort/sort';
-import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
-import {VERSION} from '../../utils/version';
-import {PlatformClient} from '../platform-client';
-import {CommerceAPIClient, getCommerceApiBaseUrl} from './commerce-api-client';
-import {CommerceAPIRequest} from './common/request';
-import {CommerceResponse} from './common/response';
-import {CommerceRecommendationsRequest} from './recommendations/recommendations-request';
+import {SortBy} from '../../features/sort/sort.js';
+import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client.js';
+import {VERSION} from '../../utils/version.js';
+import {PlatformClient} from '../platform-client.js';
+import {
+  CommerceAPIClient,
+  getCommerceApiBaseUrl,
+} from './commerce-api-client.js';
+import {CommerceAPIRequest} from './common/request.js';
+import {CommerceResponse} from './common/response.js';
+import {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';

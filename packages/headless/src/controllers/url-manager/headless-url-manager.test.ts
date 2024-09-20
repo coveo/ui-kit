@@ -1,13 +1,13 @@
-import {configuration} from '../../app/common-reducers';
-import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
-import {executeSearch} from '../../features/search/search-actions';
+import {configuration} from '../../app/common-reducers.js';
+import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {UrlManager, buildUrlManager} from './headless-url-manager';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {UrlManager, buildUrlManager} from './headless-url-manager.js';
 
 jest.mock('../../features/search-parameters/search-parameter-actions');
 jest.mock('../../features/search/search-actions');

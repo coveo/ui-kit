@@ -1,23 +1,23 @@
-import {executeSearch} from '../../features/search/search-actions';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-actions';
-import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
+} from '../../features/static-filter-set/static-filter-set-actions.js';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
-import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
 import {
   buildStaticFilter,
   StaticFilter,
   StaticFilterOptions,
-} from './headless-static-filter';
+} from './headless-static-filter.js';
 
 jest.mock('../../features/search/search-actions');
 jest.mock('../../features/static-filter-set/static-filter-set-actions');

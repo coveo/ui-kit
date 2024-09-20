@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {constructAnswerQueryParams} from '../stream-answer-api';
+import {constructAnswerQueryParams} from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
   streamAnswerAPIStateMock,
-} from './stream-answer-api-state-mock';
+} from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
   describe('constructAnswerQueryParams', () => {

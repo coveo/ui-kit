@@ -1,20 +1,20 @@
 import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
-import {SearchAPIClient} from '../../../api/search/search-api-client';
-import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildMockSearchRequest} from '../../../test/mock-search-request';
-import {buildMockSearchResponse} from '../../../test/mock-search-response';
-import {buildMockSearchState} from '../../../test/mock-search-state';
-import {getConfigurationInitialState} from '../../configuration/configuration-state';
-import {updateQuery} from '../../query/query-actions';
-import {logSearchboxSubmit} from '../../query/query-analytics-actions';
-import {logQueryError} from '../search-analytics-actions';
-import {ExecuteSearchThunkReturn} from './search-actions';
+import {SearchAPIClient} from '../../../api/search/search-api-client.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {buildMockSearchRequest} from '../../../test/mock-search-request.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../../test/mock-search-state.js';
+import {getConfigurationInitialState} from '../../configuration/configuration-state.js';
+import {updateQuery} from '../../query/query-actions.js';
+import {logSearchboxSubmit} from '../../query/query-analytics-actions.js';
+import {logQueryError} from '../search-analytics-actions.js';
 import {
   AsyncSearchThunkProcessor,
   AsyncThunkConfig,
-} from './search-actions-thunk-processor';
+} from './search-actions-thunk-processor.js';
+import {ExecuteSearchThunkReturn} from './search-actions.js';
 
 jest.mock('../search-analytics-actions');
 

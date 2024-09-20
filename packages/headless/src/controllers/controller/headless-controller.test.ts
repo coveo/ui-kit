@@ -1,9 +1,9 @@
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildController, Controller} from './headless-controller';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildController, Controller} from './headless-controller.js';
 
 describe('Controller', () => {
   let engine: MockedSearchEngine;

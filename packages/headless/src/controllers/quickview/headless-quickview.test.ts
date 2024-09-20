@@ -1,20 +1,20 @@
-import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
-import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {searchReducer} from '../../features/search/search-slice';
-import {SearchAppState} from '../../state/search-app-state';
+import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions.js';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
+import {searchReducer} from '../../features/search/search-slice.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {createMockState} from '../../test/mock-state';
-import {buildCoreQuickview} from '../core/quickview/headless-core-quickview';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildCoreQuickview} from '../core/quickview/headless-core-quickview.js';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-quickview';
+} from './headless-quickview.js';
 
 jest.mock('../core/quickview/headless-core-quickview');
 jest.mock('../../features/result-preview/result-preview-actions');

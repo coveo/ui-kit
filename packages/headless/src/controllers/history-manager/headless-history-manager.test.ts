@@ -1,17 +1,20 @@
-import {configuration} from '../../app/common-reducers';
-import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
-import {back, forward} from '../../features/history/history-actions';
-import {history} from '../../features/history/history-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice.js';
+import {back, forward} from '../../features/history/history-actions.js';
+import {history} from '../../features/history/history-slice.js';
 import {
   extractHistory,
   getHistoryInitialState,
-} from '../../features/history/history-state';
+} from '../../features/history/history-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildHistoryManager, HistoryManager} from './headless-history-manager';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {
+  buildHistoryManager,
+  HistoryManager,
+} from './headless-history-manager.js';
 
 jest.mock('../../features/history/history-actions');
 

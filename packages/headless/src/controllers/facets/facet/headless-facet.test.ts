@@ -1,39 +1,39 @@
-import {configuration} from '../../../app/common-reducers';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {configuration} from '../../../app/common-reducers.js';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
   registerFacet,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
-} from '../../../features/facets/facet-set/facet-set-actions';
+} from '../../../features/facets/facet-set/facet-set-actions.js';
 import {
   executeToggleFacetExclude,
   executeToggleFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-controller-actions';
-import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+} from '../../../features/facets/facet-set/facet-set-controller-actions.js';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchAppState} from '../../../state/search-app-state';
+} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {createMockState} from '../../../test/mock-state';
-import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
-import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
-import {buildFacet, Facet, FacetOptions} from './headless-facet';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {createMockState} from '../../../test/mock-state.js';
+import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor.js';
+import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search.js';
+import {buildFacet, Facet, FacetOptions} from './headless-facet.js';
 
 jest.mock('../../../features/facets/facet-set/facet-set-actions');
 jest.mock('../../../features/facet-options/facet-options-actions');

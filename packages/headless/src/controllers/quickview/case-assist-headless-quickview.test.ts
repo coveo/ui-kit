@@ -1,22 +1,22 @@
-import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
-import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion';
-import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
+import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
+import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
+import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion.js';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
   MockedCaseAssistEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {buildCoreQuickview} from '../core/quickview/headless-core-quickview';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildCoreQuickview} from '../core/quickview/headless-core-quickview.js';
 import {
   buildCaseAssistQuickview,
   CaseAssistQuickviewOptions,
   CaseAssistQuickview,
-} from './case-assist-headless-quickview';
-import {CoreQuickviewState} from './headless-quickview';
+} from './case-assist-headless-quickview.js';
+import {CoreQuickviewState} from './headless-quickview.js';
 
 jest.mock('../core/quickview/headless-core-quickview');
 jest.mock('../../features/result-preview/result-preview-actions');

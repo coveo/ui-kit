@@ -1,16 +1,16 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {configuration} from '../../../app/common-reducers';
-import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
-import {fieldsReducer as fields} from '../../../features/fields/fields-slice';
-import {fetchMoreResults} from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
+import {configuration} from '../../../app/common-reducers.js';
+import {registerFieldsToInclude} from '../../../features/fields/fields-actions.js';
+import {fieldsReducer as fields} from '../../../features/fields/fields-slice.js';
+import {fetchMoreResults} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockResult} from '../../../test/mock-result';
-import {createMockState} from '../../../test/mock-state';
-import {buildCoreResultList, ResultList} from './headless-core-result-list';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {buildCoreResultList, ResultList} from './headless-core-result-list.js';
 
 jest.mock('../../../features/fields/fields-actions');
 jest.mock('../../../features/search/search-actions');

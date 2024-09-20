@@ -1,4 +1,4 @@
-import {isArray} from '../../../utils/utils';
+import {isArray} from '../../../utils/utils.js';
 import {
   castUnknownObject,
   delimiter,
@@ -13,17 +13,17 @@ import {
   serializeRangeFacets,
   serializeSpecialCharacters,
   splitOnFirstEqual,
-} from '../../search-parameters/search-parameter-serializer';
-import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
+} from '../../search-parameters/search-parameter-serializer.js';
+import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
   SortBy,
   SortCriterion,
   SortDirection,
-} from '../sort/sort';
-import {Parameters} from './parameters-actions';
+} from '../sort/sort.js';
+import {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';

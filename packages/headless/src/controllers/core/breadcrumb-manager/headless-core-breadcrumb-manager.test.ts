@@ -1,13 +1,13 @@
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
-} from './headless-core-breadcrumb-manager';
+} from './headless-core-breadcrumb-manager.js';
 
 jest.mock('../../../features/breadcrumb/breadcrumb-actions');
 

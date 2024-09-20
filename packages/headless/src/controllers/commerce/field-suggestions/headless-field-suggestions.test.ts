@@ -1,23 +1,23 @@
 import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
-} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
-import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
+import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
 import {
   buildFieldSuggestions,
   FieldSuggestions,
-} from './headless-field-suggestions';
+} from './headless-field-suggestions.js';
 
 jest.mock(
   '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'

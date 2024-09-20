@@ -1,31 +1,31 @@
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
-import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
+import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
-} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
-import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
+} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
+import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
 import {
   executeSearch as executeCommerceSearch,
   QuerySearchCommerceAPIThunkReturn,
-} from '../../../commerce/search/search-actions';
+} from '../../../commerce/search/search-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
-} from '../../../search/search-actions';
-import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers';
+} from '../../../search/search-actions.js';
+import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../specific/specific-facet-search-actions';
-import {registerCategoryFacetSearch} from './category-facet-search-actions';
-import {categoryFacetSearchSetReducer} from './category-facet-search-set-slice';
+} from '../generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../specific/specific-facet-search-actions.js';
+import {registerCategoryFacetSearch} from './category-facet-search-actions.js';
+import {categoryFacetSearchSetReducer} from './category-facet-search-set-slice.js';
 import {
   CategoryFacetSearchSetState,
   getCategoryFacetSearchSetInitialState,
-} from './category-facet-search-set-state';
+} from './category-facet-search-set-state.js';
 
 describe('CategoryFacetSearchSet slice', () => {
   const facetId = '1';

@@ -1,49 +1,49 @@
-import pino from 'pino';
-import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
-import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
-import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
-import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {buildSearchRequest} from '../../features/search/search-request';
-import {emptyQuestionAnswer} from '../../features/search/search-state';
-import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockFacetSearch} from '../../test/mock-facet-search';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
-import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {createMockState} from '../../test/mock-state';
+import {pino} from 'pino';
+import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder.js';
+import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder.js';
+import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions.js';
+import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions.js';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
+import {buildSearchRequest} from '../../features/search/search-request.js';
+import {emptyQuestionAnswer} from '../../features/search/search-state.js';
+import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search.js';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
+import {buildMockFacetSearch} from '../../test/mock-facet-search.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
+import {buildMockSearchAPIClient} from '../../test/mock-search-api-client.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   getSearchApiBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
-} from '../platform-client';
-import {NoopPreprocessRequest} from '../preprocess-request';
-import {FacetSearchRequest} from './facet-search/facet-search-request';
-import {HtmlRequest} from './html/html-request';
-import {PlanRequest} from './plan/plan-request';
-import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
-import {RecommendationRequest} from './recommendation/recommendation-request';
+} from '../platform-client.js';
+import {NoopPreprocessRequest} from '../preprocess-request.js';
+import {FacetSearchRequest} from './facet-search/facet-search-request.js';
+import {HtmlRequest} from './html/html-request.js';
+import {PlanRequest} from './plan/plan-request.js';
+import {QuerySuggestRequest} from './query-suggest/query-suggest-request.js';
+import {RecommendationRequest} from './recommendation/recommendation-request.js';
 import {
   isErrorResponse,
   SearchAPIClient,
   SearchAPIClientOptions,
-} from './search-api-client';
+} from './search-api-client.js';
 import {
   getAuthenticationQueryParam,
   getOrganizationIdQueryParam,
-} from './search-api-params';
-import {QuestionsAnswers} from './search/question-answering';
-import {SearchRequest} from './search/search-request';
-import {SearchResponseSuccess} from './search/search-response';
+} from './search-api-params.js';
+import {QuestionsAnswers} from './search/question-answering.js';
+import {SearchRequest} from './search/search-request.js';
+import {SearchResponseSuccess} from './search/search-response.js';
 
 jest.mock('../platform-client');
 

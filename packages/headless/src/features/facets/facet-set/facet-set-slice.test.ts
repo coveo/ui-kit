@@ -1,31 +1,31 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {buildMockSearch} from '../../../test/mock-search';
-import {logSearchEvent} from '../../analytics/analytics-actions';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {buildMockSearch} from '../../../test/mock-search.js';
+import {logSearchEvent} from '../../analytics/analytics-actions.js';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
-import {change} from '../../history/history-actions';
-import {getHistoryInitialState} from '../../history/history-state';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+} from '../../breadcrumb/breadcrumb-actions.js';
+import {change} from '../../history/history-actions.js';
+import {getHistoryInitialState} from '../../history/history-state.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchFacetValues,
-} from '../../search/search-actions';
+} from '../../search/search-actions.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
-} from '../facet-search-set/specific/specific-facet-search-actions';
-import {updateFacetAutoSelection} from '../generic/facet-actions';
-import * as FacetReducers from '../generic/facet-reducer-helpers';
-import {FacetValueState, facetValueStates} from './../facet-api/value';
+} from '../facet-search-set/specific/specific-facet-search-actions.js';
+import {updateFacetAutoSelection} from '../generic/facet-actions.js';
+import * as FacetReducers from '../generic/facet-reducer-helpers.js';
+import {FacetValueState, facetValueStates} from './../facet-api/value.js';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -36,10 +36,13 @@ import {
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
-} from './facet-set-actions';
-import {facetSetReducer, convertFacetValueToRequest} from './facet-set-slice';
-import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
-import {FacetResponse} from './interfaces/response';
+} from './facet-set-actions.js';
+import {
+  facetSetReducer,
+  convertFacetValueToRequest,
+} from './facet-set-slice.js';
+import {FacetSetState, getFacetSetInitialState} from './facet-set-state.js';
+import {FacetResponse} from './interfaces/response.js';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;

@@ -1,12 +1,12 @@
-import {stateKey} from '../../../app/state-key';
-import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {stateKey} from '../../../app/state-key.js';
+import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger';
-import {buildNotifyTrigger} from './headless-notify-trigger';
+} from '../../../test/mock-engine-v2.js';
+import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
+import {buildNotifyTrigger} from './headless-notify-trigger.js';
 
 describe('commerce notify trigger', () => {
   let engine: MockedCommerceEngine;

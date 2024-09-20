@@ -1,13 +1,13 @@
 import {
   formatDateForSearchApi,
   parseDate,
-} from '../../../../../api/search/date/date-format';
+} from '../../../../../api/search/date/date-format.js';
 import {
   RelativeDate,
   serializeRelativeDate,
-} from '../../../../../api/search/date/relative-date';
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {buildDateRange} from './date-range';
+} from '../../../../../api/search/date/relative-date.js';
+import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import {buildDateRange} from './date-range.js';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {

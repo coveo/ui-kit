@@ -1,19 +1,19 @@
-import {configuration} from '../../app/common-reducers';
-import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
+import {configuration} from '../../app/common-reducers.js';
+import {updateNumberOfResults} from '../../features/pagination/pagination-actions.js';
 import {
   getRecommendations,
   setRecommendationId,
-} from '../../features/recommendation/recommendation-actions';
-import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
+} from '../../features/recommendation/recommendation-actions.js';
+import {recommendationReducer} from '../../features/recommendation/recommendation-slice.js';
 import {
   buildMockRecommendationEngine,
   MockedRecommendationEngine,
-} from '../../test/mock-engine-v2';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
 import {
   buildRecommendationList,
   RecommendationList,
-} from './headless-recommendation';
+} from './headless-recommendation.js';
 
 jest.mock('../../features/recommendation/recommendation-actions');
 jest.mock('../../features/pagination/pagination-actions');

@@ -1,28 +1,28 @@
 import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
-import {InsightAPIClient} from '../../../api/service/insight/insight-api-client';
-import {InsightQueryRequest} from '../../../api/service/insight/query/query-request';
-import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider';
-import {buildMockInsightQueryRequest} from '../../../test/mock-insight-request';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildMockSearchResponse} from '../../../test/mock-search-response';
-import {buildMockSearchState} from '../../../test/mock-search-state';
-import {getConfigurationInitialState} from '../../configuration/configuration-state';
-import {getInsightConfigurationInitialState} from '../../insight-configuration/insight-configuration-state';
-import {updateQuery} from '../../query/query-actions';
-import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions';
+import {InsightAPIClient} from '../../../api/service/insight/insight-api-client.js';
+import {InsightQueryRequest} from '../../../api/service/insight/query/query-request.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
+import {buildMockInsightQueryRequest} from '../../../test/mock-insight-request.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../../test/mock-search-state.js';
+import {getConfigurationInitialState} from '../../configuration/configuration-state.js';
+import {getInsightConfigurationInitialState} from '../../insight-configuration/insight-configuration-state.js';
+import {updateQuery} from '../../query/query-actions.js';
+import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
 import {
   MappedSearchRequest,
   SearchMappings,
-} from '../../search/search-mappings';
+} from '../../search/search-mappings.js';
 import {
   logFetchMoreResults,
   logQueryError,
-} from '../insight-search-analytics-actions';
+} from '../insight-search-analytics-actions.js';
 import {
   AsyncInsightSearchThunkProcessor,
   AsyncThunkConfig,
-} from './insight-search-actions-thunk-processor';
+} from './insight-search-actions-thunk-processor.js';
 
 jest.mock('../insight-search-analytics-actions');
 

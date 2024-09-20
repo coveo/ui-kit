@@ -1,5 +1,5 @@
-import {QueryCorrection} from '../../../api/search/search/query-corrections';
-import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state';
+import {QueryCorrection} from '../../../api/search/search/query-corrections.js';
+import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state.js';
 
 export interface DidYouMeanState {
   /**

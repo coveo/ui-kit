@@ -4,10 +4,10 @@ import {
   SearchEngine,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-} from '../../app/search-engine/search-engine';
-import {buildMockNonEmptyResult} from '../../test/mock-result';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {logDocumentOpen} from './result-analytics-actions';
+} from '../../app/search-engine/search-engine.js';
+import {buildMockNonEmptyResult} from '../../test/mock-result.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {logDocumentOpen} from './result-analytics-actions.js';
 
 jest.mock('@coveo/relay');
 jest.mock('coveo.analytics');

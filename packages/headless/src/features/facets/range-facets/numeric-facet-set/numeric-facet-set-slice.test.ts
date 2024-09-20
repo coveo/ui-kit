@@ -1,14 +1,14 @@
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockSearch} from '../../../../test/mock-search';
-import {logSearchEvent} from '../../../analytics/analytics-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {change} from '../../../history/history-actions';
-import {getHistoryInitialState} from '../../../history/history-state';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../../search/search-actions';
-import * as FacetReducers from '../../generic/facet-reducer-helpers';
-import * as RangeFacetReducers from '../generic/range-facet-reducers';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {buildMockSearch} from '../../../../test/mock-search.js';
+import {logSearchEvent} from '../../../analytics/analytics-actions.js';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
+import {change} from '../../../history/history-actions.js';
+import {getHistoryInitialState} from '../../../history/history-state.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
+import * as FacetReducers from '../../generic/facet-reducer-helpers.js';
+import * as RangeFacetReducers from '../generic/range-facet-reducers.js';
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
@@ -17,12 +17,12 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
   toggleExcludeNumericFacetValue,
-} from './numeric-facet-actions';
-import {numericFacetSetReducer} from './numeric-facet-set-slice';
+} from './numeric-facet-actions.js';
+import {numericFacetSetReducer} from './numeric-facet-set-slice.js';
 import {
   NumericFacetSetState,
   getNumericFacetSetInitialState,
-} from './numeric-facet-set-state';
+} from './numeric-facet-set-state.js';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;

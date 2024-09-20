@@ -4,7 +4,7 @@ import {
   UserActionTimeline,
   UserActionType,
   UserSession,
-} from './insight-user-actions-state';
+} from './insight-user-actions-state.js';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;

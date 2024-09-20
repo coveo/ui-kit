@@ -3,9 +3,9 @@ import {createSelector} from '@reduxjs/toolkit';
 import {
   CommerceConfigurationSection,
   ConfigurationSection,
-} from '../../state/state-sections';
-import {getAnalyticsNextApiBaseUrl} from '../platform-client';
-import {getAnalyticsSource} from './analytics-selectors';
+} from '../../state/state-sections.js';
+import {getAnalyticsNextApiBaseUrl} from '../platform-client.js';
+import {getAnalyticsSource} from './analytics-selectors.js';
 
 type StateNeededByRelay = ConfigurationSection | CommerceConfigurationSection;
 

@@ -1,18 +1,18 @@
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {InsightAppState} from '../../state/insight-app-state';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {getCaseContextInitialState} from '../case-context/case-context-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {getQueryInitialState} from '../query/query-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getCaseContextInitialState} from '../case-context/case-context-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
 import {
   logContextChanged,
   logFetchMoreResults,
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
   logQueryError,
-} from './insight-search-analytics-actions';
+} from './insight-search-analytics-actions.js';
 
 const mockLogContextChanged = jest.fn();
 const mockLogFetchMoreResults = jest.fn();

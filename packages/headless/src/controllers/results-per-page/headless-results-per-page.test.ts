@@ -1,32 +1,32 @@
 import {AsyncThunk, UnknownAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
-import {SearchAPIClient} from '../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {configuration} from '../../app/common-reducers';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {configuration} from '../../app/common-reducers.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
-} from '../../features/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
+} from '../../features/pagination/pagination-actions.js';
+import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
+import {StateNeededByExecuteSearch} from '../../features/search/search-actions-thunk-processor.js';
 import {
   ExecuteSearchThunkReturn,
   fetchPage,
   TransitiveSearchAction,
-} from '../../features/search/search-actions';
-import {StateNeededByExecuteSearch} from '../../features/search/search-actions-thunk-processor';
+} from '../../features/search/search-actions.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockPagination} from '../../test/mock-pagination';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockPagination} from '../../test/mock-pagination.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildResultsPerPage,
-} from './headless-results-per-page';
+} from './headless-results-per-page.js';
 
 jest.mock('../../features/pagination/pagination-actions');
 jest.mock('../../features/search/search-actions');

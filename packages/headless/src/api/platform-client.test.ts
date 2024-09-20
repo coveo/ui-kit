@@ -1,19 +1,19 @@
 import * as BackOff from 'exponential-backoff';
-import pino from 'pino';
-import {ExpiredTokenError} from '../utils/errors';
-import {PlatformEnvironment} from '../utils/url-utils';
+import {pino} from 'pino';
+import {ExpiredTokenError} from '../utils/errors.js';
+import {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
   getSearchApiBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
-} from './platform-client';
+} from './platform-client.js';
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
   PreprocessRequest,
-} from './preprocess-request';
+} from './preprocess-request.js';
 
 const {Response} = jest.requireActual('node-fetch');
 global.fetch = jest.fn();

@@ -1,10 +1,10 @@
-import {configuration} from '../../app/common-reducers';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {buildOmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
-import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
-import {updateQuery} from '../../features/query/query-actions';
-import {queryReducer as query} from '../../features/query/query-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions.js';
+import {buildOmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
+import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice.js';
+import {updateQuery} from '../../features/query/query-actions.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -12,28 +12,28 @@ import {
   updateAnalyticsToSearchFromLink,
   resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
-} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
-import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice';
-import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
+} from '../../features/standalone-search-box-set/standalone-search-box-set-actions.js';
+import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice.js';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
 import {
   ConfigurationSection,
   QuerySection,
   QuerySuggestionSection,
   StandaloneSearchBoxSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {randomID} from '../../utils/utils';
-import {validateOptions} from '../../utils/validate-payload';
-import {defaultSearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {randomID} from '../../utils/utils.js';
+import {validateOptions} from '../../utils/validate-payload.js';
+import {defaultSearchBoxOptions} from '../core/search-box/headless-core-search-box-options.js';
 import {
   buildSearchBox,
   SearchBox,
   SearchBoxState,
-} from '../search-box/headless-search-box';
+} from '../search-box/headless-search-box.js';
 import {
   StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
-} from './headless-standalone-search-box-options';
+} from './headless-standalone-search-box-options.js';
 
 export type {StandaloneSearchBoxOptions, StandaloneSearchBoxAnalytics};
 

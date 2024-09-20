@@ -5,12 +5,12 @@ import {
   splitActionsIntoTimelineSessions,
   shouldExcludeAction,
   insertSessionInTimeline,
-} from './insight-user-actions-preprocessing';
+} from './insight-user-actions-preprocessing.js';
 import {
   UserActionTimeline,
   UserActionType,
   UserSession,
-} from './insight-user-actions-state';
+} from './insight-user-actions-state.js';
 
 const createRelativeDate = (date: Date, minutes: number, seconds: number) => {
   const totalSeconds = seconds + minutes * 60;

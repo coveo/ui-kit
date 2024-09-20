@@ -1,28 +1,28 @@
-import {buildSearchResponse} from '../../../../test/mock-commerce-search';
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
-import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
-import {setView} from '../../../commerce/context/context-actions';
-import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
-import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
+import {buildSearchResponse} from '../../../../test/mock-commerce-search.js';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing.js';
+import {setView} from '../../../commerce/context/context-actions.js';
+import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
+import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
-} from '../../../search/search-actions';
-import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers';
+} from '../../../search/search-actions.js';
+import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../generic/generic-facet-search-actions';
+} from '../generic/generic-facet-search-actions.js';
 import {
   registerFacetSearch,
   updateFacetSearch,
-} from './specific-facet-search-actions';
-import {specificFacetSearchSetReducer} from './specific-facet-search-set-slice';
+} from './specific-facet-search-actions.js';
+import {specificFacetSearchSetReducer} from './specific-facet-search-set-slice.js';
 import {
   getFacetSearchSetInitialState,
   SpecificFacetSearchSetState,
-} from './specific-facet-search-set-state';
+} from './specific-facet-search-set-state.js';
 
 describe('FacetSearch slice', () => {
   const facetId = '1';

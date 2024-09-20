@@ -1,13 +1,16 @@
-import {ensureAtLeastOneSolutionType} from '../../../app/commerce-ssr-engine/common';
+import {ensureAtLeastOneSolutionType} from '../../../app/commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionOption,
   SolutionType,
   SubControllerDefinitionWithoutProps,
-} from '../../../app/commerce-ssr-engine/types/common';
-import {buildSearch, Search} from '../search/headless-search';
-import {ProductListing, buildProductListing} from './headless-product-listing';
+} from '../../../app/commerce-ssr-engine/types/common.js';
+import {buildSearch, Search} from '../search/headless-search.js';
+import {
+  ProductListing,
+  buildProductListing,
+} from './headless-product-listing.js';
 
-export type {ProductListingState as ProductListState} from './headless-product-listing';
+export type {ProductListingState as ProductListState} from './headless-product-listing.js';
 export type ProductList = Pick<
   ProductListing | Search,
   'state' | 'subscribe' | 'interactiveProduct'
