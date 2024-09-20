@@ -16,7 +16,7 @@ import {
   buildCoreResultsPerPage,
 } from './headless-core-results-per-page.js';
 
-jest.mock('../../../features/pagination/pagination-actions');
+vi.mock('../../../features/pagination/pagination-actions');
 
 describe('ResultsPerPage', () => {
   let engine: MockedSearchEngine;
@@ -28,7 +28,7 @@ describe('ResultsPerPage', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     const state = createMockState();
     engine = buildMockSearchEngine(state);
     props = {

@@ -16,12 +16,12 @@ import {
   Quickview,
 } from './headless-quickview.js';
 
-jest.mock('../core/quickview/headless-core-quickview');
-jest.mock('../../features/result-preview/result-preview-actions');
-jest.mock('../../features/result-preview/result-preview-analytics-actions');
+vi.mock('../core/quickview/headless-core-quickview');
+vi.mock('../../features/result-preview/result-preview-actions');
+vi.mock('../../features/result-preview/result-preview-analytics-actions');
 
 describe('Quickview', () => {
-  const mockedBuildCoreQuickview = jest.mocked(buildCoreQuickview);
+  const mockedBuildCoreQuickview = vi.mocked(buildCoreQuickview);
   let engine: MockedSearchEngine;
   let state: SearchAppState;
   let options: QuickviewOptions;
@@ -37,7 +37,7 @@ describe('Quickview', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initEngine();
     options = {
       result: buildMockResult(),
@@ -64,9 +64,7 @@ describe('Quickview', () => {
   });
 
   it('dispatches #preparePreviewPagination', () => {
-    const mockedPreparePreviewPagination = jest.mocked(
-      preparePreviewPagination
-    );
+    const mockedPreparePreviewPagination = vi.mocked(preparePreviewPagination);
 
     expect(preparePreviewPagination).toHaveBeenCalledWith({
       results: state.search.results,
@@ -78,7 +76,7 @@ describe('Quickview', () => {
   });
 
   it('#fetchResultContentCallback logs a document quickview', () => {
-    const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
+    const mockedLogDocumentQuickview = vi.mocked(logDocumentQuickview);
     const coreQuickviewParamsFetchResultContentCallback =
       mockedBuildCoreQuickview.mock.calls[0][4];
 

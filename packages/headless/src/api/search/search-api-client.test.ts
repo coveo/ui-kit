@@ -1,4 +1,5 @@
 import {pino} from 'pino';
+import {Mock} from 'vitest';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder.js';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder.js';
 import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions.js';
@@ -45,7 +46,7 @@ import {QuestionsAnswers} from './search/question-answering.js';
 import {SearchRequest} from './search/search-request.js';
 import {SearchResponseSuccess} from './search/search-response.js';
 
-jest.mock('../platform-client');
+vi.mock('../platform-client');
 
 describe('search api client', () => {
   const logger = pino({level: 'silent'});
@@ -62,7 +63,7 @@ describe('search api client', () => {
   }
 
   function mockPlatformResponse(buildResponse: () => Response, times = 1) {
-    const mock = jest.fn();
+    const mock = vi.fn();
     let count = times;
 
     while (count > 0) {
@@ -79,7 +80,7 @@ describe('search api client', () => {
   }
 
   function getPlatformClientCalls() {
-    return (PlatformClient.call as jest.Mock).mock.calls.map(
+    return (PlatformClient.call as Mock).mock.calls.map(
       (call) => call[0] as PlatformClientCallOptions
     );
   }
@@ -89,7 +90,7 @@ describe('search api client', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('middleware', () => {
@@ -216,7 +217,7 @@ describe('search api client', () => {
       const req = (await buildSearchRequest(state, navigatorContextProvier()))
         .request;
       searchAPIClient.search(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       const expectedRequest: PlatformClientCallOptions<
         Omit<SearchRequest, 'accessToken' | 'organizationId' | 'url'>
@@ -269,7 +270,7 @@ describe('search api client', () => {
         await buildSearchRequest(state, buildMockNavigatorContextProvider()())
       ).request;
       searchAPIClient.search(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
       const expectedUrl = `${
         state.configuration.search.apiBaseUrl ??
         getSearchApiBaseUrl(
@@ -321,7 +322,7 @@ describe('search api client', () => {
         buildMockNavigatorContextProvider()()
       );
       searchAPIClient.plan(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       const expectedRequest: PlatformClientCallOptions<
         Omit<PlanRequest, 'accessToken' | 'organizationId' | 'url'>
@@ -362,7 +363,7 @@ describe('search api client', () => {
         buildMockNavigatorContextProvider()()
       );
       searchAPIClient.plan(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
       const expectedUrl = `${
         state.configuration.search.apiBaseUrl ??
         getSearchApiBaseUrl(
@@ -388,7 +389,7 @@ describe('search api client', () => {
         buildMockNavigatorContextProvider()()
       );
       searchAPIClient.querySuggest(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       const expectedRequest: PlatformClientCallOptions<
         Omit<QuerySuggestRequest, 'accessToken' | 'organizationId' | 'url'>
@@ -438,7 +439,7 @@ describe('search api client', () => {
         buildMockNavigatorContextProvider()()
       );
       searchAPIClient.querySuggest(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       const expectedUrl = `${
         state.configuration.search.apiBaseUrl ??
@@ -469,7 +470,7 @@ describe('search api client', () => {
         );
         searchAPIClient.facetSearch(req);
 
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const request = (PlatformClient.call as Mock).mock.calls[0][0];
         const expectedRequest: PlatformClientCallOptions<
           Omit<FacetSearchRequest, 'accessToken' | 'organizationId' | 'url'>
         > = {
@@ -519,7 +520,7 @@ describe('search api client', () => {
         );
         searchAPIClient.facetSearch(req);
 
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const request = (PlatformClient.call as Mock).mock.calls[0][0];
         const expectedUrl = `${
           state.configuration.search.apiBaseUrl ??
           getSearchApiBaseUrl(
@@ -550,7 +551,7 @@ describe('search api client', () => {
 
         searchAPIClient.facetSearch(req);
 
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
         const {query} = facetSearchState.options;
         const newQuery = `*${query}*`;
@@ -600,7 +601,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
 
         searchAPIClient.facetSearch(req);
 
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
         const {query} = categoryFacetSearch.options;
         const newQuery = `*${query}*`;
@@ -690,7 +691,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'recommendations'},
       };
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       expect(request).toMatchObject(expectedRequest);
     });
@@ -715,7 +716,7 @@ it calls PlatformClient.call with the category facet search params`, async () =>
       }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
         req
       )}`;
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       expect(request.url).toBe(expectedUrl);
     });
@@ -727,7 +728,7 @@ should call PlatformClient.call with the right options`, async () => {
       ).request;
 
       searchAPIClient.fieldDescriptions(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       const expectedRequest: PlatformClientCallOptions<{}> = {
         accessToken: state.configuration.accessToken,
@@ -777,7 +778,7 @@ should call PlatformClient.call with the right options`, async () => {
       it('when calling SearchAPIClient.html should call PlatformClient.call with the right options', async () => {
         const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
         searchAPIClient.html(req);
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const request = (PlatformClient.call as Mock).mock.calls[0][0];
         const expectedRequest: PlatformClientCallOptions<
           Omit<HtmlRequest, 'accessToken' | 'organizationId' | 'url'>
         > = {

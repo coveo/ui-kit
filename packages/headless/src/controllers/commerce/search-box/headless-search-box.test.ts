@@ -32,12 +32,12 @@ import {
   buildSearchBox,
 } from './headless-search-box.js';
 
-jest.mock('../../../features/commerce/query-suggest/query-suggest-actions');
-jest.mock('../../../features/commerce/search/search-actions');
-jest.mock('../../../features/commerce/query-set/query-set-actions');
-jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
-jest.mock('../../../features/commerce/pagination/pagination-actions');
-jest.mock('../../../features/commerce/query/query-actions');
+vi.mock('../../../features/commerce/query-suggest/query-suggest-actions');
+vi.mock('../../../features/commerce/search/search-actions');
+vi.mock('../../../features/commerce/query-set/query-set-actions');
+vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
+vi.mock('../../../features/commerce/pagination/pagination-actions');
+vi.mock('../../../features/commerce/query/query-actions');
 
 describe('headless search box', () => {
   const id = 'search-box-123';
@@ -48,7 +48,7 @@ describe('headless search box', () => {
   let props: SearchBoxProps;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     const options: SearchBoxOptions = {
       id,
       highlightOptions: {
@@ -72,7 +72,7 @@ describe('headless search box', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   function initState() {
@@ -179,7 +179,7 @@ describe('headless search box', () => {
     });
 
     it('calls #showSuggestions', () => {
-      jest.spyOn(searchBox, 'showSuggestions');
+      vi.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).toHaveBeenCalled();
@@ -234,7 +234,7 @@ describe('headless search box', () => {
     });
 
     it('when clearFilters option is false, does not dispatch #clearAllCoreFacets', () => {
-      jest.resetAllMocks();
+      vi.resetAllMocks();
       engine = buildMockCommerceEngine(state);
       searchBox = buildSearchBox(engine, {
         ...props,

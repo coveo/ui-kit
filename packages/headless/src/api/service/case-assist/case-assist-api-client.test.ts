@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder.js';
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client.js';
 import {createMockState} from '../../../test/mock-state.js';
@@ -18,18 +19,18 @@ describe('case assist api client', () => {
   const clientId = 'some client id';
 
   let client: CaseAssistAPIClient;
-  let platformCallMock: jest.Mock;
+  let platformCallMock: Mock;
 
   beforeEach(() => {
     client = buildMockCaseAssistAPIClient();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const mockPlatformCall = (fakeResponse: unknown) => {
-    platformCallMock = jest.fn();
+    platformCallMock = vi.fn();
 
     platformCallMock.mockReturnValue(fakeResponse);
     PlatformClient.call = platformCallMock;

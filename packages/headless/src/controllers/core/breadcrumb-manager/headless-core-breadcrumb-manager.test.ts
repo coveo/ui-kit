@@ -1,3 +1,4 @@
+import {describe, it, vi, expect, beforeEach} from 'vitest';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
 import {
   buildMockSearchEngine,
@@ -9,7 +10,7 @@ import {
   buildCoreBreadcrumbManager,
 } from './headless-core-breadcrumb-manager.js';
 
-jest.mock('../../../features/breadcrumb/breadcrumb-actions');
+vi.mock('../../../features/breadcrumb/breadcrumb-actions');
 
 describe('headless breadcrumb manager', () => {
   let engine: MockedSearchEngine;
@@ -21,7 +22,7 @@ describe('headless breadcrumb manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initController();
   });
 

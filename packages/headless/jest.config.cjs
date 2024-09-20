@@ -6,4 +6,6 @@ module.exports = {
   moduleNameMapper: {
     '@coveo/pendragon': '<rootDir>/ponyfills/magic-cookie-node.js',
   },
+  transform: {},
+  // extensionsToTreatAsEsm: ['.ts', '.js'],
 };

@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {MockInstance} from 'vitest';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
@@ -17,7 +18,7 @@ import {
   partialRecommendationInformation,
 } from './analytics-utils.js';
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
 /* cSpell:ignore CAJS */
 
@@ -189,9 +190,9 @@ describe('analytics-utils', () => {
   describe('#makeAnalytics', () => {
     let engine: MockedSearchEngine;
     let analyticsMode: 'legacy' | 'next';
-    let relayEmitSpy: jest.SpyInstance;
-    const fakeCAJSLog = jest.fn();
-    const createRelayMocked = jest.mocked(createRelay);
+    let relayEmitSpy: MockInstance;
+    const fakeCAJSLog = vi.fn();
+    const createRelayMocked = vi.mocked(createRelay);
     const baseMakeAnalyticParams = {
       prefix: 'analytics/noop',
       __legacy__getBuilder: () =>
@@ -205,19 +206,19 @@ describe('analytics-utils', () => {
       analyticsType: '🥖',
     };
     function buildMockRelay() {
-      relayEmitSpy = jest.fn();
+      relayEmitSpy = vi.fn();
       createRelayMocked.mockReturnValue({
         emit: relayEmitSpy as unknown as ReturnType<typeof createRelay>['emit'],
-        on: jest.fn(),
-        off: jest.fn(),
-        getMeta: jest.fn(),
-        updateConfig: jest.fn(),
+        on: vi.fn(),
+        off: vi.fn(),
+        getMeta: vi.fn(),
+        updateConfig: vi.fn(),
         version: 'test',
       });
     }
 
     beforeEach(() => {
-      jest.resetAllMocks();
+      vi.resetAllMocks();
       buildMockRelay();
       engine = buildMockSearchEngine(
         createMockState({

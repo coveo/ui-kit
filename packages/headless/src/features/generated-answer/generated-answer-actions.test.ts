@@ -17,7 +17,7 @@ import {
 
 describe('generated answer', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('#updateError', () => {

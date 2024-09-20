@@ -5,8 +5,8 @@ import {createMockState} from '../../test/mock-state.js';
 import {Context, buildContext} from './headless-context.js';
 import {ContextProps, defineContext} from './headless-context.ssr.js';
 
-jest.mock('./headless-context');
-const buildContextMock = jest.mocked(buildContext);
+vi.mock('./headless-context');
+const buildContextMock = vi.mocked(buildContext);
 
 type contextDefinitionType = ControllerDefinitionWithProps<
   SSRSearchEngine,

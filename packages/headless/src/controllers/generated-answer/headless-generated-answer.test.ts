@@ -10,8 +10,8 @@ import {
   GeneratedResponseFormat,
 } from './headless-generated-answer.js';
 
-jest.mock('../../features/generated-answer/generated-answer-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/generated-answer/generated-answer-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('generated answer', () => {
   let engine: MockedSearchEngine;

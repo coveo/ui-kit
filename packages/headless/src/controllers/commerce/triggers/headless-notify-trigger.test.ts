@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
@@ -21,11 +22,11 @@ describe('commerce notify trigger', () => {
   }
 
   function registeredListeners() {
-    return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
+    return (engine.subscribe as Mock).mock.calls.map((args) => args[0]);
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockCommerceEngine(buildMockCommerceState());
     initNotifyTrigger();
   });
@@ -45,7 +46,7 @@ describe('commerce notify trigger', () => {
   });
 
   it('when the #engine.state.triggers.notifications is not updated, does not call the listener', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     engine = buildMockCommerceEngine(buildMockCommerceState());
     initNotifyTrigger();
@@ -58,7 +59,7 @@ describe('commerce notify trigger', () => {
   });
 
   it('when the #engine.state.triggers.notifications is updated, calls the listener', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     engine = buildMockCommerceEngine(buildMockCommerceState());
     initNotifyTrigger();
@@ -72,7 +73,7 @@ describe('commerce notify trigger', () => {
   });
 
   it('when the #engine.state.triggers.notifications is updated with an empty array, does not call the listener', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     engine = buildMockCommerceEngine(buildMockCommerceState());
     initNotifyTrigger();
@@ -86,7 +87,7 @@ describe('commerce notify trigger', () => {
   });
 
   it('when a non-empty #engine.state.triggers.notifications is updated with an empty array, calls the listener', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     engine = buildMockCommerceEngine(buildMockCommerceState());
     setEngineTriggersState(['hello', 'world']);
@@ -101,7 +102,7 @@ describe('commerce notify trigger', () => {
   });
 
   describe('when a non-empty #engine.state.triggers.notifications is updated with the same array, does not call the listener', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     engine = buildMockCommerceEngine(buildMockCommerceState());
     setEngineTriggersState(['hello', 'world']);

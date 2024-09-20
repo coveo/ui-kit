@@ -12,7 +12,7 @@ import {
   buildPager,
 } from './headless-pager.js';
 
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('Pager', () => {
   let engine: MockedSearchEngine;

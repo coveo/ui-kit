@@ -28,8 +28,8 @@ import {
   buildResultsPerPage,
 } from './headless-results-per-page.js';
 
-jest.mock('../../features/pagination/pagination-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/pagination/pagination-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('ResultsPerPage', () => {
   let engine: MockedSearchEngine;
@@ -59,12 +59,12 @@ describe('ResultsPerPage', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     props = {
       initialState: {},
     };
-    mockedFetchPage = jest.mocked(fetchPage);
+    mockedFetchPage = vi.mocked(fetchPage);
     initResultsPerPage();
   });
 

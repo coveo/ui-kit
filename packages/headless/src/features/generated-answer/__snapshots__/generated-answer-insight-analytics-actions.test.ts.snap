@@ -1,4 +1,148 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCopyGeneratedAnswer with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "copyToClipboard",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDislikeGeneratedAnswer with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "dislike",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerCollapse with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "collapse",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerExpand with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "expand",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerFeedback with the right payload 1`] = `
+[
+  "Qna.SubmitRgaFeedback",
+  {
+    "answer": {
+      "responseId": "456",
+    },
+    "feedback": {
+      "correct_topic": "no",
+      "details": undefined,
+      "document_url": undefined,
+      "documented": "yes",
+      "hallucination_free": "unknown",
+      "helpful": true,
+      "readable": "yes",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "hide",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "show",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logHoverCitation with the right payload 1`] = `
+[
+  "Qna.CitationHover",
+  {
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+    "citation": {
+      "id": "citation_id",
+      "type": "Source",
+    },
+    "citationHoverTimeInMs": 100,
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logLikeGeneratedAnswer with the right payload 1`] = `
+[
+  "Qna.AnswerAction",
+  {
+    "action": "like",
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logOpenGeneratedAnswerSource with the right payload 1`] = `
+[
+  "Qna.CitationClick",
+  {
+    "answer": {
+      "responseId": "456",
+      "type": "RGA",
+    },
+    "citation": {
+      "id": "citation_id",
+      "type": "Source",
+    },
+  },
+]
+`;
 
 exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logCopyGeneratedAnswer with the right payload 1`] = `
 [

@@ -15,8 +15,8 @@ import {
   RecentResultsList,
 } from './headless-recent-results-list.js';
 
-jest.mock('../../features/recent-results/recent-results-analytics-actions');
-jest.mock('../../features/recent-results/recent-results-actions');
+vi.mock('../../features/recent-results/recent-results-analytics-actions');
+vi.mock('../../features/recent-results/recent-results-actions');
 
 describe('recent results list', () => {
   let engine: MockedSearchEngine;

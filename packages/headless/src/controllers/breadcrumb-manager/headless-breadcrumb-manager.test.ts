@@ -65,22 +65,18 @@ import {
   buildBreadcrumbManager,
 } from './headless-breadcrumb-manager.js';
 
-jest.mock('../../features/breadcrumb/breadcrumb-actions');
-jest.mock(
+vi.mock('../../features/breadcrumb/breadcrumb-actions');
+vi.mock(
   '../../features/facets/automatic-facet-set/automatic-facet-set-actions'
 );
-jest.mock(
-  '../../features/facets/category-facet-set/category-facet-set-actions'
-);
-jest.mock('../../features/facets/facet-set/facet-set-actions');
-jest.mock(
-  '../../features/facets/range-facets/date-facet-set/date-facet-actions'
-);
-jest.mock(
+vi.mock('../../features/facets/category-facet-set/category-facet-set-actions');
+vi.mock('../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../features/facets/range-facets/date-facet-set/date-facet-actions');
+vi.mock(
   '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
-jest.mock('../../features/search/search-actions');
-jest.mock('../../features/static-filter-set/static-filter-set-actions');
+vi.mock('../../features/search/search-actions');
+vi.mock('../../features/static-filter-set/static-filter-set-actions');
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';

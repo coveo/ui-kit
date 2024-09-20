@@ -15,13 +15,13 @@ import {
   buildSearchBox,
 } from './headless-search-box.js';
 
-jest.mock('../../features/query/query-analytics-actions', () => ({
-  logSearchboxSubmit: jest.fn(() => () => {}),
-  searchboxSubmit: jest.fn(() => () => {}),
+vi.mock('../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: vi.fn(() => () => {}),
+  searchboxSubmit: vi.fn(() => () => {}),
 }));
 
-jest.mock('../../features/search/search-actions');
-jest.mock('../../features/query-suggest/query-suggest-actions');
+vi.mock('../../features/search/search-actions');
+vi.mock('../../features/query-suggest/query-suggest-actions');
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -54,7 +54,7 @@ describe('headless searchBox', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   function initState() {

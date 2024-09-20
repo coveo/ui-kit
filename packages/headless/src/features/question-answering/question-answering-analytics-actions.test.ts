@@ -29,65 +29,65 @@ import {
 } from './question-answering-analytics-actions.js';
 import {getQuestionAnsweringInitialState} from './question-answering-state.js';
 
-const mockLogFunction = jest.fn();
-const mockMakeExpandSmartSnippet = jest.fn(() => ({
+const mockLogFunction = vi.fn();
+const mockMakeExpandSmartSnippet = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeCollapseSmartSnippet = jest.fn(() => ({
+const mockMakeCollapseSmartSnippet = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeLikeSmartSnippet = jest.fn(() => ({
+const mockMakeLikeSmartSnippet = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeDislikeSmartSnippet = jest.fn(() => ({
+const mockMakeDislikeSmartSnippet = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenSmartSnippetSource = jest.fn((..._args) => ({
+const mockMakeOpenSmartSnippetSource = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenSmartSnippetInlineLink = jest.fn((..._args) => ({
+const mockMakeOpenSmartSnippetInlineLink = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenSmartSnippetFeedbackModal = jest.fn(() => ({
+const mockMakeOpenSmartSnippetFeedbackModal = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeCloseSmartSnippetFeedbackModal = jest.fn(() => ({
+const mockMakeCloseSmartSnippetFeedbackModal = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeSmartSnippetFeedback = jest.fn((..._args) => ({
+const mockMakeSmartSnippetFeedback = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeSmartSnippetDetailedFeedback = jest.fn(() => ({
+const mockMakeSmartSnippetDetailedFeedback = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeExpandSmartSnippetSuggestion = jest.fn((..._args) => ({
+const mockMakeExpandSmartSnippetSuggestion = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeCollapseSmartSnippetSuggestion = jest.fn((..._args) => ({
+const mockMakeCollapseSmartSnippetSuggestion = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenSmartSnippetSuggestionSource = jest.fn((..._args) => ({
+const mockMakeOpenSmartSnippetSuggestionSource = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenSmartSnippetSuggestionInlineLink = jest.fn((..._args) => ({
+const mockMakeOpenSmartSnippetSuggestionInlineLink = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const emit = jest.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoSearchPageClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoSearchPageClient = vi.fn(() => ({
+    disable: vi.fn(),
     makeExpandSmartSnippet: mockMakeExpandSmartSnippet,
     makeCollapseSmartSnippet: mockMakeCollapseSmartSnippet,
     makeLikeSmartSnippet: mockMakeLikeSmartSnippet,
@@ -108,7 +108,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoSearchPageClient: mockCoveoSearchPageClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -209,7 +209,7 @@ describe('question answering analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

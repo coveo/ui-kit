@@ -1,4 +1,139 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAbandonCase with the right payload 1`] = `
+[
+  "caseAssist.cancel",
+  {
+    "reason": "quit",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAutoSelectCaseField with the right payload 1`] = `
+[
+  "caseAssist.selectFieldClassification",
+  {
+    "autoselected": true,
+    "fieldClassification": {
+      "id": "123",
+      "responseId": "baz",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCaseStart with the right payload 1`] = `
+[
+  "caseAssist.start",
+  {},
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logClassificationClick with the right payload 1`] = `
+[
+  "caseAssist.selectFieldClassification",
+  {
+    "autoselected": false,
+    "fieldClassification": {
+      "id": "123",
+      "responseId": "baz",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCreateCase with the right payload 1`] = `
+[
+  "caseAssist.createTicket",
+  {
+    "ticket": {
+      "category": "example category",
+      "description": "example description",
+      "id": "456",
+      "subject": "example subject",
+      "system": "abc",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionClick with the right payload 1`] = `
+[
+  "caseAssist.documentSuggestionClick",
+  {
+    "documentSuggestion": {
+      "id": "exampleUniqueId",
+      "responseId": "qux",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionOpen with the right payload 1`] = `
+[
+  "itemClick",
+  {
+    "actionCause": "open",
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleClickUri",
+    },
+    "position": 1,
+    "searchUid": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionRating with the right payload 1`] = `
+[
+  "caseAssist.documentSuggestionFeedback",
+  {
+    "documentSuggestion": {
+      "id": "exampleUniqueId",
+      "responseId": "qux",
+    },
+    "liked": true,
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
+[
+  "itemClick",
+  {
+    "actionCause": "preview",
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleClickUri",
+    },
+    "position": 1,
+    "searchUid": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logSolveCase with the right payload 1`] = `
+[
+  "caseAssist.cancel",
+  {
+    "reason": "solved",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logUpdateCaseField with the right payload 1`] = `
+[
+  "caseAssist.updateField",
+  {
+    "fieldName": "exampleField",
+    "fieldValue": "bar",
+  },
+]
+`;
 
 exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logAbandonCase with the right payload 1`] = `
 [

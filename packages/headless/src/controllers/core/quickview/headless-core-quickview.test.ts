@@ -20,7 +20,7 @@ import {
   Quickview,
 } from './headless-core-quickview.js';
 
-jest.mock('../../../features/result-preview/result-preview-actions');
+vi.mock('../../../features/result-preview/result-preview-actions');
 
 describe('QuickviewCore', () => {
   let engine: MockedSearchEngine;

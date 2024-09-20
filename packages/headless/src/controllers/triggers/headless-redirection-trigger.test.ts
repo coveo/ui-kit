@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
@@ -8,7 +9,7 @@ import {createMockState} from '../../test/mock-state.js';
 import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger.js';
 import {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
-jest.mock('../../features/triggers/trigger-analytics-actions');
+vi.mock('../../features/triggers/trigger-analytics-actions');
 
 describe('RedirectionTrigger', () => {
   let engine: MockedSearchEngine;
@@ -19,7 +20,7 @@ describe('RedirectionTrigger', () => {
   }
 
   function registeredListeners() {
-    return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
+    return (engine.subscribe as Mock).mock.calls.map((args) => args[0]);
   }
 
   beforeEach(() => {
@@ -42,7 +43,7 @@ describe('RedirectionTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.redirectTo is already initialized', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       const state = createMockState();
       state.triggers.redirectTo = 'https://www.google.com';
@@ -61,7 +62,7 @@ describe('RedirectionTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.redirectTo is not updated', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
       const [firstListener] = registeredListeners();
@@ -78,7 +79,7 @@ describe('RedirectionTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.redirectTo is updated to the empty string', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
       engine.state.triggers!.redirectTo = '';
@@ -96,7 +97,7 @@ describe('RedirectionTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.redirectTo is updated', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
       engine.state.triggers!.redirectTo = 'https://www.coveo.com';

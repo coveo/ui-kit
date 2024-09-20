@@ -22,11 +22,11 @@ import {
   buildCommerceNumericFacet,
 } from './headless-commerce-numeric-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/product-listing/product-listing-actions'
 );
 
@@ -35,8 +35,8 @@ describe('NumericFacet', () => {
   const type: FacetType = 'numericalRange';
   const start = 0;
   const end = 100;
-  const facetResponseSelector = jest.fn();
-  const fetchProductsActionCreator = jest.fn();
+  const facetResponseSelector = vi.fn();
+  const fetchProductsActionCreator = vi.fn();
   let options: NumericFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -57,13 +57,13 @@ describe('NumericFacet', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       facetId,
       fetchProductsActionCreator,
       facetResponseSelector,
-      isFacetLoadingResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: vi.fn(),
     };
 
     state = buildMockCommerceState();

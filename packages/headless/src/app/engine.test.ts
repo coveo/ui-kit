@@ -12,16 +12,16 @@ import {getSampleEngineConfiguration} from './engine-configuration.js';
 import {buildEngine, CoreEngine, EngineOptions} from './engine.js';
 import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
-jest.mock('pino', () => ({
-  ...jest.requireActual('pino'),
-  __esModule: true,
-  default: () => ({
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  }),
-}));
+vi.mock(import('pino'), async (importOriginal) => {
+  const mod = await importOriginal(); // type is inferred
+  return {
+    ...mod,
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+  };
+});
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
@@ -125,7 +125,7 @@ describe('engine', () => {
 
   it("when name is specified in the config, the engine's store name is initialized with the config's value", () => {
     options.configuration.name = 'myEngine';
-    const spy = jest.spyOn(Store, 'configureStore');
+    const spy = vi.spyOn(Store, 'configureStore');
     initEngine();
 
     expect(spy).toHaveBeenCalledWith(
@@ -136,7 +136,7 @@ describe('engine', () => {
   });
 
   it("when no name is specified, the engine's store name is initialized to the default value: 'coveo-headless'", () => {
-    const spy = jest.spyOn(Store, 'configureStore');
+    const spy = vi.spyOn(Store, 'configureStore');
     initEngine();
 
     expect(spy).toHaveBeenCalledWith(
@@ -150,7 +150,7 @@ describe('engine', () => {
     options.reducers = {configuration};
     initEngine();
 
-    const stateListener = jest.fn();
+    const stateListener = vi.fn();
 
     engine.subscribe(stateListener);
     engine.addReducers({configuration});

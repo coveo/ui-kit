@@ -1,5 +1,6 @@
 import {Relay} from '@coveo/relay';
 import {pino, Logger} from 'pino';
+import {vi, Mock} from 'vitest';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
 import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr.js';
@@ -13,7 +14,7 @@ import {stateKey} from '../app/state-key.js';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R
-    ? jest.Mock<R, A>
+    ? Mock<(...args: A) => R>
     : T[K] extends object
       ? SpyEverything<T[K]>
       : T[K];
@@ -27,11 +28,11 @@ type MockedLogger = Logger & SpiedLoggerProps;
 
 function mockLogger(logger: Logger): MockedLogger {
   return Object.assign<Logger, SpiedLoggerProps>(logger, {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    fatal: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    fatal: vi.fn(),
   });
 }
 
@@ -39,11 +40,11 @@ type MockedRelay = Relay & Pick<Relay, 'emit'>;
 
 export function mockRelay(): MockedRelay {
   return {
-    emit: jest.fn(),
-    getMeta: jest.fn().mockReturnValue({clientId: 'test'}),
-    off: jest.fn(),
-    on: jest.fn(),
-    updateConfig: jest.fn(),
+    emit: vi.fn(),
+    getMeta: vi.fn().mockReturnValue({clientId: 'test'}),
+    off: vi.fn(),
+    on: vi.fn(),
+    updateConfig: vi.fn(),
     version: 'test',
   };
 }
@@ -62,20 +63,22 @@ export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
   const state: State = initialState;
   return {
     state,
-    dispatch: jest.fn(),
-    addReducers: jest.fn(),
-    disableAnalytics: jest.fn(),
-    enableAnalytics: jest.fn(),
+    // @ts-expect-error testing purposes
+    dispatch: vi.fn(),
+    addReducers: vi.fn(),
+    disableAnalytics: vi.fn(),
+    enableAnalytics: vi.fn(),
     logger: mockLogger(pino({level: 'silent'})),
     relay: mockRelay(),
     store: {
-      dispatch: jest.fn(),
-      getState: jest.fn(),
-      replaceReducer: jest.fn(),
-      subscribe: jest.fn(),
-      [Symbol.observable]: jest.fn(),
+      // @ts-expect-error testing purposes
+      dispatch: vi.fn(),
+      getState: vi.fn(),
+      replaceReducer: vi.fn(),
+      subscribe: vi.fn(),
+      [Symbol.observable]: vi.fn(),
     },
-    subscribe: jest.fn(),
+    subscribe: vi.fn(),
     navigatorContext: defaultNodeJSNavigatorContextProvider(),
   };
 }
@@ -96,13 +99,14 @@ export function buildMockCoreEngineNext<
   return {
     [stateKey]: state,
     configuration: state.configuration,
-    dispatch: jest.fn(),
-    addReducers: jest.fn(),
-    disableAnalytics: jest.fn(),
-    enableAnalytics: jest.fn(),
+    // @ts-expect-error testing purposes
+    dispatch: vi.fn(),
+    addReducers: vi.fn(),
+    disableAnalytics: vi.fn(),
+    enableAnalytics: vi.fn(),
     logger: mockLogger(pino({level: 'silent'})),
     relay: mockRelay(),
-    subscribe: jest.fn(),
+    subscribe: vi.fn(),
     navigatorContext: defaultNodeJSNavigatorContextProvider(),
   };
 }
@@ -132,8 +136,8 @@ export function buildMockSearchEngine(
 ): MockedSearchEngine {
   return {
     ...buildMockCoreEngine(initialState),
-    executeFirstSearch: jest.fn(),
-    executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
+    executeFirstSearch: vi.fn(),
+    executeFirstSearchAfterStandaloneSearchBoxRedirect: vi.fn(),
   };
 }
 
@@ -161,7 +165,7 @@ export function buildMockInsightEngine<
 >(initialState: State): InsightEngine {
   return {
     ...buildMockCoreEngine(initialState),
-    executeFirstSearch: jest.fn(),
+    executeFirstSearch: vi.fn(),
   };
 }
 
@@ -179,7 +183,7 @@ export function buildMockSSRSearchEngine(
   const engine = buildMockSearchEngine(initialState);
   return {
     ...engine,
-    waitForSearchCompletedAction: jest.fn(),
+    waitForSearchCompletedAction: vi.fn(),
   };
 }
 
@@ -189,6 +193,6 @@ export function buildMockSSRCommerceEngine(
   const engine = buildMockCommerceEngine(initialState);
   return {
     ...engine,
-    waitForRequestCompletedAction: jest.fn(),
+    waitForRequestCompletedAction: vi.fn(),
   };
 }

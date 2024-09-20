@@ -11,8 +11,8 @@ import {
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {Sort, SortProps, buildSort} from './headless-insight-sort.js';
 
-jest.mock('../../../features/sort-criteria/sort-criteria-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/sort-criteria/sort-criteria-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('InsightSort', () => {
   let engine: MockedInsightEngine;

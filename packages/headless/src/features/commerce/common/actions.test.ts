@@ -1,4 +1,5 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import {MockInstance} from 'vitest';
 import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client.js';
 import {
   BaseCommerceAPIRequest,
@@ -158,11 +159,11 @@ describe('commerce common actions', () => {
 
   describe('#buildCommerceAPIRequest', () => {
     let state: Actions.ListingAndSearchStateNeededByQueryCommerceAPI;
-    let mockedBuildBaseCommerceAPIRequest: jest.SpyInstance;
+    let mockedBuildBaseCommerceAPIRequest: MockInstance;
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       state = buildMockCommerceState();
-      mockedBuildBaseCommerceAPIRequest = jest.spyOn(
+      mockedBuildBaseCommerceAPIRequest = vi.spyOn(
         Actions,
         'buildBaseCommerceAPIRequest'
       );

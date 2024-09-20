@@ -1,3 +1,4 @@
+import {describe, it, expect, vi, Mock, beforeEach} from 'vitest';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
 import {updateNumericFacetValues} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
@@ -16,11 +17,11 @@ import {
   NumericFilterOptions,
 } from './headless-insight-numeric-filter.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
-jest.mock('../../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/insight-search/insight-search-actions');
 
 describe('insight numeric filter', () => {
   const facetId = '1';
@@ -36,7 +37,7 @@ describe('insight numeric filter', () => {
   }
 
   beforeEach(() => {
-    (updateNumericFacetValues as unknown as jest.Mock).mockReturnValue({});
+    (updateNumericFacetValues as unknown as Mock).mockReturnValue({});
     initialState = undefined;
 
     options = {

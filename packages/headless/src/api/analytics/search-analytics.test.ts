@@ -28,16 +28,16 @@ import {
   StateNeededBySearchAnalyticsProvider,
 } from './search-analytics.js';
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-const mockGetHistory = jest.fn();
+const mockGetHistory = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const originalModule = jest.requireActual('coveo.analytics');
+vi.mock('coveo.analytics', () => {
+  const originalModule = vi.requireActual('coveo.analytics');
   return {
     ...originalModule,
     history: {
-      HistoryStore: jest.fn().mockImplementation(() => {
+      HistoryStore: vi.fn().mockImplementation(() => {
         return {
           getHistory: () => mockGetHistory(),
         };

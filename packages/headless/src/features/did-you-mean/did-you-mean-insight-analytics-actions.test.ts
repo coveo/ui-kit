@@ -8,11 +8,11 @@ import {
   logDidYouMeanClick,
 } from './did-you-mean-insight-analytics-actions.js';
 
-const mockLogDidYouMeanClick = jest.fn();
-const mockLogDidYouMeanAutomatic = jest.fn();
+const mockLogDidYouMeanClick = vi.fn();
+const mockLogDidYouMeanAutomatic = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logDidYouMeanClick: mockLogDidYouMeanClick,
     logDidYouMeanAutomatic: mockLogDidYouMeanAutomatic,
@@ -20,7 +20,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -42,7 +42,7 @@ describe('did you mean insight analytics actions', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const configuration = getConfigurationInitialState();
     configuration.analytics.analyticsMode = 'legacy';
     engine = buildMockInsightEngine(

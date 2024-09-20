@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
@@ -11,13 +12,13 @@ import {
   CaseAssistInteractiveResultProps,
 } from './case-assist-headless-interactive-result.js';
 
-jest.mock('../core/interactive-result/headless-core-interactive-result');
-jest.mock('../../features/case-assist/case-assist-analytics-actions');
+vi.mock('../core/interactive-result/headless-core-interactive-result');
+vi.mock('../../features/case-assist/case-assist-analytics-actions');
 
 describe('InteractiveResult', () => {
   let engine: MockedCaseAssistEngine;
   let interactiveResultProps: CaseAssistInteractiveResultProps;
-  let mockedBuildInteractiveResultCore: jest.Mock;
+  let mockedBuildInteractiveResultCore: Mock;
   const resultStringParams = {
     uniqueId: 'unique-id',
   };
@@ -39,8 +40,8 @@ describe('InteractiveResult', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    mockedBuildInteractiveResultCore = jest.mocked(buildInteractiveResultCore);
+    vi.resetAllMocks();
+    mockedBuildInteractiveResultCore = vi.mocked(buildInteractiveResultCore);
     initEngine();
     initializeInteractiveResult();
   });
@@ -54,7 +55,7 @@ describe('InteractiveResult', () => {
   });
 
   it('dispatches #logDocumentSuggestionOpen when the action is triggered for the first time', () => {
-    const mockedLogDocumentSuggestionOpen = jest.mocked(
+    const mockedLogDocumentSuggestionOpen = vi.mocked(
       logDocumentSuggestionOpen
     );
 
@@ -66,7 +67,7 @@ describe('InteractiveResult', () => {
   });
 
   it('does not dispatch logDocumentSuggestionOpen when the action is triggered for the second time', () => {
-    const mockedLogDocumentSuggestionOpen = jest.mocked(
+    const mockedLogDocumentSuggestionOpen = vi.mocked(
       logDocumentSuggestionOpen
     );
 

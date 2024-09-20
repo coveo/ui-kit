@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {SortBy} from '../../features/sort/sort.js';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client.js';
 import {VERSION} from '../../utils/version.js';
@@ -17,18 +18,18 @@ describe('commerce api client', () => {
   const trackingId = 'some-tracking-id';
 
   let client: CommerceAPIClient;
-  let platformCallMock: jest.Mock;
+  let platformCallMock: Mock;
 
   beforeEach(() => {
     client = buildMockCommerceAPIClient();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const mockPlatformCall = (fakeResponse: unknown) => {
-    platformCallMock = jest.fn();
+    platformCallMock = vi.fn();
 
     platformCallMock.mockReturnValue(fakeResponse);
     PlatformClient.call = platformCallMock;

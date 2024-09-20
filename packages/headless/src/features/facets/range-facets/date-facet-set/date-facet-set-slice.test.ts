@@ -31,7 +31,7 @@ describe('date-facet-set slice', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('initializes the set to an empty object', () => {
@@ -80,7 +80,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#restoreSearchParameters restores the #nf payload correctly', () => {
-    const spy = jest.spyOn(
+    const spy = vi.spyOn(
       RangeFacetReducers,
       'handleRangeFacetSearchParameterRestoration'
     );
@@ -101,7 +101,7 @@ describe('date-facet-set slice', () => {
   it('#toggleSelectDateFacetValue calls #toggleSelectRangeValue', () => {
     const facetId = '1';
     const selection = buildMockDateFacetValue();
-    jest.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
+    vi.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
 
     dateFacetSetReducer(
       state,
@@ -112,7 +112,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#updateDateFacetValues calls #updateRangeValues', () => {
-    jest.spyOn(RangeFacetReducers, 'updateRangeValues');
+    vi.spyOn(RangeFacetReducers, 'updateRangeValues');
     const action = updateDateFacetValues({facetId: '1', values: []});
     dateFacetSetReducer(state, action);
 
@@ -120,7 +120,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#deselectAllDateFacetValues calls #handleRangeFacetDeselectAll', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
     const action = deselectAllDateFacetValues('1');
     dateFacetSetReducer(state, action);
 
@@ -130,7 +130,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every date facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
     state['1'] = buildMockDateFacetSlice();
     state['2'] = buildMockDateFacetSlice();
@@ -142,7 +142,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+    vi.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
     const action = updateDateFacetSortCriterion({
       facetId: '1',
@@ -156,7 +156,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
-    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
+    vi.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
 
     const search = buildMockSearch();
     dateFacetSetReducer(

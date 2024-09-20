@@ -26,28 +26,28 @@ import {
 } from '../../generated-answer/headless-generated-answer.js';
 import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock(
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
-jest.mock('../../../features/search/search-actions');
-jest.mock('../../../api/knowledge/stream-answer-api', () => {
-  const originalStreamAnswerApi = jest.requireActual(
+vi.mock('../../../features/search/search-actions');
+vi.mock('../../../api/knowledge/stream-answer-api', () => {
+  const originalStreamAnswerApi = vi.requireActual(
     '../../../api/knowledge/stream-answer-api'
   );
   return {
     ...originalStreamAnswerApi,
-    fetchAnswer: jest.fn(),
+    fetchAnswer: vi.fn(),
     selectAnswer: () => ({
       data: {answer: 'This est une answer', answerId: '12345_6'},
     }),
   };
 });
-jest.mock('../../../api/knowledge/post-answer-evaluation', () => ({
+vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
   answerEvaluation: {
     endpoints: {
       post: {
-        initiate: jest.fn(),
+        initiate: vi.fn(),
       },
     },
   },
@@ -80,7 +80,7 @@ describe('knowledge-generated-answer', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     engine = buildEngineWithGeneratedAnswer();
   });
 

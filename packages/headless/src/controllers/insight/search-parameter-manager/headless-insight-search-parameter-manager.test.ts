@@ -15,8 +15,8 @@ import {
   SearchParameterManagerProps,
 } from './headless-insight-search-parameter-manager.js';
 
-jest.mock('../../../features/search-parameters/search-parameter-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/search-parameters/search-parameter-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('insight search parameter manager', () => {
   let engine: MockedInsightEngine;
@@ -28,7 +28,7 @@ describe('insight search parameter manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockInsightEngine(buildMockInsightState());
     props = {
       initialState: {

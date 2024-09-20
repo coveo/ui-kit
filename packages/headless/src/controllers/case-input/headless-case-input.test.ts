@@ -18,10 +18,10 @@ import {
   buildCaseInput,
 } from './headless-case-input.js';
 
-jest.mock('../../features/case-input/case-input-actions');
-jest.mock('../../features/case-assist/case-assist-analytics-actions');
-jest.mock('../../features/case-field/case-field-actions');
-jest.mock('../../features/document-suggestion/document-suggestion-actions');
+vi.mock('../../features/case-input/case-input-actions');
+vi.mock('../../features/case-assist/case-assist-analytics-actions');
+vi.mock('../../features/case-field/case-field-actions');
+vi.mock('../../features/document-suggestion/document-suggestion-actions');
 
 describe('Case Input', () => {
   let engine: MockedCaseAssistEngine;
@@ -39,7 +39,7 @@ describe('Case Input', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       field: testFieldName,
     };
@@ -58,7 +58,7 @@ describe('Case Input', () => {
   });
 
   it('dispatch #updateCaseInput on init if the field was not already registered', () => {
-    const mockedUpdateCaseInput = jest.mocked(updateCaseInput);
+    const mockedUpdateCaseInput = vi.mocked(updateCaseInput);
 
     expect(mockedUpdateCaseInput).toHaveBeenCalledWith({
       fieldName: testFieldName,
@@ -70,8 +70,8 @@ describe('Case Input', () => {
   });
 
   it('do not dispatch #updateCaseInput on init if the field was already registered', () => {
-    jest.resetAllMocks();
-    const mockedUpdateCaseInput = jest.mocked(updateCaseInput);
+    vi.resetAllMocks();
+    const mockedUpdateCaseInput = vi.mocked(updateCaseInput);
     initEngine({
       ...buildMockCaseAssistState(),
       caseInput: {
@@ -97,8 +97,8 @@ describe('Case Input', () => {
     const testValue = 'test input value';
 
     it('dispatches a #updateCaseInput action with the passed input value', () => {
-      jest.resetAllMocks();
-      const mockedUpdateCaseInput = jest.mocked(updateCaseInput);
+      vi.resetAllMocks();
+      const mockedUpdateCaseInput = vi.mocked(updateCaseInput);
 
       input.update(testValue);
 
@@ -112,7 +112,7 @@ describe('Case Input', () => {
     });
 
     it('dispatches a #logUpdateCaseField analytics action', () => {
-      const mockedlogUpdateCaseField = jest.mocked(logUpdateCaseField);
+      const mockedlogUpdateCaseField = vi.mocked(logUpdateCaseField);
 
       input.update(testValue);
 
@@ -122,7 +122,7 @@ describe('Case Input', () => {
     });
 
     it('dispatches a #fetchCaseClassifications action when required', () => {
-      const mockedFetchCaseClassifications = jest.mocked(
+      const mockedFetchCaseClassifications = vi.mocked(
         fetchCaseClassifications
       );
 
@@ -137,7 +137,7 @@ describe('Case Input', () => {
     });
 
     it('dispatches a #fetchDocumentSuggestions action when required', () => {
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 
@@ -152,10 +152,10 @@ describe('Case Input', () => {
     });
 
     it('dispatches both #fetchCaseClassifications and #fetchDocumentSuggestions when required', () => {
-      const mockedFetchCaseClassifications = jest.mocked(
+      const mockedFetchCaseClassifications = vi.mocked(
         fetchCaseClassifications
       );
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 
@@ -175,10 +175,10 @@ describe('Case Input', () => {
     });
 
     it('does not dispatch #fetchCaseClassifications nor #fetchDocumentSuggestions when not required', () => {
-      const mockedFetchCaseClassifications = jest.mocked(
+      const mockedFetchCaseClassifications = vi.mocked(
         fetchCaseClassifications
       );
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 

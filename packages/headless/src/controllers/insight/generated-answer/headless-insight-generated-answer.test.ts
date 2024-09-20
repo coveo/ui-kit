@@ -10,8 +10,8 @@ import {
   GeneratedAnswerProps,
 } from './headless-insight-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('insight generated answer', () => {
   let generatedAnswer: GeneratedAnswer;

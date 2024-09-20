@@ -4,17 +4,17 @@ import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {getConfigurationInitialState} from '../../configuration/configuration-state.js';
 import {logClearBreadcrumbs} from './facet-generic-insight-analytics-actions.js';
 
-const mockLogBreadcrumbResetAll = jest.fn();
+const mockLogBreadcrumbResetAll = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logBreadcrumbResetAll: mockLogBreadcrumbResetAll,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

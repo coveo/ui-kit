@@ -2,8 +2,8 @@ import {streamAnswerAPIStateMock} from '../../api/knowledge/tests/stream-answer-
 import {SearchAppState} from '../../state/search-app-state.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
-jest.mock('../../api/knowledge/stream-answer-api', () => ({
-  ...jest.requireActual<Record<string, Partial<SearchAppState>>>(
+vi.mock('../../api/knowledge/stream-answer-api', () => ({
+  ...vi.requireActual<Record<string, Partial<SearchAppState>>>(
     '../../api/knowledge/stream-answer-api'
   ),
   selectAnswer: (_state: Partial<SearchAppState>) => ({
@@ -16,7 +16,7 @@ jest.mock('../../api/knowledge/stream-answer-api', () => ({
 describe('generated-answer-selectors', () => {
   describe('generativeQuestionAnsweringIdSelector', () => {
     afterAll(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
     it('returns the answerId if an answer configuration id is in state', () => {
       const state = {

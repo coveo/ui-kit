@@ -19,9 +19,9 @@ import {
   RecentQueriesList,
 } from './headless-recent-queries-list.js';
 
-jest.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
-jest.mock('../../../features/commerce/search/search-actions');
-jest.mock('../../../features/commerce/recent-queries/recent-queries-actions');
+vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
+vi.mock('../../../features/commerce/search/search-actions');
+vi.mock('../../../features/commerce/recent-queries/recent-queries-actions');
 
 describe('recent queries list', () => {
   let engine: MockedCommerceEngine;
@@ -70,7 +70,7 @@ describe('recent queries list', () => {
       initialState: testInitialState,
       options: testOptions,
     };
-    const mockedPrepareForSearchWithQuery = jest.mocked(
+    const mockedPrepareForSearchWithQuery = vi.mocked(
       prepareForSearchWithQuery
     );
 
@@ -97,7 +97,7 @@ describe('recent queries list', () => {
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
-      const validationSpy = jest.spyOn(NumberValue.prototype, 'validate');
+      const validationSpy = vi.spyOn(NumberValue.prototype, 'validate');
       engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
 
       expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();

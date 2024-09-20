@@ -35,10 +35,10 @@ import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determino
 import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import {buildFacet, Facet, FacetOptions} from './headless-facet.js';
 
-jest.mock('../../../features/facets/facet-set/facet-set-actions');
-jest.mock('../../../features/facet-options/facet-options-actions');
-jest.mock('../../../features/search/search-actions');
-jest.mock('../../../features/facets/facet-set/facet-set-controller-actions');
+vi.mock('../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../features/facet-options/facet-options-actions');
+vi.mock('../../../features/search/search-actions');
+vi.mock('../../../features/facets/facet-set/facet-set-controller-actions');
 
 describe('facet', () => {
   const facetId = '1';
@@ -93,7 +93,7 @@ describe('facet', () => {
   });
 
   it('it calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initFacet();
 
@@ -575,7 +575,7 @@ describe('facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
-    jest.spyOn(FacetSearch, 'buildFacetSearch');
+    vi.spyOn(FacetSearch, 'buildFacetSearch');
     initFacet();
     expect(facet.facetSearch).toBeTruthy();
     expect(FacetSearch.buildFacetSearch).toHaveBeenCalled();

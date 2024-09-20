@@ -1,3 +1,4 @@
+import {Mock, Mock} from 'vitest';
 import {configuration} from '../../../../../app/common-reducers.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {
@@ -25,7 +26,7 @@ import {
 } from './headless-core-numeric-filter.js';
 import {buildNumericRange} from './numeric-range.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
 
@@ -43,7 +44,7 @@ describe('numeric filter', () => {
   }
 
   beforeEach(() => {
-    (updateNumericFacetValues as unknown as jest.Mock).mockImplementation(
+    (updateNumericFacetValues as unknown as Mock).mockImplementation(
       () => () => {}
     );
     initialState = undefined;
@@ -86,7 +87,7 @@ describe('numeric filter', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initNumericFilter();
 
@@ -136,7 +137,7 @@ describe('numeric filter', () => {
 
     it('should return false when range start value is greater than range end value', () => {
       const value = buildMockNumericFacetValue({start: 10, end: 5});
-      (updateNumericFacetValues as unknown as jest.Mock).mockImplementationOnce(
+      (updateNumericFacetValues as unknown as Mock).mockImplementationOnce(
         () => {
           return {
             error: 'oh no',

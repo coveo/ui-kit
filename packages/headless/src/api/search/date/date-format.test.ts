@@ -16,7 +16,7 @@ describe('#parseDate', () => {
     expect(parseDate('2022-08-23T17:42:55').toDate().toUTCString()).toEqual(
       new Date('2022-08-23T17:42:55+08:45').toUTCString()
     );
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 });
 

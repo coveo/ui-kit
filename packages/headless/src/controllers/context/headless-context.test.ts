@@ -1,3 +1,4 @@
+import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {setContext} from '../../features/context/context-actions.js';
 import {
   buildMockSearchEngine,
@@ -10,7 +11,7 @@ import {
   ContextInitialState,
 } from './headless-context.js';
 
-jest.mock('../../features/context/context-actions');
+vi.mock('../../features/context/context-actions');
 
 describe('Context', () => {
   let context: Context;

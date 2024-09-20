@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`recommendation analytics actions #logRecommendationOpen when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
 [
@@ -22,6 +22,44 @@ exports[`recommendation analytics actions #logRecommendationOpen when analyticsM
 `;
 
 exports[`recommendation analytics actions #logRecommendationOpen when analyticsMode is \`next\` 1`] = `
+[
+  "itemClick",
+  {
+    "itemMetadata": {
+      "author": "unknown",
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example contentIDValue",
+      "url": "example documentUrl",
+    },
+    "position": 1,
+    "searchUid": "example searchUid",
+  },
+]
+`;
+
+exports[`recommendation analytics actions > #logRecommendationOpen > when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
+[
+  {
+    "collectionName": "example collectionName",
+    "documentAuthor": "unknown",
+    "documentPosition": 1,
+    "documentTitle": "example documentTitle",
+    "documentUri": "example documentUri",
+    "documentUriHash": "example documentUriHash",
+    "documentUrl": "example documentUrl",
+    "queryPipeline": "",
+    "rankingModifier": "example rankingModifier",
+    "sourceName": "example sourceName",
+  },
+  {
+    "contentIDKey": "permanentid",
+    "contentIDValue": "example contentIDValue",
+  },
+]
+`;
+
+exports[`recommendation analytics actions > #logRecommendationOpen > when analyticsMode is \`next\` 1`] = `
 [
   "itemClick",
   {

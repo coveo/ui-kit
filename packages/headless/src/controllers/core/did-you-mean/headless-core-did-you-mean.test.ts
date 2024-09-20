@@ -16,18 +16,18 @@ import {
   DidYouMeanProps,
 } from './headless-core-did-you-mean.js';
 
-jest.mock('pino', () => ({
-  ...jest.requireActual('pino'),
+vi.mock('pino', () => ({
+  ...vi.requireActual('pino'),
   __esModule: true,
   default: () => ({
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
   }),
 }));
 
-jest.mock('../../../features/did-you-mean/did-you-mean-actions');
+vi.mock('../../../features/did-you-mean/did-you-mean-actions');
 
 describe('did you mean', () => {
   let dym: DidYouMean;
@@ -42,7 +42,7 @@ describe('did you mean', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initDidYouMean();
   });
 

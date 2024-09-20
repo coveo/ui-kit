@@ -16,7 +16,7 @@ import {
   RegularFacetSearchProps,
 } from './headless-commerce-regular-facet-search.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
 
@@ -39,11 +39,11 @@ describe('RegularFacetSearch', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     props = {
-      exclude: jest.fn(),
-      select: jest.fn(),
+      exclude: vi.fn(),
+      select: vi.fn(),
       isForFieldSuggestions: false,
       options: {
         facetId,

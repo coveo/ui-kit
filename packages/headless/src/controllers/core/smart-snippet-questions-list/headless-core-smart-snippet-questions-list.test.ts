@@ -20,8 +20,8 @@ import {
   buildCoreSmartSnippetQuestionsList,
 } from './headless-core-smart-snippet-questions-list.js';
 
-jest.mock('../../../features/question-answering/question-answering-actions');
-jest.mock(
+vi.mock('../../../features/question-answering/question-answering-actions');
+vi.mock(
   '../../../features/question-answering/question-answering-analytics-actions'
 );
 

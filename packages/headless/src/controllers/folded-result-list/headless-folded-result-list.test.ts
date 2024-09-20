@@ -12,8 +12,8 @@ import {
   buildFoldedResultList,
 } from './headless-folded-result-list.js';
 
-jest.mock('../../features/folding/folding-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/folding/folding-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('folded result list', () => {
   let state: SearchAppState;

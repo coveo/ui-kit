@@ -31,8 +31,8 @@ import {
   SearchParameterManagerProps,
 } from './headless-search-parameter-manager.js';
 
-jest.mock('../../features/search-parameters/search-parameter-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search-parameters/search-parameter-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('search parameter manager', () => {
   let engine: MockedSearchEngine;
@@ -44,7 +44,7 @@ describe('search parameter manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     props = {
       initialState: {

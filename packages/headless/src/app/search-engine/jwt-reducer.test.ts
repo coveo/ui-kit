@@ -19,7 +19,7 @@ function cloneDeep<T>(value: T): T {
 
 describe('jwt-reducer', () => {
   const logger = pino({level: 'silent'});
-  const loggerSpy = jest.spyOn(logger, 'warn');
+  const loggerSpy = vi.spyOn(logger, 'warn');
   const reducer = jwtReducer(logger);
   const tokenPipeline = 'testing';
   const tokenSearchHub = 'testing hub';
@@ -38,7 +38,7 @@ describe('jwt-reducer', () => {
     'eyJhbGciOiJIUzI1NiJ9.eyJ2OCI6dHJ1ZSwib3JnYW5pemF0aW9uIjoic2VhcmNodWlzYW1wbGVzIiwidXNlcklkcyI6W3siYXV0aENvb2tpZSI6IiIsInByb3ZpZGVyIjoiRW1haWwgU2VjdXJpdHkgUHJvdmlkZXIiLCJuYW1lIjoiYXNtaXRoQGV4YW1wbGUuY29tIiwidHlwZSI6IlVzZXIiLCJpbmZvcyI6e319XSwicm9sZXMiOlsicXVlcnlFeGVjdXRvciJdLCJleHAiOjE2NDY3NjEyODUsImlhdCI6MTY0NjY3NDg4NX0.3wikhpJzJuoMeHDpokdkbIjf92DLxdsS4zRFSqt-niY';
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   it('should handle access token not being JWT token', () => {
     const initialState = createMockState();

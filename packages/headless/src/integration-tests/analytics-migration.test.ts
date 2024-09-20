@@ -1,3 +1,4 @@
+import {MockInstance} from 'vitest';
 import {
   PlatformClient,
   PlatformClientCallError,
@@ -129,7 +130,7 @@ const legacySearchEngine = buildSearchEngine({
 });
 
 export function assertNextEqualsLegacy(
-  call: jest.SpyInstance,
+  call: MockInstance,
   excludedProperties: string[] = excludedBaseProperties
 ) {
   expect(extractAndExcludeProperties(call, 0, excludedProperties)).toEqual(
@@ -138,7 +139,7 @@ export function assertNextEqualsLegacy(
 }
 
 export function assertActionCause(
-  call: jest.SpyInstance,
+  call: MockInstance,
   callIndex: number,
   expectedActionCause: string
 ) {
@@ -153,7 +154,7 @@ export function assertActionCause(
 }
 
 export function extractAndExcludeProperties(
-  call: jest.SpyInstance,
+  call: MockInstance,
   callIndex: number,
   excludedProperties: string[]
 ): Record<string, unknown> {
@@ -206,10 +207,14 @@ const ANY_QUERY = 'any query';
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
-  let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
+  type Procedure = (
+    ...args: unknown[]
+  ) => Promise<Response | PlatformClientCallError>;
+
+  let callSpy: MockInstance<Procedure>;
 
   beforeEach(() => {
-    callSpy = jest.spyOn(PlatformClient, 'call');
+    callSpy = vi.spyOn(PlatformClient, 'call');
     callSpy.mockImplementation(() => Promise.resolve(new Response()));
   });
 

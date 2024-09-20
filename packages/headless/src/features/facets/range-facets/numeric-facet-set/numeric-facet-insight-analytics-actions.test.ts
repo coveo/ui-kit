@@ -7,17 +7,17 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {getConfigurationInitialState} from '../../../configuration/configuration-state.js';
 import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions.js';
 
-const mockLogBreadcrumbFacet = jest.fn();
+const mockLogBreadcrumbFacet = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logBreadcrumbFacet: mockLogBreadcrumbFacet,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

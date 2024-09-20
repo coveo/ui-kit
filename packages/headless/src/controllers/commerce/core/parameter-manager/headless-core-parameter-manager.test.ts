@@ -17,10 +17,10 @@ import {
 describe('parameter manager', () => {
   let engine: MockedCommerceEngine;
   let parameterManager: ParameterManager<Parameters>;
-  const mockActiveParametersSelector = jest.fn();
-  const mockRestoreActionCreator = jest.fn();
-  const mockFetchProductsActionCreator = jest.fn();
-  const mockEnrichParameters = jest.fn();
+  const mockActiveParametersSelector = vi.fn();
+  const mockRestoreActionCreator = vi.fn();
+  const mockFetchProductsActionCreator = vi.fn();
+  const mockEnrichParameters = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -41,7 +41,7 @@ describe('parameter manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initEngine();
     initParameterManager();
   });

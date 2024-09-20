@@ -18,11 +18,11 @@ import {
   FieldSuggestionsOptions,
 } from './headless-field-suggestions.js';
 
-jest.mock('../../../features/facets/facet-set/facet-set-actions');
-jest.mock(
+vi.mock('../../../features/facets/facet-set/facet-set-actions');
+vi.mock(
   '../../../features/facets/facet-search-set/generic/generic-facet-search-actions'
 );
-jest.mock(
+vi.mock(
   '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
 
@@ -49,7 +49,7 @@ describe('fieldSuggestions', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       facet: {
         facetId,

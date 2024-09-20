@@ -1894,10 +1894,7 @@ describe('commerceFacetSetReducer', () => {
     });
     describe('#updateCategoryFacetNumberOfValues', () => {
       it('calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
-        const spy = jest.spyOn(
-          FacetReducers,
-          'handleFacetUpdateNumberOfValues'
-        );
+        const spy = vi.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
         const request = buildMockCommerceFacetRequest({
           facetId,
           type: 'hierarchical',
@@ -1916,7 +1913,7 @@ describe('commerceFacetSetReducer', () => {
       });
 
       it('calls #handleCategoryFacetNestedNumberOfValuesUpdate if there are nested children', () => {
-        const spy = jest.spyOn(
+        const spy = vi.spyOn(
           CommerceFacetReducers,
           'handleCategoryFacetNestedNumberOfValuesUpdate'
         );

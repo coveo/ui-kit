@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions.js';
 import {
   buildMockRecommendationEngine,
@@ -11,13 +12,13 @@ import {
   RecommendationInteractiveResultProps,
 } from './headless-recommendation-interactive-result.js';
 
-jest.mock('../../core/interactive-result/headless-core-interactive-result');
-jest.mock('../../../features/recommendation/recommendation-analytics-actions');
+vi.mock('../../core/interactive-result/headless-core-interactive-result');
+vi.mock('../../../features/recommendation/recommendation-analytics-actions');
 
 describe('RecommendationInteractiveResult', () => {
   let engine: MockedRecommendationEngine;
   let interactiveResultProps: RecommendationInteractiveResultProps;
-  let mockedBuildInteractiveResultCore: jest.Mock;
+  let mockedBuildInteractiveResultCore: Mock;
   const resultStringParams = {
     uniqueId: 'unique-id',
   };
@@ -39,8 +40,8 @@ describe('RecommendationInteractiveResult', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    mockedBuildInteractiveResultCore = jest.mocked(buildInteractiveResultCore);
+    vi.resetAllMocks();
+    mockedBuildInteractiveResultCore = vi.mocked(buildInteractiveResultCore);
     initEngine();
     initializeInteractiveResult();
   });
@@ -54,7 +55,7 @@ describe('RecommendationInteractiveResult', () => {
   });
 
   it('calls logRecommendationOpen when the action is triggered for the first time', () => {
-    const mockedLogDocumentSuggestionOpen = jest.mocked(logRecommendationOpen);
+    const mockedLogDocumentSuggestionOpen = vi.mocked(logRecommendationOpen);
 
     mockedSelect();
     expect(mockedLogDocumentSuggestionOpen).toHaveBeenCalledTimes(1);
@@ -64,7 +65,7 @@ describe('RecommendationInteractiveResult', () => {
   });
 
   it('does not call #logRecommendationOpen when the action is triggered for the second time', () => {
-    const mockedLogDocumentSuggestionOpen = jest.mocked(logRecommendationOpen);
+    const mockedLogDocumentSuggestionOpen = vi.mocked(logRecommendationOpen);
 
     mockedSelect();
     mockedSelect();

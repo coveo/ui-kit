@@ -15,7 +15,7 @@ import {
   buildDocumentSuggestionList,
 } from './headless-document-suggestion-list.js';
 
-jest.mock('../../features/document-suggestion/document-suggestion-actions');
+vi.mock('../../features/document-suggestion/document-suggestion-actions');
 
 describe('DocumentSuggestionList', () => {
   let engine: MockedCaseAssistEngine;
@@ -30,7 +30,7 @@ describe('DocumentSuggestionList', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initEngine();
     initDocumentSuggestion();
   });
@@ -56,7 +56,7 @@ describe('DocumentSuggestionList', () => {
 
   describe('#fetch', () => {
     it('dispatches a #fetchDocumentSuggestions', () => {
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 

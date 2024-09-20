@@ -42,7 +42,7 @@ describe('headless-cart-selectors', () => {
   const item3Key = createCartKey(item3);
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     cartOptions = {
       cart: {

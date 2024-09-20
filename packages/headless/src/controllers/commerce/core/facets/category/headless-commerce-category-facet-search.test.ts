@@ -16,7 +16,7 @@ import {
   buildCategoryFacetSearch,
 } from './headless-commerce-category-facet-search.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
 
@@ -40,10 +40,10 @@ describe('CategoryFacetSearch', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     props = {
-      select: jest.fn(),
+      select: vi.fn(),
       isForFieldSuggestions: false,
       options: {
         facetId,

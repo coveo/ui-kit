@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {stateKey} from '../../../app/state-key.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as query} from '../../../features/commerce/query/query-slice.js';
@@ -11,8 +12,8 @@ import {
 import {QueryTrigger} from '../../core/triggers/headless-core-query-trigger.js';
 import {buildQueryTrigger} from './headless-query-trigger.js';
 
-jest.mock('../../../features/commerce/query/query-actions');
-jest.mock('../../../features/commerce/search/search-actions');
+vi.mock('../../../features/commerce/query/query-actions');
+vi.mock('../../../features/commerce/search/search-actions');
 
 describe('commerce query trigger', () => {
   let engine: MockedCommerceEngine;
@@ -23,7 +24,7 @@ describe('commerce query trigger', () => {
   }
 
   function registeredListeners() {
-    return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
+    return (engine.subscribe as Mock).mock.calls.map((args) => args[0]);
   }
 
   beforeEach(() => {
@@ -47,7 +48,7 @@ describe('commerce query trigger', () => {
   });
 
   describe('when a search without a trigger is performed', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockCommerceEngine(buildMockCommerceState());
       initQueryTrigger();
