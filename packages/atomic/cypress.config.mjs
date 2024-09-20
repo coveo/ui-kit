@@ -1,4 +1,5 @@
 import {defineConfig} from 'cypress';
+import plugin from './cypress/plugins/index';
 
 export default defineConfig({
   projectId: '5ph2j4',
@@ -21,7 +22,7 @@ export default defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config);
+      plugin(on, config);
     },
     baseUrl: 'http://localhost:3333',
     specPattern: 'cypress/e2e/**/*.cypress.ts',
