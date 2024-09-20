@@ -7,7 +7,11 @@
       "dependsOn": ["^build", "clean"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:bundles", "npm run build:assets"],
+        "commands": [
+          "npm run build:addExtensions",
+          "npm run build:bundles",
+          "npm run build:assets"
+        ],
         "parallel": false,
         "cwd": "packages/atomic-react"
       }
