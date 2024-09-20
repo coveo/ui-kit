@@ -165,7 +165,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
                 disabled={state.isLoading}
                 id={value.value}
                 checked={value.state !== 'idle'}
-                onClick={() => onClickFacetValue(value)}
+                onChange={() => onClickFacetValue(value)}
                 type="checkbox"
               ></input>
               <label className="FacetValueLabel" htmlFor={value.value}>

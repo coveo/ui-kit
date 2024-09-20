@@ -4,7 +4,7 @@ import {
   Suggestion,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
-import InstantProducts from '../instant-products/instant-products';
+import InstantProducts from '../instant-products/instant-products.js';
 
 interface IStandaloneSearchBoxProps {
   navigate: (url: string) => void;
