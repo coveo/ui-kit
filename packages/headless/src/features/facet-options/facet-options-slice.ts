@@ -72,14 +72,15 @@ export const facetOptionsReducer = createReducer(
         state.facets[action.payload].enabled = false;
       })
       .addCase(restoreSearchParameters, (state, action) => {
-        for (const facetId in state.facets) {
-          const facet = state.facets[facetId];
-          if (Object.keys({...facet.tabs}).length > 0) {
-            facet.enabled = isFacetIncludedOnTab(
-              facet.tabs,
-              action.payload.tab
-            );
-          }
+        if (action.payload.tab) {
+          Object.entries(state.facets).forEach(([, facet]) => {
+            if (Object.keys(facet.tabs ?? {}).length > 0) {
+              facet.enabled = isFacetIncludedOnTab(
+                facet.tabs,
+                action.payload.tab
+              );
+            }
+          });
         }
         [
           ...Object.keys(action.payload.f ?? {}),
@@ -106,8 +107,11 @@ function handleRegisterFacetTabs(
   const newFacetState = {
     ...getFacetOptionsSliceInitialState(),
     tabs: tabs ?? {},
-    enabled: isFacetIncludedOnTab(tabs, activeTab),
   };
+
+  if (tabs && Object.keys(tabs).length > 0) {
+    newFacetState.enabled = isFacetIncludedOnTab(tabs, activeTab);
+  }
 
   state.facets[facetId] = newFacetState;
 }
