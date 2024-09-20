@@ -1217,7 +1217,6 @@ export namespace Components {
         "withToggle"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
-        "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback": () => void;
         "tooltip": string;
     }
@@ -1605,9 +1604,6 @@ export namespace Components {
         "userActions": Array<IUserAction>;
     }
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -1621,9 +1617,6 @@ export namespace Components {
          */
         "userId": string;
     }
-    /**
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
     interface AtomicInsightUserActionsToggle {
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
@@ -4533,9 +4526,6 @@ declare global {
         new (): HTMLAtomicInsightUserActionsSessionElement;
     };
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -4545,9 +4535,6 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
-    /**
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
     interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightUserActionsToggleElement: {
@@ -7149,7 +7136,6 @@ declare namespace LocalJSX {
         "withToggle"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
-        "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback"?: () => void;
         "tooltip"?: string;
     }
@@ -7511,9 +7497,6 @@ declare namespace LocalJSX {
         "userActions": Array<IUserAction>;
     }
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -7527,9 +7510,6 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
-    /**
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
     interface AtomicInsightUserActionsToggle {
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
@@ -9952,16 +9932,10 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             /**
-             * This component displays all the actions performed by a user around the time they created a case.
-             * The actions are grouped into multiple sessions, including the session during which the case was created,
-             * the sessions preceding the case creation and the sessions following the case creation.
              * @component 
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            /**
-             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-             */
             "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;

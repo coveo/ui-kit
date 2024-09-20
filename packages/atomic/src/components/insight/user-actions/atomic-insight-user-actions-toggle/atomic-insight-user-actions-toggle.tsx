@@ -1,8 +1,11 @@
 import {Component, h, Prop, Element, State} from '@stencil/core';
+import Clockicon from '../../../../images/clock.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {IconButton} from '../../../common/iconButton';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
+ * @internal
  * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
  */
 @Component({
@@ -46,11 +49,15 @@ export class AtomicInsightUserActionsToggle {
 
   public render() {
     return (
-      <atomic-insight-history-toggle
-        clickCallback={() => {
+      <IconButton
+        partPrefix="insight-user-actions-toggle"
+        style="outline-neutral"
+        icon={Clockicon}
+        ariaLabel={this.bindings.i18n.t('user-actions')}
+        onClick={() => {
           this.enableModal();
         }}
-        tooltip={this.bindings.i18n.t('user-actions')}
+        title={this.bindings.i18n.t('user-actions')}
         buttonRef={(button?: HTMLButtonElement) => {
           if (!button) {
             return;
@@ -58,7 +65,7 @@ export class AtomicInsightUserActionsToggle {
           this.buttonRef = button;
           this.loadModal();
         }}
-      ></atomic-insight-history-toggle>
+      />
     );
   }
 }

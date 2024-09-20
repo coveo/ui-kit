@@ -1072,50 +1072,6 @@ export declare interface AtomicInsightUserActionsModal extends Components.Atomic
 
 
 @ProxyCmp({
-  inputs: ['ticketCreationDateTime', 'userId']
-})
-@Component({
-  selector: 'atomic-insight-user-actions-timeline',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['ticketCreationDateTime', 'userId'],
-})
-export class AtomicInsightUserActionsTimeline {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicInsightUserActionsTimeline extends Components.AtomicInsightUserActionsTimeline {}
-
-
-@ProxyCmp({
-  inputs: ['ticketCreationDateTime', 'userId']
-})
-@Component({
-  selector: 'atomic-insight-user-actions-toggle',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['ticketCreationDateTime', 'userId'],
-})
-export class AtomicInsightUserActionsToggle {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicInsightUserActionsToggle extends Components.AtomicInsightUserActionsToggle {}
-
-
-@ProxyCmp({
   inputs: ['maxWidth', 'minWidth', 'section']
 })
 @Component({
