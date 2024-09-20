@@ -50,7 +50,6 @@ function resolveStorybookUtils() {
     },
   };
 }
-1;
 
 function externalizeDependencies() {
   return {

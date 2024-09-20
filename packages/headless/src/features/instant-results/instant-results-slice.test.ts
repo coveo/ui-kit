@@ -193,7 +193,7 @@ describe('instant results slice', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
           {
-            results: [buildMockResult()],
+            results: [buildMockResult({searchUid: 'someid'})],
             searchUid: 'someid',
             totalCountFiltered: 1,
             duration: 2,
@@ -221,7 +221,7 @@ describe('instant results slice', () => {
         const expectedState = makeState({
           isLoading: false,
           error: null,
-          results: [buildMockResult()],
+          results: [buildMockResult({searchUid: 'someid'})],
           expiresAt: 0,
           isActive: true,
           searchUid: 'someid',
@@ -233,7 +233,8 @@ describe('instant results slice', () => {
           expectedState
         );
       });
-      it('sets correct isLoading, error and expiresAt properties', () => {
+
+      it('sets correct isLoading, error, searchUid and expiresAt properties', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
           {
@@ -262,7 +263,7 @@ describe('instant results slice', () => {
         const expectedState = makeState({
           isLoading: false,
           error: null,
-          results: [buildMockResult()],
+          results: [buildMockResult({searchUid: 'someid'})],
           expiresAt: Date.now() + 10000,
           isActive: true,
           searchUid: 'someid',

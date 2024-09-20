@@ -26,7 +26,7 @@ export const logDocumentQuickview = (result: Result): ClickAction => {
         action: 'preview',
         itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
-        searchUid: state.search?.response.searchUid || '',
+        searchUid: result.searchUid || '',
         context: analyticsEventCaseContext(state),
       };
     },

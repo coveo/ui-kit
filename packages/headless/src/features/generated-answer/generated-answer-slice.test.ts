@@ -19,6 +19,7 @@ import {
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  setIsEnabled,
 } from './generated-answer-actions.js';
 import {generatedAnswerReducer} from './generated-answer-slice.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
@@ -224,6 +225,7 @@ describe('generated answer slice', () => {
       const persistentGeneratedAnswerState = {
         isVisible: false,
         responseFormat,
+        isEnabled: true,
         fieldsToIncludeInCitations: ['foo'],
       };
       const state = {
@@ -469,6 +471,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isVisible).toEqual(false);
+    });
+  });
+
+  describe('#setIsEnabled', () => {
+    it('should set isEnabled to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isEnabled: false},
+        setIsEnabled(true)
+      );
+
+      expect(finalState.isEnabled).toEqual(true);
+    });
+
+    it('should set isEnabled to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isEnabled: true},
+        setIsEnabled(false)
+      );
+
+      expect(finalState.isEnabled).toEqual(false);
     });
   });
 

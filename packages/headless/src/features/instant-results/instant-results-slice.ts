@@ -31,7 +31,10 @@ export const instantResultsReducer = createReducer(
       fetchItemsPending(action.meta.arg, state, {results: []});
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
-      const {results} = action.payload;
+      const results = action.payload.results.map((result) => ({
+        ...result,
+        searchUid: action.payload.searchUid,
+      }));
       fetchItemsFulfilled({...action.payload, ...action.meta.arg}, state, {
         results,
       });

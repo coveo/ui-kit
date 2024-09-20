@@ -19,7 +19,12 @@ export const recommendationReducer = createReducer(
       })
       .addCase(getRecommendations.fulfilled, (state, action) => {
         state.error = null;
-        state.recommendations = action.payload.recommendations;
+        state.recommendations = action.payload.recommendations.map(
+          (recommendation) => ({
+            ...recommendation,
+            searchUid: action.payload.searchUid,
+          })
+        );
         state.duration = action.payload.duration;
         state.isLoading = false;
         state.searchUid = action.payload.searchUid;

@@ -65,6 +65,11 @@ export const setIsVisible = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setIsEnabled = createAction(
+  'generatedAnswer/setIsEnabled',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
 export const updateMessage = createAction(
   'generatedAnswer/updateMessage',
   (payload: GeneratedAnswerMessagePayload) =>
