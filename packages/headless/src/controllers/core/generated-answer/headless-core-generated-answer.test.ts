@@ -9,6 +9,7 @@ import {
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  setIsEnabled,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
   generatedAnswerAnalyticsClient,
@@ -220,6 +221,52 @@ describe('generated answer', () => {
 
         generatedAnswer.hide();
         expect(logGeneratedAnswerHideAnswers).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#enable', () => {
+    describe('when already enabled', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.enable();
+        expect(setIsEnabled).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when not enabled', () => {
+      it('should dispatch the setIsEnabled action', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.enable();
+
+        expect(setIsEnabled).toHaveBeenCalledWith(true);
+      });
+    });
+  });
+
+  describe('#disable', () => {
+    describe('when already disabled', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.disable();
+        expect(setIsEnabled).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when not disabled', () => {
+      it('should dispatch the setIsEnabled action', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.disable();
+
+        expect(setIsEnabled).toHaveBeenCalledWith(false);
       });
     });
   });

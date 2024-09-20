@@ -18,6 +18,7 @@ import {MagnifyingGlass} from '../../../common/no-items/magnifying-glass';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
+ * @internal
  * This component displays all the actions performed by a user around the time they created a case.
  * The actions are grouped into multiple sessions, including the session during which the case was created,
  * the sessions preceding the case creation and the sessions following the case creation.

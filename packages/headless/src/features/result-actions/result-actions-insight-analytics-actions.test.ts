@@ -87,6 +87,7 @@ const resultParams = {
   firstSentences: 'first-sentences',
   flags: 'flags',
   rankingModifier: 'example rankingModifier',
+  searchUid: 'example searchUid',
   raw: buildMockRaw({
     author: 'example author',
     urihash: 'example documentUriHash',
@@ -102,9 +103,7 @@ describe('result actions insight analytics actions', () => {
   let engine: InsightEngine;
   const searchState = buildMockSearchState({
     results: [testResult],
-    response: buildMockSearchResponse({
-      searchUid: 'example searchUid',
-    }),
+    response: buildMockSearchResponse(),
   });
   const caseContextState = {
     caseContext: {
