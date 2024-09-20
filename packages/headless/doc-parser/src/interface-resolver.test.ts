@@ -1,3 +1,4 @@
+// eslint-disable-next-line n/no-unpublished-import
 import {facetValueStates} from '../../src/features/facets/facet-api/value';
 import {buildMockApiCallSignature} from '../mocks/mock-api-call-signature';
 import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
