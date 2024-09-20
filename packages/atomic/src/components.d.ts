@@ -1573,6 +1573,18 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface AtomicInsightUserActionsModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
+         */
+        "userId": string;
+    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -1588,9 +1600,6 @@ export namespace Components {
         "userActions": Array<IUserAction>;
     }
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -1601,6 +1610,16 @@ export namespace Components {
         "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+         */
+        "userId": string;
+    }
+    interface AtomicInsightUserActionsToggle {
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
          */
         "userId": string;
     }
@@ -4482,6 +4501,12 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsModalElement: {
+        prototype: HTMLAtomicInsightUserActionsModalElement;
+        new (): HTMLAtomicInsightUserActionsModalElement;
+    };
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -4493,9 +4518,6 @@ declare global {
         new (): HTMLAtomicInsightUserActionsSessionElement;
     };
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -4504,6 +4526,12 @@ declare global {
     var HTMLAtomicInsightUserActionsTimelineElement: {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
+    };
+    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsToggleElement: {
+        prototype: HTMLAtomicInsightUserActionsToggleElement;
+        new (): HTMLAtomicInsightUserActionsToggleElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -5873,8 +5901,10 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
+        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -7428,6 +7458,18 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface AtomicInsightUserActionsModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
+         */
+        "userId": string;
+    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -7443,9 +7485,6 @@ declare namespace LocalJSX {
         "userActions": Array<IUserAction>;
     }
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -7456,6 +7495,16 @@ declare namespace LocalJSX {
         "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+         */
+        "userId": string;
+    }
+    interface AtomicInsightUserActionsToggle {
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
          */
         "userId": string;
     }
@@ -9464,8 +9513,10 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
+        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -9858,19 +9909,18 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
              * @category Insight Panel
              * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             /**
-             * This component displays all the actions performed by a user around the time they created a case.
-             * The actions are grouped into multiple sessions, including the session during which the case was created,
-             * the sessions preceding the case creation and the sessions following the case creation.
              * @component 
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
+            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
