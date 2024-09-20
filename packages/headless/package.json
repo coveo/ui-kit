@@ -6,7 +6,7 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/headless"
   },
-  "main": "./dist/headless.js",
+  "main": "./dist/headless.cjs",
   "module": "./dist/headless.esm.js",
   "type": "module",
   "exports": {
@@ -15,7 +15,7 @@
       "node": {
         "types": "./dist/definitions/index.d.ts",
         "import": "./dist/headless.esm.js",
-        "require": "./dist/headless.js"
+        "require": "./dist/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/index.d.ts",
@@ -30,7 +30,7 @@
       "node": {
         "types": "./dist/definitions/case-assist.index.d.ts",
         "import": "./dist/case-assist/headless.esm.js",
-        "require": "./dist/case-assist/headless.js"
+        "require": "./dist/case-assist/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/case-assist.index.d.ts",
@@ -45,7 +45,7 @@
       "node": {
         "types": "./dist/definitions/commerce.index.d.ts",
         "import": "./dist/commerce/headless.esm.js",
-        "require": "./dist/commerce/headless.js"
+        "require": "./dist/commerce/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/commerce.index.d.ts",
@@ -60,7 +60,7 @@
       "node": {
         "types": "./dist/definitions/insight.index.d.ts",
         "import": "./dist/insight/headless.esm.js",
-        "require": "./dist/insight/headless.js"
+        "require": "./dist/insight/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/insight.index.d.ts",
@@ -75,7 +75,7 @@
       "node": {
         "types": "./dist/definitions/recommendation.index.d.ts",
         "import": "./dist/recommendation/headless.esm.js",
-        "require": "./dist/recommendation/headless.js"
+        "require": "./dist/recommendation/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/recommendation.index.d.ts",
@@ -90,7 +90,7 @@
       "node": {
         "types": "./dist/definitions/ssr.index.d.ts",
         "import": "./dist/ssr/headless.esm.js",
-        "require": "./dist/ssr/headless.js"
+        "require": "./dist/ssr/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/ssr.index.d.ts",
@@ -105,7 +105,7 @@
       "node": {
         "types": "./dist/definitions/ssr-commerce.index.d.ts",
         "import": "./dist/ssr-commerce/headless.esm.js",
-        "require": "./dist/ssr-commerce/headless.js"
+        "require": "./dist/ssr-commerce/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/ssr-commerce.index.d.ts",

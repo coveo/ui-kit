@@ -14,14 +14,14 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
+      "types": "./loader/index.d.ts",
       "import": "./loader/index.js",
-      "require": "./loader/index.cjs.js",
-      "types": "./loader/index.d.ts"
+      "require": "./loader/index.cjs.js"
     },
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/index.cjs.js"
     },
     "./themes/*": {
       "import": "./dist/atomic/themes/*",
@@ -39,7 +39,8 @@
   "files": [
     "dist/",
     "docs/",
-    "licenses/"
+    "licenses/",
+    "loader/"
   ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
