@@ -135,6 +135,7 @@ export default function SearchBox(props: ISearchBoxProps) {
     <div className="Searchbox">
       <input
         className="SearchBoxInput"
+        id="search-box"
         onChange={onSearchBoxInputChange}
         onKeyDown={onSearchBoxInputKeyDown}
         ref={searchInputRef}
