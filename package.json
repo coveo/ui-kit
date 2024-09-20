@@ -11,7 +11,6 @@
     "e2e": "nx run-many --target=e2e",
     "lint:check": "eslint . && cspell **/*.md --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
     "lint:fix": "eslint --fix . && prettier --write '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
-    "packages:compatibility": "node ./scripts/ci/packages-compatibility.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "commit": "git-cz",
