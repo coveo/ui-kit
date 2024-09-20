@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm test
-  package-compatibility:
+  packages-compatibility:
     name: 'Are packages compatible?'
     needs: build
     runs-on: ubuntu-latest
