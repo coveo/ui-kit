@@ -6,9 +6,9 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
-  component: 'atomic-insight-user-actions-timeline',
-  title: 'Atomic/Insight/UserActionsTimeline',
-  id: 'atomic-insight-user-actions-timeline',
+  component: 'atomic-insight-user-actions-toggle',
+  title: 'Atomic/Insight/UserActionsToggle',
+  id: 'atomic-insight-user-actions-toggle',
 
   render: renderComponent,
   decorators: [decorator],
@@ -47,7 +47,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-insight-user-actions-timeline',
+  name: 'atomic-insight-user-actions-toggle',
   play: async (context) => {
     await play(context);
   },
