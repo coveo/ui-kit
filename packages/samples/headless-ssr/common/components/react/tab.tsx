@@ -1,6 +1,5 @@
 'use client';
 
-import {TabManager} from '@coveo/headless-react/ssr';
 import {
   useTabAll,
   useTabCountries,
