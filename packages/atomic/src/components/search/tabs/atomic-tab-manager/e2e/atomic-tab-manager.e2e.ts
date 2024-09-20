@@ -44,7 +44,7 @@ test.describe('AtomicTabManager', () => {
       test.beforeEach(async ({facets}) => {
         await facets.facetValue.first().waitFor({state: 'visible'});
       });
-      test.fixme('facets', async ({tabManager}) => {
+      test('facets', async ({tabManager}) => {
         const includedFacets = await tabManager.includedFacet.all();
         for (let i = 0; i < includedFacets.length; i++) {
           await expect(includedFacets[i]).toBeHidden();
@@ -73,6 +73,16 @@ test.describe('AtomicTabManager', () => {
       test('result list', async ({tabManager}) => {
         await expect(tabManager.excludedResultList).toBeVisible();
         await expect(tabManager.includedResultList).toBeHidden();
+      });
+
+      test('generated answer', async ({tabManager, searchBox}) => {
+        await tabManager.sortDropdown.selectOption('Relevance');
+        await searchBox.searchInput.fill(
+          // eslint-disable-next-line @cspell/spellchecker
+          'how to resolve netflix connection with tivo'
+        );
+        await searchBox.submitButton.click();
+        await expect(tabManager.generatedAnswer).toBeHidden();
       });
     });
 
@@ -129,6 +139,16 @@ test.describe('AtomicTabManager', () => {
           await expect(tabManager.includedResultList).toBeVisible();
           await expect(tabManager.excludedResultList).toBeHidden();
         });
+
+        test('generated answer', async ({tabManager, searchBox}) => {
+          await tabManager.sortDropdown.selectOption('Relevance');
+          await searchBox.searchInput.fill(
+            // eslint-disable-next-line @cspell/spellchecker
+            'how to resolve netflix connection with tivo'
+          );
+          await searchBox.submitButton.click();
+          await expect(tabManager.generatedAnswer).toBeVisible();
+        });
       });
 
       test.describe('when selecting previous tab', () => {
@@ -138,7 +158,7 @@ test.describe('AtomicTabManager', () => {
         });
 
         test.describe('should change other component visibility', async () => {
-          test.fixme('facets', async ({tabManager}) => {
+          test('facets', async ({tabManager}) => {
             const excludedFacets = await tabManager.excludedFacet.all();
             for (let i = 0; i < excludedFacets.length; i++) {
               await expect(excludedFacets[i]).toBeVisible();
@@ -167,6 +187,16 @@ test.describe('AtomicTabManager', () => {
           test('result list', async ({tabManager}) => {
             await expect(tabManager.excludedResultList).toBeVisible();
             await expect(tabManager.includedResultList).toBeHidden();
+          });
+
+          test('generated answer', async ({tabManager, searchBox}) => {
+            await tabManager.sortDropdown.selectOption('Relevance');
+            await searchBox.searchInput.fill(
+              // eslint-disable-next-line @cspell/spellchecker
+              'how to resolve netflix connection with tivo'
+            );
+            await searchBox.submitButton.click();
+            await expect(tabManager.generatedAnswer).toBeHidden();
           });
         });
       });
@@ -265,6 +295,21 @@ test.describe('AtomicTabManager', () => {
           await expect(tabManager.includedResultList).toBeVisible();
           await expect(tabManager.excludedResultList).toBeHidden();
         });
+
+        test('generated answer', async ({tabManager, searchBox}) => {
+          await tabManager.refineModalButton.click();
+          await tabManager.refineModalHeader.waitFor({state: 'visible'});
+          await tabManager.refineModalSortDropdown.selectOption('Relevance');
+
+          await tabManager.refineModalCloseButton.click();
+
+          await searchBox.searchInput.fill(
+            // eslint-disable-next-line @cspell/spellchecker
+            'how to resolve netflix connection with tivo'
+          );
+          await searchBox.submitButton.click();
+          await expect(tabManager.generatedAnswer).toBeVisible();
+        });
       });
 
       test.describe('when selecting previous dropdown option', () => {
@@ -306,6 +351,20 @@ test.describe('AtomicTabManager', () => {
           test('result list', async ({tabManager}) => {
             await expect(tabManager.excludedResultList).toBeVisible();
             await expect(tabManager.includedResultList).toBeHidden();
+          });
+
+          test('generated answer', async ({tabManager, searchBox}) => {
+            await tabManager.refineModalButton.click();
+            await tabManager.refineModalHeader.waitFor({state: 'visible'});
+            await tabManager.refineModalSortDropdown.selectOption('Relevance');
+
+            await tabManager.refineModalCloseButton.click();
+            await searchBox.searchInput.fill(
+              // eslint-disable-next-line @cspell/spellchecker
+              'how to resolve netflix connection with tivo'
+            );
+            await searchBox.submitButton.click();
+            await expect(tabManager.generatedAnswer).toBeHidden();
           });
         });
       });

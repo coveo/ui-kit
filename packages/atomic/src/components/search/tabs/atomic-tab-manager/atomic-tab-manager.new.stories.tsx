@@ -6,6 +6,8 @@ import {html} from 'lit/static-html.js';
 
 const {decorator, play} = wrapInSearchInterface({
   search: {
+    // eslint-disable-next-line @cspell/spellchecker
+    pipeline: 'genqatest',
     preprocessSearchResponseMiddleware: (r) => {
       const [result] = r.body.results;
       result.title = 'Manage the Coveo In-Product Experiences (IPX)';
@@ -229,10 +231,7 @@ export const Default: Story = {
             </atomic-sort-dropdown>
           </atomic-layout-section>
           <atomic-layout-section section="results">
-            <atomic-smart-snippet tabs-included='["article", "documentation"]'
-              style="padding: 10px;"></atomic-smart-snippet>
-            <atomic-result-list tabs-included='["article"]' display="list" density="compact" image-size="small"
-              data-testid="included-result-list">
+          <atomic-generated-answer tabs-included='["article", "documentation"]'></atomic-generated-answer>
             <atomic-smart-snippet
               tabs-included='["article", "documentation"]'
               style="padding: 10px"
