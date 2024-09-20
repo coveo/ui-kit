@@ -137,6 +137,11 @@ export interface SearchBoxState {
    * Determines if a query suggest request is in progress.
    */
   isLoadingSuggestions: boolean;
+
+  /**
+   * The search box ID.
+   */
+  searchBoxId: string;
 }
 
 export interface Suggestion {
@@ -306,6 +311,7 @@ export function buildCoreSearchBox(
         : false;
 
       return {
+        searchBoxId: id,
         value: getValue(),
         suggestions,
         isLoading: state.search.isLoading,
