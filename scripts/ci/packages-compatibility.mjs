@@ -33,3 +33,5 @@ if (
 } else {
   console.log('No issues found by publint.');
 }
+
+// https://www.npmjs.com/package/@arethetypeswrong/cli add
