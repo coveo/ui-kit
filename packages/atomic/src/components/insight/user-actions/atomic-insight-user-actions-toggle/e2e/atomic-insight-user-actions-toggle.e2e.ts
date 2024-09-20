@@ -8,7 +8,7 @@ test.describe('user actions toggle', () => {
     await userActionsToggle.load({
       args: {
         userId: exampleUserId,
-        ticketCreationDate: exampleTicketCreationDate,
+        ticketCreationDateTime: exampleTicketCreationDate,
       },
     });
   });
