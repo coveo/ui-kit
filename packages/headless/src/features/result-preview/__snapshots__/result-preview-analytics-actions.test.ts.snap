@@ -34,7 +34,7 @@ exports[`result preview analytics actions #logDocumentQuickview when analyticsMo
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "",
+    "searchUid": "someid",
   },
 ]
 `;

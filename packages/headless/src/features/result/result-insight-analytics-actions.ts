@@ -31,7 +31,7 @@ export const logDocumentOpen = (result: Result) =>
       return {
         itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
-        searchUid: state.search?.response.searchUid || '',
+        searchUid: result.searchUid || '',
         action: 'open',
         context: analyticsEventCaseContext(state),
       };
