@@ -25,7 +25,6 @@ exports[`instant result analytics actions #logRecommendationOpen when analyticsM
 [
   "itemClick",
   {
-    "actionCause": "open",
     "itemMetadata": {
       "author": "unknown",
       "title": "example documentTitle",

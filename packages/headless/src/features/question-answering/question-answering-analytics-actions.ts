@@ -1,4 +1,4 @@
-import {Qna} from '@coveo/relay-event-types';
+import {SmartSnippets} from '@coveo/relay-event-types';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   ClickAction,
@@ -30,15 +30,27 @@ export const logExpandSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeExpandSmartSnippet();
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'expand',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
-        },
-      };
+    analyticsType: 'SmartSnippets.AnswerAction',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.AnswerAction | undefined => {
+      const result = answerSourceSelector(state)!;
+      const identifier = documentIdentifier(result);
+
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          action: 'expand',
+          snippetType: 'SmartSnippet',
+          responseId: searchUid,
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -48,15 +60,27 @@ export const logCollapseSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeCollapseSmartSnippet();
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'collapse',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
-        },
-      };
+    analyticsType: 'SmartSnippets.AnswerAction',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.AnswerAction | undefined => {
+      const result = answerSourceSelector(state)!;
+      const identifier = documentIdentifier(result);
+
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          action: 'collapse',
+          snippetType: 'SmartSnippet',
+          responseId: searchUid,
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -66,15 +90,27 @@ export const logLikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeLikeSmartSnippet();
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'like',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
-        },
-      };
+    analyticsType: 'SmartSnippets.AnswerAction',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.AnswerAction | undefined => {
+      const result = answerSourceSelector(state)!;
+      const identifier = documentIdentifier(result);
+
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          action: 'like',
+          snippetType: 'SmartSnippet',
+          responseId: searchUid,
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -84,15 +120,26 @@ export const logDislikeSmartSnippet = (): CustomAction =>
     __legacy__getBuilder: (client) => {
       return client.makeDislikeSmartSnippet();
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'dislike',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
-        },
-      };
+    analyticsType: 'SmartSnippets.AnswerAction',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.AnswerAction | undefined => {
+      const result = answerSourceSelector(state)!;
+      const identifier = documentIdentifier(result);
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          action: 'dislike',
+          snippetType: 'SmartSnippet',
+          responseId: searchUid,
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -109,20 +156,23 @@ export const logOpenSmartSnippetSource = (): ClickAction =>
         documentIdentifier(result)
       );
     },
-    analyticsType: 'Qna.CitationClick',
-    analyticsPayloadBuilder: (state): Qna.CitationClick => {
+    analyticsType: 'SmartSnippets.SourceClick',
+    analyticsPayloadBuilder: (state): SmartSnippets.SourceClick | undefined => {
       const result = answerSourceSelector(state)!;
       const identifier = documentIdentifier(result);
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
-        },
-        citation: {
-          id: identifier.contentIDValue,
-          type: 'Source',
-        },
-      };
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          snippetType: 'SmartSnippet',
+          responseId: searchUid,
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -145,20 +195,23 @@ export const logOpenSmartSnippetInlineLink = (
         }
       );
     },
-    analyticsType: 'Qna.CitationClick',
-    analyticsPayloadBuilder: (state): Qna.CitationClick => {
+    analyticsType: 'SmartSnippets.SourceClick',
+    analyticsPayloadBuilder: (state): SmartSnippets.SourceClick | undefined => {
       const result = answerSourceSelector(state)!;
       const identifier = documentIdentifier(result);
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippet',
-        },
-        citation: {
-          id: identifier.contentIDValue,
-          type: 'InlineLink',
-        },
-      };
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          snippetType: 'SmartSnippet',
+          responseId: searchUid,
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -174,6 +227,15 @@ export const logCloseSmartSnippetFeedbackModal = (): CustomAction =>
     client.makeCloseSmartSnippetFeedbackModal()
   );
 
+export const smartSnippetFeedbackMap: Record<
+  SmartSnippetFeedback,
+  SmartSnippets.SubmitFeedback['reason']
+> = {
+  does_not_answer: 'doesNotAnswer',
+  partially_answers: 'partiallyAnswers',
+  was_not_a_question: 'wasNotAQuestion',
+};
+
 export const logSmartSnippetFeedback = (
   feedback: SmartSnippetFeedback
 ): CustomAction =>
@@ -182,17 +244,26 @@ export const logSmartSnippetFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason(feedback);
     },
-    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-        },
-        feedback: {
-          reason:
-            feedback as Qna.SubmitSmartSnippetFeedback['feedback']['reason'],
-        },
-      };
+    analyticsType: 'SmartSnippets.SubmitFeedback',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.SubmitFeedback | undefined => {
+      const result = answerSourceSelector(state)!;
+      const identifier = documentIdentifier(result);
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          responseId: searchUid,
+          snippetType: 'SmartSnippet',
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
+          reason: smartSnippetFeedbackMap[feedback],
+        };
+      }
     },
   });
 
@@ -204,17 +275,27 @@ export const logSmartSnippetDetailedFeedback = (
     __legacy__getBuilder: (client) => {
       return client.makeSmartSnippetFeedbackReason('other', details);
     },
-    analyticsType: 'Qna.SubmitSmartSnippetFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitSmartSnippetFeedback => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-        },
-        feedback: {
+    analyticsType: 'SmartSnippets.SubmitFeedback',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.SubmitFeedback | undefined => {
+      const result = answerSourceSelector(state)!;
+      const identifier = documentIdentifier(result);
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid) {
+        return {
+          responseId: searchUid,
+          snippetType: 'SmartSnippet',
+          itemMetadata: {
+            uniqueFieldName: identifier.contentIDKey,
+            uniqueFieldValue: identifier.contentIDValue,
+            title: result.title,
+            url: result.clickUri,
+          },
           reason: 'other',
-          details: details,
-        },
-      };
+          additionalNotes: details,
+        };
+      }
     },
   });
 
@@ -240,15 +321,30 @@ export const logExpandSmartSnippetSuggestion = (
         documentId: relatedQuestion.documentId,
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'expand',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippetSuggestion',
-        },
-      };
+    analyticsType: 'SmartSnippets.AnswerAction',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.AnswerAction | undefined => {
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid && relatedQuestion) {
+        const source = answerSourceSelector(state, relatedQuestion.documentId);
+
+        return {
+          action: 'expand',
+          responseId: searchUid,
+          snippetType: 'SmartSnippetSuggestion',
+          itemMetadata: {
+            uniqueFieldName: relatedQuestion.documentId.contentIdKey,
+            uniqueFieldValue: relatedQuestion.documentId.contentIdValue,
+            title: source?.title,
+            url: source?.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -274,15 +370,30 @@ export const logCollapseSmartSnippetSuggestion = (
         documentId: relatedQuestion.documentId,
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'collapse',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippetSuggestion',
-        },
-      };
+    analyticsType: 'SmartSnippets.AnswerAction',
+    analyticsPayloadBuilder: (
+      state
+    ): SmartSnippets.AnswerAction | undefined => {
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid && relatedQuestion) {
+        const source = answerSourceSelector(state, relatedQuestion.documentId);
+
+        return {
+          action: 'collapse',
+          responseId: searchUid,
+          snippetType: 'SmartSnippetSuggestion',
+          itemMetadata: {
+            uniqueFieldName: relatedQuestion.documentId.contentIdKey,
+            uniqueFieldValue: relatedQuestion.documentId.contentIdValue,
+            title: source?.title,
+            url: source?.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -315,22 +426,27 @@ export const logOpenSmartSnippetSuggestionSource = (
         }
       );
     },
-    analyticsType: 'Qna.CitationClick',
-    analyticsPayloadBuilder: (state): Qna.CitationClick => {
+    analyticsType: 'SmartSnippets.SourceClick',
+    analyticsPayloadBuilder: (state): SmartSnippets.SourceClick | undefined => {
       const relatedQuestion = relatedQuestionSelector(
         state,
         payload.questionAnswerId
       );
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippetSuggestion',
-        },
-        citation: {
-          id: relatedQuestion?.documentId.contentIdValue || '',
-          type: 'Source',
-        },
-      };
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid && relatedQuestion) {
+        const source = answerSourceSelector(state, relatedQuestion.documentId);
+
+        return {
+          responseId: searchUid,
+          snippetType: 'SmartSnippetSuggestion',
+          itemMetadata: {
+            uniqueFieldName: relatedQuestion.documentId.contentIdKey,
+            uniqueFieldValue: relatedQuestion.documentId.contentIdValue,
+            title: source?.title,
+            url: source?.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -367,22 +483,27 @@ export const logOpenSmartSnippetSuggestionInlineLink = (
         }
       );
     },
-    analyticsType: 'Qna.CitationClick',
-    analyticsPayloadBuilder: (state): Qna.CitationClick => {
+    analyticsType: 'SmartSnippets.SourceClick',
+    analyticsPayloadBuilder: (state): SmartSnippets.SourceClick | undefined => {
       const relatedQuestion = relatedQuestionSelector(
         state,
         identifier.questionAnswerId
       );
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: 'SmartSnippetSuggestion',
-        },
-        citation: {
-          id: relatedQuestion?.documentId.contentIdValue || '',
-          type: 'InlineLink',
-        },
-      };
+      const searchUid = state.search?.response.searchUid;
+      if (searchUid && relatedQuestion) {
+        const source = answerSourceSelector(state, relatedQuestion.documentId);
+
+        return {
+          responseId: searchUid,
+          snippetType: 'SmartSnippetSuggestion',
+          itemMetadata: {
+            uniqueFieldName: relatedQuestion.documentId.contentIdKey,
+            uniqueFieldValue: relatedQuestion.documentId.contentIdValue,
+            title: source?.title,
+            url: source?.clickUri,
+          },
+        };
+      }
     },
   });
 

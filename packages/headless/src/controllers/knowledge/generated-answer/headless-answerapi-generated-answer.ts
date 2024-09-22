@@ -54,9 +54,9 @@ interface ParseEvaluationArgumentsParams {
   query: string;
 }
 
-const parseEvaluationDetails = (
+export const parseEvaluationDetails = (
   detail: 'yes' | 'no' | 'unknown'
-): Boolean | null => {
+): boolean | null => {
   if (detail === 'yes') {
     return true;
   }
