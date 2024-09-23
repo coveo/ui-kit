@@ -146,11 +146,6 @@ describe('Headless react SSR utils', () => {
       expect(err?.message).toBe(expectedErrMsg);
     }
 
-    // afterEach(() => {
-    //   // Clean up the rendered result list after each test
-    //   screen.getByTestId(resultItemTestId)?.remove();
-    // });
-
     test('should throw error when controller hook is used without context', () => {
       checkRenderError(
         () => render(<TestResultList />),
