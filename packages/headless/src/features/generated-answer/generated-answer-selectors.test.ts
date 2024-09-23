@@ -3,7 +3,7 @@ import {SearchAppState} from '../../state/search-app-state.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
 vi.mock('../../api/knowledge/stream-answer-api', () => ({
-  ...vi.requireActual<Record<string, Partial<SearchAppState>>>(
+  ...vi.importActual<Record<string, Partial<SearchAppState>>>(
     '../../api/knowledge/stream-answer-api'
   ),
   selectAnswer: (_state: Partial<SearchAppState>) => ({

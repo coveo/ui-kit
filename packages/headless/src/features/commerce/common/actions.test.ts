@@ -165,7 +165,7 @@ describe('commerce common actions', () => {
       state = buildMockCommerceState();
       mockedBuildBaseCommerceAPIRequest = vi.spyOn(
         Actions,
-        'buildBaseCommerceAPIRequest'
+        'buildCommerceAPIRequest'
       );
     });
 

@@ -70,8 +70,8 @@ describe('date facet', () => {
       expect.objectContaining({
         currentValues: [
           expect.objectContaining({
-            start: '2021/03/25@22:16:31',
-            end: '2021/03/24@22:16:31',
+            start: '2021/03/25@09:31:31',
+            end: '2021/03/24@09:31:31',
           }),
         ],
       })

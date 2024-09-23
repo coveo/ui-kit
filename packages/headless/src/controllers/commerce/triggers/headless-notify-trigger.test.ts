@@ -101,7 +101,7 @@ describe('commerce notify trigger', () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  describe('when a non-empty #engine.state.triggers.notifications is updated with the same array, does not call the listener', () => {
+  it('when a non-empty #engine.state.triggers.notifications is updated with the same array, does not call the listener', () => {
     const listener = vi.fn();
 
     engine = buildMockCommerceEngine(buildMockCommerceState());
