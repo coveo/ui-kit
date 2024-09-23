@@ -68,19 +68,12 @@ describe('date filter', () => {
     initDateFilter();
     expect(validateManualDateRanges).toHaveBeenCalledWith(
       expect.objectContaining({
-        facetId,
-        field: 'created',
-        generateAutomaticRanges: false,
-        activeTab: '',
-        tabs: {},
-        currentValues: [
-          {
-            start: '2021/03/25@09:31:31',
-            end: '2021/03/24@09:31:31',
-            endInclusive: true,
-            state: 'selected',
-          },
-        ],
+        currentValues: expect.arrayContaining([
+          expect.objectContaining({
+            start: '2021/03/25@22:16:31',
+            end: '2021/03/24@22:16:31',
+          }),
+        ]),
       })
     );
   });

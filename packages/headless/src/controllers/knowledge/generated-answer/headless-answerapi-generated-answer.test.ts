@@ -31,8 +31,8 @@ vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 vi.mock('../../../features/search/search-actions');
-vi.mock('../../../api/knowledge/stream-answer-api', () => {
-  const originalStreamAnswerApi = vi.requireActual(
+vi.mock('../../../api/knowledge/stream-answer-api', async () => {
+  const originalStreamAnswerApi = await vi.importActual(
     '../../../api/knowledge/stream-answer-api'
   );
   return {

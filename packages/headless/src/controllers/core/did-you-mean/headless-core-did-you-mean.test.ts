@@ -16,16 +16,19 @@ import {
   DidYouMeanProps,
 } from './headless-core-did-you-mean.js';
 
-vi.mock('pino', () => ({
-  ...vi.requireActual('pino'),
-  __esModule: true,
-  default: () => ({
-    info: vi.fn(),
-    error: vi.fn(),
-    warn: vi.fn(),
-    debug: vi.fn(),
-  }),
-}));
+vi.mock('pino', async () => {
+  const actual = await vi.importActual('pino');
+  return {
+    ...actual,
+    __esModule: true,
+    default: () => ({
+      info: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+    }),
+  };
+});
 
 vi.mock('../../../features/did-you-mean/did-you-mean-actions');
 

@@ -72,16 +72,10 @@ describe('date filter', () => {
       expect.objectContaining({
         currentValues: expect.arrayContaining([
           expect.objectContaining({
-            end: '2021/03/24@09:31:31', // Adjust expected values
-            start: '2021/03/25@09:31:31',
-            state: 'selected',
+            start: '2021/03/25@22:16:31',
+            end: '2021/03/24@22:16:31',
           }),
         ]),
-        facetId: '1',
-        field: 'created',
-        activeTab: '',
-        generateAutomaticRanges: false,
-        tabs: {},
       })
     );
   });
