@@ -280,7 +280,12 @@ export function buildCoreCommerceFacet<
     },
 
     get state(): CoreCommerceFacetState<ValueResponse> {
-      return getCoreFacetState(getRequest(), getResponse(), getIsLoading());
+      return getCoreFacetState(
+        facetId,
+        getRequest(),
+        getResponse(),
+        getIsLoading()
+      );
     },
   };
 }
@@ -307,6 +312,7 @@ const canShowLessValues = (request: AnyFacetRequest | undefined) => {
 };
 
 export const getCoreFacetState = <T extends AnyFacetValueResponse>(
+  facetId: string,
   request: AnyFacetRequest | undefined,
   response: AnyFacetResponse | undefined,
   isLoading: boolean
@@ -315,7 +321,7 @@ export const getCoreFacetState = <T extends AnyFacetValueResponse>(
     canShowLessValues: canShowLessValues(request),
     canShowMoreValues: response?.moreValuesAvailable ?? false,
     displayName: response?.displayName ?? '',
-    facetId: response?.facetId ?? '',
+    facetId: facetId,
     field: response?.field ?? '',
     hasActiveValues:
       !response || response.type === 'hierarchical'
