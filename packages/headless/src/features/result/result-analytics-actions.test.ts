@@ -14,7 +14,9 @@ jest.mock('coveo.analytics');
 
 describe('result analytics actions', () => {
   describe('#logDocumentOpen', () => {
-    const testResult = buildMockNonEmptyResult();
+    const testResult = buildMockNonEmptyResult({
+      searchUid: 'example searchUid',
+    });
     let engine: SearchEngine;
     const makeDocumentOpen = jest.fn();
     const emit = jest.fn();

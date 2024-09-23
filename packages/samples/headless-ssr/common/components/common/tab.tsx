@@ -1,4 +1,4 @@
-import {Tab, TabManager, TabState} from '@coveo/headless/ssr';
+import {Tab, TabState} from '@coveo/headless/ssr';
 
 interface TabCommonProps {
   state: TabState;
