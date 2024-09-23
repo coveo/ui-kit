@@ -118,9 +118,10 @@ describe('category facet slice', () => {
     });
 
     it('dispatching #deselectAllBreadcrumbs calls #handleCategoryFacetDeselectAll for every facet', () => {
-      jest
-        .spyOn(CategoryFacetReducers, 'handleCategoryFacetDeselectAll')
-        .mockReset();
+      vi.spyOn(
+        CategoryFacetReducers,
+        'handleCategoryFacetDeselectAll'
+      ).mockReset();
 
       categoryFacetSetReducer(state, deselectAllBreadcrumbs());
 

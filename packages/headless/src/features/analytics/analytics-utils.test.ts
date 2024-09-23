@@ -173,9 +173,7 @@ describe('analytics-utils', () => {
     });
 
     it('should log an error permanentid is not available on a result', () => {
-      const spyConsole = jest
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+      const spyConsole = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const result = buildMockResult();
       delete result.raw.permanentid;

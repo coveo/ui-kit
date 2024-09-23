@@ -195,9 +195,9 @@ describe('headless commerce cart', () => {
 
     it('will not dispatch an action or emit an event if item does not exist in cart and item.quantity <= 0', () => {
       const mockedUpdateItem = vi.mocked(updateItemQuantity);
-      jest
-        .mocked(itemSelector)
-        .mockReturnValue(undefined as unknown as CartItemWithMetadata);
+      vi.mocked(itemSelector).mockReturnValue(
+        undefined as unknown as CartItemWithMetadata
+      );
 
       cart.updateItemQuantity(productWithQuantity(0));
 
@@ -216,9 +216,9 @@ describe('headless commerce cart', () => {
 
     it('dispatches #updateItemQuantity when the item does not exist in the cart state and item.quantity > 0', () => {
       const mockedUpdateItem = vi.mocked(updateItemQuantity);
-      jest
-        .mocked(itemSelector)
-        .mockReturnValue(undefined as unknown as CartItemWithMetadata);
+      vi.mocked(itemSelector).mockReturnValue(
+        undefined as unknown as CartItemWithMetadata
+      );
 
       cart.updateItemQuantity(productWithQuantity(3));
 
@@ -228,9 +228,10 @@ describe('headless commerce cart', () => {
     it('dispatches #updateItemQuantity but does not dispatch #emitCartAction when the item.quantity = cartItem.quantity but item != cartItem', () => {
       const mockedUpdateItem = vi.mocked(updateItemQuantity);
       const mockedEmitCartActionEvent = vi.mocked(emitCartActionEvent);
-      jest
-        .mocked(itemSelector)
-        .mockReturnValue({...productWithQuantity(3), name: 'bap'});
+      vi.mocked(itemSelector).mockReturnValue({
+        ...productWithQuantity(3),
+        name: 'bap',
+      });
 
       cart.updateItemQuantity(productWithQuantity(3));
 
@@ -239,9 +240,9 @@ describe('headless commerce cart', () => {
     });
 
     it('dispatches #emitCartAction with "add" action and correct payload if quantity > 0 and item does not exist in cart', () => {
-      jest
-        .mocked(itemSelector)
-        .mockReturnValue(undefined as unknown as CartItemWithMetadata);
+      vi.mocked(itemSelector).mockReturnValue(
+        undefined as unknown as CartItemWithMetadata
+      );
 
       cart.updateItemQuantity(productWithQuantity(3));
 
