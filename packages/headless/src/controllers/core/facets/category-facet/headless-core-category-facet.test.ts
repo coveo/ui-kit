@@ -9,8 +9,10 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions.js';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {
+  categoryFacetSetReducer as categoryFacetSet,
+  defaultCategoryFacetOptions,
+} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
   findActiveValueAncestry,
   partitionIntoParentsAndValues,
@@ -51,7 +53,7 @@ vi.mock('../../../../features/facet-options/facet-options-actions');
 const {
   findActiveValueAncestry: actualFindActiveValueAncestry,
   partitionIntoParentsAndValues: actualPartitionIntoParentsAndValues,
-} = vi.requireActual(
+} = await vi.importActual(
   '../../../../features/facets/category-facet-set/category-facet-utils'
 );
 

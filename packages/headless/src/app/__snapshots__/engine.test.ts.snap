@@ -1,9 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`engine > should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next 1`] = `
-[Error: [vitest] No "pino" export is defined on the "pino" mock. Did you forget to return it from "vi.mock"?
-If you need to partially mock a module, you can use "importOriginal" helper inside:
-]
-`;
+exports[`engine > should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next 1`] = `[InvalidEngineConfiguration: analytics.trackingId is required when analytics.analyticsMode="next"]`;
 
 exports[`engine should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next 1`] = `"analytics.trackingId is required when analytics.analyticsMode="next""`;
