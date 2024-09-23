@@ -514,3 +514,10 @@ test.describe('standalone searchbox', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 });
+
+test('should have position:relative and z-index:10', async ({searchBox}) => {
+  await searchBox.load();
+
+  await expect(searchBox.hydrated).toHaveCSS('position', 'relative');
+  await expect(searchBox.hydrated).toHaveCSS('z-index', '10');
+});
