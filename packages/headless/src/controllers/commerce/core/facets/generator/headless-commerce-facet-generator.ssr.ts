@@ -177,6 +177,7 @@ export function buildFacetGenerator(
   const createFacetState = (facetResponseSelector: AnyFacetResponse) => {
     const facetId = facetResponseSelector.facetId;
     return getCoreFacetState(
+      facetId,
       facetRequestSelector(getEngineState(), facetId),
       facetResponseSelector,
       isFacetLoadingResponseSelector

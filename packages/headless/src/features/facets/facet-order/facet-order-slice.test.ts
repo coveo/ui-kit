@@ -6,6 +6,7 @@ import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';
+import {setContext, setView} from '../../commerce/context/context-actions';
 import {Parameters} from '../../commerce/parameters/parameters-actions';
 import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
@@ -148,5 +149,22 @@ describe('facet-order slice', () => {
         'category_facet_2',
       ]);
     });
+  });
+  it('#setView restore the initial state', () => {
+    const facetIds = ['facetA', 'facetB'];
+    dispatchMockSearch(facetIds);
+    expect(state).toEqual(facetIds);
+
+    dispatchMock(setView);
+    expect(state).toEqual(getFacetOrderInitialState());
+  });
+
+  it('#setContext (commerce) restore the initial state', () => {
+    const facetIds = ['facetA', 'facetB'];
+    dispatchMockSearch(facetIds);
+    expect(state).toEqual(facetIds);
+
+    dispatchMock(setContext);
+    expect(state).toEqual(getFacetOrderInitialState());
   });
 });
