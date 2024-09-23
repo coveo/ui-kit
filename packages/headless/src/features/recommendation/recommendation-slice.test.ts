@@ -34,7 +34,7 @@ describe('recommendation slice', () => {
   });
 
   it('when a getRecommendations fulfilled is received, it updates the state to the received payload', () => {
-    const result = buildMockResult();
+    const result = buildMockResult({searchUid: 'some-id'});
     const response = buildMockRecommendation({
       recommendations: [result],
       duration: 123,

@@ -13,6 +13,8 @@ import {HydrationMetadata} from '../common/hydration-metadata';
 import {Facet} from './facet';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
+import {Tab} from './tab';
+import {TabManager} from './tabs-manager';
 
 export default function SearchPage({
   staticState,
@@ -59,10 +61,37 @@ export default function SearchPage({
         staticState={staticState.controllers.searchBox.state}
         controller={hydratedState?.controllers.searchBox}
       />
+      <TabManager
+        staticState={staticState.controllers.tabManager.state}
+        controller={hydratedState?.controllers.tabManager}
+      >
+        <Tab
+          staticState={staticState.controllers.tabAll.state}
+          controller={hydratedState?.controllers.tabAll}
+          tabManager={hydratedState?.controllers.tabManager}
+          tabName={'all'}
+          tabLabel={'All'}
+        ></Tab>
+        <Tab
+          staticState={staticState.controllers.tabCountries.state}
+          controller={hydratedState?.controllers.tabCountries}
+          tabManager={hydratedState?.controllers.tabManager}
+          tabName={'countries'}
+          tabLabel={'Countries'}
+        ></Tab>
+        <Tab
+          staticState={staticState.controllers.tabVideos.state}
+          controller={hydratedState?.controllers.tabVideos}
+          tabManager={hydratedState?.controllers.tabManager}
+          tabName={'videos'}
+          tabLabel={'Videos'}
+        ></Tab>
+      </TabManager>
       <Facet
         title="Author"
         staticState={staticState.controllers.authorFacet.state}
         controller={hydratedState?.controllers.authorFacet}
+        tabManager={hydratedState?.controllers.tabManager}
       />
       <ResultList
         staticState={staticState.controllers.resultList.state}

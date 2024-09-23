@@ -16,15 +16,7 @@ import {
   TabManager,
   buildTabManager,
 } from '@coveo/headless';
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  Fragment,
-  Watch,
-} from '@stencil/core';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -62,7 +54,6 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -287,6 +278,10 @@ export class AtomicCategoryFacet implements InitializableComponent {
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     announceFacetSearchResultsWithAriaLive(
@@ -347,21 +342,6 @@ export class AtomicCategoryFacet implements InitializableComponent {
       (!this.facet.state.selectedValueAncestry.length &&
         !this.facet.state.valuesAsTrees.length)
     );
-  }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
   }
 
   public componentShouldUpdate(
