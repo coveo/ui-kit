@@ -1,6 +1,6 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {CoreEngine} from '../../app/engine';
 import {querySetReducer as querySet} from '../../features/query-set/query-set-slice';
 import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
 import {
@@ -79,7 +79,7 @@ export interface QuerySuggestActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadQuerySuggestActions(
-  engine: SearchEngine
+  engine: CoreEngine
 ): QuerySuggestActionCreators {
   engine.addReducers({querySuggest, querySet});
 

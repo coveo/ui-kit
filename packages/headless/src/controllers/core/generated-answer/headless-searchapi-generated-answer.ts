@@ -49,7 +49,7 @@ interface SubscribeStateManager {
   ) => Unsubscribe;
 }
 
-const subscribeStateManager: SubscribeStateManager = {
+export const subscribeStateManager: SubscribeStateManager = {
   engines: {},
 
   setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => {
@@ -82,6 +82,10 @@ const subscribeStateManager: SubscribeStateManager = {
       ) {
         subscribeStateManager.engines[genQaEngineId].lastRequestId = requestId;
         subscribeStateManager.engines[genQaEngineId].abortController?.abort();
+        if (state.generatedAnswer.isEnabled === false) {
+          return;
+        }
+
         engine.dispatch(resetAnswer());
       }
 
@@ -93,6 +97,9 @@ const subscribeStateManager: SubscribeStateManager = {
         streamId !== subscribeStateManager.engines[genQaEngineId].lastStreamId
       ) {
         subscribeStateManager.engines[genQaEngineId].lastStreamId = streamId;
+        if (state.generatedAnswer.isEnabled === false) {
+          return;
+        }
         engine.dispatch(
           streamAnswer({
             setAbortControllerRef: (ref: AbortController) =>

@@ -8,6 +8,7 @@ import {
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
+  setIsEnabled,
 } from './generated-answer-actions';
 import {
   GeneratedContentFormat,
@@ -89,6 +90,12 @@ describe('generated answer', () => {
   describe('#setIsVisible', () => {
     it('should accept a valid payload', () => {
       expect(() => setIsVisible(true)).not.toThrow();
+    });
+  });
+
+  describe('#setIsEnabled', () => {
+    it('should accept a valid payload', () => {
+      expect(() => setIsEnabled(true)).not.toThrow();
     });
   });
 

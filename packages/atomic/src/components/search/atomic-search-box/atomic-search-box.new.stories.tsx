@@ -26,9 +26,6 @@ const meta: Meta = {
   decorators: [decorator],
   parameters,
   play,
-  args: {
-    'attributes-textarea': true,
-  },
 };
 
 export default meta;

@@ -1,5 +1,5 @@
 import {Decorator} from '@storybook/web-components';
-import {html} from 'lit-html/static.js';
+import {html} from 'lit-html';
 
 export const wrapInCommerceProductList = (): {
   decorator: Decorator;
@@ -8,8 +8,8 @@ export const wrapInCommerceProductList = (): {
     <atomic-commerce-product-list
       id="code-root"
       number-of-placeholders="24"
-      display="grid"
-      density="normal"
+      display="list"
+      density="compact"
       image-size="small"
     >
       ${story()}

@@ -33,7 +33,7 @@ exports[`result analytics actions #logDocumentOpen when analyticsMode is \`next\
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "",
+    "searchUid": "example searchUid",
   },
 ]
 `;

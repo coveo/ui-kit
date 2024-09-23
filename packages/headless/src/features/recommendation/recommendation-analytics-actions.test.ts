@@ -14,7 +14,9 @@ jest.mock('coveo.analytics');
 
 describe('recommendation analytics actions', () => {
   describe('#logRecommendationOpen', () => {
-    const testResult = buildMockNonEmptyResult();
+    const testResult = buildMockNonEmptyResult({
+      searchUid: 'example searchUid',
+    });
     let engine: SearchEngine;
     const makeRecommendationOpen = jest.fn();
     const emit = jest.fn();

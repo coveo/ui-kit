@@ -69,16 +69,17 @@ export default function RegularFacet(props: IRegularFacetProps) {
   };
 
   const renderFacetSearchControls = () => {
+    const id = `${state.facetId}-search-input`;
     return (
       <div className="FacetSearch">
-        <label className="FacetSearchLabel" htmlFor="facetSearchInput">
+        <label className="FacetSearchLabel" htmlFor={id}>
           Search:{' '}
         </label>
         <input
           aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
           className="FacetSearchInput"
           disabled={state.isLoading}
-          id="facetSearchInput"
+          id={id}
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
           value={state.facetSearch.query}
@@ -157,26 +158,29 @@ export default function RegularFacet(props: IRegularFacetProps) {
           <span className="FacetLoading"> Facet is loading...</span>
         )}
         <ul className="FacetValues">
-          {state.values.map((value) => (
-            <li className="FacetValue" key={value.value}>
-              <input
-                aria-label={`${value.state === 'idle' ? 'Select' : 'Deselect'} facet value '${value.value}'`}
-                className="FacetValueCheckbox"
-                disabled={state.isLoading}
-                id={value.value}
-                checked={value.state !== 'idle'}
-                onClick={() => onClickFacetValue(value)}
-                type="checkbox"
-              ></input>
-              <label className="FacetValueLabel" htmlFor={value.value}>
-                <span className="FacetValueName">{value.value}</span>
-                <span className="FacetValueNumberOfProducts">
-                  {' '}
-                  ({value.numberOfResults})
-                </span>
-              </label>
-            </li>
-          ))}
+          {state.values.map((value) => {
+            const id = `${state.facetId}-${value.value}-facet-value`;
+            return (
+              <li className="FacetValue" key={id}>
+                <input
+                  aria-label={`${value.state === 'idle' ? 'Select' : 'Deselect'} facet value '${value.value}'`}
+                  className="FacetValueCheckbox"
+                  disabled={state.isLoading}
+                  id={id}
+                  checked={value.state !== 'idle'}
+                  onChange={() => onClickFacetValue(value)}
+                  type="checkbox"
+                ></input>
+                <label className="FacetValueLabel" htmlFor={id}>
+                  <span className="FacetValueName">{value.value}</span>
+                  <span className="FacetValueNumberOfProducts">
+                    {' '}
+                    ({value.numberOfResults})
+                  </span>
+                </label>
+              </li>
+            );
+          })}
         </ul>
         <button
           aria-label="Show more facet values"
