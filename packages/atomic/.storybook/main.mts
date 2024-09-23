@@ -1,8 +1,36 @@
 import {nxViteTsPaths} from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import type {StorybookConfig} from '@storybook/web-components-vite';
+import {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings';
 
+const externalizeDependencies: PluginImpl = () => {
+  return {
+    name: 'externalize-dependencies',
+    enforce: 'pre',
+    resolveId(source, _importer, _options) {
+      if (/^\/(headless|bueno)/.test(source)) {
+        return false;
+      }
+
+      const packageMappings = generateExternalPackageMappings(__dirname);
+      const packageMapping = packageMappings[source];
+
+      if (packageMapping) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMapping.cdn,
+          external: 'absolute',
+        };
+      }
+
+      return null;
+    },
+  };
+};
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const config: StorybookConfig = {
@@ -23,32 +51,9 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       plugins: [
         nxViteTsPaths(),
-
-        configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
+        configType === 'PRODUCTION' && externalizeDependencies(),
       ],
     }),
 };
-
-function externalizeDependencies() {
-  return {
-    name: 'externalize-dependencies',
-    enforce: 'pre',
-    resolveId: (id: string) => {
-      if (/^\/(headless|bueno)/.test(id)) {
-        return false;
-      }
-      if (generateExternalPackageMappings(__dirname)[id]) {
-        if (!isCDN) {
-          return false;
-        }
-
-        return {
-          id: generateExternalPackageMappings(__dirname)[id].cdn,
-          external: 'absolute',
-        };
-      }
-    },
-  };
-}
 
 export default config;

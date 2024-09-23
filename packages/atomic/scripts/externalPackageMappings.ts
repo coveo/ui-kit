@@ -2,11 +2,8 @@ import path from 'node:path';
 import headlessJson from '../../headless/package.json';
 import buenoJson from '../../headless/package.json';
 
-let headlessVersion: string = '';
-let buenoVersion: string = '';
-
-headlessVersion = 'v' + headlessJson.version;
-buenoVersion = 'v' + buenoJson.version;
+const headlessVersion = 'v' + headlessJson.version;
+const buenoVersion = 'v' + buenoJson.version;
 
 export function generateExternalPackageMappings(basePath: string): {
   [key: string]: {devWatch: string; cdn: string};
@@ -25,13 +22,6 @@ export function generateExternalPackageMappings(basePath: string): {
         'src/external-builds/insight/headless.esm.js'
       ),
       cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
-    },
-    '@coveo/headless/product-recommendation': {
-      devWatch: path.resolve(
-        basePath,
-        'src/external-builds/product-recommendation/headless.esm.js'
-      ),
-      cdn: `/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
     },
     '@coveo/headless/recommendation': {
       devWatch: path.resolve(

@@ -11,6 +11,7 @@ import atImport from 'postcss-import';
 import postcssMap from 'postcss-map';
 import mixins from 'postcss-mixins';
 import postcssNesting from 'postcss-nested';
+import {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
@@ -21,13 +22,13 @@ import {generateAngularModuleDefinition as angularModule} from './stencil-plugin
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
+const packageMappings = generateExternalPackageMappings(__dirname);
+
 function generateAliasEntries() {
-  return Object.entries(generateExternalPackageMappings(__dirname)).map(
-    ([find, paths]) => ({
-      find,
-      replacement: paths.devWatch,
-    })
-  );
+  return Object.entries(packageMappings).map(([find, paths]) => ({
+    find,
+    replacement: paths.devWatch,
+  }));
 }
 
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
@@ -73,6 +74,28 @@ function replace() {
     preventAssignment: true,
   });
 }
+
+const externalizeDependenciesPlugin: PluginImpl = () => {
+  return {
+    name: 'externalize-dependencies',
+    resolveId: (source, _importer, _options) => {
+      const packageMapping = packageMappings[source];
+
+      if (packageMapping) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMapping.cdn,
+          external: 'absolute',
+        };
+      }
+
+      return null;
+    },
+  };
+};
 
 const isDevWatch: boolean =
   process.argv &&
@@ -210,22 +233,3 @@ export const config: Config = {
     enableImportInjection: true,
   },
 };
-function externalizeDependenciesPlugin() {
-  return {
-    name: 'externalize-dependencies',
-    resolveId: (id: string) => {
-      if (generateExternalPackageMappings(__dirname)[id]) {
-        if (!isCDN) {
-          return false;
-        }
-
-        return {
-          id: generateExternalPackageMappings(__dirname)[id].cdn,
-          external: 'absolute',
-        };
-      }
-
-      return null;
-    },
-  };
-}
