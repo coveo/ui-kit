@@ -1,5 +1,4 @@
 import {Rga} from '@coveo/relay-event-types';
-import {parseEvaluationDetails} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer';
 import {
   CustomAction,
   LegacySearchAction,
@@ -22,6 +21,18 @@ export type GeneratedAnswerFeedback = {
   readable: GeneratedAnswerFeedbackOption;
   details?: string;
   documentUrl?: string;
+};
+
+export const parseEvaluationDetails = (
+  detail: 'yes' | 'no' | 'unknown'
+): boolean | undefined => {
+  if (detail === 'yes') {
+    return true;
+  }
+  if (detail === 'no') {
+    return false;
+  }
+  return undefined;
 };
 
 //TODO: KIT-2859
@@ -202,11 +213,10 @@ export const logGeneratedAnswerFeedback = (
           responseId: rgaID,
           helpful,
           details: {
-            readable: parseEvaluationDetails(readable) ?? undefined,
-            documented: parseEvaluationDetails(documented) ?? undefined,
-            correctTopic: parseEvaluationDetails(correctTopic) ?? undefined,
-            hallucinationFree:
-              parseEvaluationDetails(hallucinationFree) ?? undefined,
+            readable: parseEvaluationDetails(readable),
+            documented: parseEvaluationDetails(documented),
+            correctTopic: parseEvaluationDetails(correctTopic),
+            hallucinationFree: parseEvaluationDetails(hallucinationFree),
           },
           additionalNotes: details,
           correctAnswerUrl: documentUrl,

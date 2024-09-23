@@ -1,12 +1,14 @@
 import {Rga} from '@coveo/relay-event-types';
-import {parseEvaluationDetails} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer';
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
 } from '../analytics/analytics-utils';
 import {SearchPageEvents} from '../analytics/search-action-cause';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {GeneratedAnswerFeedback} from './generated-answer-analytics-actions';
+import {
+  GeneratedAnswerFeedback,
+  parseEvaluationDetails,
+} from './generated-answer-analytics-actions';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -215,11 +217,10 @@ export const logGeneratedAnswerFeedback = (
           responseId: rgaID,
           helpful,
           details: {
-            readable: parseEvaluationDetails(readable) ?? undefined,
-            documented: parseEvaluationDetails(documented) ?? undefined,
-            correctTopic: parseEvaluationDetails(correctTopic) ?? undefined,
-            hallucinationFree:
-              parseEvaluationDetails(hallucinationFree) ?? undefined,
+            readable: parseEvaluationDetails(readable),
+            documented: parseEvaluationDetails(documented),
+            correctTopic: parseEvaluationDetails(correctTopic),
+            hallucinationFree: parseEvaluationDetails(hallucinationFree),
           },
           additionalNotes: details,
           correctAnswerUrl: documentUrl,
