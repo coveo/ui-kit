@@ -1,4 +1,4 @@
-import {Mock, Mock} from 'vitest';
+import {Mock} from 'vitest';
 import {configuration} from '../../../../../app/common-reducers.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {
