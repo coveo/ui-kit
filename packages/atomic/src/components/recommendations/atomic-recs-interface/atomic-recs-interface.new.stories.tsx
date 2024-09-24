@@ -1,5 +1,5 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 async function initializeRecsInterface(canvasElement: HTMLElement) {
@@ -8,9 +8,6 @@ async function initializeRecsInterface(canvasElement: HTMLElement) {
   await recsInterface!.initialize({
     accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
     organizationId: 'fashioncoveodemocomgzh7iep8',
-    organizationEndpoints: await recsInterface?.getOrganizationEndpoints(
-      'fashioncoveodemocomgzh7iep8'
-    ),
   });
 }
 
