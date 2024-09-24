@@ -8,10 +8,10 @@ import {
 import {Context} from '@coveo/headless/commerce';
 import {useCallback} from 'react';
 import {useEffect} from 'react';
-import DidYouMean from '../components/did-you-mean/did-you-mean';
-import SearchBox from '../components/search-box/search-box';
-import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface';
-import {highlightOptions} from '../utils/highlight-options';
+import DidYouMean from '../components/did-you-mean/did-you-mean.js';
+import SearchBox from '../components/search-box/search-box.js';
+import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
+import {highlightOptions} from '../utils/highlight-options.js';
 
 interface ISearchProps {
   engine: CommerceEngine;

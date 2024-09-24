@@ -5,7 +5,6 @@ import {
   DateFacetValue,
   BreadcrumbManager as HeadlessBreadcrumbManager,
 } from '@coveo/headless/commerce';
-import {AnyFacetValueResponse} from '@coveo/headless/dist/definitions/features/commerce/facets/facet-set/interfaces/response';
 import {useEffect, useState} from 'react';
 
 interface BreadcrumbManagerProps {
@@ -26,7 +25,11 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
   }
 
   const renderBreadcrumbValue = (
-    value: AnyFacetValueResponse,
+    value:
+      | CategoryFacetValue
+      | RegularFacetValue
+      | NumericFacetValue
+      | DateFacetValue,
     type: string
   ) => {
     switch (type) {

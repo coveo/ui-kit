@@ -6,6 +6,7 @@ import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import {buildMockSearch} from '../../../test/mock-search.js';
+import {setContext, setView} from '../../commerce/context/context-actions.js';
 import {Parameters} from '../../commerce/parameters/parameters-actions.js';
 import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions.js';
@@ -151,5 +152,22 @@ describe('facet-order slice', () => {
         'category_facet_2',
       ]);
     });
+  });
+  it('#setView restore the initial state', () => {
+    const facetIds = ['facetA', 'facetB'];
+    dispatchMockSearch(facetIds);
+    expect(state).toEqual(facetIds);
+
+    dispatchMock(setView);
+    expect(state).toEqual(getFacetOrderInitialState());
+  });
+
+  it('#setContext (commerce) restore the initial state', () => {
+    const facetIds = ['facetA', 'facetB'];
+    dispatchMockSearch(facetIds);
+    expect(state).toEqual(facetIds);
+
+    dispatchMock(setContext);
+    expect(state).toEqual(getFacetOrderInitialState());
   });
 });

@@ -6,6 +6,7 @@ import {
   buildMockProduct,
   buildMockBaseProduct,
 } from '../../../test/mock-product.js';
+import {setContext, setView} from '../context/context-actions.js';
 import {
   executeSearch,
   fetchMoreProducts,
@@ -317,5 +318,49 @@ describe('search-slice', () => {
         }),
       ]);
     });
+  });
+  it('on #setView, restores the initial state', () => {
+    state = {
+      error: {message: 'message', statusCode: 500, type: 'type'},
+      isLoading: true,
+      requestId: 'request-id',
+      facets: [buildMockCommerceRegularFacetResponse()],
+      products: [
+        buildMockProduct({ec_name: 'product1'}),
+        buildMockProduct({ec_name: 'product2'}),
+      ],
+      queryExecuted: 'query',
+      responseId: 'response-id',
+    };
+
+    const finalState = commerceSearchReducer(state, setView({url: '/'}));
+
+    expect(finalState).toEqual(getCommerceSearchInitialState());
+  });
+
+  it('on #setContext, restores the initial state', () => {
+    state = {
+      error: {message: 'message', statusCode: 500, type: 'type'},
+      isLoading: true,
+      requestId: 'request-id',
+      facets: [buildMockCommerceRegularFacetResponse()],
+      products: [
+        buildMockProduct({ec_name: 'product1'}),
+        buildMockProduct({ec_name: 'product2'}),
+      ],
+      queryExecuted: 'query',
+      responseId: 'response-id',
+    };
+    const finalState = commerceSearchReducer(
+      state,
+      setContext({
+        country: 'CA',
+        currency: 'CAD',
+        language: 'fr',
+        view: {url: '/'},
+      })
+    );
+
+    expect(finalState).toEqual(getCommerceSearchInitialState());
   });
 });

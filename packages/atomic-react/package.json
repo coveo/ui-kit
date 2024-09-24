@@ -12,7 +12,7 @@
   "scripts": {
     "build": "nx build",
     "clean": "rimraf -rf dist",
-    "build:addExtensions": "fix-esm-import-path src/components/stencil-generated",
+    "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
     "build:bundles:iife-cjs": "rollup --config rollup.config.mjs --bundleConfigAsCjs",
     "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:iife-cjs\"",
