@@ -3,13 +3,14 @@ import {
   createAction,
   createReducer,
 } from '@reduxjs/toolkit';
-import {getOrganizationEndpoints} from '../api/platform-client';
 import * as Store from '../app/store';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions';
+import {ConfigurationState} from '../features/configuration/configuration-state';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {configuration} from './common-reducers';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {getSampleEngineConfiguration} from './engine-configuration';
+import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 jest.mock('pino', () => ({
   ...jest.requireActual('pino'),
@@ -24,7 +25,8 @@ jest.mock('pino', () => ({
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
-  let engine: CoreEngine;
+  let engine: CoreEngine<{}, ThunkExtraArguments, ConfigurationState>;
+  let organizationId: string;
 
   function initEngine() {
     const thunkArguments = buildMockThunkExtraArguments();
@@ -33,41 +35,72 @@ describe('engine', () => {
   }
 
   beforeEach(() => {
+    organizationId = 'orgId';
     options = {
       configuration: {
-        organizationId: 'orgId',
         accessToken: 'token',
-        platformUrl: 'https://www.coveo.com/',
+        environment: 'hipaa',
+        organizationId,
       },
       reducers: {},
     };
   });
 
-  it('when no reducers are specified, it still registers the configuration correctly', () => {
-    options.reducers = {};
+  it('registers the basic configuration', () => {
+    const {accessToken, environment, organizationId} = options.configuration;
     initEngine();
-
-    const {configuration} = engine.state;
-    expect(configuration.accessToken).toBe(options.configuration.accessToken);
-    expect(configuration.organizationId).toBe(
-      options.configuration.organizationId
-    );
-    expect(configuration.platformUrl).toBe(options.configuration.platformUrl);
+    expect(engine.state.configuration.accessToken).toBe(accessToken);
+    expect(engine.state.configuration.environment).toBe(environment);
+    expect(engine.state.configuration.organizationId).toBe(organizationId);
+    expect(engine.state.configuration.analytics.apiBaseUrl).toBeUndefined();
+    expect(engine.state.configuration.search.apiBaseUrl).toBeUndefined();
   });
 
-  it('when an #analytics configuration is specified, it registers the configuration', () => {
-    const enabled = true;
-    const originLevel2 = 'tab';
-    const originLevel3 = 'referrer';
+  it('when no reducers are specified, still registers the basic configuration correctly', () => {
+    options.reducers = {};
+    const {accessToken, environment, organizationId} = options.configuration;
+    initEngine();
+    expect(engine.state.configuration.accessToken).toBe(accessToken);
+    expect(engine.state.configuration.environment).toBe(environment);
+    expect(engine.state.configuration.organizationId).toBe(organizationId);
+    expect(engine.state.configuration.analytics.apiBaseUrl).toBeUndefined();
+    expect(engine.state.configuration.search.apiBaseUrl).toBeUndefined();
+  });
 
-    options.configuration.analytics = {enabled, originLevel2, originLevel3};
+  it('registers the analytics configuration if specified', () => {
+    options.configuration.analytics = {
+      analyticsMode: 'next',
+      anonymous: true,
+      deviceId: 'deviceId',
+      documentLocation: 'https://example.com/documentLocation',
+      enabled: true,
+      originLevel2: 'originLevel2',
+      originLevel3: 'originLevel3',
+      originContext: 'originContext',
+      proxyBaseUrl: 'https://example.com/analytics',
+      trackingId: 'trackingId',
+      source: {
+        '@coveo/atomic': '1.0.0',
+        '@coveo/quantic': '1.0.0',
+      },
+      userDisplayName: 'userDisplayName',
+    };
+
     initEngine();
 
     const {analytics} = engine.state.configuration;
+    const {proxyBaseUrl, ...restOfAnalyticsConfiguration} =
+      options.configuration.analytics;
 
-    expect(analytics.enabled).toBe(enabled);
-    expect(analytics.originLevel2).toBe(originLevel2);
-    expect(analytics.originLevel3).toBe(originLevel3);
+    expect(analytics).toEqual({
+      ...restOfAnalyticsConfiguration,
+      apiBaseUrl: proxyBaseUrl,
+    });
+  });
+
+  it('should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
+    options.configuration.analytics = {analyticsMode: 'next'};
+    expect(() => initEngine()).toThrowErrorMatchingSnapshot();
   });
 
   it('calling #enableAnalytics sets #analytics.enabled to true', () => {
@@ -123,70 +156,6 @@ describe('engine', () => {
     engine.addReducers({configuration});
 
     expect(stateListener).not.toHaveBeenCalled();
-  });
-
-  it.each([
-    {
-      organizationEndpoints: undefined,
-      platformUrl: undefined,
-      expectedMessage:
-        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
-    },
-
-    {
-      organizationEndpoints: undefined,
-      platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-      expectedMessage:
-        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
-    },
-    {
-      organizationEndpoints: undefined,
-      platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-      expectedMessage:
-        'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.',
-    },
-  ] as const)(
-    'should correctly log warnings when dealing with the organizationEndpoints and platformUrl option',
-    (testCase) => {
-      options.configuration = {
-        ...options.configuration,
-        ...testCase,
-      };
-      initEngine();
-      expect(engine.logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining(testCase.expectedMessage)
-      );
-    }
-  );
-
-  it('should not log warnings when the organizationEndpoints option is set and platformUrl is not set', () => {
-    options.configuration = {
-      ...options.configuration,
-      organizationEndpoints: getOrganizationEndpoints('orgId'),
-      platformUrl: undefined,
-    };
-    initEngine();
-    expect(engine.logger.warn).not.toHaveBeenCalled();
-  });
-
-  it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option.', () => {
-    options.configuration = {
-      ...options.configuration,
-      organizationId: 'a',
-      organizationEndpoints: getOrganizationEndpoints('b'),
-      platformUrl: undefined,
-    };
-    initEngine();
-    expect(engine.logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'There is a mismatch between the `organizationId` option (a) and the organization configured in the `organizationEndpoints` option (https://b.org.coveo.com).'
-      )
-    );
-  });
-
-  it('should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
-    options.configuration.analytics = {analyticsMode: 'next'};
-    expect(() => initEngine()).toThrowErrorMatchingSnapshot();
   });
 
   describe('with preloaded state', () => {

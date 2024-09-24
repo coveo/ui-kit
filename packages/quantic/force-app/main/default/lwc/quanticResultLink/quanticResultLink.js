@@ -52,14 +52,6 @@ export default class QuanticResultLink extends NavigationMixin(
    */
   @api target = '_self';
   /**
-   * Indicates the use case where this component is used.
-   * @api
-   * @type {'search'|'case-assist'}
-   * @deprecated The component uses the same Headless bundle as the interface it is bound to.
-   * @defaultValue `'search'`
-   */
-  @api useCase = 'search';
-  /**
    * A function used to set focus to the link.
    * @api
    * @type {VoidFunction}

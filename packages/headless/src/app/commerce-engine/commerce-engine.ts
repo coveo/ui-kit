@@ -1,14 +1,22 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
-import {getOrganizationEndpoints} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {
+  updateAnalyticsConfiguration,
+  updateBasicConfiguration,
+  updateProxyBaseUrl,
+} from '../../features/commerce/configuration/configuration-actions';
+import {configurationReducer} from '../../features/commerce/configuration/configuration-slice';
+import {ConfigurationState} from '../../features/commerce/configuration/configuration-state';
 import {setItems} from '../../features/commerce/context/cart/cart-actions';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 import {setContext} from '../../features/commerce/context/context-actions';
 import {contextReducer} from '../../features/commerce/context/context-slice';
 import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
+import {fieldSuggestionsOrderReducer} from '../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
+import {manualNumericFacetReducer} from '../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
 import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
 import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {queryReducer} from '../../features/commerce/query/query-slice';
@@ -16,14 +24,16 @@ import {recommendationsReducer} from '../../features/commerce/recommendations/re
 import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
 import {sortReducer} from '../../features/commerce/sort/sort-slice';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
+import {versionReducer} from '../../features/debug/version-slice';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
-  buildEngine,
+  buildCoreEngine,
   CoreEngineNext,
+  CoreState,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
@@ -44,9 +54,11 @@ const commerceEngineReducers = {
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
   facetOrder: facetOrderReducer,
+  fieldSuggestionsOrder: fieldSuggestionsOrderReducer,
   facetSearchSet: specificFacetSearchSetReducer,
   categoryFacetSearchSet: categoryFacetSearchSetReducer,
   commerceFacetSet: commerceFacetSetReducer,
+  manualNumericFacetSet: manualNumericFacetReducer,
   commerceContext: contextReducer,
   commerceQuery: queryReducer,
   cart: cartReducer,
@@ -64,8 +76,9 @@ export type CommerceEngineState =
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngineNext<
-    State & CommerceEngineState,
-    CommerceThunkExtraArguments
+    State & CoreState<ConfigurationState> & CommerceEngineState,
+    CommerceThunkExtraArguments,
+    ConfigurationState
   > {}
 
 /**
@@ -89,39 +102,67 @@ export function buildCommerceEngine(
   options: CommerceEngineOptions
 ): CommerceEngine {
   const logger = buildLogger(options.loggerOptions);
-  validateConfiguration(options.configuration, logger);
+  const {configuration} = options;
+  validateConfiguration(configuration, logger);
 
-  const commerceClient = createCommerceAPIClient(options.configuration, logger);
+  const commerceClient = createCommerceAPIClient(configuration, logger);
 
   const thunkArguments = {
-    ...buildThunkExtraArguments(options.configuration, logger),
+    ...buildThunkExtraArguments(configuration, logger),
     apiClient: commerceClient,
+  };
+
+  const reducers = {
+    ...commerceEngineReducers,
+    configuration: configurationReducer,
+    version: versionReducer,
   };
 
   const augmentedOptions: EngineOptions<CommerceEngineReducers> = {
     ...options,
-    configuration: {
-      ...options.configuration,
-      organizationEndpoints: {
-        ...getOrganizationEndpoints(
-          options.configuration.organizationId,
-          options.configuration.environment
-        ),
-        ...options.configuration.organizationEndpoints,
-      },
-    },
-    reducers: commerceEngineReducers,
+    reducers,
   };
 
-  const internalEngine = buildEngine(augmentedOptions, thunkArguments);
+  const internalEngine = buildCoreEngine(
+    augmentedOptions,
+    thunkArguments,
+    configurationReducer
+  );
+
   const {state: _, ...engine} = internalEngine;
 
-  engine.dispatch(setContext(options.configuration.context));
-  if (
-    options.configuration.cart !== undefined &&
-    options.configuration.cart.items !== undefined
-  ) {
-    engine.dispatch(setItems(options.configuration.cart.items));
+  const {
+    accessToken,
+    environment,
+    organizationId,
+    analytics,
+    proxyBaseUrl,
+    context,
+    cart,
+  } = configuration;
+
+  engine.dispatch(
+    updateBasicConfiguration({
+      accessToken,
+      environment,
+      organizationId,
+    })
+  );
+
+  engine.dispatch(updateAnalyticsConfiguration(analytics));
+
+  if (proxyBaseUrl !== undefined) {
+    engine.dispatch(
+      updateProxyBaseUrl({
+        proxyBaseUrl,
+      })
+    );
+  }
+
+  engine.dispatch(setContext(context));
+
+  if (cart?.items !== undefined) {
+    engine.dispatch(setItems(cart.items));
   }
 
   return redactEngine({
@@ -131,8 +172,10 @@ export function buildCommerceEngine(
       return internalEngine.state;
     },
 
-    get configuration() {
-      return internalEngine.state.configuration;
+    get configuration(): ConfigurationState {
+      return {
+        ...internalEngine.state.configuration,
+      };
     },
   });
 }

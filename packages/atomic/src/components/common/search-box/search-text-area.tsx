@@ -20,14 +20,12 @@ interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 function getPopupAttributes(props: Required<Props>['popup']) {
   return {
-    role: 'combobox',
     autocomplete: 'off',
     autocapitalize: 'off',
     autocorrect: 'off',
     ...(props.activeDescendant && {
       'aria-activedescendant': props.activeDescendant,
     }),
-    'aria-expanded': `${props.hasSuggestions && props.expanded}`,
     'aria-autocomplete': 'both',
     'aria-haspopup': 'true',
     'aria-controls': props.id,
@@ -82,8 +80,8 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   popup,
   ...defaultInputProps
 }) => (
-  <div class="grow flex overflow-hidden">
-    <div part="textarea-expander" class="grow grid overflow-hidden">
+  <div class="flex grow overflow-hidden">
+    <div part="textarea-expander" class="grid grow overflow-hidden">
       <textarea
         part="textarea"
         aria-label={ariaLabel}
@@ -135,10 +133,10 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
     </div>
 
     {loading && (
-      <div class="searchbox-button-wrapper flex items-center justify-center ml-2">
+      <div class="searchbox-button-wrapper ml-2 flex items-center justify-center">
         <span
           part="loading"
-          class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-2 grid place-items-center"
+          class="loading mr-2 grid h-5 w-5 animate-spin place-items-center rounded-full bg-gradient-to-r"
         ></span>
       </div>
     )}

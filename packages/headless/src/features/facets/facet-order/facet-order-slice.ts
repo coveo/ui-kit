@@ -1,4 +1,5 @@
 import {AnyAction, createReducer} from '@reduxjs/toolkit';
+import {setContext, setView} from '../../commerce/context/context-actions';
 import {Parameters} from '../../commerce/parameters/parameters-actions';
 import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions';
 import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
@@ -19,7 +20,9 @@ export const facetOrderReducer = createReducer(
       .addCase(restoreProductListingParameters, handleRestoreParameters)
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.facetOrder ?? state;
-      });
+      })
+      .addCase(setView, () => getFacetOrderInitialState())
+      .addCase(setContext, () => getFacetOrderInitialState());
   }
 );
 
@@ -38,5 +41,6 @@ function handleRestoreParameters(
     ...Object.keys(action.payload.nf ?? {}),
     ...Object.keys(action.payload.df ?? {}),
     ...Object.keys(action.payload.cf ?? {}),
+    ...Object.keys(action.payload.mnf ?? {}),
   ];
 }

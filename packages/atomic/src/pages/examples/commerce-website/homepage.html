@@ -42,7 +42,7 @@
             <atomic-layout-section section="main">
               <atomic-commerce-recommendation-list
                 id="popular_bought"
-                slot-id="3216339b-f776-4cb1-8a21-018c8ec0f08c"
+                slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
                 products-per-page="3"
               >
                 <atomic-product-template>
@@ -55,7 +55,7 @@
                     </atomic-product-section-visual>
                     <atomic-product-section-metadata>
                       <atomic-product-field-condition if-defined="ec_brand">
-                        <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+                        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
                       </atomic-product-field-condition>
                       <atomic-product-field-condition if-defined="ec_brand">
                         <atomic-product-rating field="ec_rating"></atomic-product-rating>
@@ -70,9 +70,15 @@
                   </template>
                 </atomic-product-template>
               </atomic-commerce-recommendation-list>
+            </atomic-layout-section>
+          </atomic-commerce-layout>
+        </atomic-commerce-recommendation-interface>
+        <atomic-commerce-recommendation-interface>
+          <atomic-commerce-layout>
+            <atomic-layout-section section="main">
               <atomic-commerce-recommendation-list
                 id="popular_viewed"
-                slot-id="36ed24b6-d7e0-4c32-8815-c456cc1928e7"
+                slot-id="d73afbd2-8521-4ee6-a9b8-31f064721e73"
                 products-per-page="3"
               >
               </atomic-commerce-recommendation-list>

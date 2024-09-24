@@ -2,7 +2,7 @@ import {
   CyHttpMessages,
   HttpResponseInterceptor,
   RouteMatcher,
-  StaticResponse, // eslint-disable-next-line node/no-unpublished-import
+  StaticResponse,
 } from 'cypress/types/net-stubbing';
 import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {buildMockRaw, buildMockResult} from '../fixtures/mock-result';
@@ -81,8 +81,9 @@ export const InterceptAliases = {
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
       ShowGeneratedAnswer: uaAlias('generatedAnswerShowAnswers'),
       HideGeneratedAnswer: uaAlias('generatedAnswerHideAnswers'),
-      GeneratedAnswerFeedbackSubmit: uaAlias('generatedAnswerFeedbackSubmit'),
-      RephraseGeneratedAnswer: uaAlias('rephraseGeneratedAnswer'),
+      GeneratedAnswerFeedbackSubmitV2: uaAlias(
+        'generatedAnswerFeedbackSubmitV2'
+      ),
       GeneratedAnswerSourceHover: uaAlias('generatedAnswerSourceHover'),
       GeneratedAnswerCopyToClipboard: uaAlias('generatedAnswerCopyToClipboard'),
       GeneratedAnswerCollapse: uaAlias('generatedAnswerCollapse'),
@@ -96,6 +97,11 @@ export const InterceptAliases = {
     },
     UndoQuery: uaAlias('undoQuery'),
     SearchboxSubmit: uaAlias('searchboxSubmit'),
+    RecentQueries: {
+      ClearRecentQueries: uaAlias('clearRecentQueries'),
+      ClickRecentQueries: uaAlias('recentQueriesClick'),
+    },
+    OmniboxAnalytics: uaAlias('omniboxAnalytics'),
   },
   NextAnalytics: {
     Qna: {
@@ -110,6 +116,7 @@ export const InterceptAliases = {
         Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
         ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
       },
+      SubmitRgaFeedback: nextAnalyticsAlias('Qna.SubmitRgaFeedback'),
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(
@@ -134,7 +141,7 @@ export const InterceptAliases = {
 };
 
 export const routeMatchers = {
-  analytics: '**/rest/ua/v15/analytics/*',
+  analytics: new RegExp(/\/rest(\/ua)?\/v15\/analytics\//i),
   nextAnalytics: '**/events/v1?*',
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
@@ -649,4 +656,18 @@ export function mockSearchWithNotifyTrigger(
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockQuerySuggestions(suggestions: string[]) {
+  cy.intercept(routeMatchers.querySuggest, (req) => {
+    req.continue((res) => {
+      res.body.completions = suggestions.map((suggestion) => ({
+        expression: suggestion,
+        highlighted: suggestion,
+      }));
+
+      res.body.responseId = crypto.randomUUID();
+      res.send();
+    });
+  }).as(InterceptAliases.QuerySuggestions.substring(1));
 }

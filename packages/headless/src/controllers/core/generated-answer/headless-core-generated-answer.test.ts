@@ -9,12 +9,12 @@ import {
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  setIsEnabled,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
   generatedAnswerAnalyticsClient,
   logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
-  logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
@@ -23,7 +23,7 @@ import {
   logOpenGeneratedAnswerSource,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
-  GeneratedAnswerFeedbackV2,
+  GeneratedAnswerFeedback,
 } from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice';
 import {
@@ -129,15 +129,8 @@ describe('generated answer', () => {
     expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
-  it('#sendFeedback dispatches the V1 actions', () => {
-    const exampleFeedback = 'notAccurate';
-    generatedAnswer.sendFeedback(exampleFeedback);
-    expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
-    expect(logGeneratedAnswerFeedback).toHaveBeenCalledWith(exampleFeedback);
-  });
-
   it('#sendFeedback dispatches the V2 actions', () => {
-    const exampleFeedback: GeneratedAnswerFeedbackV2 = {
+    const exampleFeedback: GeneratedAnswerFeedback = {
       helpful: true,
       documented: 'yes',
       correctTopic: 'no',
@@ -147,15 +140,6 @@ describe('generated answer', () => {
     generatedAnswer.sendFeedback(exampleFeedback);
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
     expect(logGeneratedAnswerFeedback).toHaveBeenCalledWith(exampleFeedback);
-  });
-
-  it('#sendDetailedFeedback dispatches the right actions', () => {
-    const exampleDetails = 'Example details';
-    generatedAnswer.sendDetailedFeedback(exampleDetails);
-    expect(sendGeneratedAnswerFeedback).toHaveBeenCalled();
-    expect(logGeneratedAnswerDetailedFeedback).toHaveBeenCalledWith(
-      exampleDetails
-    );
   });
 
   it('#logCitationClick dispatches analytics action', () => {
@@ -241,6 +225,52 @@ describe('generated answer', () => {
     });
   });
 
+  describe('#enable', () => {
+    describe('when already enabled', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.enable();
+        expect(setIsEnabled).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when not enabled', () => {
+      it('should dispatch the setIsEnabled action', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.enable();
+
+        expect(setIsEnabled).toHaveBeenCalledWith(true);
+      });
+    });
+  });
+
+  describe('#disable', () => {
+    describe('when already disabled', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.disable();
+        expect(setIsEnabled).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when not disabled', () => {
+      it('should dispatch the setIsEnabled action', () => {
+        engine = buildEngineWithGeneratedAnswer({isEnabled: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.disable();
+
+        expect(setIsEnabled).toHaveBeenCalledWith(false);
+      });
+    });
+  });
+
   describe('#expand', () => {
     describe('when already expanded', () => {
       it('should not make any changes', () => {
@@ -306,7 +336,7 @@ describe('generated answer', () => {
     describe('when #responseFormat is set', () => {
       it('should dispatch updateResponseFormat action', () => {
         const responseFormat: GeneratedResponseFormat = {
-          answerStyle: 'concise',
+          contentFormat: ['text/markdown'],
         };
         initGeneratedAnswer({initialState: {responseFormat}});
         expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);

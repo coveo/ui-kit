@@ -111,7 +111,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: RegularFacetState;
 
@@ -124,17 +123,27 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
+  private unsubscribeFacetController?: () => void | undefined;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+    this.ensureSubscribed();
     this.initAriaLive();
     this.initPopover();
-    this.registerFacet();
+  }
+
+  public connectedCallback(): void {
+    this.ensureSubscribed();
+  }
+
+  public disconnectedCallback(): void {
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
   }
 
   public componentShouldUpdate(
@@ -336,10 +345,6 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     return !this.facetState.values.length;
   }
 
-  private registerFacet() {
-    this.bindings.store.registerFacet('facets', this.facetInfo);
-  }
-
   private initPopover() {
     initializePopover(this.host, {
       ...this.facetInfo,
@@ -395,6 +400,15 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     return (
       propName === 'facetState' &&
       typeof (state as RegularFacetState)?.facetId === 'string'
+    );
+  }
+
+  private ensureSubscribed() {
+    if (this.unsubscribeFacetController) {
+      return;
+    }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
     );
   }
 }

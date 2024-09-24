@@ -65,7 +65,7 @@ describe('quantic-standalone-search-box', () => {
           Expect.displayInputSearchBox(true, textarea);
           Expect.displaySearchButton(true);
           Expect.placeholderContains('Search', textarea);
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
         });
 
         scope('when setting suggestions', () => {
@@ -89,10 +89,10 @@ describe('quantic-standalone-search-box', () => {
         });
 
         scope('when submitting a search', () => {
-          const query = 'test';
+          const query = 'another query';
           visitStandaloneSearchBox({textarea});
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.typeInSearchBox(query, textarea);
           Expect.displayClearButton(true);
           Actions.submitSearch();
@@ -106,7 +106,7 @@ describe('quantic-standalone-search-box', () => {
           mockSuggestions();
           visitStandaloneSearchBox({textarea});
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.typeInSearchBox(query, textarea);
           Actions.pressEnter(textarea);
           Expect.displayClearButton(true);
@@ -119,7 +119,7 @@ describe('quantic-standalone-search-box', () => {
           const query = '<script>alert("test")</script>';
           visitStandaloneSearchBox({textarea});
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.typeInSearchBox(query, textarea);
           Expect.displayClearButton(true);
           Actions.submitSearch();
@@ -134,7 +134,7 @@ describe('quantic-standalone-search-box', () => {
             const query = '%test';
             visitStandaloneSearchBox({textarea});
 
-            Expect.inputInitialized(textarea);
+            Expect.inputInitialized();
             Actions.typeInSearchBox(query, textarea);
             Expect.displayClearButton(true);
             Actions.submitSearch();
@@ -176,7 +176,7 @@ describe('quantic-standalone-search-box', () => {
             textarea,
           });
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.focusSearchBox(textarea);
           cy.wait(InterceptAliases.QuerySuggestions).then(() => {
             Expect.displaySuggestionList(true);
@@ -192,7 +192,7 @@ describe('quantic-standalone-search-box', () => {
             textarea,
           });
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.typeInSearchBox(query, textarea);
           Expect.displayClearButton(true);
           Actions.submitSearch();
@@ -212,7 +212,7 @@ describe('quantic-standalone-search-box', () => {
           });
           interceptQuerySuggestWithParam(requestParams, interceptAlias);
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.focusSearchBox(textarea);
 
           Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
@@ -228,7 +228,7 @@ describe('quantic-standalone-search-box', () => {
           });
           interceptQuerySuggestWithParam(requestParams, interceptAlias);
 
-          Expect.inputInitialized(textarea);
+          Expect.inputInitialized();
           Actions.focusSearchBox(textarea);
 
           Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
@@ -244,7 +244,7 @@ describe('quantic-standalone-search-box', () => {
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
         visitStandaloneSearchBox({textarea: true});
 
-        Expect.inputInitialized(true);
+        Expect.inputInitialized();
         Actions.focusSearchBox(true);
         Actions.keyboardTypeInSearchBox(longQuery, true);
         Expect.inputStyleMatches('white-space: pre-wrap;', true);
@@ -255,7 +255,7 @@ describe('quantic-standalone-search-box', () => {
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
         visitStandaloneSearchBox({textarea: true});
 
-        Expect.inputInitialized(true);
+        Expect.inputInitialized();
         Actions.focusSearchBox(true);
         Actions.keyboardTypeInSearchBox(longQuery, true);
         Actions.blurSearchBox(true);

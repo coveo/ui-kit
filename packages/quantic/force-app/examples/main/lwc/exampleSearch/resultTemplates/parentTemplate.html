@@ -1,0 +1,34 @@
+<template>
+  <div class="slds-border_bottom">
+    <c-quantic-result-template is-any-preview-open={isAnyPreviewOpen}
+      result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}>
+      <c-quantic-result-label slot="label" result={result}></c-quantic-result-label>
+      <div slot="badges" class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xx-small slds-m-right_small">
+        <div class="slds-m-right_xx-small">
+          <c-quantic-result-tag variant="recommended" result={result}></c-quantic-result-tag>
+        </div>
+        <c-quantic-result-tag variant="featured" result={result}></c-quantic-result-tag>
+      </div>
+      <template if:true={resultHasPreview}>
+        <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
+      </template>
+      <p slot="date" class="slds-size_xx-small">
+        <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+      </p>
+      <div slot="title" class="slds-truncate">
+        <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+      </div>
+      <div slot="excerpt">
+        <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
+      </div>
+      <div slot="bottom-metadata" class="slds-m-top_x-small">
+        <c-quantic-result-printable-uri engine-id={engineId} result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+      </div>
+      <div slot="children">
+        <c-quantic-result-children engine-id={engineId} template-id="myChildTemplate" collection={collection}
+          folded-result-list-controller={foldedResultListController}
+          result-templates-manager={resultTemplatesManager}></c-quantic-result-children>
+      </div>
+    </c-quantic-result-template>
+  </div>
+</template>

@@ -15,11 +15,9 @@ import {
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  setIsEnabled,
 } from '../../../features/generated-answer/generated-answer-actions';
-import {
-  GeneratedAnswerFeedback,
-  GeneratedAnswerFeedbackV2,
-} from '../../../features/generated-answer/generated-answer-analytics-actions';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
@@ -58,11 +56,6 @@ export interface GeneratedAnswer extends Controller {
    */
   dislike(): void;
   /**
-   * Re-executes the query to generate the answer in the specified format.
-   * @param responseFormat - The formatting options to apply to generated answers.
-   */
-  rephrase(responseFormat: GeneratedResponseFormat): void;
-  /**
    * Opens the modal to provide feedback about why the generated answer was not relevant.
    */
   openFeedbackModal(): void;
@@ -74,15 +67,7 @@ export interface GeneratedAnswer extends Controller {
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
-  // TODO: Update feedback type, to change in TODO: SFINT-5585
-  sendFeedback(
-    feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
-  ): void;
-  /**
-   * Sends detailed feedback about why the generated answer was not relevant.
-   * @param details - Details on why the generated answer was not relevant.
-   */
-  sendDetailedFeedback(details: string): void;
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param id - The ID of the clicked citation.
@@ -105,6 +90,14 @@ export interface GeneratedAnswer extends Controller {
    */
   collapse(): void;
   /**
+   * Enables the generated answer.
+   */
+  enable(): void;
+  /**
+   * Disables the generated answer.
+   */
+  disable(): void;
+  /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
   logCopyToClipboard(): void;
@@ -120,9 +113,8 @@ export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer: () => CustomAction;
   logDislikeGeneratedAnswer: () => CustomAction;
   logGeneratedAnswerFeedback: (
-    feedback: GeneratedAnswerFeedback | GeneratedAnswerFeedbackV2
+    feedback: GeneratedAnswerFeedback
   ) => CustomAction;
-  logGeneratedAnswerDetailedFeedback: (details: string) => CustomAction;
   logOpenGeneratedAnswerSource: (citationId: string) => CustomAction;
   logHoverCitation: (
     citationId: string,
@@ -131,9 +123,6 @@ export interface GeneratedAnswerAnalyticsClient {
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
   logCopyGeneratedAnswer: () => CustomAction;
-  logRephraseGeneratedAnswer: (
-    responseFormat: GeneratedResponseFormat
-  ) => LegacySearchAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;
@@ -145,6 +134,10 @@ export interface GeneratedAnswerPropsInitialState {
      * Sets the component visibility state on load.
      */
     isVisible?: boolean;
+    /**
+     * Sets the component enabled state on load.
+     */
+    isEnabled?: boolean;
     /**
      * The initial formatting options applied to generated answers when the controller first loads.
      */
@@ -240,11 +233,6 @@ export function buildCoreGeneratedAnswer(
       dispatch(sendGeneratedAnswerFeedback());
     },
 
-    sendDetailedFeedback(details) {
-      dispatch(analyticsClient.logGeneratedAnswerDetailedFeedback(details));
-      dispatch(sendGeneratedAnswerFeedback());
-    },
-
     logCitationClick(citationId: string) {
       dispatch(analyticsClient.logOpenGeneratedAnswerSource(citationId));
     },
@@ -253,10 +241,6 @@ export function buildCoreGeneratedAnswer(
       dispatch(
         analyticsClient.logHoverCitation(citationId, citationHoverTimeMs)
       );
-    },
-
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      dispatch(updateResponseFormat(responseFormat));
     },
 
     show() {
@@ -284,6 +268,18 @@ export function buildCoreGeneratedAnswer(
       if (this.state.expanded) {
         dispatch(collapseGeneratedAnswer());
         dispatch(analyticsClient.logGeneratedAnswerCollapse());
+      }
+    },
+
+    enable() {
+      if (!this.state.isEnabled) {
+        dispatch(setIsEnabled(true));
+      }
+    },
+
+    disable() {
+      if (this.state.isEnabled) {
+        dispatch(setIsEnabled(false));
       }
     },
 

@@ -1,7 +1,7 @@
 import {SearchBoxSelectors} from './search-box-selectors';
 
 export function assertFocusSearchBox(
-  searchBoxSelector = SearchBoxSelectors.inputBox
+  searchBoxSelector = SearchBoxSelectors.textArea
 ) {
   it('should focus on the search box', () => {
     searchBoxSelector().should('be.focused');
@@ -13,7 +13,7 @@ export function assertFocusSearchBox(
  */
 export function assertHasText(
   text: string,
-  searchBoxSelector = SearchBoxSelectors.inputBox
+  searchBoxSelector = SearchBoxSelectors.textArea
 ) {
   it(`should contain "${text}"`, () => {
     searchBoxSelector().should('have.value', text);
@@ -22,7 +22,7 @@ export function assertHasText(
 
 export function assertHasTextWithoutIt(
   text: string,
-  searchBoxSelector = SearchBoxSelectors.inputBox
+  searchBoxSelector = SearchBoxSelectors.textArea
 ) {
   searchBoxSelector().should('have.value', text);
 }

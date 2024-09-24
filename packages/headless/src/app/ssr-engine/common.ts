@@ -1,7 +1,7 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers/controller/headless-controller';
 import {clone, mapObject} from '../../utils/utils';
-import {CoreEngine} from '../engine';
+import {CoreEngine, CoreEngineNext} from '../engine';
 import {
   ControllerDefinition,
   ControllerDefinitionsMap,
@@ -16,7 +16,7 @@ import {
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<TEngine, Controller>,
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
 >({
   definition,
   engine,
@@ -35,10 +35,10 @@ function buildControllerFromDefinition<
 
 export function buildControllerDefinitions<
   TControllerDefinitionsMap extends ControllerDefinitionsMap<
-    CoreEngine,
+    CoreEngine | CoreEngineNext,
     Controller
   >,
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
 >({
   definitionsMap,
   engine,
@@ -57,23 +57,20 @@ export function buildControllerDefinitions<
   ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
-export function createStaticState<
-  TSearchAction extends AnyAction,
-  TControllers extends ControllersMap,
->({
+export function createStaticState<TSearchAction extends UnknownAction>({
   searchAction,
   controllers,
 }: {
   searchAction: TSearchAction;
-  controllers: TControllers;
+  controllers: ControllersMap;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromControllers<TControllers>
+  InferControllerStaticStateMapFromControllers<ControllersMap>
 > {
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromControllers<TControllers>,
+    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
     searchAction: clone(searchAction),
   };
 }

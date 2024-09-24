@@ -6,6 +6,7 @@ import {
   ChildProduct,
 } from '../../../api/commerce/common/product';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+import {setContext, setView} from '../context/context-actions';
 import {
   QuerySearchCommerceAPIThunkReturn,
   executeSearch,
@@ -87,7 +88,9 @@ export const commerceSearchReducer = createReducer(
         };
 
         products.splice(currentParentIndex, 1, newParent);
-      });
+      })
+      .addCase(setView, () => getCommerceSearchInitialState())
+      .addCase(setContext, () => getCommerceSearchInitialState());
   }
 );
 

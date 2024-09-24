@@ -1,0 +1,197 @@
+<template>
+  <div
+    class="search__container slds-p-around_medium"
+    onquantic__registerresulttemplates={handleResultTemplateRegistration}
+  >
+    <c-quantic-search-interface
+      engine-id={engineId}
+      search-hub={searchHub}
+      pipeline={pipeline}
+      disable-state-in-url={disableStateInUrl}
+      skip-first-search={skipFirstSearch}
+    >
+      <c-quantic-aria-live></c-quantic-aria-live>
+      <div class="slds-grid slds-grid_vertical slds-grid_align-center">
+        <div
+          class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle"
+        >
+          <div class="slds-m-vertical_small">
+            <c-quantic-search-box engine-id={engineId}></c-quantic-search-box>
+          </div>
+        </div>
+        <div class="slds-col">
+          <div
+            class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center"
+          >
+            <div
+              class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 facets_container slds-show_large"
+            >
+              <c-quantic-facet-manager engine-id={engineId}>
+                <c-quantic-facet
+                  field="objecttype"
+                  label="Type"
+                  engine-id={engineId}
+                  data-cy="type"
+                ></c-quantic-facet>
+                <c-quantic-facet
+                  display-values-as="link"
+                  field="filetype"
+                  label="File Type"
+                  engine-id={engineId}
+                >
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="html"
+                    caption="HTML"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="txt"
+                    caption="Text file"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="pdf"
+                    caption="PDF"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="YouTubeVideo"
+                    caption="YouTube Video"
+                  ></c-quantic-facet-caption>
+                </c-quantic-facet>
+                <c-quantic-numeric-facet
+                  field="ytlikecount"
+                  label="Youtube Likes"
+                  with-input="integer"
+                  engine-id={engineId}
+                ></c-quantic-numeric-facet>
+                <c-quantic-timeframe-facet
+                  engine-id={engineId}
+                  field="date"
+                  label="Date"
+                  with-date-picker
+                >
+                  <c-quantic-timeframe unit="week"></c-quantic-timeframe>
+                  <c-quantic-timeframe unit="month"></c-quantic-timeframe>
+                  <c-quantic-timeframe
+                    amount="6"
+                    unit="month"
+                  ></c-quantic-timeframe>
+                  <c-quantic-timeframe unit="year"></c-quantic-timeframe>
+                </c-quantic-timeframe-facet>
+                <c-quantic-category-facet
+                  with-search
+                  field="geographicalhierarchy"
+                  label="Country"
+                  engine-id={engineId}
+                ></c-quantic-category-facet>
+              </c-quantic-facet-manager>
+            </div>
+            <div
+              class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12"
+            >
+              <c-quantic-tab-bar>
+                <c-quantic-tab
+                  label="All"
+                  engine-id={engineId}
+                  is-active
+                ></c-quantic-tab>
+                <c-quantic-tab
+                  label="Articles"
+                  expression="@sfkbid"
+                  engine-id={engineId}
+                ></c-quantic-tab>
+                <c-quantic-tab
+                  label="Issues"
+                  expression='@jisourcetype AND NOT @jidocumenttype="WorkLog"'
+                  engine-id={engineId}
+                ></c-quantic-tab>
+                <c-quantic-tab
+                  label="Community"
+                  expression='@objecttype=="Message"'
+                  engine-id={engineId}
+                ></c-quantic-tab>
+                <c-quantic-tab
+                  label="Files"
+                  expression="@boxdocumenttype==File OR @spcontenttype==Document"
+                  engine-id={engineId}
+                ></c-quantic-tab>
+                <c-quantic-tab
+                  label="Thread"
+                  expression="@source==iNaturalistTaxons"
+                  engine-id={engineId}
+                ></c-quantic-tab>
+              </c-quantic-tab-bar>
+              <div class="slds-grid slds-var-m-top_small">
+                <c-quantic-summary
+                  class="slds-var-m-vertical_x-small slds-small-size_8-of-12 slds-large-size_7-of-12"
+                  engine-id={engineId}
+                >
+                </c-quantic-summary>
+                <c-quantic-sort
+                  class="slds-var-m-vertical_xxx-small slds-large-size_5-of-12 slds-show_large"
+                  engine-id={engineId}
+                >
+                </c-quantic-sort>
+                <div
+                  class="slds-small-size_4-of-12 slds-clearfix slds-hide_large"
+                >
+                  <div class="slds-float_right">
+                    <c-quantic-refine-toggle
+                      engine-id={engineId}
+                      full-screen
+                    ></c-quantic-refine-toggle>
+                  </div>
+                </div>
+              </div>
+              <c-quantic-query-error
+                engine-id={engineId}
+              ></c-quantic-query-error>
+              <c-quantic-breadcrumb-manager
+                engine-id={engineId}
+              ></c-quantic-breadcrumb-manager>
+              <c-quantic-did-you-mean
+                engine-id={engineId}
+              ></c-quantic-did-you-mean>
+              <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>
+              <div class="slds-var-m-vertical_small">
+                <c-quantic-smart-snippet
+                  engine-id={engineId}
+                ></c-quantic-smart-snippet>
+              </div>
+              <div class="slds-var-m-vertical_small">
+                <c-quantic-smart-snippet-suggestions
+                  engine-id={engineId}
+                ></c-quantic-smart-snippet-suggestions>
+              </div>
+              <c-quantic-folded-result-list
+                engine-id={engineId}
+              ></c-quantic-folded-result-list>
+              <div class="slds-var-m-vertical_medium">
+                <c-quantic-pager engine-id={engineId}></c-quantic-pager>
+                <c-quantic-results-per-page
+                  engine-id={engineId}
+                ></c-quantic-results-per-page>
+              </div>
+            </div>
+            <div
+              class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12"
+            >
+              <div class="slds-m-bottom_large">
+                <c-quantic-recent-queries-list
+                  engine-id={engineId}
+                ></c-quantic-recent-queries-list>
+              </div>
+              <div class="slds-m-bottom_large">
+                <c-quantic-recent-results-list
+                  engine-id={engineId}
+                ></c-quantic-recent-results-list>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </c-quantic-search-interface>
+  </div>
+</template>

@@ -10,11 +10,11 @@ export enum SearchPageEvents {
   /**
    * Identifies the search event that gets logged when `enableAutoCorrection: true` and the query is automatically corrected.
    */
-  didyoumeanAutomatic = 'didyoumeanAutomatic',
+  didYouMeanAutomatic = 'didYouMeanAutomatic',
   /**
    * Identifies the search event that gets logged when the query suggestion with the corrected term is selected and successfully updates the query.
    */
-  didyoumeanClick = 'didyoumeanClick',
+  didYouMeanClick = 'didYouMeanClick',
   /**
    * Identifies the search event that gets logged when a sorting method is selected.
    */
@@ -201,18 +201,6 @@ export enum SearchPageEvents {
    */
   collapseSmartSnippetSuggestion = 'collapseSmartSnippetSuggestion',
   /**
-   * Identifies the custom event that gets logged when the user presses "show more" on a snippet suggestion for a related question.
-   *
-   * @deprecated
-   */
-  showMoreSmartSnippetSuggestion = 'showMoreSmartSnippetSuggestion',
-  /**
-   * Identifies the custom event that gets logged when the user presses "show less" on a snippet suggestion for a related question.
-   *
-   * @deprecated
-   */
-  showLessSmartSnippetSuggestion = 'showLessSmartSnippetSuggestion',
-  /**
    * Identifies the custom event that gets logged when a user clicks on the source of an answer in a smart snippet.
    */
   openSmartSnippetSource = 'openSmartSnippetSource',
@@ -304,10 +292,6 @@ export enum SearchPageEvents {
    * Identifies the search event that gets logged when the query context is updated as a result of updating one of the case context fields.
    */
   contextChanged = 'contextChanged',
-  /**
-   * Identifies the search event that gets logged when a user clicks a rephrase button in a generated answer.
-   */
-  rephraseGeneratedAnswer = 'rephraseGeneratedAnswer',
   /**
    * Identifies the custom event that gets logged when a user hovers over a generated answer citation.
    */

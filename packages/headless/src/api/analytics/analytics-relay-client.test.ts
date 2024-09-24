@@ -1,5 +1,6 @@
 import {createRelay} from '@coveo/relay';
 import {createMockState} from '../../test/mock-state';
+import {getAnalyticsNextApiBaseUrl} from '../platform-client';
 import {getRelayInstanceFromState} from './analytics-relay-client';
 import {getAnalyticsSource} from './analytics-selectors';
 
@@ -31,7 +32,10 @@ describe('#getRelayInstanceFromState', () => {
 
     expect(mockedCreateRelay).toHaveBeenCalledWith({
       mode: 'emit',
-      url: state.configuration.analytics.nextApiBaseUrl,
+      url: getAnalyticsNextApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
       token: state.configuration.accessToken,
       trackingId: state.configuration.analytics.trackingId,
       source: expect.arrayContaining(['baguette']),

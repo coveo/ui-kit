@@ -1,9 +1,9 @@
-import type {Page} from '@playwright/test';
+import {Page} from '@playwright/test';
+import {BasePageObject} from '../../../../../playwright-utils/base-page-object';
 
-export class NoProductsPageObject {
-  private page: Page;
+export class NoProductsPageObject extends BasePageObject<'atomic-commerce-no-products'> {
   constructor(page: Page) {
-    this.page = page;
+    super(page, 'atomic-commerce-no-products');
   }
 
   searchTips() {
@@ -12,8 +12,8 @@ export class NoProductsPageObject {
 
   ariaLive(query?: string) {
     const text = query
-      ? `We couldn't find anything for ${query}`
-      : 'No results';
+      ? `We couldn't find any product for ${query}`
+      : 'No products';
 
     return this.page.getByRole('status').filter({hasText: text});
   }
@@ -21,8 +21,8 @@ export class NoProductsPageObject {
   message(query?: string) {
     return this.page.locator('[part="no-results"]', {
       hasText: query
-        ? `We couldn't find anything for “${query}”`
-        : 'No results',
+        ? `We couldn't find any product for “${query}”`
+        : 'No products',
     });
   }
 }

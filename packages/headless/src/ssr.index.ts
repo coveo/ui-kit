@@ -1,10 +1,5 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-
-polyfillCryptoNode();
-
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 export type {Relay} from '@coveo/relay';
 
@@ -88,6 +83,7 @@ export type {
   InferBuildResult,
 } from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
+export type {NavigatorContext} from './app/navigatorContextProvider';
 
 export type {LogLevel} from './app/logger';
 
@@ -312,6 +308,12 @@ export type {
   Tab,
 } from './controllers/tab/headless-tab.ssr';
 export {defineTab} from './controllers/tab/headless-tab.ssr';
+
+export type {
+  TabManagerState,
+  TabManager,
+} from './controllers/tab-manager/headless-tab-manager.ssr';
+export {defineTabManager} from './controllers/tab-manager/headless-tab-manager.ssr';
 
 export type {
   FacetManagerPayload,
@@ -579,11 +581,6 @@ export type {
   ResultTemplate,
   ResultTemplateCondition,
 } from './features/result-templates/result-templates-manager';
-export {
-  platformUrl,
-  analyticsUrl,
-  getOrganizationEndpoints,
-} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';
 export type {
   CategoryFacetValueRequest,
@@ -625,5 +622,10 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
+
+export {
+  getOrganizationEndpoint,
+  getAnalyticsNextApiBaseUrl,
+} from './api/platform-client';
 
 export * from './utils/query-expression/query-expression';

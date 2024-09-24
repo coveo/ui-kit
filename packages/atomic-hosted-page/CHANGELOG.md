@@ -1,3 +1,30 @@
+## 1.0.0 (2024-09-18)
+
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(headless, atomic, quantic)!: remove deprecated functions/properties (#4350) ([8de5406](https://github.com/coveo/ui-kit/commits/8de5406)), closes [#4350](https://github.com/coveo/ui-kit/issues/4350)
+- feat!: remove the organizationEndpoints configuration option (#4339) ([d3e1041](https://github.com/coveo/ui-kit/commits/d3e1041)), closes [#4339](https://github.com/coveo/ui-kit/issues/4339)
+- chore: update tsconfigs to match node version (#4402) ([e5bf6b8](https://github.com/coveo/ui-kit/commits/e5bf6b8)), closes [#4402](https://github.com/coveo/ui-kit/issues/4402)
+
+### BREAKING CHANGE
+
+- remove deprecated functions/properties (#4350)
+- remove the organizationEndpoints configuration option (#4339)
+- update node engine definition in all exported packages (#4330)
+
+## 0.6.3 (2024-08-07)
+
+## 0.6.2 (2024-07-31)
+
+# 0.6.0 (2024-07-17)
+
+### Bug Fixes
+
+- **deps:** update stencil j:kit-282 ([#3833](https://github.com/coveo/ui-kit/issues/3833)) ([095ab4b](https://github.com/coveo/ui-kit/commits/095ab4b7ca97b21dc01fc488b9f91ee12f9705f1))
+
+### Features
+
+- **atomic:** add atomic-hosted-ui component ([#3649](https://github.com/coveo/ui-kit/issues/3649)) ([8d52a0d](https://github.com/coveo/ui-kit/commits/8d52a0db608161a3c7036bd6979dfe8db4910cc8))
+
 ## 0.5.46 (2024-06-06)
 
 ## 0.5.43 (2024-05-15)

@@ -1,0 +1,100 @@
+<template>
+  <lightning-modal-header
+    label={labels.helpUsImprove}
+  ></lightning-modal-header>
+  <lightning-modal-body>
+    <div class="slds-grid slds-grid_vertical slds-var-m-around_x-large feedback-modal-qna__body">
+      <div class="slds-col slds-grid slds-grid_align-center">
+        <div
+          class="slds-grid slds-grid_vertical slds-size_5-of-6 slds-grid_align-center"
+        >
+          <div
+            class="slds-text-title slds-text-title_bold slds-var-m-bottom_medium slds-col slds-size_1-of-1"
+          >
+            {labels.answerEvaluation}
+          </div>
+          <template for:each={questions} for:item="question">
+            <div
+              class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start slds-var-p-bottom_x-small feedback-modal-qna__question"
+              key={question.id}
+            >
+              <div class="slds-col slds-var-p-top_x-small">
+                {question.question}
+                <span class="slds-text-color_error" aria-hidden="true">&nbsp;*</span>
+              </div>
+              <div class="slds-col slds-grow-none">
+                <lightning-radio-group
+                  label={question.question}
+                  name={question.id}
+                  data-name={question.id}
+                  id={question.id}
+                  options={answerOptions}
+                  onchange={question.changeFn}
+                  type="button"
+                  variant="label-hidden"
+                  class="feedback-modal-qna__radio-group"
+                  message-when-value-missing={labels.requiredFeedbackQuestion}
+                  required
+                ></lightning-radio-group>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div
+        class="slds-col slds-grid slds-grid_align-center slds-var-m-top_x-large"
+      >
+        <div class="slds-size_5-of-6">
+          <lightning-input
+            type="text"
+            label={labels.documentUrl}
+            aria-label={labels.documentUrlExplanation}
+            name="documentUrl"
+            data-name="documentUrl"
+            id="documentUrl"
+            value={documentUrlValue}
+            onchange={documentUrlChangeHandler}
+          ></lightning-input>
+        </div>
+      </div>
+      <div
+        class="slds-col slds-grid slds-grid_align-center slds-var-m-top_x-large"
+      >
+        <div class="slds-size_5-of-6">
+          <lightning-textarea
+            label={labels.additionalNotes}
+            placeholder={labels.additionalNotesExplanation}
+            name="details"
+            data-name="details"
+            value={detailsValue}
+            onchange={detailsChangeHandler}
+          ></lightning-textarea>
+        </div>
+      </div>
+    </div>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <div class="slds-grid slds-grid_vertical-align-center slds-var-p-horizontal_small">
+      <div>
+        <span class="slds-text-color_error">*&nbsp;</span>
+        {labels.requiredFields}
+      </div>
+      <div class="slds-col_bump-left">
+        <lightning-button
+          data-cy="feedback-modal-qna-footer__skip"
+          class="skip slds-button"
+          variant="neutral"
+          label={labels.skip}
+          onclick={closeModal}
+        ></lightning-button>
+        <lightning-button
+          data-cy="feedback-modal-qna-footer__submit"
+          class="submit-feedback slds-button slds-var-m-left_x-small feedback-modal-qna-footer__submit"
+          variant="brand"
+          label={labels.sendFeedback}
+          onclick={handleSubmitFeedback}
+        ></lightning-button>
+      </div>
+    </div>
+  </lightning-modal-footer>
+</template>

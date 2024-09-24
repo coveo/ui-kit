@@ -32,7 +32,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  * A facet is a list of values for a certain field occurring in the results.
  * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
  *
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-commerce-timeframe-facet',
@@ -62,7 +62,6 @@ export class AtomicCommerceTimeframeFacet
    */
   @Prop({reflect: true}) field?: string;
 
-  @BindStateToController('facet')
   @State()
   public facetState!: DateFacetState;
 
@@ -87,11 +86,18 @@ export class AtomicCommerceTimeframeFacet
     return this.headerFocus;
   }
 
+  private unsubscribeFacetController?: () => void | undefined;
+
   public initialize() {
-    if (!this.facetState) {
+    if (!this.facet) {
       return;
     }
+    this.ensureSubscribed();
     this.registerFacetToStore();
+  }
+
+  public connectedCallback(): void {
+    this.ensureSubscribed();
   }
 
   @Listen('atomic/dateInputApply')
@@ -162,6 +168,8 @@ export class AtomicCommerceTimeframeFacet
     if (this.host.isConnected) {
       return;
     }
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
   }
 
   private get isHidden() {
@@ -180,11 +188,6 @@ export class AtomicCommerceTimeframeFacet
       element: this.host,
       isHidden: () => this.isHidden,
     };
-
-    this.bindings.store.registerFacet('dateFacets', {
-      ...facetInfo,
-      format: (value) => this.formatFacetValue(value),
-    });
 
     initializePopover(this.host, {
       ...facetInfo,
@@ -314,6 +317,15 @@ export class AtomicCommerceTimeframeFacet
           </FacetContainer>
         }
       </FacetGuard>
+    );
+  }
+
+  private ensureSubscribed() {
+    if (this.unsubscribeFacetController) {
+      return;
+    }
+    this.unsubscribeFacetController = this.facet.subscribe(
+      () => (this.facetState = this.facet.state)
     );
   }
 }

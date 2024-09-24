@@ -1,6 +1,6 @@
-import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
+import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
 import {CommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
@@ -8,16 +8,6 @@ import {html} from 'lit/static-html.js';
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstSearch: false,
 });
-
-const noProductsEngineConfig: Partial<CommerceEngineConfiguration> = {
-  preprocessRequest: (r) => {
-    const parsed = JSON.parse(r.body as string);
-    // eslint-disable-next-line @cspell/spellchecker
-    parsed.query = 'qnjssoptjhyalwnmrbgtyslsd';
-    r.body = JSON.stringify(parsed);
-    return r;
-  },
-};
 
 const fixedNumberOfProducts = (
   perPage: number
@@ -32,11 +22,6 @@ const fixedNumberOfProducts = (
 
 const {play: playNoInitialSearch} = wrapInCommerceInterface({
   skipFirstSearch: true,
-});
-
-const {play: playNoProducts} = wrapInCommerceInterface({
-  skipFirstSearch: false,
-  engineConfig: noProductsEngineConfig,
 });
 
 const {play: playFixedNumberOfProducts} = wrapInCommerceInterface({
@@ -66,15 +51,6 @@ export const NoInitialSearch: Story = {
   decorators: [(story) => story()],
   play: async (context) => {
     await playNoInitialSearch(context);
-  },
-};
-
-export const NoProducts: Story = {
-  name: 'No Products',
-  tags: ['test'],
-  decorators: [(story) => story()],
-  play: async (context) => {
-    await playNoProducts(context);
   },
 };
 

@@ -1,6 +1,14 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller';
-import {CoreEngine} from '../../engine';
+import {CoreEngine, CoreEngineNext} from '../../engine';
+
+export type HasKey<T, K extends PropertyKey> = T extends unknown
+  ? K extends keyof T
+    ? T[K] extends never
+      ? never
+      : true
+    : never
+  : never;
 
 export type HasKeys<TObject> = TObject extends {}
   ? keyof TObject extends never
@@ -44,7 +52,7 @@ export interface ControllerStaticStateMap {
 }
 
 export interface ControllerDefinitionWithoutProps<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
 > {
   /**
@@ -57,7 +65,7 @@ export interface ControllerDefinitionWithoutProps<
 }
 
 export interface ControllerDefinitionWithProps<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
   TProps,
 > {
@@ -72,21 +80,21 @@ export interface ControllerDefinitionWithProps<
 }
 
 export type ControllerDefinition<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
 > =
   | ControllerDefinitionWithoutProps<TEngine, TController>
   | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
 export interface ControllerDefinitionsMap<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
 > {
   [customName: string]: ControllerDefinition<TEngine, TController>;
 }
 
 export interface EngineDefinitionBuildResult<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
 > {
   engine: TEngine;
@@ -94,7 +102,7 @@ export interface EngineDefinitionBuildResult<
 }
 
 export interface EngineStaticState<
-  TSearchAction extends AnyAction,
+  TSearchAction extends UnknownAction,
   TControllers extends ControllerStaticStateMap,
 > {
   searchAction: TSearchAction;
@@ -102,28 +110,34 @@ export interface EngineStaticState<
 }
 
 export interface HydratedState<
-  TEngine extends CoreEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
 > extends EngineDefinitionBuildResult<TEngine, TControllers> {}
 
 export type InferControllerPropsFromDefinition<
-  TController extends ControllerDefinition<CoreEngine, Controller>,
+  TController extends ControllerDefinition<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
 > =
   TController extends ControllerDefinitionWithProps<
-    CoreEngine,
+    CoreEngine | CoreEngineNext,
     Controller,
     infer Props
   >
     ? Props
     : TController extends ControllerDefinitionWithoutProps<
-          CoreEngine,
+          CoreEngine | CoreEngineNext,
           Controller
         >
       ? {}
       : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
 > = {
   [K in keyof TControllers as HasKeys<
     InferControllerPropsFromDefinition<TControllers[K]>
@@ -133,14 +147,20 @@ export type InferControllerPropsMapFromDefinitions<
 };
 
 export type InferControllerFromDefinition<
-  TDefinition extends ControllerDefinition<CoreEngine, Controller>,
+  TDefinition extends ControllerDefinition<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
 > =
   TDefinition extends ControllerDefinition<infer _, infer TController>
     ? TController
     : never;
 
 export type InferControllersMapFromDefinition<
-  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
 export type InferControllerStaticStateFromController<
@@ -148,7 +168,10 @@ export type InferControllerStaticStateFromController<
 > = ControllerStaticState<TController['state']>;
 
 export type InferControllerStaticStateMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
 > = {
   [K in keyof TControllers]: InferControllerStaticStateFromController<
     InferControllerFromDefinition<TControllers[K]>

@@ -1,11 +1,11 @@
 import {Config} from '@stencil/core';
-// eslint-disable-next-line node/no-unpublished-import
 import html from 'rollup-plugin-html';
 
 // https://stenciljs.com/docs/config
 
 export const config: Config = {
   globalStyle: 'src/style/index.css',
+  globalScript: 'src/utils/atomic-loader.ts',
   taskQueue: 'async',
   outputTargets: [
     {
@@ -14,8 +14,18 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic',
-          dest: 'build/atomic',
+          src: '../../../../node_modules/@coveo/atomic/dist/atomic/assets',
+          dest: 'assets',
+          keepDirStructure: false,
+        },
+        {
+          src: '../../../../node_modules/@coveo/atomic/dist/atomic/lang',
+          dest: 'lang',
+          keepDirStructure: false,
+        },
+        {
+          src: '../../../../node_modules/@coveo/atomic/dist/atomic/themes',
+          dest: 'themes',
           keepDirStructure: false,
         },
       ],

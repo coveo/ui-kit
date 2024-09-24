@@ -58,11 +58,12 @@ export type CommerceBindings = CommonBindings<
   NonceBindings;
 
 /**
- * @internal
+ * @alpha
  * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
  * (except for `atomic-commerce-recommendation-list`, which must have
  * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
  * configurations.
+ * @slot default - The default slot where you can add child components to the search box.
  */
 @Component({
   tag: 'atomic-commerce-interface',
@@ -247,7 +248,7 @@ export class AtomicCommerceInterface
   }
 
   /**
-   * Initializes the connection with the headless commerce engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+   * Initializes the connection with the headless commerce engine using the specified options.
    */
   @Method() public initialize(options: CommerceInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -361,6 +362,9 @@ export class AtomicCommerceInterface
   }
 
   private initUrlManager() {
+    if (!this.reflectStateInUrl) {
+      return;
+    }
     this.urlManager = this.searchOrListing.urlManager({
       initialState: {fragment: this.fragment},
     });

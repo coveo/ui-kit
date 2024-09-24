@@ -21,15 +21,15 @@
                   onclick={handleToggleSmartSnippetAnswer} icon-position="right"></lightning-button>
               </div>
             </template>
-            <c-quantic-smart-snippet-source title={sourceTitle} uri={sourceUri}
+            <c-quantic-smart-snippet-source source={source}
               actions={smartSnippetSourceActions}></c-quantic-smart-snippet-source>
           </div>
         </lightning-card>
       </div>
       <div class="slds-var-m-bottom_small">
         <c-quantic-feedback success-message={labels.thankYouForFeedback}
-          hide-explain-why-button={hideExplainWhyFeedbackButton} onlike={like} ondislike={dislike}
-          onpressexplainwhy={explainWhy} state={feedbackState}></c-quantic-feedback>
+          hide-explain-why-button={hideExplainWhyFeedbackButton} onquantic__like={like} onquantic__dislike={dislike}
+          onquantic__pressexplainwhy={explainWhy} state={feedbackState}></c-quantic-feedback>
       </div>
     </template>
   </template>

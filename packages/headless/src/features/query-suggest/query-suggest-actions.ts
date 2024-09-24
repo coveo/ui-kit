@@ -4,6 +4,7 @@ import {
   getVisitorID,
   historyStore,
 } from '../../api/analytics/coveo-analytics-utils';
+import {getSearchApiBaseUrl} from '../../api/platform-client';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {
@@ -42,7 +43,7 @@ export interface QuerySuggestionID {
 
 export interface RegisterQuerySuggestActionCreatorPayload {
   /**
-   * A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 
@@ -70,7 +71,7 @@ export const unregisterQuerySuggest = createAction(
 
 export interface SelectQuerySuggestionActionCreatorPayload {
   /**
-   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 
@@ -91,7 +92,7 @@ export const selectQuerySuggestion = createAction(
 
 export interface ClearQuerySuggestActionCreatorPayload {
   /**
-   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 }
@@ -104,7 +105,7 @@ export const clearQuerySuggest = createAction(
 
 export interface FetchQuerySuggestionsActionCreatorPayload {
   /**
-   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`). Usually, this will be the ID of the search box controller that requests the query suggestions.
    */
   id: string;
 }
@@ -162,7 +163,12 @@ export const buildQuerySuggestRequest = async (
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
-    url: s.configuration.search.apiBaseUrl,
+    url:
+      s.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        s.configuration.organizationId,
+        s.configuration.environment
+      ),
     count: s.querySuggest[id]!.count,
     q: s.querySet[id],
     locale: s.configuration.search.locale,

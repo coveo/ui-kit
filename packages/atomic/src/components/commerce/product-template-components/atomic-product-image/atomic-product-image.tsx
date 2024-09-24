@@ -1,12 +1,12 @@
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, State, Method} from '@stencil/core';
-import {Bindings} from '../../../../components';
 import {
-  InitializeBindings,
   InitializableComponent,
+  InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
 import {ImageCarousel} from '../../../common/image-carousel/image-carousel';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 
 type Image = {
@@ -16,14 +16,14 @@ type Image = {
 
 /**
  * The `atomic-product-image` component renders an image from a product field.
- * @internal
+ * @alpha
  */
 @Component({
   tag: 'atomic-product-image',
   styleUrl: 'atomic-product-image.pcss',
   shadow: true,
 })
-export class AtomicProductImage implements InitializableComponent {
+export class AtomicProductImage implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   @ProductContext() private product!: Product;
   @Element() private host!: HTMLElement;

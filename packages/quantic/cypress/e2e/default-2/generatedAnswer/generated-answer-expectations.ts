@@ -66,6 +66,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(`${should(display)} display the copy to clipboard button`);
     },
 
+    displaySuccessMessage: (display: boolean) => {
+      selector
+        .successMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the success message`);
+    },
+
     likeButtonIsChecked: (selected: boolean) => {
       selector
         .likeButton()
@@ -100,20 +107,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .should(checked ? 'have.attr' : 'not.have.attr', 'checked', 'checked')
         .log(
           `the generated answer toggle button ${should(checked)} be checked`
-        );
-    },
-
-    generatedAnswerFooterRowsIsOnMultiline: (multilineDisplay: boolean) => {
-      selector
-        .generatedAnswerFooterRow()
-        .should(
-          multilineDisplay ? 'have.class' : 'not.have.class',
-          'slds-grid_vertical'
-        )
-        .log(
-          `the generated answer footer rows ${should(
-            multilineDisplay
-          )} be displayed on multiple lines with slds-grid_vertical`
         );
     },
 
@@ -194,17 +187,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    citationNumberContains: (index: number, value: string) => {
-      selector
-        .citationIndex(index)
-        .then((element) => {
-          expect(element.get(0).innerText).to.equal(value);
-        })
-        .log(
-          `the citation at the index ${index} should contain the number "${value}"`
-        );
-    },
-
     citationLinkContains: (index: number, value: string) => {
       selector
         .citationLink(index)
@@ -214,6 +196,20 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log(
           `the citation ar the index ${index} should contain link "${value}"`
         );
+    },
+
+    displayFeedbackModal: (display: boolean) => {
+      selector
+        .feedbackModal()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the feedback modal`);
+    },
+
+    displayDisclaimer: (display: boolean) => {
+      selector
+        .disclaimer()
+        .should(display ? 'exist' : 'not.exist')
+        .log(`${should(display)} display the disclaimer`);
     },
 
     sessionStorageContains: (key: string, expectedData: object) => {
@@ -236,60 +232,11 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    displayFeedbackModal: (display: boolean) => {
-      selector
-        .feedbackModal()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the feedback modal`);
-    },
-
-    displayRephraseButtons: (display: boolean) => {
-      selector
-        .rephraseButtons()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the rephrase buttons`);
-    },
-
-    displayRephraseLabel: (display: boolean) => {
-      selector
-        .rephraseLabel()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the rephrase label`);
-    },
-
-    displayRephraseButtonWithLabel: (label: string) => {
-      selector
-        .rephraseButtonByLabel(label)
-        .should('exist')
-        .log(`should display the rephrase button with the label ${label}`);
-    },
-
-    displayDisclaimer: (display: boolean) => {
-      selector
-        .disclaimer()
-        .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the disclaimer`);
-    },
-
     disclaimerContains: (text: string) => {
       selector
         .disclaimer()
         .contains(text)
         .log(`the disclaimer should contain "${text}"`);
-    },
-
-    rephraseButtonIsSelected: (name: string, selected: boolean) => {
-      selector
-        .rephraseButtonByLabel(name)
-        .should(
-          selected ? 'have.class' : 'not.have.class',
-          'radio-button--selected'
-        )
-        .should(
-          selected ? 'not.have.class' : 'have.class',
-          'radio-button--unselected'
-        )
-        .log(`the ${name} rephrase button ${should(selected)} be selected`);
     },
 
     citationTooltipIsDisplayed: (index: number, displayed: boolean) => {
@@ -336,38 +283,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         })
         .log(
           `the citation tooltip text at the index ${index} should contain the text "${text}"`
-        );
-    },
-
-    searchQueryContainsCorrectRephraseOption: (
-      expectedAnswerStyle: string,
-      expectedActionCause: string,
-      expectedContentFormat?: string[]
-    ) => {
-      cy.get<Interception>(InterceptAliases.Search)
-        .then((interception) => {
-          const body = interception?.request?.body;
-          const answerStyle =
-            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-              ?.responseFormat?.answerStyle;
-          const contentFormat =
-            body?.pipelineRuleParameters?.mlGenerativeQuestionAnswering
-              ?.responseFormat?.contentFormat;
-          const analyticsSection = body.analytics;
-
-          expect(answerStyle).to.eq(expectedAnswerStyle);
-          expect(analyticsSection).to.exist;
-          expect(analyticsSection).to.have.property(
-            'actionCause',
-            expectedActionCause
-          );
-          if (expectedContentFormat) {
-            expect(contentFormat).to.exist;
-            expect(contentFormat).to.deep.equal(expectedContentFormat);
-          }
-        })
-        .log(
-          `the search query should contain the correct ${expectedAnswerStyle} parameter`
         );
     },
 
@@ -521,14 +436,28 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
     logGeneratedAnswerFeedbackSubmit(
       streamId: string,
       payload: {
-        reason: string;
+        correctTopicValue: string;
+        documented: string;
+        hallucinationFree: string;
+        helpful: boolean;
+        readable: string;
+        documentUrl?: string;
         details?: string;
       }
     ) {
       logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmitV2,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
+          const {
+            helpful,
+            correctTopicValue,
+            documented,
+            hallucinationFree,
+            readable,
+            documentUrl,
+            details,
+          } = payload;
           expect(analyticsBody).to.have.property(
             'eventType',
             'generatedAnswer'
@@ -537,9 +466,23 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
-          expect(customData).to.have.property('reason', payload.reason);
-          if (payload.details) {
-            expect(customData).to.have.property('details', payload.details);
+          expect(customData).to.have.property('helpful', helpful);
+          expect(customData).to.have.property(
+            'correctTopicValue',
+            correctTopicValue
+          );
+          expect(customData).to.have.property('documented', documented);
+          expect(customData).to.have.property(
+            'hallucinationFree',
+            hallucinationFree
+          );
+          expect(customData).to.have.property('readable', readable);
+
+          if (documentUrl) {
+            expect(customData).to.have.property('documentUrl', documentUrl);
+          }
+          if (details) {
+            expect(customData).to.have.property('details', details);
           }
         }
       );
@@ -574,23 +517,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId
-          );
-        }
-      );
-    },
-
-    logRephraseGeneratedAnswer(expectedAnswerStyle: string, streamId: string) {
-      logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.RephraseGeneratedAnswer,
-        (analyticsBody: {customData: object; eventType: string}) => {
-          const customData = analyticsBody?.customData;
-          expect(customData).to.have.property(
-            'generativeQuestionAnsweringId',
-            streamId
-          );
-          expect(customData).to.have.property(
-            'rephraseFormat',
-            expectedAnswerStyle
           );
         }
       );

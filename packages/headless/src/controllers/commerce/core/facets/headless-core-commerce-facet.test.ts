@@ -115,6 +115,19 @@ describe('CoreCommerceFacet', () => {
       facet.toggleSelect(facetValue());
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
+
+    it('sets retrieveCount when provided in selection', () => {
+      const selection = {
+        ...facetValue(),
+        retrieveCount: 30,
+      };
+      facet.toggleSelect(selection);
+      expect(toggleSelectActionCreator).toHaveBeenCalledWith({
+        facetId,
+        selection,
+        retrieveCount: 30,
+      });
+    });
   });
 
   describe('#toggleExclude', () => {
@@ -415,7 +428,9 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#state', () => {
-    it('#facetId exposes the facetId', () => {
+    it('#facetId exposes the facetId passed as an option to the controller', () => {
+      state.commerceFacetSet = {};
+      options.facetResponseSelector = jest.fn();
       expect(facet.state.facetId).toBe(facetId);
     });
 

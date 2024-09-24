@@ -1,31 +1,28 @@
+/* eslint-disable @cspell/spellchecker */
 import {test, expect} from './fixture';
 
 test.describe('when there are results', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-no-products--with-results&viewMode=story'
-    );
+  test.beforeEach(async ({noProducts}) => {
+    await noProducts.load({story: 'with-results'});
   });
 
-  test('should not be visible', async ({noProducts}) => {
-    await expect(noProducts.ariaLive()).not.toBeVisible();
+  test('should have aria live before first query', async ({noProducts}) => {
+    await expect(noProducts.ariaLive()).toBeVisible();
   });
 
   test.describe('after executing a search query that yields no results', () => {
     test.beforeEach(async ({searchBox}) => {
+      await searchBox.noProducts();
       await searchBox.hydrated.waitFor();
-      // eslint-disable-next-line @cspell/spellchecker
       await searchBox.searchInput.fill('gahaiusdhgaiuewjfsf');
       await searchBox.submitButton.click();
     });
 
     test('should have aria live', async ({noProducts}) => {
-      // eslint-disable-next-line @cspell/spellchecker
       await expect(noProducts.ariaLive('gahaiusdhgaiuewjfsf')).toBeVisible();
     });
 
     test('should display no result message', async ({noProducts}) => {
-      // eslint-disable-next-line @cspell/spellchecker
       await expect(noProducts.message('gahaiusdhgaiuewjfsf')).toBeVisible();
     });
   });
@@ -48,11 +45,11 @@ test.describe('when there are results', () => {
   });
 });
 
-test.describe('when there are no results', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-no-products--default&viewMode=story'
-    );
+test.describe('when there are no products', () => {
+  test.beforeEach(async ({noProducts}) => {
+    await noProducts.noProducts();
+    await noProducts.load({story: 'default'});
+    await expect(noProducts.hydrated).toBeVisible();
   });
 
   test('should be present in the page', async ({noProducts}) => {

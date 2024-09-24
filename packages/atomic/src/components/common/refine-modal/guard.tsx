@@ -18,7 +18,7 @@ export const RefineToggleGuard: FunctionalComponent<RefineToggleGuardProps> = (
       <div
         part="placeholder"
         aria-hidden
-        class="rounded w-28 h-8 my-2 bg-neutral animate-pulse"
+        class="bg-neutral my-2 h-8 w-28 animate-pulse rounded"
       ></div>
     );
   }

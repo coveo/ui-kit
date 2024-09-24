@@ -4,6 +4,7 @@ import {CoreEngine} from '../../../app/engine';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {ConfigurationState} from '../../../features/configuration/configuration-state';
 import {
   resetAnswer,
   setId,
@@ -23,7 +24,6 @@ import {
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-  GeneratedResponseFormat,
 } from './headless-core-generated-answer';
 
 export interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
@@ -43,12 +43,13 @@ interface SubscribeStateManager {
   subscribeToSearchRequests: (
     engine: CoreEngine<
       GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+      ClientThunkExtraArguments<GeneratedAnswerAPIClient>,
+      ConfigurationState
     >
   ) => Unsubscribe;
 }
 
-const subscribeStateManager: SubscribeStateManager = {
+export const subscribeStateManager: SubscribeStateManager = {
   engines: {},
 
   setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => {
@@ -81,6 +82,10 @@ const subscribeStateManager: SubscribeStateManager = {
       ) {
         subscribeStateManager.engines[genQaEngineId].lastRequestId = requestId;
         subscribeStateManager.engines[genQaEngineId].abortController?.abort();
+        if (state.generatedAnswer.isEnabled === false) {
+          return;
+        }
+
         engine.dispatch(resetAnswer());
       }
 
@@ -92,6 +97,9 @@ const subscribeStateManager: SubscribeStateManager = {
         streamId !== subscribeStateManager.engines[genQaEngineId].lastStreamId
       ) {
         subscribeStateManager.engines[genQaEngineId].lastStreamId = streamId;
+        if (state.generatedAnswer.isEnabled === false) {
+          return;
+        }
         engine.dispatch(
           streamAnswer({
             setAbortControllerRef: (ref: AbortController) =>
@@ -126,10 +134,25 @@ export function buildSearchAPIGeneratedAnswer(
   const controller = buildCoreGeneratedAnswer(engine, analyticsClient, props);
   const getState = () => engine.state;
 
+  if (
+    engine.state.generatedAnswer.id &&
+    !subscribeStateManager.engines[engine.state.generatedAnswer.id]
+  ) {
+    subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
+      abortController: undefined,
+      lastRequestId: engine.state.search.requestId,
+      lastStreamId:
+        engine.state.search.extendedResults.generativeQuestionAnsweringId ?? '',
+    };
+  }
+
   if (!engine.state.generatedAnswer.id) {
     const genQaEngineId = randomID('genQA-', 12);
     engine.dispatch(setId({id: genQaEngineId}));
-    subscribeStateManager.engines[genQaEngineId] = {
+  }
+
+  if (!subscribeStateManager.engines[engine.state.generatedAnswer.id]) {
+    subscribeStateManager.engines[engine.state.generatedAnswer.id] = {
       abortController: undefined,
       lastRequestId: '',
       lastStreamId: '',
@@ -155,18 +178,6 @@ export function buildSearchAPIGeneratedAnswer(
       engine.dispatch(
         executeSearch({
           legacy: analyticsClient.logRetryGeneratedAnswer(),
-        })
-      );
-    },
-
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      controller.rephrase(responseFormat);
-      if (!isSearchEngine(engine)) {
-        return;
-      }
-      engine.dispatch(
-        executeSearch({
-          legacy: analyticsClient.logRephraseGeneratedAnswer(responseFormat),
         })
       );
     },

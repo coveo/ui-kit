@@ -1,4 +1,3 @@
-import {GeneratedAnswerStyle} from '@coveo/headless';
 import {RouteAlias, TagProps} from '../fixtures/fixture-common';
 import {TestFixture, generateLongTextAnswer} from '../fixtures/test-fixture';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
@@ -13,13 +12,6 @@ import {
   GeneratedAnswerSelectors,
   feedbackModalSelectors,
 } from './generated-answer-selectors';
-
-const rephraseOptions: {label: string; value: GeneratedAnswerStyle}[] = [
-  {label: 'Auto', value: 'default'},
-  {label: 'Bullet', value: 'bullet'},
-  {label: 'Steps', value: 'step'},
-  {label: 'Summary', value: 'concise'},
-];
 
 const testCitation = {
   id: 'some-id-123',
@@ -85,45 +77,6 @@ describe('Generated Answer Test Suites', () => {
         .init();
     }
 
-    describe('when an answerStyle prop is provided', () => {
-      const streamId = crypto.randomUUID();
-      const answerStyle = rephraseOptions[0];
-
-      beforeEach(() => {
-        mockStreamResponse(streamId, testMessagePayload);
-        setupGeneratedAnswerWithoutFirstIntercept(streamId, {
-          'answer-style': answerStyle.value,
-        });
-      });
-
-      it('should perform the first query with the provided answerStyle', () => {
-        GeneratedAnswerAssertions.assertAnswerStyle(answerStyle.value);
-      });
-
-      it('should keep the same button active when we click on the same answer style', () => {
-        const initialButtonLabel = answerStyle.label;
-
-        cy.wait(TestFixture.interceptAliases.Search);
-
-        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).click();
-
-        GeneratedAnswerSelectors.rephraseButton(initialButtonLabel).should(
-          'have.class',
-          'active'
-        );
-      });
-    });
-
-    describe('when NO answerStyle prop is provided', () => {
-      beforeEach(() => {
-        setupGeneratedAnswerWithoutFirstIntercept('dummy-stream-id');
-      });
-
-      it('should perform the first query with the "default" answerStyle', () => {
-        GeneratedAnswerAssertions.assertAnswerStyle('default');
-      });
-    });
-
     describe('when no stream ID is returned', () => {
       beforeEach(() => {
         setupGeneratedAnswer();
@@ -151,42 +104,68 @@ describe('Generated Answer Test Suites', () => {
         setupGeneratedAnswer(streamId);
         cy.wait(getStreamInterceptAlias(streamId));
         GeneratedAnswerSelectors.answer();
-        GeneratedAnswerSelectors.dislikeButton().click({force: true});
       });
 
       it('should open when an answer is disliked', () => {
+        GeneratedAnswerSelectors.dislikeButton().click({force: true});
+
+        feedbackModalSelectors.modalBody().should('exist');
+        feedbackModalSelectors.modalHeader().should('exist');
+        feedbackModalSelectors.modalFooter().should('exist');
+      });
+
+      it('should open when an answer is liked', () => {
+        GeneratedAnswerSelectors.likeButton().click({force: true});
+
         feedbackModalSelectors.modalBody().should('exist');
         feedbackModalSelectors.modalHeader().should('exist');
         feedbackModalSelectors.modalFooter().should('exist');
       });
 
       describe('select button', () => {
-        it('should submit proper reason', () => {
-          const notAccurateReason = feedbackModalSelectors.reason().eq(1);
-          notAccurateReason.should('have.id', 'notAccurate');
-          notAccurateReason.click({force: true});
+        it('should submit proper feedback', () => {
+          GeneratedAnswerSelectors.likeButton().click({force: true});
+
+          feedbackModalSelectors
+            .feedbackOption('correctTopic', 'Yes')
+            .click({force: true});
+          feedbackModalSelectors
+            .feedbackOption('hallucinationFree', 'No')
+            .click({force: true});
+
+          feedbackModalSelectors.submitButton().click();
+          feedbackModalSelectors.submitButton().should('exist');
+
+          feedbackModalSelectors
+            .feedbackOption('readable', 'Yes')
+            .click({force: true});
+          feedbackModalSelectors
+            .feedbackOption('documented', 'Yes')
+            .click({force: true});
 
           feedbackModalSelectors.submitButton().click();
           feedbackModalSelectors.submitButton().should('not.exist');
           feedbackModalSelectors.cancelButton().should('exist');
 
           cy.get(`${RouteAlias.UA}.3`)
-            .its('request.body.customData.reason')
-            .should('equal', 'notAccurate');
-        });
-      });
+            .its('request.body.customData.helpful')
+            .should('equal', true);
 
-      describe('add details text area', () => {
-        it('should be visible when other is selected', () => {
-          feedbackModalSelectors.detailsTextArea().should('not.exist');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.correctTopic')
+            .should('equal', 'yes');
 
-          const reasons = feedbackModalSelectors.reason();
-          reasons.last().should('have.id', 'other');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.hallucinationFree')
+            .should('equal', 'no');
 
-          reasons.last().click({force: true});
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.readable')
+            .should('equal', 'yes');
 
-          feedbackModalSelectors.detailsInput().should('exist');
-          feedbackModalSelectors.submitButton().should('be.enabled');
+          cy.get(`${RouteAlias.UA}.3`)
+            .its('request.body.customData.documented')
+            .should('equal', 'yes');
         });
       });
     });
@@ -344,14 +323,6 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerSelectors.copyButton().should('exist');
         });
 
-        it('should display rephrase options', () => {
-          rephraseOptions.forEach((option) =>
-            GeneratedAnswerSelectors.rephraseButton(option.label).should(
-              'exist'
-            )
-          );
-        });
-
         it('should display the disclaimer', () => {
           GeneratedAnswerSelectors.disclaimer().should('exist');
         });
@@ -394,26 +365,6 @@ describe('Generated Answer Test Suites', () => {
             GeneratedAnswerAssertions.assertLogCopyGeneratedAnswer();
           });
         });
-
-        describe('when a rephrase option is selected', () => {
-          rephraseOptions
-            .filter((option) => option.value !== 'default')
-            .forEach((option) => {
-              it(`should rephrase in "${option.value}" format`, () => {
-                GeneratedAnswerSelectors.rephraseButton(option.label).click();
-
-                GeneratedAnswerAssertions.assertAnswerStyle(option.value);
-              });
-
-              it(`should log rephraseGeneratedAnswer event with "${option.label}"`, () => {
-                GeneratedAnswerSelectors.rephraseButton(option.label).click();
-
-                GeneratedAnswerAssertions.assertLogRephraseGeneratedAnswer(
-                  option.value
-                );
-              });
-            });
-        });
       });
 
       describe('when a citation event is received', () => {
@@ -435,7 +386,6 @@ describe('Generated Answer Test Suites', () => {
             'have.text',
             testCitation.title
           );
-          GeneratedAnswerSelectors.citationIndex().should('have.text', '1');
           GeneratedAnswerSelectors.citation().should(
             'have.attr',
             'href',

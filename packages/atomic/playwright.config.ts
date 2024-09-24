@@ -13,7 +13,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
-    ? [['html'], ['list'], ['github']]
+    ? [['html'], ['list'], ['github'], ['blob']]
     : [['html'], ['list']],
   use: {
     trace: 'retain-on-failure',
@@ -26,17 +26,17 @@ export default defineConfig({
         viewport: DEFAULT_DESKTOP_VIEWPORT,
       },
     },
-    {
-      name: 'firefox',
-      use: {...devices['Desktop Firefox'], viewport: DEFAULT_DESKTOP_VIEWPORT},
-    },
-    {
-      name: 'webkit',
-      use: {...devices['Desktop Safari'], viewport: DEFAULT_DESKTOP_VIEWPORT},
-    },
+    // {
+    //   name: 'firefox',
+    //   use: {...devices['Desktop Firefox'], viewport: DEFAULT_DESKTOP_VIEWPORT},
+    // },
+    // {
+    //   name: 'webkit',
+    //   use: {...devices['Desktop Safari'], viewport: DEFAULT_DESKTOP_VIEWPORT},
+    // },
   ],
   expect: {
-    timeout: 20 * 1000,
+    timeout: 7 * 1000,
   },
   webServer: process.env.CI
     ? {

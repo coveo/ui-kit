@@ -545,12 +545,28 @@
     <name>quantic_SendFeedback</name>
   </customLabels>
   <customLabels>
+    <label>Requis avant de soumettre.</label>
+    <name>quantic_requiredFeedbackQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Champs requis</label>
+    <name>quantic_requiredFields</name>
+  </customLabels>
+  <customLabels>
+    <label>Ignorer</label>
+    <name>quantic_Skip</name>
+  </customLabels>
+  <customLabels>
     <label>Terminé</label>
     <name>quantic_Done</name>
   </customLabels>
   <customLabels>
     <label>Vos commentaires permettent d'améliorer l'expérience de recherche.</label>
     <name>quantic_YourFeedbackHelps</name>
+  </customLabels>
+  <customLabels>
+    <label>"Aidez-nous à nous améliorer! Envoyez-nous un commentaire supplémentaire"</label>
+    <name>quantic_FeedbackHelpUsImprove</name>
   </customLabels>
   <customLabels>
     <label>Merci pour vos commentaires!</label>
@@ -591,10 +607,6 @@
   <customLabels>
     <label>Aucun item lié</label>
     <name>quantic_NoRelatedItems</name>
-  </customLabels>
-  <customLabels>
-    <label>Ouvre dans un sous-onglet Salesforce</label>
-    <name>quantic_OpensInSalesforceSubTab</name>
   </customLabels>
   <customLabels>
     <label>Naviguer vers l'enregistrement</label>
@@ -733,30 +745,6 @@
     <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
   </customLabels>
   <customLabels>
-    <label>Reformuler</label>
-    <name>quantic_Rephrase</name>
-  </customLabels>
-  <customLabels>
-    <label>Instructions étape par étape</label>
-    <name>quantic_StepByStepInstructions</name>
-  </customLabels>
-  <customLabels>
-    <label>Étapes</label>
-    <name>quantic_Steps</name>
-  </customLabels>
-  <customLabels>
-    <label>Résumé avec des points</label>
-    <name>quantic_BulletPointSummary</name>
-  </customLabels>
-  <customLabels>
-    <label>Points</label>
-    <name>quantic_Bullets</name>
-  </customLabels>
-  <customLabels>
-    <label>Résumé</label>
-    <name>quantic_Summary</name>
-  </customLabels>
-  <customLabels>
     <label>La réponse générée est cachée</label>
     <name>quantic_GeneratedAnswerIsHidden</name>
   </customLabels>
@@ -781,19 +769,71 @@
     <name>quantic_RGADisclaimer</name>
   </customLabels>
   <customLabels>
-    <label>Auto</label>
-    <name>quantic_Auto</name>
-  </customLabels>
-  <customLabels>
-    <label>Automatique</label>
-    <name>quantic_Automatic</name>
-  </customLabels>
-  <customLabels>
     <label>Voir plus</label>
     <name>quantic_GeneratedAnswerShowMore</name>
   </customLabels>
   <customLabels>
     <label>Voir moins</label>
     <name>quantic_GeneratedAnswerShowLess</name>
+  </customLabels>
+  <customLabels>
+    <label>La configuration des options de tri personnalisées est invalide.</label>
+    <name>quantic_InvalidCustomSortConfiguration</name>
+  </customLabels>
+  <customLabels>
+    <label>Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée.</label>
+    <name>quantic_SearchFieldWithSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} suggestion de recherche a été trouvée, pour naviguer utilisez les flèches haut et bas.</label>
+    <name>quantic_SuggestionFound</name>
+  </customLabels>
+    <customLabels>
+    <label>{{0}} suggestions de recherche ont été trouvées, pour naviguer utilisez les flèches haut et bas.</label>
+    <name>quantic_SuggestionFound_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Il n'y a pas de suggestions de recherche.</label>
+    <name>quantic_SuggestionNotFound</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche récente,</label>
+    <name>quantic_RecentQueryAriaLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>Suggestion de recherche,</label>
+    <name>quantic_QuerySuggestionAriaLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse concerne-t-elle le bon sujet?</label>
+    <name>quantic_FeedbackQuestionTopic</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse est-elle exempte de contenu halluciné?</label>
+    <name>quantic_FeedbackQuestionHallucination</name>
+  </customLabels>
+  <customLabels>
+    <label>La question peut-elle être répondue par la documentation?</label>
+    <name>quantic_FeedbackQuestionDocumented</name>
+  </customLabels>
+  <customLabels>
+    <label>La réponse est-elle lisible?</label>
+    <name>quantic_FeedbackQuestionReadable</name>
+  </customLabels>
+  <customLabels>
+    <label>Incertain</label>
+    <name>quantic_FeedbackNotSure</name>
+  </customLabels>
+  <customLabels>
+    <label>Évaluation de la réponse</label>
+    <name>quantic_FeedbackAnswerEvaluation</name>
+  </customLabels>
+  <customLabels>
+    <label>Lien vers la bonne réponse</label>
+    <name>quantic_FeedbackDocumentUrl</name>
+  </customLabels>
+  <customLabels>
+    <label>Veuillez fournir un lien vers la bonne réponse</label>
+    <name>quantic_FeedbackDocumentUrlExplanation</name>
   </customLabels>
 </Translations>

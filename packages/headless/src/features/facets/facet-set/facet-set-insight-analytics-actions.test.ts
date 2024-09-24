@@ -1,8 +1,10 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {buildMockInsightEngine} from '../../../test/mock-engine-v2';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
+import {getConfigurationInitialState} from '../../configuration/configuration-state';
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
@@ -39,39 +41,37 @@ jest.mock('coveo.analytics', () => {
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleFacetId = 'exampleFacetId';
-const exampleField = 'exampleField';
-const exampleValue = 'exampleValue';
-const exampleSortCriterion = 'score';
+describe('facet set insight analytics actions', () => {
+  let engine: InsightEngine;
 
-const insightCaseContextState = {
-  caseContext: {
-    Case_Subject: exampleSubject,
-    Case_Description: exampleDescription,
-  },
-  caseId: exampleCaseId,
-  caseNumber: exampleCaseNumber,
-};
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleFacetId = 'exampleFacetId';
+  const exampleField = 'exampleField';
+  const exampleValue = 'exampleValue';
+  const exampleSortCriterion = 'score';
 
-const baseExpectedPayload = {
-  caseContext: {
-    Case_Subject: exampleSubject,
-    Case_Description: exampleDescription,
-  },
-  caseId: exampleCaseId,
-  caseNumber: exampleCaseNumber,
-  facetId: exampleFacetId,
-  facetField: exampleField,
-  facetTitle: `${exampleField}_${exampleFacetId}`,
-};
+  const baseExpectedPayload = {
+    caseContext: {
+      Case_Subject: exampleSubject,
+      Case_Description: exampleDescription,
+    },
+    caseId: exampleCaseId,
+    caseNumber: exampleCaseNumber,
+    facetId: exampleFacetId,
+    facetField: exampleField,
+    facetTitle: `${exampleField}_${exampleFacetId}`,
+  };
 
-describe('logBreadcrumbFacet', () => {
-  it('should log #logBreadcrumbFacet with the right payload', async () => {
-    const engine = buildMockInsightEngine(
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
+
+    engine = buildMockInsightEngine(
       buildMockInsightState({
         facetSet: {
           [exampleFacetId]: buildMockFacetSlice({
@@ -81,9 +81,20 @@ describe('logBreadcrumbFacet', () => {
             }),
           }),
         },
-        insightCaseContext: insightCaseContextState,
+        insightCaseContext: {
+          caseContext: {
+            Case_Subject: exampleSubject,
+            Case_Description: exampleDescription,
+          },
+          caseId: exampleCaseId,
+          caseNumber: exampleCaseNumber,
+        },
+        configuration,
       })
     );
+  });
+
+  it('should log #logBreadcrumbFacet with the right payload', async () => {
     await logFacetBreadcrumb({
       facetId: exampleFacetId,
       facetValue: exampleValue,
@@ -99,29 +110,12 @@ describe('logBreadcrumbFacet', () => {
       expectedPayload
     );
   });
-});
 
-describe('logFacetSelect', () => {
   it('should log #logFacetSelect with the right payload', async () => {
-    const engine = buildMockInsightEngine(
-      buildMockInsightState({
-        facetSet: {
-          [exampleFacetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              facetId: exampleFacetId,
-              field: exampleField,
-            }),
-          }),
-        },
-        insightCaseContext: insightCaseContextState,
-      })
-    );
-
-    await logFacetSelect({facetId: exampleFacetId, facetValue: exampleValue})()(
-      engine.dispatch,
-      () => engine.state,
-      {} as ThunkExtraArguments
-    );
+    await logFacetSelect({
+      facetId: exampleFacetId,
+      facetValue: exampleValue,
+    })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
     const expectedPayload = {
       ...baseExpectedPayload,
@@ -131,24 +125,8 @@ describe('logFacetSelect', () => {
     expect(mockLogFacetSelect).toHaveBeenCalledTimes(1);
     expect(mockLogFacetSelect.mock.calls[0][0]).toStrictEqual(expectedPayload);
   });
-});
 
-describe('logFacetDeselect', () => {
   it('should log #logFacetDeselect with the right payload', async () => {
-    const engine = buildMockInsightEngine(
-      buildMockInsightState({
-        facetSet: {
-          [exampleFacetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              facetId: exampleFacetId,
-              field: exampleField,
-            }),
-          }),
-        },
-        insightCaseContext: insightCaseContextState,
-      })
-    );
-
     await logFacetDeselect({
       facetId: exampleFacetId,
       facetValue: exampleValue,
@@ -164,24 +142,8 @@ describe('logFacetDeselect', () => {
       expectedPayload
     );
   });
-});
 
-describe('logFacetUpdateSort', () => {
   it('should log #logFacetUpdateSort with the right payload', async () => {
-    const engine = buildMockInsightEngine(
-      buildMockInsightState({
-        facetSet: {
-          [exampleFacetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              facetId: exampleFacetId,
-              field: exampleField,
-            }),
-          }),
-        },
-        insightCaseContext: insightCaseContextState,
-      })
-    );
-
     await logFacetUpdateSort({
       facetId: exampleFacetId,
       sortCriterion: exampleSortCriterion,
@@ -197,24 +159,8 @@ describe('logFacetUpdateSort', () => {
       expectedPayload
     );
   });
-});
 
-describe('logFacetClearAll', () => {
   it('should log #logFacetClearAll with the right payload', async () => {
-    const engine = buildMockInsightEngine(
-      buildMockInsightState({
-        facetSet: {
-          [exampleFacetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              facetId: exampleFacetId,
-              field: exampleField,
-            }),
-          }),
-        },
-        insightCaseContext: insightCaseContextState,
-      })
-    );
-
     await logFacetClearAll(exampleFacetId)()(
       engine.dispatch,
       () => engine.state,
@@ -228,24 +174,8 @@ describe('logFacetClearAll', () => {
       expectedPayload
     );
   });
-});
 
-describe('logFacetShowMore', () => {
   it('should log #logFacetShowMore with the right payload', async () => {
-    const engine = buildMockInsightEngine(
-      buildMockInsightState({
-        facetSet: {
-          [exampleFacetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              facetId: exampleFacetId,
-              field: exampleField,
-            }),
-          }),
-        },
-        insightCaseContext: insightCaseContextState,
-      })
-    );
-
     await logFacetShowMore(exampleFacetId)()(
       engine.dispatch,
       () => engine.state,
@@ -259,24 +189,8 @@ describe('logFacetShowMore', () => {
       expectedPayload
     );
   });
-});
 
-describe('logFacetShowLess', () => {
   it('should log #logFacetShowLess with the right payload', async () => {
-    const engine = buildMockInsightEngine(
-      buildMockInsightState({
-        facetSet: {
-          [exampleFacetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({
-              facetId: exampleFacetId,
-              field: exampleField,
-            }),
-          }),
-        },
-        insightCaseContext: insightCaseContextState,
-      })
-    );
-
     await logFacetShowLess(exampleFacetId)()(
       engine.dispatch,
       () => engine.state,

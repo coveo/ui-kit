@@ -3,10 +3,7 @@
     <div class="slds-form-element__control searchbox_floating-container">
       <div class="slds-combobox_container">
         <div
-          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          role="combobox"
+          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open"
         >
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
@@ -27,16 +24,19 @@
                 class={searchBoxInputClass}
                 placeholder={placeholder}
                 type="search"
-                onkeydown={onKeydown}
-                onkeyup={onKeyup}
+                onkeydown={onKeyDown}
                 onfocus={onFocus}
                 onblur={onBlur}
                 oninput={onTextAreaInput}
-                aria-autocomplete="list"
                 autocomplete="off"
-                role="textbox"
+                role="combobox"
+                aria-label={labels.searchFieldWithSuggestions}
+                aria-expanded={shouldDisplaySuggestions}
+                aria-autocomplete="list"
+                aria-haspopup="listbox"
                 style="white-space: nowrap"
                 data-cy="search-box-textarea"
+                data-value={inputValue}
               >
               </textarea>
 
@@ -46,7 +46,7 @@
                 >
                   <lightning-button-icon
                     onclick={clearInput}
-                    onkeydown={handleKeyDownOnClearButton}
+                    onmousedown={preventBlur}
                     icon-name="utility:close"
                     variant="bare"
                     class="slds-grid searchbox__clear-button"
@@ -79,11 +79,13 @@
               </template>
             </div>
           </div>
-          <template if:true={hasSuggestions}>
+          <template if:true={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
+              onquantic__selection={handleSelection}
               suggestions={suggestions}
-              onhighlightchange={handleHighlightChange}
-              onsuggestionselected={handleSuggestionSelection}
+              query={inputValue}
+              recent-queries={recentQueries}
+              max-number-of-suggestions={maxNumberOfSuggestions}
             ></c-quantic-search-box-suggestions-list>
           </template>
         </div>

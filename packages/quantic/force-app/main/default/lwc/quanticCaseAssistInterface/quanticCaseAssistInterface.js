@@ -46,31 +46,51 @@ export default class QuanticCaseAssistInterface extends LightningElement {
   isCaseStartLogged = false;
 
   connectedCallback() {
-    loadDependencies(this, HeadlessBundleNames.caseAssist).then(() => {
-      if (!getHeadlessBindings(this.engineId)?.engine) {
-        getHeadlessConfiguration().then((data) => {
-          if (data) {
-            this.engineOptions = {
-              configuration: {
-                ...JSON.parse(data),
-                caseAssistId: this.caseAssistId,
-                searchHub: this.searchHub,
-              },
-            };
-            setEngineOptions(
-              this.engineOptions,
-              CoveoHeadlessCaseAssist.buildCaseAssistEngine,
-              this.engineId,
-              this,
-              CoveoHeadlessCaseAssist
-            );
-            setInitializedCallback(this.initialize, this.engineId);
-          }
-        });
-      } else {
-        setInitializedCallback(this.initialize, this.engineId);
-      }
-    });
+    loadDependencies(this, HeadlessBundleNames.caseAssist)
+      .then(() => {
+        if (!getHeadlessBindings(this.engineId)?.engine) {
+          getHeadlessConfiguration()
+            .then((data) => {
+              if (data) {
+                const {organizationId, accessToken, ...rest} = JSON.parse(data);
+                this.engineOptions = {
+                  configuration: {
+                    organizationId,
+                    accessToken,
+                    caseAssistId: this.caseAssistId,
+                    searchHub: this.searchHub,
+                    analytics: {
+                      analyticsMode: 'legacy',
+                      ...(document.referrer && {
+                        originLevel3: document.referrer,
+                      }),
+                    },
+                    ...rest,
+                  },
+                };
+                setEngineOptions(
+                  this.engineOptions,
+                  CoveoHeadlessCaseAssist.buildCaseAssistEngine,
+                  this.engineId,
+                  this,
+                  CoveoHeadlessCaseAssist
+                );
+                setInitializedCallback(this.initialize, this.engineId);
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'Error loading Headless endpoint configuration',
+                error
+              );
+            });
+        } else {
+          setInitializedCallback(this.initialize, this.engineId);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading Headless dependencies', error);
+      });
   }
 
   /**

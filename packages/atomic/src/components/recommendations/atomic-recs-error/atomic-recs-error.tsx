@@ -1,6 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildRecommendationList,
+  getOrganizationEndpoint,
   RecommendationList,
   RecommendationListState,
 } from '@coveo/headless/recommendation';
@@ -62,19 +63,19 @@ export class AtomicRecsError implements InitializableComponent<RecsBindings> {
         i18n,
         engine: {
           state: {
-            configuration: {organizationId, platformUrl},
+            configuration: {organizationId, environment},
           },
         },
       },
     } = this;
-
+    const url = getOrganizationEndpoint(organizationId, environment);
     const hasError = !isNullOrUndefined(error);
 
     if (hasError) {
       this.ariaMessage = getAriaMessageFromErrorType(
         i18n,
         organizationId,
-        platformUrl,
+        url,
         error?.type
       );
     }
@@ -87,7 +88,7 @@ export class AtomicRecsError implements InitializableComponent<RecsBindings> {
           <QueryErrorDescription
             i18n={i18n}
             organizationId={organizationId}
-            url={platformUrl}
+            url={url}
           />
           <QueryErrorShowMore
             link={<QueryErrorLink i18n={i18n} errorType={error?.type} />}

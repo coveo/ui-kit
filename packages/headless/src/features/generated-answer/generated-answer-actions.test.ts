@@ -8,11 +8,10 @@ import {
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
+  setIsEnabled,
 } from './generated-answer-actions';
 import {
-  GeneratedAnswerStyle,
   GeneratedContentFormat,
-  generatedAnswerStyle,
   generatedContentFormat,
 } from './generated-response-format';
 
@@ -66,19 +65,11 @@ describe('generated answer', () => {
   });
 
   describe('#updateResponseFormat', () => {
-    test.each(generatedAnswerStyle)(
-      'should accept a valid payload with style: "%i"',
-      (style: GeneratedAnswerStyle) => {
-        expect(() => updateResponseFormat({answerStyle: style})).not.toThrow();
-      }
-    );
-
     test.each(generatedContentFormat)(
       'should accept a valid payload with format: "%i"',
       (format: GeneratedContentFormat) => {
         expect(() =>
           updateResponseFormat({
-            answerStyle: 'default',
             contentFormat: [format],
           })
         ).not.toThrow();
@@ -99,6 +90,12 @@ describe('generated answer', () => {
   describe('#setIsVisible', () => {
     it('should accept a valid payload', () => {
       expect(() => setIsVisible(true)).not.toThrow();
+    });
+  });
+
+  describe('#setIsEnabled', () => {
+    it('should accept a valid payload', () => {
+      expect(() => setIsEnabled(true)).not.toThrow();
     });
   });
 

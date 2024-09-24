@@ -1,27 +1,81 @@
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '../../api/platform-client';
+import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart';
 import {ContextOptions} from '../../controllers/commerce/context/headless-context';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation';
 import {contextDefinition} from '../../features/commerce/context/context-validation';
-import {PlatformEnvironment} from '../../utils/url-utils';
 import {
+  nonEmptyString,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
+import {
+  AnalyticsConfiguration,
   EngineConfiguration,
   engineConfigurationDefinitions,
 } from '../engine-configuration';
 
 /**
- * The commerce engine configuration options.
+ * The commerce engine configuration.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {
+  /**
+   * The commerce analytics configuration.
+   */
+  analytics: Pick<
+    AnalyticsConfiguration,
+    'enabled' | 'proxyBaseUrl' | 'source' | 'trackingId'
+  >;
+  /**
+   * The commerce context options.
+   */
   context: ContextOptions;
+  /**
+   * The initial cart state to restore.
+   */
   cart?: CartInitialState;
-  environment?: PlatformEnvironment;
+  /**
+   * The base URL to use to proxy Coveo commerce requests (e.g., `https://example.com/commerce`).
+   *
+   * This is an advanced option that you should only set if you need to proxy Coveo commerce requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, no proxy is used and the Coveo commerce requests are sent directly to the Coveo platform through the
+   * platform [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
+   * `environment` values provided in your engine configuration (i.e.,
+   * `https://<organizationId>.org.coveo.com` or
+   * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and
+   * different from `prod`).
+   *
+   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the
+   * commerce engine will not work properly:
+   *
+   * - `POST` `/facet` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/commerce/v2/facet`](https://docs.coveo.com/en/103/api-reference/commerce-api#tag/Facet/operation/facet)
+   * - `POST` `/listing` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/commerce/v2/listing`](https://docs.coveo.com/en/103/api-reference/commerce-api#tag/Listings/operation/getListing)
+   * - `POST` `/productSuggest` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/commerce/v2/productSuggest`](https://docs.coveo.com/en/103/api-reference/commerce-api#tag/Search/operation/productSuggest)
+   * - `POST` `/querySuggest` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/commerce/v2/querySuggest`](https://docs.coveo.com/en/103/api-reference/commerce-api#tag/Search/operation/querySuggest)
+   * - `POST` `/recommendations` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/commerce/v2/recommendations`](https://docs.coveo.com/en/103/api-reference/commerce-api#tag/Recommendations/operation/recommendations)
+   * - `POST` `/search` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/commerce/v2/search`](https://docs.coveo.com/en/103/api-reference/commerce-api#tag/Search/operation/search)
+   **/
+  proxyBaseUrl?: string;
 }
 
 export const commerceEngineConfigurationSchema =
   new Schema<CommerceEngineConfiguration>({
     ...engineConfigurationDefinitions,
+    analytics: new RecordValue({
+      options: {required: true},
+      values: {
+        enabled: new BooleanValue({required: false, default: true}),
+        proxyBaseUrl: new StringValue({required: false, url: true}),
+        source: new RecordValue({
+          options: {required: false},
+          values: {
+            '@coveo/atomic': nonEmptyString,
+            '@coveo/quantic': nonEmptyString,
+          },
+        }),
+        trackingId: requiredNonEmptyString,
+      },
+    }),
     context: new RecordValue({
       options: {required: true},
       values: contextDefinition,
@@ -29,32 +83,21 @@ export const commerceEngineConfigurationSchema =
     cart: new RecordValue({
       values: cartDefinition,
     }),
-    environment: new StringValue<PlatformEnvironment>({
-      required: false,
-      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-      emptyAllowed: false,
-      default: 'prod',
-    }),
+    proxyBaseUrl: new StringValue({required: false, url: true}),
   });
 
-// TODO KIT-3244: Use a different sample organization
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {
-    accessToken: 'xxc481d5de-16cb-4290-bd78-45345319d94c',
-    organizationId: 'barcasportsmcy01fvu',
-    organizationEndpoints: getOrganizationEndpoints(
-      'barcasportsmcy01fvu',
-      'dev'
-    ),
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
     analytics: {
-      trackingId: 'sports',
+      trackingId: 'sports-ui-samples',
     },
     context: {
       language: 'en',
       country: 'US',
       currency: 'USD',
       view: {
-        url: 'https://sports-dev.barca.group/browse/promotions/skis-boards/surfboards',
+        url: 'https://sports.barca.group',
       },
     },
     cart: {
@@ -85,5 +128,6 @@ export function getSampleCommerceEngineConfiguration(): CommerceEngineConfigurat
         },
       ],
     },
+    organizationId: 'searchuisamples',
   };
 }

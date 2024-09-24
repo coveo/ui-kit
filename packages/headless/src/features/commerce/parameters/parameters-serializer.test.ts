@@ -92,6 +92,9 @@ describe('searchSerializer', () => {
         }),
       ],
     };
+    const mnf = {
+      price: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+    };
     const page = 4;
     const perPage = 96;
     const sortCriteria = buildFieldsSortCriterion([
@@ -103,6 +106,7 @@ describe('searchSerializer', () => {
       f,
       cf,
       nf,
+      mnf,
       df,
       page,
       perPage,

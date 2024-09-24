@@ -1,4 +1,5 @@
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
+import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client';
 import {SortParam} from '../../../api/commerce/commerce-api-params';
 import {
   BaseCommerceAPIRequest,
@@ -12,21 +13,28 @@ import {
   CommerceFacetSetSection,
   CommercePaginationSection,
   CommerceSortSection,
-  ConfigurationSection,
+  CommerceConfigurationSection,
   FacetOrderSection,
+  ManualRangeSection,
   VersionSection,
 } from '../../../state/state-sections';
 import {getProductsFromCartState} from '../context/cart/cart-state';
+import {AnyFacetRequest} from '../facets/facet-set/interfaces/request';
 import {SortBy, SortCriterion} from '../sort/sort';
 
-export type StateNeededByQueryCommerceAPI = ConfigurationSection &
+export type StateNeededByQueryCommerceAPI = CommerceConfigurationSection &
   CommerceContextSection &
   CartSection &
   Partial<CommercePaginationSection & VersionSection>;
 
 export type ListingAndSearchStateNeededByQueryCommerceAPI =
   StateNeededByQueryCommerceAPI &
-    Partial<CommerceSortSection & CommerceFacetSetSection & FacetOrderSection>;
+    Partial<
+      CommerceSortSection &
+        CommerceFacetSetSection &
+        FacetOrderSection &
+        ManualRangeSection
+    >;
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful response. */
@@ -39,7 +47,7 @@ export const buildCommerceAPIRequest = (
 ): CommerceAPIRequest => {
   return {
     ...buildBaseCommerceAPIRequest(state, navigatorContext),
-    facets: getFacets(state),
+    facets: [...getFacets(state), ...getManualNumericFacets(state)],
     ...(state.commerceSort && {
       sort: getSort(state.commerceSort.appliedSort),
     }),
@@ -54,11 +62,18 @@ export const buildBaseCommerceAPIRequest = (
   const {view, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
-    url: state.configuration.platformUrl,
+    url:
+      state.configuration.commerce.apiBaseUrl ??
+      getCommerceApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId,
     ...restOfContext,
-    clientId: navigatorContext.clientId,
+    ...(state.configuration.analytics.enabled
+      ? {clientId: navigatorContext.clientId}
+      : {}),
     context: {
       ...(navigatorContext.userAgent
         ? {
@@ -104,8 +119,32 @@ function getFacets(state: ListingAndSearchStateNeededByQueryCommerceAPI) {
   }
 
   return state.facetOrder
+    .filter((facetId) => state.commerceFacetSet?.[facetId])
     .map((facetId) => state.commerceFacetSet![facetId].request)
-    .filter((facet) => facet.values.length > 0);
+    .filter((facet) => facet && facet.values.length > 0);
+}
+
+function getManualNumericFacets(
+  state: ListingAndSearchStateNeededByQueryCommerceAPI
+): AnyFacetRequest[] {
+  if (!state.manualNumericFacetSet) {
+    return [];
+  }
+
+  return Object.entries(state.manualNumericFacetSet!)
+    .filter(
+      ([_, manualNumericFacet]) => manualNumericFacet.manualRange !== undefined
+    )
+    .map(([facetId, manualNumericFacet]) => ({
+      facetId,
+      field: facetId,
+      numberOfValues: 1,
+      isFieldExpanded: false,
+      preventAutoSelect: true,
+      type: 'numericalRange' as const,
+      values: [manualNumericFacet.manualRange!],
+      initialNumberOfValues: 1,
+    }));
 }
 
 function getSort(appliedSort: SortCriterion): SortParam['sort'] | undefined {

@@ -2,7 +2,7 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * @internal
+ * @alpha
  *
  * This section is intended to display the field that's important for its search criteria.
  * For example, in Commerce, a product's price is often more important than the title itself.

@@ -1,6 +1,7 @@
 import answerGenerated from '@salesforce/label/c.quantic_AnswerGenerated';
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import feedback from '@salesforce/label/c.quantic_Feedback';
+import feedbackHelpUsImprove from '@salesforce/label/c.quantic_FeedbackHelpUsImprove';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import generatedAnswerIsHidden from '@salesforce/label/c.quantic_GeneratedAnswerIsHidden';
 import showLess from '@salesforce/label/c.quantic_GeneratedAnswerShowLess';
@@ -16,7 +17,7 @@ import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpf
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
-import FeedbackModal from 'c/quanticFeedbackModal';
+import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -49,7 +50,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
  * @category Search
  * @example
- * <c-quantic-generated-answer engine-id={engineId} answer-style="step" with-toggle collapsible></c-quantic-generated-answer>
+ * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
   /**
@@ -59,31 +60,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   @api engineId;
   /**
-   * The answer style to apply when the component first loads.
-   * Options:
-   *   - `default`: Generates the answer without additional formatting instructions.
-   *   - `bullet`: Requests the answer to be generated in bullet-points.
-   *   - `step`: Requests the answer to be generated in step-by-step instructions.
-   *   - `concise`: Requests the answer to be generated as concisely as possible.
-   * @api
-   * @type {'default' | 'step' | 'bullet' | 'concise'}
-   * @default {'default'}
-   */
-  @api answerStyle = 'default';
-  /**
    * A list of fields to fetch with the citations used to generate the answer.
    * @api
    * @type {string}
    * @defaultValue `'sfid,sfkbid,sfkavid'`
    */
   @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
-  /**
-   * Indicates whether footer sections should be displayed on multiple lines.
-   * @api
-   * @type {boolean}
-   * @default {false}
-   */
-  @api multilineFooter;
   /**
    * Whether the generated answer should be collapsible when it exceeds the maximum height of 250px.
    * @api
@@ -110,6 +92,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     irrelevant,
     inaccurate,
     outOfDate,
+    feedbackHelpUsImprove,
     feedback,
     whyGeneratedAnswerWasNotHelpful,
     generatingAnswer,
@@ -140,13 +123,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _maximumAnswerHeight = 250;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
+  /** @type {boolean} */
+  _liked = false;
+  /** @type {boolean} */
+  _disliked = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.template.addEventListener(
-      'quantic__generatedanswerrephrase',
-      this.handleGeneratedAnswerRephrase
-    );
     this.template.addEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
@@ -197,12 +180,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         initialVisibility = false;
       }
     }
-
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
         isVisible: initialVisibility,
         responseFormat: {
-          answerStyle: this.answerStyle,
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },
@@ -212,10 +193,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
-    this.template.removeEventListener(
-      'quantic__generatedanswerrephrase',
-      this.handleGeneratedAnswerRephrase
-    );
     this.template.removeEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
@@ -286,9 +263,24 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * handles liking the generated answer.
    * @param {CustomEvent} event
    */
-  handleLike(event) {
+  async handleLike(event) {
     event.stopPropagation();
-    this.generatedAnswer.like?.();
+    if (!this._liked) {
+      this._liked = true;
+      this._disliked = false;
+      this.generatedAnswer.like?.();
+    }
+    if (!this.feedbackSubmitted) {
+      // @ts-ignore
+      await FeedbackModalQna.open({
+        size: 'small',
+        label: this.labels.feedbackHelpUsImprove,
+        handleSubmit: (feedbackPayload) => {
+          this.submitFeedback({...feedbackPayload, helpful: true});
+        },
+      });
+      this.generatedAnswer.closeFeedbackModal();
+    }
   }
 
   /**
@@ -297,16 +289,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
-    this.generatedAnswer.dislike?.();
+    if (!this._disliked) {
+      this._disliked = true;
+      this._liked = false;
+      this.generatedAnswer.dislike?.();
+    }
     if (!this.feedbackSubmitted) {
       // @ts-ignore
-      await FeedbackModal.open({
-        label: this.labels.feedback,
+      await FeedbackModalQna.open({
         size: 'small',
-        description: this.labels.feedback,
-        options: this.options,
-        handleSubmit: this.submitFeedback.bind(this),
-        optionsLabel: this.labels.whyGeneratedAnswerWasNotHelpful,
+        label: this.labels.feedbackHelpUsImprove,
+        handleSubmit: (feedbackPayload) => {
+          this.submitFeedback({...feedbackPayload, helpful: false});
+        },
       });
       this.generatedAnswer.closeFeedbackModal();
     }
@@ -317,25 +312,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @returns {void}
    */
   submitFeedback(feedbackPayload) {
-    if (feedbackPayload?.details) {
-      this.generatedAnswer.sendDetailedFeedback(feedbackPayload.details);
-    } else if (feedbackPayload?.value) {
-      this.generatedAnswer.sendFeedback(feedbackPayload.value);
-    }
+    this.generatedAnswer.sendFeedback(feedbackPayload);
     this.feedbackSubmitted = true;
   }
 
   handleRetry() {
     this.generatedAnswer.retry();
   }
-
-  handleGeneratedAnswerRephrase = (event) => {
-    event.stopPropagation();
-    this.generatedAnswer.rephrase({
-      ...this.state?.responseFormat,
-      answerStyle: event?.detail,
-    });
-  };
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
@@ -490,20 +473,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ];
   }
 
-  get responseFormat() {
-    return this.state?.responseFormat.answerStyle;
-  }
-
   get generatedAnswerFooterCssClass() {
-    return `slds-grid slds-wrap slds-grid_align-spread generated-answer__footer ${this.multilineFooter ? 'slds-grid_vertical' : ''}`;
+    return 'slds-grid slds-wrap slds-grid_align-spread generated-answer__footer';
   }
 
   get generatedAnswerFooterRowClass() {
-    return `generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread ${this.multilineFooter ? 'slds-grid_vertical' : ''}`;
-  }
-
-  get shouldHideRephraseLabels() {
-    return this.multilineFooter ? false : true;
+    return 'generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread';
   }
 
   get citationFields() {
@@ -511,14 +486,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       ?.split(',')
       .map((field) => field.trim())
       .filter((field) => field.length > 0);
-  }
-
-  get rephraseButtonsCssClass() {
-    return `slds-var-m-top_small slds-grid ${
-      this.multilineFooter
-        ? 'generated-answer__rephrase--width'
-        : 'slds-grid_align-end'
-    }`;
   }
 
   get shouldShowDisclaimer() {

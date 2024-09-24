@@ -12,6 +12,9 @@ import {
   FacetConditionsManager,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  TabManagerState,
+  TabManager,
+  buildTabManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -105,6 +108,7 @@ export class AtomicFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -113,6 +117,9 @@ export class AtomicFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -129,10 +136,37 @@ export class AtomicFacet implements InitializableComponent {
    */
   @Prop({reflect: true}) public field!: string;
   /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
+  /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
+
   /**
    * Whether this facet should contain a search box.
    *
@@ -257,9 +291,18 @@ export class AtomicFacet implements InitializableComponent {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.initAriaLive();
     this.initConditionManager();
     this.initPopover();
@@ -274,8 +317,8 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   public componentShouldUpdate(
-    next: unknown,
-    prev: unknown,
+    next: FacetState,
+    prev: FacetState,
     propName: keyof AtomicFacet
   ) {
     if (
@@ -481,6 +524,10 @@ export class AtomicFacet implements InitializableComponent {
         ? [...this.allowedValues]
         : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
   }
 

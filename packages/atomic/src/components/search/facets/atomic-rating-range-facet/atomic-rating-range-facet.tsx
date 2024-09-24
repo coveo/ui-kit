@@ -13,6 +13,9 @@ import {
   FacetConditionsManager,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  buildTabManager,
+  TabManager,
+  TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
@@ -22,7 +25,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
@@ -51,6 +54,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
+ * @part value-rating - The facet value rating, common for all displays.
+ * @part value-rating-icon - The individual star icons used in the rating display.
  *
  * @part value-link - The facet value when display is 'link'.
  * @part value-link-selected - The selected facet value when display is 'link'.
@@ -67,6 +72,7 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -75,6 +81,9 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('tabManager')
+  @State()
+  public tabManagerState!: TabManagerState;
   @State() public error!: Error;
 
   /**
@@ -90,6 +99,32 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
    * The field whose values you want to display in the facet.
    */
   @Prop({reflect: true}) public field!: string;
+  /**
+   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsIncluded: string[] | string = '[]';
+
+  /**
+   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, e.g.,
+   * ```html
+   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
+   * ```
+   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   */
+  @ArrayProp()
+  @Prop({reflect: true, mutable: true})
+  public tabsExcluded: string[] | string = '[]';
+
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
@@ -167,11 +202,19 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
   }
 
   public initialize() {
+    if (
+      [...this.tabsIncluded].length > 0 &&
+      [...this.tabsExcluded].length > 0
+    ) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+      );
+    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
     this.initializeFacet();
     this.initializeDependenciesManager();
   }
-
   public disconnectedCallback() {
     if (this.host.isConnected) {
       return;
@@ -197,6 +240,10 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
       generateAutomaticRanges: false,
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
@@ -301,7 +348,7 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
     return (
       <span
         part="value-label"
-        class={`ml-1 flex items-center truncate group-focus:text-primary group-hover:text-primary ${
+        class={`group-focus:text-primary group-hover:text-primary ml-1 flex items-center truncate ${
           facetValue.state === 'selected' ? 'font-bold' : ''
         }`}
       >

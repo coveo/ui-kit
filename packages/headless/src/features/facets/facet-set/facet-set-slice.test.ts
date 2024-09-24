@@ -5,7 +5,6 @@ import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {buildFetchProductListingResponse} from '../../../test/mock-old-product-listing';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {
@@ -14,10 +13,6 @@ import {
 } from '../../breadcrumb/breadcrumb-actions';
 import {change} from '../../history/history-actions';
 import {getHistoryInitialState} from '../../history/history-state';
-import {
-  fetchProductListing,
-  FetchProductListingThunkReturn,
-} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {
   executeSearch,
@@ -524,10 +519,7 @@ describe('facet-set slice', () => {
   function testFulfilledSearchRequest(
     searchBuilder: (
       facets: FacetResponse[]
-    ) => PayloadAction<
-      ExecuteSearchThunkReturn | FetchProductListingThunkReturn,
-      string
-    >
+    ) => PayloadAction<ExecuteSearchThunkReturn, string>
   ) {
     it('updates the currentValues of facet requests to the values in the response', () => {
       const id = '1';
@@ -606,17 +598,6 @@ describe('facet-set slice', () => {
     }
 
     testFulfilledSearchRequest(buildFetchFacetValuesAction);
-  });
-
-  describe('#fetchProductListing.fulfilled', () => {
-    function buildFetchProductListingAction(facets: FacetResponse[]) {
-      const productListing = buildFetchProductListingResponse();
-      productListing.response.facets = {results: facets};
-
-      return fetchProductListing.fulfilled(productListing, '');
-    }
-
-    testFulfilledSearchRequest(buildFetchProductListingAction);
   });
 
   describe.each([

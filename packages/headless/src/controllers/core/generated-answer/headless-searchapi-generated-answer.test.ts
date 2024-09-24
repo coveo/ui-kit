@@ -5,8 +5,10 @@ import {
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
+  resetAnswer,
   sendGeneratedAnswerFeedback,
   setIsVisible,
+  streamAnswer,
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions';
 import {
@@ -27,7 +29,10 @@ import {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
 } from '../../generated-answer/headless-generated-answer';
-import {buildSearchAPIGeneratedAnswer} from './headless-searchapi-generated-answer';
+import {
+  buildSearchAPIGeneratedAnswer,
+  subscribeStateManager,
+} from './headless-searchapi-generated-answer';
 
 jest.mock('../../../features/generated-answer/generated-answer-actions');
 jest.mock(
@@ -36,10 +41,6 @@ jest.mock(
 jest.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
-  it('should be tested', () => {
-    expect(true).toBe(true);
-  });
-
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
@@ -81,14 +82,6 @@ describe('searchapi-generated-answer', () => {
     expect(generatedAnswer.state).toEqual(engine.state.generatedAnswer);
   });
 
-  it('dispatches a rephrase action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'step'};
-    generatedAnswer.rephrase(responseFormat);
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-    expect(executeSearch).toHaveBeenCalled();
-  });
-
   it('dispatches a retry action', () => {
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
@@ -96,7 +89,9 @@ describe('searchapi-generated-answer', () => {
   });
 
   it('initialize the format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
+    const responseFormat: GeneratedResponseFormat = {
+      contentFormat: ['text/markdown'],
+    };
     createGeneratedAnswer({
       initialState: {responseFormat},
     });
@@ -128,23 +123,21 @@ describe('searchapi-generated-answer', () => {
     expect(closeGeneratedAnswerFeedbackModal).toHaveBeenCalled();
   });
 
-  it('dispatches a send feedback action', () => {
+  it('dispatches a sendFeedback action', () => {
     const generatedAnswer = createGeneratedAnswer();
-    const feedback: GeneratedAnswerFeedback = 'harmful';
+    const feedback: GeneratedAnswerFeedback = {
+      readable: 'unknown',
+      correctTopic: 'unknown',
+      documented: 'yes',
+      hallucinationFree: 'no',
+      helpful: false,
+      details: 'some details',
+    };
     generatedAnswer.sendFeedback(feedback);
+
     expect(
       generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
     ).toHaveBeenCalledWith(feedback);
-    expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatches a send detailed feedback action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const details = 'details';
-    generatedAnswer.sendDetailedFeedback(details);
-    expect(
-      generatedAnswerAnalyticsClient.logGeneratedAnswerDetailedFeedback
-    ).toHaveBeenCalledWith(details);
     expect(sendGeneratedAnswerFeedback).toHaveBeenCalledTimes(1);
   });
 
@@ -274,12 +267,6 @@ describe('searchapi-generated-answer', () => {
     expect(setIsVisible).toHaveBeenCalledWith(false);
   });
 
-  it('dispatches the updateResponseFormat with the initial response format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
-    createGeneratedAnswer({initialState: {responseFormat}});
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-  });
-
   it('should dispatch registerFieldsToIncludeInCitations to register the fields to include in citations', () => {
     const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
 
@@ -289,5 +276,109 @@ describe('searchapi-generated-answer', () => {
     expect(registerFieldsToIncludeInCitations).toHaveBeenCalledWith(
       exampleFieldsToIncludeInCitations
     );
+  });
+
+  describe('when used with a preloaded state', () => {
+    beforeEach(() => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          id: 'some-id',
+        },
+      });
+      state.search.requestId = 'some-request-id';
+      state.search.extendedResults.generativeQuestionAnsweringId =
+        'some-stream-id';
+      engine = buildMockSearchEngine(state);
+    });
+
+    it('should not trigger any actions on initialization', () => {
+      engine.dispatch.mockClear();
+      createGeneratedAnswer();
+      expect(engine.dispatch).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('#enable', () => {
+    let subscribeStateManagerMock: any;
+
+    const setupEngine = (isEnabled: boolean) => {
+      engine = buildEngineWithGeneratedAnswer({
+        id: 'genQaEngineId',
+        isEnabled,
+      });
+      createGeneratedAnswer({
+        initialState: {isEnabled},
+      });
+
+      engine.state.search = {
+        ...engine.state.search,
+        extendedResults: {
+          generativeQuestionAnsweringId: 'streamId',
+        },
+      };
+
+      subscribeStateManagerMock.subscribeToSearchRequests(engine);
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      subscribeStateManagerMock = {
+        engines: {
+          genQaEngineId: {
+            lastStreamId: '',
+          },
+        },
+        subscribeToSearchRequests:
+          subscribeStateManager.subscribeToSearchRequests,
+      };
+
+      subscribeStateManager.engines = subscribeStateManagerMock.engines;
+    });
+
+    it('should stream answer when generated answer is enabled', () => {
+      setupEngine(true);
+
+      expect(engine.subscribe).toHaveBeenCalled();
+
+      const listener = engine.subscribe.mock.calls[0][0];
+      listener();
+
+      expect(streamAnswer).toHaveBeenCalled();
+    });
+
+    it('should not stream answer when generated answer is disabled', () => {
+      setupEngine(false);
+
+      expect(engine.subscribe).toHaveBeenCalled();
+
+      const listener = engine.subscribe.mock.calls[0][0];
+      listener();
+
+      expect(streamAnswer).not.toHaveBeenCalled();
+    });
+
+    it('should reset answer when generated answer is enabled', () => {
+      setupEngine(true);
+
+      expect(engine.subscribe).toHaveBeenCalled();
+
+      const listener = engine.subscribe.mock.calls[0][0];
+      listener();
+
+      expect(resetAnswer).toHaveBeenCalled();
+    });
+
+    it('should not reset answer when generated answer is disabled', () => {
+      setupEngine(false);
+
+      expect(engine.subscribe).toHaveBeenCalled();
+
+      const listener = engine.subscribe.mock.calls[0][0];
+      listener();
+
+      expect(resetAnswer).not.toHaveBeenCalled();
+    });
   });
 });

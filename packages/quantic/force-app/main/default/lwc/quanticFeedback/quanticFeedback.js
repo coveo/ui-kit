@@ -6,9 +6,9 @@ import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticFeedback` component displays a question and two buttons for giving positive or negative feedback.
- * @fires CustomEvent#like
- * @fires CustomEvent#dislike
- * @fires CustomEvent#pressExplainWhy
+ * @fires CustomEvent#quantic__like
+ * @fires CustomEvent#quantic__dislike
+ * @fires CustomEvent#quantic__pressexplainwhy
  * @category Search
  * @category Insight Panel
  */
@@ -94,12 +94,12 @@ export default class QuanticFeedback extends LightningElement {
   _size = 'xx-small';
 
   /**
-   * Fires the "like" event.
+   * Fires the "quantic__like" event.
    * @returns {void}
    */
   handleLike() {
     this.dispatchEvent(
-      new CustomEvent(`like`, {
+      new CustomEvent(`quantic__like`, {
         bubbles: true,
         composed: true,
       })
@@ -107,12 +107,12 @@ export default class QuanticFeedback extends LightningElement {
   }
 
   /**
-   * Fires the "dislike" event.
+   * Fires the "quantic__dislike" event.
    * @returns {void}
    */
   handleDislike() {
     this.dispatchEvent(
-      new CustomEvent(`dislike`, {
+      new CustomEvent(`quantic__dislike`, {
         bubbles: true,
         composed: true,
       })
@@ -120,12 +120,12 @@ export default class QuanticFeedback extends LightningElement {
   }
 
   /**
-   * Fires the "pressexplainwhy" event.
+   * Fires the "quantic__pressexplainwhy" event.
    * @returns {void}
    */
   handlePressExplainWhyButton() {
     this.dispatchEvent(
-      new CustomEvent(`pressexplainwhy`, {
+      new CustomEvent(`quantic__pressexplainwhy`, {
         bubbles: true,
         composed: true,
       })

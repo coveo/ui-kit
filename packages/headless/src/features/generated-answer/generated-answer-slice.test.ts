@@ -19,11 +19,11 @@ import {
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  setIsEnabled,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 import {
-  GeneratedAnswerStyle,
   GeneratedContentFormat,
   GeneratedResponseFormat,
   generatedContentFormat,
@@ -80,6 +80,7 @@ describe('generated answer slice', () => {
       const newCitations = [
         buildMockCitation({
           id: 'some-other-id',
+          uri: 'my-uri',
         }),
       ];
       const finalState = generatedAnswerReducer(
@@ -94,6 +95,30 @@ describe('generated answer slice', () => {
         ...existingCitations,
         ...newCitations,
       ]);
+    });
+
+    it('Shows only citations that have different Uris', () => {
+      const existingCitations = [
+        buildMockCitation({
+          id: 'current-id',
+          uri: 'my-uri',
+        }),
+      ];
+      const newCitations = [
+        buildMockCitation({
+          id: 'some-other-id',
+          uri: 'my-uri',
+        }),
+      ];
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          citations: existingCitations,
+        },
+        updateCitations({citations: newCitations})
+      );
+
+      expect(finalState.citations).toEqual([...newCitations]);
     });
   });
 
@@ -194,11 +219,13 @@ describe('generated answer slice', () => {
 
   describe('#resetAnswer', () => {
     it('should reset the answer', () => {
+      const responseFormat: GeneratedResponseFormat = {
+        contentFormat: ['text/markdown'],
+      };
       const persistentGeneratedAnswerState = {
         isVisible: false,
-        responseFormat: {
-          answerStyle: 'step' as GeneratedAnswerStyle,
-        },
+        responseFormat,
+        isEnabled: true,
         fieldsToIncludeInCitations: ['foo'],
       };
       const state = {
@@ -224,7 +251,7 @@ describe('generated answer slice', () => {
 
     it('should not reset the response format', () => {
       const responseFormat: GeneratedResponseFormat = {
-        answerStyle: 'step',
+        contentFormat: ['text/markdown'],
       };
       const state = {
         ...baseState,
@@ -235,6 +262,15 @@ describe('generated answer slice', () => {
 
       expect(finalState.responseFormat).toEqual(responseFormat);
     });
+  });
+  it('should not reset the configuration id', () => {
+    const state = {
+      ...baseState,
+      answerConfigurationId: 'some-id',
+    };
+
+    const finalState = generatedAnswerReducer(state, resetAnswer());
+    expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
   test.each(generatedContentFormat)(
@@ -385,13 +421,13 @@ describe('generated answer slice', () => {
   describe('#updateResponseFormat', () => {
     it('should set the given response format', () => {
       const newResponseFormat: GeneratedResponseFormat = {
-        answerStyle: 'step',
+        contentFormat: ['text/markdown'],
       };
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
           responseFormat: {
-            answerStyle: 'default',
+            contentFormat: ['text/plain'],
           },
         },
         updateResponseFormat(newResponseFormat)
@@ -435,6 +471,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isVisible).toEqual(false);
+    });
+  });
+
+  describe('#setIsEnabled', () => {
+    it('should set isEnabled to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isEnabled: false},
+        setIsEnabled(true)
+      );
+
+      expect(finalState.isEnabled).toEqual(true);
+    });
+
+    it('should set isEnabled to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isEnabled: true},
+        setIsEnabled(false)
+      );
+
+      expect(finalState.isEnabled).toEqual(false);
     });
   });
 

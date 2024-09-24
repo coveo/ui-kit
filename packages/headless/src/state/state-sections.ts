@@ -5,11 +5,13 @@ import {CaseAssistConfigurationState} from '../features/case-assist-configuratio
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
+import {ConfigurationState as CommerceConfigurationState} from '../features/commerce/configuration/configuration-state';
 import {CartState} from '../features/commerce/context/cart/cart-state';
 import {CommerceContextState} from '../features/commerce/context/context-state';
 import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state';
 import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
 import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
+import {ManualNumericFacetSetState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state';
 import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingState} from '../features/commerce/product-listing/product-listing-state';
@@ -39,10 +41,9 @@ import {GeneratedAnswerState} from '../features/generated-answer/generated-answe
 import {HistoryState} from '../features/history/history-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
+import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
-import {OldProductListingState} from '../features/product-listing/old-product-listing-state';
-import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
 import {QueryState} from '../features/query/query-state';
@@ -208,6 +209,10 @@ export interface ConfigurationSection {
   configuration: ConfigurationState;
 }
 
+export interface CommerceConfigurationSection {
+  configuration: CommerceConfigurationState;
+}
+
 export interface FacetSearchSection {
   /**
    * The set of facet searches.
@@ -290,20 +295,6 @@ export interface RecommendationSection {
    * The information related to the recommendation endpoint.
    */
   recommendation: RecommendationState;
-}
-
-export interface ProductRecommendationsSection {
-  /**
-   * The information related to the product recommendations endpoint.
-   */
-  productRecommendations: ProductRecommendationsState;
-}
-
-export interface OldProductListingSection {
-  /**
-   * The information related to the product listing endpoint.
-   */
-  productListing: OldProductListingState;
 }
 
 export interface CommercePaginationSection {
@@ -501,4 +492,15 @@ export interface GeneratedAnswerSection {
    * The properties related to generative question answering.
    */
   generatedAnswer: GeneratedAnswerState;
+}
+
+export interface InsightUserActionsSection {
+  /**
+   * The insight user actions state.
+   */
+  insightUserActions: UserActionsState;
+}
+
+export interface ManualRangeSection {
+  manualNumericFacetSet: ManualNumericFacetSetState;
 }

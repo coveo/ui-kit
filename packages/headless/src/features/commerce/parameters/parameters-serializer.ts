@@ -38,13 +38,15 @@ export const searchSerializer: Serializer<CommerceSearchParameters> = {
   deserialize,
 };
 
+// TODO KIT-3462: add/export commerce SSR parameter serializer
+
 export const productListingSerializer = {
   serialize,
   deserialize,
 } as Serializer<ProductListingParameters>;
 
 type ParametersKey = keyof CommerceSearchParameters;
-type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'df'>;
+type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'df' | 'mnf'>;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
@@ -52,6 +54,7 @@ const supportedFacetParameters: Record<FacetParameters, boolean> = {
   cf: true,
   nf: true,
   df: true,
+  mnf: true,
 };
 
 function serialize(parameters: CommerceSearchParameters): string {
@@ -73,7 +76,7 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'df') {
+  if (key === 'nf' || key === 'df' || key === 'mnf') {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 

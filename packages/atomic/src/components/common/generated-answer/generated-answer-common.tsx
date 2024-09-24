@@ -2,7 +2,6 @@ import {
   GeneratedAnswer,
   GeneratedAnswerCitation,
   GeneratedAnswerState,
-  GeneratedAnswerStyle,
   InteractiveCitation,
   InteractiveCitationProps,
   SearchStatusState,
@@ -19,7 +18,6 @@ import {Switch} from '../switch';
 import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
-import {RephraseButtons} from './rephrase-buttons';
 import {RetryPrompt} from './retry-prompt';
 import {ShowButton} from './show-button';
 import {SourceCitations} from './source-citations';
@@ -220,13 +218,8 @@ export class GeneratedAnswerCommon {
   }
 
   private renderFeedbackAndCopyButtons() {
-    const {
-      getGeneratedAnswerState,
-      getBindings,
-      getGeneratedAnswer,
-      getCopied,
-      getCopyError,
-    } = this.props;
+    const {getGeneratedAnswerState, getBindings, getCopied, getCopyError} =
+      this.props;
     const {i18n} = getBindings();
     const {liked, disliked, answer, isStreaming} =
       getGeneratedAnswerState() ?? {};
@@ -252,7 +245,7 @@ export class GeneratedAnswerCommon {
           title={i18n.t('this-answer-was-helpful')}
           variant="like"
           active={!!liked}
-          onClick={() => getGeneratedAnswer()?.like()}
+          onClick={() => this.clickLike()}
         />
         <FeedbackButton
           title={i18n.t('this-answer-was-not-helpful')}
@@ -276,44 +269,31 @@ export class GeneratedAnswerCommon {
     );
   }
 
-  private clickDislike() {
+  private setIsAnswerHelpful(isAnswerHelpful: boolean) {
+    if (this.modalRef) {
+      this.modalRef.helpful = isAnswerHelpful;
+    }
+  }
+
+  private openFeedbackModal() {
     if (
       this.modalRef &&
       !this.props.getGeneratedAnswerState()?.feedbackSubmitted
     ) {
       this.modalRef.isOpen = true;
     }
+  }
+
+  private clickDislike() {
+    this.setIsAnswerHelpful(false);
     this.props.getGeneratedAnswer()?.dislike();
+    this.openFeedbackModal();
   }
 
-  private onChangeAnswerStyle(answerStyle: GeneratedAnswerStyle) {
-    if (
-      this.props.getGeneratedAnswerState()?.responseFormat.answerStyle !==
-      answerStyle
-    ) {
-      this.props.getGeneratedAnswer()?.rephrase({
-        ...this.props.getGeneratedAnswerState()?.responseFormat,
-        answerStyle,
-      });
-    }
-  }
-
-  private renderRephraseButtons() {
-    const {getGeneratedAnswerState, getBindings} = this.props;
-    const {i18n} = getBindings();
-    const {isStreaming, responseFormat} = getGeneratedAnswerState() ?? {};
-    const {answerStyle} = responseFormat ?? {};
-
-    if (isStreaming) {
-      return null;
-    }
-    return (
-      <RephraseButtons
-        answerStyle={answerStyle ?? 'default'}
-        i18n={i18n}
-        onChange={(answerStyle) => this.onChangeAnswerStyle(answerStyle)}
-      />
-    );
+  private clickLike() {
+    this.setIsAnswerHelpful(true);
+    this.props.getGeneratedAnswer()?.like();
+    this.openFeedbackModal();
   }
 
   private renderDisclaimer() {
@@ -364,7 +344,7 @@ export class GeneratedAnswerCommon {
     return (
       <div
         part="is-generating"
-        class="hidden text-primary font-light text-base"
+        class="text-primary hidden text-base font-light"
       >
         {i18n.t('generating-answer')}...
       </div>
@@ -384,11 +364,11 @@ export class GeneratedAnswerCommon {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary font-medium inline-block rounded-md py-2 px-2.5"
+            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
           >
             {i18n.t('generated-answer-title')}
           </Heading>
-          <div class="flex h-9 items-center ml-auto">
+          <div class="ml-auto flex h-9 items-center">
             <Switch
               part="toggle"
               checked={this.isAnswerVisible}
@@ -424,13 +404,11 @@ export class GeneratedAnswerCommon {
             >
               {this.renderCitations()}
             </SourceCitations>
-
-            {this.renderRephraseButtons()}
           </GeneratedContentContainer>
         ) : null}
 
         {!this.hasRetryableError && this.isAnswerVisible && (
-          <div part="generated-answer-footer" class="flex justify-end mt-6">
+          <div part="generated-answer-footer" class="mt-6 flex justify-end">
             {this.renderGeneratingAnswerLabel()}
             {this.renderShowButton()}
             {this.renderDisclaimer()}

@@ -43,11 +43,13 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
           'When clicking on the toggle button of the generated answer'
         ),
 
-    clickFeedbackOption: (index: number) =>
+    clickFeedbackOption: (value: string, index: number) =>
       selector
-        .feedbackOption(index)
+        .feedbackOption(value, index)
         .click({force: true})
-        .logAction(`When clicking the feedback option at the index ${index}`),
+        .logAction(
+          `When clicking the feedback option ${value} at the question at index ${index}`
+        ),
 
     clickFeedbackSubmitButton: () =>
       selector
@@ -67,17 +69,17 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         .click()
         .logAction('When clicking on the feedback modal done button'),
 
+    typeInFeedbackDocumentUrlInput: (text: string) =>
+      selector
+        .feedbackDocumentUrlInput()
+        .type(text)
+        .logAction('When typing in the feedback document url input'),
+
     typeInFeedbackDetailsInput: (text: string) =>
       selector
         .feedbackDetailsInput()
         .type(text)
         .logAction('When typing in the feedback details input'),
-
-    clickRephraseButton: (name: string) =>
-      selector
-        .rephraseButtonByLabel(name)
-        .click({force: true})
-        .logAction(`When clicking on the ${name} rephrase button`),
 
     hoverOverCitation: (index: number) =>
       selector
