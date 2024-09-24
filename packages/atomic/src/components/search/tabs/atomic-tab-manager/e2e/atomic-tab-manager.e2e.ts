@@ -81,6 +81,7 @@ test.describe('AtomicTabManager', () => {
           // eslint-disable-next-line @cspell/spellchecker
           'how to resolve netflix connection with tivo'
         );
+        await searchBox.submitButton.focus();
         await searchBox.submitButton.click();
         await expect(tabManager.generatedAnswer).toBeHidden();
       });
@@ -146,6 +147,7 @@ test.describe('AtomicTabManager', () => {
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
           );
+          await searchBox.submitButton.focus();
           await searchBox.submitButton.click();
           await expect(tabManager.generatedAnswer).toBeVisible();
         });
@@ -195,6 +197,7 @@ test.describe('AtomicTabManager', () => {
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
             );
+            await searchBox.submitButton.focus();
             await searchBox.submitButton.click();
             await expect(tabManager.generatedAnswer).toBeHidden();
           });
@@ -366,6 +369,7 @@ test.describe('AtomicTabManager', () => {
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
             );
+            await searchBox.submitButton.focus();
             await searchBox.submitButton.click();
             await expect(tabManager.generatedAnswer).toBeHidden();
           });
