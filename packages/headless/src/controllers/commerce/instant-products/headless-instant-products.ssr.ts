@@ -1,14 +1,14 @@
-import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   InstantProducts,
   InstantProductsProps,
   buildInstantProducts,
-} from './headless-instant-products';
+} from './headless-instant-products.js';
 
 export type {
   InstantProductsOptions,
   InstantProductsState,
-} from './headless-instant-products';
+} from './headless-instant-products.js';
 export type {InstantProducts, InstantProductsProps};
 
 export interface InstantProductsDefinition

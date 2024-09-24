@@ -1,12 +1,12 @@
-import {executeSearch} from '../../features/search/search-actions';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildTab, Tab, TabProps} from './headless-tab';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildTab, Tab, TabProps} from './headless-tab.js';
 
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('Tab', () => {
   const expression = 'abc123';

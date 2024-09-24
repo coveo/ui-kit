@@ -1,11 +1,11 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {fetchPage} from '../../../features/insight-search/insight-search-actions';
-import {browseResults} from '../../../features/pagination/pagination-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {fetchPage} from '../../../features/insight-search/insight-search-actions.js';
+import {browseResults} from '../../../features/pagination/pagination-analytics-actions.js';
 import {
   logPageNumber,
   logPageNext,
   logPagePrevious,
-} from '../../../features/pagination/pagination-insight-analytics-actions';
+} from '../../../features/pagination/pagination-insight-analytics-actions.js';
 import {
   buildCorePager,
   PagerInitialState,
@@ -13,7 +13,7 @@ import {
   PagerProps,
   Pager,
   PagerState,
-} from '../../core/pager/headless-core-pager';
+} from '../../core/pager/headless-core-pager.js';
 
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 

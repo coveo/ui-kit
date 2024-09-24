@@ -1,4 +1,4 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 
 export interface RecentResultsState {
   results: Result[];

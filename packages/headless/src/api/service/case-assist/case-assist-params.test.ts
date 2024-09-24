@@ -3,7 +3,7 @@ import {
   CaseAssistParam,
   prepareSuggestionRequestFields,
   prepareContextFromFields,
-} from './case-assist-params';
+} from './case-assist-params.js';
 
 describe('case assist params', () => {
   describe('baseCaseAssistRequest', () => {

@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common.js';
 import {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   buildAutomaticFacetGenerator,
-} from './headless-automatic-facet-generator';
+} from './headless-automatic-facet-generator.js';
 
-export * from './headless-automatic-facet-generator';
+export * from './headless-automatic-facet-generator.js';
 
 export interface AutomaticFacetGeneratorDefinition
   extends ControllerDefinitionWithoutProps<

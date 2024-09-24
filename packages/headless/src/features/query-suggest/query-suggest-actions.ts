@@ -3,15 +3,15 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   getVisitorID,
   historyStore,
-} from '../../api/analytics/coveo-analytics-utils';
-import {getSearchApiBaseUrl} from '../../api/platform-client';
-import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
-import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
+} from '../../api/analytics/coveo-analytics-utils.js';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request.js';
+import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response.js';
 import {
   isErrorResponse,
   AsyncThunkSearchOptions,
-} from '../../api/search/search-api-client';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
+} from '../../api/search/search-api-client.js';
+import {NavigatorContext} from '../../app/navigatorContextProvider.js';
 import {
   ConfigurationSection,
   ContextSection,
@@ -19,14 +19,14 @@ import {
   QuerySetSection,
   QuerySuggestionSection,
   SearchHubSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   validatePayload,
   requiredNonEmptyString,
   requiredEmptyAllowedString,
-} from '../../utils/validate-payload';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
+} from '../../utils/validate-payload.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
+import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &

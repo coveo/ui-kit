@@ -1,12 +1,12 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {querySetReducer} from '../../query-set/query-set-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {querySetReducer} from '../../query-set/query-set-slice.js';
 import {
   RegisterQuerySetQueryPayload,
   UpdateQuerySetQueryPayload,
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from './query-set-actions';
+} from './query-set-actions.js';
 
 export type {RegisterQuerySetQueryPayload, UpdateQuerySetQueryPayload};
 

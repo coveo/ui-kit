@@ -1,19 +1,22 @@
 import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {Result} from '../../api/search/search/result.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   clearRecentResults,
   registerRecentResults,
-} from '../../features/recent-results/recent-results-actions';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
-import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
-import {RecentResultsSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+} from '../../features/recent-results/recent-results-actions.js';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions.js';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
+import {RecentResultsSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   validateInitialState,
   validateOptions,
-} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../utils/validate-payload.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 export interface RecentResultsListProps {
   /**

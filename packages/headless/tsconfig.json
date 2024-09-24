@@ -4,19 +4,20 @@
     "isolatedModules": true,
     "declaration": false,
     "lib": ["DOM", "ES2023"],
-    "module": "ES2022",
+    "module": "Node16",
     "target": "ES2022",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node", "jest"]
+    "types": ["node", "vitest/globals"]
   },
   "exclude": [
     "./temp/**",
     "./dist/**",
     "./docs/**",
     "./ponyfills/**",
-    "./src/external-builds/**"
+    "./src/external-builds/**",
+    "node_modules"
   ]
 }

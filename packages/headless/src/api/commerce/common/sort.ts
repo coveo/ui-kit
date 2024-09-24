@@ -1,4 +1,4 @@
-import {SortBy, SortDirection} from '../../../features/sort/sort';
+import {SortBy, SortDirection} from '../../../features/sort/sort.js';
 
 export type SortOption = {sortCriteria: SortBy} & {
   fields?: {

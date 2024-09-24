@@ -9,8 +9,8 @@ import {
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
-} from '../../state/state-sections';
-import {getOrganizationEndpoint} from '../platform-client';
+} from '../../state/state-sections.js';
+import {getOrganizationEndpoint} from '../platform-client.js';
 
 type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
 

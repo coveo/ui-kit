@@ -1,22 +1,25 @@
 import {Action, AnyAction} from '@reduxjs/toolkit';
-import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
-import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
-import {buildMockSearch} from '../../../test/mock-search';
-import {buildMockSearchResponse} from '../../../test/mock-search-response';
-import {setContext, setView} from '../../commerce/context/context-actions';
-import {Parameters} from '../../commerce/parameters/parameters-actions';
-import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions';
-import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
-import {restoreSearchParameters} from '../../commerce/search-parameters/search-parameters-actions';
-import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
-import {change} from '../../history/history-actions';
-import {getHistoryInitialState} from '../../history/history-state';
-import {executeSearch} from '../../search/search-actions';
-import {facetOrderReducer} from './facet-order-slice';
-import {FacetOrderState, getFacetOrderInitialState} from './facet-order-state';
+import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value.js';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {buildMockSearch} from '../../../test/mock-search.js';
+import {setContext, setView} from '../../commerce/context/context-actions.js';
+import {Parameters} from '../../commerce/parameters/parameters-actions.js';
+import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions.js';
+import {restoreSearchParameters} from '../../commerce/search-parameters/search-parameters-actions.js';
+import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions.js';
+import {change} from '../../history/history-actions.js';
+import {getHistoryInitialState} from '../../history/history-state.js';
+import {executeSearch} from '../../search/search-actions.js';
+import {facetOrderReducer} from './facet-order-slice.js';
+import {
+  FacetOrderState,
+  getFacetOrderInitialState,
+} from './facet-order-state.js';
 
 describe('facet-order slice', () => {
   let state: FacetOrderState;

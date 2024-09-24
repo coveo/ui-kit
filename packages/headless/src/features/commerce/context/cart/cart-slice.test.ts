@@ -1,12 +1,12 @@
 import {createAction} from '@reduxjs/toolkit';
-import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
-import {purchase, setItems, updateItemQuantity} from './cart-actions';
-import {cartReducer} from './cart-slice';
+import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart.js';
+import {purchase, setItems, updateItemQuantity} from './cart-actions.js';
+import {cartReducer} from './cart-slice.js';
 import {
   CartItemWithMetadata,
   CartState,
   getCartInitialState,
-} from './cart-state';
+} from './cart-state.js';
 
 describe('cart-slice', () => {
   const someItem: CartItemWithMetadata = {

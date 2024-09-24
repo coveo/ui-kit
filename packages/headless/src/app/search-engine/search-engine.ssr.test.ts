@@ -1,23 +1,23 @@
 import {Middleware, UnknownAction} from '@reduxjs/toolkit';
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {
   buildController,
   Controller,
-} from '../../controllers/controller/headless-controller';
-import {defineResultList} from '../../controllers/result-list/headless-result-list.ssr';
-import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader';
-import {executeSearch} from '../../features/search/search-actions';
-import {buildMockResult} from '../../test/mock-result';
-import {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common';
-import {InferHydratedState} from '../ssr-engine/types/core-engine';
-import {InferStaticState} from '../ssr-engine/types/core-engine';
-import {InferBuildResult} from '../ssr-engine/types/core-engine';
-import {getSampleSearchEngineConfiguration} from './search-engine';
+} from '../../controllers/controller/headless-controller.js';
+import {defineResultList} from '../../controllers/result-list/headless-result-list.ssr.js';
+import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common.js';
+import {InferHydratedState} from '../ssr-engine/types/core-engine.js';
+import {InferStaticState} from '../ssr-engine/types/core-engine.js';
+import {InferBuildResult} from '../ssr-engine/types/core-engine.js';
+import {getSampleSearchEngineConfiguration} from './search-engine.js';
 import {
   SSRSearchEngine,
   SearchEngineDefinition,
   defineSearchEngine,
-} from './search-engine.ssr';
+} from './search-engine.ssr.js';
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;

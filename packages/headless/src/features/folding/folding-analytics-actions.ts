@@ -1,14 +1,14 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   ClickAction,
   CustomAction,
   makeAnalyticsAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 import {
   documentIdentifier,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logShowMoreFoldedResults = (result: Result): ClickAction =>
   makeAnalyticsAction('analytics/folding/showMore', (client, state) => {

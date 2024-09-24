@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice.js';
 import {
   updateFacetOptions,
   UpdateFacetOptionsActionCreatorPayload,
@@ -8,7 +8,7 @@ import {
   DisableFacetActionCreatorPayload,
   enableFacet,
   disableFacet,
-} from './facet-options-actions';
+} from './facet-options-actions.js';
 
 export type {
   UpdateFacetOptionsActionCreatorPayload,

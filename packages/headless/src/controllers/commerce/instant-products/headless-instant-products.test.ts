@@ -1,24 +1,22 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {stateKey} from '../../../app/state-key';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {stateKey} from '../../../app/state-key.js';
 import {
   registerInstantProducts,
   promoteChildToParent,
-} from '../../../features/commerce/instant-products/instant-products-actions';
-import {instantProductsReducer} from '../../../features/commerce/instant-products/instant-products-slice';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/instant-products/instant-products-actions.js';
+import {instantProductsReducer} from '../../../features/commerce/instant-products/instant-products-slice.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
+} from '../../../test/mock-engine-v2.js';
 import {
   InstantProducts,
   buildInstantProducts,
-} from './headless-instant-products';
+} from './headless-instant-products.js';
 
-jest.mock(
-  '../../../features/commerce/instant-products/instant-products-actions'
-);
+vi.mock('../../../features/commerce/instant-products/instant-products-actions');
 
 describe('instant products', () => {
   let engine: MockedCommerceEngine;
@@ -27,8 +25,8 @@ describe('instant products', () => {
   const searchBoxId = 'search_box_1';
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useFakeTimers();
+    vi.clearAllMocks();
+    vi.useFakeTimers();
     state = buildMockCommerceState();
     engine = buildMockCommerceEngine(state);
     instantProducts = buildInstantProducts(engine, {options: {searchBoxId}});

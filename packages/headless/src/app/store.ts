@@ -6,9 +6,9 @@ import {
   Middleware,
   Reducer,
 } from '@reduxjs/toolkit';
-import {logActionMiddleware} from './logger-middlewares';
-import {NavigatorContext} from './navigatorContextProvider';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {logActionMiddleware} from './logger-middlewares.js';
+import {NavigatorContext} from './navigatorContextProvider.js';
+import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export interface CoreExtraArguments
   extends ThunkExtraArguments,

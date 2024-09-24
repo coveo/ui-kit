@@ -1,11 +1,11 @@
-import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response';
-import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
+import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
+import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine.js';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
 import {
   Controller,
   buildController,
-} from '../../../controller/headless-controller';
+} from '../../../controller/headless-controller.js';
 
 export interface SummaryState {
   /**

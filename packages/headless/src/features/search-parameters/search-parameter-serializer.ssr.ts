@@ -1,12 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {arrayEqualStrictlyDifferentOrder} from '../../utils/compare-utils';
-import type {SearchParameters} from './search-parameter-actions';
+import {arrayEqualStrictlyDifferentOrder} from '../../utils/compare-utils.js';
+import type {SearchParameters} from './search-parameter-actions.js';
 import {
   SearchParameterKey,
   isValidKey,
   rangeDelimiterExclusive,
   rangeDelimiterInclusive,
-} from './search-parameter-serializer';
+} from './search-parameter-serializer.js';
 import {
   FacetValueSearchParam,
   RangeFacetValueSearchParam,
@@ -16,7 +16,7 @@ import {
   isFacetPair,
   isRangeFacetPair,
   isValidSearchParam,
-} from './search-parameter-utils';
+} from './search-parameter-utils.js';
 
 export function buildSSRSearchParameterSerializer() {
   return {toSearchParameters, serialize};

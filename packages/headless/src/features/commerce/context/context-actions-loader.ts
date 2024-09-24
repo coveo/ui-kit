@@ -1,12 +1,12 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   SetContextPayload,
   SetViewPayload,
   setContext,
   setView,
-} from './context-actions';
-import {contextReducer as commerceContext} from './context-slice';
+} from './context-actions.js';
+import {contextReducer as commerceContext} from './context-slice.js';
 
 export type {SetContextPayload, SetViewPayload};
 

@@ -129,10 +129,8 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
-    "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache --silent=false",
-    "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
-    "test:integration": "jest --testPathPattern=src/integration-tests",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
@@ -169,9 +167,8 @@
     "eslint-plugin-canonical": "4.18.0",
     "execa": "8.0.1",
     "install": "0.13.0",
-    "jest": "29.7.0",
-    "ts-jest": "29.2.3",
-    "ts-node": "10.9.2"
+    "ts-node": "10.9.2",
+    "vitest": "2.1.1"
   },
   "engines": {
     "node": "^20.9.0"

@@ -1,12 +1,12 @@
-import {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
-import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {Context, buildContext} from './headless-context';
-import {ContextProps, defineContext} from './headless-context.ssr';
+import {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr.js';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {Context, buildContext} from './headless-context.js';
+import {ContextProps, defineContext} from './headless-context.ssr.js';
 
-jest.mock('./headless-context');
-const buildContextMock = jest.mocked(buildContext);
+vi.mock('./headless-context');
+const buildContextMock = vi.mocked(buildContext);
 
 type contextDefinitionType = ControllerDefinitionWithProps<
   SSRSearchEngine,

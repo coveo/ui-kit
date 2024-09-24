@@ -1,4 +1,4 @@
-import {SummaryState} from '../../core/summary/headless-core-summary';
+import {SummaryState} from '../../core/summary/headless-core-summary.js';
 
 export interface SearchSummaryState extends SummaryState {
   /**

@@ -3,9 +3,9 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../../utils/validate-payload';
-import {ToggleSelectFacetValueActionCreatorPayload} from '../../../facets/facet-set/facet-set-actions';
-import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload';
+} from '../../../../utils/validate-payload.js';
+import {ToggleSelectFacetValueActionCreatorPayload} from '../../../facets/facet-set/facet-set-actions.js';
+import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
 
 export type ToggleExcludeFacetValuePayload =
   ToggleSelectFacetValueActionCreatorPayload;

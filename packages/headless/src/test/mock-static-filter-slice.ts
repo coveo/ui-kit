@@ -1,4 +1,4 @@
-import {StaticFilterSlice} from '../features/static-filter-set/static-filter-set-state';
+import {StaticFilterSlice} from '../features/static-filter-set/static-filter-set-state.js';
 
 export function buildMockStaticFilterSlice(
   config: Partial<StaticFilterSlice> = {}
