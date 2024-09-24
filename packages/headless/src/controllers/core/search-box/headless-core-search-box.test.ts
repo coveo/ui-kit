@@ -1,43 +1,43 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
-import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
+} from '../../../features/query-set/query-set-actions.js';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
 import {
   registerQuerySuggest,
   clearQuerySuggest,
   fetchQuerySuggestions,
   selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
-import {queryReducer as query} from '../../../features/query/query-slice';
+} from '../../../features/query-suggest/query-suggest-actions.js';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   executeSearch,
   prepareForSearchWithQuery,
-} from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchAppState} from '../../../state/search-app-state';
+} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   SearchBox,
   SearchBoxProps,
   SearchBoxOptions,
   buildCoreSearchBox,
-} from './headless-core-search-box';
+} from './headless-core-search-box.js';
 
-jest.mock('../../../features/query/query-analytics-actions', () => ({
-  logSearchboxSubmit: jest.fn(() => () => {}),
+vi.mock('../../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: vi.fn(() => () => {}),
 }));
-jest.mock('../../../features/query-suggest/query-suggest-actions');
-jest.mock('../../../features/query-set/query-set-actions');
-jest.mock('../../../features/search/search-actions');
+vi.mock('../../../features/query-suggest/query-suggest-actions');
+vi.mock('../../../features/query-set/query-set-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('headless CoreSearchBox', () => {
   const id = 'search-box-123';
@@ -75,7 +75,7 @@ describe('headless CoreSearchBox', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   function initState() {
@@ -143,6 +143,7 @@ describe('headless CoreSearchBox', () => {
 
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
+      searchBoxId: id,
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         highlightedValue: '<a>hi<a>light<i>ed<i>',
@@ -175,7 +176,7 @@ describe('headless CoreSearchBox', () => {
     });
 
     it('should call the showSuggestions method', () => {
-      jest.spyOn(searchBox, 'showSuggestions');
+      vi.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).toHaveBeenCalled();

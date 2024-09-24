@@ -1,33 +1,33 @@
-import {Result} from '../api/search/search/result';
-import {
-  SearchEngine,
-  buildSearchEngine,
-} from '../app/search-engine/search-engine';
+import {Result} from '../api/search/search/result.js';
 import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
-} from '../app/search-engine/search-engine-configuration';
+} from '../app/search-engine/search-engine-configuration.js';
+import {
+  SearchEngine,
+  buildSearchEngine,
+} from '../app/search-engine/search-engine.js';
 import {
   CategoryFacet,
   buildCategoryFacet,
-} from '../controllers/facets/category-facet/headless-category-facet';
-import {Facet, FacetValue} from '../controllers/facets/facet/headless-facet';
-import {buildFacet} from '../controllers/facets/facet/headless-facet';
+} from '../controllers/facets/category-facet/headless-category-facet.js';
+import {Facet, FacetValue} from '../controllers/facets/facet/headless-facet.js';
+import {buildFacet} from '../controllers/facets/facet/headless-facet.js';
 import {
   ResultList,
   buildResultList,
-} from '../controllers/result-list/headless-result-list';
+} from '../controllers/result-list/headless-result-list.js';
 import {
   SearchBox,
   buildSearchBox,
-} from '../controllers/search-box/headless-search-box';
-import {Sort, buildSort} from '../controllers/sort/headless-sort';
+} from '../controllers/search-box/headless-search-box.js';
+import {Sort, buildSort} from '../controllers/sort/headless-sort.js';
 import {
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
-} from '../features/sort-criteria/criteria';
-import {waitForNextStateChange} from '../test/functional-test-utils';
+} from '../features/sort-criteria/criteria.js';
+import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 let configuration: SearchEngineConfiguration;
 let engine: SearchEngine;

@@ -1,27 +1,27 @@
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {SearchAppState} from '../../state/search-app-state';
+import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   SearchBox,
   SearchBoxProps,
   SearchBoxOptions,
   buildSearchBox,
-} from './headless-search-box';
+} from './headless-search-box.js';
 
-jest.mock('../../features/query/query-analytics-actions', () => ({
-  logSearchboxSubmit: jest.fn(() => () => {}),
-  searchboxSubmit: jest.fn(() => () => {}),
+vi.mock('../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: vi.fn(() => () => {}),
+  searchboxSubmit: vi.fn(() => () => {}),
 }));
 
-jest.mock('../../features/search/search-actions');
-jest.mock('../../features/query-suggest/query-suggest-actions');
+vi.mock('../../features/search/search-actions');
+vi.mock('../../features/query-suggest/query-suggest-actions');
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -54,7 +54,7 @@ describe('headless searchBox', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   function initState() {

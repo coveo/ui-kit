@@ -5,29 +5,29 @@ import {
   CommerceAPIClient,
   CommerceAPIResponse,
   isErrorResponse,
-} from '../../../api/commerce/commerce-api-client';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {CommerceAPIRequest} from '../../../api/commerce/common/request';
-import {CommerceSearchRequest} from '../../../api/commerce/search/request';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {CommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import {CommerceSearchRequest} from '../../../api/commerce/search/request.js';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {
   CommerceSearchSection,
   CommerceQuerySection,
   CommerceDidYouMeanSection,
   TriggerSection,
-} from '../../../state/state-sections';
+} from '../../../state/state-sections.js';
 import {
   ListingAndSearchStateNeededByQueryCommerceAPI,
   buildCommerceAPIRequest,
-} from '../common/actions';
-import {updateQuery} from '../query/query-actions';
+} from '../common/actions.js';
+import {updateQuery} from '../query/query-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from '../triggers/triggers-actions';
-import {QuerySearchCommerceAPIThunkReturn} from './search-actions';
-import {queryExecutedFromResponseSelector} from './search-selectors';
+} from '../triggers/triggers-actions.js';
+import {QuerySearchCommerceAPIThunkReturn} from './search-actions.js';
+import {queryExecutedFromResponseSelector} from './search-selectors.js';
 
 interface FetchedResponse {
   response: CommerceAPIResponse<SearchCommerceSuccessResponse>;

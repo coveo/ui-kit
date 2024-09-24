@@ -1,13 +1,13 @@
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {
   buildMockQuestionAnswer,
   buildMockQuestionsAnswers,
-} from '../../test/mock-question-answer';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {executeSearch} from '../search/search-actions';
+} from '../../test/mock-question-answer.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   collapseSmartSnippet,
   collapseSmartSnippetRelatedQuestion,
@@ -15,12 +15,12 @@ import {
   expandSmartSnippet,
   expandSmartSnippetRelatedQuestion,
   likeSmartSnippet,
-} from './question-answering-actions';
-import {questionAnsweringReducer} from './question-answering-slice';
+} from './question-answering-actions.js';
+import {questionAnsweringReducer} from './question-answering-slice.js';
 import {
   getQuestionAnsweringInitialState,
   QuestionAnsweringState,
-} from './question-answering-state';
+} from './question-answering-state.js';
 
 function buildUniqueQuestionAnswer(increment: number) {
   return buildMockQuestionAnswer({

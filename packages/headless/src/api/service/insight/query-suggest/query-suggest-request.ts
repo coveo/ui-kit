@@ -2,15 +2,15 @@ import {
   ContextParam,
   LocaleParam,
   VisitorIDParam,
-} from '../../../platform-service-params';
+} from '../../../platform-service-params.js';
 import {
   ActionsHistoryParam,
   AnalyticsParam,
   AuthenticationParam,
   QueryParam,
   TimezoneParam,
-} from '../../../search/search-api-params';
-import {InsightParam} from '../insight-params';
+} from '../../../search/search-api-params.js';
+import {InsightParam} from '../insight-params.js';
 
 export type InsightQuerySuggestRequest = InsightParam &
   QueryParam &

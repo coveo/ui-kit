@@ -1,9 +1,9 @@
 import pino, {Logger} from 'pino';
-import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {generateFacetId, FacetIdConfig} from './facet-id-generator';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {generateFacetId, FacetIdConfig} from './facet-id-generator.js';
 
 describe('#generateFacetId', () => {
   let config: FacetIdConfig;
@@ -20,7 +20,7 @@ describe('#generateFacetId', () => {
 
   function initLogger() {
     logger = pino({level: 'silent'});
-    logger.warn = jest.fn();
+    logger.warn = vi.fn();
   }
 
   beforeEach(() => {

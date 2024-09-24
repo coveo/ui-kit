@@ -1,7 +1,7 @@
-import {SearchSection} from '../../../state/state-sections';
-import {FacetSection} from '../../../state/state-sections';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
-import {FacetResponse, FacetValue} from './interfaces/response';
+import {SearchSection} from '../../../state/state-sections.js';
+import {FacetSection} from '../../../state/state-sections.js';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
+import {FacetResponse, FacetValue} from './interfaces/response.js';
 
 function isFacetResponse(
   state: FacetSection,

@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {executeSearch} from '../search/search-actions';
+import {executeSearch} from '../search/search-actions.js';
 import {
   enableDidYouMean,
   disableDidYouMean,
@@ -7,13 +7,13 @@ import {
   enableAutomaticQueryCorrection,
   disableAutomaticQueryCorrection,
   setCorrectionMode,
-} from './did-you-mean-actions';
-import {setToNonEmptyQueryCorrection} from './did-you-mean-slice-functions';
+} from './did-you-mean-actions.js';
+import {setToNonEmptyQueryCorrection} from './did-you-mean-slice-functions.js';
 import {
   CorrectionMode,
   emptyLegacyCorrection,
   getDidYouMeanInitialState,
-} from './did-you-mean-state';
+} from './did-you-mean-state.js';
 
 export const didYouMeanReducer = createReducer(
   getDidYouMeanInitialState(),

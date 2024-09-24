@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {QueryError, buildQueryError} from './headless-query-error';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {QueryError, buildQueryError} from './headless-query-error.js';
 
-export * from './headless-query-error';
+export * from './headless-query-error.js';
 
 export interface QueryErrorDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, QueryError> {}

@@ -1,15 +1,15 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
-import {setView} from '../../../commerce/context/context-actions';
+import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {setView} from '../../../commerce/context/context-actions.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
-} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
-import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
-import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
-import {executeSearch} from '../../../search/search-actions';
+} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
+import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
+import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
 import {
   handleCommerceFacetFieldSuggestionsFulfilled,
   handleCommerceFacetSearchFulfilled,
@@ -21,16 +21,16 @@ import {
   handleFacetSearchRejected,
   handleFacetSearchSetClear,
   handleFacetSearchUpdate,
-} from '../facet-search-reducer-helpers';
+} from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../generic/generic-facet-search-actions';
+} from '../generic/generic-facet-search-actions.js';
 import {
   registerFacetSearch,
   updateFacetSearch,
-} from './specific-facet-search-actions';
-import {getFacetSearchSetInitialState} from './specific-facet-search-set-state';
+} from './specific-facet-search-actions.js';
+import {getFacetSearchSetInitialState} from './specific-facet-search-set-state.js';
 
 export const specificFacetSearchSetReducer = createReducer(
   getFacetSearchSetInitialState(),

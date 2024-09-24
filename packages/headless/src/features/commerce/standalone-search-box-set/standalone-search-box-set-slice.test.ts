@@ -1,12 +1,12 @@
-import {buildMockCommerceStandaloneSearchBoxEntry} from '../../../test/mock-commerce-standalone-search-box-entry';
+import {buildMockCommerceStandaloneSearchBoxEntry} from '../../../test/mock-commerce-standalone-search-box-entry.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
-} from './standalone-search-box-set-actions';
-import {commerceStandaloneSearchBoxSetReducer} from './standalone-search-box-set-slice';
-import {CommerceStandaloneSearchBoxSetState} from './standalone-search-box-set-state';
+} from './standalone-search-box-set-actions.js';
+import {commerceStandaloneSearchBoxSetReducer} from './standalone-search-box-set-slice.js';
+import {CommerceStandaloneSearchBoxSetState} from './standalone-search-box-set-state.js';
 
 describe('commerce standalone search box slice', () => {
   const id = '1';

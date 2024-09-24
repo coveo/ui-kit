@@ -1,14 +1,14 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {QueryTrigger} from '../core/triggers/headless-core-query-trigger';
-import {buildQueryTrigger} from './headless-query-trigger';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
+import {buildQueryTrigger} from './headless-query-trigger.js';
 
 export type {
   QueryTrigger,
   QueryTriggerState,
-} from '../core/triggers/headless-core-query-trigger';
+} from '../core/triggers/headless-core-query-trigger.js';
 
-export * from './headless-query-trigger';
+export * from './headless-query-trigger.js';
 
 export interface QueryTriggerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, QueryTrigger> {}

@@ -1,25 +1,25 @@
-import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
-import {Result} from '../../../api/search/search/result';
-import {CoreEngine} from '../../../app/engine';
+import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
+import {Result} from '../../../api/search/search/result.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
-} from '../../../features/question-answering/question-answering-actions';
-import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
-import {getResultProperty} from '../../../features/result-templates/result-templates-helpers';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/question-answering/question-answering-actions.js';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
+import {getResultProperty} from '../../../features/result-templates/result-templates-helpers.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   QuestionAnsweringSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
-import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet';
+} from '../../controller/headless-controller.js';
+import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 
 export interface SmartSnippetQuestionsListOptions {
   /**

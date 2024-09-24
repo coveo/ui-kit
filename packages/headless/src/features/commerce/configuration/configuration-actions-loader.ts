@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {configurationReducer as configuration} from '../../configuration/configuration-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {configurationReducer as configuration} from '../../configuration/configuration-slice.js';
 import {
   UpdateAnalyticsConfigurationPayload,
   UpdateBasicConfigurationPayload,
@@ -10,7 +10,7 @@ import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
   updateProxyBaseUrl,
-} from './configuration-actions';
+} from './configuration-actions.js';
 
 export type {
   UpdateAnalyticsConfigurationPayload,

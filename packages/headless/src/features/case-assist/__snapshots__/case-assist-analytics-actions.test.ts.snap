@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logAbandonCase with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAbandonCase with the right payload 1`] = `
 [
   "caseAssist.cancel",
   {
@@ -9,7 +9,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logAutoSelectCaseField with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAutoSelectCaseField with the right payload 1`] = `
 [
   "caseAssist.selectFieldClassification",
   {
@@ -22,14 +22,14 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logCaseStart with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCaseStart with the right payload 1`] = `
 [
   "caseAssist.start",
   {},
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logClassificationClick with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logClassificationClick with the right payload 1`] = `
 [
   "caseAssist.selectFieldClassification",
   {
@@ -42,7 +42,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logCreateCase with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCreateCase with the right payload 1`] = `
 [
   "caseAssist.createTicket",
   {
@@ -57,7 +57,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logDocumentSuggestionClick with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionClick with the right payload 1`] = `
 [
   "caseAssist.documentSuggestionClick",
   {
@@ -69,7 +69,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logDocumentSuggestionOpen with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionOpen with the right payload 1`] = `
 [
   "itemClick",
   {
@@ -86,7 +86,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logDocumentSuggestionRating with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionRating with the right payload 1`] = `
 [
   "caseAssist.documentSuggestionFeedback",
   {
@@ -99,7 +99,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
 [
   "itemClick",
   {
@@ -116,7 +116,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logSolveCase with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logSolveCase with the right payload 1`] = `
 [
   "caseAssist.cancel",
   {
@@ -125,7 +125,7 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logUpdateCaseField with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logUpdateCaseField with the right payload 1`] = `
 [
   "caseAssist.updateField",
   {

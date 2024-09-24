@@ -18,6 +18,10 @@ export const {
 export const {
   useResultList,
   useSearchBox,
+  useTabManager,
+  useTabAll,
+  useTabCountries,
+  useTabVideos,
   useAuthorFacet,
   useSearchParameterManager,
 } = engineDefinition.controllers;

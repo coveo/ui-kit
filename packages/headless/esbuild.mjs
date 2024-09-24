@@ -210,7 +210,7 @@ async function buildBrowserConfig(options, outDir) {
 const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const dir = getUseCaseDir('dist/', useCase);
-  const outfile = `${dir}/headless.js`;
+  const outfile = `${dir}/headless.cjs`;
   return buildNodeConfig(
     {
       entryPoints: [entryPoint],

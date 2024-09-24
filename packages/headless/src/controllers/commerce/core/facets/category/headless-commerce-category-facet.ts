@@ -1,13 +1,13 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../../app/state-key';
+import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../../app/state-key.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from '../../../../../features/commerce/facets/category-facet/category-facet-actions';
-import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
-import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions';
-import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils';
-import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector';
+} from '../../../../../features/commerce/facets/category-facet/category-facet-actions.js';
+import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils.js';
+import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {
   CategoryFacetValue,
   CoreCommerceFacet,
@@ -15,13 +15,13 @@ import {
   CoreCommerceFacetState,
   FacetControllerType,
   buildCoreCommerceFacet,
-} from '../headless-core-commerce-facet';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
+} from '../headless-core-commerce-facet.js';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 import {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   buildCategoryFacetSearch,
-} from './headless-commerce-category-facet-search';
+} from './headless-commerce-category-facet-search.js';
 
 export type CategoryFacetOptions = Omit<
   CoreCommerceFacetOptions,

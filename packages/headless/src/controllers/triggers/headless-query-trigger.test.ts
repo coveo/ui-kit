@@ -1,17 +1,18 @@
-import {updateQuery} from '../../features/query/query-actions';
-import {queryReducer as query} from '../../features/query/query-slice';
-import {executeSearch} from '../../features/search/search-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {Mock} from 'vitest';
+import {updateQuery} from '../../features/query/query-actions.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {QueryTrigger} from '../core/triggers/headless-core-query-trigger';
-import {buildQueryTrigger} from './headless-query-trigger';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
+import {buildQueryTrigger} from './headless-query-trigger.js';
 
-jest.mock('../../features/query/query-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/query/query-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('QueryTrigger', () => {
   let engine: MockedSearchEngine;
@@ -22,7 +23,7 @@ describe('QueryTrigger', () => {
   }
 
   function registeredListeners() {
-    return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
+    return (engine.subscribe as Mock).mock.calls.map((args) => args[0]);
   }
 
   beforeEach(() => {
@@ -46,7 +47,7 @@ describe('QueryTrigger', () => {
   });
 
   describe('when a search without a trigger is performed', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockSearchEngine(createMockState());
       initQueryTrigger();

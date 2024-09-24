@@ -3,20 +3,20 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
-} from '../../../api/commerce/commerce-api-client';
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {ProductListingSection} from '../../../state/state-sections';
-import {validatePayload} from '../../../utils/validate-payload';
+} from '../../../api/commerce/commerce-api-client.js';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {ProductListingSection} from '../../../state/state-sections.js';
+import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   buildCommerceAPIRequest,
   QueryCommerceAPIThunkReturn,
   ListingAndSearchStateNeededByQueryCommerceAPI,
-} from '../common/actions';
-import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
+} from '../common/actions.js';
+import {perPagePrincipalSelector} from '../pagination/pagination-selectors.js';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
-} from './product-listing-selectors';
+} from './product-listing-selectors.js';
 
 export type StateNeededByFetchProductListing =
   ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingSection;

@@ -1,28 +1,28 @@
-import {CoreEngine} from '../../app/engine';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
-import {configurationReducer as configuration} from '../../features/configuration/configuration-slice';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
-import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice';
-import {automaticFacetSetReducer as automaticFacetSet} from '../../features/facets/automatic-facet-set/automatic-facet-set-slice';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
-import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
-import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
-import {queryReducer as query} from '../../features/query/query-slice';
-import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/sort-criteria-slice';
-import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
-import {tabSetReducer as tabSet} from '../../features/tab-set/tab-set-slice';
-import {loadReducerError} from '../../utils/errors';
-import {advancedSearchQueriesReducer as advancedSearchQueries} from './../../features/advanced-search-queries/advanced-search-queries-slice';
+import {CoreEngine} from '../../app/engine.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import {configurationReducer as configuration} from '../../features/configuration/configuration-slice.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
+import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice.js';
+import {automaticFacetSetReducer as automaticFacetSet} from '../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice.js';
+import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
+import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/sort-criteria-slice.js';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
+import {tabSetReducer as tabSet} from '../../features/tab-set/tab-set-slice.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {advancedSearchQueriesReducer as advancedSearchQueries} from './../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {
   SearchParameterManager,
   SearchParameterManagerInitialState,
   buildSearchParameterManager,
-} from './headless-search-parameter-manager';
+} from './headless-search-parameter-manager.js';
 
-export * from './headless-search-parameter-manager';
+export * from './headless-search-parameter-manager.js';
 
 export interface SearchParameterManagerBuildProps {
   initialState: SearchParameterManagerInitialState;

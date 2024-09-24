@@ -1,4 +1,5 @@
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {readFromObject} from '../../../utils/object-utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 export function getStringValueFromProductOrNull(
@@ -35,12 +36,4 @@ export function buildStringTemplateFromProduct(
 
     return newValue;
   });
-}
-
-function readFromObject<T>(object: T, key: string): string | undefined {
-  if (object && typeof object === 'object' && key in object) {
-    const value = (object as Record<string, unknown>)[key];
-    return typeof value === 'string' ? value : undefined;
-  }
-  return undefined;
 }

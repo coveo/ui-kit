@@ -1,9 +1,9 @@
-import {getSearchApiBaseUrl} from '../../../../api/platform-client';
-import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
-import {NavigatorContext} from '../../../../app/navigatorContextProvider';
-import {buildSearchRequest} from '../../../search/search-request';
-import {CategoryFacetRequest} from '../../category-facet-set/interfaces/request';
-import {StateNeededForCategoryFacetSearch} from '../generic/generic-facet-search-state';
+import {getSearchApiBaseUrl} from '../../../../api/platform-client.js';
+import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request.js';
+import {NavigatorContext} from '../../../../app/navigatorContextProvider.js';
+import {buildSearchRequest} from '../../../search/search-request.js';
+import {CategoryFacetRequest} from '../../category-facet-set/interfaces/request.js';
+import {StateNeededForCategoryFacetSearch} from '../generic/generic-facet-search-state.js';
 
 export const buildCategoryFacetSearchRequest = async (
   id: string,

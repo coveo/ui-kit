@@ -1,34 +1,34 @@
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {deselectAllDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
-import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {updateRangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/range-facet-actions';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
+import {deselectAllDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions.js';
+import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {updateRangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/range-facet-actions.js';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
+import {InsightAppState} from '../../../../../state/insight-app-state.js';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value.js';
 import {
   MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state.js';
 import {
   DateFacet,
   DateFacetOptions,
   buildDateFacet,
-} from './headless-insight-date-facet';
+} from './headless-insight-date-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
-jest.mock('../../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../../features/insight-search/insight-search-actions');
-jest.mock(
+vi.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/insight-search/insight-search-actions');
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions'
 );
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
-jest.mock(
+vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
+vi.mock(
   '../../../../../features/facets/range-facets/generic/range-facet-actions'
 );
 

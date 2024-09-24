@@ -1,29 +1,32 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {getSearchApiBaseUrl} from '../../api/platform-client';
-import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
-import {PlanRequest} from '../../api/search/plan/plan-request';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
+import {PlanRequest} from '../../api/search/plan/plan-request.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
+} from '../../api/search/search-api-client.js';
+import {NavigatorContext} from '../../app/navigatorContextProvider.js';
 import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
-import {CustomAction, makeAnalyticsAction} from '../analytics/analytics-utils';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+} from '../../utils/validate-payload.js';
+import {
+  CustomAction,
+  makeAnalyticsAction,
+} from '../analytics/analytics-utils.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
+import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**

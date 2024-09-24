@@ -1,13 +1,13 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   documentIdentifier,
   InsightAction,
   makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 export const logShowMoreFoldedResults = (result: Result): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.showMoreFoldedResults)(

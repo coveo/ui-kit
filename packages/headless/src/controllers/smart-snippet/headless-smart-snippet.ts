@@ -1,5 +1,5 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
   SmartSnippet,
   SmartSnippetCore,
@@ -7,10 +7,10 @@ import {
   SmartSnippetProps,
   SmartSnippetState,
   buildCoreSmartSnippet,
-} from '../core/smart-snippet/headless-core-smart-snippet';
-import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links';
+} from '../core/smart-snippet/headless-core-smart-snippet.js';
+import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 export type {
   SmartSnippet,
   SmartSnippetOptions,

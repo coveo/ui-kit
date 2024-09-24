@@ -2,12 +2,12 @@ import {RecordValue, Schema} from '@coveo/bueno';
 import {
   nonEmptyString,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
   getSampleEngineConfiguration,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The insight engine configuration.

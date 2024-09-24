@@ -1,21 +1,21 @@
-import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockInsightEngine} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {getConfigurationInitialState} from '../../configuration/configuration-state';
-import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions';
+import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockInsightEngine} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../../configuration/configuration-state.js';
+import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions.js';
 
-const mockLogBreadcrumbFacet = jest.fn();
+const mockLogBreadcrumbFacet = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logBreadcrumbFacet: mockLogBreadcrumbFacet,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

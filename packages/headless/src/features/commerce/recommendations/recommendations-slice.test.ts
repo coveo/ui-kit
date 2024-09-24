@@ -1,23 +1,23 @@
 import {Action} from '@reduxjs/toolkit';
-import {ChildProduct} from '../../../api/commerce/common/product';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
   buildMockChildProduct,
   buildMockProduct,
   buildMockBaseProduct,
-} from '../../../test/mock-product';
-import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice';
+} from '../../../test/mock-product.js';
+import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice.js';
+import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
   promoteChildToParent,
   registerRecommendationsSlot,
-} from './recommendations-actions';
-import {recommendationsReducer} from './recommendations-slice';
+} from './recommendations-actions.js';
+import {recommendationsReducer} from './recommendations-slice.js';
 import {
   getRecommendationsInitialState,
   RecommendationsState,
-} from './recommendations-state';
+} from './recommendations-state.js';
 
 describe('recommendation-slice', () => {
   let state: RecommendationsState;

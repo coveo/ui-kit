@@ -1,6 +1,6 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common';
-import {buildSearch} from '../headless-search';
-import {DidYouMean, DidYouMeanState} from './headless-did-you-mean';
+import {SearchOnlyControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common.js';
+import {buildSearch} from '../headless-search.js';
+import {DidYouMean, DidYouMeanState} from './headless-did-you-mean.js';
 
 export type {DidYouMean, DidYouMeanState};
 

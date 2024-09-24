@@ -1,31 +1,32 @@
-import {configuration} from '../../../../../app/common-reducers';
-import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {Mock} from 'vitest';
+import {configuration} from '../../../../../app/common-reducers.js';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {
   registerNumericFacet,
   updateNumericFacetValues,
   validateManualNumericRanges,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {searchReducer as search} from '../../../../../features/search/search-slice';
-import {SearchAppState} from '../../../../../state/search-app-state';
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {searchReducer as search} from '../../../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../../../state/search-app-state.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {createMockState} from '../../../../../test/mock-state';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response.js';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value.js';
+import {createMockState} from '../../../../../test/mock-state.js';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor.js';
 import {
   buildCoreNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
-} from './headless-core-numeric-filter';
-import {buildNumericRange} from './numeric-range';
+} from './headless-core-numeric-filter.js';
+import {buildNumericRange} from './numeric-range.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
 
@@ -43,7 +44,7 @@ describe('numeric filter', () => {
   }
 
   beforeEach(() => {
-    (updateNumericFacetValues as unknown as jest.Mock).mockImplementation(
+    (updateNumericFacetValues as unknown as Mock).mockImplementation(
       () => () => {}
     );
     initialState = undefined;
@@ -86,7 +87,7 @@ describe('numeric filter', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initNumericFilter();
 
@@ -136,7 +137,7 @@ describe('numeric filter', () => {
 
     it('should return false when range start value is greater than range end value', () => {
       const value = buildMockNumericFacetValue({start: 10, end: 5});
-      (updateNumericFacetValues as unknown as jest.Mock).mockImplementationOnce(
+      (updateNumericFacetValues as unknown as Mock).mockImplementationOnce(
         () => {
           return {
             error: 'oh no',

@@ -3,8 +3,8 @@ import {createSelector} from '@reduxjs/toolkit';
 import {
   CommercePaginationSection,
   RecommendationsSection,
-} from '../../../state/state-sections';
-import {totalEntriesRecommendationSelector} from '../pagination/pagination-selectors';
+} from '../../../state/state-sections.js';
+import {totalEntriesRecommendationSelector} from '../pagination/pagination-selectors.js';
 
 export const numberOfRecommendationsSelector = createSelector(
   (state: Partial<RecommendationsSection>, slotId: string) =>

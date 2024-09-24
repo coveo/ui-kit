@@ -1,9 +1,9 @@
-import {FacetValueState} from '../../../../facets/facet-api/value';
+import {FacetValueState} from '../../../../facets/facet-api/value.js';
 import {
   CategoryFacetDelimitingCharacter,
   FacetType,
   NumericFacetExtraProperties,
-} from './common';
+} from './common.js';
 
 export type CategoryFacetResponse = BaseFacetResponse<
   CategoryFacetValue,

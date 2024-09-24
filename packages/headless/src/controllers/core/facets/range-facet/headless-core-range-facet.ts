@@ -1,31 +1,31 @@
-import {CoreEngine} from '../../../../app/engine';
+import {CoreEngine} from '../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
-} from '../../../../features/facet-options/facet-options-actions';
-import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../features/facet-options/facet-options-actions.js';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors.js';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   baseFacetResponseSelector,
   isFacetLoadingResponseSelector,
-} from '../../../../features/facets/facet-set/facet-set-selectors';
+} from '../../../../features/facets/facet-set/facet-set-selectors.js';
 import {
   RangeFacetResponse,
   RangeFacetRequest,
-} from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+} from '../../../../features/facets/range-facets/generic/interfaces/range-facet.js';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions.js';
 import {
   isRangeFacetValueExcluded,
   isRangeFacetValueSelected,
-} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+} from '../../../../features/facets/range-facets/generic/range-facet-utils.js';
 import {
   ConfigurationSection,
   FacetOptionsSection,
   SearchSection,
-} from '../../../../state/state-sections';
-import {buildController} from '../../../controller/headless-controller';
+} from '../../../../state/state-sections.js';
+import {buildController} from '../../../controller/headless-controller.js';
 
 export type RangeFacet = ReturnType<typeof buildCoreRangeFacet>;
 

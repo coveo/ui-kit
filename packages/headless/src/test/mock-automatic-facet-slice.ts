@@ -1,5 +1,5 @@
-import {AutomaticFacetSlice} from '../features/facets/automatic-facet-set/automatic-facet-set-state';
-import {buildMockAutomaticFacetResponse} from './mock-automatic-facet-response';
+import {AutomaticFacetSlice} from '../features/facets/automatic-facet-set/automatic-facet-set-state.js';
+import {buildMockAutomaticFacetResponse} from './mock-automatic-facet-response.js';
 
 export function buildMockAutomaticFacetSlice(
   config: Partial<AutomaticFacetSlice> = {}

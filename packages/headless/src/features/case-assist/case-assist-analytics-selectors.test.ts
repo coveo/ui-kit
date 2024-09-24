@@ -1,4 +1,4 @@
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
+import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 import {
   KnownCaseFields,
   caseAssistCaseSelector,
@@ -8,7 +8,7 @@ import {
   caseAssistCustomCaseFieldValuesSelector,
   caseAssistCustomCaseInputValuesSelector,
   caseAssistDocumentSuggestionSelector,
-} from './case-assist-analytics-selectors';
+} from './case-assist-analytics-selectors.js';
 
 describe('case assist analytics selectors', () => {
   const buildStateWithCaseInput = (): Partial<CaseAssistAppState> => ({

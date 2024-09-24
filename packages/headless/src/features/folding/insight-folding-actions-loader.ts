@@ -1,14 +1,14 @@
 import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {foldingReducer as folding} from '../../features/folding/folding-slice';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {foldingReducer as folding} from '../../features/folding/folding-slice.js';
 import {
   registerFolding,
   loadCollection,
   StateNeededByLoadCollection,
   LoadCollectionFulfilledReturn,
   RegisterFoldingActionCreatorPayload,
-} from './insight-folding-actions';
+} from './insight-folding-actions.js';
 
 export type {RegisterFoldingActionCreatorPayload};
 

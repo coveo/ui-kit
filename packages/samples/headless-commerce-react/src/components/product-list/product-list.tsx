@@ -4,7 +4,7 @@ import {
   Product as HeadlessProduct,
   Cart,
 } from '@coveo/headless/commerce';
-import InteractiveProduct from '../interactive-product/interactive-product';
+import InteractiveProduct from '../interactive-product/interactive-product.js';
 
 interface IProductListProps {
   products: HeadlessProduct[];

@@ -1,5 +1,5 @@
-import {BaseFacetResponse} from '../../facet-api/response';
-import {FacetValue} from '../../facet-set/interfaces/response';
+import {BaseFacetResponse} from '../../facet-api/response.js';
+import {FacetValue} from '../../facet-set/interfaces/response.js';
 
 export type AutomaticFacetResponse = Omit<
   BaseFacetResponse<FacetValue>,

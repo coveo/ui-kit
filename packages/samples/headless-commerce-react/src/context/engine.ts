@@ -1,5 +1,5 @@
 import {buildCommerceEngine, CommerceEngine} from '@coveo/headless/commerce';
-import {loadCartItemsFromLocalStorage} from '../utils/cart-utils';
+import {loadCartItemsFromLocalStorage} from '../utils/cart-utils.js';
 
 export const getEngine = () => {
   if (_engine !== null) {

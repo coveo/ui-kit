@@ -1,8 +1,8 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {
   GeneratedContentFormat,
   GeneratedResponseFormat,
-} from './generated-response-format';
+} from './generated-response-format.js';
 
 export interface GeneratedAnswerState {
   id: string;
@@ -18,6 +18,10 @@ export interface GeneratedAnswerState {
    * Determines if the generated answer is streaming.
    */
   isStreaming: boolean;
+  /**
+   * Determines if the generated answer is enabled.
+   */
+  isEnabled: boolean;
   /**
    * The generated answer.
    */
@@ -82,6 +86,7 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     id: '',
     isVisible: true,
+    isEnabled: true,
     isLoading: false,
     isStreaming: false,
     citations: [],

@@ -1,12 +1,17 @@
-import {setContext} from '../../features/context/context-actions';
+import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {setContext} from '../../features/context/context-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildContext, Context, ContextInitialState} from './headless-context';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {
+  buildContext,
+  Context,
+  ContextInitialState,
+} from './headless-context.js';
 
-jest.mock('../../features/context/context-actions');
+vi.mock('../../features/context/context-actions');
 
 describe('Context', () => {
   let context: Context;
