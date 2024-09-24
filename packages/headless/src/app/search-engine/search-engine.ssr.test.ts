@@ -168,7 +168,7 @@ describe('SSR', () => {
       });
     });
 
-    describe('NOT OK with a buildResult that has a customized numberOfResults', () => {
+    describe('with a buildResult that has a customized numberOfResults', () => {
       const newNumberOfResults = 6;
 
       async function fetchBuildResultWithNewNumberOfResults() {
