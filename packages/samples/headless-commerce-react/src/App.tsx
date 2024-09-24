@@ -1,6 +1,6 @@
 import {Suspense} from 'react';
-import {getEngine} from './context/engine';
-import Router from './router/router';
+import {getEngine} from './context/engine.js';
+import Router from './router/router.js';
 
 export default function App() {
   const engine = getEngine();
