@@ -1,9 +1,9 @@
 import {
   playExecuteFirstSearch,
   wrapInCommerceInterface,
-} from '@coveo/atomic/storybookUtils/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/render-component';
+} from '@coveo/atomic-storybook-utils/commerce/commerce-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 
@@ -58,7 +58,7 @@ export const InAPage: Story = {
                 <atomic-product-section-metadata>
                   <atomic-product-text
                     field="ec_brand"
-                    class="block text-neutral-dark"
+                    class="text-neutral-dark block"
                   ></atomic-product-text>
                   <atomic-product-rating
                     field="ec_rating"
