@@ -17,17 +17,21 @@ export default function Pagination(props: IPaginationProps) {
   const renderPageRadioButtons = () => {
     return Array.from({length: state.totalPages}, (_, i) => {
       const page = i + 1;
+      const id = `page-${page}`;
       return (
-        <label className="SelectPage" key={page}>
+        <div className="PageRadioButton">
           <input
+            id={id}
             type="radio"
             name="page"
             value={page - 1}
             checked={state.page === page - 1}
             onChange={() => controller.selectPage(page - 1)}
           />
-          {page}
-        </label>
+          <label className="SelectPage" htmlFor={id} key={page}>
+            {page}
+          </label>
+        </div>
       );
     });
   };

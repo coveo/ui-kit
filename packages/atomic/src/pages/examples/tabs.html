@@ -17,6 +17,10 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
+          search: {
+            pipeline: 'genqatest',
+          },
+          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         // Trigger a first search
@@ -136,7 +140,7 @@
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
-          <atomic-search-box textarea></atomic-search-box>
+          <atomic-search-box></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
@@ -199,7 +203,7 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-tab-manager clear-filters-on-tab-change="true">
+          <atomic-tab-manager clear-filters-on-tab-change="false">
             <atomic-tab name="all" label="All"></atomic-tab>
             <atomic-tab name="article" label="Articles"></atomic-tab>
             <atomic-tab name="product" label="Products"></atomic-tab>
@@ -232,6 +236,7 @@
             <atomic-query-summary></atomic-query-summary>
             <atomic-refine-toggle></atomic-refine-toggle>
             <atomic-sort-dropdown>
+              <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
               <atomic-sort-expression
                 tabs-excluded='["article"]'
                 label="Name descending"
@@ -252,12 +257,12 @@
                 label="Least Recent"
                 expression="date ascending"
               ></atomic-sort-expression>
-              <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
             </atomic-sort-dropdown>
             <atomic-did-you-mean></atomic-did-you-mean>
             <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">
+            <atomic-generated-answer tabs-included='["all","parts"]'></atomic-generated-answer>
             <atomic-smart-snippet></atomic-smart-snippet>
             <atomic-smart-snippet-suggestions></atomic-smart-snippet-suggestions>
             <atomic-result-list display="list" tabs-included='["all", "parts"]'>
