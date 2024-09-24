@@ -1,8 +1,8 @@
 import {Cart, Recommendations} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
-import ProductList from '../../product-list/product-list';
-import ShowMore from '../../show-more/show-more';
-import Summary from '../../summary/summary';
+import ProductList from '../../product-list/product-list.js';
+import ShowMore from '../../show-more/show-more.js';
+import Summary from '../../summary/summary.js';
 
 //import Pagination from '../pagination/pagination';
 

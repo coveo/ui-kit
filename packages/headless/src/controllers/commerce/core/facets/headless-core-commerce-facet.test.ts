@@ -428,7 +428,9 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#state', () => {
-    it('#facetId exposes the facetId', () => {
+    it('#facetId exposes the facetId passed as an option to the controller', () => {
+      state.commerceFacetSet = {};
+      options.facetResponseSelector = jest.fn();
       expect(facet.state.facetId).toBe(facetId);
     });
 

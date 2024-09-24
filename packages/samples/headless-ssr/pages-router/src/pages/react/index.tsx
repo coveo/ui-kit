@@ -3,6 +3,7 @@ import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchSearchParameterManager from '@/common/components/react/search-parameter-manager';
+import TabManager from '@/common/components/react/tab-manager';
 import {
   SearchStaticState,
   fetchStaticState,
@@ -50,6 +51,7 @@ export default function Search({staticState, marshal}: StaticStateProps) {
     <SearchPageProvider navigatorContext={marshal} staticState={staticState}>
       <SearchSearchParameterManager />
       <SearchBox />
+      <TabManager />
       <ResultList />
       <AuthorFacet />
     </SearchPageProvider>

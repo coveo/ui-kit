@@ -14,7 +14,7 @@ jest.mock('coveo.analytics');
 
 describe('result preview analytics actions', () => {
   describe('#logDocumentQuickview', () => {
-    const testResult = buildMockNonEmptyResult();
+    const testResult = buildMockNonEmptyResult({searchUid: 'someid'});
     let engine: SearchEngine;
     const makeDocumentQuickview = jest.fn();
     const emit = jest.fn();

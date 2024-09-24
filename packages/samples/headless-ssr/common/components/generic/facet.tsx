@@ -1,16 +1,22 @@
-import {FacetState, Facet as FacetController} from '@coveo/headless/ssr';
+import {
+  FacetState,
+  Facet as FacetController,
+  TabManager,
+} from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent} from 'react';
 import FacetCommon from '../common/facet';
 
 interface FacetProps {
   title: string;
   staticState: FacetState;
+  tabManager?: TabManager;
   controller?: FacetController;
 }
 
 export const Facet: FunctionComponent<FacetProps> = ({
   title,
   staticState,
+  tabManager,
   controller,
 }) => {
   const [state, setState] = useState(staticState);
@@ -19,6 +25,10 @@ export const Facet: FunctionComponent<FacetProps> = ({
     () => controller?.subscribe?.(() => setState({...controller.state})),
     [controller]
   );
+
+  if (!state.enabled) {
+    return;
+  }
 
   return (
     <FacetCommon
