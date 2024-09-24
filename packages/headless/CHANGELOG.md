@@ -1,3 +1,14 @@
+## 3.1.0 (2024-09-24)
+
+- chore(atomic, headless): make bueno external (#4433) ([e1f7f2d](https://github.com/coveo/ui-kit/commits/e1f7f2d)), closes [#4433](https://github.com/coveo/ui-kit/issues/4433)
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+- fix(headless, commerce): schema validation error when switching between search page and plp (#4448) ([5808edb](https://github.com/coveo/ui-kit/commits/5808edb)), closes [#4448](https://github.com/coveo/ui-kit/issues/4448)
+- fix(quantic, searchbox): Issue with searchbox suggestions list flashing after selecting recent query ([6f75ad6](https://github.com/coveo/ui-kit/commits/6f75ad6)), closes [#4401](https://github.com/coveo/ui-kit/issues/4401)
+- feat: add answer configuration id to atomic-insight-generated-answer (#4451) ([6b7c2bd](https://github.com/coveo/ui-kit/commits/6b7c2bd)), closes [#4451](https://github.com/coveo/ui-kit/issues/4451)
+- feat(headless): add a way to disable/enable the generated answer controller (#4288) ([a2f167b](https://github.com/coveo/ui-kit/commits/a2f167b)), closes [#4288](https://github.com/coveo/ui-kit/issues/4288)
+- fix(atomic): enable/disable facet based on tab with updateActiveTab action (#4313) ([08fe92a](https://github.com/coveo/ui-kit/commits/08fe92a)), closes [#4313](https://github.com/coveo/ui-kit/issues/4313) [#4311](https://github.com/coveo/ui-kit/issues/4311)
+- fix(headless): ensure each result keep a reference of its 'source' searchId (#4391) ([d0aa1fc](https://github.com/coveo/ui-kit/commits/d0aa1fc)), closes [#4391](https://github.com/coveo/ui-kit/issues/4391)
+
 ## 3.0.0 (2024-09-18)
 
 - chore!: remove abab (#3908) ([e7b5682](https://github.com/coveo/ui-kit/commits/e7b5682)), closes [#3908](https://github.com/coveo/ui-kit/issues/3908) [#3897](https://github.com/coveo/ui-kit/issues/3897)

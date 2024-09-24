@@ -20,7 +20,7 @@ import {
   buildCommerceRegularFacet,
 } from './headless-commerce-regular-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/regular-facet/regular-facet-actions'
 );
 
@@ -30,7 +30,7 @@ describe('RegularFacet', () => {
   let state: CommerceAppState;
   let options: RegularFacetOptions;
   let facet: RegularFacet;
-  const facetResponseSelector = jest.fn();
+  const facetResponseSelector = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -54,13 +54,13 @@ describe('RegularFacet', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       facetId,
-      fetchProductsActionCreator: jest.fn(),
+      fetchProductsActionCreator: vi.fn(),
       facetResponseSelector,
-      isFacetLoadingResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: vi.fn(),
       facetSearch: {type: 'SEARCH'},
     };
 

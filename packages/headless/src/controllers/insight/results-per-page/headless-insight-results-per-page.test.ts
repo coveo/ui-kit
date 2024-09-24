@@ -11,8 +11,8 @@ import {
   buildResultsPerPage,
 } from './headless-insight-results-per-page.js';
 
-jest.mock('../../../features/pagination/pagination-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/pagination/pagination-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('InsightResultsPerPage', () => {
   let engine: MockedInsightEngine;

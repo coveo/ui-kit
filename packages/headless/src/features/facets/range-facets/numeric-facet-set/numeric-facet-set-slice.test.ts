@@ -32,7 +32,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('initializes the set to an empty object', () => {
@@ -84,7 +84,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#restoreSearchParameters restores the #nf payload correctly', () => {
-    const spy = jest.spyOn(
+    const spy = vi.spyOn(
       RangeFacetReducers,
       'handleRangeFacetSearchParameterRestoration'
     );
@@ -105,7 +105,7 @@ describe('numeric-facet-set slice', () => {
   it('#toggleSelectNumericFacetValue calls #toggleSelectRangeValue', () => {
     const facetId = '1';
     const selection = buildMockNumericFacetValue();
-    jest.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
+    vi.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
 
     numericFacetSetReducer(
       state,
@@ -118,7 +118,7 @@ describe('numeric-facet-set slice', () => {
   it('#toggleExcludeNumericFacetValue calls #toggleExcludeRangeValue', () => {
     const facetId = '1';
     const selection = buildMockNumericFacetValue();
-    jest.spyOn(RangeFacetReducers, 'toggleExcludeRangeValue');
+    vi.spyOn(RangeFacetReducers, 'toggleExcludeRangeValue');
 
     numericFacetSetReducer(
       state,
@@ -129,7 +129,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#deselectAllNumericFacetValues calls #handleRangeFacetDeselectAll', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
     const action = deselectAllNumericFacetValues('1');
     numericFacetSetReducer(state, action);
 
@@ -139,7 +139,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#updateNumericFacetValues calls #updateRangeValues', () => {
-    jest.spyOn(RangeFacetReducers, 'updateRangeValues');
+    vi.spyOn(RangeFacetReducers, 'updateRangeValues');
     const action = updateNumericFacetValues({facetId: '1', values: []});
     numericFacetSetReducer(state, action);
 
@@ -147,7 +147,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every numeric facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
     state['1'] = buildMockNumericFacetSlice();
     state['2'] = buildMockNumericFacetSlice();
@@ -159,7 +159,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+    vi.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
     const action = updateNumericFacetSortCriterion({
       facetId: '1',
@@ -173,7 +173,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
-    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
+    vi.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
 
     const search = buildMockSearch();
     numericFacetSetReducer(

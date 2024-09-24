@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {configuration} from '../../../../app/common-reducers.js';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
@@ -26,9 +27,9 @@ import {
   NumericFilterOptions,
 } from './headless-numeric-filter.js';
 
-jest.mock('../../../../features/search/search-actions');
-jest.mock('../../../../features/facet-options/facet-options-actions');
-jest.mock(
+vi.mock('../../../../features/search/search-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock(
   '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
 
@@ -85,7 +86,7 @@ describe('numeric filter', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initNumericFilter();
 
@@ -117,9 +118,7 @@ describe('numeric filter', () => {
 
   describe('#setRange', () => {
     beforeEach(() => {
-      (updateNumericFacetValues as unknown as jest.Mock).mockReturnValueOnce(
-        {}
-      );
+      (updateNumericFacetValues as unknown as Mock).mockReturnValueOnce({});
     });
     it('dispatches a updateNumericFacetValues with the passed value', () => {
       const value = buildMockNumericFacetValue({});

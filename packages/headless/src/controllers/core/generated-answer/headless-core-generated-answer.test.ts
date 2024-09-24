@@ -44,8 +44,8 @@ import {
   GeneratedAnswerProps,
 } from './headless-core-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock(
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 
@@ -75,7 +75,7 @@ describe('generated answer', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildEngineWithGeneratedAnswer();
     initGeneratedAnswer();
   });

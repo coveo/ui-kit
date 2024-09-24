@@ -23,15 +23,15 @@ import {
   buildAttachToCase,
 } from './headless-attach-to-case.js';
 
-jest.mock(
+vi.mock(
   '../../../features/attached-results/attached-results-analytics-actions',
   () => ({
-    logCaseAttach: jest.fn(() => () => {}),
-    logCaseDetach: jest.fn(() => () => {}),
+    logCaseAttach: vi.fn(() => () => {}),
+    logCaseDetach: vi.fn(() => () => {}),
   })
 );
 
-jest.mock('../../../features/attached-results/attached-results-actions');
+vi.mock('../../../features/attached-results/attached-results-actions');
 
 describe('insight attach to case', () => {
   let engine: MockedInsightEngine;
@@ -55,7 +55,7 @@ describe('insight attach to case', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('initializes', () => {

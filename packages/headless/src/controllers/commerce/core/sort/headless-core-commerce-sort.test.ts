@@ -13,9 +13,9 @@ import {
   SortBy,
 } from './headless-core-commerce-sort.js';
 
-jest.mock('../../../../features/commerce/sort/sort-actions');
-jest.mock('../../../../features/pagination/pagination-actions');
-jest.mock(
+vi.mock('../../../../features/commerce/sort/sort-actions');
+vi.mock('../../../../features/pagination/pagination-actions');
+vi.mock(
   '../../../../features/commerce/product-listing/product-listing-actions'
 );
 

@@ -19,8 +19,8 @@ import {
   StaticFilterOptions,
 } from './headless-static-filter.js';
 
-jest.mock('../../features/search/search-actions');
-jest.mock('../../features/static-filter-set/static-filter-set-actions');
+vi.mock('../../features/search/search-actions');
+vi.mock('../../features/static-filter-set/static-filter-set-actions');
 
 describe('Static Filter', () => {
   let engine: MockedSearchEngine;
@@ -32,7 +32,7 @@ describe('Static Filter', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     options = {
       id: 'a',

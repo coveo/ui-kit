@@ -4,17 +4,17 @@ import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {logResultsSort} from './sort-criteria-insight-analytics-actions.js';
 
-const mockLogResultsSort = jest.fn();
+const mockLogResultsSort = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logResultsSort: mockLogResultsSort,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

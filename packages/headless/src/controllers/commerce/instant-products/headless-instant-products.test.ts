@@ -16,9 +16,7 @@ import {
   buildInstantProducts,
 } from './headless-instant-products.js';
 
-jest.mock(
-  '../../../features/commerce/instant-products/instant-products-actions'
-);
+vi.mock('../../../features/commerce/instant-products/instant-products-actions');
 
 describe('instant products', () => {
   let engine: MockedCommerceEngine;
@@ -27,8 +25,8 @@ describe('instant products', () => {
   const searchBoxId = 'search_box_1';
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useFakeTimers();
+    vi.clearAllMocks();
+    vi.useFakeTimers();
     state = buildMockCommerceState();
     engine = buildMockCommerceEngine(state);
     instantProducts = buildInstantProducts(engine, {options: {searchBoxId}});

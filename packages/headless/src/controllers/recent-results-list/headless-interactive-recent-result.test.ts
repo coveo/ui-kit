@@ -12,7 +12,7 @@ import {
   InteractiveRecentResult,
 } from './headless-interactive-recent-result.js';
 
-jest.mock('../../features/recent-results/recent-results-analytics-actions');
+vi.mock('../../features/recent-results/recent-results-analytics-actions');
 
 describe('InteractiveRecentResult', () => {
   let engine: MockedSearchEngine;
@@ -40,11 +40,11 @@ describe('InteractiveRecentResult', () => {
   beforeEach(() => {
     engine = buildMockSearchEngine(createMockState());
     initializeInteractiveRecentResult();
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('it adds the correct reducers to engine', () => {
@@ -53,7 +53,7 @@ describe('InteractiveRecentResult', () => {
 
   it('when calling select(), logs recentResultClick', () => {
     interactiveRecentResult.select();
-    jest.runAllTimers();
+    vi.runAllTimers();
 
     expect(logRecentResultClick).toHaveBeenCalledWith(mockResult);
   });

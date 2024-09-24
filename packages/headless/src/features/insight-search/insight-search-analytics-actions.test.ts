@@ -14,14 +14,14 @@ import {
   logQueryError,
 } from './insight-search-analytics-actions.js';
 
-const mockLogContextChanged = jest.fn();
-const mockLogFetchMoreResults = jest.fn();
-const mockLogQueryError = jest.fn();
-const mockLogInterfaceLoad = jest.fn();
-const mockLogInterfaceChange = jest.fn();
+const mockLogContextChanged = vi.fn();
+const mockLogFetchMoreResults = vi.fn();
+const mockLogQueryError = vi.fn();
+const mockLogInterfaceLoad = vi.fn();
+const mockLogInterfaceChange = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logContextChanged: mockLogContextChanged,
     logFetchMoreResults: mockLogFetchMoreResults,
@@ -32,7 +32,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

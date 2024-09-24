@@ -18,13 +18,13 @@ import {
   Pagination,
 } from './headless-core-commerce-pagination.js';
 
-jest.mock('../../../../features/commerce/pagination/pagination-actions');
+vi.mock('../../../../features/commerce/pagination/pagination-actions');
 
 describe('core pagination', () => {
   let engine: MockedCommerceEngine;
   let pagination: Pagination;
-  const fetchProductsActionCreator = jest.fn();
-  const fetchMoreProductsActionCreator = jest.fn();
+  const fetchProductsActionCreator = vi.fn();
+  const fetchMoreProductsActionCreator = vi.fn();
   const slotId = 'recommendations-slot-id';
 
   function initPagination(options: CorePaginationOptions = {}) {

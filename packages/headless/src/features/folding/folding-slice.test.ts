@@ -186,7 +186,7 @@ describe('folding slice', () => {
 
       beforeEach(() => {
         apiClient = {
-          search: jest.fn().mockResolvedValue({success: {results: []}}),
+          search: vi.fn().mockResolvedValue({success: {results: []}}),
         } as unknown as SearchAPIClient;
         mockEngine = buildMockSearchEngine(createMockState());
       });

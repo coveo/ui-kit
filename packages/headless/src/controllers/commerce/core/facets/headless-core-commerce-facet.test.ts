@@ -26,14 +26,14 @@ import {
   CoreCommerceFacetOptions,
 } from './headless-core-commerce-facet.js';
 
-jest.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
-jest.mock(
+vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
+vi.mock(
   '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
 );
 
 describe('CoreCommerceFacet', () => {
   const facetId = 'facet_id';
-  const fetchProductsActionCreator = jest.fn();
+  const fetchProductsActionCreator = vi.fn();
   const toggleExcludeActionCreator = toggleExcludeFacetValue;
   const toggleSelectActionCreator = toggleSelectFacetValue;
   const field = 'some_field';
@@ -67,14 +67,14 @@ describe('CoreCommerceFacet', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       facetId,
       toggleExcludeActionCreator,
       toggleSelectActionCreator,
       fetchProductsActionCreator,
-      facetResponseSelector: jest.fn(),
-      isFacetLoadingResponseSelector: jest.fn(),
+      facetResponseSelector: vi.fn(),
+      isFacetLoadingResponseSelector: vi.fn(),
     };
 
     state = buildMockCommerceState();
@@ -138,15 +138,15 @@ describe('CoreCommerceFacet', () => {
           facetId,
           toggleSelectActionCreator,
           fetchProductsActionCreator,
-          facetResponseSelector: jest.fn(),
-          isFacetLoadingResponseSelector: jest.fn(),
+          facetResponseSelector: vi.fn(),
+          isFacetLoadingResponseSelector: vi.fn(),
         };
 
         initFacet();
       });
 
       it('logs a warning', () => {
-        jest.spyOn(engine.logger, 'warn');
+        vi.spyOn(engine.logger, 'warn');
         facet.toggleExclude(facetValue());
 
         expect(engine.logger.warn).toHaveBeenCalledTimes(1);
@@ -185,7 +185,7 @@ describe('CoreCommerceFacet', () => {
       });
 
       it('calls #toggleSelect', () => {
-        jest.spyOn(facet, 'toggleSelect');
+        vi.spyOn(facet, 'toggleSelect');
         facet.toggleSingleSelect(facetValue());
 
         expect(facet.toggleSelect).toHaveBeenCalled();
@@ -203,7 +203,7 @@ describe('CoreCommerceFacet', () => {
       const facetValue = () => buildMockCommerceRegularFacetValue({state});
 
       it('calls #toggleSelect', () => {
-        jest.spyOn(facet, 'toggleSelect');
+        vi.spyOn(facet, 'toggleSelect');
         facet.toggleSingleSelect(facetValue());
 
         expect(facet.toggleSelect).toHaveBeenCalled();
@@ -225,15 +225,15 @@ describe('CoreCommerceFacet', () => {
           facetId,
           toggleSelectActionCreator,
           fetchProductsActionCreator,
-          facetResponseSelector: jest.fn(),
-          isFacetLoadingResponseSelector: jest.fn(),
+          facetResponseSelector: vi.fn(),
+          isFacetLoadingResponseSelector: vi.fn(),
         };
 
         initFacet();
       });
 
       it('logs a warning', () => {
-        jest.spyOn(engine.logger, 'warn');
+        vi.spyOn(engine.logger, 'warn');
         facet.toggleSingleExclude(facetValue());
 
         expect(engine.logger.warn).toHaveBeenCalledTimes(1);
@@ -245,7 +245,7 @@ describe('CoreCommerceFacet', () => {
       });
 
       it('does not call #toggleExclude', () => {
-        jest.spyOn(facet, 'toggleExclude');
+        vi.spyOn(facet, 'toggleExclude');
         facet.toggleSingleExclude(facetValue());
 
         expect(facet.toggleExclude).not.toHaveBeenCalled();
@@ -261,7 +261,7 @@ describe('CoreCommerceFacet', () => {
         });
 
         it('calls #toggleExclude', () => {
-          jest.spyOn(facet, 'toggleExclude');
+          vi.spyOn(facet, 'toggleExclude');
           facet.toggleSingleExclude(facetValue());
 
           expect(facet.toggleExclude).toHaveBeenCalled();
@@ -277,7 +277,7 @@ describe('CoreCommerceFacet', () => {
         },
       ])('when toggled facet value state is $state', ({state}) => {
         it('calls #toggleExclude', () => {
-          jest.spyOn(facet, 'toggleExclude');
+          vi.spyOn(facet, 'toggleExclude');
           const excludedFacetValue = buildMockCommerceRegularFacetValue({
             state,
           });
@@ -428,7 +428,9 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#state', () => {
-    it('#facetId exposes the facetId', () => {
+    it('#facetId exposes the facetId passed as an option to the controller', () => {
+      state.commerceFacetSet = {};
+      options.facetResponseSelector = vi.fn();
       expect(facet.state.facetId).toBe(facetId);
     });
 

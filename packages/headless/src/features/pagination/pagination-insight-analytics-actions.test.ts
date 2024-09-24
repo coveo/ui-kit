@@ -11,12 +11,12 @@ import {
   logPagePrevious,
 } from './pagination-insight-analytics-actions.js';
 
-const mockLogPagerNumber = jest.fn();
-const mockLogPagerNext = jest.fn();
-const mockLogPagerPrevious = jest.fn();
+const mockLogPagerNumber = vi.fn();
+const mockLogPagerNext = vi.fn();
+const mockLogPagerPrevious = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logPagerNumber: mockLogPagerNumber,
     logPagerNext: mockLogPagerNext,
@@ -25,7 +25,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -71,7 +71,7 @@ describe('pagination insight analytics actions', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     engine = buildMockInsightEngine(buildMockInsightState(insightState));
   });
 

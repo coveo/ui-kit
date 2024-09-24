@@ -16,11 +16,11 @@ import {
   buildSearchBox,
 } from './headless-insight-search-box.js';
 
-jest.mock('../../../features/query/query-insight-analytics-actions', () => ({
-  logSearchboxSubmit: jest.fn(() => () => {}),
+vi.mock('../../../features/query/query-insight-analytics-actions', () => ({
+  logSearchboxSubmit: vi.fn(() => () => {}),
 }));
 
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -31,7 +31,7 @@ describe('headless searchBox', () => {
   let props: SearchBoxProps;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     const options: SearchBoxOptions = {
       id,
       numberOfSuggestions: 10,

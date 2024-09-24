@@ -20,8 +20,8 @@ import {
 import {createMockState} from '../../../test/mock-state.js';
 import {Sort, SortProps, buildCoreSort} from './headless-core-sort.js';
 
-jest.mock('../../../features/sort-criteria/sort-criteria-actions');
-jest.mock('../../../features/pagination/pagination-actions');
+vi.mock('../../../features/sort-criteria/sort-criteria-actions');
+vi.mock('../../../features/pagination/pagination-actions');
 
 describe('Sort', () => {
   let engine: MockedSearchEngine;

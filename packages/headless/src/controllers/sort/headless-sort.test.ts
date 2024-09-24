@@ -11,8 +11,8 @@ import {
 import {createMockState} from '../../test/mock-state.js';
 import {Sort, SortProps, buildSort} from './headless-sort.js';
 
-jest.mock('../../features/sort-criteria/sort-criteria-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/sort-criteria/sort-criteria-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('Sort', () => {
   let engine: MockedSearchEngine;
@@ -24,7 +24,7 @@ describe('Sort', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     props = {
       initialState: {},

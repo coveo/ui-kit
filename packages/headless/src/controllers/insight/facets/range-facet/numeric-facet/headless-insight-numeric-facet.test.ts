@@ -14,8 +14,8 @@ import {
   NumericFacetOptions,
 } from './headless-insight-numeric-facet.js';
 
-jest.mock('../../../../../features/insight-search/insight-search-actions');
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
 
 describe('insight numeric facet', () => {
   const facetId = '1';

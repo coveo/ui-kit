@@ -16,11 +16,9 @@ import {
   buildUserActions,
 } from './headless-user-actions.js';
 
-jest.mock(
-  '../../../features/insight-user-actions/insight-user-actions-actions'
-);
+vi.mock('../../../features/insight-user-actions/insight-user-actions-actions');
 
-jest.mock('../../../features/insight-search/insight-analytics-actions');
+vi.mock('../../../features/insight-search/insight-analytics-actions');
 
 describe('UserActions', () => {
   let engine: MockedInsightEngine;

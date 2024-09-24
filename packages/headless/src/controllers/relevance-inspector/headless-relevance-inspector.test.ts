@@ -22,8 +22,8 @@ import {
   RelevanceInspectorProps,
 } from './headless-relevance-inspector.js';
 
-jest.mock('../../features/debug/debug-actions');
-jest.mock('../../features/fields/fields-actions');
+vi.mock('../../features/debug/debug-actions');
+vi.mock('../../features/fields/fields-actions');
 
 describe('RelevanceInspector', () => {
   let engine: MockedSearchEngine;
@@ -52,14 +52,14 @@ describe('RelevanceInspector', () => {
   });
 
   it('when enabling debug, should call the listener', () => {
-    const listenerSpy = jest.fn();
+    const listenerSpy = vi.fn();
     relevanceInspector.subscribe(listenerSpy);
     relevanceInspector.enable();
     expect(listenerSpy).toHaveBeenCalledTimes(1);
   });
 
   it('when enabling debug twice, should call the listener once', () => {
-    const listenerSpy = jest.fn();
+    const listenerSpy = vi.fn();
     relevanceInspector.subscribe(listenerSpy);
     relevanceInspector.enable();
     relevanceInspector.enable();
@@ -67,7 +67,7 @@ describe('RelevanceInspector', () => {
   });
 
   it('when disabling, should call the listener', () => {
-    const listenerSpy = jest.fn();
+    const listenerSpy = vi.fn();
     relevanceInspector.enable();
     relevanceInspector.subscribe(listenerSpy);
     relevanceInspector.disable();
@@ -75,7 +75,7 @@ describe('RelevanceInspector', () => {
   });
 
   it('when disabling twice, should call the listener once', () => {
-    const listenerSpy = jest.fn();
+    const listenerSpy = vi.fn();
     relevanceInspector.enable();
     relevanceInspector.subscribe(listenerSpy);
     relevanceInspector.disable();

@@ -99,7 +99,6 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm run build
-      - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -115,7 +114,6 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm run build
-      - run: cat packages/atomic/dist/atomic/atomic.esm.js
       - uses: ./.github/actions/merge-playwright-reports
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}

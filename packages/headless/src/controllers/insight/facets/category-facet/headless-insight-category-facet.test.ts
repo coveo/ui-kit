@@ -30,11 +30,11 @@ import {
   buildCategoryFacet,
 } from './headless-insight-category-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../features/facets/category-facet-set/category-facet-set-actions'
 );
-jest.mock('../../../../features/insight-search/insight-search-actions');
-jest.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
 
 describe('insight category facet', () => {
   const facetId = '1';

@@ -19,10 +19,10 @@ import {
   FieldSuggestions,
 } from './headless-field-suggestions.js';
 
-jest.mock(
+vi.mock(
   '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
-jest.mock(
+vi.mock(
   '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
 
@@ -47,12 +47,12 @@ describe('fieldSuggestions', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       facetId,
-      fetchProductsActionCreator: jest.fn(),
-      facetResponseSelector: jest.fn(),
-      isFacetLoadingResponseSelector: jest.fn(),
+      fetchProductsActionCreator: vi.fn(),
+      facetResponseSelector: vi.fn(),
+      isFacetLoadingResponseSelector: vi.fn(),
       facetSearch: {type: 'SEARCH'},
     };
 

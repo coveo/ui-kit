@@ -30,8 +30,8 @@ import {
   FoldedResultListOptions,
 } from './headless-core-folded-result-list.js';
 
-jest.mock('../../../features/folding/folding-actions');
-jest.mock('../../../features/folding/folding-analytics-actions');
+vi.mock('../../../features/folding/folding-actions');
+vi.mock('../../../features/folding/folding-analytics-actions');
 
 describe('FoldedResultList', () => {
   let engine: MockedSearchEngine;

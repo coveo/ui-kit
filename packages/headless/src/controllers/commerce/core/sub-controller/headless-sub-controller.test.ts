@@ -27,26 +27,26 @@ import {
 
 describe('sub-controllers', () => {
   let engine: MockedCommerceEngine;
-  const mockResponseIdSelector = jest.fn();
-  const mockIsLoadingSelector = jest.fn();
-  const mockNumberOfProductsSelector = jest.fn();
-  const mockErrorSelector = jest.fn();
-  const mockPageSelector = jest.fn();
-  const mockPerPageSelector = jest.fn();
-  const mockTotalEntriesSelector = jest.fn();
-  const mockAugmentSummary = jest.fn();
-  const mockFetchProductsActionCreator = jest.fn();
-  const mockFetchMoreProductsActionCreator = jest.fn();
-  const mockFacetResponseSelector = jest.fn();
-  const mockIsFacetLoadingResponseSelector = jest.fn();
-  const mockRequestIdSelector = jest.fn();
+  const mockResponseIdSelector = vi.fn();
+  const mockIsLoadingSelector = vi.fn();
+  const mockNumberOfProductsSelector = vi.fn();
+  const mockErrorSelector = vi.fn();
+  const mockPageSelector = vi.fn();
+  const mockPerPageSelector = vi.fn();
+  const mockTotalEntriesSelector = vi.fn();
+  const mockAugmentSummary = vi.fn();
+  const mockFetchProductsActionCreator = vi.fn();
+  const mockFetchMoreProductsActionCreator = vi.fn();
+  const mockFacetResponseSelector = vi.fn();
+  const mockIsFacetLoadingResponseSelector = vi.fn();
+  const mockRequestIdSelector = vi.fn();
   const mockParametersDefinition = {};
-  const mockActiveParametersSelector = jest.fn();
-  const mockRestoreActionCreator = jest.fn();
-  const mockEnrichParameters = jest.fn();
+  const mockActiveParametersSelector = vi.fn();
+  const mockRestoreActionCreator = vi.fn();
+  const mockEnrichParameters = vi.fn();
   const mockSerializer = {
-    serialize: jest.fn(),
-    deserialize: jest.fn(),
+    serialize: vi.fn(),
+    deserialize: vi.fn(),
   };
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe('sub-controllers', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('#buildSearchSubControllers', () => {
@@ -99,7 +99,7 @@ describe('sub-controllers', () => {
     });
 
     it('#didYouMean builds did you mean controller', () => {
-      const buildDidYouMean = jest.spyOn(DidYouMean, 'buildDidYouMean');
+      const buildDidYouMean = vi.spyOn(DidYouMean, 'buildDidYouMean');
 
       const didYouMean = subControllers.didYouMean();
 
@@ -146,7 +146,7 @@ describe('sub-controllers', () => {
     });
 
     it('#sort builds sort controller', () => {
-      const buildCoreSortMock = jest.spyOn(CoreSort, 'buildCoreSort');
+      const buildCoreSortMock = vi.spyOn(CoreSort, 'buildCoreSort');
 
       const sort = subControllers.sort();
 
@@ -154,7 +154,7 @@ describe('sub-controllers', () => {
     });
 
     it('#facetGenerator builds facet generator', () => {
-      const buildCoreFacetGenerator = jest.spyOn(
+      const buildCoreFacetGenerator = vi.spyOn(
         CoreFacetGenerator,
         'buildFacetGenerator'
       );
@@ -167,7 +167,7 @@ describe('sub-controllers', () => {
     });
 
     it('#breadcrumbManager builds breadcrumb manager', () => {
-      const buildCoreBreadcrumbManager = jest.spyOn(
+      const buildCoreBreadcrumbManager = vi.spyOn(
         CoreBreadcrumbManager,
         'buildCoreBreadcrumbManager'
       );
@@ -181,7 +181,7 @@ describe('sub-controllers', () => {
 
     it('#urlManager builds url manager', () => {
       mockSerializer.deserialize.mockReturnValue({});
-      const buildCoreUrlManager = jest.spyOn(
+      const buildCoreUrlManager = vi.spyOn(
         CoreUrlManager,
         'buildCoreUrlManager'
       );
@@ -202,7 +202,7 @@ describe('sub-controllers', () => {
     });
 
     it('#parameterManager builds parameter manager', () => {
-      const buildCoreParameterManager = jest.spyOn(
+      const buildCoreParameterManager = vi.spyOn(
         CoreParameterManager,
         'buildCoreParameterManager'
       );
@@ -249,7 +249,7 @@ describe('sub-controllers', () => {
     });
 
     it('#interactiveProduct builds interactive product controller', () => {
-      const buildCoreInteractiveProductMock = jest.spyOn(
+      const buildCoreInteractiveProductMock = vi.spyOn(
         CoreInteractiveProduct,
         'buildCoreInteractiveProduct'
       );
@@ -278,7 +278,7 @@ describe('sub-controllers', () => {
     });
 
     it('#pagination builds pagination controller with slot id', () => {
-      const buildCorePaginationMock = jest.spyOn(
+      const buildCorePaginationMock = vi.spyOn(
         CorePagination,
         'buildCorePagination'
       );

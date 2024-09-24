@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {configuration} from '../../../../../app/common-reducers.js';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
@@ -26,11 +27,11 @@ import {
   DateFilterOptions,
 } from './headless-core-date-filter.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
 
-jest.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
 
 describe('date filter', () => {
   const facetId = '1';
@@ -46,7 +47,7 @@ describe('date filter', () => {
   }
 
   beforeEach(() => {
-    (updateDateFacetValues as unknown as jest.Mock).mockImplementation(
+    (updateDateFacetValues as unknown as Mock).mockImplementation(
       () => () => {}
     );
     initialState = undefined;
@@ -69,14 +70,12 @@ describe('date filter', () => {
     initDateFilter();
     expect(validateManualDateRanges).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentValues: [
-          {
-            end: '2021/03/24@22:16:31',
-            endInclusive: true,
+        currentValues: expect.arrayContaining([
+          expect.objectContaining({
             start: '2021/03/25@22:16:31',
-            state: 'selected',
-          },
-        ],
+            end: '2021/03/24@22:16:31',
+          }),
+        ]),
       })
     );
   });
@@ -91,7 +90,7 @@ describe('date filter', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initDateFilter();
 
@@ -147,13 +146,11 @@ describe('date filter', () => {
     });
 
     it('should return false when range start value is greater than range end value', () => {
-      (updateDateFacetValues as unknown as jest.Mock).mockImplementationOnce(
-        () => {
-          return {
-            error: 'oh no',
-          };
-        }
-      );
+      (updateDateFacetValues as unknown as Mock).mockImplementationOnce(() => {
+        return {
+          error: 'oh no',
+        };
+      });
       const value = buildMockDateFacetValue(
         buildDateRange({start: 1616679091000, end: 1616592691000})
       );

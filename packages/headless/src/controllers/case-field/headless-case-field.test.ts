@@ -25,9 +25,9 @@ import {
   CaseFieldOptions,
 } from './headless-case-field.js';
 
-jest.mock('../../features/document-suggestion/document-suggestion-actions');
-jest.mock('../../features/case-field/case-field-actions');
-jest.mock('../../features/case-assist/case-assist-analytics-actions');
+vi.mock('../../features/document-suggestion/document-suggestion-actions');
+vi.mock('../../features/case-field/case-field-actions');
+vi.mock('../../features/case-assist/case-assist-analytics-actions');
 
 describe('Case Field', () => {
   let engine: MockedCaseAssistEngine;
@@ -45,7 +45,7 @@ describe('Case Field', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       field: testFieldName,
     };
@@ -64,7 +64,7 @@ describe('Case Field', () => {
   });
 
   it('dispatch #registerCaseField on init if the field was not already registered', () => {
-    const mockedRegisterCaseField = jest.mocked(registerCaseField);
+    const mockedRegisterCaseField = vi.mocked(registerCaseField);
 
     initCaseField();
 
@@ -78,8 +78,8 @@ describe('Case Field', () => {
   });
 
   it('does not dispatch #registerCaseField on init if the field is already registered', () => {
-    jest.resetAllMocks();
-    const mockedRegisterCaseField = jest.mocked(registerCaseField);
+    vi.resetAllMocks();
+    const mockedRegisterCaseField = vi.mocked(registerCaseField);
 
     const initialState = buildMockCaseAssistState();
     initialState.caseField.fields[testFieldName] = {suggestions: [], value: ''};
@@ -116,7 +116,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #logClassificationClick action when value is a suggestion', () => {
-      const mockedLogClassificationClick = jest.mocked(logClassificationClick);
+      const mockedLogClassificationClick = vi.mocked(logClassificationClick);
 
       field.update('suggested value');
 
@@ -129,7 +129,7 @@ describe('Case Field', () => {
     });
 
     it('does not dispatch a #logClassificationClick action when value is not a suggestion', () => {
-      const mockedLogClassificationClick = jest.mocked(logClassificationClick);
+      const mockedLogClassificationClick = vi.mocked(logClassificationClick);
 
       field.update(testValue);
 
@@ -137,7 +137,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #updateCaseField action with the passed field value', () => {
-      const mockedUpdateCaseField = jest.mocked(updateCaseField);
+      const mockedUpdateCaseField = vi.mocked(updateCaseField);
 
       field.update(testValue);
 
@@ -151,7 +151,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #logUpdateCaseField analytics action', () => {
-      const mockedLogUpdateCaseField = jest.mocked(logUpdateCaseField);
+      const mockedLogUpdateCaseField = vi.mocked(logUpdateCaseField);
 
       field.update(testValue);
 
@@ -162,7 +162,7 @@ describe('Case Field', () => {
     });
 
     it('does not dispatch a #logCaseFieldUpdate analytics action when the autoSelection parameter is set to true', () => {
-      const mockedLogUpdateCaseField = jest.mocked(logUpdateCaseField);
+      const mockedLogUpdateCaseField = vi.mocked(logUpdateCaseField);
 
       field.update(testValue, undefined, true);
 
@@ -170,7 +170,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #fetchCaseClassifications action when required', () => {
-      const mockedFetchCaseClassifications = jest.mocked(
+      const mockedFetchCaseClassifications = vi.mocked(
         fetchCaseClassifications
       );
 
@@ -185,7 +185,7 @@ describe('Case Field', () => {
     });
 
     it('dispatches a #fetchDocumentSuggestions action when required', () => {
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 
@@ -200,10 +200,10 @@ describe('Case Field', () => {
     });
 
     it('dispatches both #fetchCaseClassifications and #fetchDocumentSuggestions when required', () => {
-      const mockedFetchCaseClassifications = jest.mocked(
+      const mockedFetchCaseClassifications = vi.mocked(
         fetchCaseClassifications
       );
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 
@@ -223,10 +223,10 @@ describe('Case Field', () => {
     });
 
     it('does not dispatch #fetchCaseClassifications nor #fetchDocumentSuggestions when not required', () => {
-      const mockedFetchCaseClassifications = jest.mocked(
+      const mockedFetchCaseClassifications = vi.mocked(
         fetchCaseClassifications
       );
-      const mockedFetchDocumentSuggestions = jest.mocked(
+      const mockedFetchDocumentSuggestions = vi.mocked(
         fetchDocumentSuggestions
       );
 

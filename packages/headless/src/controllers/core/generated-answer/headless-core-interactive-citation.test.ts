@@ -15,7 +15,7 @@ import {
   InteractiveCitation,
 } from './headless-core-interactive-citation.js';
 
-jest.mock(
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 

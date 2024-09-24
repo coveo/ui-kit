@@ -8,14 +8,14 @@ import {
 import {createMockState} from '../../test/mock-state.js';
 import {buildInstantResults} from './instant-results.js';
 
-jest.mock('../../features/instant-results/instant-results-actions');
+vi.mock('../../features/instant-results/instant-results-actions');
 
 describe('instant results', () => {
   let engine: MockedSearchEngine;
   let state: SearchAppState;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     state = createMockState();
     engine = buildMockSearchEngine(state);
   });

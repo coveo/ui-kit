@@ -14,10 +14,10 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator.js';
 
-jest.mock(
+vi.mock(
   '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'
 );
-jest.mock('../../../features/search/search-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('automatic facet', () => {
   const field = 'field';

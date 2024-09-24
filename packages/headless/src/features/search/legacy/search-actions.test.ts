@@ -25,9 +25,9 @@ describe('search actions', () => {
     }) as unknown as ClientThunkExtraArguments<SearchAPIClient>;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     apiClient = {
-      search: jest.fn(),
+      search: vi.fn(),
     } as unknown as SearchAPIClient;
     e = buildMockSearchEngine(createMockState());
   });

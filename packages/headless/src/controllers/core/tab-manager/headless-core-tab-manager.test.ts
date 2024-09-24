@@ -6,7 +6,7 @@ import {
 import {createMockState} from '../../../test/mock-state.js';
 import {buildCoreTabManager} from './headless-core-tab-manager.js';
 
-jest.mock('../../../features/tab-set/tab-set-actions');
+vi.mock('../../../features/tab-set/tab-set-actions');
 
 describe('Core Tab Manager', () => {
   let engine: MockedSearchEngine;

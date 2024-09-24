@@ -23,11 +23,9 @@ import {
   RangeFacetProps,
 } from './headless-core-range-facet.js';
 
-jest.mock('../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../features/facets/facet-set/facet-set-actions');
-jest.mock(
-  '../../../../features/facets/range-facets/generic/range-facet-actions'
-);
+vi.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../features/facets/range-facets/generic/range-facet-actions');
 
 describe('range facet', () => {
   const facetId = '1';

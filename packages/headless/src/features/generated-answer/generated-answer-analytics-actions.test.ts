@@ -26,62 +26,62 @@ import {
 } from './generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
-const mockLogFunction = jest.fn();
-const mockMakeGeneratedAnswerFeedbackSubmit = jest.fn(() => ({
+const mockLogFunction = vi.fn();
+const mockMakeGeneratedAnswerFeedbackSubmit = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeRetryGeneratedAnswer = jest.fn(() => ({
+const mockMakeRetryGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenGeneratedAnswerSource = jest.fn(() => ({
+const mockMakeOpenGeneratedAnswerSource = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerSourceHover = jest.fn(() => ({
+const mockMakeGeneratedAnswerSourceHover = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeLikeGeneratedAnswer = jest.fn(() => ({
+const mockMakeLikeGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeDislikeGeneratedAnswer = jest.fn(() => ({
+const mockMakeDislikeGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerStreamEnd = jest.fn(() => ({
+const mockMakeGeneratedAnswerStreamEnd = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerShowAnswers = jest.fn(() => ({
+const mockMakeGeneratedAnswerShowAnswers = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerHideAnswers = jest.fn(() => ({
+const mockMakeGeneratedAnswerHideAnswers = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerCopyToClipboard = jest.fn(() => ({
+const mockMakeGeneratedAnswerCopyToClipboard = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerExpand = jest.fn(() => ({
+const mockMakeGeneratedAnswerExpand = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerCollapse = jest.fn(() => ({
+const mockMakeGeneratedAnswerCollapse = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerFeedbackSubmitV2 = jest.fn(() => ({
+const mockMakeGeneratedAnswerFeedbackSubmitV2 = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const emit = jest.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoSearchPageClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoSearchPageClient = vi.fn(() => ({
+    disable: vi.fn(),
     makeGeneratedAnswerFeedbackSubmit: mockMakeGeneratedAnswerFeedbackSubmit,
     makeRetryGeneratedAnswer: mockMakeRetryGeneratedAnswer,
     makeOpenGeneratedAnswerSource: mockMakeOpenGeneratedAnswerSource,
@@ -100,7 +100,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoSearchPageClient: mockCoveoSearchPageClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -137,7 +137,7 @@ describe('generated answer analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

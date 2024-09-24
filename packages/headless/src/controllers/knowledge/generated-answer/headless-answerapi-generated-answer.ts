@@ -10,6 +10,7 @@ import {
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   resetAnswer,
@@ -119,7 +120,7 @@ const subscribeToSearchRequest = (
  * @returns A `AnswerApiGeneratedAnswer` controller instance.
  */
 export function buildAnswerApiGeneratedAnswer(
-  engine: SearchEngine,
+  engine: SearchEngine | InsightEngine,
   analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient,
   props: AnswerApiGeneratedAnswerProps = {}
 ): AnswerApiGeneratedAnswer {
@@ -175,7 +176,7 @@ export function buildAnswerApiGeneratedAnswer(
 }
 
 function loadAnswerApiReducers(
-  engine: SearchEngine
+  engine: SearchEngine | InsightEngine
 ): engine is SearchEngine<
   GeneratedAnswerSection &
     QuerySection & {answer: ReturnType<typeof answerApi.reducer>}

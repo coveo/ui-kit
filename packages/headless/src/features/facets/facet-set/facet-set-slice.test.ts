@@ -405,7 +405,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #deselectAllFacetValues calls #handleFacetDeselectAll', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    vi.spyOn(FacetReducers, 'handleFacetDeselectAll');
     facetSetReducer(state, deselectAllFacetValues('1'));
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
@@ -427,7 +427,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleFacetDeselectAll for every facet', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+    vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
     state['1'] = buildMockFacetSlice();
     state['2'] = buildMockFacetSlice();
@@ -437,7 +437,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs does not call #handleFacetDeselectAll for a facet where hasBreadcrumbs is false', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+    vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
     state['1'] = buildMockFacetSlice({
       hasBreadcrumbs: false,
@@ -448,7 +448,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs does not call #handleFacetDeselectAll for a facet where hasBreadcrumbs is false', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+    vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
     state['1'] = buildMockFacetSlice({
       hasBreadcrumbs: false,
@@ -465,7 +465,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+    vi.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
     const action = updateFacetSortCriterion({
       facetId: '1',
       criterion: 'alphanumeric',
@@ -478,7 +478,7 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #updateFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
-    jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
+    vi.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
     facetSetReducer(
       state,
       updateFacetNumberOfValues({

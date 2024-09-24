@@ -1,5 +1,6 @@
 import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
+import {Mock} from 'vitest';
 import {InsightAPIClient} from '../../../api/service/insight/insight-api-client.js';
 import {InsightQueryRequest} from '../../../api/service/insight/query/query-request.js';
 import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
@@ -24,7 +25,7 @@ import {
   AsyncThunkConfig,
 } from './insight-search-actions-thunk-processor.js';
 
-jest.mock('../insight-search-analytics-actions');
+vi.mock('../insight-search-analytics-actions');
 
 const initialSearchMappings: () => SearchMappings = () => ({
   dateFacetValueMap: {},
@@ -36,17 +37,17 @@ describe('AsyncInsightSearchThunkProcessor', () => {
   beforeEach(() => {
     config = {
       analyticsAction: logFetchMoreResults(),
-      dispatch: jest.fn(),
+      dispatch: vi.fn(),
       extra: {
-        analyticsClientMiddleware: jest.fn(),
-        apiClient: {query: jest.fn()} as unknown as InsightAPIClient,
-        logger: jest.fn() as unknown as Logger,
-        validatePayload: jest.fn(),
-        preprocessRequest: jest.fn(),
-        relay: jest.fn() as unknown as Relay,
+        analyticsClientMiddleware: vi.fn(),
+        apiClient: {query: vi.fn()} as unknown as InsightAPIClient,
+        logger: vi.fn() as unknown as Logger,
+        validatePayload: vi.fn(),
+        preprocessRequest: vi.fn(),
+        relay: vi.fn() as unknown as Relay,
         navigatorContext: defaultNodeJSNavigatorContextProvider(),
       },
-      getState: jest.fn().mockReturnValue({
+      getState: vi.fn().mockReturnValue({
         insightConfiguration: getInsightConfigurationInitialState(),
         configuration: getConfigurationInitialState(),
         search: buildMockSearchState({
@@ -58,7 +59,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
           automaticallyCorrectQuery: true,
         },
       }),
-      rejectWithValue: jest.fn(),
+      rejectWithValue: vi.fn(),
     };
   });
 
@@ -145,7 +146,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
       results: [buildMockResult({uniqueId: '123'})],
     });
 
-    (config.extra.apiClient.query as jest.Mock).mockReturnValue(
+    (config.extra.apiClient.query as Mock).mockReturnValue(
       Promise.resolve({success: responseAfterCorrection})
     );
 

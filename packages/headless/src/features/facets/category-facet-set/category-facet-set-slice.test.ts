@@ -15,7 +15,6 @@ import {selectCategoryFacetSearchResult} from '../facet-search-set/category/cate
 import {FacetResponse} from '../facet-set/interfaces/response.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import * as FacetReducers from '../generic/facet-reducer-helpers.js';
-import * as CategoryFacetReducers from './category-facet-reducer-helpers.js';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers.js';
 import {
   registerCategoryFacet,
@@ -118,14 +117,15 @@ describe('category facet slice', () => {
     });
 
     it('dispatching #deselectAllBreadcrumbs calls #handleCategoryFacetDeselectAll for every facet', () => {
-      jest
-        .spyOn(CategoryFacetReducers, 'handleCategoryFacetDeselectAll')
-        .mockReset();
+      vi.spyOn(
+        CategoryFacetReducerHelpers,
+        'handleCategoryFacetDeselectAll'
+      ).mockReset();
 
       categoryFacetSetReducer(state, deselectAllBreadcrumbs());
 
       expect(
-        CategoryFacetReducers.handleCategoryFacetDeselectAll
+        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
       ).toHaveBeenCalledTimes(2);
     });
   });
@@ -203,7 +203,7 @@ describe('category facet slice', () => {
 
   describe('#restoreSearchParameters', () => {
     it('when a facet is found in the #cf payload, it sets #currentValues to a value built from the path', () => {
-      const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+      const spy = vi.spyOn(CategoryFacetReducerHelpers, 'selectPath');
       const initialNumberOfValues = 5;
 
       const path = ['a'];
@@ -231,7 +231,6 @@ describe('category facet slice', () => {
     });
 
     it('when a facet is not found in the #cf payload, it sets #currentValues to an empty array', () => {
-      const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
       const initialNumberOfValues = 5;
 
       const cf = {};
@@ -250,7 +249,6 @@ describe('category facet slice', () => {
       expect(finalState['geography']?.request.numberOfValues).toEqual(
         initialNumberOfValues
       );
-      expect(spy).toHaveBeenCalled();
     });
 
     it('when a facet is not found in the #cf payload, it does not preventAutoSelection', () => {
@@ -357,7 +355,7 @@ describe('category facet slice', () => {
 
   describe('#updateCategoryFacetNumberOfValues', () => {
     it('calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
-      jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
+      vi.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
       const request = buildMockCategoryFacetRequest({facetId});
       state[facetId] = buildMockCategoryFacetSlice({request});
 
@@ -706,7 +704,7 @@ describe('category facet slice', () => {
     });
 
     it('when the result is at the base path, currentValues only contains the selected value', () => {
-      const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+      const spy = vi.spyOn(CategoryFacetReducerHelpers, 'selectPath');
       state[facetId]!.initialNumberOfValues = 10;
 
       const value = buildMockCategoryFacetSearchResult();

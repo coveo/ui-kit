@@ -13,7 +13,7 @@ import {createMockState} from '../../../test/mock-state.js';
 import {buildMockTabSlice} from '../../../test/mock-tab-state.js';
 import {buildCoreTab, Tab, TabProps} from './headless-core-tab.js';
 
-jest.mock('../../../features/tab-set/tab-set-actions');
+vi.mock('../../../features/tab-set/tab-set-actions');
 
 describe('Core Tab', () => {
   let engine: MockedSearchEngine;

@@ -47,11 +47,11 @@ describe('headless product-listing', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('uses sub-controllers', () => {
-    const buildProductListingSubControllers = jest.spyOn(
+    const buildProductListingSubControllers = vi.spyOn(
       SubControllers,
       'buildProductListingSubControllers'
     );
@@ -88,7 +88,7 @@ describe('headless product-listing', () => {
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const promoteChildToParent = jest.spyOn(
+    const promoteChildToParent = vi.spyOn(
       ProductListingActions,
       'promoteChildToParent'
     );
@@ -102,7 +102,7 @@ describe('headless product-listing', () => {
   });
 
   it('#refresh dispatches #fetchProductListing', () => {
-    const fetchProductListing = jest.spyOn(
+    const fetchProductListing = vi.spyOn(
       ProductListingActions,
       'fetchProductListing'
     );
@@ -113,7 +113,7 @@ describe('headless product-listing', () => {
   });
 
   it('#executeFirstRequest dispatches #fetchProductListing', () => {
-    const executeRequest = jest.spyOn(
+    const executeRequest = vi.spyOn(
       ProductListingActions,
       'fetchProductListing'
     );

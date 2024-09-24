@@ -62,7 +62,7 @@ describe('fields slice', () => {
     beforeEach(() => {
       e = buildMockSearchEngine(createMockState());
       apiClient = {
-        fieldDescriptions: jest.fn(),
+        fieldDescriptions: vi.fn(),
       } as unknown as SearchAPIClient;
     });
 

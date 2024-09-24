@@ -16,7 +16,7 @@ import {
   HistoryManager,
 } from './headless-history-manager.js';
 
-jest.mock('../../features/history/history-actions');
+vi.mock('../../features/history/history-actions');
 
 describe('History Manager', () => {
   let engine: MockedSearchEngine;

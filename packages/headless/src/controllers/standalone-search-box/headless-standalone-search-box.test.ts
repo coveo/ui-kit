@@ -31,10 +31,10 @@ import {
   StandaloneSearchBoxOptions,
 } from './headless-standalone-search-box.js';
 
-jest.mock('../../features/query-set/query-set-actions');
-jest.mock('../../features/query-suggest/query-suggest-actions');
-jest.mock('../../features/query/query-actions');
-jest.mock(
+vi.mock('../../features/query-set/query-set-actions');
+vi.mock('../../features/query-suggest/query-suggest-actions');
+vi.mock('../../features/query/query-actions');
+vi.mock(
   '../../features/standalone-search-box-set/standalone-search-box-set-actions'
 );
 
@@ -184,7 +184,7 @@ describe('headless standalone searchBox', () => {
     });
 
     it('calls #submit', () => {
-      jest.spyOn(searchBox, 'submit');
+      vi.spyOn(searchBox, 'submit');
       searchBox.selectSuggestion('a');
 
       expect(searchBox.submit).toHaveBeenCalledTimes(1);

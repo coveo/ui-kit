@@ -4,17 +4,17 @@ import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {logSearchboxSubmit} from './query-insight-analytics-actions.js';
 
-const mockLogSearchboxSubmit = jest.fn();
+const mockLogSearchboxSubmit = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logSearchboxSubmit: mockLogSearchboxSubmit,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

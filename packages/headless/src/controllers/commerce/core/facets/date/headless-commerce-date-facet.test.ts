@@ -22,7 +22,7 @@ import {
   buildCommerceDateFacet,
 } from './headless-commerce-date-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/date-facet/date-facet-actions'
 );
 
@@ -31,7 +31,7 @@ describe('DateFacet', () => {
   const type: FacetType = 'dateRange';
   const start = '2023-01-01';
   const end = '2024-01-01';
-  const fetchProductsActionCreator = jest.fn();
+  const fetchProductsActionCreator = vi.fn();
   let options: DateFacetOptions;
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
@@ -52,13 +52,13 @@ describe('DateFacet', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       facetId,
       fetchProductsActionCreator,
-      facetResponseSelector: jest.fn(),
-      isFacetLoadingResponseSelector: jest.fn(),
+      facetResponseSelector: vi.fn(),
+      isFacetLoadingResponseSelector: vi.fn(),
     };
 
     state = buildMockCommerceState();

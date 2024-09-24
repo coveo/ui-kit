@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {
   disableFacet,
   enableFacet,
@@ -24,21 +25,21 @@ import {
   FacetConditionsManager,
 } from './headless-facet-conditions-manager.js';
 
-jest.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
 
 describe('facet conditions manager', () => {
   let state: SearchAppState;
   let engine: MockedSearchEngine;
   let engineListener: Function;
-  let engineUnsubscriber: jest.Mock;
+  let engineUnsubscriber: Mock;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     state = createMockState();
     engine = buildMockSearchEngine(state);
-    engine.subscribe = jest.fn((listener) => {
+    engine.subscribe = vi.fn((listener) => {
       engineListener = listener;
-      return (engineUnsubscriber = jest.fn());
+      return (engineUnsubscriber = vi.fn());
     });
   });
 
@@ -46,7 +47,7 @@ describe('facet conditions manager', () => {
     const facetId = 'abc';
     const parentFacetId = 'def';
     let facetConditionsManager: FacetConditionsManager;
-    let condition: jest.Mock;
+    let condition: Mock;
 
     function initCondition() {
       state.facetSet[facetId] = buildMockFacetSlice();
@@ -56,7 +57,7 @@ describe('facet conditions manager', () => {
         conditions: [
           {
             parentFacetId,
-            condition: (condition = jest.fn(() => false)),
+            condition: (condition = vi.fn(() => false)),
           },
         ],
       });
@@ -224,11 +225,11 @@ describe('facet conditions manager', () => {
         conditions: [
           {
             parentFacetId: parentFacetAId,
-            condition: jest.fn(() => getConditionIsMet(parentFacetAId)),
+            condition: vi.fn(() => getConditionIsMet(parentFacetAId)),
           },
           {
             parentFacetId: parentFacetBId,
-            condition: jest.fn(() => getConditionIsMet(parentFacetBId)),
+            condition: vi.fn(() => getConditionIsMet(parentFacetBId)),
           },
         ],
       });

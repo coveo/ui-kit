@@ -7,7 +7,7 @@ import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildResultList} from './headless-insight-result-list.js';
 
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('InsightResultList', () => {
   let engine: MockedInsightEngine;
@@ -17,11 +17,11 @@ describe('InsightResultList', () => {
     const results = new Array(10).fill(buildMockResult());
     engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('fetchMoreResults should dispatch a fetchMoreResults action', () => {

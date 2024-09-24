@@ -184,10 +184,10 @@ describe('instant results slice', () => {
 
     describe('when fulfilled', () => {
       beforeEach(() => {
-        jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+        vi.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       });
       afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
       });
       it('updates results in correct searchbox and query cache', () => {
         const query = 'some_query';

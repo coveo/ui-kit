@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {configuration} from '../../../../app/common-reducers.js';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
@@ -26,11 +27,11 @@ import {
   DateFilterOptions,
 } from './headless-date-filter.js';
 
-jest.mock('../../../../features/facet-options/facet-options-actions');
-jest.mock(
+vi.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock(
   '../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
-jest.mock('../../../../features/search/search-actions');
+vi.mock('../../../../features/search/search-actions');
 
 describe('date filter', () => {
   const facetId = '1';
@@ -47,7 +48,7 @@ describe('date filter', () => {
 
   beforeEach(() => {
     initialState = undefined;
-    (updateDateFacetValues as unknown as jest.Mock).mockReturnValue(() => {});
+    (updateDateFacetValues as unknown as Mock).mockReturnValue(() => {});
 
     options = {
       facetId,
@@ -86,7 +87,7 @@ describe('date filter', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initDateFilter();
 

@@ -20,7 +20,7 @@ describe('#generateFacetId', () => {
 
   function initLogger() {
     logger = pino({level: 'silent'});
-    logger.warn = jest.fn();
+    logger.warn = vi.fn();
   }
 
   beforeEach(() => {

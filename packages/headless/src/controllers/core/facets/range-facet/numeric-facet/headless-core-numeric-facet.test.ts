@@ -27,17 +27,17 @@ import {
   buildNumericRange,
 } from './headless-core-numeric-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions'
 );
 
-jest.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions'
 );
 
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -96,7 +96,7 @@ describe('numeric facet', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initNumericFacet();
 

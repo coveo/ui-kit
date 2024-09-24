@@ -11,7 +11,7 @@ import {
   InteractiveProduct,
 } from './headless-core-interactive-product.js';
 
-jest.mock('../../../../features/commerce/product/product-actions');
+vi.mock('../../../../features/commerce/product/product-actions');
 
 describe('core interactive result', () => {
   let engine: MockedCommerceEngine;

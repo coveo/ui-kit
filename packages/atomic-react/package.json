@@ -2,7 +2,7 @@
   "name": "@coveo/atomic-react",
   "sideEffects": false,
   "type": "module",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   "scripts": {
     "build": "nx build",
     "clean": "rimraf -rf dist",
-    "build:addExtensions": "fix-esm-import-path src/components/stencil-generated",
+    "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
     "build:bundles:iife-cjs": "rollup --config rollup.config.mjs --bundleConfigAsCjs",
     "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:iife-cjs\"",
@@ -30,7 +30,7 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.1.1"
+    "@coveo/atomic": "3.2.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
@@ -52,7 +52,7 @@
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.0.0",
+    "@coveo/headless": "3.1.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

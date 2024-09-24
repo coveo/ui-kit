@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
@@ -18,16 +19,16 @@ import {
 } from './case-assist-headless-quickview.js';
 import {CoreQuickviewState} from './headless-quickview.js';
 
-jest.mock('../core/quickview/headless-core-quickview');
-jest.mock('../../features/result-preview/result-preview-actions');
-jest.mock('../../features/case-assist/case-assist-analytics-actions');
+vi.mock('../core/quickview/headless-core-quickview');
+vi.mock('../../features/result-preview/result-preview-actions');
+vi.mock('../../features/case-assist/case-assist-analytics-actions');
 
 describe('CaseAssistQuickview', () => {
   let engine: MockedCaseAssistEngine;
   let options: CaseAssistQuickviewOptions;
   let quickview: CaseAssistQuickview;
   let engineState: CaseAssistAppState;
-  let mockedBuildCoreQuickview: jest.Mock;
+  let mockedBuildCoreQuickview: Mock;
   let coreQuickviewState: Partial<CoreQuickviewState>;
 
   const testUniqueId = 'testUniqueId';
@@ -43,8 +44,8 @@ describe('CaseAssistQuickview', () => {
 
   beforeEach(() => {
     coreQuickviewState = {};
-    jest.resetAllMocks();
-    mockedBuildCoreQuickview = jest.mocked(buildCoreQuickview);
+    vi.resetAllMocks();
+    mockedBuildCoreQuickview = vi.mocked(buildCoreQuickview);
     mockedBuildCoreQuickview.mockImplementation(() => ({
       state: coreQuickviewState,
     }));
@@ -73,9 +74,7 @@ describe('CaseAssistQuickview', () => {
   });
 
   it('dispatches a #preparePreviewPagination on initialization', () => {
-    const mockedPreparePreviewPagination = jest.mocked(
-      preparePreviewPagination
-    );
+    const mockedPreparePreviewPagination = vi.mocked(preparePreviewPagination);
 
     expect(mockedPreparePreviewPagination).toHaveBeenCalledWith({
       results: engineState.documentSuggestion.documents,
@@ -117,7 +116,7 @@ describe('CaseAssistQuickview', () => {
   });
 
   it('#fetchResultContentCallback dispatches a #logQuickviewDocumentSuggestionClick with the proper uniqueId', () => {
-    const mockedLogQuickviewDocumentSuggestionClick = jest.mocked(
+    const mockedLogQuickviewDocumentSuggestionClick = vi.mocked(
       logQuickviewDocumentSuggestionClick
     );
 

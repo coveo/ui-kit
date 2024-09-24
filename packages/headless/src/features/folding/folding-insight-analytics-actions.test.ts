@@ -14,19 +14,19 @@ import {
 } from './folding-insight-analytics-actions.js';
 import {getFoldingInitialState} from './folding-state.js';
 
-const mockLogShowMoreFoldedResults = jest.fn();
-const mockLogShowLessFoldedResults = jest.fn();
+const mockLogShowMoreFoldedResults = vi.fn();
+const mockLogShowLessFoldedResults = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logShowMoreFoldedResults: mockLogShowMoreFoldedResults,
     logShowLessFoldedResults: mockLogShowLessFoldedResults,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -111,7 +111,7 @@ describe('folding insight analytics actions', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should log #logShowMoreFoldedResults with the result payload', async () => {

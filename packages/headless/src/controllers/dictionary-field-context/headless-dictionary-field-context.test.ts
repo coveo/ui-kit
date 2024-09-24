@@ -14,7 +14,7 @@ import {
   DictionaryFieldContext,
 } from './headless-dictionary-field-context.js';
 
-jest.mock(
+vi.mock(
   '../../features/dictionary-field-context/dictionary-field-context-actions'
 );
 

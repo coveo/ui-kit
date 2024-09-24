@@ -11,7 +11,7 @@ import {
 } from '../../../test/mock-engine-v2.js';
 import {buildContext, Context} from './headless-context.js';
 
-jest.mock('../../../features/commerce/context/context-actions');
+vi.mock('../../../features/commerce/context/context-actions');
 
 describe('headless commerce context', () => {
   const options: CommerceContextState = {
@@ -27,7 +27,7 @@ describe('headless commerce context', () => {
   let engine: MockedCommerceEngine;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockCommerceEngine({
       ...buildMockCommerceState(),
       commerceContext: {
@@ -48,7 +48,7 @@ describe('headless commerce context', () => {
   });
 
   it('when context is not provided, does not dispatch #setContext on load', () => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     context = buildContext(engine);
 

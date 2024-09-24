@@ -10,8 +10,8 @@ import {
 import {createMockState} from '../../test/mock-state.js';
 import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
 
-jest.mock('../../features/did-you-mean/did-you-mean-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/did-you-mean/did-you-mean-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('did you mean', () => {
   let dym: DidYouMean;

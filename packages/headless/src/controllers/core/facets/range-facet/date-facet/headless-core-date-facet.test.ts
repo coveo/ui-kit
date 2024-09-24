@@ -29,13 +29,13 @@ import {
   buildDateRange,
 } from './headless-core-date-facet.js';
 
-jest.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions'
 );
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
 
@@ -93,7 +93,7 @@ describe('date facet', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initDateFacet();
 

@@ -9,8 +9,10 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions.js';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {
+  categoryFacetSetReducer as categoryFacetSet,
+  defaultCategoryFacetOptions,
+} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
   findActiveValueAncestry,
   partitionIntoParentsAndValues,
@@ -40,20 +42,18 @@ import {
   CoreCategoryFacet,
 } from './headless-core-category-facet.js';
 
-jest.mock(
-  '../../../../features/facets/category-facet-set/category-facet-utils'
-);
+vi.mock('../../../../features/facets/category-facet-set/category-facet-utils');
 
-jest.mock(
+vi.mock(
   '../../../../features/facets/category-facet-set/category-facet-set-actions'
 );
 
-jest.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
 
 const {
   findActiveValueAncestry: actualFindActiveValueAncestry,
   partitionIntoParentsAndValues: actualPartitionIntoParentsAndValues,
-} = jest.requireActual(
+} = await vi.importActual(
   '../../../../features/facets/category-facet-set/category-facet-utils'
 );
 
@@ -63,8 +63,8 @@ describe('category facet', () => {
   let state: SearchAppState;
   let engine: MockedSearchEngine;
   let categoryFacet: CoreCategoryFacet;
-  const findActiveValueAncestryMock = jest.mocked(findActiveValueAncestry);
-  const partitionIntoParentsAndValuesMock = jest.mocked(
+  const findActiveValueAncestryMock = vi.mocked(findActiveValueAncestry);
+  const partitionIntoParentsAndValuesMock = vi.mocked(
     partitionIntoParentsAndValues
   );
 
@@ -106,7 +106,7 @@ describe('category facet', () => {
   });
 
   it('it calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initCategoryFacet();
 

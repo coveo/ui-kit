@@ -18,13 +18,13 @@ describe('commerce core summary', () => {
   let engine: MockedCommerceEngine;
   let summary: Summary;
   let options = {
-    responseIdSelector: jest.fn(),
-    isLoadingSelector: jest.fn(),
-    errorSelector: jest.fn(),
-    numberOfProductsSelector: jest.fn(),
-    pageSelector: jest.fn(),
-    perPageSelector: jest.fn(),
-    totalEntriesSelector: jest.fn(),
+    responseIdSelector: vi.fn(),
+    isLoadingSelector: vi.fn(),
+    errorSelector: vi.fn(),
+    numberOfProductsSelector: vi.fn(),
+    pageSelector: vi.fn(),
+    perPageSelector: vi.fn(),
+    totalEntriesSelector: vi.fn(),
   };
 
   function initSummary<S extends SummaryState = SummaryState>(
@@ -35,15 +35,15 @@ describe('commerce core summary', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
-      responseIdSelector: jest.fn(),
-      isLoadingSelector: jest.fn(),
-      errorSelector: jest.fn(),
-      numberOfProductsSelector: jest.fn(),
-      pageSelector: jest.fn(),
-      perPageSelector: jest.fn(),
-      totalEntriesSelector: jest.fn(),
+      responseIdSelector: vi.fn(),
+      isLoadingSelector: vi.fn(),
+      errorSelector: vi.fn(),
+      numberOfProductsSelector: vi.fn(),
+      pageSelector: vi.fn(),
+      perPageSelector: vi.fn(),
+      totalEntriesSelector: vi.fn(),
     };
 
     state = buildMockCommerceState();

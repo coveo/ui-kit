@@ -1,3 +1,4 @@
+import {describe, it, vi, expect, beforeEach} from 'vitest';
 import {CoreEngine} from '../../../../../app/engine.js';
 import {
   executeFacetSearch,
@@ -27,10 +28,10 @@ import {
   FacetSearchProps,
 } from './headless-facet-search.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -54,8 +55,8 @@ describe('FacetSearch', () => {
   beforeEach(() => {
     props = {
       options: {facetId},
-      select: jest.fn(),
-      exclude: jest.fn(),
+      select: vi.fn(),
+      exclude: vi.fn(),
       isForFieldSuggestions: false,
       executeFacetSearchActionCreator: executeFacetSearch,
       executeFieldSuggestActionCreator: executeFieldSuggest,
