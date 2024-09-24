@@ -91,29 +91,31 @@ export default function NumericFacet(props: INumericFacetProps) {
   };
 
   const renderManualRangeControls = () => {
+    const manualRangeStartId = `${state.facetId}-manual-range-start`;
+    const manualRangeEndId = `${state.facetId}-manual-range-end`;
     return (
       <div className="ManualRangeControls">
-        <label className="ManualRangeStartLabel" htmlFor="manualRangeStart">
+        <label className="ManualRangeStartLabel" htmlFor={manualRangeStartId}>
           From:{' '}
         </label>
         <input
           aria-label="Manual range start"
           className="ManualRangeStartInput"
           disabled={state.isLoading}
-          id="manualRangeStart"
+          id={manualRangeStartId}
           ref={manualRangeStartInputRef}
           type="number"
           value={currentManualRange.start}
           onChange={onChangeManualRangeStart}
         />
-        <label className="ManualRangeEndLabel" htmlFor="manualRangeEnd">
+        <label className="ManualRangeEndLabel" htmlFor={manualRangeEndId}>
           To:{' '}
         </label>
         <input
           aria-label="Manual range end"
           className="ManualRangeEndInput"
           disabled={state.isLoading}
-          id="manualRangeEnd"
+          id={manualRangeEndId}
           type="number"
           value={currentManualRange.end}
           onChange={onChangeManualRangeEnd}
@@ -146,18 +148,18 @@ export default function NumericFacet(props: INumericFacetProps) {
         {state.isLoading && <span> Facet is loading...</span>}
         <ul>
           {state.values.map((value, index) => {
-            const checkboxId = `${value.start}-${value.end}-${value.endInclusive}`;
+            const id = `${value.start}-${value.end}-${value.endInclusive}`;
             return (
               <li className="FacetValue" key={index}>
                 <input
                   className="FacetValueCheckbox"
                   disabled={state.isLoading}
-                  id={checkboxId}
+                  id={id}
                   type="checkbox"
                   checked={value.state !== 'idle'}
                   onChange={() => controller.toggleSelect(value)}
                 ></input>
-                <label className="FacetValueLabel" htmlFor={checkboxId}>
+                <label className="FacetValueLabel" htmlFor={id}>
                   <span className="FacetValueName">
                     {value.start} to {value.end}
                   </span>
