@@ -13,6 +13,7 @@ import {
   excludeIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import {addFacet, field, label} from './facet-actions';
+import {FacetSelectors} from './facet-selectors';
 
 describe('Facet Test Suite 3', () => {
   describe('with breadbox', () => {
