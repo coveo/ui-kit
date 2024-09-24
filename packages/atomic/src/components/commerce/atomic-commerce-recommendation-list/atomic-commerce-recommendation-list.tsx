@@ -56,6 +56,8 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
+ *
+ * @slot default - The default slot where the product templates are defined.
  */
 @Component({
   tag: 'atomic-commerce-recommendation-list',

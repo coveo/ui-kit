@@ -13,21 +13,35 @@ const meta: Meta = {
   decorators: [decorator],
   parameters,
   play,
-  args: {'attributes-slot-id': 'd8118c04-ff59-4f03-baca-2fc5f3b81221'},
+  args: {
+    'attributes-slot-id': 'd8118c04-ff59-4f03-baca-2fc5f3b81221',
+    'slots-default': `<atomic-product-template>
+                  <template>
+                    <atomic-product-section-name>
+                      <atomic-product-link class="font-bold"></atomic-product-link>
+                    </atomic-product-section-name>
+                    <atomic-product-section-visual>
+                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                    </atomic-product-section-visual>
+                    <atomic-product-section-metadata>
+                      <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                    </atomic-product-section-metadata>
+                    <atomic-product-section-emphasized>
+                      <atomic-product-price currency="USD"></atomic-product-price>
+                    </atomic-product-section-emphasized>
+                    <atomic-product-section-children>
+                      <atomic-product-children></atomic-product-children>
+                    </atomic-product-section-children>
+                  </template>
+                </atomic-product-template>`,
+  },
 };
-
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-commerce-recommendation-list',
 };
-
-// export const WithProductId: Story = {
-//   args: {
-//     'attributes-slot-id': 'd8118c04-ff59-4f03-baca-2fc5f3b81221',
-//     'attributes-product-id': '1',
-//   },
-// };
 
 const {play: playNoFirstQuery} = wrapInCommerceInterface({
   skipFirstSearch: true,
@@ -71,9 +85,8 @@ export const WithFullTemplate: Story = {
   },
 };
 
-export const AsCarousel: Story = {};
-// display
-// density
-// image Size
-
-//carousel
+export const AsCarousel: Story = {
+  args: {
+    'attributes-products-per-page': 3,
+  },
+};
