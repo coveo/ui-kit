@@ -40,6 +40,7 @@ export class AtomicProductRating
 
   /**
    * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+   * @type {string}
    */
   @Prop({reflect: true}) public ratingDetailsField?: string;
 
