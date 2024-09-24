@@ -1,4 +1,4 @@
-import type {SearchParameterKey} from './search-parameter-serializer';
+import type {SearchParameterKey} from './search-parameter-serializer.js';
 import {
   SearchParamValue,
   addFacetValuesToSearchParams,
@@ -7,7 +7,7 @@ import {
   isRangeFacetPair,
   isValidSearchParam,
   toArray,
-} from './search-parameter-utils';
+} from './search-parameter-utils.js';
 
 describe('search-parameter-utils', () => {
   describe('toArray', () => {

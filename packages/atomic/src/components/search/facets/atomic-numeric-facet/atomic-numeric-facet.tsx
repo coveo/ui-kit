@@ -22,7 +22,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, Element, h, Listen, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -39,7 +39,6 @@ import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
@@ -264,22 +263,6 @@ export class AtomicNumericFacet implements InitializableComponent {
   private initializeTabManager() {
     this.tabManager = buildTabManager(this.bindings.engine);
   }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facetForRange
-      );
-    }
-  }
-
   private initializeFacetForInput() {
     if (!this.withInput) {
       return;
@@ -294,6 +277,10 @@ export class AtomicNumericFacet implements InitializableComponent {
         rangeAlgorithm: this.rangeAlgorithm,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 

@@ -1,20 +1,23 @@
-import {AsyncThunkOptions} from '../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {CaseAssistAppState} from '../../../state/case-assist-app-state';
-import {PlatformClient} from '../../platform-client';
-import {getHtml, HtmlAPIClientOptions} from '../../search/html/html-api-client';
-import {HtmlRequest} from '../../search/html/html-request';
-import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import {CaseAssistAppState} from '../../../state/case-assist-app-state.js';
+import {PlatformClient} from '../../platform-client.js';
+import {
+  getHtml,
+  HtmlAPIClientOptions,
+} from '../../search/html/html-api-client.js';
+import {HtmlRequest} from '../../search/html/html-request.js';
+import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response.js';
 import {
   buildGetCaseClassificationsRequest,
   GetCaseClassificationsRequest,
-} from './get-case-classifications/get-case-classifications-request';
-import {GetCaseClassificationsResponse} from './get-case-classifications/get-case-classifications-response';
+} from './get-case-classifications/get-case-classifications-request.js';
+import {GetCaseClassificationsResponse} from './get-case-classifications/get-case-classifications-response.js';
 import {
   buildGetDocumentSuggestionsRequest,
   GetDocumentSuggestionsRequest,
-} from './get-document-suggestions/get-document-suggestions-request';
-import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-document-suggestions-response';
+} from './get-document-suggestions/get-document-suggestions-request.js';
+import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-document-suggestions-response.js';
 
 /**
  * Initialization options for the `CaseAssistAPIClient`.

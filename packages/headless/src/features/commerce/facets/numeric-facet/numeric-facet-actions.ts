@@ -11,14 +11,14 @@ import {
   serializeSchemaValidationError,
   validatePayload,
   validatePayloadAndThrow,
-} from '../../../../utils/validate-payload';
-import {numericFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
+} from '../../../../utils/validate-payload.js';
+import {numericFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload.js';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {
   ToggleSelectNumericFacetValueActionCreatorPayload,
   UpdateNumericFacetValuesActionCreatorPayload,
   validateManualNumericRanges,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 
 export type ToggleSelectNumericFacetValuePayload =
   ToggleSelectNumericFacetValueActionCreatorPayload;

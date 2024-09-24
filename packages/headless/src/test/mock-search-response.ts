@@ -1,9 +1,9 @@
 import {
   SearchResponseSuccess,
   SearchResponseSuccessWithDebugInfo,
-} from '../api/search/search/search-response';
-import {emptyLegacyCorrection} from '../features/did-you-mean/did-you-mean-state';
-import {emptyQuestionAnswer} from '../features/search/search-state';
+} from '../api/search/search/search-response.js';
+import {emptyLegacyCorrection} from '../features/did-you-mean/did-you-mean-state.js';
+import {emptyQuestionAnswer} from '../features/search/search-state.js';
 
 export function buildMockSearchResponse(
   config: Partial<SearchResponseSuccess> = {}

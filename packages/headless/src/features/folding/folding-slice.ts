@@ -1,12 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Result} from '../../api/search/search/result';
-import {isArray} from '../../utils/utils';
+import {Result} from '../../api/search/search/result.js';
+import {isArray} from '../../utils/utils.js';
 import {
   executeSearch,
   fetchMoreResults,
   fetchPage,
-} from '../search/search-actions';
-import {loadCollection, registerFolding} from './folding-actions';
+} from '../search/search-actions.js';
+import {loadCollection, registerFolding} from './folding-actions.js';
 import {
   FoldedCollection,
   CollectionId,
@@ -14,8 +14,8 @@ import {
   FoldingFields,
   getFoldingInitialState,
   FoldingState,
-} from './folding-state';
-import {getAllIncludedResultsFrom} from './folding-utils';
+} from './folding-state.js';
+import {getAllIncludedResultsFrom} from './folding-utils.js';
 
 export interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;

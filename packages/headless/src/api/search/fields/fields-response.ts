@@ -1,7 +1,7 @@
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
-} from '../search-api-error-response';
+} from '../search-api-error-response.js';
 
 /**
  * Field description

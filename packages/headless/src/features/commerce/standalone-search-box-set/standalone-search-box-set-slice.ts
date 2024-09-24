@@ -4,11 +4,11 @@ import {
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
-} from './standalone-search-box-set-actions';
+} from './standalone-search-box-set-actions.js';
 import {
   getCommerceStandaloneSearchBoxSetInitialState,
   StandaloneSearchBoxEntry,
-} from './standalone-search-box-set-state';
+} from './standalone-search-box-set-state.js';
 
 export const commerceStandaloneSearchBoxSetReducer = createReducer(
   getCommerceStandaloneSearchBoxSetInitialState(),

@@ -1,49 +1,49 @@
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ChildProduct, Product} from '../../../api/commerce/common/product';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/state-key';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {stateKey} from '../../../app/state-key.js';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
   totalEntriesPrincipalSelector,
-} from '../../../features/commerce/pagination/pagination-selectors';
-import {Parameters} from '../../../features/commerce/parameters/parameters-actions';
-import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
+} from '../../../features/commerce/pagination/pagination-selectors.js';
+import {Parameters} from '../../../features/commerce/parameters/parameters-actions.js';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {
   activeParametersSelector,
   enrichedParametersSelector,
-} from '../../../features/commerce/parameters/parameters-selectors';
-import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
-import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
+} from '../../../features/commerce/parameters/parameters-selectors.js';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {
   fetchProductListing,
   fetchMoreProducts,
   promoteChildToParent,
-} from '../../../features/commerce/product-listing/product-listing-actions';
+} from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
   errorSelector,
   isLoadingSelector,
   numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
-} from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../features/commerce/product-listing/product-listing-selectors.js';
+import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   buildProductListingSubControllers,
   SearchAndListingSubControllers,
-} from '../core/sub-controller/headless-sub-controller';
+} from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
-} from './facets/headless-product-listing-facet-options';
-import {ProductListingSummaryState} from './summary/headless-product-listing-summary';
+} from './facets/headless-product-listing-facet-options.js';
+import {ProductListingSummaryState} from './summary/headless-product-listing-summary.js';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.

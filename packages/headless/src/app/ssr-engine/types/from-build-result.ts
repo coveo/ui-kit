@@ -1,5 +1,5 @@
-import {CoreEngine, CoreEngineNext} from '../../engine';
-import {ControllersMap, EngineDefinitionBuildResult} from './common';
+import {CoreEngine, CoreEngineNext} from '../../engine.js';
+import {ControllersMap, EngineDefinitionBuildResult} from './common.js';
 
 export interface FromBuildResultOptions<
   TEngine extends CoreEngine | CoreEngineNext,

@@ -1,6 +1,6 @@
-import {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request';
-import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
-import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request.js';
+import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 
 export type SearchableFacetOptions = {
   facetSearch: {facetQuery?: string; type: FacetSearchType};

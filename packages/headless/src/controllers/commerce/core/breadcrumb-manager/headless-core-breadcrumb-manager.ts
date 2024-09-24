@@ -2,19 +2,19 @@ import {createSelector} from '@reduxjs/toolkit';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
+} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
 import {
   clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
   updateCoreFacetFreezeCurrentValues,
-} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from '../../../../features/commerce/facets/date-facet/date-facet-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common';
+} from '../../../../features/commerce/facets/date-facet/date-facet-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common.js';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
@@ -23,30 +23,30 @@ import {
   DateFacetResponse,
   NumericFacetResponse,
   RegularFacetResponse,
-} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
+} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
-import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils';
-import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
+import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils.js';
+import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import {
   CommerceFacetSetSection,
   FacetOrderSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
+} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
 import {
   BreadcrumbValue,
   CoreBreadcrumbManager,
   DeselectableValue,
-} from '../../../breadcrumb-manager/headless-breadcrumb-manager';
-import {buildController} from '../../../controller/headless-controller';
-import {ToggleActionCreator} from '../common';
-import {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet';
+} from '../../../breadcrumb-manager/headless-breadcrumb-manager.js';
+import {buildController} from '../../../controller/headless-controller.js';
+import {ToggleActionCreator} from '../common.js';
+import {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet.js';
 
 export type {BreadcrumbValue, DeselectableValue};
 

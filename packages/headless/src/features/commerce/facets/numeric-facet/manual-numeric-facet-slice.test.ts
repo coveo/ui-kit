@@ -1,13 +1,13 @@
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
-import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions';
-import {manualNumericFacetReducer} from './manual-numeric-facet-slice';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions.js';
+import {manualNumericFacetReducer} from './manual-numeric-facet-slice.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
-} from './numeric-facet-actions';
+} from './numeric-facet-actions.js';
 
 describe('manualNumericFacetSlice', () => {
   const someManualRange = {

@@ -1,26 +1,29 @@
 import {SerializedError} from '@reduxjs/toolkit';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {Result} from '../../api/search/search/result';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {hasExpired} from '../../features/instant-items/instant-items-state';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {Result} from '../../api/search/search/result.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {hasExpired} from '../../features/instant-items/instant-items-state.js';
 import {
   clearExpiredResults,
   registerInstantResults,
   updateInstantResultsQuery,
-} from '../../features/instant-results/instant-results-actions';
-import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
-import {fetchInstantResults} from '../../features/search/search-actions';
-import {InstantResultSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {randomID} from '../../utils/utils';
-import {validateOptions} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../features/instant-results/instant-results-actions.js';
+import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice.js';
+import {fetchInstantResults} from '../../features/search/search-actions.js';
+import {InstantResultSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {randomID} from '../../utils/utils.js';
+import {validateOptions} from '../../utils/validate-payload.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 import {
   InstantResultOptions,
   instantResultsOptionsSchema,
-} from './instant-results-options';
+} from './instant-results-options.js';
 
-export type {InstantResultOptions} from './instant-results-options';
+export type {InstantResultOptions} from './instant-results-options.js';
 
 export interface InstantResultProps {
   options: InstantResultOptions;

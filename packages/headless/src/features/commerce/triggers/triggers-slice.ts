@@ -4,13 +4,13 @@ import {
   handleFetchItemsFulfilled,
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
-} from '../../triggers/triggers-slice-functions';
-import {getTriggerInitialState} from '../../triggers/triggers-state';
-import {executeSearch} from '../search/search-actions';
+} from '../../triggers/triggers-slice-functions.js';
+import {getTriggerInitialState} from '../../triggers/triggers-state.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from './triggers-actions';
+} from './triggers-actions.js';
 
 export const commerceTriggersReducer = createReducer(
   getTriggerInitialState(),

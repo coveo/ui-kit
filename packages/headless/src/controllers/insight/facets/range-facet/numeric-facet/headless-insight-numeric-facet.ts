@@ -1,18 +1,18 @@
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
+import {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
 import {
   facetClearAll,
   facetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
-import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions.js';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils.js';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils.js';
+import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
@@ -21,7 +21,7 @@ import {
   NumericFacetProps,
   NumericFacetState,
   NumericRangeOptions,
-} from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
+} from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
 export type {
   NumericRangeOptions,

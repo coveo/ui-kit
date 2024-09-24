@@ -3,18 +3,18 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {Result} from '../../api/search/search/result';
+} from '../../api/search/search-api-client.js';
+import {Result} from '../../api/search/search/result.js';
 import {
   ConfigurationSection,
   FoldingSection,
   QuerySection,
-} from '../../state/state-sections';
-import {validatePayload} from '../../utils/validate-payload';
-import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
-import {ResultWithFolding} from './folding-slice';
-import {CollectionId} from './folding-state';
+} from '../../state/state-sections.js';
+import {validatePayload} from '../../utils/validate-payload.js';
+import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
+import {ResultWithFolding} from './folding-slice.js';
+import {CollectionId} from './folding-state.js';
 
 export interface RegisterFoldingActionCreatorPayload {
   /**

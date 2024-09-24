@@ -1,12 +1,12 @@
 import {ItemClick} from '@coveo/relay-event-types';
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   ClickAction,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logDocumentQuickview = (result: Result): ClickAction => {
   return makeAnalyticsAction({
@@ -22,7 +22,7 @@ export const logDocumentQuickview = (result: Result): ClickAction => {
       const docInfo = partialDocumentInformation(result, state);
       const docId = documentIdentifier(result);
       return {
-        searchUid: state.search?.response.searchUid ?? '',
+        searchUid: result.searchUid ?? '',
         position: docInfo.documentPosition,
         actionCause: 'preview',
         itemMetadata: {

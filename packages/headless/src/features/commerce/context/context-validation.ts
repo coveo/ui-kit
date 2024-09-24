@@ -1,6 +1,6 @@
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {requiredNonEmptyString} from '../../../utils/validate-payload';
+import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 const currencies = Intl.supportedValuesOf('currency') as CurrencyCodeISO4217[];
 

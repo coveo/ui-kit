@@ -1,11 +1,11 @@
 import {
   CategoryFacetSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {baseFacetResponseSelector} from '../facet-set/facet-set-selectors';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
-import {findActiveValueAncestry} from './category-facet-utils';
-import {CategoryFacetResponse} from './interfaces/response';
+} from '../../../state/state-sections.js';
+import {baseFacetResponseSelector} from '../facet-set/facet-set-selectors.js';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
+import {findActiveValueAncestry} from './category-facet-utils.js';
+import {CategoryFacetResponse} from './interfaces/response.js';
 
 function isCategoryFacetResponse(
   state: CategoryFacetSection,

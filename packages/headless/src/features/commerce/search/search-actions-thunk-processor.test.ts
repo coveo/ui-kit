@@ -1,20 +1,21 @@
 import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
-import {CommerceAPIClient} from '../../../api/commerce/commerce-api-client';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider';
-import {CommerceAppState} from '../../../state/commerce-app-state';
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockProduct} from '../../../test/mock-product';
-import {buildCommerceAPIRequest} from '../common/actions';
-import {updateQuery} from '../query/query-actions';
-import {QuerySearchCommerceAPIThunkReturn} from './search-actions';
+import {Mock} from 'vitest';
+import {CommerceAPIClient} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockProduct} from '../../../test/mock-product.js';
+import {buildCommerceAPIRequest} from '../common/actions.js';
+import {updateQuery} from '../query/query-actions.js';
 import {
   AsyncThunkConfig,
   AsyncSearchThunkProcessor,
-} from './search-actions-thunk-processor';
+} from './search-actions-thunk-processor.js';
+import {QuerySearchCommerceAPIThunkReturn} from './search-actions.js';
 
 describe('commerce AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;
@@ -22,18 +23,18 @@ describe('commerce AsyncSearchThunkProcessor', () => {
   beforeEach(() => {
     state = buildMockCommerceState();
     config = {
-      dispatch: jest.fn(),
+      dispatch: vi.fn(),
       extra: {
-        analyticsClientMiddleware: jest.fn(),
-        apiClient: {search: jest.fn()} as unknown as CommerceAPIClient,
-        logger: jest.fn() as unknown as Logger,
-        validatePayload: jest.fn(),
-        preprocessRequest: jest.fn(),
-        relay: jest.fn() as unknown as Relay,
+        analyticsClientMiddleware: vi.fn(),
+        apiClient: {search: vi.fn()} as unknown as CommerceAPIClient,
+        logger: vi.fn() as unknown as Logger,
+        validatePayload: vi.fn(),
+        preprocessRequest: vi.fn(),
+        relay: vi.fn() as unknown as Relay,
         navigatorContext: defaultNodeJSNavigatorContextProvider(),
       },
-      getState: jest.fn().mockReturnValue(state),
-      rejectWithValue: jest.fn(),
+      getState: vi.fn().mockReturnValue(state),
+      rejectWithValue: vi.fn(),
     };
   });
 
@@ -109,7 +110,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       products: [buildMockProduct()],
     });
 
-    (config.extra.apiClient.search as jest.Mock).mockReturnValue(
+    (config.extra.apiClient.search as Mock).mockReturnValue(
       Promise.resolve({success: responseAfterModification})
     );
 

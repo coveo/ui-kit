@@ -1,5 +1,5 @@
-import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
-import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
+import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata.js';
+import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -7,9 +7,9 @@ import {
   updateAnalyticsToSearchFromLink,
   resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
-} from './standalone-search-box-set-actions';
-import {standaloneSearchBoxSetReducer} from './standalone-search-box-set-slice';
-import {StandaloneSearchBoxSetState} from './standalone-search-box-set-state';
+} from './standalone-search-box-set-actions.js';
+import {standaloneSearchBoxSetReducer} from './standalone-search-box-set-slice.js';
+import {StandaloneSearchBoxSetState} from './standalone-search-box-set-state.js';
 
 describe('standalone search box slice', () => {
   const id = '1';

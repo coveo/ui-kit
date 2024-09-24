@@ -1,8 +1,8 @@
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider';
-import {createMockState} from '../../test/mock-state';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
-import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildMockTabSlice} from '../../test/mock-tab-state.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request.js';
 
 describe('buildSearchAndFoldingLoadCollectionRequest', () => {
   describe('#aq', () => {

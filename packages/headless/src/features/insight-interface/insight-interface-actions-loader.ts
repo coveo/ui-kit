@@ -1,12 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
 import {
   fetchInterface,
   FetchInterfaceThunkReturn,
   StateNeededByFetchInterface,
-} from './insight-interface-actions';
+} from './insight-interface-actions.js';
 
 /**
  * The Insight interface action creators.

@@ -1,10 +1,10 @@
-import {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {SearchAction} from '../search/search-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {SearchAction} from '../search/search-actions.js';
 
 //TODO: KIT-2859
 export const logNavigateForward = (): LegacySearchAction =>

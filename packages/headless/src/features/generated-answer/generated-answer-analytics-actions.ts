@@ -3,13 +3,13 @@ import {
   CustomAction,
   LegacySearchAction,
   makeAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {SearchAction} from '../search/search-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {SearchAction} from '../search/search-actions.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
-} from './generated-answer-selectors';
+} from './generated-answer-selectors.js';
 
 export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
 

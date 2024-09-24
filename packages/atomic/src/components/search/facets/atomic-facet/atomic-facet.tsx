@@ -24,7 +24,6 @@ import {
   Element,
   VNode,
   Fragment,
-  Watch,
 } from '@stencil/core';
 import {
   AriaLiveRegion,
@@ -53,7 +52,6 @@ import {
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {
   FacetValueProps,
   FacetValue,
@@ -318,21 +316,6 @@ export class AtomicFacet implements InitializableComponent {
     this.facetConditionsManager?.stopWatching();
   }
 
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
-  }
-
   public componentShouldUpdate(
     next: FacetState,
     prev: FacetState,
@@ -541,6 +524,10 @@ export class AtomicFacet implements InitializableComponent {
         ? [...this.allowedValues]
         : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
   }
 

@@ -1,26 +1,26 @@
-import {Result} from '../../api/search/search/result';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
-import {logPageNext} from '../pagination/pagination-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {Result} from '../../api/search/search/result.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockQuestionsAnswers} from '../../test/mock-question-answer.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions.js';
+import {logPageNext} from '../pagination/pagination-analytics-actions.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './search-actions';
-import {searchReducer} from './search-slice';
+} from './search-actions.js';
+import {searchReducer} from './search-slice.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
   SearchState,
-} from './search-state';
+} from './search-state.js';
 
 describe('search-slice', () => {
   let state: SearchState;
@@ -148,6 +148,22 @@ describe('search-slice', () => {
       expect(finalState.searchResponseId).toBe('a_new_id');
     });
 
+    it('when a executeSearch fulfilled is received, results should contain last #searchUid', () => {
+      state.searchResponseId = 'an_initial_id';
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        executeSearch.fulfilled(search, '', {legacy: logSearchboxSubmit()})
+      );
+
+      expect(finalState.results[0].searchUid).toBe('a_new_id');
+    });
+
     it('when a executeSearch fulfilled is received, it overwrites the #questionAnswer', () => {
       state.questionAnswer = buildMockQuestionsAnswers({
         question: 'When?',
@@ -198,6 +214,26 @@ describe('search-slice', () => {
       );
 
       expect(finalState.searchResponseId).toBe('an_initial_id');
+    });
+
+    it('when a fetchMoreResults fulfilled is received, previous results keep their #searchUiD', () => {
+      state.results = state.results.map((result) => ({
+        ...result,
+        searchUid: 'an_initial_id',
+      }));
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        fetchMoreResults.fulfilled(search, '')
+      );
+
+      expect(finalState.results[0].searchUid).toBe('an_initial_id');
+      expect(finalState.results[1].searchUid).toBe('a_new_id');
     });
 
     it('when a fetchMoreResults fulfilled is received, keeps the previous #questionAnswer', () => {
