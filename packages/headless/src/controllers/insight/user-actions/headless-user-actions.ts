@@ -1,27 +1,27 @@
-import {configuration} from '../../../app/common-reducers';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logOpenUserActions} from '../../../features/insight-search/insight-analytics-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {logOpenUserActions} from '../../../features/insight-search/insight-analytics-actions.js';
 import {
   fetchUserActions,
   registerUserActions,
-} from '../../../features/insight-user-actions/insight-user-actions-actions';
-import {insightUserActionsReducer} from '../../../features/insight-user-actions/insight-user-actions-slice';
-import {UserActionsState} from '../../../features/insight-user-actions/insight-user-actions-state';
+} from '../../../features/insight-user-actions/insight-user-actions-actions.js';
+import {insightUserActionsReducer} from '../../../features/insight-user-actions/insight-user-actions-slice.js';
+import {UserActionsState} from '../../../features/insight-user-actions/insight-user-actions-state.js';
 import {
   ConfigurationSection,
   InsightUserActionsSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export type {
   UserActionsState,
   UserAction,
   UserSession,
-} from '../../../features/insight-user-actions/insight-user-actions-state';
+} from '../../../features/insight-user-actions/insight-user-actions-state.js';
 
 export interface UserActionsProps {
   /**

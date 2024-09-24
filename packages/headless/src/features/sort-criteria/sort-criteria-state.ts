@@ -1,7 +1,7 @@
 import {
   buildCriterionExpression,
   buildRelevanceSortCriterion,
-} from './criteria';
+} from './criteria.js';
 
 export type SortCriteriaState = string;
 

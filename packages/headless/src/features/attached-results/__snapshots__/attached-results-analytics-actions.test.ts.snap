@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`attached results analytics actions when analyticsMode is \`next\` logCaseAttach should call relay.emit properly 1`] = `
+exports[`attached results analytics actions > when analyticsMode is \`next\` > logCaseAttach > should call relay.emit properly 1`] = `
 [
   "InsightPanel.ItemAction",
   {
@@ -23,7 +23,7 @@ exports[`attached results analytics actions when analyticsMode is \`next\` logCa
 ]
 `;
 
-exports[`attached results analytics actions when analyticsMode is \`next\` logCaseDetach should call relay.emit properly 1`] = `
+exports[`attached results analytics actions > when analyticsMode is \`next\` > logCaseDetach > should call relay.emit properly 1`] = `
 [
   "InsightPanel.DetachItem",
   {

@@ -1,5 +1,5 @@
-import {BaseParam} from '../../../platform-service-params';
-import {baseInsightRequest, InsightIdParam} from '../insight-params';
+import {BaseParam} from '../../../platform-service-params.js';
+import {baseInsightRequest, InsightIdParam} from '../insight-params.js';
 
 export type GetInsightInterfaceConfigRequest = BaseParam & InsightIdParam;
 

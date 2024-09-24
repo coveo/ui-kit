@@ -8,14 +8,14 @@ import {
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
-import {PlatformEnvironment} from '../../utils/url-utils';
+import {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   nonEmptyString,
   validatePayload,
   requiredNonEmptyString,
   optionalNonEmptyVersionString,
-} from '../../utils/validate-payload';
-import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version';
+} from '../../utils/validate-payload.js';
+import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version.js';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 

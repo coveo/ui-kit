@@ -1,48 +1,48 @@
-import {configuration} from '../../../app/common-reducers';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-} from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+} from '../../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
-} from '../../../features/facets/category-facet-set/interfaces/request';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+} from '../../../features/facets/category-facet-set/interfaces/request.js';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response.js';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
-import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor.js';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search.js';
 import {
   buildCategoryFacet,
   CategoryFacet,
   CategoryFacetOptions,
-} from './headless-category-facet';
+} from './headless-category-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../features/facets/category-facet-set/category-facet-set-actions'
 );
-jest.mock('../../../features/search/search-actions');
-jest.mock('../../../features/facet-options/facet-options-actions');
+vi.mock('../../../features/search/search-actions');
+vi.mock('../../../features/facet-options/facet-options-actions');
 
 describe('category facet', () => {
   const facetId = '1';
@@ -83,7 +83,7 @@ describe('category facet', () => {
   });
 
   it('it calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initCategoryFacet();
 
@@ -447,7 +447,7 @@ describe('category facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
-    jest.spyOn(CategoryFacetSearch, 'buildCoreCategoryFacetSearch');
+    vi.spyOn(CategoryFacetSearch, 'buildCoreCategoryFacetSearch');
     initCategoryFacet();
 
     expect(categoryFacet.facetSearch).toBeTruthy();

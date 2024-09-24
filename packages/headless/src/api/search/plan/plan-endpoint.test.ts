@@ -1,6 +1,6 @@
-import {TriggerRedirect} from '../../common/trigger';
-import {ExecutionPlan} from './plan-endpoint';
-import {PlanResponseSuccess} from './plan-response';
+import {TriggerRedirect} from '../../common/trigger.js';
+import {ExecutionPlan} from './plan-endpoint.js';
+import {PlanResponseSuccess} from './plan-response.js';
 
 describe('execution plan', () => {
   const planResponse: PlanResponseSuccess = {

@@ -1,52 +1,52 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/state-key';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {stateKey} from '../../../app/state-key.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from '../../../features/commerce/query-set/query-set-actions';
+} from '../../../features/commerce/query-set/query-set-actions.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
   registerQuerySuggest,
   selectQuerySuggestion,
-} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
+} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
+import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import {
   PrepareForSearchWithQueryOptions,
   prepareForSearchWithQuery,
-} from '../../../features/commerce/search/search-actions';
-import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice';
-import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
+} from '../../../features/commerce/search/search-actions.js';
+import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import {
   CommerceQuerySection,
   CommerceSearchSection,
   ConfigurationSection,
   QuerySetSection,
   QuerySuggestionSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   Delimiters,
   SuggestionHighlightingOptions,
-} from '../../../utils/highlight';
-import {randomID} from '../../../utils/utils';
-import {validateOptions} from '../../../utils/validate-payload';
-import {buildController} from '../../controller/headless-controller';
+} from '../../../utils/highlight.js';
+import {randomID} from '../../../utils/utils.js';
+import {validateOptions} from '../../../utils/validate-payload.js';
+import {buildController} from '../../controller/headless-controller.js';
 import {
   getSuggestions,
   SearchBoxState,
   SearchBox as CoreSearchBox,
   Suggestion,
-} from '../../core/search-box/headless-core-search-box';
+} from '../../core/search-box/headless-core-search-box.js';
 import {
   defaultSearchBoxOptions,
   SearchBoxOptions,
   searchBoxOptionsSchema,
-} from './headless-search-box-options';
+} from './headless-search-box-options.js';
 
 export type {
   SearchBoxOptions,

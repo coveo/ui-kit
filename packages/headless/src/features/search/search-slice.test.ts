@@ -1,26 +1,26 @@
-import {Result} from '../../api/search/search/result';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
-import {logPageNext} from '../pagination/pagination-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {Result} from '../../api/search/search/result.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockQuestionsAnswers} from '../../test/mock-question-answer.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions.js';
+import {logPageNext} from '../pagination/pagination-analytics-actions.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './search-actions';
-import {searchReducer} from './search-slice';
+} from './search-actions.js';
+import {searchReducer} from './search-slice.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
   SearchState,
-} from './search-state';
+} from './search-state.js';
 
 describe('search-slice', () => {
   let state: SearchState;

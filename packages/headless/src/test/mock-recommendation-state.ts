@@ -1,14 +1,14 @@
-import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-queries/advanced-search-queries-state';
-import {getConfigurationInitialState} from '../features/configuration/configuration-state';
-import {getContextInitialState} from '../features/context/context-state';
-import {getDebugInitialState} from '../features/debug/debug-state';
-import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
-import {getFieldsInitialState} from '../features/fields/fields-state';
-import {getPaginationInitialState} from '../features/pagination/pagination-state';
-import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
-import {getRecommendationInitialState} from '../features/recommendation/recommendation-state';
-import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
-import {RecommendationAppState} from '../state/recommendation-app-state';
+import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-queries/advanced-search-queries-state.js';
+import {getConfigurationInitialState} from '../features/configuration/configuration-state.js';
+import {getContextInitialState} from '../features/context/context-state.js';
+import {getDebugInitialState} from '../features/debug/debug-state.js';
+import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state.js';
+import {getFieldsInitialState} from '../features/fields/fields-state.js';
+import {getPaginationInitialState} from '../features/pagination/pagination-state.js';
+import {getPipelineInitialState} from '../features/pipeline/pipeline-state.js';
+import {getRecommendationInitialState} from '../features/recommendation/recommendation-state.js';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
+import {RecommendationAppState} from '../state/recommendation-app-state.js';
 
 export function createMockRecommendationState(
   config: Partial<RecommendationAppState> = {}

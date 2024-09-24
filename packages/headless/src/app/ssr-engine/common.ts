@@ -1,7 +1,7 @@
 import {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../controllers/controller/headless-controller';
-import {clone, mapObject} from '../../utils/utils';
-import {CoreEngine, CoreEngineNext} from '../engine';
+import {Controller} from '../../controllers/controller/headless-controller.js';
+import {clone, mapObject} from '../../utils/utils.js';
+import {CoreEngine, CoreEngineNext} from '../engine.js';
 import {
   ControllerDefinition,
   ControllerDefinitionsMap,
@@ -12,7 +12,7 @@ import {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromControllers,
   InferControllersMapFromDefinition,
-} from './types/common';
+} from './types/common.js';
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<TEngine, Controller>,

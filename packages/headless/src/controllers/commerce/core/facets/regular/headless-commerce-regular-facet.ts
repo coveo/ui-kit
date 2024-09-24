@@ -1,10 +1,10 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../../app/state-key';
+import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../../app/state-key.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions';
-import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector';
+} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
+import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -13,13 +13,13 @@ import {
   FacetValueRequest,
   RegularFacetValue,
   buildCoreCommerceFacet,
-} from '../headless-core-commerce-facet';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet';
+} from '../headless-core-commerce-facet.js';
+import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 import {
   RegularFacetSearch,
   RegularFacetSearchState,
   buildRegularFacetSearch,
-} from './headless-commerce-regular-facet-search';
+} from './headless-commerce-regular-facet-search.js';
 
 export type RegularFacetOptions = Omit<
   CoreCommerceFacetOptions,

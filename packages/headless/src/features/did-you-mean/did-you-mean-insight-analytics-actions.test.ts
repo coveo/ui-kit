@@ -1,18 +1,18 @@
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logDidYouMeanAutomatic,
   logDidYouMeanClick,
-} from './did-you-mean-insight-analytics-actions';
+} from './did-you-mean-insight-analytics-actions.js';
 
-const mockLogDidYouMeanClick = jest.fn();
-const mockLogDidYouMeanAutomatic = jest.fn();
+const mockLogDidYouMeanClick = vi.fn();
+const mockLogDidYouMeanAutomatic = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logDidYouMeanClick: mockLogDidYouMeanClick,
     logDidYouMeanAutomatic: mockLogDidYouMeanAutomatic,
@@ -20,7 +20,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -42,7 +42,7 @@ describe('did you mean insight analytics actions', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const configuration = getConfigurationInitialState();
     configuration.analytics.analyticsMode = 'legacy';
     engine = buildMockInsightEngine(

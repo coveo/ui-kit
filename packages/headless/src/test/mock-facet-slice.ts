@@ -1,5 +1,5 @@
-import {FacetSlice} from '../features/facets/facet-set/facet-set-state';
-import {buildMockFacetRequest} from './mock-facet-request';
+import {FacetSlice} from '../features/facets/facet-set/facet-set-state.js';
+import {buildMockFacetRequest} from './mock-facet-request.js';
 
 export function buildMockFacetSlice(
   config: Partial<FacetSlice> = {}

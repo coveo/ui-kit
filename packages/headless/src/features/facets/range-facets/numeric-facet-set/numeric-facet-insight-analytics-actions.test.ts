@@ -1,23 +1,23 @@
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {getConfigurationInitialState} from '../../../configuration/configuration-state';
-import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {getConfigurationInitialState} from '../../../configuration/configuration-state.js';
+import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions.js';
 
-const mockLogBreadcrumbFacet = jest.fn();
+const mockLogBreadcrumbFacet = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logBreadcrumbFacet: mockLogBreadcrumbFacet,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

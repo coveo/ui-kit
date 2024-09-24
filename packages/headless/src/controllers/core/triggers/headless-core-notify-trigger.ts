@@ -1,4 +1,4 @@
-import {Controller} from '../../controller/headless-controller';
+import {Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `NotifyTrigger` controller handles notify triggers. A [Notify trigger](https://docs.coveo.com/en/3413#notify) query pipeline rule lets you define a message to be displayed to the end user when a certain condition is met.

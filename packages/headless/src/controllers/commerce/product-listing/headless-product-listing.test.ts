@@ -1,38 +1,41 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {configuration} from '../../../app/common-reducers';
-import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {contextReducer} from '../../../features/commerce/context/context-slice.js';
 import {
   pagePrincipalSelector,
   perPagePrincipalSelector,
   totalEntriesPrincipalSelector,
-} from '../../../features/commerce/pagination/pagination-selectors';
-import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema';
+} from '../../../features/commerce/pagination/pagination-selectors.js';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {
   activeParametersSelector,
   enrichedParametersSelector,
-} from '../../../features/commerce/parameters/parameters-selectors';
-import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer';
-import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
-import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions';
+} from '../../../features/commerce/parameters/parameters-selectors.js';
+import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
+import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
   errorSelector,
   isLoadingSelector,
   numberOfProductsSelector,
   requestIdSelector,
   responseIdSelector,
-} from '../../../features/commerce/product-listing/product-listing-selectors';
-import {productListingReducer} from '../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/product-listing/product-listing-selectors.js';
+import {productListingReducer} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
-import * as SubControllers from '../core/sub-controller/headless-sub-controller';
+} from '../../../test/mock-engine-v2.js';
+import * as SubControllers from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
-} from './facets/headless-product-listing-facet-options';
-import {buildProductListing, ProductListing} from './headless-product-listing';
+} from './facets/headless-product-listing-facet-options.js';
+import {
+  buildProductListing,
+  ProductListing,
+} from './headless-product-listing.js';
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;
@@ -44,11 +47,11 @@ describe('headless product-listing', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('uses sub-controllers', () => {
-    const buildProductListingSubControllers = jest.spyOn(
+    const buildProductListingSubControllers = vi.spyOn(
       SubControllers,
       'buildProductListingSubControllers'
     );
@@ -85,7 +88,7 @@ describe('headless product-listing', () => {
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const promoteChildToParent = jest.spyOn(
+    const promoteChildToParent = vi.spyOn(
       ProductListingActions,
       'promoteChildToParent'
     );
@@ -99,7 +102,7 @@ describe('headless product-listing', () => {
   });
 
   it('#refresh dispatches #fetchProductListing', () => {
-    const fetchProductListing = jest.spyOn(
+    const fetchProductListing = vi.spyOn(
       ProductListingActions,
       'fetchProductListing'
     );
@@ -110,7 +113,7 @@ describe('headless product-listing', () => {
   });
 
   it('#executeFirstRequest dispatches #fetchProductListing', () => {
-    const executeRequest = jest.spyOn(
+    const executeRequest = vi.spyOn(
       ProductListingActions,
       'fetchProductListing'
     );

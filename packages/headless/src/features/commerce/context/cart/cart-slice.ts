@@ -1,11 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart';
-import {purchase, setItems, updateItemQuantity} from './cart-actions';
+import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart.js';
+import {purchase, setItems, updateItemQuantity} from './cart-actions.js';
 import {
   CartItemWithMetadata,
   CartState,
   getCartInitialState,
-} from './cart-state';
+} from './cart-state.js';
 
 export const cartReducer = createReducer(
   getCartInitialState(),

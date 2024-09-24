@@ -28,7 +28,7 @@ import {
   GeneratedAnswerSection,
   ContextSection,
   InsightUserActionsSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type InsightSearchParametersState = FacetSection &
   DateFacetSection &

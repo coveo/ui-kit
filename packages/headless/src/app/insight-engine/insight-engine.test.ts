@@ -1,10 +1,10 @@
-import {getSampleEngineConfiguration} from '../engine-configuration';
+import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
   buildInsightEngine,
   InsightEngine,
   InsightEngineConfiguration,
   InsightEngineOptions,
-} from './insight-engine';
+} from './insight-engine.js';
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {

@@ -1,14 +1,14 @@
 /**
  * This is an example of how to generate a strict context provider
  */
-import {CoreEngine} from '../../../app/engine';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   Context as CoreContext,
   ContextState as CoreContextState,
   ContextProps as CoreContextProps,
-} from './headless-core-context';
-import {buildInternalCoreContext} from './headless-core-internal-context';
-import {generateStrictContextFunctions} from './headless-strict-context-factory';
+} from './headless-core-context.js';
+import {buildInternalCoreContext} from './headless-core-internal-context.js';
+import {generateStrictContextFunctions} from './headless-strict-context-factory.js';
 
 export interface ContextProps extends CoreContextProps {}
 

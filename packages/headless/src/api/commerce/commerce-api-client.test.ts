@@ -1,11 +1,15 @@
-import {SortBy} from '../../features/sort/sort';
-import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
-import {VERSION} from '../../utils/version';
-import {PlatformClient} from '../platform-client';
-import {CommerceAPIClient, getCommerceApiBaseUrl} from './commerce-api-client';
-import {CommerceAPIRequest} from './common/request';
-import {CommerceResponse} from './common/response';
-import {CommerceRecommendationsRequest} from './recommendations/recommendations-request';
+import {Mock} from 'vitest';
+import {SortBy} from '../../features/sort/sort.js';
+import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client.js';
+import {VERSION} from '../../utils/version.js';
+import {PlatformClient} from '../platform-client.js';
+import {
+  CommerceAPIClient,
+  getCommerceApiBaseUrl,
+} from './commerce-api-client.js';
+import {CommerceAPIRequest} from './common/request.js';
+import {CommerceResponse} from './common/response.js';
+import {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';
@@ -14,18 +18,18 @@ describe('commerce api client', () => {
   const trackingId = 'some-tracking-id';
 
   let client: CommerceAPIClient;
-  let platformCallMock: jest.Mock;
+  let platformCallMock: Mock;
 
   beforeEach(() => {
     client = buildMockCommerceAPIClient();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const mockPlatformCall = (fakeResponse: unknown) => {
-    platformCallMock = jest.fn();
+    platformCallMock = vi.fn();
 
     platformCallMock.mockReturnValue(fakeResponse);
     PlatformClient.call = platformCallMock;

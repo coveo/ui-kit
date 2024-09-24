@@ -1,18 +1,18 @@
-import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
-import {Trigger} from '../../common/trigger';
+import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response.js';
+import {Trigger} from '../../common/trigger.js';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
-} from '../search-api-error-response';
-import {AutomaticFacets} from './automatic-facets';
-import {ExecutionReport} from './execution-report';
-import {ExtendedResults} from './extended-results';
-import {Correction, QueryCorrection} from './query-corrections';
-import {QueryRankingExpression} from './query-ranking-expression';
-import {QuestionsAnswers} from './question-answering';
-import {Result} from './result';
-import {SecurityIdentity} from './security-identity';
-import {PhrasesToHighlight, TermsToHighlight} from './stemming';
+} from '../search-api-error-response.js';
+import {AutomaticFacets} from './automatic-facets.js';
+import {ExecutionReport} from './execution-report.js';
+import {ExtendedResults} from './extended-results.js';
+import {Correction, QueryCorrection} from './query-corrections.js';
+import {QueryRankingExpression} from './query-ranking-expression.js';
+import {QuestionsAnswers} from './question-answering.js';
+import {Result} from './result.js';
+import {SecurityIdentity} from './security-identity.js';
+import {PhrasesToHighlight, TermsToHighlight} from './stemming.js';
 
 export interface SearchResponseSuccess {
   generateAutomaticFacets?: AutomaticFacets;

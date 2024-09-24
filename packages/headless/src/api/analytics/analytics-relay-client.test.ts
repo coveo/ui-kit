@@ -1,28 +1,28 @@
 import {createRelay} from '@coveo/relay';
-import {createMockState} from '../../test/mock-state';
-import {getAnalyticsNextApiBaseUrl} from '../platform-client';
-import {getRelayInstanceFromState} from './analytics-relay-client';
-import {getAnalyticsSource} from './analytics-selectors';
+import {createMockState} from '../../test/mock-state.js';
+import {getAnalyticsNextApiBaseUrl} from '../platform-client.js';
+import {getRelayInstanceFromState} from './analytics-relay-client.js';
+import {getAnalyticsSource} from './analytics-selectors.js';
 
-jest.mock('@coveo/relay');
-jest.mock('./analytics-selectors');
+vi.mock('@coveo/relay');
+vi.mock('./analytics-selectors');
 
 describe('#getRelayInstanceFromState', () => {
-  const mockedCreateRelay = jest.mocked(createRelay).mockImplementation(() => ({
-    emit: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
-    getMeta: jest.fn(),
-    updateConfig: jest.fn(),
+  const mockedCreateRelay = vi.mocked(createRelay).mockImplementation(() => ({
+    emit: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
+    getMeta: vi.fn(),
+    updateConfig: vi.fn(),
     version: 'test',
   }));
 
   beforeEach(() => {
-    jest.mocked(getAnalyticsSource).mockReturnValue(['baguette']);
+    vi.mocked(getAnalyticsSource).mockReturnValue(['baguette']);
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('creates a Relay client properly and returns it', () => {

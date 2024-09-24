@@ -1,11 +1,14 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
-import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
-import {TriggerSection} from '../../state/state-sections';
-import {arrayEqual} from '../../utils/compare-utils';
-import {loadReducerError} from '../../utils/errors';
-import {buildController, Controller} from '../controller/headless-controller';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
+import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
+import {TriggerSection} from '../../state/state-sections.js';
+import {arrayEqual} from '../../utils/compare-utils.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 /**
  * The `ExecuteTrigger` controller handles Execute triggers from the query response. An [Execute trigger](https://docs.coveo.com/en/3413#execute) query pipeline rule lets you define a custom JavaScript function to be executed in the frontend when a certain condition is met.

@@ -1,40 +1,40 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ChildProduct, Product} from '../../../api/commerce/common/product';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
+} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
 import {
   pageRecommendationSelector,
   perPageRecommendationSelector,
   totalEntriesRecommendationSelector,
-} from '../../../features/commerce/pagination/pagination-selectors';
-import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations';
+} from '../../../features/commerce/pagination/pagination-selectors.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
   promoteChildToParent,
   registerRecommendationsSlot,
-} from '../../../features/commerce/recommendations/recommendations-actions';
+} from '../../../features/commerce/recommendations/recommendations-actions.js';
 import {
   isLoadingSelector,
   numberOfRecommendationsSelector,
-} from '../../../features/commerce/recommendations/recommendations-selectors';
-import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice';
-import {loadReducerError} from '../../../utils/errors';
-import {validateInitialState} from '../../../utils/validate-payload';
+} from '../../../features/commerce/recommendations/recommendations-selectors.js';
+import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice.js';
+import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
-} from '../core/sub-controller/headless-sub-controller';
-import {SummaryState} from '../core/summary/headless-core-summary';
-import {RecommendationsSummaryState} from './summary/headless-recommendations-summary';
+} from '../core/sub-controller/headless-sub-controller.js';
+import {SummaryState} from '../core/summary/headless-core-summary.js';
+import {RecommendationsSummaryState} from './summary/headless-recommendations-summary.js';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.

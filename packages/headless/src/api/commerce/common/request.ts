@@ -1,5 +1,5 @@
-import {PlatformClientCallOptions} from '../../platform-client';
-import {BaseParam} from '../../platform-service-params';
+import {PlatformClientCallOptions} from '../../platform-client.js';
+import {BaseParam} from '../../platform-service-params.js';
 import {
   TrackingIdParam,
   LanguageParam,
@@ -11,8 +11,8 @@ import {
   PageParam,
   SortParam,
   PerPageParam,
-} from '../commerce-api-params';
-import {CommerceApiMethod} from '../commerce-metadata';
+} from '../commerce-api-params.js';
+import {CommerceApiMethod} from '../commerce-metadata.js';
 
 export type BaseCommerceAPIRequest = BaseParam &
   TrackingIdParam &
