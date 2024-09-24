@@ -64,7 +64,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
       "url": "exampleUri",
     },
     "position": 1,
-    "responseId": "baz",
+    "responseId": "qux",
   },
 ]
 `;
@@ -80,7 +80,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
       "url": "exampleUri",
     },
     "position": 1,
-    "responseId": "baz",
+    "responseId": "qux",
   },
 ]
 `;
@@ -96,7 +96,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
       "url": "exampleUri",
     },
     "liked": true,
-    "responseId": "baz",
+    "responseId": "qux",
   },
 ]
 `;
@@ -112,7 +112,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
       "url": "exampleUri",
     },
     "position": 1,
-    "responseId": "baz",
+    "responseId": "qux",
   },
 ]
 `;

@@ -183,7 +183,7 @@ export const logDocumentSuggestionClick = (
     analyticsPayloadBuilder: (
       state
     ): CaseAssist.DocumentSuggestionClick | undefined => {
-      const responseId = state.caseField?.status?.lastResponseId;
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
       const documentSuggestion = caseAssistDocumentSuggestionSelector(
         state,
         suggestionId
@@ -222,7 +222,7 @@ export const logQuickviewDocumentSuggestionClick = (
     analyticsPayloadBuilder: (
       state
     ): CaseAssist.DocumentSuggestionClick | undefined => {
-      const responseId = state.caseField?.status?.lastResponseId;
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
       const documentSuggestion = caseAssistDocumentSuggestionSelector(
         state,
         suggestionId
@@ -262,7 +262,7 @@ export const logDocumentSuggestionOpen = (
     analyticsPayloadBuilder: (
       state
     ): CaseAssist.DocumentSuggestionClick | undefined => {
-      const responseId = state.caseField?.status?.lastResponseId;
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
       const documentSuggestion = caseAssistDocumentSuggestionSelector(
         state,
         suggestionId
@@ -300,7 +300,7 @@ export const logDocumentSuggestionRating = (
     analyticsPayloadBuilder: (
       state
     ): CaseAssist.DocumentSuggestionFeedback | undefined => {
-      const responseId = state.caseField?.status?.lastResponseId;
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
       const documentSuggestion = caseAssistDocumentSuggestionSelector(
         state,
         suggestionId
