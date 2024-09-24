@@ -302,12 +302,15 @@ test.describe('AtomicTabManager', () => {
           await tabManager.refineModalSortDropdown.selectOption('Relevance');
 
           await tabManager.refineModalCloseButton.click();
-
+          await tabManager.refineModalHeader.waitFor({state: 'hidden'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
           );
+          await searchBox.submitButton.focus();
           await searchBox.submitButton.click();
+          await tabManager.generatedAnswer.waitFor({state: 'visible'});
+
           await expect(tabManager.generatedAnswer).toBeVisible();
         });
       });
