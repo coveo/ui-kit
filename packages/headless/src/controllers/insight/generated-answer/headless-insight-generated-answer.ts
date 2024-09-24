@@ -10,6 +10,7 @@ import {
   GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 import {buildSearchAPIGeneratedAnswer} from '../../core/generated-answer/headless-searchapi-generated-answer.js';
+import {buildAnswerApiGeneratedAnswer} from '../../knowledge/generated-answer/headless-answerapi-generated-answer.js';
 
 export type {
   GeneratedAnswerCitation,
@@ -31,11 +32,17 @@ export function buildGeneratedAnswer(
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
   const {dispatch} = engine;
-  const controller = buildSearchAPIGeneratedAnswer(
-    engine,
-    generatedAnswerInsightAnalyticsClient,
-    props
-  );
+  const controller = props.answerConfigurationId
+    ? buildAnswerApiGeneratedAnswer(
+        engine,
+        generatedAnswerInsightAnalyticsClient,
+        props
+      )
+    : buildSearchAPIGeneratedAnswer(
+        engine,
+        generatedAnswerInsightAnalyticsClient,
+        props
+      );
 
   return {
     ...controller,

@@ -1213,6 +1213,7 @@ export namespace Components {
         "tooltip": string;
     }
     interface AtomicInsightGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -7133,6 +7134,7 @@ declare namespace LocalJSX {
         "tooltip"?: string;
     }
     interface AtomicInsightGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
