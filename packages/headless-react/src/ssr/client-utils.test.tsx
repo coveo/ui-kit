@@ -1,12 +1,13 @@
 import {renderHook} from '@testing-library/react';
+import {vi, expect, describe, test, it} from 'vitest';
 import {useSyncMemoizedStore} from './client-utils';
 
 describe('useSyncMemoizedStore', () => {
   test('should return the initial snapshot', () => {
     const snapshot = {count: 0};
-    const unsubscribe = jest.fn();
-    const subscribe = jest.fn(() => unsubscribe);
-    const getSnapshot = jest.fn(() => snapshot);
+    const unsubscribe = vi.fn();
+    const subscribe = vi.fn(() => unsubscribe);
+    const getSnapshot = vi.fn(() => snapshot);
 
     const {result} = renderHook(() =>
       useSyncMemoizedStore(subscribe, getSnapshot)
@@ -17,9 +18,9 @@ describe('useSyncMemoizedStore', () => {
 
   test('should not call getSnapshot when there is a re-render with the same getSnapshot', () => {
     const snapshot = {count: 0};
-    const unsubscribe = jest.fn();
-    const subscribe = jest.fn(() => unsubscribe);
-    const getSnapshot = jest.fn(() => snapshot);
+    const unsubscribe = vi.fn();
+    const subscribe = vi.fn(() => unsubscribe);
+    const getSnapshot = vi.fn(() => snapshot);
 
     const {rerender} = renderHook(() =>
       useSyncMemoizedStore(subscribe, getSnapshot)
@@ -33,26 +34,26 @@ describe('useSyncMemoizedStore', () => {
   test('should update the state when getSnapshot changes', () => {
     const snapshot1 = {count: 0};
     const snapshot2 = {count: 1};
-    const subscribe = jest.fn(() => jest.fn());
-    let getSnapshot = jest.fn(() => snapshot1);
+    const subscribe = vi.fn(() => vi.fn());
+    let getSnapshot = vi.fn(() => snapshot1);
 
     const {result, rerender} = renderHook(() =>
       useSyncMemoizedStore(subscribe, getSnapshot)
     );
 
     expect(result.current).toEqual(snapshot1);
-    getSnapshot = jest.fn(() => snapshot2);
+    getSnapshot = vi.fn(() => snapshot2);
     rerender();
     expect(result.current).toEqual(snapshot2);
   });
 
   test('should unsubscribe and re-subscribe to new function when subscribe function is changed', () => {
     const snapshot = {count: 0};
-    const unsubscribe1 = jest.fn();
-    const unsubscribe2 = jest.fn();
-    const subscribe1 = jest.fn(() => unsubscribe1);
-    const subscribe2 = jest.fn(() => unsubscribe2);
-    const getSnapshot = jest.fn(() => snapshot);
+    const unsubscribe1 = vi.fn();
+    const unsubscribe2 = vi.fn();
+    const subscribe1 = vi.fn(() => unsubscribe1);
+    const subscribe2 = vi.fn(() => unsubscribe2);
+    const getSnapshot = vi.fn(() => snapshot);
 
     const {rerender} = renderHook(
       ({subscribe}) => useSyncMemoizedStore(subscribe, getSnapshot),
@@ -71,10 +72,10 @@ describe('useSyncMemoizedStore', () => {
   test('should replace current snapshot when getSnapshot function is changed', () => {
     const snapshot1 = {count: 0};
     const snapshot2 = {count: 1};
-    const unsubscribe = jest.fn();
-    const subscribe = jest.fn(() => unsubscribe);
-    const getSnapshot1 = jest.fn(() => snapshot1);
-    const getSnapshot2 = jest.fn(() => snapshot2);
+    const unsubscribe = vi.fn();
+    const subscribe = vi.fn(() => unsubscribe);
+    const getSnapshot1 = vi.fn(() => snapshot1);
+    const getSnapshot2 = vi.fn(() => snapshot2);
 
     const {result, rerender} = renderHook(
       ({getSnapshot}) => useSyncMemoizedStore(subscribe, getSnapshot),
@@ -88,13 +89,13 @@ describe('useSyncMemoizedStore', () => {
 
   it('should call the subscribe listener on mount and unsubscribe on unmount', () => {
     const snapshot = {count: 0};
-    const unsubscribe = jest.fn();
-    const listener = jest.fn();
-    const subscribe = jest.fn(() => {
+    const unsubscribe = vi.fn();
+    const listener = vi.fn();
+    const subscribe = vi.fn(() => {
       listener();
       return unsubscribe;
     });
-    const getSnapshot = jest.fn(() => snapshot);
+    const getSnapshot = vi.fn(() => snapshot);
 
     const {result, unmount} = renderHook(() => {
       return useSyncMemoizedStore(subscribe, getSnapshot);
