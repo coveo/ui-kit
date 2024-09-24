@@ -5,6 +5,7 @@ import {
   defineResultList,
   defineSearchBox,
   Result,
+  NavigatorContextProvider,
 } from '@coveo/headless/ssr';
 import {act, render, renderHook, screen} from '@testing-library/react';
 import {randomUUID} from 'crypto';
@@ -19,7 +20,6 @@ import {
   MockInstance,
   afterEach,
 } from 'vitest';
-import {NavigatorContextProvider} from '../../../headless/dist/definitions/app/navigatorContextProvider.js';
 import {MissingEngineProviderError} from './common.js';
 import {defineSearchEngine} from './search-engine.js';
 
