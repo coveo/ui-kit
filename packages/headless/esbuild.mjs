@@ -4,13 +4,24 @@ import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import path, {dirname, resolve} from 'node:path';
+import {join} from 'path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
+
+const __dirname = dirname(new URL(import.meta.url).pathname);
+
+const buenoJsonPath = join(__dirname, '../bueno/package.json');
+const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
-const __dirname = dirname(new URL(import.meta.url).pathname);
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
+const buenoVersion = 'v' + buenoJson.version;
+const buenoPath = isCDN
+  ? `/bueno/${buenoVersion}/bueno.esm.js`
+  : '@coveo/bueno';
 
 const useCaseEntries = {
   search: 'src/index.ts',
@@ -200,20 +211,32 @@ function resolveBrowser(moduleName) {
  * @returns {Promise<import('esbuild').BuildResult>}
  */
 async function buildBrowserConfig(options, outDir) {
+  const replaceBuenoImport = [
+    {
+      name: 'replace-bueno-import',
+      setup(build) {
+        build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+          return {path: buenoPath, external: true};
+        });
+      },
+    },
+  ];
   const out = await build({
     ...base,
     platform: 'browser',
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto', '@coveo/bueno'],
+    external: ['crypto', buenoPath],
     ...options,
+
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
+      ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
     ],
   });
