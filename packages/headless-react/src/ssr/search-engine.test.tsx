@@ -1,13 +1,15 @@
-import {NavigatorContextProvider} from '@coveo/headless/dist/definitions/app/navigatorContextProvider.js';
 import {
   getSampleSearchEngineConfiguration,
   InferStaticState,
   InferHydratedState,
   defineResultList,
   defineSearchBox,
+  Result,
 } from '@coveo/headless/ssr';
 import {act, render, renderHook, screen} from '@testing-library/react';
+import {randomUUID} from 'crypto';
 import {PropsWithChildren} from 'react';
+import React from 'react';
 import {
   vi,
   expect,
@@ -17,6 +19,7 @@ import {
   MockInstance,
   afterEach,
 } from 'vitest';
+import {NavigatorContextProvider} from '../../../headless/dist/definitions/app/navigatorContextProvider.js';
 import {MissingEngineProviderError} from './common.js';
 import {defineSearchEngine} from './search-engine.js';
 
@@ -106,7 +109,38 @@ describe('Headless react SSR utils', () => {
     } = engineDefinition;
 
     function TestResultList() {
+      const generateMockResult: () => Result = () => {
+        return {
+          absentTerms: [],
+          clickUri: '',
+          excerpt: '',
+          excerptHighlights: [],
+          firstSentences: '',
+          firstSentencesHighlights: [],
+          flags: '',
+          hasHtmlVersion: false,
+          isRecommendation: false,
+          isTopResult: false,
+          isUserActionView: false,
+          percentScore: 0,
+          printableUri: '',
+          printableUriHighlights: [],
+          rankingInfo: null,
+          raw: {urihash: ''},
+          score: 0,
+          searchUid: '',
+          summary: null,
+          summaryHighlights: [],
+          title: '',
+          titleHighlights: [],
+          uniqueId: randomUUID(),
+          uri: '',
+        };
+      };
+
       const {state} = controllers.useResultList();
+
+      state.results = Array.from({length: numResults}, generateMockResult);
       return (
         <ul>
           {state.results.map((result) => (
