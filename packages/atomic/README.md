@@ -7,6 +7,16 @@ A web-component library for building modern UIs interfacing with the Coveo platf
 
 Using the library: [Coveo Atomic Library Official Documentation](https://docs.coveo.com/en/atomic/latest/).
 
+## Entry points
+
+The `@coveo/atomic` package exposes the following entry points:
+
+- `@coveo/atomic`: exports various types and utilities used by Coveo Atomic.
+- `@coveo/atomic/loader`: exports the Coveo Atomic components types, as well as the `defineCustomElements` and `setNonce` utilities.
+- `@coveo/atomic/themes`; exports the sample Coveo Atomic themes.
+- `@coveo/atomic/assets`: exports the SVG icons used by Coveo Atomic.
+- `@coveo/atomic/lang`: exports the localization files used by Coveo Atomic.
+
 ## Getting Started
 
 Once you have cloned the repo, follow the instructions in the top-level [README.md](../../README.md) to install dependencies and link packages.
