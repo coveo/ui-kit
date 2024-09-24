@@ -12,8 +12,8 @@
     "buildInputs": [
       "{projectRoot}/stencil.config.ts",
       "{projectRoot}/collection-manifest.json",
-      "{projectRoot}/tailwind.config.js",
-      "{projectRoot}/svg.transform.js",
+      "{projectRoot}/tailwind.config.cjs",
+      "{projectRoot}/svg.transform.cjs",
       "{projectRoot}/stencil-plugin/**",
       "!{projectRoot}/src/external-builds/**",
       "!{projectRoot}/src/generated/**",

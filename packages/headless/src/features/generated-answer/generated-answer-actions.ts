@@ -6,7 +6,7 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
+import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client.js';
 import {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerEndOfStreamPayload,
@@ -14,25 +14,25 @@ import {
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
-} from '../../api/generated-answer/generated-answer-event-payload';
-import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
+} from '../../api/generated-answer/generated-answer-event-payload.js';
+import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import {
   ConfigurationSection,
   DebugSection,
   GeneratedAnswerSection,
   SearchSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   nonEmptyStringArray,
   validatePayload,
-} from '../../utils/validate-payload';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
-import {buildStreamingRequest} from './generated-answer-request';
+} from '../../utils/validate-payload.js';
+import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
+import {buildStreamingRequest} from './generated-answer-request.js';
 import {
   GeneratedContentFormat,
   GeneratedResponseFormat,
   generatedContentFormat,
-} from './generated-response-format';
+} from './generated-response-format.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &

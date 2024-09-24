@@ -1,12 +1,12 @@
-import {getSearchApiBaseUrl} from '../../api/platform-client';
-import {HtmlRequestOptions} from '../../api/search/html/html-request';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {getQueryInitialState} from '../query/query-state';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {HtmlRequestOptions} from '../../api/search/html/html-request.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
 import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
-} from '../result-preview/result-preview-request-builder';
-import {getResultPreviewInitialState} from './result-preview-state';
+} from '../result-preview/result-preview-request-builder.js';
+import {getResultPreviewInitialState} from './result-preview-state.js';
 
 describe('ResultPreviewRequestBuilder', () => {
   let state: StateNeededByHtmlEndpoint;

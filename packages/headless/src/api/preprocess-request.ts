@@ -1,6 +1,6 @@
-import {AnalyticsClientOrigin} from 'coveo.analytics/dist/definitions/client/analyticsRequestClient';
-import {CommerceApiMethod} from './commerce/commerce-metadata';
-import {SearchApiMethod, SearchOrigin} from './search/search-metadata';
+import {AnalyticsClientOrigin} from 'coveo.analytics/dist/definitions/client/analyticsRequestClient.js';
+import {CommerceApiMethod} from './commerce/commerce-metadata.js';
+import {SearchApiMethod, SearchOrigin} from './search/search-metadata.js';
 
 export interface PlatformRequestOptions extends RequestInit {
   url: string;

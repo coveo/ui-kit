@@ -1,9 +1,9 @@
-import {Product} from '../../../api/commerce/common/product';
+import {Product} from '../../../api/commerce/common/product.js';
 import {
   buildTemplatesManager,
   Template,
   TemplateCondition,
-} from '../../templates/templates-manager';
+} from '../../templates/templates-manager.js';
 
 export type ProductTemplate<Content = unknown> = Template<Product, Content>;
 export type ProductTemplateCondition = TemplateCondition<Product>;

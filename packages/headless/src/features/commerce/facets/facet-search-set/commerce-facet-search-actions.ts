@@ -2,18 +2,18 @@ import {AsyncThunkPayloadCreator, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   CommerceAPIResponse,
   CommerceFacetSearchAPIClient,
-} from '../../../../api/commerce/commerce-api-client';
-import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request';
-import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
-import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {requiredNonEmptyString} from '../../../../utils/validate-payload';
-import {FieldSuggestionsOrderState} from '../field-suggestions-order/field-suggestions-order-state';
-import {buildCategoryFacetSearchRequest} from './category/commerce-category-facet-search-request-builder';
-import {StateNeededForAnyFacetSearch} from './commerce-facet-search-state';
-import {buildFacetSearchRequest} from './regular/commerce-regular-facet-search-request-builder';
-import {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet-search-state';
+} from '../../../../api/commerce/commerce-api-client.js';
+import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
+import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
+import {FieldSuggestionsOrderState} from '../field-suggestions-order/field-suggestions-order-state.js';
+import {buildCategoryFacetSearchRequest} from './category/commerce-category-facet-search-request-builder.js';
+import {StateNeededForAnyFacetSearch} from './commerce-facet-search-state.js';
+import {buildFacetSearchRequest} from './regular/commerce-regular-facet-search-request-builder.js';
+import {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet-search-state.js';
 
 type ExecuteCommerceFacetSearchThunkReturn = {
   facetId: string;

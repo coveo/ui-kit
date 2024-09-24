@@ -1,11 +1,11 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {ChildProduct} from '../../../api/commerce/common/product';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
   validatePayload,
   requiredEmptyAllowedString,
   requiredNonEmptyString,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 
 export interface CoreInstantProductPayload {
   /**

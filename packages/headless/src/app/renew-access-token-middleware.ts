@@ -1,8 +1,8 @@
 import {Middleware, UnknownAction} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
-import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
-import {ExpiredTokenError} from '../utils/errors';
+import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
+import {ExpiredTokenError} from '../utils/errors.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,

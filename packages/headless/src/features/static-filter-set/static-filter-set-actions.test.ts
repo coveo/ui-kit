@@ -1,20 +1,20 @@
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {logInsightStaticFilterDeselect} from './static-filter-set-insight-analytics-actions';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {logInsightStaticFilterDeselect} from './static-filter-set-insight-analytics-actions.js';
 
-const mockOriginalStaticFilterDeselect = jest.fn();
+const mockOriginalStaticFilterDeselect = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logStaticFilterDeselect: mockOriginalStaticFilterDeselect,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 

@@ -1,13 +1,13 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {facetOrderReducer as facetOrder} from '../../facets/facet-order/facet-order-slice';
-import {commerceFacetSetReducer as commerceFacetSet} from '../facets/facet-set/facet-set-slice';
-import {paginationReducer as commercePagination} from '../pagination/pagination-slice';
-import {sortReducer as commerceSort} from '../sort/sort-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {facetOrderReducer as facetOrder} from '../../facets/facet-order/facet-order-slice.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../facets/facet-set/facet-set-slice.js';
+import {paginationReducer as commercePagination} from '../pagination/pagination-slice.js';
+import {sortReducer as commerceSort} from '../sort/sort-slice.js';
 import {
   RestoreProductListingParametersPayload,
   restoreProductListingParameters,
-} from './product-listing-parameters-actions';
+} from './product-listing-parameters-actions.js';
 
 export type {RestoreProductListingParametersPayload};
 

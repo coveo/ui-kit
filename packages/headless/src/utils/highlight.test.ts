@@ -5,7 +5,7 @@ import {
   getHighlightedSuggestion,
   SuggestionHighlightingOptions,
   escape,
-} from './highlight';
+} from './highlight.js';
 
 describe('highlight', () => {
   describe('highlightString', () => {

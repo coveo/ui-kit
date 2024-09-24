@@ -3,21 +3,21 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   buildContentURL,
   HtmlApiClient,
-} from '../../api/search/html/html-api-client';
+} from '../../api/search/html/html-api-client.js';
 import {
   HtmlRequest,
   HtmlRequestOptions,
-} from '../../api/search/html/html-request';
-import {isErrorResponse} from '../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import type {Result} from '../../api/search/search/result';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {validatePayload} from '../../utils/validate-payload';
+} from '../../api/search/html/html-request.js';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {Result} from '../../api/search/search/result.js';
+import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
-} from './result-preview-request-builder';
+} from './result-preview-request-builder.js';
 
 export interface FetchResultContentThunkReturn {
   content: string;

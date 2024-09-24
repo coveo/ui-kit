@@ -94,7 +94,7 @@ const commonExternal = [
 
 /** @returns {import('rollup').OutputOptions} */
 const outputCJS = ({useCase}) => ({
-  file: `dist/cjs/${useCase}atomic-react.js`,
+  file: `dist/cjs/${useCase}atomic-react.cjs`,
   format: 'cjs',
 });
 

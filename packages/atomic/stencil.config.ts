@@ -185,11 +185,11 @@ export const config: Config = {
     browserArgs: ['--no-sandbox'],
     transform: {
       '^.+\\.html?$': 'html-loader-jest',
-      '^.+\\.svg$': './svg.transform.js',
+      '^.+\\.svg$': './svg.transform.cjs',
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['.snap'],
-    setupFiles: ['./jest/setup.js', 'jest-localstorage-mock'],
+    setupFiles: ['./jest/setup.cjs', 'jest-localstorage-mock'],
     resetMocks: false,
   },
   devServer: {

@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine';
-import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions';
+import {CoreEngine} from '../../app/engine.js';
+import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions.js';
 
 /**
  * Internal and experimental actions loader for the IPX.

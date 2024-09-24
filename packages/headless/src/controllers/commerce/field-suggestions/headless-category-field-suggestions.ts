@@ -1,32 +1,32 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
+import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
-import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
-import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   CategoryFacetSearchSection,
   CommerceFacetSetSection,
   FacetSearchSection,
   FieldSuggestionsOrderSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   CategoryFieldSuggestionsState as CoreCategoryFieldSuggestionsState,
   CategoryFieldSuggestionsValue,
-} from '../../field-suggestions/category-facet/headless-category-field-suggestions';
-import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet';
-import {buildCategoryFacetSearch} from '../core/facets/category/headless-commerce-category-facet-search';
-import {FacetControllerType} from '../core/facets/headless-core-commerce-facet';
+} from '../../field-suggestions/category-facet/headless-category-field-suggestions.js';
+import {buildCategoryFacetSearch} from '../core/facets/category/headless-commerce-category-facet-search.js';
+import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
+import {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
 
 export type {CategoryFieldSuggestionsValue};
 

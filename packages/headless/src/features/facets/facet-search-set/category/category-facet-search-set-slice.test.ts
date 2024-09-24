@@ -1,31 +1,31 @@
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
-import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
+import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
-} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
-import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
+} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
+import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
 import {
   executeSearch as executeCommerceSearch,
   QuerySearchCommerceAPIThunkReturn,
-} from '../../../commerce/search/search-actions';
+} from '../../../commerce/search/search-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
-} from '../../../search/search-actions';
-import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers';
+} from '../../../search/search-actions.js';
+import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../specific/specific-facet-search-actions';
-import {registerCategoryFacetSearch} from './category-facet-search-actions';
-import {categoryFacetSearchSetReducer} from './category-facet-search-set-slice';
+} from '../generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../specific/specific-facet-search-actions.js';
+import {registerCategoryFacetSearch} from './category-facet-search-actions.js';
+import {categoryFacetSearchSetReducer} from './category-facet-search-set-slice.js';
 import {
   CategoryFacetSearchSetState,
   getCategoryFacetSearchSetInitialState,
-} from './category-facet-search-set-state';
+} from './category-facet-search-set-state.js';
 
 describe('CategoryFacetSearchSet slice', () => {
   const facetId = '1';
@@ -34,7 +34,7 @@ describe('CategoryFacetSearchSet slice', () => {
   let state: CategoryFacetSearchSetState;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     state = getCategoryFacetSearchSetInitialState();
   });
 
@@ -44,7 +44,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#registerCategoryFacetSearch calls #handleFacetSearchRegistration', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRegistration');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRegistration');
     facetSearchSetReducer(state, registerCategoryFacetSearch({facetId}));
     expect(
       FacetSearchReducerHelpers.handleFacetSearchRegistration
@@ -52,7 +52,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#updateFacetSearch calls #handleFacetSearchUpdate', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchUpdate');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchUpdate');
     facetSearchSetReducer(state, updateFacetSearch({facetId}));
     expect(
       FacetSearchReducerHelpers.handleFacetSearchUpdate
@@ -60,7 +60,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFacetSearch.pending calls #handleFacetSearchPending', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeCommerceFacetSearch.pending(facetId, {
       facetId: '',
       facetSearchType: 'SEARCH',
@@ -73,7 +73,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFieldSuggest.pending calls #handleFacetSearchPending', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeCommerceFieldSuggest.pending(facetId, {
       facetId,
       facetSearchType: 'SEARCH',
@@ -86,7 +86,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeFacetSearch.pending calls #handleFacetSearchPending', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeFacetSearch.pending(facetId, '');
     facetSearchSetReducer(state, pendingAction);
 
@@ -96,7 +96,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFacetSearch.rejected calls #handleFacetSearchRejected', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
     const rejectedAction = executeCommerceFacetSearch.rejected(
       {name: 'test', message: 'test'},
       facetId,
@@ -110,7 +110,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFieldSuggest.rejected calls #handleFacetSearchRejected', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
     const rejectedAction = executeCommerceFieldSuggest.rejected(
       {name: 'test', message: 'test'},
       facetId,
@@ -124,7 +124,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeFacetSearch.rejected calls #handleFacetSearchRejected', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
     const rejectedAction = executeFacetSearch.rejected(
       {name: 'test', message: 'test'},
       facetId,
@@ -138,7 +138,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFacetSearch.fulfilled calls #handleCommerceFacetSearchFulfilled', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
     const response = buildMockFacetSearchResponse();
     const action = executeCommerceFacetSearch.fulfilled(
       {facetId, response: {success: response}},
@@ -153,7 +153,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFieldSuggest.fulfilled calls #handleCommerceFacetFieldSuggestionsFulfilled', () => {
-    jest.spyOn(
+    vi.spyOn(
       FacetSearchReducerHelpers,
       'handleCommerceFacetFieldSuggestionsFulfilled'
     );
@@ -171,7 +171,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#fetchQuerySuggestions.fulfilled calls #handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet', () => {
-    jest.spyOn(
+    vi.spyOn(
       FacetSearchReducerHelpers,
       'handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet'
     );
@@ -196,7 +196,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeFacetSearch.fulfilled calls #handleFacetSearchFulfilled', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchFulfilled');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchFulfilled');
     const response = buildMockFacetSearchResponse();
     const action = executeFacetSearch.fulfilled({facetId, response}, '', '');
 
@@ -207,7 +207,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#clearFacetSearch calls #handleFacetSearchClear', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClear');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClear');
     facetSearchSetReducer(state, clearFacetSearch({facetId}));
 
     expect(
@@ -216,7 +216,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#fetchProductListing.fulfilled calls #handleFacetSearchSetClear', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     const action = fetchProductListing.fulfilled(
       {} as QueryCommerceAPIThunkReturn,
       ''
@@ -229,7 +229,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceSearch.fulfilled calls #handleFacetSearchSetClear', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     const action = executeCommerceSearch.fulfilled(
       {} as QuerySearchCommerceAPIThunkReturn,
       ''
@@ -242,7 +242,7 @@ describe('CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeSearch.fulfilled calls #handleFacetSearchSetClear', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     const action = executeSearch.fulfilled({} as ExecuteSearchThunkReturn, '', {
       legacy: null as never,
     });

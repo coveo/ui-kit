@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   RegisterRecommendationsSlotPaginationPayload,
   NextPagePayload,
@@ -11,8 +11,8 @@ import {
   selectPage,
   setPageSize,
   registerRecommendationsSlotPagination,
-} from './pagination-actions';
-import {paginationReducer as commercePagination} from './pagination-slice';
+} from './pagination-actions.js';
+import {paginationReducer as commercePagination} from './pagination-slice.js';
 
 export type {
   RegisterRecommendationsSlotPaginationPayload,

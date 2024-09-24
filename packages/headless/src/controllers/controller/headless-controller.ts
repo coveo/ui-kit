@@ -1,5 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import type {CoreEngine, CoreEngineNext} from '../../app/engine';
+import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 
 export interface Subscribable {
   /**

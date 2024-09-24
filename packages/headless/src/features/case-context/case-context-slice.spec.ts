@@ -1,5 +1,9 @@
-import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions';
-import {caseContextReducer} from './case-context-slice';
+import {
+  setCaseContext,
+  setCaseId,
+  setCaseNumber,
+} from './case-context-actions.js';
+import {caseContextReducer} from './case-context-slice.js';
 
 describe('case context slice', () => {
   it('initializes state correctly', () => {

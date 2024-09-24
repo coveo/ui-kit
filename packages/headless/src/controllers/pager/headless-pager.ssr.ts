@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {Pager, PagerProps, buildPager} from './headless-pager';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {Pager, PagerProps, buildPager} from './headless-pager.js';
 
-export * from './headless-pager';
+export * from './headless-pager.js';
 
 export interface PagerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, Pager> {}

@@ -1,22 +1,22 @@
 import {
   clearRecentResults,
   registerRecentResults,
-} from '../../features/recent-results/recent-results-actions';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
-import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
+} from '../../features/recent-results/recent-results-actions.js';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions.js';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildRecentResultsList,
   RecentResultsList,
-} from './headless-recent-results-list';
+} from './headless-recent-results-list.js';
 
-jest.mock('../../features/recent-results/recent-results-analytics-actions');
-jest.mock('../../features/recent-results/recent-results-actions');
+vi.mock('../../features/recent-results/recent-results-analytics-actions');
+vi.mock('../../features/recent-results/recent-results-actions');
 
 describe('recent results list', () => {
   let engine: MockedSearchEngine;

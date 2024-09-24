@@ -1,9 +1,9 @@
 import {
   fetchUserActions,
   registerUserActions,
-} from './insight-user-actions-actions';
-import {insightUserActionsReducer} from './insight-user-actions-slice';
-import {getInsightUserActionsInitialState} from './insight-user-actions-state';
+} from './insight-user-actions-actions.js';
+import {insightUserActionsReducer} from './insight-user-actions-slice.js';
+import {getInsightUserActionsInitialState} from './insight-user-actions-state.js';
 
 describe('insight user actions slice', () => {
   const requestId = 'some-request-id';

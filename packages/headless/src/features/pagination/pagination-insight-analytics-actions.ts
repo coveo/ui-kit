@@ -1,11 +1,11 @@
-import {PaginationSection} from '../../state/state-sections';
+import {PaginationSection} from '../../state/state-sections.js';
 import {
   makeInsightAnalyticsActionFactory,
   InsightAction,
-} from '../analytics/analytics-utils';
-import {LegacySearchPageEvents} from '../analytics/legacy-search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {currentPageSelector} from './pagination-selectors';
+} from '../analytics/analytics-utils.js';
+import {LegacySearchPageEvents} from '../analytics/legacy-search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {currentPageSelector} from './pagination-selectors.js';
 
 export const logPageNumber = (): InsightAction =>
   makeInsightAnalyticsActionFactory(LegacySearchPageEvents.pagerNumber)(

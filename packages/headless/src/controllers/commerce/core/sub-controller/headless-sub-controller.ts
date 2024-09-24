@@ -1,66 +1,66 @@
 import {SchemaDefinition} from '@coveo/bueno';
 import {UnknownAction} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response';
-import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request';
+import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
+import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
-import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
-import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer';
-import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions';
-import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions';
-import {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary';
+} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
+import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer.js';
+import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
+import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
+import {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary.js';
 import {
   buildDidYouMean,
   DidYouMean,
-} from '../../search/did-you-mean/headless-did-you-mean';
-import {SearchSummaryState} from '../../search/summary/headless-search-summary';
+} from '../../search/did-you-mean/headless-did-you-mean.js';
+import {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
-} from '../breadcrumb-manager/headless-core-breadcrumb-manager';
-import {FetchProductsActionCreator} from '../common';
-import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet';
-import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet';
+} from '../breadcrumb-manager/headless-core-breadcrumb-manager.js';
+import {FetchProductsActionCreator} from '../common.js';
+import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet.js';
+import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet.js';
 import {
   buildFacetGenerator,
   FacetGenerator,
-} from '../facets/generator/headless-commerce-facet-generator';
-import {buildCommerceNumericFacet} from '../facets/numeric/headless-commerce-numeric-facet';
-import {buildCommerceRegularFacet} from '../facets/regular/headless-commerce-regular-facet';
+} from '../facets/generator/headless-commerce-facet-generator.js';
+import {buildCommerceNumericFacet} from '../facets/numeric/headless-commerce-numeric-facet.js';
+import {buildCommerceRegularFacet} from '../facets/regular/headless-commerce-regular-facet.js';
 import {
   buildCoreInteractiveProduct,
   InteractiveProduct,
   InteractiveProductProps,
-} from '../interactive-product/headless-core-interactive-product';
+} from '../interactive-product/headless-core-interactive-product.js';
 import {
   buildCorePagination,
   Pagination,
   PaginationProps,
-} from '../pagination/headless-core-commerce-pagination';
+} from '../pagination/headless-core-commerce-pagination.js';
 import {
   buildCoreParameterManager,
   ParameterManager,
   ParameterManagerProps,
-} from '../parameter-manager/headless-core-parameter-manager';
+} from '../parameter-manager/headless-core-parameter-manager.js';
 import {
   buildCoreSort,
   Sort,
   SortProps,
-} from '../sort/headless-core-commerce-sort';
+} from '../sort/headless-core-commerce-sort.js';
 import {
   buildCoreSummary,
   Summary,
   SummaryState,
-} from '../summary/headless-core-summary';
+} from '../summary/headless-core-summary.js';
 import {
   buildCoreUrlManager,
   UrlManager,
   type UrlManagerProps,
-} from '../url-manager/headless-core-url-manager';
+} from '../url-manager/headless-core-url-manager.js';
 
 export interface BaseSolutionTypeSubControllers<S extends SummaryState> {
   /**

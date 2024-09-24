@@ -1,16 +1,19 @@
-import {change} from '../history/history-actions';
-import {getHistoryInitialState, HistoryState} from '../history/history-state';
+import {change} from '../history/history-actions.js';
+import {
+  getHistoryInitialState,
+  HistoryState,
+} from '../history/history-state.js';
 import {
   addContext,
   AddDictionaryFieldContextActionCreatorPayload,
   removeContext,
   setContext,
-} from './dictionary-field-context-actions';
-import {dictionaryFieldContextReducer} from './dictionary-field-context-slice';
+} from './dictionary-field-context-actions.js';
+import {dictionaryFieldContextReducer} from './dictionary-field-context-slice.js';
 import {
   DictionaryFieldContextPayload,
   DictionaryFieldContextState,
-} from './dictionary-field-context-state';
+} from './dictionary-field-context-state.js';
 
 describe('dictionary field context slice', () => {
   it('initializes state correctly', () => {

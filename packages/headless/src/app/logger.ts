@@ -1,4 +1,4 @@
-import pino, {LevelWithSilent} from 'pino';
+import {pino, LevelWithSilent} from 'pino';
 
 export type LogLevel = LevelWithSilent;
 
