@@ -1,13 +1,16 @@
 import alias from 'esbuild-plugin-alias';
+import {aliasPath} from 'esbuild-plugin-alias-path';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
-import {readFileSync, promises, writeFileSync} from 'node:fs';
+import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import {dirname, resolve} from 'node:path';
+import path, {dirname, resolve} from 'node:path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
+
+const __dirname = dirname(new URL(import.meta.url).pathname);
 
 const useCaseEntries = {
   search: 'src/index.ts',
@@ -85,6 +88,16 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         format: 'esm',
         watch: devMode,
         minify: false,
+        plugins: [
+          aliasPath({
+            alias: {
+              '@coveo/bueno': path.resolve(
+                __dirname,
+                './src/external-builds/bueno.esm.js'
+              ),
+            },
+          }),
+        ],
       },
       outDir
     );
@@ -150,6 +163,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
+      external: ['crypto'],
       inject: [
         'ponyfills/abortable-fetch-shim.js',
         '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
@@ -192,7 +206,7 @@ async function buildBrowserConfig(options, outDir) {
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto'],
+    external: ['crypto', '@coveo/bueno'],
     ...options,
     plugins: [
       alias({
