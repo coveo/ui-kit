@@ -1,10 +1,10 @@
-import {getQueryInitialState} from '../../features/query/query-state';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {InstantResultSection} from '../../state/state-sections';
+import {getQueryInitialState} from '../../features/query/query-state.js';
+import {getSearchInitialState} from '../../features/search/search-state.js';
+import {InstantResultSection} from '../../state/state-sections.js';
 import {
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
-} from './search-analytics';
+} from './search-analytics.js';
 
 export type StateNeededByInstantResultsAnalyticsProvider =
   StateNeededBySearchAnalyticsProvider & InstantResultSection;

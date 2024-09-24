@@ -1,11 +1,11 @@
 import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {Result} from '../../api/search/search/result';
-import {validatePayload} from '../../utils/validate-payload';
+import {Result} from '../../api/search/search/result.js';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   resultPartialDefinition,
   validateResultPayload,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export interface RegisterRecentResultsCreatorPayload {
   /**

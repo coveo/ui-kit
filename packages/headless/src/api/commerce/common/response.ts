@@ -1,12 +1,12 @@
-import {AnyFacetResponse} from '../../../features/commerce/facets/facet-set/interfaces/response';
-import {Trigger} from '../../common/trigger';
+import {AnyFacetResponse} from '../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {Trigger} from '../../common/trigger.js';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
-} from '../../search/search-api-error-response';
-import {Pagination} from './pagination';
-import {BaseProduct} from './product';
-import {Sort} from './sort';
+} from '../../search/search-api-error-response.js';
+import {Pagination} from './pagination.js';
+import {BaseProduct} from './product.js';
+import {Sort} from './sort.js';
 
 export interface BaseCommerceSuccessResponse {
   responseId: string;

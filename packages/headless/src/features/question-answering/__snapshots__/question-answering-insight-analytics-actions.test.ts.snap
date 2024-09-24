@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logCollapseSmartSnippet with the case payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logCollapseSmartSnippet with the case payload 1`] = `
 [
   "SmartSnippets.AnswerAction",
   {
@@ -17,7 +17,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logCollapseSmartSnippetSuggestion with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logCollapseSmartSnippetSuggestion with the right payload 1`] = `
 [
   "SmartSnippets.AnswerAction",
   {
@@ -34,7 +34,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logDislikeSmartSnippet with the case payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logDislikeSmartSnippet with the case payload 1`] = `
 [
   "SmartSnippets.AnswerAction",
   {
@@ -51,7 +51,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logExpandSmartSnippet with the case payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logExpandSmartSnippet with the case payload 1`] = `
 [
   "SmartSnippets.AnswerAction",
   {
@@ -68,7 +68,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logExpandSmartSnippetSuggestion with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logExpandSmartSnippetSuggestion with the right payload 1`] = `
 [
   "SmartSnippets.AnswerAction",
   {
@@ -85,7 +85,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logLikeSmartSnippet with the case payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logLikeSmartSnippet with the case payload 1`] = `
 [
   "SmartSnippets.AnswerAction",
   {
@@ -102,7 +102,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetInlineLink with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetInlineLink with the right payload 1`] = `
 [
   "SmartSnippets.SourceClick",
   {
@@ -118,7 +118,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSource with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetSource with the right payload 1`] = `
 [
   "SmartSnippets.SourceClick",
   {
@@ -134,7 +134,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSuggestionInlineLink with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetSuggestionInlineLink with the right payload 1`] = `
 [
   "SmartSnippets.SourceClick",
   {
@@ -150,7 +150,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logOpenSmartSnippetSuggestionSource with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetSuggestionSource with the right payload 1`] = `
 [
   "SmartSnippets.SourceClick",
   {
@@ -166,7 +166,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logSmartSnippetDetailedFeedback with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logSmartSnippetDetailedFeedback with the right payload 1`] = `
 [
   "SmartSnippets.SubmitFeedback",
   {
@@ -184,7 +184,7 @@ exports[`question answering insight analytics actions when analyticsMode is \`ne
 ]
 `;
 
-exports[`question answering insight analytics actions when analyticsMode is \`next\` should log #logSmartSnippetFeedback with the right payload 1`] = `
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logSmartSnippetFeedback with the right payload 1`] = `
 [
   "SmartSnippets.SubmitFeedback",
   {

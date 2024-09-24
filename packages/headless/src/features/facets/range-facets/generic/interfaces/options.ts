@@ -1,5 +1,5 @@
-import {RangeFacetRequest} from './range-facet';
-import {AutomaticRanges} from './request';
+import {RangeFacetRequest} from './range-facet.js';
+import {AutomaticRanges} from './request.js';
 
 type RangeFacetRequiredParameters = Pick<
   RangeFacetRequest,

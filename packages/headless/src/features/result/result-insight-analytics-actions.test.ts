@@ -1,39 +1,39 @@
 import {createRelay} from '@coveo/relay';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {logDocumentOpen} from './result-insight-analytics-actions';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {logDocumentOpen} from './result-insight-analytics-actions.js';
 
-const mockLogDocumentOpen = jest.fn();
-const emit = jest.fn();
+const mockLogDocumentOpen = vi.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logDocumentOpen: mockLogDocumentOpen,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
@@ -107,7 +107,7 @@ describe('result insight analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

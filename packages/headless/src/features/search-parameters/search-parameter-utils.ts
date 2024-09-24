@@ -1,7 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {isEmptyString} from '../../utils/utils';
-import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
-import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
+import {isEmptyString} from '../../utils/utils.js';
+import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {
   SearchParameterKey,
   buildDateRanges,
@@ -12,7 +12,7 @@ import {
   isRangeFacetObject,
   isValidBasicKey,
   keyHasObjectValue,
-} from './search-parameter-serializer';
+} from './search-parameter-serializer.js';
 
 export type SearchParamValue = string | string[] | undefined;
 export type SearchParamPair<T> = [SearchParameterKey, T];

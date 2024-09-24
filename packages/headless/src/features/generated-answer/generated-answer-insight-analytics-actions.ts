@@ -2,17 +2,17 @@ import {Rga} from '@coveo/relay-event-types';
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {
   GeneratedAnswerFeedback,
   parseEvaluationDetails,
-} from './generated-answer-analytics-actions';
+} from './generated-answer-analytics-actions.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
-} from './generated-answer-selectors';
+} from './generated-answer-selectors.js';
 
 //TODO: SFINT-5435
 export const logRetryGeneratedAnswer = (): InsightAction =>

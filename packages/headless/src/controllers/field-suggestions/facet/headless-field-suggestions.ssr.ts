@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common.js';
 import {
   FieldSuggestions,
   FieldSuggestionsProps,
   buildFieldSuggestions,
-} from './headless-field-suggestions';
+} from './headless-field-suggestions.js';
 
-export * from './headless-field-suggestions';
+export * from './headless-field-suggestions.js';
 
 export interface FieldSuggestionsDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, FieldSuggestions> {}

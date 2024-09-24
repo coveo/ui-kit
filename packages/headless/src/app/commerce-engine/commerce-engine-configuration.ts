@@ -1,17 +1,17 @@
 import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart';
-import {ContextOptions} from '../../controllers/commerce/context/headless-context';
-import {cartDefinition} from '../../features/commerce/context/cart/cart-validation';
-import {contextDefinition} from '../../features/commerce/context/context-validation';
+import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart.js';
+import {ContextOptions} from '../../controllers/commerce/context/headless-context.js';
+import {cartDefinition} from '../../features/commerce/context/cart/cart-validation.js';
+import {contextDefinition} from '../../features/commerce/context/context-validation.js';
 import {
   nonEmptyString,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   AnalyticsConfiguration,
   EngineConfiguration,
   engineConfigurationDefinitions,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The commerce engine configuration.

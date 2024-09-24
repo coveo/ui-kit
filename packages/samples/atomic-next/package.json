@@ -2,6 +2,7 @@
   "name": "@coveo/atomic-next-samples",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@coveo/atomic": "3.1.1",
     "@coveo/atomic-react": "3.0.2",

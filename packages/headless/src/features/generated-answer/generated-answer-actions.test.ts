@@ -1,4 +1,4 @@
-import {buildMockCitation} from '../../test/mock-citation';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   setIsVisible,
   setIsLoading,
@@ -9,15 +9,15 @@ import {
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
   setIsEnabled,
-} from './generated-answer-actions';
+} from './generated-answer-actions.js';
 import {
   GeneratedContentFormat,
   generatedContentFormat,
-} from './generated-response-format';
+} from './generated-response-format.js';
 
 describe('generated answer', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('#updateError', () => {

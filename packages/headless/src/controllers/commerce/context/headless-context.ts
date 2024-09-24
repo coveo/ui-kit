@@ -1,18 +1,18 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
   setView,
-} from '../../../features/commerce/context/context-actions';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {contextSchema} from '../../../features/commerce/context/context-validation';
-import {loadReducerError} from '../../../utils/errors';
-import {validateOptions} from '../../../utils/validate-payload';
+} from '../../../features/commerce/context/context-actions.js';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
+import {contextSchema} from '../../../features/commerce/context/context-validation.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateOptions} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface ContextOptions {
   language: string;

@@ -1,5 +1,5 @@
-import {createMockState} from '../../test/mock-state';
-import {firstSearchExecutedSelector} from './search-selectors';
+import {createMockState} from '../../test/mock-state.js';
+import {firstSearchExecutedSelector} from './search-selectors.js';
 
 describe('search selectors', () => {
   it(`when the response searchUid is truthy,

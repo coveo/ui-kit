@@ -1,27 +1,27 @@
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../../test/mock-engine-v2';
-import {createMockState} from '../../../../test/mock-state';
-import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
+} from '../../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../../test/mock-state.js';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
 import {
   executeToggleRangeFacetExclude,
   executeToggleRangeFacetSelect,
-} from '../generic/range-facet-controller-actions';
+} from '../generic/range-facet-controller-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from './date-facet-actions';
+} from './date-facet-actions.js';
 import {
   executeToggleDateFacetExclude,
   executeToggleDateFacetSelect,
-} from './date-facet-controller-actions';
+} from './date-facet-controller-actions.js';
 
-jest.mock('../generic/range-facet-controller-actions');
-jest.mock('../../../facet-options/facet-options-actions');
-jest.mock('./date-facet-actions');
+vi.mock('../generic/range-facet-controller-actions');
+vi.mock('../../../facet-options/facet-options-actions');
+vi.mock('./date-facet-actions');
 
 describe('date facet controller actions', () => {
   let engine: MockedSearchEngine;
@@ -36,7 +36,7 @@ describe('date facet controller actions', () => {
     executeToggleDateFacetSelect({facetId, selection})(
       engine.dispatch,
       () => engine.state as Required<typeof engine.state>,
-      {validatePayload: jest.fn()} as unknown as ThunkExtraArguments
+      {validatePayload: vi.fn()} as unknown as ThunkExtraArguments
     );
     expect(toggleSelectDateFacetValue).toHaveBeenCalledWith({
       facetId,
@@ -54,7 +54,7 @@ describe('date facet controller actions', () => {
     executeToggleDateFacetExclude({facetId, selection})(
       engine.dispatch,
       () => engine.state as Required<typeof engine.state>,
-      {validatePayload: jest.fn()} as unknown as ThunkExtraArguments
+      {validatePayload: vi.fn()} as unknown as ThunkExtraArguments
     );
 
     expect(toggleExcludeDateFacetValue).toHaveBeenCalledWith({

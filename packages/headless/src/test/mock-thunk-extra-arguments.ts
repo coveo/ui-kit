@@ -1,13 +1,13 @@
-import {buildLogger} from '../app/logger';
-import {ThunkExtraArguments} from '../app/thunk-extra-arguments';
+import {buildLogger} from '../app/logger.js';
+import {ThunkExtraArguments} from '../app/thunk-extra-arguments.js';
 
 export function buildMockThunkExtraArguments(
   config: Partial<ThunkExtraArguments> = {}
 ): ThunkExtraArguments {
   return {
-    analyticsClientMiddleware: jest.fn(),
-    preprocessRequest: jest.fn(),
-    validatePayload: jest.fn(),
+    analyticsClientMiddleware: vi.fn(),
+    preprocessRequest: vi.fn(),
+    validatePayload: vi.fn(),
     logger: buildLogger({level: 'silent'}),
     ...config,
   };

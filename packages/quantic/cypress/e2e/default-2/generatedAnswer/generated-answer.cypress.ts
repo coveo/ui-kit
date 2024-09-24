@@ -349,7 +349,7 @@ describe('quantic-generated-answer', () => {
           });
         });
 
-        // TODO (SFINT-5732)
+        // TODO: (SFINT-5732)
         [
           {
             mode: AnalyticsModeEnum.legacy,

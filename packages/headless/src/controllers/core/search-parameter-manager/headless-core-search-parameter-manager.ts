@@ -1,31 +1,31 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {CoreEngine} from '../../../app/engine';
-import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response';
-import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
+import {CoreEngine} from '../../../app/engine.js';
+import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
+import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils.js';
 import {
   BaseFacetValueRequest,
   CurrentValues,
-} from '../../../features/facets/facet-api/request';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+} from '../../../features/facets/facet-api/request.js';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import {
   getQ,
   getSortCriteria,
   getFacets,
-} from '../../../features/parameter-manager/parameter-manager-selectors';
-import {getQueryInitialState} from '../../../features/query/query-state';
+} from '../../../features/parameter-manager/parameter-manager-selectors.js';
+import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
   restoreSearchParameters,
   SearchParameters,
-} from '../../../features/search-parameters/search-parameter-actions';
-import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema';
-import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state';
-import {SearchParametersState} from '../../../state/search-app-state';
-import {validateInitialState} from '../../../utils/validate-payload';
+} from '../../../features/search-parameters/search-parameter-actions.js';
+import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
+import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
+import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state.js';
+import {SearchParametersState} from '../../../state/search-app-state.js';
+import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export type {SearchParameters};
 

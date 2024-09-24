@@ -1,18 +1,18 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../../api/service/insight/insight-api-client';
-import {InsightAction} from '../../analytics/analytics-utils';
-import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions';
+import {AsyncThunkInsightOptions} from '../../../api/service/insight/insight-api-client.js';
+import {InsightAction} from '../../analytics/analytics-utils.js';
+import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
 import {
   StateNeededByExecuteSearch,
   addEntryInActionsHistory,
-} from '../insight-search-actions';
-import {logFetchMoreResults} from '../insight-search-analytics-actions';
+} from '../insight-search-actions.js';
+import {logFetchMoreResults} from '../insight-search-analytics-actions.js';
 import {
   buildInsightFetchFacetValuesRequest,
   buildInsightFetchMoreResultsRequest,
   buildInsightSearchRequest,
-} from '../insight-search-request';
-import {AsyncInsightSearchThunkProcessor} from './insight-search-actions-thunk-processor';
+} from '../insight-search-request.js';
+import {AsyncInsightSearchThunkProcessor} from './insight-search-actions-thunk-processor.js';
 
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,

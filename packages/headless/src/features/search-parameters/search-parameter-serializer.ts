@@ -3,15 +3,15 @@ import {
   API_DATE_FORMAT,
   isSearchApiDate,
   validateAbsoluteDate,
-} from '../../api/search/date/date-format';
+} from '../../api/search/date/date-format.js';
 import {
   isRelativeDateFormat,
   validateRelativeDate,
-} from '../../api/search/date/relative-date';
-import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
-import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
-import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
-import {SearchParameters} from './search-parameter-actions';
+} from '../../api/search/date/relative-date.js';
+import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
+import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
+import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
+import {SearchParameters} from './search-parameter-actions.js';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';

@@ -4,12 +4,12 @@ import {
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './legacy/search-actions';
+} from './legacy/search-actions.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
   SearchState,
-} from './search-state';
+} from './search-state.js';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
 

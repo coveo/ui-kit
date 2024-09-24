@@ -1,13 +1,13 @@
-import {fetchMoreResults} from '../../features/search/search-actions';
+import {fetchMoreResults} from '../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {createMockState} from '../../test/mock-state';
-import {buildResultList} from './headless-result-list';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildResultList} from './headless-result-list.js';
 
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('ResultList', () => {
   let engine: MockedSearchEngine;
@@ -17,11 +17,11 @@ describe('ResultList', () => {
     const results = new Array(10).fill(buildMockResult());
     engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('fetchMoreResults should dispatch a fetchMoreResults action', () => {

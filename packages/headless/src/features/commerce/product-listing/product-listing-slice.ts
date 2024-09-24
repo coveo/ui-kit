@@ -1,22 +1,22 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import {
   Product,
   BaseProduct,
   ChildProduct,
-} from '../../../api/commerce/common/product';
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
-import {QueryCommerceAPIThunkReturn} from '../common/actions';
-import {setContext, setView} from '../context/context-actions';
+} from '../../../api/commerce/common/product.js';
+import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {QueryCommerceAPIThunkReturn} from '../common/actions.js';
+import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
-} from './product-listing-actions';
+} from './product-listing-actions.js';
 import {
   ProductListingState,
   getProductListingInitialState,
-} from './product-listing-state';
+} from './product-listing-state.js';
 
 export const productListingReducer = createReducer(
   getProductListingInitialState(),

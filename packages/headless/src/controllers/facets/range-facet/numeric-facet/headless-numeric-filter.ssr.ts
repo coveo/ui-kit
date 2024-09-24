@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common.js';
 import {
   NumericFilter,
   NumericFilterProps,
   buildNumericFilter,
-} from './headless-numeric-filter';
+} from './headless-numeric-filter.js';
 
-export * from './headless-numeric-filter';
+export * from './headless-numeric-filter.js';
 
 export interface NumericFilterDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, NumericFilter> {}

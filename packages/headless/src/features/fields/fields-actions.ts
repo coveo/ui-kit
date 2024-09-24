@@ -1,15 +1,15 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getSearchApiBaseUrl} from '../../api/platform-client';
-import {FieldDescription} from '../../api/search/fields/fields-response';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {FieldDescription} from '../../api/search/fields/fields-response.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {ConfigurationSection} from '../../state/state-sections';
+} from '../../api/search/search-api-client.js';
+import {ConfigurationSection} from '../../state/state-sections.js';
 import {
   validatePayload,
   nonEmptyStringArray,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 export const registerFieldsToInclude = createAction(
   'fields/registerFieldsToInclude',
