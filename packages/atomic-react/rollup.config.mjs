@@ -52,9 +52,6 @@ const packageMappings = {
   '@coveo/headless/insight': {
     cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
   },
-  '@coveo/headless/product-recommendation': {
-    cdn: `/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
-  },
   '@coveo/headless/recommendation': {
     cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
   },
