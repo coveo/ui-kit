@@ -13,7 +13,7 @@ The `@coveo/atomic` package exposes the following entry points:
 
 - `@coveo/atomic`: exports various types and utilities used by Coveo Atomic.
 - `@coveo/atomic/loader`: exports the Coveo Atomic components types, as well as the `defineCustomElements` and `setNonce` utilities.
-- `@coveo/atomic/themes`; exports the sample Coveo Atomic themes.
+- `@coveo/atomic/themes`: exports the sample Coveo Atomic themes.
 - `@coveo/atomic/assets`: exports the SVG icons used by Coveo Atomic.
 - `@coveo/atomic/lang`: exports the localization files used by Coveo Atomic.
 
