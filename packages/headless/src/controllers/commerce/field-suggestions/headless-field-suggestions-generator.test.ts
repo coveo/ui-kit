@@ -23,9 +23,9 @@ describe('fieldSuggestionsGenerator', () => {
   let state: CommerceAppState;
   let fieldSuggestionsGenerator: FieldSuggestionsGenerator;
   const commonOptions = {
-    fetchProductsActionCreator: jest.fn(),
-    facetResponseSelector: jest.fn(),
-    isFacetLoadingResponseSelector: jest.fn(),
+    fetchProductsActionCreator: vi.fn(),
+    facetResponseSelector: vi.fn(),
+    isFacetLoadingResponseSelector: vi.fn(),
     facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
@@ -59,7 +59,7 @@ describe('fieldSuggestionsGenerator', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     state = buildMockCommerceState();
     setFacetState();

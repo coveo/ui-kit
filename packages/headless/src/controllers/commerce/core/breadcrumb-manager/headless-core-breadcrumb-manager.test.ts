@@ -50,13 +50,13 @@ import {
   CoreBreadcrumbManagerOptions,
 } from './headless-core-breadcrumb-manager.js';
 
-jest.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
-jest.mock(
+vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
+vi.mock(
   '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
-jest.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
+vi.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
 
-jest.mock(
+vi.mock(
   '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
 );
 
@@ -67,8 +67,8 @@ describe('core breadcrumb manager', () => {
   let state: CommerceAppState;
 
   const facetId = 'some_facet_id';
-  const facetResponseSelector = jest.fn();
-  const fetchProductsActionCreator = jest.fn();
+  const facetResponseSelector = vi.fn();
+  const fetchProductsActionCreator = vi.fn();
 
   function initEngine() {
     engine = buildMockCommerceEngine(state);
@@ -87,7 +87,7 @@ describe('core breadcrumb manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       facetResponseSelector,
       fetchProductsActionCreator,

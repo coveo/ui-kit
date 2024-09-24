@@ -34,9 +34,9 @@ import {
   FacetOptions,
 } from './headless-core-facet.js';
 
-jest.mock('../../../../features/facets/facet-set/facet-set-actions');
-jest.mock('../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../features/facets/facet-set/facet-set-controller-actions');
+vi.mock('../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/facets/facet-set/facet-set-controller-actions');
 
 describe('facet', () => {
   const facetId = '1';
@@ -89,7 +89,7 @@ describe('facet', () => {
   });
 
   it('it calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initFacet();
 

@@ -38,11 +38,11 @@ import {
   CategoryFacetOptions,
 } from './headless-category-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../features/facets/category-facet-set/category-facet-set-actions'
 );
-jest.mock('../../../features/search/search-actions');
-jest.mock('../../../features/facet-options/facet-options-actions');
+vi.mock('../../../features/search/search-actions');
+vi.mock('../../../features/facet-options/facet-options-actions');
 
 describe('category facet', () => {
   const facetId = '1';
@@ -83,7 +83,7 @@ describe('category facet', () => {
   });
 
   it('it calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initCategoryFacet();
 
@@ -447,7 +447,7 @@ describe('category facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
-    jest.spyOn(CategoryFacetSearch, 'buildCoreCategoryFacetSearch');
+    vi.spyOn(CategoryFacetSearch, 'buildCoreCategoryFacetSearch');
     initCategoryFacet();
 
     expect(categoryFacet.facetSearch).toBeTruthy();

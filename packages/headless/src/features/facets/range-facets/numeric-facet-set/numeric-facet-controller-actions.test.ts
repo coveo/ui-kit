@@ -13,9 +13,9 @@ import {
   executeToggleNumericFacetExclude,
 } from './numeric-facet-controller-actions.js';
 
-jest.mock('../generic/range-facet-controller-actions');
-jest.mock('./numeric-facet-actions');
-jest.mock('../../../facet-options/facet-options-actions');
+vi.mock('../generic/range-facet-controller-actions');
+vi.mock('./numeric-facet-actions');
+vi.mock('../../../facet-options/facet-options-actions');
 
 describe('numeric facet controller actions', () => {
   let engine: MockedSearchEngine;
@@ -30,7 +30,7 @@ describe('numeric facet controller actions', () => {
     await executeToggleNumericFacetSelect({facetId, selection})(
       engine.dispatch,
       () => engine.state as Required<typeof engine.state>,
-      {validatePayload: jest.fn()} as unknown as ThunkExtraArguments
+      {validatePayload: vi.fn()} as unknown as ThunkExtraArguments
     );
     expect(toggleSelectNumericFacetValue).toHaveBeenCalledWith({
       facetId,
@@ -45,7 +45,7 @@ describe('numeric facet controller actions', () => {
     await executeToggleNumericFacetExclude({facetId, selection})(
       engine.dispatch,
       () => engine.state as Required<typeof engine.state>,
-      {validatePayload: jest.fn()} as unknown as ThunkExtraArguments
+      {validatePayload: vi.fn()} as unknown as ThunkExtraArguments
     );
     expect(toggleSelectNumericFacetValue).toHaveBeenCalledWith({
       facetId,

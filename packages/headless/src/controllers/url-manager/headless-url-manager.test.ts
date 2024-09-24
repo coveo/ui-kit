@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {configuration} from '../../app/common-reducers.js';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
@@ -9,8 +10,8 @@ import {
 import {createMockState} from '../../test/mock-state.js';
 import {UrlManager, buildUrlManager} from './headless-url-manager.js';
 
-jest.mock('../../features/search-parameters/search-parameter-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search-parameters/search-parameter-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('url manager', () => {
   let engine: MockedSearchEngine;
@@ -25,7 +26,7 @@ describe('url manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     initUrlManager();
   });
@@ -103,20 +104,18 @@ describe('url manager', () => {
 
   describe('#subscribe', () => {
     function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls.map(
-        (args) => args[0]
-      )[0]();
+      return (engine.subscribe as Mock).mock.calls.map((args) => args[0])[0]();
     }
 
     it('should not call listener when initially subscribing', () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       manager.subscribe(listener);
 
       expect(listener).not.toHaveBeenCalled();
     });
 
     it('should not call listener when only the requestId changes', () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       manager.subscribe(listener);
 
       engine.state.search.requestId = 'abcde';
@@ -126,7 +125,7 @@ describe('url manager', () => {
     });
 
     it('should not call listener when only a fragment value modified', () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       manager.subscribe(listener);
 
       engine.state.query!.q = 'albums';
@@ -136,7 +135,7 @@ describe('url manager', () => {
     });
 
     it('should call listener when a fragment value is added and the requestId has changed', () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       manager.subscribe(listener);
 
       engine.state.search.requestId = 'abcde';
@@ -149,7 +148,7 @@ describe('url manager', () => {
     it('should call listener when a fragment value is removed and the requestId has changed', () => {
       initUrlManager('q=movies');
 
-      const listener = jest.fn();
+      const listener = vi.fn();
       manager.subscribe(listener);
 
       engine.state.search.requestId = 'abcde';

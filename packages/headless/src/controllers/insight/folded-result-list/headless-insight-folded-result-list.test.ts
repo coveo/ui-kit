@@ -12,8 +12,8 @@ import {
   buildFoldedResultList,
 } from './headless-insight-folded-result-list.js';
 
-jest.mock('../../../features/folding/insight-folding-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/folding/insight-folding-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('insight folded result list', () => {
   let state: InsightAppState;

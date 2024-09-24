@@ -34,11 +34,11 @@ import {
   subscribeStateManager,
 } from './headless-searchapi-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock(
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
-jest.mock('../../../features/search/search-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
   let engine: MockedSearchEngine;
@@ -63,7 +63,7 @@ describe('searchapi-generated-answer', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     engine = buildEngineWithGeneratedAnswer();
   });
 
@@ -322,7 +322,7 @@ describe('searchapi-generated-answer', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
 
       subscribeStateManagerMock = {
         engines: {

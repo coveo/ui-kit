@@ -5,9 +5,9 @@ export function buildMockThunkExtraArguments(
   config: Partial<ThunkExtraArguments> = {}
 ): ThunkExtraArguments {
   return {
-    analyticsClientMiddleware: jest.fn(),
-    preprocessRequest: jest.fn(),
-    validatePayload: jest.fn(),
+    analyticsClientMiddleware: vi.fn(),
+    preprocessRequest: vi.fn(),
+    validatePayload: vi.fn(),
     logger: buildLogger({level: 'silent'}),
     ...config,
   };

@@ -14,7 +14,7 @@ import {
   buildRecommendations,
 } from './headless-recommendations.js';
 
-jest.mock('../../../features/commerce/recommendations/recommendations-actions');
+vi.mock('../../../features/commerce/recommendations/recommendations-actions');
 
 describe('headless recommendations', () => {
   let recommendations: Recommendations;

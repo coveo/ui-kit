@@ -1,3 +1,4 @@
+import {describe, it, vi, expect, beforeEach} from 'vitest';
 import {CoreEngine} from '../../../../../app/engine.js';
 import {
   registerCategoryFacetSearch,
@@ -21,7 +22,7 @@ import {
   buildCoreCategoryFacetSearch,
 } from './headless-category-facet-search.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/facet-search-set/category/category-facet-search-actions'
 );
 
@@ -50,9 +51,9 @@ describe('CategoryFacetSearch', () => {
         ...defaultFacetSearchOptions,
         facetId,
       },
-      executeFacetSearchActionCreator: jest.fn(),
-      executeFieldSuggestActionCreator: jest.fn(),
-      select: jest.fn(),
+      executeFacetSearchActionCreator: vi.fn(),
+      executeFieldSuggestActionCreator: vi.fn(),
+      select: vi.fn(),
       isForFieldSuggestions: false,
     };
 

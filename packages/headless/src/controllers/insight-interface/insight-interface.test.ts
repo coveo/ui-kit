@@ -10,7 +10,7 @@ import {
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildInsightInterface, InsightInterface} from './insight-interface.js';
 
-jest.mock('../../features/insight-interface/insight-interface-actions');
+vi.mock('../../features/insight-interface/insight-interface-actions');
 
 describe('Insight Interface', () => {
   let engine: MockedInsightEngine;

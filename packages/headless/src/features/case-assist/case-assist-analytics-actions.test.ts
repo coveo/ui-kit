@@ -23,32 +23,32 @@ import {
   logDocumentSuggestionRating,
 } from './case-assist-analytics-actions.js';
 
-const mockLogEnterInterface = jest.fn();
-const mockLogMoveToNextCaseStep = jest.fn();
-const mockLogCaseCreated = jest.fn();
-const mockLogCaseSolved = jest.fn();
-const mockLogCaseCancelled = jest.fn();
-const mockLogUpdateCaseField = jest.fn();
-const mockLogSelectFieldSuggestion = jest.fn();
-const mockLogSelectDocumentSuggestion = jest.fn();
-const mockLogRateDocumentSuggestion = jest.fn();
+const mockLogEnterInterface = vi.fn();
+const mockLogMoveToNextCaseStep = vi.fn();
+const mockLogCaseCreated = vi.fn();
+const mockLogCaseSolved = vi.fn();
+const mockLogCaseCancelled = vi.fn();
+const mockLogUpdateCaseField = vi.fn();
+const mockLogSelectFieldSuggestion = vi.fn();
+const mockLogSelectDocumentSuggestion = vi.fn();
+const mockLogRateDocumentSuggestion = vi.fn();
 
-const emit = jest.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
-jest.mock('coveo.analytics', () => {
-  const mockCaseAssistClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCaseAssistClient = vi.fn(() => ({
+    disable: vi.fn(),
     logEnterInterface: mockLogEnterInterface,
     logMoveToNextCaseStep: mockLogMoveToNextCaseStep,
     logCaseCreated: mockLogCaseCreated,
@@ -62,7 +62,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CaseAssistClient: mockCaseAssistClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -136,7 +136,7 @@ describe('generated answer insight analytics actions', () => {
   let engine: MockedCaseAssistEngine;
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

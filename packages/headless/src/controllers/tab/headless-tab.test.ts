@@ -6,7 +6,7 @@ import {
 import {createMockState} from '../../test/mock-state.js';
 import {buildTab, Tab, TabProps} from './headless-tab.js';
 
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('Tab', () => {
   const expression = 'abc123';

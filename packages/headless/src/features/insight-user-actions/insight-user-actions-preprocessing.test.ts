@@ -1,3 +1,4 @@
+import {MockInstance} from 'vitest';
 import {
   mapAndSortActionsByMostRecent,
   isActionWithinSessionThreshold,
@@ -225,10 +226,10 @@ describe('insight user actions preprocessing', () => {
     });
 
     describe('when a rawUserAction cannot be parsed', () => {
-      let consoleWarnSpy: jest.SpyInstance;
+      let consoleWarnSpy: MockInstance;
 
       beforeAll(() => {
-        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+        consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
       });
 
       afterAll(() => {

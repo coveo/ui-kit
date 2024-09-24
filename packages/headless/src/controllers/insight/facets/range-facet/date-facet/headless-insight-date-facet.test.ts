@@ -19,16 +19,16 @@ import {
   buildDateFacet,
 } from './headless-insight-date-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
-jest.mock('../../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../../features/insight-search/insight-search-actions');
-jest.mock(
+vi.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/insight-search/insight-search-actions');
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions'
 );
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
-jest.mock(
+vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
+vi.mock(
   '../../../../../features/facets/range-facets/generic/range-facet-actions'
 );
 

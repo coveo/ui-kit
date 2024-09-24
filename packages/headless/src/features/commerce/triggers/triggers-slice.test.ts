@@ -27,7 +27,7 @@ describe('commerce triggers slice', () => {
   let finalState: TriggerState;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initialState = getTriggerInitialState();
     initialStateCopy = JSON.parse(
       JSON.stringify(initialState)

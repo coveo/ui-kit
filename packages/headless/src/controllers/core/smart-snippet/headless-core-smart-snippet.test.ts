@@ -28,8 +28,8 @@ import {
   buildCoreSmartSnippet,
 } from './headless-core-smart-snippet.js';
 
-jest.mock('../../../features/question-answering/question-answering-actions');
-jest.mock(
+vi.mock('../../../features/question-answering/question-answering-actions');
+vi.mock(
   '../../../features/question-answering/question-answering-analytics-actions'
 );
 
@@ -39,7 +39,7 @@ describe('SmartSnippet', () => {
   let smartSnippet: SmartSnippetCore;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initState();
     initController();
   });

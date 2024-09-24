@@ -15,7 +15,7 @@ import {
   AutomaticFacetGeneratorOptions,
 } from './headless-automatic-facet-generator.js';
 
-jest.mock(
+vi.mock(
   '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'
 );
 
@@ -36,7 +36,7 @@ describe('automatic facets', () => {
     automaticFacets = buildAutomaticFacetGenerator(engine, props);
   }
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     setup();
   });
 

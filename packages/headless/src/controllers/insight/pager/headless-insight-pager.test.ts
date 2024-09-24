@@ -11,7 +11,7 @@ import {
   buildPager,
 } from './headless-insight-pager.js';
 
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('Pager', () => {
   let engine: MockedInsightEngine;

@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
 import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
@@ -16,11 +17,11 @@ import {
   DateFilterOptions,
 } from './headless-insight-date-filter.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
-jest.mock('../../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/insight-search/insight-search-actions');
 
 describe('insight date filter', () => {
   const facetId = '1';
@@ -36,7 +37,7 @@ describe('insight date filter', () => {
   }
 
   beforeEach(() => {
-    (updateDateFacetValues as unknown as jest.Mock).mockReturnValue(() => {});
+    (updateDateFacetValues as unknown as Mock).mockReturnValue(() => {});
     initialState = undefined;
 
     options = {

@@ -32,12 +32,12 @@ import {
   buildCoreSearchBox,
 } from './headless-core-search-box.js';
 
-jest.mock('../../../features/query/query-analytics-actions', () => ({
-  logSearchboxSubmit: jest.fn(() => () => {}),
+vi.mock('../../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: vi.fn(() => () => {}),
 }));
-jest.mock('../../../features/query-suggest/query-suggest-actions');
-jest.mock('../../../features/query-set/query-set-actions');
-jest.mock('../../../features/search/search-actions');
+vi.mock('../../../features/query-suggest/query-suggest-actions');
+vi.mock('../../../features/query-set/query-set-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('headless CoreSearchBox', () => {
   const id = 'search-box-123';
@@ -75,7 +75,7 @@ describe('headless CoreSearchBox', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   function initState() {
@@ -176,7 +176,7 @@ describe('headless CoreSearchBox', () => {
     });
 
     it('should call the showSuggestions method', () => {
-      jest.spyOn(searchBox, 'showSuggestions');
+      vi.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).toHaveBeenCalled();

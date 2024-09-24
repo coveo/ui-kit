@@ -7,12 +7,12 @@ import {
 } from './logger-middlewares.js';
 
 const createMiddlewareBoilerplate = () => {
-  const logger = {error: jest.fn(), debug: jest.fn()} as unknown as Logger;
+  const logger = {error: vi.fn(), debug: vi.fn()} as unknown as Logger;
   const store = {
-    getState: jest.fn(() => {}),
-    dispatch: jest.fn(),
+    getState: vi.fn(() => {}),
+    dispatch: vi.fn(),
   };
-  const next = jest.fn();
+  const next = vi.fn();
 
   return {store, next, logger};
 };
@@ -37,7 +37,7 @@ const createLogActionMiddleware = () => {
 
 describe('logActionErrorMiddleware', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
   it(`when a action has no error parameter
   it should not log an error`, () => {

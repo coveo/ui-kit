@@ -44,7 +44,7 @@ describe('headless search', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('adds the correct reducers to engine', () => {
@@ -57,7 +57,7 @@ describe('headless search', () => {
   });
 
   it('uses sub-controllers', () => {
-    const buildSearchSubControllers = jest.spyOn(
+    const buildSearchSubControllers = vi.spyOn(
       SubControllers,
       'buildSearchSubControllers'
     );
@@ -87,7 +87,7 @@ describe('headless search', () => {
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
-    const promoteChildToParent = jest.spyOn(
+    const promoteChildToParent = vi.spyOn(
       SearchActions,
       'promoteChildToParent'
     );
@@ -99,7 +99,7 @@ describe('headless search', () => {
   });
 
   it('executeFirstSearch dispatches #executeSearch', () => {
-    const executeSearch = jest.spyOn(SearchActions, 'executeSearch');
+    const executeSearch = vi.spyOn(SearchActions, 'executeSearch');
 
     search.executeFirstSearch();
 

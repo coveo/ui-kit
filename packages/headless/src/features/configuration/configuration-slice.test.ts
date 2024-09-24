@@ -15,7 +15,7 @@ import {
   getConfigurationInitialState,
 } from './configuration-state.js';
 
-jest.mock('../../api/analytics/coveo-analytics-utils');
+vi.mock('../../api/analytics/coveo-analytics-utils');
 
 describe('configuration slice', () => {
   const initialState = getConfigurationInitialState();

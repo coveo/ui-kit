@@ -24,10 +24,10 @@ import {
   GenericFacetSearchProps,
 } from './facet-search.js';
 
-jest.mock(
+vi.mock(
   '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions'
 );
-jest.mock(
+vi.mock(
   '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
 

@@ -15,8 +15,8 @@ import {
   executeToggleFacetSelect,
 } from './facet-set-controller-actions.js';
 
-jest.mock('./facet-set-actions');
-jest.mock('../../facet-options/facet-options-actions');
+vi.mock('./facet-set-actions');
+vi.mock('../../facet-options/facet-options-actions');
 
 describe('facet set controller actions', () => {
   let engine: MockedSearchEngine;
@@ -31,7 +31,7 @@ describe('facet set controller actions', () => {
     await executeToggleFacetSelect({facetId, selection})(
       engine.dispatch,
       () => engine.state as Required<typeof engine.state>,
-      {validatePayload: jest.fn()} as unknown as ThunkExtraArguments
+      {validatePayload: vi.fn()} as unknown as ThunkExtraArguments
     );
 
     expect(toggleSelectFacetValue).toHaveBeenCalledWith({facetId, selection});
@@ -43,7 +43,7 @@ describe('facet set controller actions', () => {
     await executeToggleFacetExclude({facetId, selection})(
       engine.dispatch,
       () => engine.state as Required<typeof engine.state>,
-      {validatePayload: jest.fn()} as unknown as ThunkExtraArguments
+      {validatePayload: vi.fn()} as unknown as ThunkExtraArguments
     );
 
     expect(toggleExcludeFacetValue).toHaveBeenCalledWith({facetId, selection});

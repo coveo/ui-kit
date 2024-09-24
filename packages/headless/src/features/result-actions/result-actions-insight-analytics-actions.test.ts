@@ -15,15 +15,15 @@ import {
   logFeedItemTextPost,
 } from './result-actions-insight-analytics-actions.js';
 
-const mockLogCopyToClipboard = jest.fn();
-const mockLogCaseSendEmail = jest.fn();
-const mockLogFeedItemTextPost = jest.fn();
-const emit = jest.fn();
+const mockLogCopyToClipboard = vi.fn();
+const mockLogCaseSendEmail = vi.fn();
+const mockLogFeedItemTextPost = vi.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logCopyToClipboard: mockLogCopyToClipboard,
     logCaseSendEmail: mockLogCaseSendEmail,
@@ -32,16 +32,16 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
@@ -115,7 +115,7 @@ describe('result actions insight analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

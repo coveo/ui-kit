@@ -1,3 +1,4 @@
+import {Mock} from 'vitest';
 import {configuration} from '../../../app/common-reducers.js';
 import {
   buildMockSearchEngine,
@@ -12,7 +13,7 @@ import {
 describe('InteractiveResultCore', () => {
   let engine: MockedSearchEngine;
   let interactiveResultCore: InteractiveResultCore;
-  let actionSpy: jest.Mock;
+  let actionSpy: Mock;
 
   function initializeInteractiveResultCore(delay?: number) {
     interactiveResultCore = buildInteractiveResultCore(
@@ -25,14 +26,14 @@ describe('InteractiveResultCore', () => {
   }
 
   beforeEach(() => {
-    actionSpy = jest.fn();
+    actionSpy = vi.fn();
     engine = buildMockSearchEngine(createMockState());
     initializeInteractiveResultCore();
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('it adds the correct reducers to engine', () => {
@@ -53,23 +54,23 @@ describe('InteractiveResultCore', () => {
 
     it("when calling beginDelayedSelect(), doesn't execute action before the delay", () => {
       interactiveResultCore.beginDelayedSelect();
-      jest.advanceTimersByTime(selectDelay - 1);
+      vi.advanceTimersByTime(selectDelay - 1);
 
       expect(actionSpy).not.toHaveBeenCalled();
     });
 
     it('when calling beginDelayedSelect(), executes action after the delay', () => {
       interactiveResultCore.beginDelayedSelect();
-      jest.advanceTimersByTime(selectDelay);
+      vi.advanceTimersByTime(selectDelay);
 
       expect(actionSpy).toHaveBeenCalled();
     });
 
     it("when calling beginDelayedSelect(), doesn't execute action after the delay if cancelPendingSelect() was called", () => {
       interactiveResultCore.beginDelayedSelect();
-      jest.advanceTimersByTime(selectDelay - 1);
+      vi.advanceTimersByTime(selectDelay - 1);
       interactiveResultCore.cancelPendingSelect();
-      jest.advanceTimersByTime(1);
+      vi.advanceTimersByTime(1);
 
       expect(actionSpy).not.toHaveBeenCalled();
     });

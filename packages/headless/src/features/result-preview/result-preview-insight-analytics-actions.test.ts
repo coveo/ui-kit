@@ -11,30 +11,30 @@ import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {logDocumentQuickview} from './result-preview-insight-analytics-actions.js';
 
-jest.mock('@coveo/relay');
-jest.mock('coveo.analytics');
+vi.mock('@coveo/relay');
+vi.mock('coveo.analytics');
 
-const mockLogDocumentQuickview = jest.fn();
-const emit = jest.fn();
+const mockLogDocumentQuickview = vi.fn();
+const emit = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logDocumentQuickview: mockLogDocumentQuickview,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
@@ -99,7 +99,7 @@ describe('#logDocumentQuickview', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

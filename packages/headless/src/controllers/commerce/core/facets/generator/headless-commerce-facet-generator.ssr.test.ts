@@ -81,7 +81,7 @@ describe('SSR FacetGenerator', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
   describe.each([
     {

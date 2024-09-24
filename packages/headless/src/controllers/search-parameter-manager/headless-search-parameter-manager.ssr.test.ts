@@ -25,10 +25,8 @@ import {
   defineSearchParameterManager,
 } from './headless-search-parameter-manager.ssr.js';
 
-jest.mock('./headless-search-parameter-manager');
-const buildSearchParameterManagerMock = jest.mocked(
-  buildSearchParameterManager
-);
+vi.mock('./headless-search-parameter-manager');
+const buildSearchParameterManagerMock = vi.mocked(buildSearchParameterManager);
 
 type SearchParameterManagerDefinitionType = ControllerDefinitionWithProps<
   SSRSearchEngine,

@@ -20,7 +20,7 @@ import {
   buildCategoryFacet,
 } from './headless-commerce-category-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/category-facet/category-facet-actions'
 );
 
@@ -30,9 +30,9 @@ describe('CategoryFacet', () => {
   let state: CommerceAppState;
   let options: CategoryFacetOptions;
   let facet: CategoryFacet;
-  const mockFetchProductsActionCreator = jest.fn();
-  const mockFacetResponseSelector = jest.fn();
-  const mockIsFacetLoadingResponseSelector = jest.fn();
+  const mockFetchProductsActionCreator = vi.fn();
+  const mockFacetResponseSelector = vi.fn();
+  const mockIsFacetLoadingResponseSelector = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -65,7 +65,7 @@ describe('CategoryFacet', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       facetId,

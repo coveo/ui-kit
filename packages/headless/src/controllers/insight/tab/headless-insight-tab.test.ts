@@ -11,7 +11,7 @@ import {
   TabOptions,
 } from './headless-insight-tab.js';
 
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('insight Tab', () => {
   let engine: MockedInsightEngine;

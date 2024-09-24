@@ -1,3 +1,4 @@
+import {MockInstance} from 'vitest';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
 import * as Actions from '../../../../../features/commerce/common/actions.js';
 import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
@@ -20,10 +21,10 @@ describe('#buildCategoryFacetSearchRequest', () => {
   let navigatorContext: NavigatorContext;
   const facetId = '1';
   let query: string;
-  let buildCommerceAPIRequestMock: jest.SpyInstance;
+  let buildCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     query = 'test';
     state = buildMockCommerceState();
@@ -36,10 +37,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       request: buildMockCommerceFacetRequest({type: 'hierarchical'}),
     });
 
-    buildCommerceAPIRequestMock = jest.spyOn(
-      Actions,
-      'buildCommerceAPIRequest'
-    );
+    buildCommerceAPIRequestMock = vi.spyOn(Actions, 'buildCommerceAPIRequest');
 
     navigatorContext = buildMockNavigatorContextProvider()();
   });
@@ -171,7 +169,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
   });
 
   it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', () => {
-    const buildCommerceAPIRequestMock = jest.spyOn(
+    const buildCommerceAPIRequestMock = vi.spyOn(
       Actions,
       'buildCommerceAPIRequest'
     );

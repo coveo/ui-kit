@@ -1,3 +1,4 @@
+import {MockInstance} from 'vitest';
 import {
   PlatformClient,
   PlatformClientCallError,
@@ -121,10 +122,14 @@ const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
-  let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
+  type Procedure = (
+    ...args: unknown[]
+  ) => Promise<Response | PlatformClientCallError>;
+
+  let callSpy: MockInstance<Procedure>;
 
   beforeEach(() => {
-    callSpy = jest.spyOn(PlatformClient, 'call');
+    callSpy = vi.spyOn(PlatformClient, 'call');
     callSpy.mockImplementation(() => Promise.resolve(new Response()));
   });
 

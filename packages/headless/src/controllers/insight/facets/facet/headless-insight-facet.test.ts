@@ -23,10 +23,10 @@ import {buildMockFacetValue} from '../../../../test/mock-facet-value.js';
 import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
 import {buildFacet, Facet, FacetOptions} from './headless-insight-facet.js';
 
-jest.mock('../../../../features/facets/facet-set/facet-set-actions');
-jest.mock('../../../../features/insight-search/insight-search-actions');
-jest.mock('../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../features/facets/facet-set/facet-set-controller-actions');
+vi.mock('../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/facets/facet-set/facet-set-controller-actions');
 
 describe('InsightFacet', () => {
   const facetId = '1';

@@ -17,7 +17,7 @@ import {
   FacetGeneratorOptions,
 } from './headless-commerce-facet-generator.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/core-facet/core-facet-actions'
 );
 
@@ -26,11 +26,11 @@ describe('CSR FacetGenerator', () => {
   let state: CommerceAppState;
   let options: FacetGeneratorOptions;
   let facetGenerator: FacetGenerator;
-  const mockBuildNumericFacet = jest.fn();
-  const mockBuildRegularFacet = jest.fn();
-  const mockBuildDateFacet = jest.fn();
-  const mockBuildCategoryFacet = jest.fn();
-  const mockFetchProductsActionCreator = jest.fn();
+  const mockBuildNumericFacet = vi.fn();
+  const mockBuildRegularFacet = vi.fn();
+  const mockBuildDateFacet = vi.fn();
+  const mockBuildCategoryFacet = vi.fn();
+  const mockFetchProductsActionCreator = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -56,7 +56,7 @@ describe('CSR FacetGenerator', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       buildNumericFacet: mockBuildNumericFacet,

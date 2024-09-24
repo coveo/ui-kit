@@ -106,7 +106,7 @@ describe('category field suggestions', () => {
       });
 
       afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       it('has more values', () => {

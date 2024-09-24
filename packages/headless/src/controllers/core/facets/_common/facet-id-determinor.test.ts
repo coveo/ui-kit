@@ -20,7 +20,7 @@ describe('#determineFacetId', () => {
   });
 
   it('when a #facetId key is empty, it calls #generateFacetId', () => {
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
+    vi.spyOn(FacetIdGenerator, 'generateFacetId');
     determineFacetId(engine, {facetId: '', field: 'author'});
 
     const {state, logger} = engine;
@@ -32,7 +32,7 @@ describe('#determineFacetId', () => {
   });
 
   it('when the #facetId key is not passed, it calls #generateFacetId', () => {
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
+    vi.spyOn(FacetIdGenerator, 'generateFacetId');
     determineFacetId(engine, {field: 'author'});
 
     const {state, logger} = engine;
