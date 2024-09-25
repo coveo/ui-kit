@@ -1,10 +1,14 @@
-name: 'Setup & build'
-description: 'Setup node, install dependencies & build'
+name: 'Setup & build (CDN Build)'
+description: 'Setup node, install dependencies & build (CDN Build)'
 inputs:
   load-cache:
     description: 'Whether to restore the Nx cache.'
     required: false
     default: 'true'
+  cache-suffix:
+    description: 'Suffix to add to the cache key for different environments'
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -24,7 +28,7 @@ runs:
         path: |
           **/node_modules/
           !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}}}
+        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}-${{ inputs.cache-suffix }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources
