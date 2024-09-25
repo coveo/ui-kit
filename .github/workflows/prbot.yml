@@ -45,7 +45,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm test
   package-compatibility:
-    name: 'Are packages compatible?'
+    name: 'Verify compatibility of packages'
     needs: build
     runs-on: ubuntu-latest
     steps:
