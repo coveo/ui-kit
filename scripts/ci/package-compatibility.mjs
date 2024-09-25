@@ -23,11 +23,18 @@ if (
   headlessMessages.length > 0 ||
   atomicReactMessages.length > 0
 ) {
-  console.error('publint found issues:', {
-    atomic: atomicMessages,
-    headless: headlessMessages,
-    atomicReact: atomicReactMessages,
-  });
+  console.error(
+    'publint found issues:',
+    JSON.stringify(
+      {
+        atomic: atomicMessages,
+        headless: headlessMessages,
+        atomicReact: atomicReactMessages,
+      },
+      null,
+      2
+    )
+  );
 
   process.exit(1);
 } else {
