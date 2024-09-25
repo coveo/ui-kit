@@ -1,1 +1,1 @@
-export * from './components/search/index';
+export * from './components/search/index.js';

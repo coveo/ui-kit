@@ -6,7 +6,7 @@ import {renderToString} from 'react-dom/server';
 import {
   AtomicRecsList,
   AtomicResultLink,
-} from '../stencil-generated/search/index';
+} from '../stencil-generated/search/index.js';
 
 interface Template {
   contentTemplate: JSX.Element;
