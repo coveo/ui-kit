@@ -103,6 +103,7 @@ const isDevWatch: boolean =
   process.argv.indexOf('--watch') > -1;
 
 export const config: Config = {
+  tsconfig: 'tsconfig.stencil.json',
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
