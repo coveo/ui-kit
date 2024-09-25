@@ -6,7 +6,10 @@
       "dependsOn": ["^build", "clean"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:assets", "npm run build:vue"],
+        "commands": [
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:assets; fi",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:vue; fi"
+        ],
         "parallel": false,
         "cwd": "packages/samples/vuejs"
       }

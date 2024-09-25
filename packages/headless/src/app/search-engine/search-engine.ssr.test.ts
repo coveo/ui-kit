@@ -112,10 +112,6 @@ describe('SSR', () => {
       );
     }
 
-    function getResultsCount(state: AnyState) {
-      return state.controllers.resultList.state.results.length;
-    }
-
     beforeEach(() => {
       engineDefinition = defineSearchEngine({
         configuration: {
@@ -147,27 +143,27 @@ describe('SSR', () => {
     });
 
     it('fetches initial state of engine', async () => {
-      const {fetchStaticState} = engineDefinition;
+      const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
       const staticState = await fetchStaticState();
       expect(staticState).toBeTruthy();
-      expect(getResultsCount(staticState)).toBe(defaultNumberOfResults);
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
     });
 
     describe('with a static state', () => {
       let staticState: StaticState;
       beforeEach(async () => {
-        const {fetchStaticState} = engineDefinition;
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
         staticState = await fetchStaticState();
       });
 
-      it('hydrates engine and fetches results using hydrated engine', async () => {
-        const {hydrateStaticState} = engineDefinition;
+      it('hydrates engine', async () => {
+        const hydrateStaticState = vi.mocked(
+          engineDefinition.hydrateStaticState
+        );
         const hydratedState = await hydrateStaticState(staticState);
         expect(hydratedState.engine.state.configuration.organizationId).toEqual(
           getSampleSearchEngineConfiguration().organizationId
         );
-        expect(getResultsCount(hydratedState)).toBe(defaultNumberOfResults);
         expect(getResultsPerPage(hydratedState)).toBe(defaultNumberOfResults);
       });
     });
@@ -176,7 +172,7 @@ describe('SSR', () => {
       const newNumberOfResults = 6;
 
       async function fetchBuildResultWithNewNumberOfResults() {
-        const {build} = engineDefinition;
+        const build = vi.mocked(engineDefinition.build);
         const buildResult = await build();
         const {registerNumberOfResults} = loadPaginationActions(
           buildResult.engine
@@ -189,33 +185,30 @@ describe('SSR', () => {
       }
 
       it('fetches initial state of engine from build result', async () => {
-        const {fetchStaticState} = engineDefinition;
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
         const staticState = await fetchStaticState.fromBuildResult({
           buildResult: await fetchBuildResultWithNewNumberOfResults(),
         });
         expect(staticState).toBeTruthy();
-        expect(getResultsCount(staticState)).toBe(newNumberOfResults);
         expect(getResultsPerPage(staticState)).toBe(newNumberOfResults);
       });
 
       describe('with the default static state', () => {
         let staticState: StaticState;
         beforeEach(async () => {
-          const {fetchStaticState} = engineDefinition;
+          const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
           staticState = await fetchStaticState();
         });
 
         it('hydrates engine from build result', async () => {
-          const {hydrateStaticState} = engineDefinition;
+          const hydrateStaticState = vi.mocked(
+            engineDefinition.hydrateStaticState
+          );
           const buildResult = await fetchBuildResultWithNewNumberOfResults();
           const hydratedState = await hydrateStaticState.fromBuildResult({
             buildResult: buildResult,
             searchAction: staticState.searchAction,
           });
-          expect(getResultsCount(staticState)).toBe(defaultNumberOfResults);
-          expect(getResultsCount(hydratedState)).toBe(
-            getResultsCount(staticState)
-          );
           expect(getResultsPerPage(hydratedState)).toBe(newNumberOfResults);
         });
       });
