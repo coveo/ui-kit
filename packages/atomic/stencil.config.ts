@@ -108,35 +108,37 @@ export const config: Config = {
   taskQueue: 'async',
   sourceMap: true,
   outputTargets: [
-    react({
-      componentCorePackage: '@coveo/atomic',
-      proxiesFile:
-        '../atomic-react/src/components/stencil-generated/search/index.ts',
-      includeDefineCustomElements: true,
-      excludeComponents: [
-        'atomic-result-template',
-        'atomic-recs-result-template',
-        'atomic-field-condition',
-      ].concat(
-        filterComponentsByUseCaseForReactOutput('src/components/commerce')
-      ),
-    }),
-    react({
-      componentCorePackage: '@coveo/atomic',
-      proxiesFile:
-        '../atomic-react/src/components/stencil-generated/commerce/index.ts',
-      includeDefineCustomElements: true,
-      excludeComponents: [
-        'atomic-product-template',
-        'atomic-recs-result-template',
-        'atomic-field-condition',
-      ].concat(
-        filterComponentsByUseCaseForReactOutput('src/components/search'),
-        filterComponentsByUseCaseForReactOutput(
-          'src/components/recommendations'
-        )
-      ),
-    }),
+    !isDevWatch &&
+      react({
+        componentCorePackage: '@coveo/atomic',
+        proxiesFile:
+          '../atomic-react/src/components/stencil-generated/search/index.ts',
+        includeDefineCustomElements: true,
+        excludeComponents: [
+          'atomic-result-template',
+          'atomic-recs-result-template',
+          'atomic-field-condition',
+        ].concat(
+          filterComponentsByUseCaseForReactOutput('src/components/commerce')
+        ),
+      }),
+    !isDevWatch &&
+      react({
+        componentCorePackage: '@coveo/atomic',
+        proxiesFile:
+          '../atomic-react/src/components/stencil-generated/commerce/index.ts',
+        includeDefineCustomElements: true,
+        excludeComponents: [
+          'atomic-product-template',
+          'atomic-recs-result-template',
+          'atomic-field-condition',
+        ].concat(
+          filterComponentsByUseCaseForReactOutput('src/components/search'),
+          filterComponentsByUseCaseForReactOutput(
+            'src/components/recommendations'
+          )
+        ),
+      }),
     angular({
       componentCorePackage: '@coveo/atomic',
       directivesProxyFile:
@@ -181,7 +183,7 @@ export const config: Config = {
         },
       ].filter((n) => n.src),
     },
-  ],
+  ].filter(Boolean),
   testing: {
     browserArgs: ['--no-sandbox'],
     transform: {
