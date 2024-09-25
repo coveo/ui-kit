@@ -3,7 +3,7 @@ import type {FoldedResult} from '@coveo/headless';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicFoldedResultList} from '../stencil-generated/search/index.js';
+import {AtomicFoldedResultList} from '../stencil-generated/search/index';
 
 /**
  * The properties of the AtomicFoldedResultList component

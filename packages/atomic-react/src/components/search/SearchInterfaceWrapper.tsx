@@ -4,7 +4,7 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import React, {useEffect, useRef} from 'react';
-import {AtomicSearchInterface} from '../stencil-generated/search/index.js';
+import {AtomicSearchInterface} from '../stencil-generated/search/index';
 
 type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
 /**
