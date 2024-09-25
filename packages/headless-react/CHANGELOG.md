@@ -1,3 +1,7 @@
+## <small>2.0.1 (2024-09-24)</small>
+
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+
 ## 2.0.0 (2024-09-18)
 
 - chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)

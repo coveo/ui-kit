@@ -1,14 +1,14 @@
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common.js';
 import {
   NumericFacet,
   NumericFacetProps,
   buildNumericFacet,
-} from './headless-numeric-facet';
+} from './headless-numeric-facet.js';
 
-export * from './headless-numeric-facet';
+export * from './headless-numeric-facet.js';
 
-export {buildNumericRange} from './headless-numeric-facet';
+export {buildNumericRange} from './headless-numeric-facet.js';
 
 export interface NumericFacetDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, NumericFacet> {}

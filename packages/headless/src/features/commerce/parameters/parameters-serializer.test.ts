@@ -1,8 +1,8 @@
-import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range';
-import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
-import {buildFieldsSortCriterion, SortDirection} from '../sort/sort';
-import {searchSerializer} from './parameters-serializer';
+import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range.js';
+import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range.js';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {buildFieldsSortCriterion, SortDirection} from '../sort/sort.js';
+import {searchSerializer} from './parameters-serializer.js';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',

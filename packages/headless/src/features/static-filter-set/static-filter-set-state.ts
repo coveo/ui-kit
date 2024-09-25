@@ -1,4 +1,4 @@
-import {FacetValueState} from '../facets/facet-api/value';
+import {FacetValueState} from '../facets/facet-api/value.js';
 
 export type StaticFilterSetState = Record<string, StaticFilterSlice>;
 

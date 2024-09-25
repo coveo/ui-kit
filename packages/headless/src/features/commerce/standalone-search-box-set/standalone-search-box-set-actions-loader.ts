@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../standalone-search-box-set/standalone-search-box-set-slice';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../standalone-search-box-set/standalone-search-box-set-slice.js';
 import {
   FetchRedirectUrlPayload,
   RegisterStandaloneSearchBoxPayload,
@@ -11,7 +11,7 @@ import {
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
-} from './standalone-search-box-set-actions';
+} from './standalone-search-box-set-actions.js';
 
 export type {
   FetchRedirectUrlPayload,

@@ -5,8 +5,8 @@ import {
   Schema,
   StringValue,
 } from '@coveo/bueno';
-import {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart';
-import {requiredNonEmptyString} from '../../../../utils/validate-payload';
+import {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart.js';
+import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 
 export const itemPayloadDefinition = {
   productId: requiredNonEmptyString,

@@ -1,25 +1,25 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
   buildCoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,
   CoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsListProps,
-} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 import {
   buildSmartSnippetInteractiveInlineLinks,
   InlineLink,
-} from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
-import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
+} from '../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 export type {
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
   SmartSnippetRelatedQuestion,
   CoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,
-} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.

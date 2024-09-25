@@ -2,7 +2,7 @@ import {
   makeAnalyticsAction,
   CustomAction,
   LegacySearchAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logClearRecentQueries = (): CustomAction =>
   makeAnalyticsAction('analytics/recentQueries/clear', (client) => {

@@ -1,6 +1,6 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   ClearQuerySuggestPayload,
   FetchQuerySuggestionsPayload,
@@ -11,9 +11,9 @@ import {
   clearQuerySuggest,
   registerQuerySuggest,
   selectQuerySuggestion,
-} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice';
-import {fetchQuerySuggestions} from './query-suggest-actions';
+} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
+import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice.js';
+import {fetchQuerySuggestions} from './query-suggest-actions.js';
 
 export type {
   ClearQuerySuggestPayload,

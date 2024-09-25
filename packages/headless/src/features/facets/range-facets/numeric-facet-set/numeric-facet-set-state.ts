@@ -1,4 +1,4 @@
-import {NumericFacetRequest} from './interfaces/request';
+import {NumericFacetRequest} from './interfaces/request.js';
 
 export type NumericFacetSlice = {
   request: NumericFacetRequest;

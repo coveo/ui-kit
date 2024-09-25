@@ -1,22 +1,22 @@
-import {Result} from '../../../api/search/search/result';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logOpenSmartSnippetSuggestionSource} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {Result} from '../../../api/search/search/result.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {logOpenSmartSnippetSuggestionSource} from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
-} from '../../../features/question-answering/question-answering-selectors';
-import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/question-answering/question-answering-selectors.js';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   QuestionAnsweringSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
-} from '../../core/interactive-result/headless-core-interactive-result';
+} from '../../core/interactive-result/headless-core-interactive-result.js';
 
 /**
  * @internal

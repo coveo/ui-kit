@@ -1,5 +1,5 @@
-import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response.js';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 
 export interface QuerySuggestState {
   /**

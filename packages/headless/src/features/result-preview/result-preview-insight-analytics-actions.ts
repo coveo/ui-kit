@@ -1,5 +1,5 @@
 import {InsightPanel} from '@coveo/relay-event-types';
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   ClickAction,
   analyticsEventItemMetadata,
@@ -7,8 +7,8 @@ import {
   makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
-import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils';
+} from '../analytics/analytics-utils.js';
+import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils.js';
 
 export const logDocumentQuickview = (result: Result): ClickAction => {
   return makeInsightAnalyticsActionFactory('')({

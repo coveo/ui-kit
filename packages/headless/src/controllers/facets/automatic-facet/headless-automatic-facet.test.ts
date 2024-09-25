@@ -1,23 +1,23 @@
-import {buildAutomaticFacet} from '../../../controllers/facets/automatic-facet/headless-automatic-facet';
+import {buildAutomaticFacet} from '../../../controllers/facets/automatic-facet/headless-automatic-facet.js';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {executeSearch} from '../../../features/search/search-actions';
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
+import {executeSearch} from '../../../features/search/search-actions.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
+import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {createMockState} from '../../../test/mock-state';
-import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator.js';
 
-jest.mock(
+vi.mock(
   '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'
 );
-jest.mock('../../../features/search/search-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('automatic facet', () => {
   const field = 'field';

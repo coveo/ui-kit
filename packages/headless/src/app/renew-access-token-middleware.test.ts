@@ -1,8 +1,9 @@
 import {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
-import pino, {Logger} from 'pino';
-import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
-import {ExpiredTokenError} from '../utils/errors';
-import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {pino, Logger} from 'pino';
+import {Mock} from 'vitest';
+import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
+import {ExpiredTokenError} from '../utils/errors.js';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
 
 describe('createRenewAccessTokenMiddleware', () => {
   let logger: Logger;
@@ -19,7 +20,7 @@ describe('createRenewAccessTokenMiddleware', () => {
   }
 
   function buildDispatch() {
-    return jest.fn((action: unknown) =>
+    return vi.fn((action: unknown) =>
       typeof action === 'function' ? action() : action
     );
   }
@@ -32,7 +33,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     logger = pino({level: 'silent'});
     store = {
       dispatch: buildDispatch(),
-      getState: jest.fn(),
+      getState: vi.fn(),
     };
   });
 
@@ -58,7 +59,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
     const middleware = createRenewAccessTokenMiddleware(logger);
-    logger.warn = jest.fn();
+    logger.warn = vi.fn();
 
     const result = await callMiddleware(middleware, action);
 
@@ -98,7 +99,7 @@ describe('createRenewAccessTokenMiddleware', () => {
       const payload = buildExpiredTokenPayload();
       const action = () => Promise.resolve(payload);
       const renewFn = () => Promise.resolve('newToken');
-      logger.warn = jest.fn();
+      logger.warn = vi.fn();
 
       const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
@@ -106,7 +107,7 @@ describe('createRenewAccessTokenMiddleware', () => {
       const promises = array.map(() => callMiddleware(middleware, action));
       await Promise.all(promises);
 
-      (store.dispatch as jest.Mock).mockReset();
+      (store.dispatch as Mock).mockReset();
 
       await callMiddleware(middleware, action);
     });
@@ -131,14 +132,14 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const array = buildArrayWithLengthEqualToNumberOfRetries();
     const promises = array.map(() => callMiddleware(middleware, action));
     await Promise.all(promises);
 
-    (store.dispatch as jest.Mock).mockReset();
+    (store.dispatch as Mock).mockReset();
 
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     await callMiddleware(middleware, action);
 
     expect(store.dispatch).toHaveBeenCalled();

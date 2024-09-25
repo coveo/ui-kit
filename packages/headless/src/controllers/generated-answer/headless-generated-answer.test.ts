@@ -1,17 +1,17 @@
-import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions';
+import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildGeneratedAnswer,
   GeneratedAnswerProps,
   GeneratedResponseFormat,
-} from './headless-generated-answer';
+} from './headless-generated-answer.js';
 
-jest.mock('../../features/generated-answer/generated-answer-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/generated-answer/generated-answer-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('generated answer', () => {
   let engine: MockedSearchEngine;

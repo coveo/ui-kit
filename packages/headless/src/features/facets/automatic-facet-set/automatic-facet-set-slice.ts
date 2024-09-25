@@ -1,16 +1,16 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {change} from '../../history/history-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../search/search-actions';
-import {FacetValue} from '../facet-set/interfaces/response';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
+import {change} from '../../history/history-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../search/search-actions.js';
+import {FacetValue} from '../facet-set/interfaces/response.js';
 import {
   deselectAllAutomaticFacetValues,
   setOptions,
   toggleSelectAutomaticFacetValue,
-} from './automatic-facet-set-actions';
-import {getAutomaticFacetSetInitialState} from './automatic-facet-set-state';
-import {AutomaticFacetResponse} from './interfaces/response';
+} from './automatic-facet-set-actions.js';
+import {getAutomaticFacetSetInitialState} from './automatic-facet-set-state.js';
+import {AutomaticFacetResponse} from './interfaces/response.js';
 
 export const automaticFacetSetReducer = createReducer(
   getAutomaticFacetSetInitialState(),

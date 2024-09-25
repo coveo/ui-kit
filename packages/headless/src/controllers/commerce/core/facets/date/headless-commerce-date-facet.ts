@@ -1,10 +1,10 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
+import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../../../../../features/commerce/facets/date-facet/date-facet-actions';
-import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range';
+} from '../../../../../features/commerce/facets/date-facet/date-facet-actions.js';
+import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range.js';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -13,7 +13,7 @@ import {
   DateRangeRequest,
   FacetControllerType,
   buildCoreCommerceFacet,
-} from '../headless-core-commerce-facet';
+} from '../headless-core-commerce-facet.js';
 
 export type DateFacetOptions = Omit<
   CoreCommerceFacetOptions,

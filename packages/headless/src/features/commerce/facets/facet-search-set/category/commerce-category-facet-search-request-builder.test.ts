@@ -1,29 +1,30 @@
-import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
-import * as Actions from '../../../../../features/commerce/common/actions';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options';
-import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider';
-import {CategoryFacetValueRequest} from '../../facet-set/interfaces/request';
+import {MockInstance} from 'vitest';
+import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
+import * as Actions from '../../../../../features/commerce/common/actions.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
+import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
+import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options.js';
+import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider.js';
+import {CategoryFacetValueRequest} from '../../facet-set/interfaces/request.js';
 import {
   getFacetIdWithCommerceFieldSuggestionNamespace,
   getFacetIdWithoutCommerceFieldSuggestionNamespace,
-} from '../commerce-facet-search-actions';
-import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-request-builder';
+} from '../commerce-facet-search-actions.js';
+import {buildCategoryFacetSearchRequest} from './commerce-category-facet-search-request-builder.js';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   let state: CommerceAppState;
   let navigatorContext: NavigatorContext;
   const facetId = '1';
   let query: string;
-  let buildCommerceAPIRequestMock: jest.SpyInstance;
+  let buildCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     query = 'test';
     state = buildMockCommerceState();
@@ -36,10 +37,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       request: buildMockCommerceFacetRequest({type: 'hierarchical'}),
     });
 
-    buildCommerceAPIRequestMock = jest.spyOn(
-      Actions,
-      'buildCommerceAPIRequest'
-    );
+    buildCommerceAPIRequestMock = vi.spyOn(Actions, 'buildCommerceAPIRequest');
 
     navigatorContext = buildMockNavigatorContextProvider()();
   });
@@ -171,7 +169,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
   });
 
   it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', () => {
-    const buildCommerceAPIRequestMock = jest.spyOn(
+    const buildCommerceAPIRequestMock = vi.spyOn(
       Actions,
       'buildCommerceAPIRequest'
     );

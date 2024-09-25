@@ -1,37 +1,37 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../app/common-reducers';
-import {stateKey} from '../../../app/state-key';
-import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions';
-import {updateQuery} from '../../../features/commerce/query/query-actions';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {stateKey} from '../../../app/state-key.js';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
+import {updateQuery} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
-} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions';
-import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
+} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions.js';
+import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import {
   CommerceQuerySection,
   ConfigurationSection,
   QuerySuggestionSection,
   CommerceStandaloneSearchBoxSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {randomID} from '../../../utils/utils';
-import {validateOptions} from '../../../utils/validate-payload';
-import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {randomID} from '../../../utils/utils.js';
+import {validateOptions} from '../../../utils/validate-payload.js';
+import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box.js';
+import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options.js';
 import {
   SearchBox,
   SearchBoxState,
   buildSearchBox,
-} from '../search-box/headless-search-box';
-import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options';
+} from '../search-box/headless-search-box.js';
 import {
   StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
-} from './headless-standalone-search-box-options';
+} from './headless-standalone-search-box-options.js';
 
 export interface StandaloneSearchBox extends SearchBox {
   /**

@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
   ToggleExcludeNumericFacetValuePayload,
   ToggleSelectNumericFacetValuePayload,
@@ -8,7 +8,7 @@ import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
-} from './numeric-facet-actions';
+} from './numeric-facet-actions.js';
 
 export type {
   ToggleSelectNumericFacetValuePayload,

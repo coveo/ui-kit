@@ -1,36 +1,39 @@
 import {Schema} from '@coveo/bueno';
-import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {configuration} from '../../app/common-reducers';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
+import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import {configuration} from '../../app/common-reducers.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {
   logAutoSelectCaseField,
   logClassificationClick,
   logUpdateCaseField,
-} from '../../features/case-assist/case-assist-analytics-actions';
+} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
-} from '../../features/case-field/case-field-actions';
-import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
-import {CaseFieldSuggestion} from '../../features/case-field/case-field-state';
-import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
+} from '../../features/case-field/case-field-actions.js';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
+import {CaseFieldSuggestion} from '../../features/case-field/case-field-state.js';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
   CaseInputSection,
   ConfigurationSection,
   DocumentSuggestionSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   requiredNonEmptyString,
   validateOptions,
-} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../utils/validate-payload.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 export interface CaseFieldProps {
   options?: CaseFieldOptions;

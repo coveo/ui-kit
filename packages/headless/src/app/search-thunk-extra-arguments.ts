@@ -1,6 +1,6 @@
-import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client';
-import {SearchAPIClient} from '../api/search/search-api-client';
-import {ClientThunkExtraArguments} from './thunk-extra-arguments';
+import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
+import {SearchAPIClient} from '../api/search/search-api-client.js';
+import {ClientThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export interface SearchThunkExtraArguments
   extends ClientThunkExtraArguments<

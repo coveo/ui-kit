@@ -1,16 +1,16 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {executeSearch} from '../search/search-actions';
+import {executeSearch} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from './triggers-actions';
+} from './triggers-actions.js';
 import {
   handleApplyQueryTriggerModification,
   handleFetchItemsFulfilled,
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
-} from './triggers-slice-functions';
-import {getTriggerInitialState} from './triggers-state';
+} from './triggers-slice-functions.js';
+import {getTriggerInitialState} from './triggers-state.js';
 
 export const triggerReducer = createReducer(
   getTriggerInitialState(),

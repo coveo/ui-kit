@@ -1,1 +1,1 @@
-export * from './components/recommendation';
+export * from './components/recommendation/index.js';

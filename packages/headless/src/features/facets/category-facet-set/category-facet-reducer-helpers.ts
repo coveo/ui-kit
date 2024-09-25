@@ -1,8 +1,8 @@
-import {CategoryFacetSetState} from './category-facet-set-state';
+import {CategoryFacetSetState} from './category-facet-set-state.js';
 import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
-} from './interfaces/request';
+} from './interfaces/request.js';
 
 export function handleCategoryFacetDeselectAll(
   state: CategoryFacetSetState,

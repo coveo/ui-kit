@@ -1,6 +1,6 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
+import {nonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 
 export interface ApplyQueryTriggerModificationPayload {
   originalQuery: string;

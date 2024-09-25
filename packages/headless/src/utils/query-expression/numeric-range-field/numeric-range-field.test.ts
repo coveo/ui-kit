@@ -1,4 +1,4 @@
-import {buildNumericRangeField} from './numeric-range-field';
+import {buildNumericRangeField} from './numeric-range-field.js';
 
 describe('#buildNumericRangeField', () => {
   describe('#toQuerySyntax', () => {

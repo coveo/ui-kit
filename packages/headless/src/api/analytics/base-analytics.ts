@@ -1,14 +1,14 @@
 import {SearchPageClientProvider} from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
-} from '../../state/state-sections';
-import {VERSION} from '../../utils/version';
+} from '../../state/state-sections.js';
+import {VERSION} from '../../utils/version.js';
 
 export const getLanguage = (state: ConfigurationSection) => {
   const langKey = state.configuration.search.locale.split('-')[0];

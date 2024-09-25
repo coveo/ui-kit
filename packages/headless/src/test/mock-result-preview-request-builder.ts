@@ -1,5 +1,8 @@
-import {HtmlRequestOptions, HtmlRequest} from '../api/search/html/html-request';
-import {StateNeededByHtmlEndpoint} from '../features/result-preview/result-preview-request-builder';
+import {
+  HtmlRequestOptions,
+  HtmlRequest,
+} from '../api/search/html/html-request.js';
+import {StateNeededByHtmlEndpoint} from '../features/result-preview/result-preview-request-builder.js';
 
 export async function buildMockResultPreviewRequest(
   _state: StateNeededByHtmlEndpoint,

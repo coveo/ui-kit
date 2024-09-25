@@ -4,13 +4,13 @@ import {
   ProductListing,
 } from '@coveo/headless/commerce';
 import {useState, useEffect} from 'react';
-import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager';
-import FacetGenerator from '../../facets/facet-generator/facet-generator';
-import ProductList from '../../product-list/product-list';
-import ProductsPerPage from '../../products-per-page/products-per-page';
-import ShowMore from '../../show-more/show-more';
-import Sort from '../../sort/sort';
-import Summary from '../../summary/summary';
+import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
+import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
+import ProductList from '../../product-list/product-list.js';
+import ProductsPerPage from '../../products-per-page/products-per-page.js';
+import ShowMore from '../../show-more/show-more.js';
+import Sort from '../../sort/sort.js';
+import Summary from '../../summary/summary.js';
 import './search-and-listing-interface.css';
 
 //import Pagination from './pagination/pagination';

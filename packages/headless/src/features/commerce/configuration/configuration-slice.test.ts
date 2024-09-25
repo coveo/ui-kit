@@ -4,12 +4,12 @@ import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
   updateProxyBaseUrl,
-} from './configuration-actions';
-import {configurationReducer} from './configuration-slice';
+} from './configuration-actions.js';
+import {configurationReducer} from './configuration-slice.js';
 import {
   ConfigurationState,
   getConfigurationInitialState,
-} from './configuration-state';
+} from './configuration-state.js';
 
 describe('commerce configuration slice', () => {
   const initialState = getConfigurationInitialState();

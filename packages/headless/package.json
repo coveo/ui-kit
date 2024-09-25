@@ -6,15 +6,16 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/headless"
   },
-  "main": "./dist/headless.js",
+  "main": "./dist/headless.cjs",
   "module": "./dist/headless.esm.js",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
       "node": {
         "types": "./dist/definitions/index.d.ts",
         "import": "./dist/headless.esm.js",
-        "require": "./dist/headless.js"
+        "require": "./dist/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/index.d.ts",
@@ -29,7 +30,7 @@
       "node": {
         "types": "./dist/definitions/case-assist.index.d.ts",
         "import": "./dist/case-assist/headless.esm.js",
-        "require": "./dist/case-assist/headless.js"
+        "require": "./dist/case-assist/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/case-assist.index.d.ts",
@@ -44,7 +45,7 @@
       "node": {
         "types": "./dist/definitions/commerce.index.d.ts",
         "import": "./dist/commerce/headless.esm.js",
-        "require": "./dist/commerce/headless.js"
+        "require": "./dist/commerce/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/commerce.index.d.ts",
@@ -59,7 +60,7 @@
       "node": {
         "types": "./dist/definitions/insight.index.d.ts",
         "import": "./dist/insight/headless.esm.js",
-        "require": "./dist/insight/headless.js"
+        "require": "./dist/insight/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/insight.index.d.ts",
@@ -74,7 +75,7 @@
       "node": {
         "types": "./dist/definitions/recommendation.index.d.ts",
         "import": "./dist/recommendation/headless.esm.js",
-        "require": "./dist/recommendation/headless.js"
+        "require": "./dist/recommendation/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/recommendation.index.d.ts",
@@ -89,7 +90,7 @@
       "node": {
         "types": "./dist/definitions/ssr.index.d.ts",
         "import": "./dist/ssr/headless.esm.js",
-        "require": "./dist/ssr/headless.js"
+        "require": "./dist/ssr/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/ssr.index.d.ts",
@@ -104,7 +105,7 @@
       "node": {
         "types": "./dist/definitions/ssr-commerce.index.d.ts",
         "import": "./dist/ssr-commerce/headless.esm.js",
-        "require": "./dist/ssr-commerce/headless.js"
+        "require": "./dist/ssr-commerce/headless.cjs"
       },
       "browser": {
         "types": "./dist/definitions/ssr-commerce.index.d.ts",
@@ -117,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.0.0",
+  "version": "3.1.2",
   "files": [
     "dist/"
   ],
@@ -128,10 +129,10 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
-    "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache --silent=false",
-    "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
-    "test:integration": "jest --testPathPattern=src/integration-tests",
+    "test": "vitest run --exclude \"src/integration-tests/**\"",
+    "test:watch": "vitest --exclude \"src/integration-tests/**\"",
+    "integration-test": "vitest run --poolOptions.threads.singleThread src/integration-tests/**",
+    "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
@@ -144,7 +145,7 @@
     "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.0",
+    "@coveo/bueno": "1.0.1",
     "@coveo/relay": "0.7.10",
     "@coveo/relay-event-types": "9.4.0",
     "@microsoft/fetch-event-source": "2.0.1",
@@ -165,12 +166,12 @@
     "@microsoft/api-extractor": "7.47.3",
     "@microsoft/api-extractor-model": "7.29.3",
     "@microsoft/tsdoc": "0.15.0",
+    "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
     "execa": "8.0.1",
     "install": "0.13.0",
-    "jest": "29.7.0",
-    "ts-jest": "29.2.3",
-    "ts-node": "10.9.2"
+    "ts-node": "10.9.2",
+    "vitest": "2.1.1"
   },
   "engines": {
     "node": "^20.9.0"

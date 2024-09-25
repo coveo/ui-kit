@@ -1,6 +1,6 @@
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../test/mock-engine-v2';
-import {buildMockProduct} from '../../../test/mock-product';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {buildMockProduct} from '../../../test/mock-product.js';
 import {
   errorSelector,
   isLoadingSelector,
@@ -9,7 +9,7 @@ import {
   requestIdSelector,
   responseIdSelector,
   responseIdSelectorFromEngine,
-} from './product-listing-selectors';
+} from './product-listing-selectors.js';
 
 describe('commerce product listing selectors', () => {
   it('#responseIdSelector should return the responseId value from the product listing section', () => {

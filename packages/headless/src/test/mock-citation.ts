@@ -1,4 +1,4 @@
-import {GeneratedAnswerCitation} from '../api/generated-answer/generated-answer-event-payload';
+import {GeneratedAnswerCitation} from '../api/generated-answer/generated-answer-event-payload.js';
 
 /**
  * For internal use only.

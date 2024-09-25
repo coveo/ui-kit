@@ -1,5 +1,5 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
 import {
   CartActionPayload,
   emitCartActionEvent,
@@ -7,26 +7,26 @@ import {
   purchase,
   setItems,
   updateItemQuantity,
-} from '../../../../features/commerce/context/cart/cart-actions';
+} from '../../../../features/commerce/context/cart/cart-actions.js';
 import {
   Transaction,
   itemsSelector,
-} from '../../../../features/commerce/context/cart/cart-selector';
-import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
-import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
-import {CartSection} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
-import {validateInitialState} from '../../../../utils/validate-payload';
+} from '../../../../features/commerce/context/cart/cart-selector.js';
+import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice.js';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
+import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation.js';
+import {CartSection} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
+} from '../../../controller/headless-controller.js';
 import {
   itemSelector,
   totalPriceSelector,
   totalQuantitySelector,
-} from './headless-cart-selectors';
+} from './headless-cart-selectors.js';
 
 export interface CartInitialState {
   items?: CartItemWithMetadata[];

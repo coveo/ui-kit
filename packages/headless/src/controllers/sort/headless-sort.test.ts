@@ -1,18 +1,18 @@
-import {executeSearch} from '../../features/search/search-actions';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildDateSortCriterion,
   SortOrder,
-} from '../../features/sort-criteria/criteria';
-import {updateSortCriterion} from '../../features/sort-criteria/sort-criteria-actions';
+} from '../../features/sort-criteria/criteria.js';
+import {updateSortCriterion} from '../../features/sort-criteria/sort-criteria-actions.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {Sort, SortProps, buildSort} from './headless-sort';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {Sort, SortProps, buildSort} from './headless-sort.js';
 
-jest.mock('../../features/sort-criteria/sort-criteria-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/sort-criteria/sort-criteria-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('Sort', () => {
   let engine: MockedSearchEngine;
@@ -24,7 +24,7 @@ describe('Sort', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     props = {
       initialState: {},

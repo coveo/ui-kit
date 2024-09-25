@@ -3,24 +3,24 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
-} from '../../../api/commerce/commerce-api-client';
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request';
-import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
-import {NavigatorContext} from '../../../app/navigatorContextProvider';
-import {RecommendationsSection} from '../../../state/state-sections';
-import {validatePayload} from '../../../utils/validate-payload';
+} from '../../../api/commerce/commerce-api-client.js';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request.js';
+import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
+import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {RecommendationsSection} from '../../../state/state-sections.js';
+import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   StateNeededByQueryCommerceAPI,
   buildBaseCommerceAPIRequest,
-} from '../common/actions';
-import {getProductsFromCartPurchasedState} from '../context/cart/cart-state';
-import {perPageRecommendationSelector} from '../pagination/pagination-selectors';
-import {recommendationsSlotDefinition} from './recommendations';
+} from '../common/actions.js';
+import {getProductsFromCartPurchasedState} from '../context/cart/cart-state.js';
+import {perPageRecommendationSelector} from '../pagination/pagination-selectors.js';
 import {
   moreRecommendationsAvailableSelector,
   numberOfRecommendationsSelector,
-} from './recommendations-selectors';
+} from './recommendations-selectors.js';
+import {recommendationsSlotDefinition} from './recommendations.js';
 
 export interface QueryRecommendationsCommerceAPIThunkReturn {
   /** The successful recommendations response. */

@@ -10,7 +10,7 @@ import {
   SearchHubSection,
   VersionSection,
   PaginationSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type RecommendationAppState = ConfigurationSection &
   FieldsSection &
