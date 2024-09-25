@@ -1,3 +1,7 @@
+## <small>3.1.2 (2024-09-25)</small>
+
+- chore(headless): ensure Bueno is loaded from the CDN, not from NPM specifier (#4459) ([ba823e2](https://github.com/coveo/ui-kit/commits/ba823e2)), closes [#4459](https://github.com/coveo/ui-kit/issues/4459)
+
 ## <small>3.1.1 (2024-09-24)</small>
 
 - docs: document headless, atomic, and atomic-react entry points (#4455) ([3853bdc](https://github.com/coveo/ui-kit/commits/3853bdc)), closes [#4455](https://github.com/coveo/ui-kit/issues/4455)
