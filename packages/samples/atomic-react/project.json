@@ -10,8 +10,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --noEmit",
-          "tsc --module es2022 --noEmit; fi"
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --noEmit; fi",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --module es2022 --noEmit; fi"
         ],
         "parallel": true,
         "cwd": "packages/samples/atomic-react"
