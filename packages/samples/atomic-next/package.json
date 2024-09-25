@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "nx build",
-    "dev": "npm run build:assets && npm run dev:nextjs",
+    "dev": "npm run build:assets && npm run dev:nextjs sd",
     "dev:nextjs": "next dev",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
     "e2e:watch": "cypress open --browser chrome --e2e",
