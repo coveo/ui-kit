@@ -1,42 +1,61 @@
+/* eslint-disable @cspell/spellchecker */
+import {exec} from 'child_process';
 import {publint} from 'publint';
+import {promisify} from 'util';
 
-const {messages: atomicMessages} = await publint({
-  pkgDir: './packages/atomic',
-  level: 'warning',
-  strict: true,
-});
+const pkgDirs = [
+  'packages/atomic',
+  'packages/headless',
+  'packages/atomic-react',
+];
 
-const {messages: headlessMessages} = await publint({
-  pkgDir: './packages/atomic',
-  level: 'warning',
-  strict: true,
-});
+const execute = promisify(exec);
 
-const {messages: atomicReactMessages} = await publint({
-  pkgDir: './packages/atomic',
-  level: 'warning',
-  strict: true,
-});
+let exitCode = 0;
 
-if (
-  atomicMessages.length > 0 ||
-  headlessMessages.length > 0 ||
-  atomicReactMessages.length > 0
-) {
-  console.error(
-    'publint found issues:',
-    JSON.stringify(
-      {
-        atomic: atomicMessages,
-        headless: headlessMessages,
-        atomicReact: atomicReactMessages,
-      },
-      null,
-      2
-    )
-  );
+const issues = {attw: [], publint: []};
 
-  process.exit(1);
-} else {
-  console.log('No issues found by publint.');
+for (const pkgDir of pkgDirs) {
+  try {
+    await execute(`attw --format ascii --pack ${pkgDir}`);
+  } catch (err) {
+    issues.attw.push(err.stdout);
+  }
+
+  const message = await publint({
+    pkgDir,
+    level: 'warning',
+    strict: true,
+  });
+
+  if (message) {
+    issues.publint.push({[pkgDir]: message});
+  }
 }
+
+console.info('***********************************');
+console.info('*           ATTW REPORT           *');
+console.info('***********************************\n');
+
+if (issues.attw.length > 0) {
+  console.error('attw found issues:\n', issues.attw.join('\n'));
+  exitCode = 1;
+} else {
+  console.info('No issues found by attw.');
+}
+
+console.info('***********************************');
+console.info('*         PUBLINT REPORT          *');
+console.info('***********************************\n');
+
+if (issues.publint.length > 0) {
+  console.error(
+    'publint found issues:\n',
+    JSON.stringify(issues.publint, null, 2)
+  );
+  exitCode = 1;
+} else {
+  console.info('No issues found by publint.');
+}
+
+process.exit(exitCode);
