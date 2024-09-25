@@ -8,7 +8,7 @@ inputs:
   cache-suffix:
     description: 'Suffix to add to the cache key for different environments'
     required: false
-    default: ''
+    default: 'test'
 runs:
   using: composite
   steps:
@@ -28,7 +28,7 @@ runs:
         path: |
           **/node_modules/
           !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}-${{ inputs.cache-suffix }}
+        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources
@@ -42,7 +42,7 @@ runs:
       id: nx-cache
       with:
         path: .nx/cache
-        key: nx-${{ github.sha }}
+        key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash

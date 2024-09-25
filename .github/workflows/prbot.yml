@@ -43,8 +43,14 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - name: Run Playwright tests
+      - name: Setup for CDN checks
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: ./.github/actions/setup
+        with:
+          cache-suffix: cdn
+        env:
+          DEPLOYMENT_ENVIRONMENT: CDN
+      - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
   lint-check:
     name: 'Check with linter'
