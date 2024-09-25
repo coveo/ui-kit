@@ -1,3 +1,8 @@
+## <small>3.2.1 (2024-09-24)</small>
+
+- docs: document headless, atomic, and atomic-react entry points (#4455) ([3853bdc](https://github.com/coveo/ui-kit/commits/3853bdc)), closes [#4455](https://github.com/coveo/ui-kit/issues/4455)
+- fix: use correct pjson for bueno version replacement (#4454) ([bab0883](https://github.com/coveo/ui-kit/commits/bab0883)), closes [#4454](https://github.com/coveo/ui-kit/issues/4454)
+
 ## 3.2.0 (2024-09-24)
 
 - chore(atomic, headless): make bueno external (#4433) ([e1f7f2d](https://github.com/coveo/ui-kit/commits/e1f7f2d)), closes [#4433](https://github.com/coveo/ui-kit/issues/4433)

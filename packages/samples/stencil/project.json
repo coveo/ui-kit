@@ -14,7 +14,7 @@
       "outputs": ["{projectRoot}/www", "{projectRoot}/src/components.d.ts"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build",
+        "command": "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build; fi",
         "cwd": "packages/samples/stencil"
       }
     },

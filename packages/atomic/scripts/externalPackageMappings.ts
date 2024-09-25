@@ -1,6 +1,6 @@
 import path from 'node:path';
+import buenoJson from '../../bueno/package.json';
 import headlessJson from '../../headless/package.json';
-import buenoJson from '../../headless/package.json';
 
 const headlessVersion = 'v' + headlessJson.version;
 const buenoVersion = 'v' + buenoJson.version;
