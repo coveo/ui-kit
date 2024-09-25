@@ -44,3 +44,23 @@ export const LowFacetValues: Story = {
   },
   decorators: [facetDecorator],
 };
+
+export const SortCriteriaAlphanumeric: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'objecttype',
+    'attributes-number-of-values': 2,
+    'attributes-sort-criteria': 'alphanumeric',
+  },
+  decorators: [facetDecorator],
+};
+
+export const monthFacet: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'month',
+    'attributes-label': 'Month',
+    'attributes-number-of-values': 12,
+  },
+  decorators: [facetDecorator],
+};
