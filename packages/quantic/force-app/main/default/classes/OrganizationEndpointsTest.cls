@@ -47,9 +47,9 @@ public class OrganizationEndpointsTest {
     String expectedSearch = expectedPlatform + '/rest/search/v2';
     String expectedAdmin = 'https://testOrgIdadmin.org.coveo.com';
 
-    System.assertEquals(expectedPlatform, endpoints.get('platform'), 'Platform URL mismatch for default method');
-    System.assertEquals(expectedAnalytics, endpoints.get('analytics'), 'Analytics URL mismatch for default method');
-    System.assertEquals(expectedSearch, endpoints.get('search'), 'Search URL mismatch for default method');
-    System.assertEquals(expectedAdmin, endpoints.get('admin'), 'Admin URL mismatch for default method');
+    System.assertEquals(expectedPlatform, endpoints.get('platform'), 'Platform URL mismatch');
+    System.assertEquals(expectedAnalytics, endpoints.get('analytics'), 'Analytics URL mismatch');
+    System.assertEquals(expectedSearch, endpoints.get('search'), 'Search URL mismatch');
+    System.assertEquals(expectedAdmin, endpoints.get('admin'), 'Admin URL mismatch');
   }
 }
