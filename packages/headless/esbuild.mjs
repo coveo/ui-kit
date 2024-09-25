@@ -44,8 +44,6 @@ function getUmdGlobalName(useCase) {
   const map = {
     search: 'CoveoHeadless',
     recommendation: 'CoveoHeadlessRecommendation',
-    'product-recommendation': 'CoveoHeadlessProductRecommendation',
-    'product-listing': 'CoveoHeadlessProductListing',
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
