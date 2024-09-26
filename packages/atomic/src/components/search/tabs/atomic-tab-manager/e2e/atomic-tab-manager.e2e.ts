@@ -42,7 +42,7 @@ test.describe('AtomicTabManager', () => {
 
     test.describe('should change other component visibility', async () => {
       test.beforeEach(async ({facets}) => {
-        await facets.getFacetValue.first().waitFor({state: 'visible'});
+        await facets.facetValue.first().waitFor({state: 'visible'});
       });
       test.fixme('facets', async ({tabManager}) => {
         const includedFacets = await tabManager.includedFacet.all();
@@ -134,7 +134,7 @@ test.describe('AtomicTabManager', () => {
       test.describe('when selecting previous tab', () => {
         test.beforeEach(async ({tabManager, facets}) => {
           await tabManager.tabButtons('All').click();
-          await facets.getFacetValue.first().waitFor({state: 'visible'});
+          await facets.facetValue.first().waitFor({state: 'visible'});
         });
 
         test.describe('should change other component visibility', async () => {
