@@ -1,7 +1,7 @@
-import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
-import {wrapInProduct} from '@coveo/atomic/storybookUtils/product-wrapper';
+import {wrapInCommerceInterface} from '@coveo/atomic-storybook-utils/commerce/commerce-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {wrapInProduct} from '@coveo/atomic-storybook-utils/product-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {render} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
