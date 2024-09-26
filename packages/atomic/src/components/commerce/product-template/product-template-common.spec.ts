@@ -16,7 +16,7 @@ describe('makeMatchConditions', () => {
       {field: ['value']},
       {field: ['value']}
     );
-    expect(conditions).toHaveLength(1);
+    expect(conditions).toHaveLength(10); // TODO: failing test purposefully for testing
     expect(conditions[0]).toBeInstanceOf(Function);
     expect(conditions[0].toString()).toMatchSnapshot();
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
