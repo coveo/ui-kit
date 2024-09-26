@@ -47,6 +47,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
    * If the value of the field is an array of strings, the alt text will be used in the order of the images.
    *
    * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+   * @type {string}
    */
   @Prop({reflect: true}) imageAltField?: string;
 
@@ -222,7 +223,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
     }
 
     return (
-      // TODO: handle small/icon image sizes better on mobile
+      // TODO - KIT-3612 : handle small/icon image sizes better on mobile
       <ImageCarousel
         bindings={this.bindings}
         currentImage={this.currentImage}
