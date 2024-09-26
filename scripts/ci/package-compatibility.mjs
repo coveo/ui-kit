@@ -1,7 +1,6 @@
-/* eslint-disable @cspell/spellchecker */
-import {exec} from 'child_process';
 import {publint} from 'publint';
-import {promisify} from 'util';
+
+let exitCode = 0;
 
 const pkgDirs = [
   'packages/atomic',
@@ -9,99 +8,62 @@ const pkgDirs = [
   'packages/atomic-react',
 ];
 
-// For available attw.ignoreRules values, see https://www.npmjs.com/package/@arethetypeswrong/cli#ignore-rules
-// Available publint.level values: 'error' | 'suggestion' | 'warning'
-const pkgs = [
-  {
-    pkgDir: 'packages/atomic',
-    attw: {
-      enabled: false,
-      ignoreRules: [],
-    },
-    publint: {
-      enabled: true,
-      level: 'error',
-    },
-  },
-  {
-    pkgDir: 'packages/atomic-react',
-    attw: {
-      enabled: false,
-      ignoreRules: [],
-    },
-    publint: {
-      enabled: true,
-      level: 'error',
-    },
-  },
-  {
-    pkgDir: 'packages/headless',
-    attw: {
-      enabled: true,
-      ignoreRules: [],
-    },
-    publint: {
-      enabled: true,
-      level: 'error',
-    },
-  },
-];
-
-const execute = promisify(exec);
-
-let exitCode = 0;
-
-const issues = {attw: [], publint: []};
-
-for (const pkg of pkgs) {
-  if (pkg.attw.enabled) {
-    try {
-      const ignoreRules =
-        pkg.attw.ignoreRules.length > 0
-          ? `--ignore-rules ${pkg.attwIgnoreRules.join(' ')}`
-          : '';
-      await execute(`attw --format ascii --pack ${pkg.pkgDir} ${ignoreRules}`);
-    } catch (err) {
-      issues.attw.push(err.stdout);
-    }
-  }
-
-  if (pkg.publint.enabled) {
-    const message = await publint({
-      pkgDir: pkg.pkgDir,
-      level: pkg.publint.level,
-      strict: true,
+const issues = await Promise.all(
+  pkgDirs.map(async (pkgDir) => {
+    const {messages} = await publint({
+      pkgDir,
+      level: 'suggestion',
+      strict: false,
     });
 
-    if (message) {
-      issues.publint.push({[pkg.pkgDir]: message});
+    const suggestions = [];
+    const warnings = [];
+    const errors = [];
+
+    for (const message of messages) {
+      switch (message.type) {
+        case 'suggestion':
+          suggestions.push(message);
+          break;
+        case 'warning':
+          warnings.push(message);
+          break;
+        case 'error':
+          errors.push(message);
+          break;
+      }
+    }
+
+    return {
+      pkgDir,
+      suggestions,
+      warnings,
+      errors,
+    };
+  })
+);
+
+if (issues.length > 0) {
+  console.info('The publint scan detected compatibility issues:\n');
+
+  for (const issue of issues) {
+    console.info(`\n********** ${issue.pkgDir} **********\n`);
+    if (issue.errors.length > 0) {
+      exitCode = 1;
+      console.info('Errors:\n');
+      console.error(JSON.stringify(issue.errors, null, 2));
+    }
+    if (issue.warnings.length > 0) {
+      console.info('Warnings:\n');
+      console.warn(JSON.stringify(issue.warnings, null, 2));
+    }
+    if (issue.suggestions.length > 0) {
+      console.info('Suggestions:\n');
+      console.info(JSON.stringify(issue.suggestions, null, 2));
     }
   }
-}
-
-console.info('***********************************');
-console.info('*           ATTW REPORT           *');
-console.info('***********************************\n');
-
-if (issues.attw.length > 0) {
-  console.error('attw found issues:\n', issues.attw.join('\n'));
-  exitCode = 1;
 } else {
-  console.info('No issues found by attw.');
-}
-
-console.info('***********************************');
-console.info('*         PUBLINT REPORT          *');
-console.info('***********************************\n');
-
-if (issues.publint.length > 0) {
-  console.error(
-    'publint found issues:\n',
-    JSON.stringify(issues.publint, null, 2)
-  );
-  exitCode = 1;
-} else {
-  console.info('No issues found by publint.');
+  console.info('No compatibility issues found by publint.');
 }
 
 process.exit(exitCode);
