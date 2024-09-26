@@ -1,3 +1,8 @@
+## <small>3.1.3 (2024-09-25)</small>
+
+- chore: eliminate network calls in npm test (#4453) ([c6393a9](https://github.com/coveo/ui-kit/commits/c6393a9)), closes [#4453](https://github.com/coveo/ui-kit/issues/4453)
+- docs(headless): update adding-a-sub-package (#4456) ([92c5404](https://github.com/coveo/ui-kit/commits/92c5404)), closes [#4456](https://github.com/coveo/ui-kit/issues/4456)
+
 ## <small>3.1.2 (2024-09-25)</small>
 
 - chore(headless): ensure Bueno is loaded from the CDN, not from NPM specifier (#4459) ([ba823e2](https://github.com/coveo/ui-kit/commits/ba823e2)), closes [#4459](https://github.com/coveo/ui-kit/issues/4459)
