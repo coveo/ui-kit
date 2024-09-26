@@ -1,26 +1,26 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {InsightAction} from '../analytics/analytics-utils';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {InsightAction} from '../analytics/analytics-utils.js';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
   RegisterQuerySuggestActionCreatorPayload,
   registerQuerySuggest,
-} from '../query-suggest/query-suggest-actions';
-import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions';
+} from '../query-suggest/query-suggest-actions.js';
+import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions.js';
 import {
   StateNeededByExecuteSearch,
   StateNeededByQuerySuggest,
   fetchQuerySuggestions,
-} from './insight-search-actions';
+} from './insight-search-actions.js';
 import {
   executeSearch,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './legacy/insight-search-actions';
+} from './legacy/insight-search-actions.js';
 
 export type {
   FetchQuerySuggestionsActionCreatorPayload,

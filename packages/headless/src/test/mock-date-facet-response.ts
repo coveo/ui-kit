@@ -1,4 +1,4 @@
-import {DateFacetResponse} from '../features/facets/range-facets/date-facet-set/interfaces/response';
+import {DateFacetResponse} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
 
 export function buildMockDateFacetResponse(
   config: Partial<DateFacetResponse> = {}

@@ -1,26 +1,26 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   fetchResultContent,
   nextPreview,
   previousPreview,
   updateContentURL,
-} from '../../../features/result-preview/result-preview-actions';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
+} from '../../../features/result-preview/result-preview-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder';
-import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder.js';
+import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-core-quickview';
+} from './headless-core-quickview.js';
 
-jest.mock('../../../features/result-preview/result-preview-actions');
+vi.mock('../../../features/result-preview/result-preview-actions');
 
 describe('QuickviewCore', () => {
   let engine: MockedSearchEngine;

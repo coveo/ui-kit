@@ -1,6 +1,6 @@
-import {CommerceSuccessResponse} from '../api/commerce/common/response';
-import {QueryCommerceAPIThunkReturn} from '../features/commerce/common/actions';
-import {SortBy} from '../features/sort/sort';
+import {CommerceSuccessResponse} from '../api/commerce/common/response.js';
+import {QueryCommerceAPIThunkReturn} from '../features/commerce/common/actions.js';
+import {SortBy} from '../features/sort/sort.js';
 
 export function buildFetchProductListingResponse(
   response: Partial<CommerceSuccessResponse> = {}

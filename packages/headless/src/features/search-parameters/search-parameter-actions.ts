@@ -1,8 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
-import {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
-import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
-import {searchParametersDefinition} from './search-parameter-schema';
+import {validatePayload} from '../../utils/validate-payload.js';
+import {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
+import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {searchParametersDefinition} from './search-parameter-schema.js';
 
 /**
  * The parameters affecting the search response.

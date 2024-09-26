@@ -19,17 +19,20 @@ routes.forEach((route) => {
           .as('initial-results');
       });
 
-      it('should not update the search parameters', () => {
-        cy.url().should((href) =>
-          expect(new URL(href).searchParams.size).to.equal(0)
-        );
+      it('should add the tab search parameter with the default value', () => {
+        cy.url().should((href) => {
+          const url = new URL(href);
+          expect(url.searchParams.size).to.equal(1);
+          expect(url.searchParams.has('tab', 'all'));
+        });
       });
 
       describe('after submitting a search', () => {
         const query = 'abc';
-        beforeEach(() =>
-          cy.get('.search-box input').focus().type(`${query}{enter}`)
-        );
+        beforeEach(() => {
+          cy.wait(1000);
+          cy.get('.search-box input').focus().type(`${query}{enter}`);
+        });
 
         describe('after the url was updated', () => {
           beforeEach(() => {
@@ -59,7 +62,7 @@ routes.forEach((route) => {
 
             it('should remove the search parameters', () => {
               cy.url().should((href) =>
-                expect(new URL(href).searchParams.size).to.be.equal(0)
+                expect(new URL(href).searchParams.size).to.be.equal(1)
               );
             });
 
@@ -82,7 +85,7 @@ routes.forEach((route) => {
     describe('when loading a page with search parameters', () => {
       const query = 'def';
       function getInitialUrl() {
-        return `${route}?q=${query}&foo=bar`;
+        return `${route}?q=${query}&foo=bar&tab=videos`;
       }
 
       it('renders page in SSR as expected', () => {
@@ -111,9 +114,10 @@ routes.forEach((route) => {
           cy.wait(1000);
           cy.url().should((href) => {
             const url = new URL(href);
-            expect(url.searchParams.size).to.equal(2);
+            expect(url.searchParams.size).to.equal(3);
             expect(url.searchParams.has('q', query));
             expect(url.searchParams.has('foo', 'bar'));
+            expect(url.searchParams.has('tab', 'videos'));
           });
         });
 

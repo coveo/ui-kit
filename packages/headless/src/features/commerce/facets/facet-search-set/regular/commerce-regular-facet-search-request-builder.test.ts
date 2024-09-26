@@ -1,21 +1,22 @@
-import {NavigatorContext} from '../../../../../app/navigatorContextProvider';
-import * as Actions from '../../../../../features/commerce/common/actions';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options';
-import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider';
-import {buildFacetSearchRequest} from './commerce-regular-facet-search-request-builder';
+import {MockInstance} from 'vitest';
+import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
+import * as Actions from '../../../../../features/commerce/common/actions.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
+import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
+import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider.js';
+import {buildFacetSearchRequest} from './commerce-regular-facet-search-request-builder.js';
 
 describe('#buildFacetSearchRequest', () => {
   let state: CommerceAppState;
   let navigatorContext: NavigatorContext;
   let facetId: string;
   let query: string;
-  let buildCommerceAPIRequestMock: jest.SpyInstance;
+  let buildCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     facetId = '1';
     query = 'test';
@@ -24,10 +25,7 @@ describe('#buildFacetSearchRequest', () => {
       options: {...buildMockFacetSearchRequestOptions(), query},
     });
 
-    buildCommerceAPIRequestMock = jest.spyOn(
-      Actions,
-      'buildCommerceAPIRequest'
-    );
+    buildCommerceAPIRequestMock = vi.spyOn(Actions, 'buildCommerceAPIRequest');
 
     navigatorContext = buildMockNavigatorContextProvider()();
   });
@@ -57,7 +55,7 @@ describe('#buildFacetSearchRequest', () => {
   });
 
   it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', () => {
-    const buildCommerceAPIRequestMock = jest.spyOn(
+    const buildCommerceAPIRequestMock = vi.spyOn(
       Actions,
       'buildCommerceAPIRequest'
     );

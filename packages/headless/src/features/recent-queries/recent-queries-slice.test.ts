@@ -1,17 +1,17 @@
-import {Result} from '../../api/search/search/result';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {logSearchEvent} from '../analytics/analytics-actions';
-import {executeSearch} from '../search/search-actions';
+import {Result} from '../../api/search/search/result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {logSearchEvent} from '../analytics/analytics-actions.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from './recent-queries-actions';
-import {recentQueriesReducer} from './recent-queries-slice';
+} from './recent-queries-actions.js';
+import {recentQueriesReducer} from './recent-queries-slice.js';
 import {
   getRecentQueriesInitialState,
   RecentQueriesState,
-} from './recent-queries-state';
+} from './recent-queries-state.js';
 
 function withResult(rest = {}) {
   return {

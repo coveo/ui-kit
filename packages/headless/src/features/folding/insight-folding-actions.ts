@@ -1,22 +1,22 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {isErrorResponse} from '../../api/search/search-api-client';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
 import {
   ConfigurationSection,
   FoldingSection,
   InsightConfigurationSection,
   QuerySection,
-} from '../../state/state-sections';
-import {validatePayload} from '../../utils/validate-payload';
+} from '../../state/state-sections.js';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   RegisterFoldingActionCreatorPayload,
   foldingOptionsSchemaDefinition,
   LoadCollectionFulfilledReturn,
-} from '../folding/folding-actions';
-import {ResultWithFolding} from '../folding/folding-slice';
-import {CollectionId} from '../folding/folding-state';
-import {fetchFromAPI} from '../insight-search/insight-search-actions';
-import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request';
+} from '../folding/folding-actions.js';
+import {ResultWithFolding} from '../folding/folding-slice.js';
+import {CollectionId} from '../folding/folding-state.js';
+import {fetchFromAPI} from '../insight-search/insight-search-actions.js';
+import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request.js';
 
 export type {
   RegisterFoldingActionCreatorPayload,

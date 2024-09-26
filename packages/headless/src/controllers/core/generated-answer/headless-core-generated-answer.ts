@@ -1,9 +1,9 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
-import {CoreEngine} from '../../../app/engine';
+import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   CustomAction,
   LegacySearchAction,
-} from '../../../features/analytics/analytics-utils';
+} from '../../../features/analytics/analytics-utils.js';
 import {
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
@@ -15,21 +15,22 @@ import {
   registerFieldsToIncludeInCitations,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
-} from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
-import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state';
-import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
+  setIsEnabled,
+} from '../../../features/generated-answer/generated-answer-actions.js';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
+import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
+import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
 import {
   DebugSection,
   GeneratedAnswerSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   Controller,
   buildController,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export type {
   GeneratedAnswerCitation,
@@ -89,6 +90,14 @@ export interface GeneratedAnswer extends Controller {
    */
   collapse(): void;
   /**
+   * Enables the generated answer.
+   */
+  enable(): void;
+  /**
+   * Disables the generated answer.
+   */
+  disable(): void;
+  /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
   logCopyToClipboard(): void;
@@ -125,6 +134,10 @@ export interface GeneratedAnswerPropsInitialState {
      * Sets the component visibility state on load.
      */
     isVisible?: boolean;
+    /**
+     * Sets the component enabled state on load.
+     */
+    isEnabled?: boolean;
     /**
      * The initial formatting options applied to generated answers when the controller first loads.
      */
@@ -255,6 +268,18 @@ export function buildCoreGeneratedAnswer(
       if (this.state.expanded) {
         dispatch(collapseGeneratedAnswer());
         dispatch(analyticsClient.logGeneratedAnswerCollapse());
+      }
+    },
+
+    enable() {
+      if (!this.state.isEnabled) {
+        dispatch(setIsEnabled(true));
+      }
+    },
+
+    disable() {
+      if (this.state.isEnabled) {
+        dispatch(setIsEnabled(false));
       }
     },
 

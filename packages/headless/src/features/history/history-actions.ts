@@ -1,6 +1,6 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {SearchAppState} from '../../state/search-app-state';
-import {HistoryState} from './history-state';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {HistoryState} from './history-state.js';
 
 export const undo = createAction('history/undo');
 export const redo = createAction('history/redo');

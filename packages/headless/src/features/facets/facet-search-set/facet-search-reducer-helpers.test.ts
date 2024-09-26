@@ -1,8 +1,8 @@
-import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
-import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
-import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
+import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options.js';
+import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response.js';
+import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {
   handleFacetSearchRegistration,
   handleFacetSearchUpdate,
@@ -12,11 +12,11 @@ import {
   handleFacetSearchClear,
   handleFacetSearchSetClear,
   defaultFacetSearchOptions,
-} from './facet-search-reducer-helpers';
+} from './facet-search-reducer-helpers.js';
 import {
   SpecificFacetSearchSetState,
   getFacetSearchSetInitialState,
-} from './specific/specific-facet-search-set-state';
+} from './specific/specific-facet-search-set-state.js';
 
 describe('FacetSearch slice', () => {
   const buildEmptyResponse = (): SpecificFacetSearchResponse => ({

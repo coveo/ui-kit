@@ -1,21 +1,21 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload';
-import {configuration} from '../../../app/common-reducers';
+import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   generatedAnswerAnalyticsClient,
   logOpenGeneratedAnswerSource,
-} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {buildMockCitation} from '../../../test/mock-citation';
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {buildMockCitation} from '../../../test/mock-citation.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildInteractiveCitationCore,
   InteractiveCitation,
-} from './headless-core-interactive-citation';
+} from './headless-core-interactive-citation.js';
 
-jest.mock(
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 

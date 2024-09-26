@@ -1,4 +1,4 @@
-import {URLPath} from './url-utils';
+import {URLPath} from './url-utils.js';
 
 describe('URLPath', () => {
   const testBasePath = 'https://www.test.com';

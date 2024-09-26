@@ -3,31 +3,31 @@ import {
   SearchPageClientProvider,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
-} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
-import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
-import {getQueryInitialState} from '../../features/query/query-state';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
-import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
-import {SearchAppState} from '../../state/search-app-state';
-import {ConfigurationSection} from '../../state/state-sections';
-import {getOrganizationEndpoint} from '../platform-client';
-import {PreprocessRequest} from '../preprocess-request';
-import {BaseAnalyticsProvider} from './base-analytics';
+} from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
+import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request.js';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request.js';
+import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
+import {getQueryInitialState} from '../../features/query/query-state.js';
+import {getSearchInitialState} from '../../features/search/search-state.js';
+import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state.js';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {ConfigurationSection} from '../../state/state-sections.js';
+import {getOrganizationEndpoint} from '../platform-client.js';
+import {PreprocessRequest} from '../preprocess-request.js';
+import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   historyStore,
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;

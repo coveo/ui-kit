@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`insight analytics actions when analyticsMode is \`next\` logCreateArticle should call relay.emit properly 1`] = `
+exports[`insight analytics actions > when analyticsMode is \`next\` > logCreateArticle > should call relay.emit properly 1`] = `
 [
   "InsightPanel.CreateArticle",
   {
@@ -14,7 +14,7 @@ exports[`insight analytics actions when analyticsMode is \`next\` logCreateArtic
 ]
 `;
 
-exports[`insight analytics actions when analyticsMode is \`next\` logExpandToFullUI should call relay.emit properly 1`] = `
+exports[`insight analytics actions > when analyticsMode is \`next\` > logExpandToFullUI > should call relay.emit properly 1`] = `
 [
   "InsightPanel.ExpandToFullUI",
   {

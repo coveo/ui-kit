@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine';
-import {resetAnswer} from './generated-answer-actions';
-import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice';
+import {CoreEngine} from '../../app/engine.js';
+import {resetAnswer} from './generated-answer-actions.js';
+import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice.js';
 
 /**
  * The generated answer action creators.

@@ -5,7 +5,7 @@ import {
   Context,
 } from '@coveo/headless/commerce';
 import {useEffect} from 'react';
-import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface';
+import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface.js';
 
 interface IHomePageProps {
   engine: CommerceEngine;

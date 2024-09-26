@@ -1,4 +1,4 @@
-import {QueryState} from '../features/query/query-state';
+import {QueryState} from '../features/query/query-state.js';
 
 export function buildMockQueryState(
   config: Partial<QueryState> = {}

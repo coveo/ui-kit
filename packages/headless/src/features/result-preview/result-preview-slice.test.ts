@@ -1,23 +1,26 @@
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
-import {buildMockLegacySearch, buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {logInterfaceLoad} from '../analytics/analytics-actions';
-import {executeSearch} from '../insight-search/insight-search-actions';
-import {logPageNext} from '../pagination/pagination-analytics-actions';
-import {fetchMoreResults, fetchPage} from '../search/search-actions';
+import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {
+  buildMockLegacySearch,
+  buildMockSearch,
+} from '../../test/mock-search.js';
+import {logInterfaceLoad} from '../analytics/analytics-actions.js';
+import {executeSearch} from '../insight-search/insight-search-actions.js';
+import {logPageNext} from '../pagination/pagination-analytics-actions.js';
+import {fetchMoreResults, fetchPage} from '../search/search-actions.js';
 import {
   fetchResultContent,
   nextPreview,
   preparePreviewPagination,
   previousPreview,
   updateContentURL,
-} from './result-preview-actions';
-import {resultPreviewReducer} from './result-preview-slice';
+} from './result-preview-actions.js';
+import {resultPreviewReducer} from './result-preview-slice.js';
 import {
   getResultPreviewInitialState,
   ResultPreviewState,
-} from './result-preview-state';
+} from './result-preview-state.js';
 
 describe('ResultPreview', () => {
   let state: ResultPreviewState;

@@ -1,37 +1,37 @@
-import {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
+import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   executeFacetSearch,
   executeFieldSuggest,
-} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {
   facetSelect,
   logFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {executeSearch} from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {executeSearch} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Subscribable,
-} from '../../controller/headless-controller';
-import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
-import {CategoryFacetOptions} from '../../facets/category-facet/headless-category-facet';
-import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search';
+} from '../../controller/headless-controller.js';
+import {determineFacetId} from '../../core/facets/_common/facet-id-determinor.js';
+import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search.js';
+import {CategoryFacetOptions} from '../../facets/category-facet/headless-category-facet.js';
 
 export interface CategoryFieldSuggestionsValue {
   /**

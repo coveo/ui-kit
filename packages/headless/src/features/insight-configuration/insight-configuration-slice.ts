@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setInsightConfiguration} from './insight-configuration-actions';
-import {getInsightConfigurationInitialState} from './insight-configuration-state';
+import {setInsightConfiguration} from './insight-configuration-actions.js';
+import {getInsightConfigurationInitialState} from './insight-configuration-state.js';
 
 export const insightConfigurationReducer = createReducer(
   getInsightConfigurationInitialState(),

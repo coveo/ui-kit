@@ -1,9 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../utils/validate-payload';
+import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   RegisterRecentQueriesCreatorPayload,
   registerRecentQueriesPayloadDefinition,
-} from '../../recent-queries/recent-queries-actions';
+} from '../../recent-queries/recent-queries-actions.js';
 
 export const clearRecentQueries = createAction('commerce/recentQueries/clear');
 

@@ -1,4 +1,3 @@
-import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
 import {postcss} from '@stencil-community/postcss';
@@ -7,74 +6,23 @@ import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
 import {readFileSync, readdirSync} from 'fs';
-import path from 'path';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
 import postcssMap from 'postcss-map';
 import mixins from 'postcss-mixins';
 import postcssNesting from 'postcss-nested';
+import {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
-import headlessJson from '../../packages/headless/package.json';
+import {generateExternalPackageMappings} from './scripts/externalPackageMappings';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
-let headlessVersion: string;
-
-if (isCDN) {
-  console.log('Building for CDN');
-  headlessVersion = 'v' + headlessJson.version;
-}
-
-const packageMappings: {[key: string]: {devWatch: string; cdn: string}} = {
-  '@coveo/headless/commerce': {
-    devWatch: path.resolve(
-      __dirname,
-      './src/external-builds/commerce/headless.esm.js'
-    ),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/commerce/headless.esm.js`,
-  },
-  '@coveo/headless/insight': {
-    devWatch: path.resolve(
-      __dirname,
-      './src/external-builds/insight/headless.esm.js'
-    ),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/insight/headless.esm.js`,
-  },
-  '@coveo/headless/product-recommendation': {
-    devWatch: path.resolve(
-      __dirname,
-      './src/external-builds/product-recommendation/headless.esm.js'
-    ),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
-  },
-  '@coveo/headless/recommendation': {
-    devWatch: path.resolve(
-      __dirname,
-      './src/external-builds/recommendation/headless.esm.js'
-    ),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/recommendation/headless.esm.js`,
-  },
-  '@coveo/headless/case-assist': {
-    devWatch: path.resolve(
-      __dirname,
-      './src/external-builds/case-assist/headless.esm.js'
-    ),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/case-assist/headless.esm.js`,
-  },
-  '@coveo/headless': {
-    devWatch: path.resolve(__dirname, './src/external-builds/headless.esm.js'),
-    cdn: `https://static.cloud.coveo.com/headless/${headlessVersion}/headless.esm.js`,
-  },
-  /*   '@coveo/bueno': {
-    devWatch: path.resolve(__dirname, './src/external-builds/bueno.esm.js'),
-    cdn: `https://static.cloud.coveo.com/bueno/${headlessVersion}/bueno.esm.js`,
-  }, */
-};
+const packageMappings = generateExternalPackageMappings(__dirname);
 
 function generateAliasEntries() {
   return Object.entries(packageMappings).map(([find, paths]) => ({
@@ -83,15 +31,6 @@ function generateAliasEntries() {
   }));
 }
 
-function generateReplaceValues(): {[key: string]: string} {
-  return Object.entries(packageMappings).reduce(
-    (acc: {[key: string]: string}, [find, paths]) => {
-      acc[find] = paths.cdn;
-      return acc;
-    },
-    {}
-  );
-}
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
   return readdirSync(useCasePath, {
     recursive: true,
@@ -136,45 +75,70 @@ function replace() {
   });
 }
 
+const externalizeDependenciesPlugin: PluginImpl = () => {
+  return {
+    name: 'externalize-dependencies',
+    resolveId: (source, _importer, _options) => {
+      const packageMapping = packageMappings[source];
+
+      if (packageMapping) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMapping.cdn,
+          external: 'absolute',
+        };
+      }
+
+      return null;
+    },
+  };
+};
+
 const isDevWatch: boolean =
   process.argv &&
   process.argv.indexOf('--dev') > -1 &&
   process.argv.indexOf('--watch') > -1;
 
 export const config: Config = {
+  tsconfig: 'tsconfig.stencil.json',
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
   outputTargets: [
-    react({
-      componentCorePackage: '@coveo/atomic',
-      proxiesFile:
-        '../atomic-react/src/components/stencil-generated/search/index.ts',
-      includeDefineCustomElements: true,
-      excludeComponents: [
-        'atomic-result-template',
-        'atomic-recs-result-template',
-        'atomic-field-condition',
-      ].concat(
-        filterComponentsByUseCaseForReactOutput('src/components/commerce')
-      ),
-    }),
-    react({
-      componentCorePackage: '@coveo/atomic',
-      proxiesFile:
-        '../atomic-react/src/components/stencil-generated/commerce/index.ts',
-      includeDefineCustomElements: true,
-      excludeComponents: [
-        'atomic-product-template',
-        'atomic-recs-result-template',
-        'atomic-field-condition',
-      ].concat(
-        filterComponentsByUseCaseForReactOutput('src/components/search'),
-        filterComponentsByUseCaseForReactOutput(
-          'src/components/recommendations'
-        )
-      ),
-    }),
+    !isDevWatch &&
+      react({
+        componentCorePackage: '@coveo/atomic',
+        proxiesFile:
+          '../atomic-react/src/components/stencil-generated/search/index.ts',
+        includeDefineCustomElements: true,
+        excludeComponents: [
+          'atomic-result-template',
+          'atomic-recs-result-template',
+          'atomic-field-condition',
+        ].concat(
+          filterComponentsByUseCaseForReactOutput('src/components/commerce')
+        ),
+      }),
+    !isDevWatch &&
+      react({
+        componentCorePackage: '@coveo/atomic',
+        proxiesFile:
+          '../atomic-react/src/components/stencil-generated/commerce/index.ts',
+        includeDefineCustomElements: true,
+        excludeComponents: [
+          'atomic-product-template',
+          'atomic-recs-result-template',
+          'atomic-field-condition',
+        ].concat(
+          filterComponentsByUseCaseForReactOutput('src/components/search'),
+          filterComponentsByUseCaseForReactOutput(
+            'src/components/recommendations'
+          )
+        ),
+      }),
     angular({
       componentCorePackage: '@coveo/atomic',
       directivesProxyFile:
@@ -219,16 +183,16 @@ export const config: Config = {
         },
       ].filter((n) => n.src),
     },
-  ],
+  ].filter(Boolean),
   testing: {
     browserArgs: ['--no-sandbox'],
     transform: {
       '^.+\\.html?$': 'html-loader-jest',
-      '^.+\\.svg$': './svg.transform.js',
+      '^.+\\.svg$': './svg.transform.cjs',
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['.snap'],
-    setupFiles: ['./jest/setup.js', 'jest-localstorage-mock'],
+    setupFiles: ['./jest/setup.cjs', 'jest-localstorage-mock'],
     resetMocks: false,
   },
   devServer: {
@@ -254,10 +218,6 @@ export const config: Config = {
       ],
     }),
     replace(),
-    isCDN &&
-      replaceWithASTPlugin({
-        replacements: generateReplaceValues(),
-      }),
   ],
   rollupPlugins: {
     before: [
@@ -276,16 +236,3 @@ export const config: Config = {
     enableImportInjection: true,
   },
 };
-
-function externalizeDependenciesPlugin() {
-  return {
-    name: 'externalize-dependencies',
-    resolveId(source: string) {
-      // Externalize @coveo/headless and @coveo/bueno
-      if (/^@coveo\/(headless)/.test(source)) {
-        return false;
-      }
-      return null;
-    },
-  };
-}

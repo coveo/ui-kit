@@ -1,17 +1,17 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   SearchBox,
   buildSearchBox,
   SearchBoxProps,
   SearchBoxOptions,
   Suggestion,
-} from './headless-search-box';
+} from './headless-search-box.js';
 
 export type {
   SearchBoxState,
   SearchBox,
   SearchBoxProps,
-} from './headless-search-box';
+} from './headless-search-box.js';
 export type {SearchBoxOptions, Suggestion};
 
 export interface SearchBoxDefinition

@@ -1,16 +1,19 @@
-import {CoreEngine} from '../../../app/engine';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {PaginationSection, SearchSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+import {CoreEngine} from '../../../app/engine.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {
+  PaginationSection,
+  SearchSection,
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   buildCoreStatus,
   SearchStatusState,
-} from '../status/headless-core-status';
+} from '../status/headless-core-status.js';
 
 /**
  * The `QuerySummary` headless controller offers a high-level interface for designing a common query summary UI controller.

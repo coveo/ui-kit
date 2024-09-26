@@ -1074,6 +1074,14 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
+        /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
          */
@@ -1205,6 +1213,7 @@ export namespace Components {
         "tooltip": string;
     }
     interface AtomicInsightGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -1573,6 +1582,18 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface AtomicInsightUserActionsModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
+         */
+        "userId": string;
+    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -1588,9 +1609,6 @@ export namespace Components {
         "userActions": Array<IUserAction>;
     }
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -1601,6 +1619,16 @@ export namespace Components {
         "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+         */
+        "userId": string;
+    }
+    interface AtomicInsightUserActionsToggle {
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
          */
         "userId": string;
     }
@@ -2044,7 +2072,7 @@ export namespace Components {
      */
     interface AtomicProductLink {
         /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
+          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
          */
         "hrefTemplate"?: string;
     }
@@ -2099,6 +2127,7 @@ export namespace Components {
         "maxValueInIndex": number;
         /**
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+          * @type {string}
          */
         "ratingDetailsField"?: string;
     }
@@ -4499,6 +4528,12 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsModalElement: {
+        prototype: HTMLAtomicInsightUserActionsModalElement;
+        new (): HTMLAtomicInsightUserActionsModalElement;
+    };
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -4510,9 +4545,6 @@ declare global {
         new (): HTMLAtomicInsightUserActionsSessionElement;
     };
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -4521,6 +4553,12 @@ declare global {
     var HTMLAtomicInsightUserActionsTimelineElement: {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
+    };
+    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsToggleElement: {
+        prototype: HTMLAtomicInsightUserActionsToggleElement;
+        new (): HTMLAtomicInsightUserActionsToggleElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -5899,8 +5937,10 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
+        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -6985,6 +7025,14 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
+        /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
          */
@@ -7113,6 +7161,7 @@ declare namespace LocalJSX {
         "tooltip"?: string;
     }
     interface AtomicInsightGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -7455,6 +7504,18 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface AtomicInsightUserActionsModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
+         */
+        "userId": string;
+    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -7470,9 +7531,6 @@ declare namespace LocalJSX {
         "userActions": Array<IUserAction>;
     }
     /**
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -7483,6 +7541,16 @@ declare namespace LocalJSX {
         "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+         */
+        "userId": string;
+    }
+    interface AtomicInsightUserActionsToggle {
+        /**
+          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
+         */
+        "ticketCreationDateTime": string;
+        /**
+          * The ID of the user whose actions are being displayed.
          */
         "userId": string;
     }
@@ -7902,7 +7970,7 @@ declare namespace LocalJSX {
      */
     interface AtomicProductLink {
         /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-product-link> ```
+          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
          */
         "hrefTemplate"?: string;
     }
@@ -7957,6 +8025,7 @@ declare namespace LocalJSX {
         "maxValueInIndex"?: number;
         /**
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+          * @type {string}
          */
         "ratingDetailsField"?: string;
     }
@@ -9508,8 +9577,10 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
+        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -9903,19 +9974,18 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
              * @category Insight Panel
              * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             /**
-             * This component displays all the actions performed by a user around the time they created a case.
-             * The actions are grouped into multiple sessions, including the session during which the case was created,
-             * the sessions preceding the case creation and the sessions following the case creation.
              * @component 
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
+            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;

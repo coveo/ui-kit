@@ -1,6 +1,6 @@
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {Product} from '../../../api/commerce/common/product';
-import {AnyFacetResponse} from '../facets/facet-set/interfaces/response';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {Product} from '../../../api/commerce/common/product.js';
+import {AnyFacetResponse} from '../facets/facet-set/interfaces/response.js';
 
 export interface CommerceSearchState {
   error: CommerceAPIErrorStatusResponse | null;

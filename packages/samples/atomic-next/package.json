@@ -2,10 +2,11 @@
   "name": "@coveo/atomic-next-samples",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.0.0",
-    "@coveo/atomic-react": "3.0.0",
-    "@coveo/headless": "3.0.0",
+    "@coveo/atomic": "3.2.3",
+    "@coveo/atomic-react": "3.1.3",
+    "@coveo/headless": "3.1.3",
     "next": "14.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1"

@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {QuerySummary, buildQuerySummary} from './headless-query-summary';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {QuerySummary, buildQuerySummary} from './headless-query-summary.js';
 
-export * from './headless-query-summary';
+export * from './headless-query-summary.js';
 
 export interface QuerySummaryDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, QuerySummary> {}

@@ -3,6 +3,7 @@ import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
 import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchParameterManager from '@/common/components/react/search-parameter-manager';
+import TabManager from '@/common/components/react/tab-manager';
 import {
   fetchStaticState,
   setNavigatorContextProvider,
@@ -62,6 +63,7 @@ export default async function Search(url: {
     >
       <SearchParameterManager />
       <SearchBox />
+      <TabManager />
       <ResultList />
       <AuthorFacet />
     </SearchPageProvider>

@@ -1,3 +1,34 @@
+## <small>3.2.3 (2024-09-25)</small>
+
+- chore(atomic): fix tsconfig resolution for the e2e folders (#4462) ([2a037ff](https://github.com/coveo/ui-kit/commits/2a037ff)), closes [#4462](https://github.com/coveo/ui-kit/issues/4462)
+
+## <small>3.2.1 (2024-09-24)</small>
+
+- docs: document headless, atomic, and atomic-react entry points (#4455) ([3853bdc](https://github.com/coveo/ui-kit/commits/3853bdc)), closes [#4455](https://github.com/coveo/ui-kit/issues/4455)
+- fix: use correct pjson for bueno version replacement (#4454) ([bab0883](https://github.com/coveo/ui-kit/commits/bab0883)), closes [#4454](https://github.com/coveo/ui-kit/issues/4454)
+
+## 3.2.0 (2024-09-24)
+
+- chore(atomic, headless): make bueno external (#4433) ([e1f7f2d](https://github.com/coveo/ui-kit/commits/e1f7f2d)), closes [#4433](https://github.com/coveo/ui-kit/issues/4433)
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+- feat: add answer configuration id to atomic-insight-generated-answer (#4451) ([6b7c2bd](https://github.com/coveo/ui-kit/commits/6b7c2bd)), closes [#4451](https://github.com/coveo/ui-kit/issues/4451)
+- feat(atomic): add tab support for atomic-generated-answer (#4285) ([744fb61](https://github.com/coveo/ui-kit/commits/744fb61)), closes [#4285](https://github.com/coveo/ui-kit/issues/4285)
+- feat(atomic): atomic insight user actions toggle component created (#4298) ([bad4ff5](https://github.com/coveo/ui-kit/commits/bad4ff5)), closes [#4298](https://github.com/coveo/ui-kit/issues/4298)
+- test(atomic): add tests for atomic-product-rating (#4440) ([498beff](https://github.com/coveo/ui-kit/commits/498beff)), closes [#4440](https://github.com/coveo/ui-kit/issues/4440)
+- test(atomic): add tests for product link (#4203) ([b62f3c7](https://github.com/coveo/ui-kit/commits/b62f3c7)), closes [#4203](https://github.com/coveo/ui-kit/issues/4203)
+- fix(atomic): bad search box layout when removing textarea prop (#4435) ([70d9378](https://github.com/coveo/ui-kit/commits/70d9378)), closes [#4435](https://github.com/coveo/ui-kit/issues/4435)
+- fix(atomic): enable/disable facet based on tab with updateActiveTab action (#4313) ([08fe92a](https://github.com/coveo/ui-kit/commits/08fe92a)), closes [#4313](https://github.com/coveo/ui-kit/issues/4313) [#4311](https://github.com/coveo/ui-kit/issues/4311)
+- fix(atomic): remove unnecessary css (#4397) ([1ee2897](https://github.com/coveo/ui-kit/commits/1ee2897)), closes [#4397](https://github.com/coveo/ui-kit/issues/4397)
+
+## <small>3.1.1 (2024-09-18)</small>
+
+- chore: ensure absolute paths are not resolved as local when building for the CDN (#4434) ([b9ee6e1](https://github.com/coveo/ui-kit/commits/b9ee6e1)), closes [#4434](https://github.com/coveo/ui-kit/issues/4434)
+
+## 3.1.0 (2024-09-18)
+
+- fix(atomic, atomic-react): use root-relative URL for CDN (#4431) ([39313ea](https://github.com/coveo/ui-kit/commits/39313ea)), closes [#4431](https://github.com/coveo/ui-kit/issues/4431)
+- feat(atomic): add label prop on NoItems functional component (#4390) ([7946199](https://github.com/coveo/ui-kit/commits/7946199)), closes [#4390](https://github.com/coveo/ui-kit/issues/4390)
+
 ## 3.0.0 (2024-09-18)
 
 - chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)

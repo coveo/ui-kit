@@ -1,9 +1,9 @@
-import {buildMockTabSlice} from '../../test/mock-tab-state';
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {registerTab, updateActiveTab} from './tab-set-actions';
-import {tabSetReducer} from './tab-set-slice';
+import {buildMockTabSlice} from '../../test/mock-tab-state.js';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {registerTab, updateActiveTab} from './tab-set-actions.js';
+import {tabSetReducer} from './tab-set-slice.js';
 
 describe('tab set slice', () => {
   it('initializes state correctly', () => {

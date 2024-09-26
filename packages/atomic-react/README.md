@@ -24,6 +24,14 @@ Since Atomic React is built on top of the core [Atomic](https://docs.coveo.com/e
 
 However, there are still some special considerations.
 
+## Entry points
+
+The `@coveo/atomic-react` package exposes the following entry points:
+
+- `@coveo/atomic-react`: exports the components and utilities for building non-commerce search interfaces with Atomic React.
+- `@coveo/atomic-react/recommendation`: exports the components and utilities for building non-commerce recommendation interfaces with Atomic React.
+- `@coveo/atomic-react/commerce`: exports the components and utilities for building commerce applications with Atomic React.
+
 ## Static Assets - Languages and SVGs
 
 For performance reasons, the generated JavaScript bundle does not automatically include static assets that are loaded on demand. This impacts language support, as well as the use of included SVG icons.
@@ -193,9 +201,11 @@ import {
   AtomicResultLink,
   AtomicSearchInterface,
   AtomicResultList,
+} from '@coveo/atomic-react';
+import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-} from '@coveo/atomic-react';
+} from '@coveo/headless';
 import {useMemo} from 'react';
 
 const MyStyledResultLink: React.FC<
@@ -242,12 +252,14 @@ The following is an example that makes the text of an `AtomicResultBadge` pink:
 
 ```tsx
 import {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
   AtomicSearchInterface,
   AtomicResultList,
   AtomicResultBadge,
 } from '@coveo/atomic-react';
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from '@coveo/headless';
 import {useMemo} from 'react';
 
 const myStyles = `

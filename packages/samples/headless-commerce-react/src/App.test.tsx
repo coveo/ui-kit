@@ -1,6 +1,6 @@
 import {render} from '@testing-library/react';
 import {vi, MockInstance} from 'vitest';
-import App from './App';
+import App from './App.js';
 
 let errorSpy: MockInstance<{
   (...data: unknown[]): void;

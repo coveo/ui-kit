@@ -1,26 +1,26 @@
-import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request';
+import {RegularFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-commerce-facet-response';
-import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+} from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceRegularFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
+import {buildMockCommerceRegularFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {
   RegularFacet,
   RegularFacetOptions,
   buildCommerceRegularFacet,
-} from './headless-commerce-regular-facet';
+} from './headless-commerce-regular-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/regular-facet/regular-facet-actions'
 );
 
@@ -30,7 +30,7 @@ describe('RegularFacet', () => {
   let state: CommerceAppState;
   let options: RegularFacetOptions;
   let facet: RegularFacet;
-  const facetResponseSelector = jest.fn();
+  const facetResponseSelector = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -54,13 +54,13 @@ describe('RegularFacet', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       facetId,
-      fetchProductsActionCreator: jest.fn(),
+      fetchProductsActionCreator: vi.fn(),
       facetResponseSelector,
-      isFacetLoadingResponseSelector: jest.fn(),
+      isFacetLoadingResponseSelector: vi.fn(),
       facetSearch: {type: 'SEARCH'},
     };
 

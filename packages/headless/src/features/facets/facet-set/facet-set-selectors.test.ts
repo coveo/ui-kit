@@ -1,14 +1,14 @@
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {createMockState} from '../../../test/mock-state';
+import {SearchAppState} from '../../../state/search-app-state.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   baseFacetResponseSelector,
   facetRequestSelector,
   facetResponseSelectedValuesSelector,
-} from './facet-set-selectors';
+} from './facet-set-selectors.js';
 
 describe('facet-set selectors', () => {
   it('#facetSelector gets the facet response by id', () => {

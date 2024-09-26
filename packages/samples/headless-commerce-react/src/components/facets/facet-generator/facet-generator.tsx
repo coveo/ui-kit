@@ -1,9 +1,9 @@
 import {FacetGenerator as HeadlessFacetGenerator} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
-import CategoryFacet from '../category-facet/category-facet';
-import DateFacet from '../date-facet/date-facet';
-import NumericFacet from '../numeric-facet/numeric-facet';
-import RegularFacet from '../regular-facet/regular-facet';
+import CategoryFacet from '../category-facet/category-facet.js';
+import DateFacet from '../date-facet/date-facet.js';
+import NumericFacet from '../numeric-facet/numeric-facet.js';
+import RegularFacet from '../regular-facet/regular-facet.js';
 
 interface IFacetGeneratorProps {
   controller: HeadlessFacetGenerator;

@@ -1,11 +1,11 @@
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {updateQuery} from './query-actions';
-import {queryReducer} from './query-slice';
-import {getQueryInitialState, QueryState} from './query-state';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {updateQuery} from './query-actions.js';
+import {queryReducer} from './query-slice.js';
+import {getQueryInitialState, QueryState} from './query-state.js';
 
 describe('query slice', () => {
   let state: QueryState;
