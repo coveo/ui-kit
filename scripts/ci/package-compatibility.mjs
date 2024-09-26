@@ -19,7 +19,7 @@ const pkgs = [
       ignoreRules: [],
     },
     publint: {
-      enable: true,
+      enabled: true,
       level: 'error',
     },
   },
@@ -30,7 +30,7 @@ const pkgs = [
       ignoreRules: [],
     },
     publint: {
-      enable: true,
+      enabled: true,
       level: 'error',
     },
   },
