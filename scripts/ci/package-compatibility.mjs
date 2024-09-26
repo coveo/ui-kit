@@ -9,27 +9,73 @@ const pkgDirs = [
   'packages/atomic-react',
 ];
 
+// For available attw.ignoreRules values, see https://www.npmjs.com/package/@arethetypeswrong/cli#ignore-rules
+// Available publint.level values: 'error' | 'suggestion' | 'warning'
+const pkgs = [
+  {
+    pkgDir: 'packages/atomic',
+    attw: {
+      enabled: false,
+      ignoreRules: [],
+    },
+    publint: {
+      enable: true,
+      level: 'error',
+    },
+  },
+  {
+    pkgDir: 'packages/atomic-react',
+    attw: {
+      enabled: false,
+      ignoreRules: [],
+    },
+    publint: {
+      enable: true,
+      level: 'error',
+    },
+  },
+  {
+    pkgDir: 'packages/headless',
+    attw: {
+      enabled: true,
+      ignoreRules: [],
+    },
+    publint: {
+      enabled: true,
+      level: 'error',
+    },
+  },
+];
+
 const execute = promisify(exec);
 
 let exitCode = 0;
 
 const issues = {attw: [], publint: []};
 
-for (const pkgDir of pkgDirs) {
-  try {
-    await execute(`attw --format ascii --pack ${pkgDir}`);
-  } catch (err) {
-    issues.attw.push(err.stdout);
+for (const pkg of pkgs) {
+  if (pkg.attw.enabled) {
+    try {
+      const ignoreRules =
+        pkg.attw.ignoreRules.length > 0
+          ? `--ignore-rules ${pkg.attwIgnoreRules.join(' ')}`
+          : '';
+      await execute(`attw --format ascii --pack ${pkg.pkgDir} ${ignoreRules}`);
+    } catch (err) {
+      issues.attw.push(err.stdout);
+    }
   }
 
-  const message = await publint({
-    pkgDir,
-    level: 'warning',
-    strict: true,
-  });
+  if (pkg.publint.enabled) {
+    const message = await publint({
+      pkgDir: pkg.pkgDir,
+      level: pkg.publint.level,
+      strict: true,
+    });
 
-  if (message) {
-    issues.publint.push({[pkgDir]: message});
+    if (message) {
+      issues.publint.push({[pkg.pkgDir]: message});
+    }
   }
 }
 
