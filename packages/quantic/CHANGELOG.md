@@ -1,3 +1,11 @@
+## <small>3.0.4 (2024-09-25)</small>
+
+- test(quantic): added new apex class test to increase code coverage (#4464) ([b595d0d](https://github.com/coveo/ui-kit/commits/b595d0d)), closes [#4464](https://github.com/coveo/ui-kit/issues/4464)
+
+## <small>3.0.1 (2024-09-24)</small>
+
+- fix(quantic, searchbox): Issue with searchbox suggestions list flashing after selecting recent query ([6f75ad6](https://github.com/coveo/ui-kit/commits/6f75ad6)), closes [#4401](https://github.com/coveo/ui-kit/issues/4401)
+
 ## 3.0.0 (2024-09-18)
 
 - chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)

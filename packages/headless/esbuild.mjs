@@ -1,13 +1,27 @@
 import alias from 'esbuild-plugin-alias';
+import {aliasPath} from 'esbuild-plugin-alias-path';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
-import {readFileSync, promises, writeFileSync} from 'node:fs';
+import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import {dirname, resolve} from 'node:path';
+import path, {dirname, resolve} from 'node:path';
+import {join} from 'path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
+const __dirname = dirname(new URL(import.meta.url).pathname);
+
+const buenoJsonPath = join(__dirname, '../bueno/package.json');
+const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
+
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
+
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
+const buenoVersion = 'v' + buenoJson.version;
+const buenoPath = isCDN
+  ? `/bueno/${buenoVersion}/bueno.esm.js`
+  : '@coveo/bueno';
 
 const useCaseEntries = {
   search: 'src/index.ts',
@@ -30,8 +44,6 @@ function getUmdGlobalName(useCase) {
   const map = {
     search: 'CoveoHeadless',
     recommendation: 'CoveoHeadlessRecommendation',
-    'product-recommendation': 'CoveoHeadlessProductRecommendation',
-    'product-listing': 'CoveoHeadlessProductListing',
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
@@ -85,6 +97,16 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         format: 'esm',
         watch: devMode,
         minify: false,
+        plugins: [
+          aliasPath({
+            alias: {
+              '@coveo/bueno': path.resolve(
+                __dirname,
+                './src/external-builds/bueno.esm.js'
+              ),
+            },
+          }),
+        ],
       },
       outDir
     );
@@ -150,6 +172,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
+      external: ['crypto'],
       inject: [
         'ponyfills/abortable-fetch-shim.js',
         '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
@@ -186,20 +209,32 @@ function resolveBrowser(moduleName) {
  * @returns {Promise<import('esbuild').BuildResult>}
  */
 async function buildBrowserConfig(options, outDir) {
+  const replaceBuenoImport = [
+    {
+      name: 'replace-bueno-import',
+      setup(build) {
+        build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+          return {path: buenoPath, external: true};
+        });
+      },
+    },
+  ];
   const out = await build({
     ...base,
     platform: 'browser',
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto'],
+    external: ['crypto', buenoPath],
     ...options,
+
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
         '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
+      ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
     ],
   });

@@ -1,7 +1,7 @@
 const {resolve} = require('path');
 
 module.exports = {
-  ignorePatterns: ['dist', 'temp', 'ponyfills'],
+  ignorePatterns: ['dist', 'temp', 'ponyfills', 'src/external-builds/**/*'],
   plugins: ['canonical'],
   settings: {
     'import/parsers': {
@@ -13,6 +13,7 @@ module.exports = {
       },
     },
   },
+
   rules: {
     '@typescript-eslint/no-namespace': 'off',
     curly: ['error'],
