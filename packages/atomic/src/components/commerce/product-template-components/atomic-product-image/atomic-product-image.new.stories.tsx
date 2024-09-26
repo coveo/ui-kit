@@ -3,7 +3,7 @@ import {wrapInCommerceProductList} from '@coveo/atomic-storybook-utils/commerce/
 import {wrapInProductTemplate} from '@coveo/atomic-storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta} from '@storybook/web-components';
 
 const {
   decorator: commerceInterfaceDecorator,
@@ -41,9 +41,55 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-product-image',
-  args: {
-    'attributes-fallback': '2',
-  },
-};
+// export const Default: Story = {
+//   name: 'atomic-product-image',
+//   args: {
+//     'attributes-fallback': '2',
+//     play: async (context) => {
+//       await play(context);
+//       await playExecuteFirstSearch(context);
+//     },
+//   },
+// };
+
+// const {play: playWithMultipleImages} = wrapInCommerceInterface({
+//   engineConfig: {
+//     ...engineConfig,
+//     preprocessRequest: (r) => {
+//       const parsed = JSON.parse(r.body as string);
+//       parsed.query = 'https://sports.barca.group/pdp/SP00003_00001';
+//       r.body = JSON.stringify(parsed);
+//       return r;
+//     },
+//   },
+// });
+
+// export const WithMultipleImages: Story = {
+//   name: 'With multiple images',
+//   play: async (context) => {
+//     await playWithMultipleImages(context);
+//   },
+// };
+
+// export const WithNoImage: Story = {
+//   name: 'With no image',
+//   args: {
+//     'attributes-field': 'ec_invalid_image_field',
+//   },
+//   play: async (context) => {
+//     await play(context);
+//     await playExecuteFirstSearch(context);
+//   },
+// };
+
+// export const WitCustomFallbackImage: Story = {
+//   name: 'With custom fallback',
+//   args: {
+//     'attributes-field': 'ec_invalid_image_field',
+//     'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
+//   },
+//   play: async (context) => {
+//     await play(context);
+//     await playExecuteFirstSearch(context);
+//   },
+// };
