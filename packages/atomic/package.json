@@ -29,7 +29,7 @@
     "build:locales": "npx nx build:locales atomic",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "npx playwright test",
+    "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
