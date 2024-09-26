@@ -2,14 +2,26 @@ import {wrapInCommerceInterface} from '@coveo/atomic-storybook-utils/commerce/co
 import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
 import {wrapInProduct} from '@coveo/atomic-storybook-utils/product-wrapper';
+import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {render} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {html} from 'lit/static-html.js';
 
+const baseConfiguration = getSampleCommerceEngineConfiguration();
+
 const {decorator: productDecorator} = wrapInProduct();
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  engineConfig: {
+    ...baseConfiguration,
+    context: {
+      ...baseConfiguration.context,
+      view: {
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-multi-value-text',
+      },
+    },
+  },
+  type: 'product-listing',
 });
 
 const meta: Meta = {
@@ -30,6 +42,16 @@ export const Default: Story = {
     'attributes-field': 'cat_available_sizes',
   },
   decorators: [productDecorator],
+};
+
+const {play: playSkipFirstSearch} = wrapInCommerceInterface({
+  skipFirstSearch: true,
+});
+
+export const BeforeFirstRequest: Story = {
+  name: 'Before first request',
+  decorators: [productDecorator],
+  play: playSkipFirstSearch,
 };
 
 export const WithMaxValuesToDisplay: Story = {
@@ -71,11 +93,6 @@ export const InPage: Story = {
                 )}
               </atomic-product-template>
             </atomic-commerce-product-list>
-
-            <atomic-commerce-products-per-page
-              choices-displayed="1"
-              initial-choice="1"
-            ></atomic-commerce-products-per-page>
           </atomic-layout-section>
         </atomic-commerce-layout>
       `;

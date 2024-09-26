@@ -26,10 +26,6 @@ export const wrapInProduct = (): {
             )}
           </atomic-product-template>
         </atomic-commerce-product-list>
-        <atomic-commerce-products-per-page
-          choices-displayed="1"
-          initial-choice="1"
-        ></atomic-commerce-products-per-page>
         <div style="position: absolute; top: -20px; right: 0;">Template</div>
       </div>
       <style>
