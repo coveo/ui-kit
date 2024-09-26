@@ -1,7 +1,7 @@
-import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
+  base,
 } from '../../../../../../playwright-utils/base-fixture';
 import {AtomicFoldedResultListPageObject as FoldedResultList} from './page-object';
 

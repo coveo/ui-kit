@@ -1,7 +1,7 @@
-import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
+  base,
 } from '../../../../../playwright-utils/base-fixture';
 import {QuerySummaryPageObject} from '../../atomic-commerce-query-summary/e2e/page-object';
 import {ProductsPerPageObject} from './page-object';

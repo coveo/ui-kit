@@ -1,7 +1,7 @@
-import {test as base} from '@playwright/test';
 import {
   AxeFixture,
   makeAxeBuilder,
+  base,
 } from '../../../../../playwright-utils/base-fixture';
 import {RefineModalPageObject} from '../../atomic-refine-modal/e2e/page-object';
 import {AtomicFacetPageObject} from '../../facets/atomic-facet/e2e/page-object';
