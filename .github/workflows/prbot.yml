@@ -87,6 +87,14 @@ jobs:
             24,
           ]
         shardTotal: [24]
+    services:
+      pact:
+        image: pactfoundation/pact-stub-server:latest
+        ports:
+          - 1234:1234
+        volumes:
+          - packages/headless/pact-provider/pacts:/app/pacts
+        options: -p 1234 -d pacts -o
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
