@@ -1,7 +1,7 @@
 import {test as base} from '@playwright/test';
 import {
-  makeAxeBuilder,
   AxeFixture,
+  makeAxeBuilder,
 } from '../../../../../../playwright-utils/base-fixture';
 import {ProductMultiValueTextPageObject} from './page-object';
 

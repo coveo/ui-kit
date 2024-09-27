@@ -5,4 +5,22 @@ export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-prod
   constructor(page: Page) {
     super(page, 'atomic-product-multi-value-text');
   }
+
+  get values() {
+    return this.hydrated
+      .first()
+      .locator('li[part="product-multi-value-text-value"]');
+  }
+
+  get separators() {
+    return this.hydrated.first().locator('li[class="separator"]');
+  }
+
+  moreValuesIndicator(expectedNumber?: number) {
+    return this.hydrated
+      .first()
+      .getByText(
+        `${expectedNumber ? expectedNumber.toString() + ' ' : ''}more...`
+      );
+  }
 }

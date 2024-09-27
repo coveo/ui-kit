@@ -54,8 +54,8 @@ export const BeforeFirstRequest: Story = {
   play: playSkipFirstSearch,
 };
 
-export const WithMaxValuesToDisplay: Story = {
-  name: 'With max values to display',
+export const WithMaxValuesToDisplaySetToMinimum: Story = {
+  name: 'With max values to display set to minimum',
   args: {
     'attributes-field': 'cat_available_sizes',
     'attributes-max-values-to-display': 1,
@@ -63,8 +63,17 @@ export const WithMaxValuesToDisplay: Story = {
   decorators: [productDecorator],
 };
 
-export const InPage: Story = {
-  name: 'In a page',
+export const WithMaxValuesToDisplaySetToTotalNumberOfValues: Story = {
+  name: 'With max values to display set to total number of values',
+  args: {
+    'attributes-field': 'cat_available_sizes',
+    'attributes-max-values-to-display': 5,
+  },
+  decorators: [productDecorator],
+};
+
+export const InAPageWithTheCorrespondingFacet: Story = {
+  name: 'In a page with the corresponding facet',
   args: {
     'attributes-field': 'cat_available_sizes',
   },
