@@ -6,7 +6,7 @@ test.describe('before query is loaded', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be ally compliant', async ({makeAxeBuilder}) => {
+  test('should be a11y compliant', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations.length).toEqual(0);
   });
@@ -22,7 +22,7 @@ test.describe('after query is loaded', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be ally compliant', async ({makeAxeBuilder}) => {
+  test('should be a11y compliant', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations.length).toEqual(0);
   });
@@ -38,7 +38,7 @@ test.describe('with a full result template', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be ally compliant', async ({makeAxeBuilder}) => {
+  test('should be a11y compliant', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations.length).toEqual(0);
   });
@@ -54,7 +54,7 @@ test.describe('with a carousel', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be ally compliant', async ({makeAxeBuilder}) => {
+  test('should be a11y compliant', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations.length).toEqual(0);
   });
