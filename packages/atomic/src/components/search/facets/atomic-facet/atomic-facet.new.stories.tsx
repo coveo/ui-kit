@@ -50,7 +50,7 @@ export const monthFacet: Story = {
   args: {
     'attributes-field': 'month',
     'attributes-label': 'Month',
-    'attributes-number-of-values': 12,
+    'attributes-number-of-values': 2,
   },
   decorators: [facetDecorator],
 };
