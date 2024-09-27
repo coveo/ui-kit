@@ -1,7 +1,6 @@
 import {test, expect} from './fixture';
 
 test.describe('default', () => {
-  // Require docker run -t -p 1234:1234 -v "$(pwd)/pact-provider/pacts/:/app/pacts" pactfoundation/pact-stub-server -p 1234 -d pacts -o to run.
   test.beforeEach(async ({searchBox}) => {
     await searchBox.load({
       args: {suggestionTimeout: 5000},
