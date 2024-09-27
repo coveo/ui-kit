@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './src',
   testMatch: '*.e2e.ts',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  forbidOnly: !!process.env.CI || false, //temp
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
