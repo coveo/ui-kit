@@ -9,11 +9,9 @@ test.describe('default', () => {
     productMultiValueText,
     makeAxeBuilder,
   }) => {
-    await productMultiValueText.hydrated.first().isVisible();
+    await expect(productMultiValueText.hydrated.first()).toBeVisible();
 
-    const res = await makeAxeBuilder().analyze();
-
-    expect(res.violations.length).toBe(0);
+    expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
   });
 
   test('should render 3 values and 3 separators', async ({
