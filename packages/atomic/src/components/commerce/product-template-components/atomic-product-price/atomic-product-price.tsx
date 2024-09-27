@@ -10,8 +10,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {defaultCurrencyFormatter} from '../../../common/formats/format-common';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
+import {parseValue} from '../product-utils';
 
 /**
  * @alpha
@@ -35,31 +37,61 @@ export class AtomicProductPrice
     this.context = buildContext(this.bindings.engine);
   }
 
-  public render() {
-    const hasPromotionalPrice =
+  private formatValue(value: number) {
+    try {
+      const {currency} = this.contextState;
+      const formatter = defaultCurrencyFormatter(currency);
+      return formatter(value, this.bindings.i18n.languages as string[]);
+    } catch (error) {
+      this.error = error as Error;
+      return value.toString();
+    }
+  }
+
+  private parse(field: string) {
+    try {
+      return parseValue(this.product, field);
+    } catch (error) {
+      this.error = error as Error;
+      return null;
+    }
+  }
+
+  private getFormattedValue(field: string) {
+    const value = this.parse(field);
+    if (value !== null) {
+      return this.formatValue(value);
+    }
+  }
+
+  private get hasPromotionalPrice() {
+    return (
       this.product.ec_promo_price !== null &&
       this.product.ec_price !== null &&
-      this.product.ec_promo_price < this.product.ec_price;
+      this.product.ec_promo_price < this.product.ec_price
+    );
+  }
 
-    const {currency} = this.contextState;
+  public render() {
+    const mainPrice = this.getFormattedValue(
+      this.hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'
+    );
+
+    const originalPrice = this.hasPromotionalPrice
+      ? this.getFormattedValue('ec_price')
+      : null;
 
     return (
       <div class="flex flex-wrap">
-        <atomic-product-numeric-field-value
-          class={`mx-1 truncate break-keep ${hasPromotionalPrice && 'text-error'}`}
-          field={hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'}
+        <div
+          class={`mx-1 truncate break-keep ${this.hasPromotionalPrice && 'text-error'}`}
         >
-          <atomic-format-currency currency={currency}></atomic-format-currency>
-        </atomic-product-numeric-field-value>
-        {hasPromotionalPrice && (
-          <atomic-product-numeric-field-value
-            class="mx-1 truncate break-keep text-xl line-through"
-            field="ec_price"
-          >
-            <atomic-format-currency
-              currency={currency}
-            ></atomic-format-currency>
-          </atomic-product-numeric-field-value>
+          {mainPrice}
+        </div>
+        {originalPrice && (
+          <div class="mx-1 truncate break-keep text-xl line-through">
+            {originalPrice}
+          </div>
         )}
       </div>
     );
