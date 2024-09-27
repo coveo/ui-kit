@@ -1,6 +1,19 @@
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {readFromObject} from '../../../utils/object-utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {FieldValueIsNaNError} from './error';
+
+export function parseValue(product: Product, field: string) {
+  const value = ProductTemplatesHelpers.getProductProperty(product, field);
+  if (value === null) {
+    return null;
+  }
+  const valueAsNumber = parseFloat(`${value}`);
+  if (Number.isNaN(valueAsNumber)) {
+    throw new FieldValueIsNaNError(field, value);
+  }
+  return valueAsNumber;
+}
 
 export function getStringValueFromProductOrNull(
   product: Product,
