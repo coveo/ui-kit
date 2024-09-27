@@ -56,8 +56,6 @@ export class BasePageObject<
       const response = await route.fetch();
       const body = await response.json();
       body.products = [];
-      console.log(body);
-
       await route.fulfill({
         response,
         json: body,

@@ -89,11 +89,10 @@ test.describe('with a carousel', () => {
 
 test('with no recommendations returned by the API, should render placeholders', async ({
   recommendationList,
-  page,
 }) => {
   await recommendationList.noRecommendations();
   await recommendationList.load({story: 'default'});
-  await page.waitForTimeout(2000); // Wait for atomic components to render
+  await recommendationList.hydrated.waitFor({state: 'hidden'});
   await expect
     .poll(async () => await recommendationList.recommendation.count())
     .toBe(0);
