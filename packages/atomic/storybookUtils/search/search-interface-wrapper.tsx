@@ -27,10 +27,17 @@ export const wrapInSearchInterface = (
         'root-interface'
       );
     await step('Render the Search Interface', async () => {
-      await searchInterface!.initialize({
+      const engineConfig = {
         ...getSampleSearchEngineConfiguration(),
         ...config,
-      });
+      };
+      const proxyUrl = new URL(
+        searchInterface.ownerDocument.location.href
+      ).searchParams.get('searchProxyUrl');
+      if (proxyUrl) {
+        engineConfig.search!.proxyBaseUrl = decodeURIComponent(proxyUrl);
+      }
+      await searchInterface!.initialize(engineConfig);
     });
     if (skipFirstSearch) {
       return;
