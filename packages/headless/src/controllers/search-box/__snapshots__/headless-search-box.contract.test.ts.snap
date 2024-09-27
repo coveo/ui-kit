@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SearchBox > when there are suggestions available > should return suggestions 1`] = `
+{
+  "isLoading": false,
+  "isLoadingSuggestions": false,
+  "searchBoxId": "search_boxi",
+  "suggestions": [
+    {
+      "highlightedValue": "suede",
+      "rawValue": "suede",
+    },
+  ],
+  "value": "",
+}
+`;
