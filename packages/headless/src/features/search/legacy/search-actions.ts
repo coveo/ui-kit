@@ -1,45 +1,45 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
-import {historyStore} from '../../../api/analytics/coveo-analytics-utils';
-import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client';
-import {SearchResponseSuccess} from '../../../api/search/search/search-response';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options';
-import {InstantResultSection} from '../../../state/state-sections';
+import {historyStore} from '../../../api/analytics/coveo-analytics-utils.js';
+import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client.js';
+import {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
+import {InstantResultSection} from '../../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   AnalyticsAsyncThunk,
   LegacySearchAction,
-} from '../../analytics/analytics-utils';
+} from '../../analytics/analytics-utils.js';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
-import {updateFacetAutoSelection} from '../../facets/generic/facet-actions';
-import {logInstantResultsSearch} from '../../instant-results/instant-result-analytics-actions';
+} from '../../breadcrumb/breadcrumb-actions.js';
+import {updateFacetAutoSelection} from '../../facets/generic/facet-actions.js';
+import {logInstantResultsSearch} from '../../instant-results/instant-result-analytics-actions.js';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
   updateInstantResultsQuery,
-} from '../../instant-results/instant-results-actions';
-import {updatePage} from '../../pagination/pagination-actions';
+} from '../../instant-results/instant-results-actions.js';
+import {updatePage} from '../../pagination/pagination-actions.js';
 import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
-} from '../../query/query-actions';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request';
-import {logFetchMoreResults} from '../search-analytics-actions';
-import {MappedSearchRequest, mapSearchRequest} from '../search-mappings';
+} from '../../query/query-actions.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
+import {logFetchMoreResults} from '../search-analytics-actions.js';
+import {MappedSearchRequest, mapSearchRequest} from '../search-mappings.js';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
-} from './search-actions-thunk-processor';
-import {buildSearchRequest} from './search-request';
+} from './search-actions-thunk-processor.js';
+import {buildSearchRequest} from './search-request.js';
 
-export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
+export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
 
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */

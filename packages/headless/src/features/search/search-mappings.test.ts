@@ -1,13 +1,13 @@
 import {
   formatRelativeDateForSearchApi,
   serializeRelativeDate,
-} from '../../api/search/date/relative-date';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
-import {buildMockSearchRequest} from '../../test/mock-search-request';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {mapSearchRequest, mapSearchResponse} from './search-mappings';
+} from '../../api/search/date/relative-date.js';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
+import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response.js';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
+import {buildMockSearchRequest} from '../../test/mock-search-request.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {mapSearchRequest, mapSearchResponse} from './search-mappings.js';
 
 const facetId = 'myfacet';
 const relativeStart = serializeRelativeDate({
@@ -33,12 +33,12 @@ const getExpectedMappings = () => ({
 describe('#mapSearchRequest', () => {
   beforeAll(() => {
     const frozenInTime = new Date();
-    jest.useFakeTimers();
-    jest.setSystemTime(frozenInTime);
+    vi.useFakeTimers();
+    vi.setSystemTime(frozenInTime);
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should return the full request along with mappings', () => {
@@ -91,12 +91,12 @@ describe('#mapSearchRequest', () => {
 describe('#mapSearchResponse', () => {
   beforeAll(() => {
     const frozenInTime = new Date();
-    jest.useFakeTimers();
-    jest.setSystemTime(frozenInTime);
+    vi.useFakeTimers();
+    vi.setSystemTime(frozenInTime);
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should return the full response', () => {

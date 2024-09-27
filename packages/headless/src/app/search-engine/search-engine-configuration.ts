@@ -3,16 +3,16 @@ import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
+} from '../../api/search/search-api-client-middleware.js';
 import {
   nonEmptyString,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
   getSampleEngineConfiguration,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The search engine configuration.

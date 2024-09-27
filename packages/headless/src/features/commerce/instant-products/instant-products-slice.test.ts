@@ -1,24 +1,24 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {
   buildMockChildProduct,
   buildMockProduct,
   buildMockBaseProduct,
-} from '../../../test/mock-product';
+} from '../../../test/mock-product.js';
 import {
   fetchInstantProducts,
   QuerySearchCommerceAPIThunkReturn,
-} from '../search/search-actions';
+} from '../search/search-actions.js';
 import {
   promoteChildToParent,
   registerInstantProducts,
   updateInstantProductsQuery,
-} from './instant-products-actions';
-import {instantProductsReducer} from './instant-products-slice';
+} from './instant-products-actions.js';
+import {instantProductsReducer} from './instant-products-slice.js';
 import {
   InstantProductsCache,
   InstantProductsState,
-} from './instant-products-state';
+} from './instant-products-state.js';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
@@ -193,10 +193,10 @@ describe('instant products slice', () => {
 
     describe('when fulfilled', () => {
       beforeEach(() => {
-        jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+        vi.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       });
       afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
       });
       it('updates products in correct searchbox and query cache', () => {
         const query = 'some_query';

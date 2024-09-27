@@ -1,4 +1,4 @@
-import {CategoryFacetValue} from '../features/facets/category-facet-set/interfaces/response';
+import {CategoryFacetValue} from '../features/facets/category-facet-set/interfaces/response.js';
 
 export function buildMockCategoryFacetValue(
   config: Partial<CategoryFacetValue> = {}

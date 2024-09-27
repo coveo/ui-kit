@@ -1,9 +1,9 @@
 import {
   playExecuteFirstSearch,
   wrapInCommerceInterface,
-} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
+} from '@coveo/atomic-storybook-utils/commerce/commerce-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
 import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,

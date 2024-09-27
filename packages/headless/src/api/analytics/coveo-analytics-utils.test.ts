@@ -1,10 +1,13 @@
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {pino} from 'pino';
-import {PlatformRequestOptions, PreprocessRequest} from '../preprocess-request';
+import {
+  PlatformRequestOptions,
+  PreprocessRequest,
+} from '../preprocess-request.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 describe('coveo-analytics-utils', () => {
   it('should properly wrap preprocessRequest', () => {

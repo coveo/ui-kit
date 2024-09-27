@@ -4,7 +4,7 @@ import {
   nonRequiredEmptyAllowedString,
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 
 export const slotIdDefinition = {
   slotId: nonRequiredEmptyAllowedString,

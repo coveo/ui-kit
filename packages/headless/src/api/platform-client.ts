@@ -1,15 +1,15 @@
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
-import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
-import {PlatformEnvironment} from '../utils/url-utils';
-import {clone} from '../utils/utils';
-import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
+import {DisconnectedError, ExpiredTokenError} from '../utils/errors.js';
+import {PlatformEnvironment} from '../utils/url-utils.js';
+import {clone} from '../utils/utils.js';
+import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
 import {
   PlatformClientOrigin,
   PlatformRequestOptions,
   PreprocessRequest,
   RequestMetadata,
-} from './preprocess-request';
+} from './preprocess-request.js';
 
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentType =

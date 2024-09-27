@@ -1,15 +1,15 @@
-import {CoreEngine} from '../../app/engine';
+import {CoreEngine} from '../../app/engine.js';
 import {
   ContextPayload,
   ContextValue,
-} from '../../features/context/context-state';
+} from '../../features/context/context-state.js';
 import {
   buildCoreContext,
   Context,
   ContextProps,
   ContextState,
-} from '../core/context/headless-core-context';
-import {ContextInitialState} from './../core/context/headless-core-context';
+} from '../core/context/headless-core-context.js';
+import {ContextInitialState} from './../core/context/headless-core-context.js';
 
 export type {
   Context,

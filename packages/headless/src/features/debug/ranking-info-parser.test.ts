@@ -1,4 +1,4 @@
-import {parseRankingInfo} from './ranking-info-parser';
+import {parseRankingInfo} from './ranking-info-parser.js';
 
 function createRankingInfoNoKeywords() {
   return `Document weights:

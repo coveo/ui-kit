@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions';
-import {getFieldSuggestionsOrderInitialState} from './field-suggestions-order-state';
+import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
+import {getFieldSuggestionsOrderInitialState} from './field-suggestions-order-state.js';
 
 export const fieldSuggestionsOrderReducer = createReducer(
   getFieldSuggestionsOrderInitialState(),

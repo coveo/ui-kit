@@ -1,17 +1,17 @@
-import {configuration} from '../../../../app/common-reducers';
-import {productClick} from '../../../../features/commerce/product/product-actions';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {configuration} from '../../../../app/common-reducers.js';
+import {productClick} from '../../../../features/commerce/product/product-actions.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildMockProduct} from '../../../../test/mock-product';
+} from '../../../../test/mock-engine-v2.js';
+import {buildMockProduct} from '../../../../test/mock-product.js';
 import {
   buildCoreInteractiveProduct,
   InteractiveProduct,
-} from './headless-core-interactive-product';
+} from './headless-core-interactive-product.js';
 
-jest.mock('../../../../features/commerce/product/product-actions');
+vi.mock('../../../../features/commerce/product/product-actions');
 
 describe('core interactive result', () => {
   let engine: MockedCommerceEngine;

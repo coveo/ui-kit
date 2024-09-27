@@ -1,5 +1,5 @@
-import {Result} from '../api/search/search/result';
-import {buildMockRaw} from './mock-raw';
+import {Result} from '../api/search/search/result.js';
+import {buildMockRaw} from './mock-raw.js';
 
 /**
  * For internal use only.

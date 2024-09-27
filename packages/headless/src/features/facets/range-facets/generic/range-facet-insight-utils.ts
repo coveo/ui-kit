@@ -1,10 +1,10 @@
-import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
+import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils.js';
 import {
   logFacetDeselect,
   logFacetSelect,
-} from '../../facet-set/facet-set-insight-analytics-actions';
-import {RangeFacetValue} from './interfaces/range-facet';
-import {isRangeFacetValueSelected} from './range-facet-utils';
+} from '../../facet-set/facet-set-insight-analytics-actions.js';
+import {RangeFacetValue} from './interfaces/range-facet.js';
+import {isRangeFacetValueSelected} from './range-facet-utils.js';
 
 export const getInsightAnalyticsActionForToggleRangeFacetSelect = (
   facetId: string,

@@ -1,11 +1,11 @@
-import {buildMockResult} from '../../test/mock-result';
-import {fetchInstantResults} from '../search/search-actions';
+import {buildMockResult} from '../../test/mock-result.js';
+import {fetchInstantResults} from '../search/search-actions.js';
 import {
   registerInstantResults,
   updateInstantResultsQuery,
-} from './instant-results-actions';
-import {instantResultsReducer} from './instant-results-slice';
-import {InstantResultCache} from './instant-results-state';
+} from './instant-results-actions.js';
+import {instantResultsReducer} from './instant-results-slice.js';
+import {InstantResultCache} from './instant-results-state.js';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
@@ -184,10 +184,10 @@ describe('instant results slice', () => {
 
     describe('when fulfilled', () => {
       beforeEach(() => {
-        jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+        vi.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       });
       afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
       });
       it('updates results in correct searchbox and query cache', () => {
         const query = 'some_query';

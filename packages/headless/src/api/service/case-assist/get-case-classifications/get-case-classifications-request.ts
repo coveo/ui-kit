@@ -4,13 +4,13 @@ import {
   ContextParam,
   DebugParam,
   LocaleParam,
-} from '../../../platform-service-params';
+} from '../../../platform-service-params.js';
 import {
   baseCaseAssistRequest,
   CaseAssistIdParam,
   FieldsParam,
   prepareSuggestionRequestFields,
-} from '../case-assist-params';
+} from '../case-assist-params.js';
 
 export type GetCaseClassificationsRequest = BaseParam &
   CaseAssistIdParam &

@@ -1,11 +1,11 @@
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildTabManager, TabManager} from './headless-tab-manager';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildTabManager, TabManager} from './headless-tab-manager.js';
 
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('Tab', () => {
   let engine: MockedSearchEngine;

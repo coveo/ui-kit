@@ -1,16 +1,16 @@
-import {Product} from '../../../../api/commerce/common/product';
+import {Product} from '../../../../api/commerce/common/product.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
-import {productClick} from '../../../../features/commerce/product/product-actions';
+} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
+import {productClick} from '../../../../features/commerce/product/product-actions.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions as InteractiveProductCoreOptions,
   InteractiveResultCoreProps as InteractiveResultHeadlessCoreProps,
-} from '../../../core/interactive-result/headless-core-interactive-result';
+} from '../../../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveProductOptions
   extends InteractiveProductCoreOptions {
