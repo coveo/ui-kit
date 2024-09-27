@@ -4,7 +4,7 @@ import {
   CaseAssistClientProvider,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
@@ -12,13 +12,13 @@ import {
   ConfigurationSection,
   DocumentSuggestionSection,
   SearchHubSection,
-} from '../../state/state-sections';
-import {getOrganizationEndpoint} from '../platform-client';
-import {PreprocessRequest} from '../preprocess-request';
+} from '../../state/state-sections.js';
+import {getOrganizationEndpoint} from '../platform-client.js';
+import {PreprocessRequest} from '../preprocess-request.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &

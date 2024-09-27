@@ -9,7 +9,7 @@ import {
   AllowedValues,
   CustomSort,
   SpecificSortCriteriaExplicitAlphanumeric,
-} from '../../facet-api/request';
+} from '../../facet-api/request.js';
 
 export const facetSortCriteria: FacetSortCriterion[] = [
   'score',

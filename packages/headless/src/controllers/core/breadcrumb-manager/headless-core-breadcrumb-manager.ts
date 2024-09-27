@@ -1,14 +1,14 @@
-import {CoreEngine} from '../../../app/engine';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
-import {BaseFacetValue} from '../../../features/facets/facet-api/response';
-import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
-import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-section';
-import {DateRangeRequest} from '../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericRangeRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {CoreEngine} from '../../../app/engine.js';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
+import {BaseFacetValue} from '../../../features/facets/facet-api/response.js';
+import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-section.js';
+import {DateRangeRequest} from '../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {NumericRangeRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
   CategoryFacetSection,
   ConfigurationSection,
@@ -16,12 +16,12 @@ import {
   FacetSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../state/state-sections';
+} from '../../../state/state-sections.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
-import {StaticFilterValue} from '../../static-filter/headless-static-filter';
+} from '../../controller/headless-controller.js';
+import {StaticFilterValue} from '../../static-filter/headless-static-filter.js';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.

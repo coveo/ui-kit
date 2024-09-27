@@ -1,12 +1,12 @@
-import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors';
-import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client';
-import {SortParam} from '../../../api/commerce/commerce-api-params';
+import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors.js';
+import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client.js';
+import {SortParam} from '../../../api/commerce/commerce-api-params.js';
 import {
   BaseCommerceAPIRequest,
   CommerceAPIRequest,
-} from '../../../api/commerce/common/request';
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
-import {NavigatorContext} from '../../../app/navigatorContextProvider';
+} from '../../../api/commerce/common/request.js';
+import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
 import {
   CartSection,
   CommerceContextSection,
@@ -17,10 +17,10 @@ import {
   FacetOrderSection,
   ManualRangeSection,
   VersionSection,
-} from '../../../state/state-sections';
-import {getProductsFromCartState} from '../context/cart/cart-state';
-import {AnyFacetRequest} from '../facets/facet-set/interfaces/request';
-import {SortBy, SortCriterion} from '../sort/sort';
+} from '../../../state/state-sections.js';
+import {getProductsFromCartState} from '../context/cart/cart-state.js';
+import {AnyFacetRequest} from '../facets/facet-set/interfaces/request.js';
+import {SortBy, SortCriterion} from '../sort/sort.js';
 
 export type StateNeededByQueryCommerceAPI = CommerceConfigurationSection &
   CommerceContextSection &

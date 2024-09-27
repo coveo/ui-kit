@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {HtmlRequestOptions} from '../../api/search/html/html-request';
-import {CoreEngine} from '../../app/engine';
-import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
+import {HtmlRequestOptions} from '../../api/search/html/html-request.js';
+import {CoreEngine} from '../../app/engine.js';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice.js';
 import {
   AsyncThunkGlobalOptions,
   fetchResultContent,
@@ -13,8 +13,8 @@ import {
   updateContentURL,
   UpdateContentURLOptions,
   PreparePreviewPaginationActionPayload,
-} from './result-preview-actions';
-import {StateNeededByHtmlEndpoint} from './result-preview-request-builder';
+} from './result-preview-actions.js';
+import {StateNeededByHtmlEndpoint} from './result-preview-request-builder.js';
 
 /**
  * The result preview action creators.

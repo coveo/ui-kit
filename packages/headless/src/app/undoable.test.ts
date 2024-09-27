@@ -1,5 +1,5 @@
 import {AnyAction, Reducer} from '@reduxjs/toolkit';
-import {makeHistory, undoable} from './undoable';
+import {makeHistory, undoable} from './undoable.js';
 
 describe('undoable', () => {
   const reducer: Reducer = (state: string, action: AnyAction) =>

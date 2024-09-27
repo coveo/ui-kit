@@ -1,40 +1,43 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
-import {FieldDescription} from '../../api/search/fields/fields-response';
+import {FieldDescription} from '../../api/search/fields/fields-response.js';
 import {
   ExecutionReport,
   ExecutionStep,
-} from '../../api/search/search/execution-report';
-import {QueryRankingExpression} from '../../api/search/search/query-ranking-expression';
-import {Result} from '../../api/search/search/result';
-import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
-import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {configuration} from '../../app/common-reducers';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
-import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
+} from '../../api/search/search/execution-report.js';
+import {QueryRankingExpression} from '../../api/search/search/query-ranking-expression.js';
+import {Result} from '../../api/search/search/result.js';
+import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response.js';
+import {SecurityIdentity} from '../../api/search/search/security-identity.js';
+import {configuration} from '../../app/common-reducers.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {enableDebug, disableDebug} from '../../features/debug/debug-actions.js';
+import {rankingInformationSelector} from '../../features/debug/debug-selectors.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {
   QueryRankingExpressionWeights,
   DocumentWeights,
   RankingInformation,
   TermWeightReport,
-} from '../../features/debug/ranking-info-parser';
+} from '../../features/debug/ranking-info-parser.js';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
-} from '../../features/fields/fields-actions';
-import {fieldsReducer as fields} from '../../features/fields/fields-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
+} from '../../features/fields/fields-actions.js';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
   ConfigurationSection,
   DebugSection,
   FieldsSection,
   SearchSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {validateInitialState} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {validateInitialState} from '../../utils/validate-payload.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 export type {
   RankingInformation,

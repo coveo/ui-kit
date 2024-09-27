@@ -1,20 +1,20 @@
+import {getSampleCommerceEngineConfiguration} from '../app/commerce-engine/commerce-engine-configuration.js';
 import {
   CommerceEngine,
   buildCommerceEngine,
   CommerceEngineConfiguration,
-} from '../app/commerce-engine/commerce-engine';
-import {getSampleCommerceEngineConfiguration} from '../app/commerce-engine/commerce-engine-configuration';
-import {CategoryFieldSuggestions} from '../controllers/commerce/field-suggestions/headless-category-field-suggestions';
-import {buildFieldSuggestionsGenerator} from '../controllers/commerce/field-suggestions/headless-field-suggestions-generator';
-import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
-import {buildProductListing} from '../controllers/commerce/product-listing/headless-product-listing';
-import {buildRecommendations} from '../controllers/commerce/recommendations/headless-recommendations';
+} from '../app/commerce-engine/commerce-engine.js';
+import {CategoryFieldSuggestions} from '../controllers/commerce/field-suggestions/headless-category-field-suggestions.js';
+import {buildFieldSuggestionsGenerator} from '../controllers/commerce/field-suggestions/headless-field-suggestions-generator.js';
+import {ProductListing} from '../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildProductListing} from '../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildRecommendations} from '../controllers/commerce/recommendations/headless-recommendations.js';
 import {
   buildSearchBox,
   SearchBox,
-} from '../controllers/commerce/search-box/headless-search-box';
-import {buildSearch} from '../controllers/commerce/search/headless-search';
-import {waitForNextStateChange} from '../test/functional-test-utils';
+} from '../controllers/commerce/search-box/headless-search-box.js';
+import {buildSearch} from '../controllers/commerce/search/headless-search.js';
+import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 describe.skip('commerce', () => {
   let configuration: CommerceEngineConfiguration;

@@ -1,4 +1,4 @@
-import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response';
+import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
 
 export interface AutomaticFacets {
   /**

@@ -1,26 +1,26 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
-import {fieldsReducer as fields} from '../../../features/fields/fields-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
+import {Result} from '../../../api/search/search/result.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {registerFieldsToInclude} from '../../../features/fields/fields-actions.js';
+import {fieldsReducer as fields} from '../../../features/fields/fields-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   ConfigurationSection,
   FieldsSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {validateOptions} from '../../../utils/validate-payload';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateOptions} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   buildCoreStatus,
   SearchStatusState,
-} from '../status/headless-core-status';
+} from '../status/headless-core-status.js';
 
 const optionsSchema = new Schema<ResultListOptions>({
   fieldsToInclude: new ArrayValue({

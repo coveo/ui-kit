@@ -1,8 +1,8 @@
 import {
   emptyQuestionAnswer,
   SearchState,
-} from '../features/search/search-state';
-import {buildMockSearchResponse} from './mock-search-response';
+} from '../features/search/search-state.js';
+import {buildMockSearchResponse} from './mock-search-response.js';
 
 export function buildMockSearchState(
   config: Partial<SearchState>

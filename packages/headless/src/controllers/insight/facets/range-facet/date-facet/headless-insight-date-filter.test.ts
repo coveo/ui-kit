@@ -1,26 +1,27 @@
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
+import {Mock} from 'vitest';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
+import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
+import {InsightAppState} from '../../../../../state/insight-app-state.js';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state.js';
 import {
   buildDateFilter,
   DateFilter,
   DateFilterInitialState,
   DateFilterOptions,
-} from './headless-insight-date-filter';
+} from './headless-insight-date-filter.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
-jest.mock('../../../../../features/facet-options/facet-options-actions');
-jest.mock('../../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/insight-search/insight-search-actions');
 
 describe('insight date filter', () => {
   const facetId = '1';
@@ -36,7 +37,7 @@ describe('insight date filter', () => {
   }
 
   beforeEach(() => {
-    (updateDateFacetValues as unknown as jest.Mock).mockReturnValue(() => {});
+    (updateDateFacetValues as unknown as Mock).mockReturnValue(() => {});
     initialState = undefined;
 
     options = {

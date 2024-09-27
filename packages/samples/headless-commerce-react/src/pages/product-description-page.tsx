@@ -6,10 +6,10 @@ import {
   buildRecommendations,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
-import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface';
-import {saveCartItemsToLocaleStorage} from '../utils/cart-utils';
-import {formatCurrency} from '../utils/format-currency';
-import {loadProduct} from '../utils/pdp-utils';
+import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface.js';
+import {saveCartItemsToLocaleStorage} from '../utils/cart-utils.js';
+import {formatCurrency} from '../utils/format-currency.js';
+import {loadProduct} from '../utils/pdp-utils.js';
 
 interface IProductDescriptionPageProps {
   engine: CommerceEngine;

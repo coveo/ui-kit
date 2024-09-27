@@ -1,36 +1,37 @@
-import {CoreEngine} from '../../../../../app/engine';
+import {describe, it, vi, expect, beforeEach} from 'vitest';
+import {CoreEngine} from '../../../../../app/engine.js';
 import {
   executeFacetSearch,
   executeFieldSuggest,
-} from '../../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+} from '../../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {
   excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   ConfigurationSection,
   FacetSearchSection,
-} from '../../../../../state/state-sections';
+} from '../../../../../state/state-sections.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result';
-import {createMockState} from '../../../../../test/mock-state';
-import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
+import {createMockState} from '../../../../../test/mock-state.js';
+import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet.js';
 import {
   buildFacetSearch,
   FacetSearch,
   FacetSearchProps,
-} from './headless-facet-search';
+} from './headless-facet-search.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
-jest.mock('../../../../../features/facets/facet-set/facet-set-actions');
+vi.mock('../../../../../features/facets/facet-set/facet-set-actions');
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -54,8 +55,8 @@ describe('FacetSearch', () => {
   beforeEach(() => {
     props = {
       options: {facetId},
-      select: jest.fn(),
-      exclude: jest.fn(),
+      select: vi.fn(),
+      exclude: vi.fn(),
       isForFieldSuggestions: false,
       executeFacetSearchActionCreator: executeFacetSearch,
       executeFieldSuggestActionCreator: executeFieldSuggest,

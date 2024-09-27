@@ -1,12 +1,16 @@
 import {AnyAction, createReducer} from '@reduxjs/toolkit';
-import {Parameters} from '../../commerce/parameters/parameters-actions';
-import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions';
-import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions';
-import {restoreSearchParameters} from '../../commerce/search-parameters/search-parameters-actions';
-import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions';
-import {change} from '../../history/history-actions';
-import {executeSearch} from '../../search/search-actions';
-import {FacetOrderState, getFacetOrderInitialState} from './facet-order-state';
+import {setContext, setView} from '../../commerce/context/context-actions.js';
+import {Parameters} from '../../commerce/parameters/parameters-actions.js';
+import {restoreProductListingParameters} from '../../commerce/product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../../commerce/product-listing/product-listing-actions.js';
+import {restoreSearchParameters} from '../../commerce/search-parameters/search-parameters-actions.js';
+import {executeSearch as executeCommerceSearch} from '../../commerce/search/search-actions.js';
+import {change} from '../../history/history-actions.js';
+import {executeSearch} from '../../search/search-actions.js';
+import {
+  FacetOrderState,
+  getFacetOrderInitialState,
+} from './facet-order-state.js';
 
 export const facetOrderReducer = createReducer(
   getFacetOrderInitialState(),
@@ -19,7 +23,9 @@ export const facetOrderReducer = createReducer(
       .addCase(restoreProductListingParameters, handleRestoreParameters)
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.facetOrder ?? state;
-      });
+      })
+      .addCase(setView, () => getFacetOrderInitialState())
+      .addCase(setContext, () => getFacetOrderInitialState());
   }
 );
 

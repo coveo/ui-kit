@@ -2,8 +2,8 @@ import {Draft} from '@reduxjs/toolkit';
 import {
   Correction,
   QueryCorrection,
-} from '../../api/search/search/query-corrections';
-import {emptyNextCorrection} from './did-you-mean-state';
+} from '../../api/search/search/query-corrections.js';
+import {emptyNextCorrection} from './did-you-mean-state.js';
 
 export const setToNonEmptyQueryCorrection = (
   state: {queryCorrection: Draft<QueryCorrection>; wasCorrectedTo: string},

@@ -1,7 +1,7 @@
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockCommerceEngine} from '../../../test/mock-engine-v2';
-import {buildMockProduct} from '../../../test/mock-product';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {buildMockProduct} from '../../../test/mock-product.js';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
@@ -9,7 +9,7 @@ import {
   requestIdSelector,
   responseIdSelector,
   responseIdSelectorFromEngine,
-} from './search-selectors';
+} from './search-selectors.js';
 
 describe('commerce search selectors', () => {
   it('#responseIdSelector should return the responseId value from the search section', () => {

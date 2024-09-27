@@ -1,8 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {Quickview, QuickviewProps, buildQuickview} from './headless-quickview';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {
+  Quickview,
+  QuickviewProps,
+  buildQuickview,
+} from './headless-quickview.js';
 
-export * from './headless-quickview';
+export * from './headless-quickview.js';
 
 export interface QuickviewDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, Quickview> {}

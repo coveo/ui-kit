@@ -1,18 +1,18 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client';
-import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine';
-import {validatePayload} from '../../../../utils/validate-payload';
+import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client.js';
+import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine.js';
+import {validatePayload} from '../../../../utils/validate-payload.js';
 import {
   CartActionDetails,
   Transaction,
   getECCartActionPayload,
   getECPurchasePayload,
-} from './cart-selector';
-import {CartItemWithMetadata} from './cart-state';
+} from './cart-selector.js';
+import {CartItemWithMetadata} from './cart-state.js';
 import {
   setItemsPayloadDefinition,
   itemPayloadDefinition,
-} from './cart-validation';
+} from './cart-validation.js';
 
 export type SetItemsPayload = CartItemWithMetadata[];
 

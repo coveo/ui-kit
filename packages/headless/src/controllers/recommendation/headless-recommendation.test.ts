@@ -1,22 +1,22 @@
-import {configuration} from '../../app/common-reducers';
-import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
+import {configuration} from '../../app/common-reducers.js';
+import {updateNumberOfResults} from '../../features/pagination/pagination-actions.js';
 import {
   getRecommendations,
   setRecommendationId,
-} from '../../features/recommendation/recommendation-actions';
-import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
+} from '../../features/recommendation/recommendation-actions.js';
+import {recommendationReducer} from '../../features/recommendation/recommendation-slice.js';
 import {
   buildMockRecommendationEngine,
   MockedRecommendationEngine,
-} from '../../test/mock-engine-v2';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
 import {
   buildRecommendationList,
   RecommendationList,
-} from './headless-recommendation';
+} from './headless-recommendation.js';
 
-jest.mock('../../features/recommendation/recommendation-actions');
-jest.mock('../../features/pagination/pagination-actions');
+vi.mock('../../features/recommendation/recommendation-actions');
+vi.mock('../../features/pagination/pagination-actions');
 
 describe('Recommendation', () => {
   let recommendation: RecommendationList;
@@ -27,7 +27,7 @@ describe('Recommendation', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initEngine();
     recommendation = buildRecommendationList(engine);
   });
@@ -40,7 +40,7 @@ describe('Recommendation', () => {
   });
 
   it('when #options.id is set to a non empty value, it dispatches #setRecommendationId', () => {
-    const mockedSetRecommendationId = jest.mocked(setRecommendationId);
+    const mockedSetRecommendationId = vi.mocked(setRecommendationId);
 
     recommendation = buildRecommendationList(engine, {options: {id: 'foo'}});
 
@@ -51,7 +51,7 @@ describe('Recommendation', () => {
   });
 
   it('when #options.id is set to an empty value, it does not dispatches #setRecommendationId', () => {
-    const mockedSetRecommendationId = jest.mocked(setRecommendationId);
+    const mockedSetRecommendationId = vi.mocked(setRecommendationId);
 
     recommendation = buildRecommendationList(engine, {options: {id: ''}});
 
@@ -59,7 +59,7 @@ describe('Recommendation', () => {
   });
 
   it('when #options.numberOfRecommendations is set, it dispatches #updateNumberOfResults', () => {
-    const mockedUpdateNumberOfResults = jest.mocked(updateNumberOfResults);
+    const mockedUpdateNumberOfResults = vi.mocked(updateNumberOfResults);
 
     recommendation = buildRecommendationList(engine, {
       options: {numberOfRecommendations: 20},
@@ -72,7 +72,7 @@ describe('Recommendation', () => {
   });
 
   it('when #options.numberOfRecommendations is not set, it does not dispatches #updateNumberOfResults', () => {
-    const mockedUpdateNumberOfResults = jest.mocked(updateNumberOfResults);
+    const mockedUpdateNumberOfResults = vi.mocked(updateNumberOfResults);
 
     recommendation = buildRecommendationList(engine);
 
@@ -86,7 +86,7 @@ describe('Recommendation', () => {
   });
 
   it('#refresh dispatches #getRecommendations', () => {
-    const mockedGetRecommendations = jest.mocked(getRecommendations);
+    const mockedGetRecommendations = vi.mocked(getRecommendations);
 
     recommendation.refresh();
 

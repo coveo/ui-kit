@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {UpdateQueryPayload, updateQuery} from './query-actions';
-import {queryReducer as query} from './query-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {UpdateQueryPayload, updateQuery} from './query-actions.js';
+import {queryReducer as query} from './query-slice.js';
 
 export type {UpdateQueryPayload};
 

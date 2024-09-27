@@ -1,8 +1,8 @@
 import {EventDescription} from 'coveo.analytics';
-import {getAnalyticsSource} from '../../api/analytics/analytics-selectors';
-import {AnalyticsParam} from '../../api/search/search-api-params';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
-import {AnalyticsState} from './configuration-state';
+import {getAnalyticsSource} from '../../api/analytics/analytics-selectors.js';
+import {AnalyticsParam} from '../../api/search/search-api-params.js';
+import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {AnalyticsState} from './configuration-state.js';
 
 export const fromAnalyticsStateToAnalyticsParams = (
   s: AnalyticsState,

@@ -1,22 +1,22 @@
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {InsightAppState} from '../../state/insight-app-state';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockPagination} from '../../test/mock-pagination';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockPagination} from '../../test/mock-pagination.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logPageNext,
   logPageNumber,
   logPagePrevious,
-} from './pagination-insight-analytics-actions';
+} from './pagination-insight-analytics-actions.js';
 
-const mockLogPagerNumber = jest.fn();
-const mockLogPagerNext = jest.fn();
-const mockLogPagerPrevious = jest.fn();
+const mockLogPagerNumber = vi.fn();
+const mockLogPagerNext = vi.fn();
+const mockLogPagerPrevious = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logPagerNumber: mockLogPagerNumber,
     logPagerNext: mockLogPagerNext,
@@ -25,7 +25,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -71,7 +71,7 @@ describe('pagination insight analytics actions', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     engine = buildMockInsightEngine(buildMockInsightState(insightState));
   });
 

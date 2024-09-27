@@ -12,17 +12,17 @@ import {
   requiredNonEmptyString,
   serializeSchemaValidationError,
   validatePayloadAndThrow,
-} from '../../../../utils/validate-payload';
-import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
+} from '../../../../utils/validate-payload.js';
+import {deselectAllFacetValues} from '../../facet-set/facet-set-actions.js';
+import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {
   RangeFacetRangeAlgorithm,
   RangeFacetSortCriterion,
-} from '../generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
-import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {NumericRangeRequest} from './interfaces/request';
-import {NumericFacetValue} from './interfaces/response';
+} from '../generic/interfaces/request.js';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions.js';
+import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload.js';
+import {NumericRangeRequest} from './interfaces/request.js';
+import {NumericFacetValue} from './interfaces/response.js';
 
 export interface RegisterNumericFacetActionCreatorPayload {
   /**

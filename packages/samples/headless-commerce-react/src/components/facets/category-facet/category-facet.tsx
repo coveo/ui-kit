@@ -71,16 +71,17 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
   };
 
   const renderFacetSearchControls = () => {
+    const id = `${state.facetId}-search-input`;
     return (
       <div className="FacetSearch">
-        <label className="FacetSearchLabel" htmlFor="facetSearchInput">
+        <label className="FacetSearchLabel" htmlFor={id}>
           Search:{' '}
         </label>
         <input
           aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
           className="FacetSearchInput"
           disabled={state.isLoading}
-          id="facetSearchInput"
+          id={id}
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
           value={state.facetSearch.query}
@@ -111,40 +112,43 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
       </span>
     ) : (
       <ul className="FacetSearchResults">
-        {state.facetSearch.values.map((value) => (
-          <li
-            className="FacetSearchResult"
-            key={value.rawValue}
-            onClick={() => onClickFacetSearchResult(value)}
-            style={{width: 'fit-content'}}
-          >
-            <input
-              aria-label={`Select facet search result '${value.displayValue}' in category '${value.path.join(' / ')}'`}
-              className="FacetSearchResultCheckbox"
-              disabled={state.isLoading}
-              id={value.rawValue}
-              type="checkbox"
-            ></input>
-            <label className="FacetSearchResultLabel" htmlFor={value.rawValue}>
-              <span
-                className="FacetSearchResultName"
-                dangerouslySetInnerHTML={{
-                  __html: highlightFacetSearchResult(value.displayValue),
-                }}
-              ></span>
-              {value.path.length > 0 && (
-                <span className="FacetSearchResultCategory">
-                  {' '}
-                  <small>in {value.path.join(' > ')}</small>
-                </span>
-              )}
-            </label>
-            <span className="FacetSearchResultNumberOfProducts">
-              {' '}
-              ({value.count})
-            </span>
-          </li>
-        ))}
+        {state.facetSearch.values.map((value) => {
+          const id = `${state.facetId}-search-result-${value.rawValue}`;
+          return (
+            <li
+              className="FacetSearchResult"
+              key={id}
+              onClick={() => onClickFacetSearchResult(value)}
+              style={{width: 'fit-content'}}
+            >
+              <input
+                aria-label={`Select facet search result '${value.displayValue}' in category '${value.path.join(' / ')}'`}
+                className="FacetSearchResultCheckbox"
+                disabled={state.isLoading}
+                id={id}
+                type="checkbox"
+              ></input>
+              <label className="FacetSearchResultLabel" htmlFor={id}>
+                <span
+                  className="FacetSearchResultName"
+                  dangerouslySetInnerHTML={{
+                    __html: highlightFacetSearchResult(value.displayValue),
+                  }}
+                ></span>
+                {value.path.length > 0 && (
+                  <span className="FacetSearchResultCategory">
+                    {' '}
+                    <small>in {value.path.join(' > ')}</small>
+                  </span>
+                )}
+              </label>
+              <span className="FacetSearchResultNumberOfProducts">
+                {' '}
+                ({value.count})
+              </span>
+            </li>
+          );
+        })}
       </ul>
     );
   };
@@ -160,7 +164,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
     return (
       <ul className="ActiveFacetValueTree">
         {ancestry.map((ancestryValue) => {
-          const checkboxId = `ancestryFacetValueCheckbox-${ancestryValue.value}`;
+          const id = `ancestry-facet-value-${ancestryValue.value}`;
           return (
             <li
               className="AncestryFacetValue"
@@ -170,11 +174,11 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
                 checked={controller.isValueSelected(ancestryValue)}
                 className="FacetValueCheckbox"
                 disabled={state.isLoading}
-                id={checkboxId}
+                id={id}
                 onChange={() => toggleSelectFacetValue(ancestryValue)}
                 type="checkbox"
               ></input>
-              <label className="FacetValueLabel" htmlFor={checkboxId}>
+              <label className="FacetValueLabel" htmlFor={id}>
                 <span className="FacetValueName">{ancestryValue.value}</span>
                 <span className="FacetValueNumberOfProducts">
                   {' '}
@@ -222,16 +226,20 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
     return (
       <ul className="RootFacetValues">
         {state.values.map((root) => {
+          const id = `${root.value}-root`;
           return (
-            <li className="FacetValue" key={`${root.value}-root`}>
+            <li className="FacetValue" key={id}>
               <input
-                className="FacetValueCheckbox"
-                type="checkbox"
                 checked={false}
+                className="FacetValueCheckbox"
                 disabled={state.isLoading}
+                id={id}
                 onChange={() => toggleSelectFacetValue(root)}
+                type="checkbox"
               ></input>
-              <label className="FacetValueName">{root.value}</label>
+              <label className="FacetValueName" htmlFor={id}>
+                {root.value}
+              </label>
               <span className="FacetValueNumberOfResults">
                 {' '}
                 ({root.numberOfResults})

@@ -1,4 +1,4 @@
-import {buildMockCitation} from '../../test/mock-citation';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   setIsVisible,
   setIsLoading,
@@ -8,15 +8,16 @@ import {
   updateResponseFormat,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
-} from './generated-answer-actions';
+  setIsEnabled,
+} from './generated-answer-actions.js';
 import {
   GeneratedContentFormat,
   generatedContentFormat,
-} from './generated-response-format';
+} from './generated-response-format.js';
 
 describe('generated answer', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('#updateError', () => {
@@ -89,6 +90,12 @@ describe('generated answer', () => {
   describe('#setIsVisible', () => {
     it('should accept a valid payload', () => {
       expect(() => setIsVisible(true)).not.toThrow();
+    });
+  });
+
+  describe('#setIsEnabled', () => {
+    it('should accept a valid payload', () => {
+      expect(() => setIsEnabled(true)).not.toThrow();
     });
   });
 

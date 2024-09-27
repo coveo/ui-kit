@@ -1,5 +1,5 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {ViewParams} from '../../../api/commerce/commerce-api-params';
+import {ViewParams} from '../../../api/commerce/commerce-api-params.js';
 
 export interface CommerceContextState {
   language: string;

@@ -1,16 +1,16 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {emptyQuestionAnswer} from '../search/search-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {emptyQuestionAnswer} from '../search/search-state.js';
 import {
   logExpandSmartSnippet,
   logExpandSmartSnippetSuggestion,
@@ -26,39 +26,39 @@ import {
   logCloseSmartSnippetFeedbackModal,
   logSmartSnippetFeedback,
   logSmartSnippetDetailedFeedback,
-} from './question-answering-insight-analytics-actions';
-import {getQuestionAnsweringInitialState} from './question-answering-state';
+} from './question-answering-insight-analytics-actions.js';
+import {getQuestionAnsweringInitialState} from './question-answering-state.js';
 
-const mockLogExpandSmartSnippet = jest.fn();
-const mockLogCollapseSmartSnippet = jest.fn();
-const mockLogLikeSmartSnippet = jest.fn();
-const mockLogDislikeSmartSnippet = jest.fn();
-const mockLogOpenSmartSnippetSource = jest.fn();
-const mockLogOpenSmartSnippetInlineLink = jest.fn();
-const mockLogOpenSmartSnippetFeedbackModal = jest.fn();
-const mockLogCloseSmartSnippetFeedbackModal = jest.fn();
-const mockLogSmartSnippetFeedback = jest.fn();
-const mockLogSmartSnippetDetailedFeedback = jest.fn();
-const mockLogExpandSmartSnippetSuggestion = jest.fn();
-const mockLogCollapseSmartSnippetSuggestion = jest.fn();
-const mockLogOpenSmartSnippetSuggestionSource = jest.fn();
-const mockLogOpenSmartSnippetSuggestionInlineLink = jest.fn();
-const emit = jest.fn();
+const mockLogExpandSmartSnippet = vi.fn();
+const mockLogCollapseSmartSnippet = vi.fn();
+const mockLogLikeSmartSnippet = vi.fn();
+const mockLogDislikeSmartSnippet = vi.fn();
+const mockLogOpenSmartSnippetSource = vi.fn();
+const mockLogOpenSmartSnippetInlineLink = vi.fn();
+const mockLogOpenSmartSnippetFeedbackModal = vi.fn();
+const mockLogCloseSmartSnippetFeedbackModal = vi.fn();
+const mockLogSmartSnippetFeedback = vi.fn();
+const mockLogSmartSnippetDetailedFeedback = vi.fn();
+const mockLogExpandSmartSnippetSuggestion = vi.fn();
+const mockLogCollapseSmartSnippetSuggestion = vi.fn();
+const mockLogOpenSmartSnippetSuggestionSource = vi.fn();
+const mockLogOpenSmartSnippetSuggestionInlineLink = vi.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logExpandSmartSnippet: mockLogExpandSmartSnippet,
     logCollapseSmartSnippet: mockLogCollapseSmartSnippet,
     logLikeSmartSnippet: mockLogLikeSmartSnippet,
@@ -79,7 +79,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -201,7 +201,7 @@ describe('question answering insight analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

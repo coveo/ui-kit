@@ -1,17 +1,17 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {executeSearch} from '../../features/search/search-actions';
-import {SortCriterion} from '../../features/sort-criteria/criteria';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {SortCriterion} from '../../features/sort-criteria/criteria.js';
 import {
   logResultsSort,
   resultsSort,
-} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+} from '../../features/sort-criteria/sort-criteria-analytics-actions.js';
 import {
   buildCoreSort,
   Sort,
   SortProps,
   SortState,
   SortInitialState,
-} from '../core/sort/headless-core-sort';
+} from '../core/sort/headless-core-sort.js';
 
 export type {Sort, SortProps, SortState, SortInitialState};
 

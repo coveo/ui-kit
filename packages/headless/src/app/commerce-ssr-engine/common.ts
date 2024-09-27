@@ -1,8 +1,8 @@
-import {Controller} from '../../controllers/controller/headless-controller';
-import {InvalidControllerDefinition} from '../../utils/errors';
-import {filterObject, mapObject} from '../../utils/utils';
-import {CoreEngine, CoreEngineNext} from '../engine';
-import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common';
+import {Controller} from '../../controllers/controller/headless-controller.js';
+import {InvalidControllerDefinition} from '../../utils/errors.js';
+import {filterObject, mapObject} from '../../utils/utils.js';
+import {CoreEngine, CoreEngineNext} from '../engine.js';
+import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common.js';
 import {
   ControllerDefinition,
   ControllerDefinitionOption,
@@ -11,7 +11,7 @@ import {
   InferControllerPropsFromDefinition,
   InferControllersMapFromDefinition,
   SolutionType,
-} from './types/common';
+} from './types/common.js';
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<TEngine, Controller>,

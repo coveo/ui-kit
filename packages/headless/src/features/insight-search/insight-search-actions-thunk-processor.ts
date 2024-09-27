@@ -3,28 +3,28 @@ import {
   SearchOptions,
   isErrorResponse,
   isSuccessResponse,
-} from '../../api/search/search-api-client';
+} from '../../api/search/search-api-client.js';
 import {
   InsightAPIClient,
   InsightAPIErrorStatusResponse,
-} from '../../api/service/insight/insight-api-client';
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state';
-import {snapshot} from '../history/history-actions';
-import {extractHistory} from '../history/history-state';
-import {updateQuery} from '../query/query-actions';
-import {ExecuteSearchThunkReturn} from '../search/search-actions';
+} from '../../api/service/insight/insight-api-client.js';
+import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
+import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state.js';
+import {snapshot} from '../history/history-actions.js';
+import {extractHistory} from '../history/history-state.js';
+import {updateQuery} from '../query/query-actions.js';
+import {ExecuteSearchThunkReturn} from '../search/search-actions.js';
 import {
   ErrorResponse,
   MappedSearchRequest,
   SuccessResponse,
   mapSearchResponse,
-} from '../search/search-mappings';
-import {StateNeededByExecuteSearch} from './insight-search-actions';
-import {logQueryError} from './insight-search-analytics-actions';
-import {buildInsightSearchRequest} from './insight-search-request';
+} from '../search/search-mappings.js';
+import {StateNeededByExecuteSearch} from './insight-search-actions.js';
+import {logQueryError} from './insight-search-analytics-actions.js';
+import {buildInsightSearchRequest} from './insight-search-request.js';
 
 export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;

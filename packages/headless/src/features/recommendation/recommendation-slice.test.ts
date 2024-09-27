@@ -1,14 +1,14 @@
-import {buildMockRecommendation} from '../../test/mock-recommendation';
-import {buildMockResult} from '../../test/mock-result';
+import {buildMockRecommendation} from '../../test/mock-recommendation.js';
+import {buildMockResult} from '../../test/mock-result.js';
 import {
   getRecommendations,
   setRecommendationId,
-} from './recommendation-actions';
-import {recommendationReducer} from './recommendation-slice';
+} from './recommendation-actions.js';
+import {recommendationReducer} from './recommendation-slice.js';
 import {
   getRecommendationInitialState,
   RecommendationState,
-} from './recommendation-state';
+} from './recommendation-state.js';
 
 describe('recommendation slice', () => {
   let state: RecommendationState;
@@ -34,7 +34,7 @@ describe('recommendation slice', () => {
   });
 
   it('when a getRecommendations fulfilled is received, it updates the state to the received payload', () => {
-    const result = buildMockResult();
+    const result = buildMockResult({searchUid: 'some-id'});
     const response = buildMockRecommendation({
       recommendations: [result],
       duration: 123,

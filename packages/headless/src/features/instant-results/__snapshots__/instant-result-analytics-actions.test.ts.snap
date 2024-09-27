@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`instant result analytics actions #logRecommendationOpen when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
+exports[`instant result analytics actions > #logRecommendationOpen > when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
 [
   {
     "collectionName": "example collectionName",
@@ -21,7 +21,7 @@ exports[`instant result analytics actions #logRecommendationOpen when analyticsM
 ]
 `;
 
-exports[`instant result analytics actions #logRecommendationOpen when analyticsMode is \`next\` should call relay.emit properly 1`] = `
+exports[`instant result analytics actions > #logRecommendationOpen > when analyticsMode is \`next\` should call relay.emit properly 1`] = `
 [
   "itemClick",
   {
@@ -34,7 +34,7 @@ exports[`instant result analytics actions #logRecommendationOpen when analyticsM
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "",
+    "searchUid": "example searchUid",
   },
 ]
 `;

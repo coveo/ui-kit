@@ -2,7 +2,7 @@ import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import {
   searchBoxOptionDefinitions,
   SearchBoxOptions,
-} from '../search-box/headless-search-box-options';
+} from '../search-box/headless-search-box-options.js';
 
 export interface StandaloneSearchBoxOptions extends SearchBoxOptions {
   /**

@@ -1,8 +1,8 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
-import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger';
-import {buildNotifyTrigger} from './headless-notify-trigger';
+import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
+import {buildNotifyTrigger} from './headless-notify-trigger.js';
 
-export type {NotifyTriggerState} from '../../core/triggers/headless-core-notify-trigger';
+export type {NotifyTriggerState} from '../../core/triggers/headless-core-notify-trigger.js';
 export type {NotifyTrigger};
 export interface NotifyTriggerDefinition
   extends SearchOnlyControllerDefinitionWithoutProps<NotifyTrigger> {}

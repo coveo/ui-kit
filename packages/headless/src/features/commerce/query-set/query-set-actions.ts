@@ -1,10 +1,10 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../utils/validate-payload';
+import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   RegisterQuerySetQueryActionCreatorPayload,
   UpdateQuerySetQueryActionCreatorPayload,
   querySetDefinition,
-} from '../../query-set/query-set-actions';
+} from '../../query-set/query-set-actions.js';
 
 export type RegisterQuerySetQueryPayload =
   RegisterQuerySetQueryActionCreatorPayload;

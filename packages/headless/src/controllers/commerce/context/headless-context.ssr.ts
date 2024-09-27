@@ -1,13 +1,13 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   Context,
   buildContext,
   ContextProps,
   ContextOptions,
   View,
-} from './headless-context';
+} from './headless-context.js';
 
-export type {ContextState, Context, ContextProps} from './headless-context';
+export type {ContextState, Context, ContextProps} from './headless-context.js';
 export type {View, ContextOptions};
 
 export interface ContextDefinition

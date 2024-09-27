@@ -1,11 +1,11 @@
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
-import {createMockState} from '../../../../test/mock-state';
-import {determineFacetId} from './facet-id-determinor';
-import * as FacetIdGenerator from './facet-id-generator';
+} from '../../../../test/mock-engine-v2.js';
+import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config.js';
+import {createMockState} from '../../../../test/mock-state.js';
+import {determineFacetId} from './facet-id-determinor.js';
+import * as FacetIdGenerator from './facet-id-generator.js';
 
 describe('#determineFacetId', () => {
   let engine: MockedSearchEngine;
@@ -20,7 +20,7 @@ describe('#determineFacetId', () => {
   });
 
   it('when a #facetId key is empty, it calls #generateFacetId', () => {
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
+    vi.spyOn(FacetIdGenerator, 'generateFacetId');
     determineFacetId(engine, {facetId: '', field: 'author'});
 
     const {state, logger} = engine;
@@ -32,7 +32,7 @@ describe('#determineFacetId', () => {
   });
 
   it('when the #facetId key is not passed, it calls #generateFacetId', () => {
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
+    vi.spyOn(FacetIdGenerator, 'generateFacetId');
     determineFacetId(engine, {field: 'author'});
 
     const {state, logger} = engine;

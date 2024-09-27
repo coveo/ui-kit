@@ -3,13 +3,13 @@ import {
   handleClearRecentQueries,
   handleExecuteSearchFulfilled,
   handleRegisterQueries,
-} from '../../recent-queries/recent-queries-slice';
-import {getRecentQueriesInitialState} from '../../recent-queries/recent-queries-state';
-import {executeSearch as commerceExecuteSearch} from '../search/search-actions';
+} from '../../recent-queries/recent-queries-slice.js';
+import {getRecentQueriesInitialState} from '../../recent-queries/recent-queries-state.js';
+import {executeSearch as commerceExecuteSearch} from '../search/search-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from './recent-queries-actions';
+} from './recent-queries-actions.js';
 
 export const recentQueriesReducer = createReducer(
   getRecentQueriesInitialState(),

@@ -1,10 +1,14 @@
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common';
-import {DateFacet, DateFacetProps, buildDateFacet} from './headless-date-facet';
+import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common.js';
+import {
+  DateFacet,
+  DateFacetProps,
+  buildDateFacet,
+} from './headless-date-facet.js';
 
-export * from './headless-date-facet';
+export * from './headless-date-facet.js';
 
-export {buildDateRange} from './headless-date-facet';
+export {buildDateRange} from './headless-date-facet.js';
 
 export interface DateFacetDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, DateFacet> {}

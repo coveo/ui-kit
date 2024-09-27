@@ -1,23 +1,24 @@
 import * as BackOff from 'exponential-backoff';
-import pino from 'pino';
-import {ExpiredTokenError} from '../utils/errors';
-import {PlatformEnvironment} from '../utils/url-utils';
+import {pino} from 'pino';
+import {Mock} from 'vitest';
+import {ExpiredTokenError} from '../utils/errors.js';
+import {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
   getSearchApiBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
-} from './platform-client';
+} from './platform-client.js';
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
   PreprocessRequest,
-} from './preprocess-request';
+} from './preprocess-request.js';
 
-const {Response} = jest.requireActual('node-fetch');
-global.fetch = jest.fn();
-const mockFetch = global.fetch as jest.Mock;
+const {Response} = await vi.importActual('node-fetch');
+global.fetch = vi.fn();
+const mockFetch = global.fetch as Mock;
 
 it.each([
   {
@@ -325,7 +326,7 @@ describe('PlatformClient call', () => {
   });
 
   it('should not throw when backOff rejects with a response', async () => {
-    const spy = jest.spyOn(BackOff, 'backOff');
+    const spy = vi.spyOn(BackOff, 'backOff');
     const expectedResponse = new Response(
       JSON.stringify({someProps: 'someValue'}),
       {
