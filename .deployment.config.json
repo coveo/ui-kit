@@ -6,7 +6,10 @@
       "sequential": ["dev", "stg", "prd"]
     },
     "notifications": {
-      "slack_channels": ["relay-deployments"]
+      "slack_channels": ["relay-deployments"],
+      "actionable": {
+        "mode": "thread_broadcast"
+      }
     },
     "start_environment_automatically": true,
     "prd": {
