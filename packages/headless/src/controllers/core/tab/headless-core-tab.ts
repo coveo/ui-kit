@@ -1,25 +1,28 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
-import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
 import {
   registerTab,
   updateActiveTab,
-} from '../../../features/tab-set/tab-set-actions';
-import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
-import {ConfigurationSection, TabSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../features/tab-set/tab-set-actions.js';
+import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
+import {
+  ConfigurationSection,
+  TabSection,
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
   validateInitialState,
   validateOptions,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface TabOptions {
   /**

@@ -18,12 +18,13 @@ export default function CartTab(props: ICartTab) {
   return (
     <span>
       <input
-        type="radio"
+        aria-label={`Cart (${state.totalQuantity})`}
+        checked={window.location.pathname === '/cart'}
         id="cart"
         name="cart"
-        value="/cart"
-        checked={window.location.pathname === '/cart'}
         onChange={onChange}
+        type="radio"
+        value="/cart"
       />
       <label htmlFor="cart">
         Cart<span>({state.totalQuantity})</span>

@@ -1,12 +1,12 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
   ToggleSelectCategoryFacetValuePayload,
   UpdateCategoryFacetNumberOfValuesPayload,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
-} from './category-facet-actions';
+} from './category-facet-actions.js';
 
 export type {
   ToggleSelectCategoryFacetValuePayload,

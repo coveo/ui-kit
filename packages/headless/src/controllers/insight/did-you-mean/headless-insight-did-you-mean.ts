@@ -1,16 +1,16 @@
 import {
   QueryCorrection,
   WordCorrection,
-} from '../../../api/search/search/query-corrections';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {didYouMeanClick} from '../../../features/did-you-mean/did-you-mean-analytics-actions';
-import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+} from '../../../api/search/search/query-corrections.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {didYouMeanClick} from '../../../features/did-you-mean/did-you-mean-analytics-actions.js';
+import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions.js';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreDidYouMean,
   DidYouMean,
   DidYouMeanState,
-} from '../../core/did-you-mean/headless-core-did-you-mean';
+} from '../../core/did-you-mean/headless-core-did-you-mean.js';
 
 export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
 

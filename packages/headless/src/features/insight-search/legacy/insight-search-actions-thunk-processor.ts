@@ -1,36 +1,36 @@
 import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
-import {StateNeededByInsightAnalyticsProvider} from '../../../api/analytics/insight-analytics';
+import {StateNeededByInsightAnalyticsProvider} from '../../../api/analytics/insight-analytics.js';
 import {
   SearchOptions,
   isErrorResponse,
   isSuccessResponse,
-} from '../../../api/search/search-api-client';
-import {SearchResponseSuccess} from '../../../api/search/search/search-response';
+} from '../../../api/search/search-api-client.js';
+import {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
 import {
   InsightAPIClient,
   InsightAPIErrorStatusResponse,
-} from '../../../api/service/insight/insight-api-client';
-import {InsightQueryRequest} from '../../../api/service/insight/query/query-request';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {AnalyticsAsyncThunk} from '../../analytics/analytics-utils';
-import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions';
-import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-insight-analytics-actions';
-import {emptyLegacyCorrection} from '../../did-you-mean/did-you-mean-state';
-import {snapshot} from '../../history/history-actions';
-import {extractHistory} from '../../history/history-state';
-import {updateQuery} from '../../query/query-actions';
-import {getQueryInitialState} from '../../query/query-state';
-import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions';
+} from '../../../api/service/insight/insight-api-client.js';
+import {InsightQueryRequest} from '../../../api/service/insight/query/query-request.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import {AnalyticsAsyncThunk} from '../../analytics/analytics-utils.js';
+import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions.js';
+import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-insight-analytics-actions.js';
+import {emptyLegacyCorrection} from '../../did-you-mean/did-you-mean-state.js';
+import {snapshot} from '../../history/history-actions.js';
+import {extractHistory} from '../../history/history-state.js';
+import {updateQuery} from '../../query/query-actions.js';
+import {getQueryInitialState} from '../../query/query-state.js';
+import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
 import {
   ErrorResponse,
   MappedSearchRequest,
   SuccessResponse,
   mapSearchResponse,
-} from '../../search/search-mappings';
-import {getSearchInitialState} from '../../search/search-state';
-import {StateNeededByExecuteSearch} from '../insight-search-actions';
-import {logQueryError} from '../insight-search-analytics-actions';
-import {buildInsightSearchRequest} from '../insight-search-request';
+} from '../../search/search-mappings.js';
+import {getSearchInitialState} from '../../search/search-state.js';
+import {StateNeededByExecuteSearch} from '../insight-search-actions.js';
+import {logQueryError} from '../insight-search-analytics-actions.js';
+import {buildInsightSearchRequest} from '../insight-search-request.js';
 
 export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;

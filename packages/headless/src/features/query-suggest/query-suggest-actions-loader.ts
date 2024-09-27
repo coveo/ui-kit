@@ -1,8 +1,8 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {CoreEngine} from '../../app/engine';
-import {querySetReducer as querySet} from '../../features/query-set/query-set-slice';
-import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
+import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import {CoreEngine} from '../../app/engine.js';
+import {querySetReducer as querySet} from '../../features/query-set/query-set-slice.js';
+import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice.js';
 import {
   clearQuerySuggest,
   ClearQuerySuggestActionCreatorPayload,
@@ -14,7 +14,7 @@ import {
   selectQuerySuggestion,
   SelectQuerySuggestionActionCreatorPayload,
   StateNeededByQuerySuggest,
-} from './query-suggest-actions';
+} from './query-suggest-actions.js';
 
 export type {
   ClearQuerySuggestActionCreatorPayload,

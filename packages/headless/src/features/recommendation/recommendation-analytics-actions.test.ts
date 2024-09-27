@@ -4,13 +4,13 @@ import {
   SearchEngine,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-} from '../../app/search-engine/search-engine';
-import {buildMockNonEmptyResult} from '../../test/mock-result';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {logRecommendationOpen} from './recommendation-analytics-actions';
+} from '../../app/search-engine/search-engine.js';
+import {buildMockNonEmptyResult} from '../../test/mock-result.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {logRecommendationOpen} from './recommendation-analytics-actions.js';
 
-jest.mock('@coveo/relay');
-jest.mock('coveo.analytics');
+vi.mock('@coveo/relay');
+vi.mock('coveo.analytics');
 
 describe('recommendation analytics actions', () => {
   describe('#logRecommendationOpen', () => {
@@ -18,19 +18,19 @@ describe('recommendation analytics actions', () => {
       searchUid: 'example searchUid',
     });
     let engine: SearchEngine;
-    const makeRecommendationOpen = jest.fn();
-    const emit = jest.fn();
+    const makeRecommendationOpen = vi.fn();
+    const emit = vi.fn();
 
     beforeEach(() => {
-      jest.mocked(CoveoSearchPageClient).mockReturnValue({
+      vi.mocked(CoveoSearchPageClient).mockReturnValue({
         makeRecommendationOpen,
       } as unknown as CoveoSearchPageClient);
-      jest.mocked(createRelay).mockReturnValue({
+      vi.mocked(createRelay).mockReturnValue({
         emit,
-        getMeta: jest.fn(),
-        on: jest.fn(),
-        off: jest.fn(),
-        updateConfig: jest.fn(),
+        getMeta: vi.fn(),
+        on: vi.fn(),
+        off: vi.fn(),
+        updateConfig: vi.fn(),
         version: 'foo',
       });
     });

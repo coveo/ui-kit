@@ -4,7 +4,7 @@ import {
   Suggestion,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
-import InstantProducts from '../instant-products/instant-products';
+import InstantProducts from '../instant-products/instant-products.js';
 
 interface ISearchBoxProps {
   controller: HeadlessSearchBox;
@@ -135,6 +135,7 @@ export default function SearchBox(props: ISearchBoxProps) {
     <div className="Searchbox">
       <input
         className="SearchBoxInput"
+        id="search-box"
         onChange={onSearchBoxInputChange}
         onKeyDown={onSearchBoxInputKeyDown}
         ref={searchInputRef}

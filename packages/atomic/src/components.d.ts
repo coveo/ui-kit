@@ -1213,6 +1213,7 @@ export namespace Components {
         "tooltip": string;
     }
     interface AtomicInsightGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -2109,6 +2110,7 @@ export namespace Components {
         "maxValueInIndex": number;
         /**
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+          * @type {string}
          */
         "ratingDetailsField"?: string;
     }
@@ -7132,6 +7134,7 @@ declare namespace LocalJSX {
         "tooltip"?: string;
     }
     interface AtomicInsightGeneratedAnswer {
+        "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than 250px.
           * @default false
@@ -7978,6 +7981,7 @@ declare namespace LocalJSX {
         "maxValueInIndex"?: number;
         /**
           * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+          * @type {string}
          */
         "ratingDetailsField"?: string;
     }

@@ -1,20 +1,20 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
   fetchRecommendations,
   promoteChildToParent,
-} from '../../../features/commerce/recommendations/recommendations-actions';
-import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+} from '../../../features/commerce/recommendations/recommendations-actions.js';
+import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../test/mock-engine-v2';
+} from '../../../test/mock-engine-v2.js';
 import {
   Recommendations,
   buildRecommendations,
-} from './headless-recommendations';
+} from './headless-recommendations.js';
 
-jest.mock('../../../features/commerce/recommendations/recommendations-actions');
+vi.mock('../../../features/commerce/recommendations/recommendations-actions');
 
 describe('headless recommendations', () => {
   let recommendations: Recommendations;

@@ -1,7 +1,7 @@
-import {Result} from '../../api/search/search/result';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {ClickAction} from '../analytics/analytics-utils';
-import {logRecommendationOpen} from './recommendation-analytics-actions';
+import {Result} from '../../api/search/search/result.js';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
+import {ClickAction} from '../analytics/analytics-utils.js';
+import {logRecommendationOpen} from './recommendation-analytics-actions.js';
 
 /**
  * The click analytics action creators.

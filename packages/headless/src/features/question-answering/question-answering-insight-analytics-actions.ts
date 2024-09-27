@@ -1,25 +1,25 @@
 import {Qna} from '@coveo/relay-event-types';
-import {validatePayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   InsightAction,
   documentIdentifier,
   makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {SmartSnippetFeedback} from './question-answering-analytics-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {SmartSnippetFeedback} from './question-answering-analytics-actions.js';
 import {
   inlineLinkPayloadDefinition,
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
-} from './question-answering-document-id';
+} from './question-answering-document-id.js';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
-} from './question-answering-selectors';
+} from './question-answering-selectors.js';
 
 export const logExpandSmartSnippet = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.expandSmartSnippet)({

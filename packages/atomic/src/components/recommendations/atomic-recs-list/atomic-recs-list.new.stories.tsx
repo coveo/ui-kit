@@ -1,6 +1,6 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
-import {wrapInRecommendationInterface} from '@coveo/atomic/storybookUtils/search/recs-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {wrapInRecommendationInterface} from '@coveo/atomic-storybook-utils/search/recs-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit-html/static.js';
 
@@ -10,7 +10,6 @@ const meta: Meta = {
   component: 'atomic-recs-list',
   title: 'Atomic/RecsList',
   id: 'atomic-recs-list',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -30,4 +29,53 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
+};
+
+const {play: playNoFirstQuery} = wrapInRecommendationInterface({
+  skipFirstQuery: true,
+});
+
+export const RecsBeforeQuery: Story = {
+  tags: ['test'],
+  play: playNoFirstQuery,
+};
+
+export const RecsWithFullTemplate: Story = {
+  tags: ['test'],
+  args: {
+    'slots-default': `<atomic-recs-result-template>
+            <template>
+              <atomic-result-section-visual>
+                <span>Visual Section</span>
+              </atomic-result-section-visual>
+              <atomic-result-section-badge>
+                <span>Badge Section</span>
+              </atomic-result-section-badge>
+              <atomic-result-section-actions>
+                <span>Actions Section</span>
+              </atomic-result-section-actions>
+              <atomic-result-section-title>
+                <span>Title Section</span>
+              </atomic-result-section-title>
+              <atomic-result-section-title-metadata>
+                  <span>Title Metadata Section</span>
+              </atomic-result-section-title-metadata>
+              <atomic-result-section-emphasized>
+                <span>Emphasized Section</span>
+              </atomic-result-section-emphasized>
+              <atomic-result-section-excerpt>
+                <span>Excerpt Section</span>
+              </atomic-result-section-excerpt>
+              <atomic-result-section-bottom-metadata>
+                <span>Bottom Metadata Section</span>
+              </atomic-result-section-bottom-metadata>
+            </template>
+          </atomic-recs-result-template>`,
+  },
+};
+
+export const RecsAsCarousel: Story = {
+  args: {
+    'attributes-number-of-recommendations-per-page': 4,
+  },
 };

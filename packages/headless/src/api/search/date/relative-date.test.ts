@@ -1,4 +1,4 @@
-import {isSearchApiDate} from './date-format';
+import {isSearchApiDate} from './date-format.js';
 import {
   deserializeRelativeDate,
   RelativeDate,
@@ -7,7 +7,7 @@ import {
   isRelativeDateFormat,
   formatRelativeDateForSearchApi,
   validateRelativeDate,
-} from './relative-date';
+} from './relative-date.js';
 
 describe('#deserializeRelativeDate', () => {
   it('parses "now"', () => {

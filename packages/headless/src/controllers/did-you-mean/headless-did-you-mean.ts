@@ -1,20 +1,20 @@
 import {
   QueryCorrection,
   WordCorrection,
-} from '../../api/search/search/query-corrections';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+} from '../../api/search/search/query-corrections.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   didYouMeanClick,
   logDidYouMeanClick,
-} from '../../features/did-you-mean/did-you-mean-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../features/did-you-mean/did-you-mean-analytics-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildCoreDidYouMean,
   DidYouMean,
   DidYouMeanProps,
   DidYouMeanState,
   DidYouMeanOptions,
-} from '../core/did-you-mean/headless-core-did-you-mean';
+} from '../core/did-you-mean/headless-core-did-you-mean.js';
 
 export type {
   QueryCorrection,

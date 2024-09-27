@@ -1,5 +1,5 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {Result} from '../../api/search/search/result';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {Result} from '../../api/search/search/result.js';
 
 export const getRecommendationInitialState = (): RecommendationState => ({
   duration: 0,

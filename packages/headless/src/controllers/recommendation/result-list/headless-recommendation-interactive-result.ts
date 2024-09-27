@@ -1,12 +1,12 @@
-import {Result} from '../../../api/search/search/result';
-import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine';
-import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
+import {Result} from '../../../api/search/search/result.js';
+import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine.js';
+import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-} from '../../core/interactive-result/headless-core-interactive-result';
+} from '../../core/interactive-result/headless-core-interactive-result.js';
 
 export type {
   InteractiveResultCoreOptions,

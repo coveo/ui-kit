@@ -1,10 +1,10 @@
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {LogStaticFilterToggleValueActionCreatorPayload} from './static-filter-set-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {LogStaticFilterToggleValueActionCreatorPayload} from './static-filter-set-actions.js';
 
 export const logInsightStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload

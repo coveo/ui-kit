@@ -1,7 +1,7 @@
 import {
   StaticFilterValue,
   StaticFilterValueState,
-} from '../../features/static-filter-set/static-filter-set-state';
+} from '../../features/static-filter-set/static-filter-set-state.js';
 
 export interface StaticFilterValueOptions {
   /**

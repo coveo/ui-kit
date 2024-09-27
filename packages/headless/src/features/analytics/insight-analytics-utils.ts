@@ -1,6 +1,6 @@
 import {InsightPanel} from '@coveo/relay-event-types';
-import {InsightAppState} from '../../state/insight-app-state';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 // TODO SFINT-5420: Update from where we are grabbing the case context.
 export const analyticsEventCaseContext = (

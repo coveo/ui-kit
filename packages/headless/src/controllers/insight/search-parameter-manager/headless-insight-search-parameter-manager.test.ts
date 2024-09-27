@@ -1,22 +1,22 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions';
-import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
+import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions.js';
+import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
-} from './headless-insight-search-parameter-manager';
+} from './headless-insight-search-parameter-manager.js';
 
-jest.mock('../../../features/search-parameters/search-parameter-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/search-parameters/search-parameter-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('insight search parameter manager', () => {
   let engine: MockedInsightEngine;
@@ -28,7 +28,7 @@ describe('insight search parameter manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockInsightEngine(buildMockInsightState());
     props = {
       initialState: {

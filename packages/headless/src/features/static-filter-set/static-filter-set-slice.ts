@@ -1,13 +1,13 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
-} from './static-filter-set-actions';
-import {getStaticFilterSetInitialState} from './static-filter-set-state';
+} from './static-filter-set-actions.js';
+import {getStaticFilterSetInitialState} from './static-filter-set-state.js';
 
 export const staticFilterSetReducer = createReducer(
   getStaticFilterSetInitialState(),

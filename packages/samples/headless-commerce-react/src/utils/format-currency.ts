@@ -1,5 +1,5 @@
 import {buildContext} from '@coveo/headless/commerce';
-import {getEngine} from '../context/engine';
+import {getEngine} from '../context/engine.js';
 
 const engine = getEngine();
 

@@ -1,11 +1,11 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions';
-import {fieldSuggestionsOrderReducer} from './field-suggestions-order-slice';
+import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
+import {fieldSuggestionsOrderReducer} from './field-suggestions-order-slice.js';
 import {
   FieldSuggestionsFacet,
   FieldSuggestionsOrderState,
   getFieldSuggestionsOrderInitialState,
-} from './field-suggestions-order-state';
+} from './field-suggestions-order-state.js';
 
 describe('field suggestions order slice', () => {
   let state: FieldSuggestionsOrderState;

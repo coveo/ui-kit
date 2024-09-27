@@ -1,4 +1,4 @@
-import {FieldDescription} from '../api/search/fields/fields-response';
+import {FieldDescription} from '../api/search/fields/fields-response.js';
 
 export function buildMockFieldDescription(
   config: Partial<FieldDescription> = {}

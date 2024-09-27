@@ -4,7 +4,7 @@ import {
   clearQuerySuggest as clearCommerceQuerySuggest,
   fetchQuerySuggestions as fetchCommerceQuerySuggestions,
   registerQuerySuggest as registerCommerceQuerySuggest,
-} from '../commerce/query-suggest/query-suggest-actions';
+} from '../commerce/query-suggest/query-suggest-actions.js';
 import {
   ClearQuerySuggestActionCreatorPayload,
   RegisterQuerySuggestActionCreatorPayload,
@@ -12,12 +12,12 @@ import {
   fetchQuerySuggestions,
   registerQuerySuggest,
   unregisterQuerySuggest,
-} from './query-suggest-actions';
+} from './query-suggest-actions.js';
 import {
   getQuerySuggestSetInitialState,
   QuerySuggestSet,
   QuerySuggestState,
-} from './query-suggest-state';
+} from './query-suggest-state.js';
 
 export const querySuggestReducer = createReducer(
   getQuerySuggestSetInitialState(),

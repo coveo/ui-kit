@@ -1,32 +1,32 @@
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logShowMoreFoldedResults,
   logShowLessFoldedResults,
-} from './folding-insight-analytics-actions';
-import {getFoldingInitialState} from './folding-state';
+} from './folding-insight-analytics-actions.js';
+import {getFoldingInitialState} from './folding-state.js';
 
-const mockLogShowMoreFoldedResults = jest.fn();
-const mockLogShowLessFoldedResults = jest.fn();
+const mockLogShowMoreFoldedResults = vi.fn();
+const mockLogShowLessFoldedResults = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logShowMoreFoldedResults: mockLogShowMoreFoldedResults,
     logShowLessFoldedResults: mockLogShowLessFoldedResults,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -111,7 +111,7 @@ describe('folding insight analytics actions', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should log #logShowMoreFoldedResults with the result payload', async () => {

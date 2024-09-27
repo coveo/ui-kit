@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logCopyGeneratedAnswer with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logCopyGeneratedAnswer with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -13,7 +13,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logDislikeGeneratedAnswer with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logDislikeGeneratedAnswer with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -26,7 +26,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerCollapse with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerCollapse with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -39,7 +39,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerExpand with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerExpand with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -52,7 +52,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerFeedback with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerFeedback with the right payload 1`] = `
 [
   "Qna.SubmitRgaFeedback",
   {
@@ -72,7 +72,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -85,7 +85,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -98,7 +98,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logHoverCitation with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logHoverCitation with the right payload 1`] = `
 [
   "Qna.CitationHover",
   {
@@ -115,7 +115,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logLikeGeneratedAnswer with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logLikeGeneratedAnswer with the right payload 1`] = `
 [
   "Qna.AnswerAction",
   {
@@ -128,7 +128,7 @@ exports[`generated answer analytics actions when analyticsMode is \`next\` shoul
 ]
 `;
 
-exports[`generated answer analytics actions when analyticsMode is \`next\` should log #logOpenGeneratedAnswerSource with the right payload 1`] = `
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logOpenGeneratedAnswerSource with the right payload 1`] = `
 [
   "Qna.CitationClick",
   {

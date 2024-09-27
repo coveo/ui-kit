@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {enableDebug, disableDebug} from './debug-actions';
-import {getDebugInitialState} from './debug-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {enableDebug, disableDebug} from './debug-actions.js';
+import {getDebugInitialState} from './debug-state.js';
 
 export const debugReducer = createReducer(getDebugInitialState(), (builder) => {
   builder

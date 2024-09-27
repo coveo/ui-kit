@@ -1,31 +1,31 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request';
+import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
-import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
-import {executeSearch} from '../../../features/commerce/search/search-actions';
-import {FieldSuggestionsOrderSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+import {executeSearch} from '../../../features/commerce/search/search-actions.js';
+import {FieldSuggestionsOrderSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
-} from '../search/facets/headless-search-facet-options';
+} from '../search/facets/headless-search-facet-options.js';
 import {
   buildCategoryFieldSuggestions,
   CategoryFieldSuggestions,
-} from './headless-category-field-suggestions';
+} from './headless-category-field-suggestions.js';
 import {
   buildFieldSuggestions,
   FieldSuggestions,
-} from './headless-field-suggestions';
+} from './headless-field-suggestions.js';
 
 export type GeneratedFieldSuggestionsControllers = Array<
   FieldSuggestions | CategoryFieldSuggestions

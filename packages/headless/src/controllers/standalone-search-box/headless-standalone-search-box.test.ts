@@ -1,40 +1,40 @@
-import {configuration} from '../../app/common-reducers';
+import {configuration} from '../../app/common-reducers.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from '../../features/query-set/query-set-actions';
-import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
-import {updateQuery} from '../../features/query/query-actions';
-import {queryReducer as query} from '../../features/query/query-slice';
+} from '../../features/query-set/query-set-actions.js';
+import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions.js';
+import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice.js';
+import {updateQuery} from '../../features/query/query-actions.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
-import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice';
-import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
-import {SearchAppState} from '../../state/search-app-state';
+} from '../../features/standalone-search-box-set/standalone-search-box-set-actions.js';
+import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice.js';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata.js';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildStandaloneSearchBox,
   StandaloneSearchBox,
   StandaloneSearchBoxOptions,
-} from './headless-standalone-search-box';
+} from './headless-standalone-search-box.js';
 
-jest.mock('../../features/query-set/query-set-actions');
-jest.mock('../../features/query-suggest/query-suggest-actions');
-jest.mock('../../features/query/query-actions');
-jest.mock(
+vi.mock('../../features/query-set/query-set-actions');
+vi.mock('../../features/query-suggest/query-suggest-actions');
+vi.mock('../../features/query/query-actions');
+vi.mock(
   '../../features/standalone-search-box-set/standalone-search-box-set-actions'
 );
 
@@ -184,7 +184,7 @@ describe('headless standalone searchBox', () => {
     });
 
     it('calls #submit', () => {
-      jest.spyOn(searchBox, 'submit');
+      vi.spyOn(searchBox, 'submit');
       searchBox.selectSuggestion('a');
 
       expect(searchBox.submit).toHaveBeenCalledTimes(1);

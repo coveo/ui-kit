@@ -1,5 +1,5 @@
-import {RecommendationsCommerceSuccessResponse} from '../api/commerce/recommendations/recommendations-response';
-import {QueryRecommendationsCommerceAPIThunkReturn} from '../features/commerce/recommendations/recommendations-actions';
+import {RecommendationsCommerceSuccessResponse} from '../api/commerce/recommendations/recommendations-response.js';
+import {QueryRecommendationsCommerceAPIThunkReturn} from '../features/commerce/recommendations/recommendations-actions.js';
 
 export function buildMockRecommendationsResponse(
   response: Partial<RecommendationsCommerceSuccessResponse> = {}

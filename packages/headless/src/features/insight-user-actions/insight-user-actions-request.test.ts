@@ -1,7 +1,7 @@
-import {getOrganizationEndpoint} from '../../api/platform-client';
-import {InsightAppState} from '../../state/insight-app-state';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildFetchUserActionsRequest} from './insight-user-actions-request';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildFetchUserActionsRequest} from './insight-user-actions-request.js';
 
 describe('insight user actions request', () => {
   let state: InsightAppState;
