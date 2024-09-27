@@ -55,7 +55,7 @@ export default defineConfig({
         {
           command: `docker run -t -p 1234:1234 -v "$${pactDirectory}" pactfoundation/pact-stub-server -p 1234 -d pacts -o`,
           port: 1234,
-          timeout: 120 * 1000,
+          timeout: 60 * 10 * 1000,
           reuseExistingServer: !process.env.CI,
         },
       ]
