@@ -5,13 +5,13 @@ test.describe('default', () => {
     await productMultiValueText.load();
   });
 
-  test('should be accessible', async ({
+  test('should be a11y compliant', async ({
     productMultiValueText,
     makeAxeBuilder,
   }) => {
-    await expect(productMultiValueText.hydrated.first()).toBeVisible();
-
-    expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
+    await productMultiValueText.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render 3 values and 3 separators', async ({
@@ -21,7 +21,7 @@ test.describe('default', () => {
     await expect(productMultiValueText.separators).toHaveCount(3);
   });
 
-  test('should render indicator that 2 more values are available', async ({
+  test('should render an indicator that 2 more values are available', async ({
     productMultiValueText,
   }) => {
     await expect(productMultiValueText.moreValuesIndicator(2)).toBeVisible();
@@ -39,9 +39,9 @@ test.describe('with max-values-to-display set to 1', () => {
     productMultiValueText,
     makeAxeBuilder,
   }) => {
-    await expect(productMultiValueText.hydrated.first()).toBeVisible();
-
-    expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
+    await productMultiValueText.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render 1 value and 1 separator', async ({
@@ -51,14 +51,14 @@ test.describe('with max-values-to-display set to 1', () => {
     await expect(productMultiValueText.separators).toHaveCount(1);
   });
 
-  test('should render indicator that 4 more values are available', async ({
+  test('should render an indicator that 4 more values are available', async ({
     productMultiValueText,
   }) => {
     await expect(productMultiValueText.moreValuesIndicator(4)).toBeVisible();
   });
 });
 
-test.describe('with #max-values-to-display set to 5', () => {
+test.describe('with max-values-to-display set to 5', () => {
   test.beforeEach(async ({productMultiValueText}) => {
     await productMultiValueText.load({
       story: 'with-max-values-to-display-set-to-total-number-of-values',
@@ -69,9 +69,9 @@ test.describe('with #max-values-to-display set to 5', () => {
     productMultiValueText,
     makeAxeBuilder,
   }) => {
-    await expect(productMultiValueText.hydrated.first()).toBeVisible();
-
-    expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
+    await productMultiValueText.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render 5 values and 4 separators', async ({
@@ -88,13 +88,31 @@ test.describe('with #max-values-to-display set to 5', () => {
   });
 });
 
-test.describe('in a page with the corresponding facet', () => {
+test.describe('in a page with corresponding facet', () => {
   test.beforeEach(async ({productMultiValueText}) => {
     await productMultiValueText.load({
       story: 'in-a-page-with-the-corresponding-facet',
     });
   });
-  test('with a selected value in the corresponding facet, should render that value first', async ({
+
+  test('should be a11y compliant', async ({
+    productMultiValueText,
+    makeAxeBuilder,
+  }) => {
+    await productMultiValueText.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
+  });
+
+  test('with no selected values in corresponding facet, should render values in default order', async ({
+    productMultiValueText,
+  }) => {
+    await expect(productMultiValueText.values.first()).toHaveText('XS');
+    await expect(productMultiValueText.values.nth(1)).toHaveText('S');
+    await expect(productMultiValueText.values.nth(2)).toHaveText('M');
+  });
+
+  test('with a selected value in corresponding facet, should render that value first', async ({
     page,
     productMultiValueText,
   }) => {
@@ -105,14 +123,10 @@ test.describe('in a page with the corresponding facet', () => {
     await expect(productMultiValueText.values.first()).toHaveText('L');
   });
 
-  test('with 3 selected values in the corresponding facet, renders those values in alphabetical order', async ({
+  test('with 3 selected values in corresponding facet, should render those values in alphabetical order', async ({
     productMultiValueText,
     page,
   }) => {
-    await expect(productMultiValueText.values.first()).toHaveText('XS');
-    await expect(productMultiValueText.values.nth(1)).toHaveText('S');
-    await expect(productMultiValueText.values.nth(2)).toHaveText('M');
-
     await page.getByLabel('Inclusion filter on M; 45 results').click();
     await expect(page.getByText('Clear filter')).toBeVisible();
     await page.getByLabel('Inclusion filter on L; 45 results').click();
