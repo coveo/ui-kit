@@ -63,9 +63,6 @@ export default defineConfig({
   },
   server: {
     open: true,
-    fs: {
-      strict: false,
-    },
   },
   test: {
     globals: true,
