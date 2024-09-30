@@ -51,6 +51,20 @@ export class BasePageObject<
     return this;
   }
 
+  async noRecommendations() {
+    await this.page.route('**/commerce/v2/recommendations', async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body.products = [];
+      await route.fulfill({
+        response,
+        json: body,
+      });
+    });
+
+    return this;
+  }
+
   private camelToKebab(args: Component) {
     const toKebab: Record<string, unknown> = {};
     Object.entries(args as Record<string, unknown>).forEach(([key, value]) => {
