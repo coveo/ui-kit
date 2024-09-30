@@ -557,7 +557,7 @@ describe('InsightClient', () => {
                 contentIDValue: meta.documentId.contentIdValue,
             };
 
-            await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta, baseCaseMetadata);
+            await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta);
             expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, expectedMetadata);
         });
 
@@ -1346,6 +1346,23 @@ describe('InsightClient', () => {
 
             await client.logOpenGeneratedAnswerSource(exampleGeneratedAnswerMetadata, baseCaseMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, expectedMetadata);
+        });
+
+        it('should send proper payload for #generatedAnswerCitationClick', async () => {
+            const meta = {
+                generativeQuestionAnsweringId: '123',
+                citationId: 'bar',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+
+            const expectedMetadata = {
+                ...meta,
+                contentIDKey: meta.documentId.contentIdKey,
+                contentIDValue: meta.documentId.contentIdValue,
+            };
+
+            await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta, baseCaseMetadata);
+            expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, expectedMetadata);
         });
 
         it('should send proper payload for #generatedAnswerSourceHover', async () => {
