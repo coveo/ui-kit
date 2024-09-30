@@ -13,14 +13,13 @@ runs:
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
       shell: bash
-    - uses: ./.github/actions/playwright-atomic-cdn
+    - uses: ./.github/actions/playwright-atomic
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
       with:
         shardIndex: 1
         shardTotal: 25
-    - name: Run Unit Tests
+        uploadArtifacts: false
+    - uses: ./.github/actions/playwright-headless-commerce-react
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
-      run: npm test
-      shell: bash
