@@ -10,7 +10,7 @@
       "outputs": ["{projectRoot}/www/cdn"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npm run build:assets",
+        "command": "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:assets; fi",
         "cwd": "packages/samples/iife"
       }
     },
