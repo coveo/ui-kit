@@ -14,7 +14,7 @@ const {
   engineConfig: {
     context: {
       view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-price',
       },
       language: 'en',
       country: 'US',
@@ -22,6 +22,25 @@ const {
     },
   },
 });
+
+const {
+  decorator: commerceInterfaceDecoratorEUR,
+  play: initializeCommerceInterfaceEUR,
+} = wrapInCommerceInterface({
+  skipFirstSearch: false,
+  type: 'product-listing',
+  engineConfig: {
+    context: {
+      view: {
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-price',
+      },
+      language: 'fr',
+      country: 'FR',
+      currency: 'EUR',
+    },
+  },
+});
+
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
@@ -30,17 +49,26 @@ const meta: Meta = {
   title: 'Atomic-Commerce/Product Template Components/ProductPrice',
   id: 'atomic-product-price',
   render: renderComponent,
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
   parameters,
-  play: initializeCommerceInterface,
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-price',
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
+  play: initializeCommerceInterface,
+};
+
+export const WithEURCurrency: Story = {
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecoratorEUR,
+  ],
+  play: initializeCommerceInterfaceEUR,
 };
