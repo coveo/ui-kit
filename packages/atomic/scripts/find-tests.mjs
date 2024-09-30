@@ -8,7 +8,7 @@ import {
   getBaseHeadSHAs,
   getChangedFiles,
   getOutputName,
-} from './hasFileChanged.mjs';
+} from '../../../scripts/ci/hasFileChanged.mjs';
 import {listImports, ensureFileExists} from './list-imports.mjs';
 
 /**
@@ -93,6 +93,9 @@ function dependsOnCoveoPackage(file) {
 
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head);
+console.log('******** changed files *************');
+console.log(changedFiles);
+console.log('*********************');
 
 const outputName = getOutputName();
 const testFiles = findAllTestFiles(join('src', 'components')); // TODO: maybe should be an input
