@@ -6,15 +6,28 @@ export class ProductImageObject extends BasePageObject<'atomic-product-image'> {
     super(page, 'atomic-product-image');
   }
 
-  async withMoreImages() {
+  get noCarouselImage() {
+    return this.page.getByRole('img').nth(0);
+  }
+
+  get carouselImage() {
+    return this.page.getByRole('img').nth(1);
+  }
+
+  get nextButton() {
+    return this.page.getByRole('button', {name: 'Next'});
+  }
+
+  get previousButton() {
+    return this.page.getByRole('button', {name: 'Previous'});
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async withCustomThumbnails(thumbnails: any[]) {
     await this.page.route('**/commerce/v2/listing', async (route) => {
       const response = await route.fetch();
       const body = await response.json();
-      body.products[0].ec_thumbnails = [
-        'https://images.barca.group/Sports/mj/Sandals%20%26%20Shoes/Sandals/47_Blue_Women_Logo_Flip_Flop/7940686db76f_bottom_left.webp',
-        'https://images.barca.group/Sports/mj/Clothing/T-Shirts/29_Women_Blue_Cotton/2b1a880a2e30_bottom_left.webp',
-        'https://images.barca.group/Sports/mj/Clothing/T-Shirts/29_Women_Blue_Elastane/892ee4fe4145_bottom_left.webp',
-      ];
+      body.products[0].ec_thumbnails = thumbnails;
 
       await route.fulfill({
         response,
@@ -24,11 +37,15 @@ export class ProductImageObject extends BasePageObject<'atomic-product-image'> {
     return this;
   }
 
-  async withNoImage() {
+  async withCustomField(
+    fieldNoCarousel: string | string[],
+    fieldCarousel: string | string[]
+  ) {
     await this.page.route('**/commerce/v2/listing', async (route) => {
       const response = await route.fetch();
       const body = await response.json();
-      body.products[0].ec_thumbnails = [];
+      body.products[0].custom_alt_field = fieldNoCarousel;
+      body.products[1].custom_alt_field = fieldCarousel;
 
       await route.fulfill({
         response,
