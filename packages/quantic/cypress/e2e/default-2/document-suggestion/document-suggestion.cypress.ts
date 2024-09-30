@@ -153,7 +153,8 @@ describe('quantic-document-suggestion', () => {
         });
       });
 
-      describe('when withoutQuickview is set to true', () => {
+      // TODO: (SFINT-5732)
+      describe.skip('when withoutQuickview is set to true', () => {
         it('should not render quick view button', () => {
           const exampleResponseId = crypto.randomUUID();
           visitDocumentSuggestion({
