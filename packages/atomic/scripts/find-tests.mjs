@@ -8,7 +8,8 @@ import {
   getBaseHeadSHAs,
   getChangedFiles,
   getOutputName,
-} from '../../../scripts/ci/hasFileChanged.mjs';
+} from './hasFileChanged.mjs';
+// TODO: there is already a file in the root dir
 import {listImports, ensureFileExists} from './list-imports.mjs';
 
 /**
