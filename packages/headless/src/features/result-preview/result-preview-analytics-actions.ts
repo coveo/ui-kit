@@ -24,7 +24,6 @@ export const logDocumentQuickview = (result: Result): ClickAction => {
       return {
         searchUid: result.searchUid ?? '',
         position: docInfo.documentPosition,
-        actionCause: 'preview',
         itemMetadata: {
           uniqueFieldName: docId.contentIDKey,
           uniqueFieldValue: docId.contentIDValue,
