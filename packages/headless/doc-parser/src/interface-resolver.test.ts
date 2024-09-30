@@ -1,22 +1,23 @@
-import {facetValueStates} from '../../src/features/facets/facet-api/value';
-import {buildMockApiCallSignature} from '../mocks/mock-api-call-signature';
-import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
-import {buildMockApiIndexSignature} from '../mocks/mock-api-index-signature';
-import {buildMockApiInterface} from '../mocks/mock-api-interface';
-import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature';
-import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
-import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
-import {buildMockEntity} from '../mocks/mock-entity';
-import {buildMockEntityWithTypeAlias} from '../mocks/mock-entity-with-type-alias';
-import {buildMockEntryPoint} from '../mocks/mock-entry-point';
+// eslint-disable-next-line n/no-unpublished-import
+import {facetValueStates} from '../../src/features/facets/facet-api/value.js';
+import {buildMockApiCallSignature} from '../mocks/mock-api-call-signature.js';
+import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment.js';
+import {buildMockApiIndexSignature} from '../mocks/mock-api-index-signature.js';
+import {buildMockApiInterface} from '../mocks/mock-api-interface.js';
+import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature.js';
+import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature.js';
+import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias.js';
+import {buildMockEntityWithTypeAlias} from '../mocks/mock-entity-with-type-alias.js';
+import {buildMockEntity} from '../mocks/mock-entity.js';
+import {buildMockEntryPoint} from '../mocks/mock-entry-point.js';
 import {
   buildContentExcerptToken,
   buildReferenceExcerptToken,
-} from '../mocks/mock-excerpt-token';
-import {buildMockFuncEntity} from '../mocks/mock-func-entity';
-import {buildMockObjEntity} from '../mocks/mock-obj-entity';
-import {AnyEntity} from './entity';
-import {resolveInterfaceMembers} from './interface-resolver';
+} from '../mocks/mock-excerpt-token.js';
+import {buildMockFuncEntity} from '../mocks/mock-func-entity.js';
+import {buildMockObjEntity} from '../mocks/mock-obj-entity.js';
+import {AnyEntity} from './entity.js';
+import {resolveInterfaceMembers} from './interface-resolver.js';
 
 describe('#resolveInterfaceMembers', () => {
   it('resolves a property with a primitive type', () => {

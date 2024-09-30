@@ -1,5 +1,5 @@
-import {SearchParameters} from './search-parameter-actions';
-import {buildSSRSearchParameterSerializer} from './search-parameter-serializer.ssr';
+import {SearchParameters} from './search-parameter-actions.js';
+import {buildSSRSearchParameterSerializer} from './search-parameter-serializer.ssr.js';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',

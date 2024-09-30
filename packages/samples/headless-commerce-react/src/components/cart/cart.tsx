@@ -1,7 +1,7 @@
 import {CartItem, Cart as HeadlessCart} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
-import {saveCartItemsToLocaleStorage} from '../../utils/cart-utils';
-import {formatCurrency} from '../../utils/format-currency';
+import {saveCartItemsToLocaleStorage} from '../../utils/cart-utils.js';
+import {formatCurrency} from '../../utils/format-currency.js';
 
 interface ICartProps {
   controller: HeadlessCart;

@@ -1,5 +1,5 @@
-import type {CoreEngine, CoreEngineNext} from '../app/engine';
-import {Controller} from '../controllers/controller/headless-controller';
+import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
+import {Controller} from '../controllers/controller/headless-controller.js';
 
 function isEngine(obj: object): obj is CoreEngine {
   return 'dispatch' in obj;

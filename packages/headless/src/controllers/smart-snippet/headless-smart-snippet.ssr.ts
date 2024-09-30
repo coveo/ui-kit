@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
   SmartSnippet,
   SmartSnippetProps,
   buildSmartSnippet,
-} from './headless-smart-snippet';
+} from './headless-smart-snippet.js';
 
-export * from './headless-smart-snippet';
+export * from './headless-smart-snippet.js';
 
 export interface SmartSnippetDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, SmartSnippet> {}

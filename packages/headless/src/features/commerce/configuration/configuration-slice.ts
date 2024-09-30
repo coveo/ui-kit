@@ -9,11 +9,11 @@ import {
   UpdateBasicConfigurationPayload,
   updateProxyBaseUrl,
   UpdateProxyBaseUrlPayload,
-} from './configuration-actions';
+} from './configuration-actions.js';
 import {
   ConfigurationState,
   getConfigurationInitialState,
-} from './configuration-state';
+} from './configuration-state.js';
 
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),

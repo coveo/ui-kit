@@ -37,7 +37,7 @@ import {
   ExcerptLengthSection,
   AutomaticFacetSection,
   GeneratedAnswerSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type SearchParametersState = FacetSection &
   DateFacetSection &

@@ -1,38 +1,38 @@
 import {Schema} from '@coveo/bueno';
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {Result} from '../../../api/search/search/result';
-import {CoreEngine} from '../../../app/engine';
+import {Result} from '../../../api/search/search/result.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   ClickAction,
   CustomAction,
-} from '../../../features/analytics/analytics-utils';
-import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
+} from '../../../features/analytics/analytics-utils.js';
+import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice.js';
 import {
   foldingOptionsSchemaDefinition,
   registerFolding,
-} from '../../../features/folding/folding-actions';
-import {foldingReducer as folding} from '../../../features/folding/folding-slice';
+} from '../../../features/folding/folding-actions.js';
+import {foldingReducer as folding} from '../../../features/folding/folding-slice.js';
 import {
   CollectionId,
   FoldedCollection,
   FoldedResult,
-} from '../../../features/folding/folding-state';
-import {queryReducer as query} from '../../../features/query/query-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/folding/folding-state.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   ConfigurationSection,
   FoldingSection,
   QuerySection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {validateOptions} from '../../../utils/validate-payload';
-import {Controller} from '../../controller/headless-controller';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateOptions} from '../../../utils/validate-payload.js';
+import {Controller} from '../../controller/headless-controller.js';
 import {
   ResultListOptions,
   buildCoreResultList,
-} from '../result-list/headless-core-result-list';
-import {SearchStatusState} from '../status/headless-core-status';
+} from '../result-list/headless-core-result-list.js';
+import {SearchStatusState} from '../status/headless-core-status.js';
 
 export type {FoldedCollection, FoldedResult};
 

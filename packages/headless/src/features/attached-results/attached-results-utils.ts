@@ -1,6 +1,6 @@
 import {isString} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
-import {AttachedResult} from './attached-results-state';
+import {Result} from '../../api/search/search/result.js';
+import {AttachedResult} from './attached-results-state.js';
 
 const ensureStringOrUndefined = (
   result: Result,

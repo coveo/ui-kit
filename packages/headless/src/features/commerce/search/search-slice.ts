@@ -1,21 +1,22 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import {
   Product,
   BaseProduct,
   ChildProduct,
-} from '../../../api/commerce/common/product';
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response';
+} from '../../../api/commerce/common/product.js';
+import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {setContext, setView} from '../context/context-actions.js';
 import {
   QuerySearchCommerceAPIThunkReturn,
   executeSearch,
   fetchMoreProducts,
   promoteChildToParent,
-} from './search-actions';
+} from './search-actions.js';
 import {
   CommerceSearchState,
   getCommerceSearchInitialState,
-} from './search-state';
+} from './search-state.js';
 
 export const commerceSearchReducer = createReducer(
   getCommerceSearchInitialState(),
@@ -87,7 +88,9 @@ export const commerceSearchReducer = createReducer(
         };
 
         products.splice(currentParentIndex, 1, newParent);
-      });
+      })
+      .addCase(setView, () => getCommerceSearchInitialState())
+      .addCase(setContext, () => getCommerceSearchInitialState());
   }
 );
 

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`result actions insight analytics actions when analyticsMode is \`next\` logCaseSendEmail should call relay.emit properly 1`] = `
+exports[`result actions insight analytics actions > when analyticsMode is \`next\` > logCaseSendEmail > should call relay.emit properly 1`] = `
 [
   "InsightPanel.ItemAction",
   {
@@ -23,7 +23,7 @@ exports[`result actions insight analytics actions when analyticsMode is \`next\`
 ]
 `;
 
-exports[`result actions insight analytics actions when analyticsMode is \`next\` logCopyToClipboard should call relay.emit properly 1`] = `
+exports[`result actions insight analytics actions > when analyticsMode is \`next\` > logCopyToClipboard > should call relay.emit properly 1`] = `
 [
   "InsightPanel.ItemAction",
   {
@@ -46,7 +46,7 @@ exports[`result actions insight analytics actions when analyticsMode is \`next\`
 ]
 `;
 
-exports[`result actions insight analytics actions when analyticsMode is \`next\` logFeedItemTextPost should call relay.emit properly 1`] = `
+exports[`result actions insight analytics actions > when analyticsMode is \`next\` > logFeedItemTextPost > should call relay.emit properly 1`] = `
 [
   "InsightPanel.ItemAction",
   {

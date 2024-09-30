@@ -11,40 +11,40 @@ import {
   UnknownAction,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client';
-import {answerApi} from '../api/knowledge/stream-answer-api';
+import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client.js';
+import {answerApi} from '../api/knowledge/stream-answer-api.js';
 import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
   UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
-} from '../features/configuration/configuration-actions';
+} from '../features/configuration/configuration-actions.js';
 import {
   ConfigurationState,
   CoreConfigurationState,
-} from '../features/configuration/configuration-state';
-import {versionReducer as version} from '../features/debug/version-slice';
-import {SearchParametersState} from '../state/search-app-state';
-import {isBrowser} from '../utils/runtime';
-import {doNotTrack} from '../utils/utils';
-import {analyticsMiddleware} from './analytics-middleware';
-import {configuration} from './common-reducers';
-import {EngineConfiguration} from './engine-configuration';
-import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
-import {LoggerOptions} from './logger';
-import {logActionErrorMiddleware} from './logger-middlewares';
+} from '../features/configuration/configuration-state.js';
+import {versionReducer as version} from '../features/debug/version-slice.js';
+import {SearchParametersState} from '../state/search-app-state.js';
+import {isBrowser} from '../utils/runtime.js';
+import {doNotTrack} from '../utils/utils.js';
+import {analyticsMiddleware} from './analytics-middleware.js';
+import {configuration} from './common-reducers.js';
+import {EngineConfiguration} from './engine-configuration.js';
+import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
+import {logActionErrorMiddleware} from './logger-middlewares.js';
+import {LoggerOptions} from './logger.js';
 import {
   NavigatorContext,
   NavigatorContextProvider,
   defaultBrowserNavigatorContextProvider,
   defaultNodeJSNavigatorContextProvider,
-} from './navigatorContextProvider';
-import {createReducerManager, ReducerManager} from './reducer-manager';
-import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {stateKey} from './state-key';
-import {CoreExtraArguments, Store, configureStore} from './store';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+} from './navigatorContextProvider.js';
+import {createReducerManager, ReducerManager} from './reducer-manager.js';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
+import {stateKey} from './state-key.js';
+import {CoreExtraArguments, Store, configureStore} from './store.js';
+import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export type CoreState<
   Configuration extends CoreConfigurationState = CoreConfigurationState,

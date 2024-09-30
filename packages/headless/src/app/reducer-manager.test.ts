@@ -1,7 +1,7 @@
-import {paginationReducer as pagination} from '../features/pagination/pagination-slice';
-import {getPaginationInitialState} from '../features/pagination/pagination-state';
-import {searchReducer as search} from '../features/search/search-slice';
-import {createReducerManager} from './reducer-manager';
+import {paginationReducer as pagination} from '../features/pagination/pagination-slice.js';
+import {getPaginationInitialState} from '../features/pagination/pagination-state.js';
+import {searchReducer as search} from '../features/search/search-slice.js';
+import {createReducerManager} from './reducer-manager.js';
 
 describe('ReducerManager', () => {
   it('when a key does not exist, #add stores the key-reducer pair', () => {
@@ -32,7 +32,7 @@ describe('ReducerManager', () => {
 
   it('should call root reducer when configured', () => {
     const manager = createReducerManager({pagination}, {});
-    const rootReducer = jest.fn();
+    const rootReducer = vi.fn();
     manager.addCrossReducer(rootReducer);
     manager.combinedReducer(undefined, {type: ''});
     expect(rootReducer).toHaveBeenCalled();

@@ -1,15 +1,15 @@
 import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
 import {UnknownAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions';
-import {deepEqualAnyOrder} from '../../../../utils/compare-utils';
-import {validateInitialState} from '../../../../utils/validate-payload';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
+import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import {deepEqualAnyOrder} from '../../../../utils/compare-utils.js';
+import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
   Controller,
   buildController,
-} from '../../../controller/headless-controller';
-import {FetchProductsActionCreator} from '../common';
+} from '../../../controller/headless-controller.js';
+import {FetchProductsActionCreator} from '../common.js';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**

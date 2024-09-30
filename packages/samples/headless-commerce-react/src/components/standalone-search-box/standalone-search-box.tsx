@@ -4,7 +4,7 @@ import {
   Suggestion,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
-import InstantProducts from '../instant-products/instant-products';
+import InstantProducts from '../instant-products/instant-products.js';
 
 interface IStandaloneSearchBoxProps {
   navigate: (url: string) => void;
@@ -144,12 +144,14 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   return (
     <div className="Searchbox">
       <input
+        aria-label="Enter query"
         className="SearchBoxInput"
+        id="search-box"
         onChange={onSearchBoxInputChange}
         onKeyDown={onSearchBoxInputKeyDown}
         ref={searchInputRef}
         value={state.value}
-      ></input>
+      />
       <button
         aria-label="Clear query"
         className="SearchBoxClear"
@@ -157,7 +159,6 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
           state.isLoadingSuggestions || state.isLoading || state.value === ''
         }
         onClick={onClickSearchBoxClear}
-        title="Clear query"
         type="reset"
       >
         X

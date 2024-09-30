@@ -1,11 +1,11 @@
-import {buildMockResult} from '../../test/mock-result';
-import {fetchInstantResults} from '../search/search-actions';
+import {buildMockResult} from '../../test/mock-result.js';
+import {fetchInstantResults} from '../search/search-actions.js';
 import {
   registerInstantResults,
   updateInstantResultsQuery,
-} from './instant-results-actions';
-import {instantResultsReducer} from './instant-results-slice';
-import {InstantResultCache} from './instant-results-state';
+} from './instant-results-actions.js';
+import {instantResultsReducer} from './instant-results-slice.js';
+import {InstantResultCache} from './instant-results-state.js';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
@@ -184,16 +184,16 @@ describe('instant results slice', () => {
 
     describe('when fulfilled', () => {
       beforeEach(() => {
-        jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+        vi.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       });
       afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
       });
       it('updates results in correct searchbox and query cache', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
           {
-            results: [buildMockResult()],
+            results: [buildMockResult({searchUid: 'someid'})],
             searchUid: 'someid',
             totalCountFiltered: 1,
             duration: 2,
@@ -221,7 +221,7 @@ describe('instant results slice', () => {
         const expectedState = makeState({
           isLoading: false,
           error: null,
-          results: [buildMockResult()],
+          results: [buildMockResult({searchUid: 'someid'})],
           expiresAt: 0,
           isActive: true,
           searchUid: 'someid',
@@ -233,7 +233,8 @@ describe('instant results slice', () => {
           expectedState
         );
       });
-      it('sets correct isLoading, error and expiresAt properties', () => {
+
+      it('sets correct isLoading, error, searchUid and expiresAt properties', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
           {
@@ -262,7 +263,7 @@ describe('instant results slice', () => {
         const expectedState = makeState({
           isLoading: false,
           error: null,
-          results: [buildMockResult()],
+          results: [buildMockResult({searchUid: 'someid'})],
           expiresAt: Date.now() + 10000,
           isActive: true,
           searchUid: 'someid',

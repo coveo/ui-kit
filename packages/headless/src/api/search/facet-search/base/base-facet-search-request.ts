@@ -1,6 +1,6 @@
-import {BaseParam, VisitorIDParam} from '../../../platform-service-params';
-import {AuthenticationParam} from '../../search-api-params';
-import {SearchRequest} from '../../search/search-request';
+import {BaseParam, VisitorIDParam} from '../../../platform-service-params.js';
+import {AuthenticationParam} from '../../search-api-params.js';
+import {SearchRequest} from '../../search/search-request.js';
 
 export interface FacetSearchRequestOptions {
   /** A dictionary that maps index field values to facet value display names. */

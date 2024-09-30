@@ -1,13 +1,13 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   buildProductView,
   ProductView as BaseProductView,
-} from './headless-product-view';
+} from './headless-product-view.js';
 
 export interface ProductViewDefinition
   extends UniversalControllerDefinitionWithoutProps<ProductView> {}

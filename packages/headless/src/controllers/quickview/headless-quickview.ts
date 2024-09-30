@@ -1,20 +1,20 @@
-import {HtmlApiClient} from '../../api/search/html/html-api-client';
-import {CoreEngine} from '../../app/engine';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
-import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {SearchSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+import {HtmlApiClient} from '../../api/search/html/html-api-client.js';
+import {CoreEngine} from '../../app/engine.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions.js';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {SearchSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   buildCoreQuickview,
   QuickviewOptions,
   QuickviewState as CoreQuickviewState,
   QuickviewProps,
   Quickview as CoreQuickview,
-} from '../core/quickview/headless-core-quickview';
+} from '../core/quickview/headless-core-quickview.js';
 
 export type {
   QuickviewOptions,

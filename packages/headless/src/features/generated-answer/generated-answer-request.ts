@@ -1,10 +1,10 @@
-import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
-import {getOrganizationEndpoint} from '../../api/platform-client';
+import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
   SearchSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &

@@ -1,12 +1,12 @@
 import {EventDescription} from 'coveo.analytics';
-import {SearchAppState} from '../../../state/search-app-state';
-import {ConfigurationSection} from '../../../state/state-sections';
-import {getFacets} from '../../../utils/facet-utils';
-import {AutomaticFacetRequest} from '../../facets/automatic-facet-set/interfaces/request';
-import {AutomaticFacetResponse} from '../../facets/automatic-facet-set/interfaces/response';
-import {maximumNumberOfResultsFromIndex} from '../../pagination/pagination-constants';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request';
-import {mapSearchRequest} from '../search-mappings';
+import {SearchAppState} from '../../../state/search-app-state.js';
+import {ConfigurationSection} from '../../../state/state-sections.js';
+import {getFacets} from '../../../utils/facet-utils.js';
+import {AutomaticFacetRequest} from '../../facets/automatic-facet-set/interfaces/request.js';
+import {AutomaticFacetResponse} from '../../facets/automatic-facet-set/interfaces/response.js';
+import {maximumNumberOfResultsFromIndex} from '../../pagination/pagination-constants.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
+import {mapSearchRequest} from '../search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;

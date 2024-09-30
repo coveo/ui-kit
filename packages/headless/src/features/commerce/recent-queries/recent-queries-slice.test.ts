@@ -1,15 +1,15 @@
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildMockProduct} from '../../../test/mock-product';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildMockProduct} from '../../../test/mock-product.js';
 import {
   RecentQueriesState,
   getRecentQueriesInitialState,
-} from '../../recent-queries/recent-queries-state';
-import {executeSearch} from '../search/search-actions';
+} from '../../recent-queries/recent-queries-state.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from './recent-queries-actions';
-import {recentQueriesReducer} from './recent-queries-slice';
+} from './recent-queries-actions.js';
+import {recentQueriesReducer} from './recent-queries-slice.js';
 
 describe('commerce/recent-queries-slice', () => {
   let state: RecentQueriesState;

@@ -1,13 +1,13 @@
 import {UnknownAction} from '@reduxjs/toolkit';
-import {CoreEngine, CoreEngineNext} from '../../engine';
+import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {
   ControllersMap,
   ControllersPropsMap,
   EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
-} from './common';
-import {FromBuildResult} from './from-build-result';
+} from './common.js';
+import {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
   searchAction: TSearchAction;

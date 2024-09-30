@@ -1,16 +1,16 @@
-import {CoreEngine} from '../../../app/engine';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   InsightAction,
   LegacySearchAction,
-} from '../../../features/analytics/analytics-utils';
-import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice';
-import {TriggerSection} from '../../../state/state-sections';
-import {arrayEqual} from '../../../utils/compare-utils';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../features/analytics/analytics-utils.js';
+import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice.js';
+import {TriggerSection} from '../../../state/state-sections.js';
+import {arrayEqual} from '../../../utils/compare-utils.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 /**
  * The `NotifyTrigger` controller handles notify triggers. A [Notify trigger](https://docs.coveo.com/en/3413#notify) query pipeline rule lets you define a message to be displayed to the end user when a certain condition is met.

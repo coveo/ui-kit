@@ -2,33 +2,33 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 import {Action, UnknownAction} from '@reduxjs/toolkit';
-import {stateKey} from '../../app/state-key';
-import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
-import {buildSearch} from '../../controllers/commerce/search/headless-search';
-import type {Controller} from '../../controllers/controller/headless-controller';
-import {createWaitForActionMiddleware} from '../../utils/utils';
-import {buildControllerDefinitions} from '../commerce-ssr-engine/common';
+import {stateKey} from '../../app/state-key.js';
+import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
+import type {Controller} from '../../controllers/controller/headless-controller.js';
+import {createWaitForActionMiddleware} from '../../utils/utils.js';
+import {buildControllerDefinitions} from '../commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionsMap,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
-} from '../commerce-ssr-engine/types/common';
+} from '../commerce-ssr-engine/types/common.js';
 import {
   EngineDefinition,
   EngineDefinitionOptions,
-} from '../commerce-ssr-engine/types/core-engine';
-import {NavigatorContextProvider} from '../navigatorContextProvider';
-import {composeFunction} from '../ssr-engine/common';
-import {createStaticState} from '../ssr-engine/common';
+} from '../commerce-ssr-engine/types/core-engine.js';
+import {NavigatorContextProvider} from '../navigatorContextProvider.js';
+import {composeFunction} from '../ssr-engine/common.js';
+import {createStaticState} from '../ssr-engine/common.js';
 import {
   EngineStaticState,
   InferControllerPropsMapFromDefinitions,
-} from '../ssr-engine/types/common';
+} from '../ssr-engine/types/common.js';
 import {
   CommerceEngine,
   CommerceEngineOptions,
   buildCommerceEngine,
-} from './commerce-engine';
+} from './commerce-engine.js';
 
 /**
  * The SSR commerce engine.

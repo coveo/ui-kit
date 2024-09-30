@@ -1,4 +1,4 @@
-const cypressSplit = require('cypress-split');
+import cypressSplit from 'cypress-split';
 
 /// <reference types="cypress" />
 // ***********************************************************
@@ -17,7 +17,7 @@ const cypressSplit = require('cypress-split');
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (on, config) => {
+export default (on, config) => {
   cypressSplit(on, config);
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config

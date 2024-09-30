@@ -1,9 +1,9 @@
-import {FacetSetState} from '../features/facets/facet-set/facet-set-state';
-import {getFacetRequests} from '../features/facets/generic/interfaces/generic-facet-request';
-import {AnyFacetValue} from '../features/facets/generic/interfaces/generic-facet-response';
-import {RangeFacetSetState} from '../features/facets/range-facets/generic/interfaces/range-facet';
-import {SearchAppState} from '../state/search-app-state';
-import {ConfigurationSection} from '../state/state-sections';
+import {FacetSetState} from '../features/facets/facet-set/facet-set-state.js';
+import {getFacetRequests} from '../features/facets/generic/interfaces/generic-facet-request.js';
+import {AnyFacetValue} from '../features/facets/generic/interfaces/generic-facet-response.js';
+import {RangeFacetSetState} from '../features/facets/range-facets/generic/interfaces/range-facet.js';
+import {SearchAppState} from '../state/search-app-state.js';
+import {ConfigurationSection} from '../state/state-sections.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;

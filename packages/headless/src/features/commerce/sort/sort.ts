@@ -6,7 +6,7 @@ import {
   SortByFields as CoreSortByFields,
   SortByFieldsFields as CoreSortByFieldsFields,
   buildRelevanceSortCriterion,
-} from '../../sort/sort';
+} from '../../sort/sort.js';
 
 export type {SortByRelevance};
 export {SortBy, SortDirection, buildRelevanceSortCriterion};

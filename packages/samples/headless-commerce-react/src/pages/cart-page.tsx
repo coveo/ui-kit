@@ -5,8 +5,8 @@ import {
   Context,
 } from '@coveo/headless/commerce';
 import {useEffect} from 'react';
-import Cart from '../components/cart/cart';
-import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface';
+import Cart from '../components/cart/cart.js';
+import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface.js';
 
 interface ICartPageProps {
   engine: CommerceEngine;

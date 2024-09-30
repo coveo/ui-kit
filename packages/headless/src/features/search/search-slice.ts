@@ -4,12 +4,12 @@ import {
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './legacy/search-actions';
+} from './legacy/search-actions.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
   SearchState,
-} from './search-state';
+} from './search-state.js';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
 
@@ -44,7 +44,10 @@ function handleFulfilledNewSearch(
   action: ReturnType<SearchAction['fulfilled']>
 ) {
   handleFulfilledSearch(state, action);
-  state.results = action.payload.response.results;
+  state.results = action.payload.response.results.map((result) => ({
+    ...result,
+    searchUid: action.payload.response.searchUid,
+  }));
   state.searchResponseId = action.payload.response.searchUid;
   state.questionAnswer = action.payload.response.questionAnswer;
   state.extendedResults = action.payload.response.extendedResults;
@@ -81,7 +84,13 @@ export const searchReducer = createReducer(
     });
     builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
-      state.results = [...state.results, ...action.payload.response.results];
+      state.results = [
+        ...state.results,
+        ...action.payload.response.results.map((result) => ({
+          ...result,
+          searchUid: action.payload.response.searchUid,
+        })),
+      ];
     });
     builder.addCase(fetchPage.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);

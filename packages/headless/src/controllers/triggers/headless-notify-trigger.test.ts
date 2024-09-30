@@ -1,12 +1,12 @@
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger';
-import {buildNotifyTrigger} from './headless-notify-trigger';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger.js';
+import {buildNotifyTrigger} from './headless-notify-trigger.js';
 
-jest.mock('../../features/triggers/trigger-analytics-actions');
+vi.mock('../../features/triggers/trigger-analytics-actions');
 
 describe('NotifyTrigger', () => {
   let engine: MockedSearchEngine;
@@ -17,7 +17,7 @@ describe('NotifyTrigger', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     initNotifyTrigger();
   });

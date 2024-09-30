@@ -26,6 +26,7 @@ import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
 import {Heading} from '../../common/heading';
+import {Hidden} from '../../common/hidden';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
@@ -56,6 +57,8 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
+ *
+ * @slot default - The default slot where the product templates are defined.
  */
 @Component({
   tag: 'atomic-commerce-recommendation-list',
@@ -409,7 +412,7 @@ export class AtomicCommerceRecommendationList
   public render() {
     if (this.hasNoProducts) {
       this.bindings.store.unsetLoadingFlag(this.loadingFlag);
-      return;
+      return <Hidden></Hidden>;
     }
     return (
       <Fragment>

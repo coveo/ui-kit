@@ -1,8 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
-import {updateQuery} from './query-actions';
-import {getCommerceQueryInitialState} from './query-state';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {updateQuery} from './query-actions.js';
+import {getCommerceQueryInitialState} from './query-state.js';
 
 export const queryReducer = createReducer(
   getCommerceQueryInitialState(),

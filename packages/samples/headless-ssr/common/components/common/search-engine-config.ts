@@ -9,6 +9,8 @@ import {
   defineSearchBox,
   defineContext,
   defineSearchParameterManager,
+  defineTabManager,
+  defineTab,
 } from '@coveo/headless/ssr';
 
 export const config = {
@@ -23,7 +25,27 @@ export const config = {
     context: defineContext(),
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
-    authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
+    tabManager: defineTabManager(),
+    tabAll: defineTab({
+      options: {id: 'all', expression: ''},
+      initialState: {isActive: true},
+    }),
+    tabCountries: defineTab({
+      options: {
+        id: 'countries',
+        expression: '@source="Coveo Sample - Atlas"',
+      },
+    }),
+    tabVideos: defineTab({
+      options: {id: 'videos', expression: '@filetype=YouTubeVideo'},
+    }),
+    authorFacet: defineFacet({
+      options: {
+        facetId: 'author-1',
+        field: 'author',
+        tabs: {included: ['all', 'videos']},
+      },
+    }),
     searchParameterManager: defineSearchParameterManager(),
   },
 } satisfies SearchEngineDefinitionOptions<

@@ -4,7 +4,7 @@ import {
   DateFacetResponse,
   AnyFacetResponse,
   CategoryFacetResponse,
-} from '../features/commerce/facets/facet-set/interfaces/response';
+} from '../features/commerce/facets/facet-set/interfaces/response.js';
 
 function getMockBaseCommerceFacetResponse(): Omit<
   AnyFacetResponse,

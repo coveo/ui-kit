@@ -3,7 +3,7 @@ import {
   validatePayload,
   requiredNonEmptyString,
   requiredEmptyAllowedString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 export interface SetCaseInputActionCreatorPayload {
   /**

@@ -1,10 +1,10 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions.js';
 import {
   buildCoreNotifyTrigger,
   NotifyTrigger,
   NotifyTriggerState,
-} from '../core/triggers/headless-core-notify-trigger';
+} from '../core/triggers/headless-core-notify-trigger.js';
 
 export type {NotifyTrigger, NotifyTriggerState};
 
