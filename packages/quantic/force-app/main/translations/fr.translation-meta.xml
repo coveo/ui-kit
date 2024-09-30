@@ -844,4 +844,12 @@
     <label>Recherche vide</label>
     <name>quantic_EmptySearch</name>
   </customLabels>
+  <customLabels>
+    <label>{{count}} action supplémentaire dans cette session</label>
+    <name>quantic_MoreActionsInThisSession</name>
+  </customLabels>
+    <customLabels>
+    <label>{{count}} autres actions dans cette session</label>
+    <name>quantic_MoreActionsInThisSession_plural</name>
+  </customLabels>
 </Translations>

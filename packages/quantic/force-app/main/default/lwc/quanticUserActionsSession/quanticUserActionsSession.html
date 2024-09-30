@@ -1,0 +1,40 @@
+<template>
+    <div class="slds-grid items-center slds-var-m-bottom_xx-small">
+        <template lwc:if={isTicketCreationSession}>
+            <div data-test="session-start__date-icon"
+                class="session-start__icon-container slds-grid slds-grid_align-center slds-var-m-right_x-small items-center">
+                <lightning-icon class='session-start__icon' icon-name='utility:priority'
+                    size="xx-small"></lightning-icon>
+            </div>
+        </template>
+        <div data-test="session-start__date" class="session-start__date slds-text-title_bold">{formatedStartDate}</div>
+    </div>
+
+    <template lwc:if={areActionsAfterTicketCreationVisible}>
+        <div data-test="session__user-actions-after-ticket-creation" class="slds-var-p-horizontal_xx-smalls">
+            <template for:each={userActionsAfterTicketCreation} for:item="action">
+                <div key={action.timestamp}>
+                    <c-quantic-user-action action={action}></c-quantic-user-action>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <template lwc:if={isShowMoreActionsButtonVisible}>
+        <div class="slds-var-p-horizontal_xx-smalls">
+            <lightning-button data-test="session__show-more-actions-button" class="session__show-more-actions-button"
+                variant="base" label={showMoreActionsButtonLabel} title={showMoreActionsButtonLabel}
+                onclick={showActionsAfterTicketCreation} icon-name="utility:threedots"></lightning-button>
+        </div>
+    </template>
+
+
+    <div data-test="session__user-actions" class="slds-var-p-horizontal_xx-smalls">
+        <template for:each={userActionsToDisplay} for:item="action">
+            <div key={action.timestamp}>
+                <c-quantic-user-action action={action}></c-quantic-user-action>
+            </div>
+        </template>
+    </div>
+
+</template>
