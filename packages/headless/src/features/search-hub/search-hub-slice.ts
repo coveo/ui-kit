@@ -1,8 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {updateSearchConfiguration} from '../configuration/configuration-actions';
-import {change} from '../history/history-actions';
-import {setSearchHub} from './search-hub-actions';
-import {getSearchHubInitialState} from './search-hub-state';
+import {updateSearchConfiguration} from '../configuration/configuration-actions.js';
+import {change} from '../history/history-actions.js';
+import {setSearchHub} from './search-hub-actions.js';
+import {getSearchHubInitialState} from './search-hub-state.js';
 
 export const searchHubReducer = createReducer(
   getSearchHubInitialState(),

@@ -3,8 +3,8 @@ import {
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
-} from './case-field-actions';
-import {getCaseFieldInitialState} from './case-field-state';
+} from './case-field-actions.js';
+import {getCaseFieldInitialState} from './case-field-state.js';
 
 export const caseFieldReducer = createReducer(
   getCaseFieldInitialState(),

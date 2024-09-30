@@ -3,14 +3,14 @@ import {createSelector} from '@reduxjs/toolkit';
 import {
   selectAnswer,
   StateNeededByAnswerAPI,
-} from '../../api/knowledge/stream-answer-api';
-import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer';
-import {SearchAppState} from '../../state/search-app-state';
+} from '../../api/knowledge/stream-answer-api.js';
+import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   GeneratedAnswerSection,
   SearchSection,
-} from '../../state/state-sections';
-import {selectQuery} from '../query/query-selectors';
+} from '../../state/state-sections.js';
+import {selectQuery} from '../query/query-selectors.js';
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>

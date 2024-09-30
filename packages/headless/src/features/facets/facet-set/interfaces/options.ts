@@ -1,4 +1,4 @@
-import {FacetOptions} from '../../../../controllers/core/facets/facet/headless-core-facet-options';
+import {FacetOptions} from '../../../../controllers/core/facets/facet/headless-core-facet-options.js';
 
 export type FacetOptionalParameters = Required<
   Pick<

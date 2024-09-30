@@ -1,4 +1,5 @@
-import {SearchAction} from '../../../search/search-actions';
+import {SearchAction} from '../../../search/search-actions.js';
+import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils.js';
 import {
   facetDeselect,
   facetExclude,
@@ -8,9 +9,8 @@ import {
   logFacetExclude,
   logFacetSelect,
   logFacetUnexclude,
-} from '../../facet-set/facet-set-analytics-actions';
-import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
-import {RangeFacetValue} from './interfaces/range-facet';
+} from '../../facet-set/facet-set-analytics-actions.js';
+import {RangeFacetValue} from './interfaces/range-facet.js';
 
 export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
   return selection.state === 'selected';

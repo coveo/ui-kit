@@ -3,26 +3,26 @@ import {
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
 import {createSelector} from '@reduxjs/toolkit';
-import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors';
-import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format';
-import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants';
-import {selectPipeline} from '../../features/pipeline/select-pipeline';
-import {selectQuery} from '../../features/query/query-selectors';
-import {selectSearchHub} from '../../features/search-hub/search-hub-selectors';
+import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
+import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
+import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
+import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
+import {selectQuery} from '../../features/query/query-selectors.js';
+import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {
   initialSearchMappings,
   mapFacetRequest,
-} from '../../features/search/search-mappings';
-import {SearchAppState} from '../../state/search-app-state';
+} from '../../features/search/search-mappings.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
-} from '../../state/state-sections';
-import {getFacets} from '../../utils/facet-utils';
-import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload';
-import {getOrganizationEndpoint} from '../platform-client';
-import {SearchRequest} from '../search/search/search-request';
-import {answerSlice} from './answer-slice';
+} from '../../state/state-sections.js';
+import {getFacets} from '../../utils/facet-utils.js';
+import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
+import {getOrganizationEndpoint} from '../platform-client.js';
+import {SearchRequest} from '../search/search/search-request.js';
+import {answerSlice} from './answer-slice.js';
 
 export type StateNeededByAnswerAPI = {
   searchHub: string;

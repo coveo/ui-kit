@@ -3,28 +3,28 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
-} from '../../../api/commerce/commerce-api-client';
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
-import {validatePayload} from '../../../utils/validate-payload';
-import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {buildCommerceAPIRequest} from '../common/actions';
+} from '../../../api/commerce/commerce-api-client.js';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import {validatePayload} from '../../../utils/validate-payload.js';
+import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
+import {buildCommerceAPIRequest} from '../common/actions.js';
 import {
   clearAllCoreFacets,
   updateAutoSelectionForAllCoreFacets,
-} from '../facets/core-facet/core-facet-actions';
-import {selectPage} from '../pagination/pagination-actions';
-import {perPagePrincipalSelector} from '../pagination/pagination-selectors';
-import {UpdateQueryPayload, updateQuery} from '../query/query-actions';
+} from '../facets/core-facet/core-facet-actions.js';
+import {selectPage} from '../pagination/pagination-actions.js';
+import {perPagePrincipalSelector} from '../pagination/pagination-selectors.js';
+import {UpdateQueryPayload, updateQuery} from '../query/query-actions.js';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
-} from './search-actions-thunk-processor';
+} from './search-actions-thunk-processor.js';
 import {
   querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
-} from './search-selectors';
+} from './search-selectors.js';
 
 export interface QuerySearchCommerceAPIThunkReturn {
   /** The successful response. */

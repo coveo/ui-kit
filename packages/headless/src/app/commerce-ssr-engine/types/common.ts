@@ -1,12 +1,12 @@
-import type {Controller} from '../../../controllers/controller/headless-controller';
-import type {InvalidControllerDefinition} from '../../../utils/errors';
-import type {CommerceEngine} from '../../commerce-engine/commerce-engine';
-import type {CoreEngine, CoreEngineNext} from '../../engine';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {InvalidControllerDefinition} from '../../../utils/errors.js';
+import type {CommerceEngine} from '../../commerce-engine/commerce-engine.js';
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
-} from '../../ssr-engine/types/common';
+} from '../../ssr-engine/types/common.js';
 
 export type {
   InferControllerStaticStateFromController,

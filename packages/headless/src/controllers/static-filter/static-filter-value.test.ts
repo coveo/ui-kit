@@ -1,4 +1,4 @@
-import {buildStaticFilterValue} from './static-filter-value';
+import {buildStaticFilterValue} from './static-filter-value.js';
 
 describe('#buildStaticFilterValue', () => {
   it('when #state is not specified, it defaults to idle', () => {

@@ -10,35 +10,35 @@ import {
   setIsVisible,
   streamAnswer,
   updateResponseFormat,
-} from '../../../features/generated-answer/generated-answer-actions';
+} from '../../../features/generated-answer/generated-answer-actions.js';
 import {
   generatedAnswerAnalyticsClient,
   GeneratedAnswerFeedback,
-} from '../../../features/generated-answer/generated-answer-analytics-actions';
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {
   GeneratedAnswerState,
   getGeneratedAnswerInitialState,
-} from '../../../features/generated-answer/generated-answer-state';
-import {executeSearch} from '../../../features/search/search-actions';
+} from '../../../features/generated-answer/generated-answer-state.js';
+import {executeSearch} from '../../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
-} from '../../generated-answer/headless-generated-answer';
+} from '../../generated-answer/headless-generated-answer.js';
 import {
   buildSearchAPIGeneratedAnswer,
   subscribeStateManager,
-} from './headless-searchapi-generated-answer';
+} from './headless-searchapi-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock(
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
-jest.mock('../../../features/search/search-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('searchapi-generated-answer', () => {
   let engine: MockedSearchEngine;
@@ -63,7 +63,7 @@ describe('searchapi-generated-answer', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     engine = buildEngineWithGeneratedAnswer();
   });
 
@@ -322,7 +322,7 @@ describe('searchapi-generated-answer', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
 
       subscribeStateManagerMock = {
         engines: {

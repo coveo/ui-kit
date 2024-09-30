@@ -8,10 +8,10 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
-import {PreprocessRequest} from '../api/preprocess-request';
-import {PlatformEnvironment} from '../utils/url-utils';
-import {requiredNonEmptyString} from '../utils/validate-payload';
-import {CoveoFramework} from '../utils/version';
+import {PreprocessRequest} from '../api/preprocess-request.js';
+import {PlatformEnvironment} from '../utils/url-utils.js';
+import {requiredNonEmptyString} from '../utils/validate-payload.js';
+import {CoveoFramework} from '../utils/version.js';
 
 /**
  * The global headless engine configuration options.

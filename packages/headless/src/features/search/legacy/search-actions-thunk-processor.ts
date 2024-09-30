@@ -1,17 +1,17 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
-import {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics';
+import {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics.js';
 import {
   isErrorResponse,
   isSuccessResponse,
   SearchAPIClient,
-} from '../../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../../api/search/search-api-error-response';
-import {SearchOrigin} from '../../../api/search/search-metadata';
-import {SearchRequest} from '../../../api/search/search/search-request';
-import {SearchResponseSuccess} from '../../../api/search/search/search-response';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+} from '../../../api/search/search-api-client.js';
+import {SearchAPIErrorWithStatusCode} from '../../../api/search/search-api-error-response.js';
+import {SearchOrigin} from '../../../api/search/search-metadata.js';
+import {SearchRequest} from '../../../api/search/search/search-request.js';
+import {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {
   AdvancedSearchQueriesSection,
   CategoryFacetSection,
@@ -34,29 +34,29 @@ import {
   SearchSection,
   SortSection,
   TriggerSection,
-} from '../../../state/state-sections';
-import {AnalyticsAsyncThunk} from '../../analytics/analytics-utils';
-import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions';
-import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-analytics-actions';
-import {snapshot} from '../../history/history-actions';
-import {extractHistory} from '../../history/history-state';
-import {updateQuery} from '../../query/query-actions';
-import {getQueryInitialState} from '../../query/query-state';
-import {logTriggerQuery} from '../../triggers/trigger-analytics-actions';
+} from '../../../state/state-sections.js';
+import {AnalyticsAsyncThunk} from '../../analytics/analytics-utils.js';
+import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions.js';
+import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-analytics-actions.js';
+import {snapshot} from '../../history/history-actions.js';
+import {extractHistory} from '../../history/history-state.js';
+import {updateQuery} from '../../query/query-actions.js';
+import {getQueryInitialState} from '../../query/query-state.js';
+import {logTriggerQuery} from '../../triggers/trigger-analytics-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from '../../triggers/triggers-actions';
-import {logQueryError} from '../search-analytics-actions';
+} from '../../triggers/triggers-actions.js';
+import {logQueryError} from '../search-analytics-actions.js';
 import {
   ErrorResponse,
   MappedSearchRequest,
   mapSearchResponse,
   SuccessResponse,
-} from '../search-mappings';
-import {getSearchInitialState} from '../search-state';
-import {ExecuteSearchThunkReturn} from './search-actions';
-import {buildSearchRequest} from './search-request';
+} from '../search-mappings.js';
+import {getSearchInitialState} from '../search-state.js';
+import {ExecuteSearchThunkReturn} from './search-actions.js';
+import {buildSearchRequest} from './search-request.js';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<

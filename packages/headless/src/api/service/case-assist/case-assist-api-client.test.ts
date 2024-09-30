@@ -1,10 +1,14 @@
-import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder';
-import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
-import {createMockState} from '../../../test/mock-state';
-import {getOrganizationEndpoint, PlatformClient} from '../../platform-client';
-import {CaseAssistAPIClient} from './case-assist-api-client';
-import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
-import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request';
+import {Mock} from 'vitest';
+import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder.js';
+import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {
+  getOrganizationEndpoint,
+  PlatformClient,
+} from '../../platform-client.js';
+import {CaseAssistAPIClient} from './case-assist-api-client.js';
+import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request.js';
+import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request.js';
 
 describe('case assist api client', () => {
   const orgId = 'some org id';
@@ -15,18 +19,18 @@ describe('case assist api client', () => {
   const clientId = 'some client id';
 
   let client: CaseAssistAPIClient;
-  let platformCallMock: jest.Mock;
+  let platformCallMock: Mock;
 
   beforeEach(() => {
     client = buildMockCaseAssistAPIClient();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const mockPlatformCall = (fakeResponse: unknown) => {
-    platformCallMock = jest.fn();
+    platformCallMock = vi.fn();
 
     platformCallMock.mockReturnValue(fakeResponse);
     PlatformClient.call = platformCallMock;

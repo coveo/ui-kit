@@ -1,7 +1,7 @@
-import {AnyFacetRequest as AnyCommerceFacetRequest} from '../../commerce/facets/facet-set/interfaces/request';
-import {FacetRequest} from '../facet-set/interfaces/request';
-import {AnyFacetRequest} from './interfaces/generic-facet-request';
-import {AnyFacetSlice} from './interfaces/generic-facet-section';
+import {AnyFacetRequest as AnyCommerceFacetRequest} from '../../commerce/facets/facet-set/interfaces/request.js';
+import {FacetRequest} from '../facet-set/interfaces/request.js';
+import {AnyFacetRequest} from './interfaces/generic-facet-request.js';
+import {AnyFacetSlice} from './interfaces/generic-facet-section.js';
 
 export type SpecificFacetState<
   SliceType extends AnyFacetSlice = AnyFacetSlice,

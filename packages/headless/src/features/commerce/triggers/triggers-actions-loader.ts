@@ -1,12 +1,12 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions.js';
 import {
   UpdateIgnoreQueryTriggerPayload,
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from './triggers-actions';
-import {commerceTriggersReducer as triggers} from './triggers-slice';
+} from './triggers-actions.js';
+import {commerceTriggersReducer as triggers} from './triggers-slice.js';
 
 export type {
   UpdateIgnoreQueryTriggerPayload,

@@ -1,6 +1,6 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   FetchMoreRecommendationsPayload,
   FetchRecommendationsPayload,
@@ -12,8 +12,8 @@ import {
   fetchRecommendations,
   promoteChildToParent,
   registerRecommendationsSlot,
-} from './recommendations-actions';
-import {recommendationsReducer as recommendations} from './recommendations-slice';
+} from './recommendations-actions.js';
+import {recommendationsReducer as recommendations} from './recommendations-slice.js';
 
 export type {
   RegisterRecommendationsSlotPayload,

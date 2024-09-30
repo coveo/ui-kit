@@ -1,21 +1,21 @@
-import {registerInstantResults} from '../../features/instant-results/instant-results-actions';
-import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
-import {SearchAppState} from '../../state/search-app-state';
+import {registerInstantResults} from '../../features/instant-results/instant-results-actions.js';
+import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildInstantResults} from './instant-results';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildInstantResults} from './instant-results.js';
 
-jest.mock('../../features/instant-results/instant-results-actions');
+vi.mock('../../features/instant-results/instant-results-actions');
 
 describe('instant results', () => {
   let engine: MockedSearchEngine;
   let state: SearchAppState;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     state = createMockState();
     engine = buildMockSearchEngine(state);
   });

@@ -1,18 +1,18 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildDateSortCriterion,
   SortOrder,
-} from '../../../features/sort-criteria/criteria';
-import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions';
+} from '../../../features/sort-criteria/criteria.js';
+import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {
   MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {Sort, SortProps, buildSort} from './headless-insight-sort';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {Sort, SortProps, buildSort} from './headless-insight-sort.js';
 
-jest.mock('../../../features/sort-criteria/sort-criteria-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/sort-criteria/sort-criteria-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('InsightSort', () => {
   let engine: MockedInsightEngine;

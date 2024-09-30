@@ -1,49 +1,49 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {CommerceAPIClient} from '../../api/commerce/commerce-api-client.js';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
   updateProxyBaseUrl,
-} from '../../features/commerce/configuration/configuration-actions';
-import {configurationReducer} from '../../features/commerce/configuration/configuration-slice';
-import {ConfigurationState} from '../../features/commerce/configuration/configuration-state';
-import {setItems} from '../../features/commerce/context/cart/cart-actions';
-import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
-import {setContext} from '../../features/commerce/context/context-actions';
-import {contextReducer} from '../../features/commerce/context/context-slice';
-import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice';
-import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice';
-import {fieldSuggestionsOrderReducer} from '../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {manualNumericFacetReducer} from '../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
-import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
-import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice';
-import {queryReducer} from '../../features/commerce/query/query-slice';
-import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice';
-import {commerceSearchReducer} from '../../features/commerce/search/search-slice';
-import {sortReducer} from '../../features/commerce/sort/sort-slice';
-import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice';
-import {versionReducer} from '../../features/debug/version-slice';
-import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice';
-import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice';
-import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
-import {CommerceAppState} from '../../state/commerce-app-state';
-import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
+} from '../../features/commerce/configuration/configuration-actions.js';
+import {configurationReducer} from '../../features/commerce/configuration/configuration-slice.js';
+import {ConfigurationState} from '../../features/commerce/configuration/configuration-state.js';
+import {setItems} from '../../features/commerce/context/cart/cart-actions.js';
+import {cartReducer} from '../../features/commerce/context/cart/cart-slice.js';
+import {setContext} from '../../features/commerce/context/context-actions.js';
+import {contextReducer} from '../../features/commerce/context/context-slice.js';
+import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {fieldSuggestionsOrderReducer} from '../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {manualNumericFacetReducer} from '../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
+import {paginationReducer} from '../../features/commerce/pagination/pagination-slice.js';
+import {productListingReducer} from '../../features/commerce/product-listing/product-listing-slice.js';
+import {queryReducer} from '../../features/commerce/query/query-slice.js';
+import {recommendationsReducer} from '../../features/commerce/recommendations/recommendations-slice.js';
+import {commerceSearchReducer} from '../../features/commerce/search/search-slice.js';
+import {sortReducer} from '../../features/commerce/sort/sort-slice.js';
+import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice.js';
+import {versionReducer} from '../../features/debug/version-slice.js';
+import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice.js';
+import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
+import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
+import {CommerceAppState} from '../../state/commerce-app-state.js';
+import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments.js';
 import {
   buildCoreEngine,
   CoreEngineNext,
   CoreState,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {buildLogger} from '../logger';
-import {redactEngine, stateKey} from '../state-key';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+} from '../engine.js';
+import {buildLogger} from '../logger.js';
+import {redactEngine, stateKey} from '../state-key.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
-} from './commerce-engine-configuration';
+} from './commerce-engine-configuration.js';
 
 export type {CommerceEngineConfiguration};
 

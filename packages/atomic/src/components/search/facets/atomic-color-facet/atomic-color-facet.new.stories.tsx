@@ -1,7 +1,7 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {facetDecorator} from '@coveo/atomic/storybookUtils/common/facets-decorator';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {facetDecorator} from '@coveo/atomic-storybook-utils/common/facets-decorator';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic-storybook-utils/search/search-interface-wrapper';
 import {
   ArgTypes,
   Args,

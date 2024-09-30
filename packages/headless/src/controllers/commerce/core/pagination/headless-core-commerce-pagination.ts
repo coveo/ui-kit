@@ -3,23 +3,23 @@ import {createSelector} from '@reduxjs/toolkit';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
+} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
 import {
   nextPage,
   previousPage,
   registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
-} from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {loadReducerError} from '../../../../utils/errors';
-import {validateOptions} from '../../../../utils/validate-payload';
+} from '../../../../features/commerce/pagination/pagination-actions.js';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {validateOptions} from '../../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
-import {FetchProductsActionCreator} from '../common';
+} from '../../../controller/headless-controller.js';
+import {FetchProductsActionCreator} from '../common.js';
 
 /**
  * The `Pagination` sub-controller is responsible for navigating between pages of results in a commerce interface.

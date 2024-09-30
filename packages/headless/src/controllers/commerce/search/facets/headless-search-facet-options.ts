@@ -2,7 +2,7 @@ import {createSelector} from '@reduxjs/toolkit';
 import {
   CommerceFacetSetSection,
   CommerceSearchSection,
-} from '../../../../state/state-sections';
+} from '../../../../state/state-sections.js';
 
 export const facetResponseSelector = createSelector(
   (
