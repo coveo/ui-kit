@@ -171,6 +171,10 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
         this.product,
         this.imageAltField
       );
+      // KIT-3620
+      // if (isNullOrUndefined(value)) {
+      //   return null;
+      // }
 
       if (Array.isArray(value)) {
         return value.map((v) => `${v}`.trim());
@@ -209,9 +213,9 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
     });
     if (this.images.length === 0) {
       this.validateUrl(this.fallback);
-
       return (
         <img
+          // class="aspect-square" KIT-3619
           alt={this.bindings.i18n.t('image-not-found-alt')}
           src={this.fallback}
           loading="eager"

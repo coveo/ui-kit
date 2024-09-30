@@ -3,7 +3,13 @@ import {wrapInCommerceProductList} from '@coveo/atomic-storybook-utils/commerce/
 import {wrapInProductTemplate} from '@coveo/atomic-storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
-import type {Meta} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Decorator} from '@storybook/web-components';
+import {html} from 'lit-html';
+
+const styledDivDecorator: Decorator = (story) => {
+  return html`<div style="max-width: 700px">${story()}</div>`;
+};
 
 const {
   decorator: commerceInterfaceDecorator,
@@ -14,7 +20,7 @@ const {
   engineConfig: {
     context: {
       view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+        url: 'https://ui-kit.coveo/atomic/storybook/atomic-product-image',
       },
       language: 'en',
       country: 'US',
@@ -34,6 +40,7 @@ const meta: Meta = {
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
+    styledDivDecorator,
   ],
   parameters,
   play: initializeCommerceInterface,
@@ -41,55 +48,22 @@ const meta: Meta = {
 
 export default meta;
 
-// export const Default: Story = {
-//   name: 'atomic-product-image',
-//   args: {
-//     'attributes-fallback': '2',
-//     play: async (context) => {
-//       await play(context);
-//       await playExecuteFirstSearch(context);
-//     },
-//   },
-// };
+export const Default: Story = {
+  name: 'atomic-product-image',
+};
 
-// const {play: playWithMultipleImages} = wrapInCommerceInterface({
-//   engineConfig: {
-//     ...engineConfig,
-//     preprocessRequest: (r) => {
-//       const parsed = JSON.parse(r.body as string);
-//       parsed.query = 'https://sports.barca.group/pdp/SP00003_00001';
-//       r.body = JSON.stringify(parsed);
-//       return r;
-//     },
-//   },
-// });
+export const withAFallbackImage: Story = {
+  name: 'With a fallback image',
+  args: {
+    'attributes-field': 'invalid',
+    'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
+  },
+};
 
-// export const WithMultipleImages: Story = {
-//   name: 'With multiple images',
-//   play: async (context) => {
-//     await playWithMultipleImages(context);
-//   },
-// };
-
-// export const WithNoImage: Story = {
-//   name: 'With no image',
-//   args: {
-//     'attributes-field': 'ec_invalid_image_field',
-//   },
-//   play: async (context) => {
-//     await play(context);
-//     await playExecuteFirstSearch(context);
-//   },
-// };
-
-// export const WitCustomFallbackImage: Story = {
-//   name: 'With custom fallback',
-//   args: {
-//     'attributes-field': 'ec_invalid_image_field',
-//     'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
-//   },
-//   play: async (context) => {
-//     await play(context);
-//     await playExecuteFirstSearch(context);
-//   },
-// };
+export const withAnAltTextField: Story = {
+  tags: ['test'],
+  name: 'With an alt text field',
+  args: {
+    'attributes-image-alt-field': 'custom_alt_field',
+  },
+};
