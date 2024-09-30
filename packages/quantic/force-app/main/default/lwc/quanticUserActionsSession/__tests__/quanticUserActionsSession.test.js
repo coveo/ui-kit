@@ -127,7 +127,7 @@ describe('c-quantic-user-actions-session', () => {
         timestamp: new Date('2024-09-25T05:08Z').getTime(),
       },
       {
-        actionType: 'TICKET_',
+        actionType: 'SEARCH',
         timestamp: new Date('2024-09-25T05:07Z').getTime(),
         query: 'example query',
       },
