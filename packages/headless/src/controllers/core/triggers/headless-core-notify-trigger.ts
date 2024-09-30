@@ -1,5 +1,8 @@
 import {CoreEngine} from '../../../app/engine';
-import {logNotifyTrigger} from '../../../features/triggers/trigger-analytics-actions';
+import {
+  InsightAction,
+  LegacySearchAction,
+} from '../../../features/analytics/analytics-utils';
 import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice';
 import {TriggerSection} from '../../../state/state-sections';
 import {arrayEqual} from '../../../utils/compare-utils';
@@ -29,13 +32,26 @@ export interface NotifyTriggerState {
   notifications: string[];
 }
 
+export interface NotifyTriggerProps {
+  options: NotifyTriggerOptions;
+}
+
+export interface NotifyTriggerOptions {
+  logNotifyTriggerActionCreator: () => InsightAction | LegacySearchAction;
+}
+
 /**
  * Creates a core `NotifyTrigger` controller instance.
  *
  * @param engine - The headless engine.
  * @returns A `NotifyTrigger` controller instance.
  */
-export function buildCoreNotifyTrigger(engine: CoreEngine): NotifyTrigger {
+export function buildCoreNotifyTrigger(
+  engine: CoreEngine,
+  props: NotifyTriggerProps
+): NotifyTrigger {
+  const logNotifyTrigger = props.options.logNotifyTriggerActionCreator;
+
   if (!loadNotifyTriggerReducers(engine)) {
     throw loadReducerError;
   }

@@ -15,7 +15,11 @@ describe('NotifyTrigger', () => {
   let notifyTrigger: NotifyTrigger;
 
   function initNotifyTrigger() {
-    notifyTrigger = buildCoreNotifyTrigger(engine);
+    notifyTrigger = buildCoreNotifyTrigger(engine, {
+      options: {
+        logNotifyTriggerActionCreator: logNotifyTrigger,
+      },
+    });
   }
 
   function setEngineTriggersState(notifications: string[]) {

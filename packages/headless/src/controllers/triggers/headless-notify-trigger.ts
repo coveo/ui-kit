@@ -15,21 +15,9 @@ export type {NotifyTrigger, NotifyTriggerState};
  * @returns A `NotifyTrigger` controller instance.
  * */
 export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
-  const {dispatch} = engine;
-  const notifyTrigger = buildCoreNotifyTrigger(engine);
-
-  return {
-    ...notifyTrigger,
-
-    get state() {
-      return notifyTrigger.state;
+  return buildCoreNotifyTrigger(engine, {
+    options: {
+      logNotifyTriggerActionCreator: logNotifyTrigger,
     },
-
-    subscribe(listener: () => void) {
-      return notifyTrigger.subscribe(() => {
-        listener();
-        dispatch(logNotifyTrigger());
-      });
-    },
-  };
+  });
 }

@@ -4,9 +4,6 @@ import {
   buildMockInsightEngine,
 } from '../../test/mock-engine-v2';
 import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchState} from '../../test/mock-search-state';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {logNotifyTrigger} from './insight-trigger-analytics-actions';
 import {getTriggerInitialState} from './triggers-state';
@@ -24,27 +21,7 @@ jest.mock('coveo.analytics', () => {
     history: {HistoryStore: jest.fn()},
   };
 });
-const examplePermanentId = 'example permanent id';
 const expectedNotifications = ['Hello'];
-
-const resultParams = {
-  title: 'example documentTitle',
-  uri: 'example documentUri',
-  printableUri: 'printable-uri',
-  clickUri: 'example documentUrl',
-  uniqueId: 'unique-id',
-  excerpt: 'excerpt',
-  firstSentences: 'first-sentences',
-  flags: 'flags',
-  rankingModifier: 'example rankingModifier',
-  raw: buildMockRaw({
-    urihash: 'example documentUriHash',
-    source: 'example sourceName',
-    collection: 'example collectionName',
-    permanentid: examplePermanentId,
-  }),
-};
-const exampleResult = buildMockResult(resultParams);
 
 const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
@@ -76,9 +53,6 @@ describe('the analytics related to the triggers feature in the insight use case'
           ...getTriggerInitialState(),
           notifications: expectedNotifications,
         },
-        search: buildMockSearchState({
-          results: [exampleResult],
-        }),
       })
     );
   });
