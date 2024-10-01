@@ -72,7 +72,7 @@ export interface PreparedSearchEventRequest extends Omit<SearchEventRequest, 'se
 
 export interface DocumentInformation {
     documentUri?: string;
-    documentUriHash: string;
+    documentUriHash?: string;
     collectionName?: string;
     sourceName: string;
     documentPosition: number;

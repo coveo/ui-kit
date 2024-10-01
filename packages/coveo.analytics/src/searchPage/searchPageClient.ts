@@ -43,6 +43,7 @@ import {
     GeneratedAnswerBaseMeta,
     GeneratedAnswerRephraseMeta,
     GeneratedAnswerFeedbackMetaV2,
+    GeneratedAnswerCitationClickMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -908,6 +909,27 @@ export class CoveoSearchPageClient {
 
     public async logOpenGeneratedAnswerSource(metadata: GeneratedAnswerCitationMeta) {
         return (await this.makeOpenGeneratedAnswerSource(metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
+
+    public makeGeneratedAnswerCitationClick(
+        info: PartialDocumentInformation,
+        citation: GeneratedAnswerCitationClickMeta
+    ) {
+        return this.makeClickEvent(
+            SearchPageEvents.generatedAnswerCitationClick,
+            {...info, documentPosition: 1},
+            {contentIDKey: citation.documentId.contentIdKey, contentIDValue: citation.documentId.contentIdValue},
+            citation
+        );
+    }
+
+    public async logGeneratedAnswerCitationClick(
+        info: PartialDocumentInformation,
+        citation: GeneratedAnswerCitationClickMeta
+    ) {
+        return (await this.makeGeneratedAnswerCitationClick(info, citation)).log({
             searchUID: this.provider.getSearchUID(),
         });
     }

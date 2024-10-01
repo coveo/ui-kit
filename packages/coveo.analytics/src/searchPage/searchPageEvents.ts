@@ -350,6 +350,10 @@ export enum SearchPageEvents {
      * Identifies the new version of custom event that gets logged when a user submits a feedback of a generated answer.
      */
     generatedAnswerFeedbackSubmitV2 = 'generatedAnswerFeedbackSubmitV2',
+    /**
+     * Identifies the click event that gets logged when the user clicks on a generated answer citation.
+     */
+    generatedAnswerCitationClick = 'generatedAnswerCitationClick',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
@@ -559,6 +563,16 @@ export type GeneratedAnswerStreamEndMeta = GeneratedAnswerBaseMeta & {
 export type GeneratedAnswerCitationMeta = GeneratedAnswerBaseMeta & {
     permanentId: string;
     citationId: string;
+};
+
+export type GeneratedAnswerCitationClickMeta = GeneratedAnswerBaseMeta & {
+    citationId: string;
+    documentId: GeneratedAnswerDocumentIdentifier;
+};
+
+type GeneratedAnswerDocumentIdentifier = {
+    contentIdKey: string;
+    contentIdValue: string;
 };
 
 export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful' | 'other';
