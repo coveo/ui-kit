@@ -1,5 +1,5 @@
-name: 'Playwright Headless Comnerce React'
-description: 'Run Playwright tests for Headless Comnerce React'
+name: 'Playwright Headless Commerce React'
+description: 'Run Playwright tests for Headless Commerce React'
 runs:
   using: composite
   steps:
