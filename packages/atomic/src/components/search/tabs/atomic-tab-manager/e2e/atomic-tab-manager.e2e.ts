@@ -81,8 +81,7 @@ test.describe('AtomicTabManager', () => {
           // eslint-disable-next-line @cspell/spellchecker
           'how to resolve netflix connection with tivo'
         );
-        await searchBox.submitButton.focus();
-        await searchBox.submitButton.click();
+        await searchBox.searchInput.press('Enter');
         await expect(tabManager.generatedAnswer).toBeHidden();
       });
     });
@@ -147,8 +146,7 @@ test.describe('AtomicTabManager', () => {
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
           );
-          await searchBox.submitButton.focus();
-          await searchBox.submitButton.click();
+          await searchBox.searchInput.press('Enter');
 
           await tabManager.generatedAnswer.waitFor({state: 'visible'});
           await expect(tabManager.generatedAnswer).toBeVisible();
@@ -199,8 +197,7 @@ test.describe('AtomicTabManager', () => {
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
             );
-            await searchBox.submitButton.focus();
-            await searchBox.submitButton.click();
+            await searchBox.searchInput.press('Enter');
             await expect(tabManager.generatedAnswer).toBeHidden();
           });
         });
@@ -313,8 +310,8 @@ test.describe('AtomicTabManager', () => {
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
           );
-          await searchBox.searchInput.press('Enter');
 
+          await searchBox.searchInput.press('Enter');
           await expect(tabManager.generatedAnswer).toBeVisible();
         });
       });
@@ -370,8 +367,7 @@ test.describe('AtomicTabManager', () => {
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
             );
-            await searchBox.submitButton.focus();
-            await searchBox.submitButton.click();
+            await searchBox.searchInput.press('Enter');
             await expect(tabManager.generatedAnswer).toBeHidden();
           });
         });
