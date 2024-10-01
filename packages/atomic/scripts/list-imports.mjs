@@ -1,12 +1,30 @@
 #!/usr/bin/env node
 import {existsSync, readFileSync} from 'fs';
-import {dirname, extname, isAbsolute, join, relative, resolve} from 'path';
+import {dirname, extname, isAbsolute, relative, resolve} from 'path';
 import ts from 'typescript';
 
 export function ensureFileExists(filePath) {
   if (!existsSync(filePath)) {
     throw new Error(`File ${filePath} does not exist.`);
   }
+}
+
+function getImports(sourceFile) {
+  const imports = [];
+
+  const visit = (node) => {
+    if (ts.isImportDeclaration(node)) {
+      const importPath = node.moduleSpecifier.text;
+      // TODO: should have the extension in the import path
+      imports.push(importPath);
+    }
+
+    ts.forEachChild(node, visit);
+  };
+
+  ts.forEachChild(sourceFile, visit);
+
+  return imports;
 }
 
 /**
@@ -16,7 +34,6 @@ export function ensureFileExists(filePath) {
  */
 export function listImports(filePath, projectRoot) {
   ensureFileExists(filePath);
-  const imports = [];
   const fileContent = readFileSync(filePath, 'utf-8');
   const sourceFile = ts.createSourceFile(
     filePath,
@@ -24,38 +41,24 @@ export function listImports(filePath, projectRoot) {
     ts.ScriptTarget.ES2015,
     true // SetParentNodes - useful for AST transformations
   );
-
-  const visit = (node) => {
-    if (ts.isImportDeclaration(node)) {
-      const importPath = node.moduleSpecifier.text;
-      //   TODO: make sure the path starts at the root of atomic or ui-kit... we do not want to have the absolute path of the machine
-      imports.push(importPath);
-    }
-
-    ts.forEachChild(node, visit);
-  };
-
-  ts.forEachChild(sourceFile, visit);
+  const imports = getImports(sourceFile);
 
   const resolvedImports = imports.map((importPath) => {
     const absolutePath = isAbsolute(importPath)
       ? importPath
       : resolve(dirname(filePath), importPath);
 
-    const relativePath = relative(projectRoot, absolutePath);
-
-    if (!extname(relativePath)) {
+    if (!extname(absolutePath)) {
       const extensions = ['.ts', '.tsx'];
       for (const ext of extensions) {
-        const filePath = relativePath.concat(ext);
+        const filePath = absolutePath.concat(ext);
         if (existsSync(filePath)) {
-          return filePath;
+          return relative(projectRoot, filePath);
         }
         // TODO: handle the case where the file does not exist
       }
     }
-
-    return relativePath;
+    return relative(projectRoot, absolutePath);
   });
 
   return resolvedImports;

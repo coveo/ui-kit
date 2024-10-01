@@ -2,7 +2,6 @@
 import {setOutput} from '@actions/core';
 import 'fs';
 import {readdirSync, statSync} from 'fs';
-import 'path';
 import {basename, resolve, dirname, join, relative} from 'path';
 import {
   getBaseHeadSHAs,
@@ -49,6 +48,7 @@ function findAllTestFiles(dir) {
  */
 function createTestFileMappings(testFiles, projectRoot) {
   const testFileMappings = testFiles.map((file) => {
+    const imports = new Set();
     const fileName = basename(file);
     const sourceFile = join(
       dirname(file).replace('/e2e', ''),
@@ -56,13 +56,13 @@ function createTestFileMappings(testFiles, projectRoot) {
     );
 
     ensureFileExists(sourceFile);
-    const imports = new Set();
+
     [resolve(sourceFile), ...listImports(sourceFile, projectRoot)].forEach(
       (importedFile) => imports.add(importedFile)
     );
 
     // make sure the path relative to the project root
-    const filenameAbsolute = relative(projectRoot, filename);
+    const filenameAbsolute = relative(projectRoot, fileName);
 
     console.log('*********************');
     console.log(filenameAbsolute, [...imports]);
