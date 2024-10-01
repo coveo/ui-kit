@@ -57,6 +57,12 @@ function createTestFileMappings(testPaths, projectRoot) {
 
     ensureFileExists(sourceFilePath);
 
+    console.log('=======');
+    console.log(projectRoot);
+    console.log(sourceFilePath);
+    console.log(relative(projectRoot, sourceFilePath));
+    console.log('=======');
+
     [
       relative(projectRoot, sourceFilePath),
       ...listImports(sourceFilePath, projectRoot),
