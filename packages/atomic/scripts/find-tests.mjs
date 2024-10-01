@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import {setOutput} from '@actions/core';
-import 'fs';
 import {readdirSync, statSync} from 'fs';
-import {basename, resolve, dirname, join, relative} from 'path';
+import {basename, dirname, join, relative} from 'path';
 import {
   getBaseHeadSHAs,
   getChangedFiles,
@@ -19,9 +18,7 @@ import {listImports, ensureFileExists} from './list-imports.mjs';
  * @returns An array of strings, each representing the full path to an E2E test file.
  */
 function findAllTestFiles(dir) {
-  const testFiles = [];
-
-  function searchFiles(currentDir) {
+  function searchFiles(currentDir, testFiles) {
     const files = readdirSync(currentDir);
 
     for (const file of files) {
@@ -29,15 +26,16 @@ function findAllTestFiles(dir) {
       const stat = statSync(fullPath);
 
       if (stat.isDirectory()) {
-        searchFiles(fullPath);
+        searchFiles(fullPath, testFiles);
       } else if (fullPath.endsWith('.e2e.ts')) {
         testFiles.push(fullPath);
       }
     }
+
+    return testFiles;
   }
 
-  searchFiles(dir);
-  return testFiles;
+  return searchFiles(dir, []);
 }
 
 /**
@@ -56,12 +54,6 @@ function createTestFileMappings(testPaths, projectRoot) {
     );
 
     ensureFileExists(sourceFilePath);
-
-    console.log('=======');
-    console.log(projectRoot);
-    console.log(sourceFilePath);
-    console.log(relative(projectRoot, sourceFilePath));
-    console.log('=======');
 
     [
       relative(projectRoot, sourceFilePath),
@@ -87,12 +79,19 @@ function createTestFileMappings(testPaths, projectRoot) {
  */
 function determineTestFilesToRun(filesChanged, testMappings) {
   const testsToRun = new Set();
+  // TODO: make it more performant and reduce the number of iterations
   for (const file of filesChanged) {
     for (const [testFile, sourceFiles] of testMappings) {
       if (dependsOnCoveoPackage(file)) {
         throw new Error('Change detected in a Coveo package.');
       }
+      sourceFiles.forEach((value, key) => {
+        if (value.includes('atomic-commerce-pager.tsx')) {
+          console.log(value, value === file);
+        }
+      });
       if (sourceFiles.has(file)) {
+        console.log('Adding testFile', testFile);
         testsToRun.add(testFile);
         break;
       }

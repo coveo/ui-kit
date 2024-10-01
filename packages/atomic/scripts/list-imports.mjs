@@ -48,6 +48,7 @@ export function listImports(filePath, projectRoot) {
       ? importPath
       : resolve(dirname(filePath), importPath);
 
+    // TODO: find a way to get rid of this and automatically have the extension in the path
     if (!extname(absolutePath)) {
       const extensions = ['.ts', '.tsx'];
       for (const ext of extensions) {
