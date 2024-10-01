@@ -35,7 +35,9 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - uses: ./.github/actions/build-cdn
+      - uses: ./.github/actions/build
+        with:
+          cache-suffix: cdn
   cdn-checks:
     name: 'CDN Checks'
     needs: build-cdn
