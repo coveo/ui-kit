@@ -470,6 +470,51 @@ describe('c-quantic-search-box-input', () => {
               expectedFirstSuggestionSelected
             );
           });
+
+          it('should display the selected suggestion in the input and display the clear input icon', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              suggestions: mockSuggestions,
+              textarea: textareaValue,
+            });
+            setupEventListeners(element);
+            await flushPromises();
+
+            const input = element.shadowRoot.querySelector(
+              textareaValue
+                ? selectors.searchBoxTextArea
+                : selectors.searchBoxInput
+            );
+            expect(input).not.toBeNull();
+
+            await input.focus();
+
+            const suggestionsList = element.shadowRoot.querySelector(
+              selectors.searchBoxSuggestionsList
+            );
+            expect(suggestionsList).not.toBeNull();
+
+            const querySuggestionIndex = 0;
+            const firstSuggestion = suggestionsList.shadowRoot.querySelectorAll(
+              selectors.suggestionOption
+            )[querySuggestionIndex];
+            expect(firstSuggestion).not.toBeNull();
+
+            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
+
+            expect(
+              functionsMocks.exampleSelectSuggestion
+            ).toHaveBeenCalledTimes(1);
+
+            expect(input.value).toEqual(
+              mockSuggestions[querySuggestionIndex].value
+            );
+
+            const clearIcon = element.shadowRoot.querySelector(
+              selectors.searchBoxClearIcon
+            );
+            expect(clearIcon).not.toBeNull();
+          });
         });
 
         describe('when selecting the clear recent query option from the suggestions list', () => {
