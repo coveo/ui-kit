@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {existsSync, readFileSync} from 'fs';
-import {dirname, extname, isAbsolute, resolve} from 'path';
+import {dirname, extname, isAbsolute, join, relative, resolve} from 'path';
 import ts from 'typescript';
 
 export function ensureFileExists(filePath) {
@@ -14,7 +14,7 @@ export function ensureFileExists(filePath) {
  * @param filePath Path to the TypeScript file.
  * @returns A list of files that are imported by the input file.
  */
-export function listImports(filePath) {
+export function listImports(filePath, projectRoot) {
   ensureFileExists(filePath);
   const imports = [];
   const fileContent = readFileSync(filePath, 'utf-8');
@@ -42,10 +42,12 @@ export function listImports(filePath) {
       ? importPath
       : resolve(dirname(filePath), importPath);
 
-    if (!extname(absolutePath)) {
+    const relativePath = relative(projectRoot, absolutePath);
+
+    if (!extname(relativePath)) {
       const extensions = ['.ts', '.tsx'];
       for (const ext of extensions) {
-        const filePath = absolutePath.concat(ext);
+        const filePath = relativePath.concat(ext);
         if (existsSync(filePath)) {
           return filePath;
         }
@@ -53,7 +55,7 @@ export function listImports(filePath) {
       }
     }
 
-    return absolutePath;
+    return relativePath;
   });
 
   return resolvedImports;

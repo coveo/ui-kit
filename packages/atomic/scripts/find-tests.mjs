@@ -47,7 +47,7 @@ function findAllTestFiles(dir) {
  * @param testFiles - An array of E2E test file paths.
  * @returns A map where each key is a test file name and the value is a set of files it imports.
  */
-function createTestFileMappings(testFiles) {
+function createTestFileMappings(testFiles, projectRoot) {
   const testFileMappings = testFiles.map((file) => {
     const fileName = basename(file);
     const sourceFile = join(
@@ -57,8 +57,8 @@ function createTestFileMappings(testFiles) {
 
     ensureFileExists(sourceFile);
     const imports = new Set();
-    [resolve(sourceFile), ...listImports(sourceFile)].forEach((importedFile) =>
-      imports.add(importedFile)
+    [resolve(sourceFile), ...listImports(sourceFile, projectRoot)].forEach(
+      (importedFile) => imports.add(importedFile)
     );
 
     console.log('*********************');
@@ -76,8 +76,7 @@ function determineTestFilesToRun(filesChanged, testMappings) {
   for (const file of filesChanged) {
     for (const [testFile, sourceFiles] of testMappings) {
       if (dependsOnCoveoPackage(file)) {
-        console.log('Change detected in a Coveo package.');
-        return;
+        throw new Error('Change detected in a Coveo package.');
       }
       if (sourceFiles.has(file)) {
         testsToRun.add(testFile);
@@ -99,14 +98,22 @@ console.log(changedFiles);
 console.log('*********************');
 
 const outputName = getOutputName();
-const testFiles = findAllTestFiles(join('src', 'components')); // TODO: maybe should be an input
-const testMappings = createTestFileMappings(testFiles);
+const projectRoot = 'home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic
+try {
+  const testFiles = findAllTestFiles(
+    join('src', 'components') // TODO: depends from where the script is running
+  ); // TODO: maybe should be an input
+  const testMappings = createTestFileMappings(testFiles, projectRoot);
 
-// TODO: check what happens to the output if an error is thrown
-const testsToRun = determineTestFilesToRun(changedFiles, testMappings);
-if (testsToRun) {
-  setOutput(outputName, testsToRun);
-} else {
+  // TODO: check what happens to the output if an error is thrown
+  const testsToRun = determineTestFilesToRun(changedFiles, testMappings);
+  if (testsToRun) {
+    console.log(testsToRun);
+    setOutput(outputName, testsToRun);
+  } else {
+    console.log('No E2E tests to run');
+  }
+} catch (error) {
+  console.log(error);
   console.log('Running all tests');
 }
-setOutput(outputName, testsToRun);
