@@ -26,7 +26,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npx http-server dist -p 3000',
+    command: 'npx ws -d dist -p 3000',
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
