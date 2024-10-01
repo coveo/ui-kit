@@ -1,24 +1,24 @@
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {logNotifyTrigger} from './insight-trigger-analytics-actions';
-import {getTriggerInitialState} from './triggers-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {logNotifyTrigger} from './insight-trigger-analytics-actions.js';
+import {getTriggerInitialState} from './triggers-state.js';
 
-const mockLogTriggerNotify = jest.fn();
+const mockLogTriggerNotify = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logTriggerNotify: mockLogTriggerNotify,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 const expectedNotifications = ['Hello'];
@@ -58,7 +58,7 @@ describe('the analytics related to the triggers feature in the insight use case'
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should log #logNotifyTrigger when there are notifications', async () => {

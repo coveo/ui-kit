@@ -1,14 +1,14 @@
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   NotifyTrigger,
   buildNotifyTrigger,
-} from './headless-insight-notify-trigger';
+} from './headless-insight-notify-trigger.js';
 
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('NotifyTrigger', () => {
   let engine: MockedInsightEngine;

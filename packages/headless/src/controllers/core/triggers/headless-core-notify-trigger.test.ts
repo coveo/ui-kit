@@ -1,14 +1,15 @@
-import {logNotifyTrigger} from '../../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice';
+import {Mock} from 'vitest';
+import {logNotifyTrigger} from '../../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger';
-import {buildCoreNotifyTrigger} from './headless-core-notify-trigger';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
+import {buildCoreNotifyTrigger} from './headless-core-notify-trigger.js';
 
-jest.mock('../../../features/triggers/trigger-analytics-actions');
+vi.mock('../../../features/triggers/trigger-analytics-actions');
 
 describe('NotifyTrigger', () => {
   let engine: MockedSearchEngine;
@@ -27,11 +28,11 @@ describe('NotifyTrigger', () => {
   }
 
   function registeredListeners() {
-    return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
+    return (engine.subscribe as Mock).mock.calls.map((args) => args[0]);
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     initNotifyTrigger();
   });
@@ -51,7 +52,7 @@ describe('NotifyTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.notifications is not updated', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockSearchEngine(createMockState());
       initNotifyTrigger();
@@ -70,7 +71,7 @@ describe('NotifyTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.notifications is updated', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockSearchEngine(createMockState());
       initNotifyTrigger();
@@ -90,7 +91,7 @@ describe('NotifyTrigger', () => {
   });
 
   describe('when the #engine.state.triggers.notifications is updated with an empty array', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockSearchEngine(createMockState());
       initNotifyTrigger();
@@ -110,7 +111,7 @@ describe('NotifyTrigger', () => {
   });
 
   describe('when a non-empty #engine.state.triggers.notifications is updated with an empty array', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockSearchEngine(createMockState());
       setEngineTriggersState(['hello', 'world']);
@@ -131,7 +132,7 @@ describe('NotifyTrigger', () => {
   });
 
   describe('when a non-empty #engine.state.triggers.notifications is updated with the same array', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     beforeEach(() => {
       engine = buildMockSearchEngine(createMockState());
       setEngineTriggersState(['hello', 'world']);

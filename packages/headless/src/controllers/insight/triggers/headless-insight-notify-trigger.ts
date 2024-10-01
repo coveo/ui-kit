@@ -1,10 +1,10 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logNotifyTrigger} from '../../../features/triggers/insight-trigger-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {logNotifyTrigger} from '../../../features/triggers/insight-trigger-analytics-actions.js';
 import {
   buildCoreNotifyTrigger,
   NotifyTrigger,
   NotifyTriggerState,
-} from '../../core/triggers/headless-core-notify-trigger';
+} from '../../core/triggers/headless-core-notify-trigger.js';
 
 export type {NotifyTrigger, NotifyTriggerState};
 
