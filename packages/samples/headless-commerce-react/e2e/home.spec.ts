@@ -10,7 +10,6 @@ test.describe('Home Page', () => {
   test('should perform a search and display products', async ({page}) => {
     await page.goto('/');
     const searchBox = page.getByLabel('Enter query');
-    await searchBox.fill('blue pants');
     await searchBox.press('Enter');
 
     const productList = page.locator('css=.ProductList');
@@ -23,7 +22,6 @@ test.describe('Home Page', () => {
   test('should display the facets', async ({page}) => {
     await page.goto('/');
     const searchBox = page.getByLabel('Enter query');
-    await searchBox.fill('blue pants');
     await searchBox.press('Enter');
 
     const facetsSection = page.getByLabel('Brand');
