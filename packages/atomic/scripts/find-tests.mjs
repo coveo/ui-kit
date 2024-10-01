@@ -3,7 +3,7 @@ import {setOutput} from '@actions/core';
 import 'fs';
 import {readdirSync, statSync} from 'fs';
 import 'path';
-import {basename, resolve, dirname, join} from 'path';
+import {basename, resolve, dirname, join, relative} from 'path';
 import {
   getBaseHeadSHAs,
   getChangedFiles,
@@ -74,6 +74,13 @@ function createTestFileMappings(testFiles, projectRoot) {
   return new Map(testFileMappings);
 }
 
+/**
+ * Determines which E2E test files to run based on the files that have changed.
+ *
+ * @param filesChanged - An array of files that have changed.
+ * @param testMappings - A map of test file names to the set of files they import.
+ * @returns A space-separated string of test files to run.
+ */
 function determineTestFilesToRun(filesChanged, testMappings) {
   const testsToRun = new Set();
   for (const file of filesChanged) {
@@ -101,7 +108,7 @@ console.log(changedFiles);
 console.log('*********************');
 
 const outputName = getOutputName();
-const projectRoot = '/home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic
+const projectRoot = '/home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic (and/or pass it as an input)
 try {
   const testFiles = findAllTestFiles(
     join('src', 'components') // TODO: depends from where the script is running
