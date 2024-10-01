@@ -110,6 +110,7 @@ export class AtomicCommercePager
   }
 
   public render() {
+    // This is a change to trigger the E2E scoping job
     const pagesRange = getCurrentPagesRange(
       this.pagerState.page,
       this.numberOfPages,
