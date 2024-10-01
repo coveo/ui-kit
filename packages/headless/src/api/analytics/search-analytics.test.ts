@@ -256,7 +256,7 @@ describe('#configureLegacyAnalytics', () => {
           facetValue
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         facetField: state.facetSet[facetId].request.field,
         facetId,
         facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
@@ -275,7 +275,7 @@ describe('#configureLegacyAnalytics', () => {
           facetId
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         facetField: state.facetSet[facetId].request.field,
         facetId,
         facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
@@ -295,7 +295,7 @@ describe('#configureLegacyAnalytics', () => {
           criteria
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         facetField: state.facetSet[facetId].request.field,
         facetId,
         facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
@@ -321,7 +321,7 @@ describe('#configureLegacyAnalytics', () => {
           () => state
         ).getRangeBreadcrumbFacetMetadata(facetId, facetValue)
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         facetField: state.facetSet[facetId].request.field,
         facetId,
         facetTitle: `${state.facetSet[facetId].request.field}_${facetId}`,
@@ -339,7 +339,7 @@ describe('#configureLegacyAnalytics', () => {
       expect(
         new SearchAnalyticsProvider(() => state).getResultSortMetadata()
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         resultsSortBy,
       });
     });
@@ -358,7 +358,7 @@ describe('#configureLegacyAnalytics', () => {
           staticFilterValue
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         staticFilterId,
         staticFilterValue,
       });
@@ -373,7 +373,7 @@ describe('#configureLegacyAnalytics', () => {
           undoneQuery
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         undoneQuery,
       });
     });
@@ -390,7 +390,7 @@ describe('#configureLegacyAnalytics', () => {
           () => state
         ).getCategoryBreadcrumbFacetMetadata(categoryFacetId, categoryFacetPath)
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         categoryFacetField:
           state.categoryFacetSet[categoryFacetId].request.field,
         categoryFacetId,
@@ -431,7 +431,7 @@ describe('#configureLegacyAnalytics', () => {
           suggestion
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         partialQueries,
         partialQuery: partialQueries[partialQueries.length - 1],
         querySuggestResponseId: '',
@@ -448,7 +448,7 @@ describe('#configureLegacyAnalytics', () => {
       expect(
         new SearchAnalyticsProvider(() => state).getInterfaceChangeMetadata()
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         interfaceChangeTo: originLevel2,
       });
     });
@@ -469,7 +469,7 @@ describe('#configureLegacyAnalytics', () => {
           metadata
         )
       ).toEqual({
-        coveoHeadlessVersion: 'Test version',
+        coveoHeadlessVersion: '0.0.0',
         ...metadata,
       });
     });

@@ -416,7 +416,6 @@ describe('search api client', () => {
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
-          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'querySuggest'},

@@ -180,18 +180,20 @@ export const buildQuerySuggestRequest = async (
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),
     tab: s.configuration.analytics.originLevel2,
-    ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(s.configuration.analytics),
-      ...(s.configuration.analytics.enabled &&
-      s.configuration.analytics.analyticsMode === 'legacy'
-        ? await legacyFromAnalyticsStateToAnalyticsParams(
-            s.configuration.analytics
-          )
-        : fromAnalyticsStateToAnalyticsParams(
-            s.configuration.analytics,
-            navigatorContext
-          )),
-    }),
+    ...(s.configuration.analytics.enabled &&
+      s.configuration.analytics.analyticsMode === 'legacy' && {
+        visitorId: await getVisitorID(s.configuration.analytics),
+        ...(await legacyFromAnalyticsStateToAnalyticsParams(
+          s.configuration.analytics
+        )),
+      }),
+    ...(s.configuration.analytics.enabled &&
+      s.configuration.analytics.analyticsMode === 'next' && {
+        ...fromAnalyticsStateToAnalyticsParams(
+          s.configuration.analytics,
+          navigatorContext
+        ),
+      }),
     ...(s.configuration.search.authenticationProviders.length && {
       authentication: s.configuration.search.authenticationProviders.join(','),
     }),

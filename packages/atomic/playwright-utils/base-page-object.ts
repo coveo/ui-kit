@@ -22,13 +22,20 @@ export class BasePageObject<
   async load({
     args,
     story = 'default',
-  }: {args?: Component; story?: string} = {}) {
+    queryParams = {},
+  }: {
+    args?: Component;
+    story?: string;
+    queryParams?: Record<string, string>;
+  } = {}) {
     if (args) {
       await this.page.goto(
-        `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`
+        `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}&${new URLSearchParams(queryParams).toString()}`
       );
     } else {
-      await this.page.goto(`${this.urlRoot}?id=${this.tag}--${story}`);
+      await this.page.goto(
+        `${this.urlRoot}?id=${this.tag}--${story}&${new URLSearchParams(queryParams).toString()}`
+      );
     }
   }
 

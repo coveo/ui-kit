@@ -2,7 +2,12 @@ import {test, expect} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({args: {suggestionTimeout: 5000}});
+    await searchBox.load({
+      args: {suggestionTimeout: 5000},
+      queryParams: {
+        searchProxyUrl: encodeURIComponent('http://localhost:1234'),
+      },
+    });
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -21,7 +26,7 @@ test.describe('default', () => {
       await searchBox.searchInput.click();
     });
 
-    test('should display suggested queries', async ({searchBox}) => {
+    test.only('should display suggested queries', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
     });
 
