@@ -61,11 +61,14 @@ function createTestFileMappings(testFiles, projectRoot) {
       (importedFile) => imports.add(importedFile)
     );
 
+    // make sure the path relative to the project root
+    const filenameAbsolute = relative(projectRoot, filename);
+
     console.log('*********************');
-    console.log(fileName, [...imports]);
+    console.log(filenameAbsolute, [...imports]);
     console.log('*********************');
 
-    return [fileName, imports];
+    return [filenameAbsolute, imports];
   });
 
   return new Map(testFileMappings);
