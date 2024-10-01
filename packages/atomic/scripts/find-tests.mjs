@@ -98,7 +98,7 @@ console.log(changedFiles);
 console.log('*********************');
 
 const outputName = getOutputName();
-const projectRoot = 'home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic
+const projectRoot = '/home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic
 try {
   const testFiles = findAllTestFiles(
     join('src', 'components') // TODO: depends from where the script is running
