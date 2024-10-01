@@ -149,6 +149,8 @@ test.describe('AtomicTabManager', () => {
           );
           await searchBox.submitButton.focus();
           await searchBox.submitButton.click();
+
+          await tabManager.generatedAnswer.waitFor({state: 'visible'});
           await expect(tabManager.generatedAnswer).toBeVisible();
         });
       });
