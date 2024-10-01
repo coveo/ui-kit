@@ -1,14 +1,14 @@
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockSearch} from '../../../../test/mock-search';
-import {logSearchEvent} from '../../../analytics/analytics-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {change} from '../../../history/history-actions';
-import {getHistoryInitialState} from '../../../history/history-state';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../../search/search-actions';
-import * as FacetReducers from '../../generic/facet-reducer-helpers';
-import * as RangeFacetReducers from '../generic/range-facet-reducers';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {buildMockSearch} from '../../../../test/mock-search.js';
+import {logSearchEvent} from '../../../analytics/analytics-actions.js';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
+import {change} from '../../../history/history-actions.js';
+import {getHistoryInitialState} from '../../../history/history-state.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
+import * as FacetReducers from '../../generic/facet-reducer-helpers.js';
+import * as RangeFacetReducers from '../generic/range-facet-reducers.js';
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
@@ -17,12 +17,12 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
   toggleExcludeNumericFacetValue,
-} from './numeric-facet-actions';
-import {numericFacetSetReducer} from './numeric-facet-set-slice';
+} from './numeric-facet-actions.js';
+import {numericFacetSetReducer} from './numeric-facet-set-slice.js';
 import {
   NumericFacetSetState,
   getNumericFacetSetInitialState,
-} from './numeric-facet-set-state';
+} from './numeric-facet-set-state.js';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;
@@ -32,7 +32,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('initializes the set to an empty object', () => {
@@ -84,7 +84,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#restoreSearchParameters restores the #nf payload correctly', () => {
-    const spy = jest.spyOn(
+    const spy = vi.spyOn(
       RangeFacetReducers,
       'handleRangeFacetSearchParameterRestoration'
     );
@@ -105,7 +105,7 @@ describe('numeric-facet-set slice', () => {
   it('#toggleSelectNumericFacetValue calls #toggleSelectRangeValue', () => {
     const facetId = '1';
     const selection = buildMockNumericFacetValue();
-    jest.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
+    vi.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
 
     numericFacetSetReducer(
       state,
@@ -118,7 +118,7 @@ describe('numeric-facet-set slice', () => {
   it('#toggleExcludeNumericFacetValue calls #toggleExcludeRangeValue', () => {
     const facetId = '1';
     const selection = buildMockNumericFacetValue();
-    jest.spyOn(RangeFacetReducers, 'toggleExcludeRangeValue');
+    vi.spyOn(RangeFacetReducers, 'toggleExcludeRangeValue');
 
     numericFacetSetReducer(
       state,
@@ -129,7 +129,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#deselectAllNumericFacetValues calls #handleRangeFacetDeselectAll', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
     const action = deselectAllNumericFacetValues('1');
     numericFacetSetReducer(state, action);
 
@@ -139,7 +139,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#updateNumericFacetValues calls #updateRangeValues', () => {
-    jest.spyOn(RangeFacetReducers, 'updateRangeValues');
+    vi.spyOn(RangeFacetReducers, 'updateRangeValues');
     const action = updateNumericFacetValues({facetId: '1', values: []});
     numericFacetSetReducer(state, action);
 
@@ -147,7 +147,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every numeric facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
     state['1'] = buildMockNumericFacetSlice();
     state['2'] = buildMockNumericFacetSlice();
@@ -159,7 +159,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+    vi.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
     const action = updateNumericFacetSortCriterion({
       facetId: '1',
@@ -173,7 +173,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
-    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
+    vi.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
 
     const search = buildMockSearch();
     numericFacetSetReducer(

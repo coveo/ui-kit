@@ -10,13 +10,13 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   allowedValues,
   customSort,
-} from '../../../controllers/core/facets/_common/facet-option-definitions';
-import {validatePayload} from '../../../utils/validate-payload';
-import {FacetResultsMustMatch} from '../facet-api/request';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {facetValueDefinition} from './facet-set-validate-payload';
-import {FacetSortCriterion} from './interfaces/request';
-import {FacetValue} from './interfaces/response';
+} from '../../../controllers/core/facets/_common/facet-option-definitions.js';
+import {validatePayload} from '../../../utils/validate-payload.js';
+import {FacetResultsMustMatch} from '../facet-api/request.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
+import {facetValueDefinition} from './facet-set-validate-payload.js';
+import {FacetSortCriterion} from './interfaces/request.js';
+import {FacetValue} from './interfaces/response.js';
 
 export interface RegisterFacetActionCreatorPayload {
   /**

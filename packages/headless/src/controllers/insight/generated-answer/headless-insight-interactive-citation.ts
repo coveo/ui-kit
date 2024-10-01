@@ -1,11 +1,11 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logOpenGeneratedAnswerSource} from '../../../features/generated-answer/generated-answer-insight-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {logOpenGeneratedAnswerSource} from '../../../features/generated-answer/generated-answer-insight-analytics-actions.js';
 import {
   InteractiveCitation,
   InteractiveCitationOptions,
   InteractiveCitationProps,
   buildInteractiveCitationCore,
-} from '../../core/generated-answer/headless-core-interactive-citation';
+} from '../../core/generated-answer/headless-core-interactive-citation.js';
 
 export type {
   InteractiveCitation,

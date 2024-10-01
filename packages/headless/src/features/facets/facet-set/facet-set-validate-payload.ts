@@ -1,5 +1,5 @@
 import {NumberValue} from '@coveo/bueno';
-import {requiredNonEmptyString} from '../../../utils/validate-payload';
+import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 export const facetValueDefinition = {
   value: requiredNonEmptyString,

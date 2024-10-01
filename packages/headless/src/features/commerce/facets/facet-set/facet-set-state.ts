@@ -1,4 +1,4 @@
-import {AnyFacetRequest} from './interfaces/request';
+import {AnyFacetRequest} from './interfaces/request.js';
 
 export type CommerceFacetSlice = {
   request: AnyFacetRequest;

@@ -1,5 +1,5 @@
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {validateManualNumericRanges} from './numeric-facet-actions';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {validateManualNumericRanges} from './numeric-facet-actions.js';
 
 describe('validateManualNumericRanges', () => {
   it('should not throw when the start is lower or equal than the end', () => {

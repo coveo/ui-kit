@@ -1,40 +1,40 @@
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-} from '../../../../features/facets/category-facet-set/category-facet-set-actions';
-import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
+} from '../../../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
-} from '../../../../features/facets/category-facet-set/interfaces/request';
+} from '../../../../features/facets/category-facet-set/interfaces/request.js';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../../features/insight-search/insight-search-actions';
-import {InsightAppState} from '../../../../state/insight-app-state';
-import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response';
-import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value';
+} from '../../../../features/insight-search/insight-search-actions.js';
+import {InsightAppState} from '../../../../state/insight-app-state.js';
+import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response.js';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
+import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
+} from '../../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
 import {
   CategoryFacet,
   CategoryFacetOptions,
   buildCategoryFacet,
-} from './headless-insight-category-facet';
+} from './headless-insight-category-facet.js';
 
-jest.mock(
+vi.mock(
   '../../../../features/facets/category-facet-set/category-facet-set-actions'
 );
-jest.mock('../../../../features/insight-search/insight-search-actions');
-jest.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/insight-search/insight-search-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
 
 describe('insight category facet', () => {
   const facetId = '1';

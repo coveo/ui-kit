@@ -5,12 +5,12 @@ import {
   serializeSchemaValidationError,
   validatePayload,
   validatePayloadAndThrow,
-} from '../../../../utils/validate-payload';
+} from '../../../../utils/validate-payload.js';
 import {
   ToggleSelectCategoryFacetValueActionCreatorPayload,
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
-} from '../../../facets/category-facet-set/category-facet-set-actions';
-import {validateCategoryFacetValue} from '../../../facets/category-facet-set/category-facet-validate-payload';
+} from '../../../facets/category-facet-set/category-facet-set-actions.js';
+import {validateCategoryFacetValue} from '../../../facets/category-facet-set/category-facet-validate-payload.js';
 
 export type UpdateCategoryFacetNumberOfValuesPayload =
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload;

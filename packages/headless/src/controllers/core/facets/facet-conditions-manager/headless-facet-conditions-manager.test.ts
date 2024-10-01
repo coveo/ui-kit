@@ -1,44 +1,45 @@
+import {Mock} from 'vitest';
 import {
   disableFacet,
   enableFacet,
-} from '../../../../features/facet-options/facet-options-actions';
-import {SearchAppState} from '../../../../state/search-app-state';
-import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+} from '../../../../features/facet-options/facet-options-actions.js';
+import {SearchAppState} from '../../../../state/search-app-state.js';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
+import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
-import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {createMockState} from '../../../../test/mock-state';
-import {FacetValueState} from '../facet/headless-core-facet';
+} from '../../../../test/mock-engine-v2.js';
+import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice.js';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {createMockState} from '../../../../test/mock-state.js';
+import {FacetValueState} from '../facet/headless-core-facet.js';
 import {
   buildCoreFacetConditionsManager,
   FacetConditionsManager,
-} from './headless-facet-conditions-manager';
+} from './headless-facet-conditions-manager.js';
 
-jest.mock('../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../features/facet-options/facet-options-actions');
 
 describe('facet conditions manager', () => {
   let state: SearchAppState;
   let engine: MockedSearchEngine;
   let engineListener: Function;
-  let engineUnsubscriber: jest.Mock;
+  let engineUnsubscriber: Mock;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     state = createMockState();
     engine = buildMockSearchEngine(state);
-    engine.subscribe = jest.fn((listener) => {
+    engine.subscribe = vi.fn((listener) => {
       engineListener = listener;
-      return (engineUnsubscriber = jest.fn());
+      return (engineUnsubscriber = vi.fn());
     });
   });
 
@@ -46,7 +47,7 @@ describe('facet conditions manager', () => {
     const facetId = 'abc';
     const parentFacetId = 'def';
     let facetConditionsManager: FacetConditionsManager;
-    let condition: jest.Mock;
+    let condition: Mock;
 
     function initCondition() {
       state.facetSet[facetId] = buildMockFacetSlice();
@@ -56,7 +57,7 @@ describe('facet conditions manager', () => {
         conditions: [
           {
             parentFacetId,
-            condition: (condition = jest.fn(() => false)),
+            condition: (condition = vi.fn(() => false)),
           },
         ],
       });
@@ -224,11 +225,11 @@ describe('facet conditions manager', () => {
         conditions: [
           {
             parentFacetId: parentFacetAId,
-            condition: jest.fn(() => getConditionIsMet(parentFacetAId)),
+            condition: vi.fn(() => getConditionIsMet(parentFacetAId)),
           },
           {
             parentFacetId: parentFacetBId,
-            condition: jest.fn(() => getConditionIsMet(parentFacetBId)),
+            condition: vi.fn(() => getConditionIsMet(parentFacetBId)),
           },
         ],
       });

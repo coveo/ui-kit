@@ -1,44 +1,44 @@
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
-import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations';
-import {setContext, setView} from '../context/context-actions';
-import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
+import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations.js';
+import {setContext, setView} from '../context/context-actions.js';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions.js';
 import {
   clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
-} from '../facets/core-facet/core-facet-actions';
+} from '../facets/core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from '../facets/date-facet/date-facet-actions';
+} from '../facets/date-facet/date-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../facets/numeric-facet/numeric-facet-actions';
+} from '../facets/numeric-facet/numeric-facet-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../facets/regular-facet/regular-facet-actions';
-import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
-import {fetchRecommendations} from '../recommendations/recommendations-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
-import {executeSearch} from '../search/search-actions';
-import {applySort} from '../sort/sort-actions';
+} from '../facets/regular-facet/regular-facet-actions.js';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../product-listing/product-listing-actions.js';
+import {fetchRecommendations} from '../recommendations/recommendations-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {applySort} from '../sort/sort-actions.js';
 import {
   nextPage,
   previousPage,
   registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
-} from './pagination-actions';
-import {paginationReducer} from './pagination-slice';
+} from './pagination-actions.js';
+import {paginationReducer} from './pagination-slice.js';
 import {
   CommercePaginationState,
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
   PaginationSlice,
-} from './pagination-state';
+} from './pagination-state.js';
 
 describe('pagination slice', () => {
   let state: CommercePaginationState;

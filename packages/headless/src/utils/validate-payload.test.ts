@@ -1,14 +1,14 @@
 import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
-import {CoreEngine} from '../app/engine';
-import {buildMockSearchEngine} from '../test/mock-engine-v2';
-import {createMockState} from '../test/mock-state';
+import {CoreEngine} from '../app/engine.js';
+import {buildMockSearchEngine} from '../test/mock-engine-v2.js';
+import {createMockState} from '../test/mock-state.js';
 import {
   validatePayload,
   validatePayloadAndThrow,
   validateOptions,
   validateInitialState,
   serializeSchemaValidationError,
-} from './validate-payload';
+} from './validate-payload.js';
 
 const definition = {
   id: new NumberValue({max: 10}),

@@ -1,20 +1,20 @@
-import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {CoreEngine} from '../../app/engine';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
-import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {DocumentSuggestionSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client.js';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import {CoreEngine} from '../../app/engine.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
+import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
+import {DocumentSuggestionSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   buildCoreQuickview,
   QuickviewOptions,
   QuickviewState,
   QuickviewProps,
   Quickview,
-} from '../core/quickview/headless-core-quickview';
+} from '../core/quickview/headless-core-quickview.js';
 
 export interface CaseAssistQuickviewProps extends QuickviewProps {}
 

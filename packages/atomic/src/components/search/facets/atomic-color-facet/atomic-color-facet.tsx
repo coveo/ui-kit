@@ -17,7 +17,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element, Watch} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -45,7 +45,6 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -348,21 +347,6 @@ export class AtomicColorFacet implements InitializableComponent {
     );
   }
 
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
-  }
-
   public componentShouldUpdate(
     next: unknown,
     prev: unknown,
@@ -606,6 +590,10 @@ export class AtomicColorFacet implements InitializableComponent {
         ? [...this.allowedValues]
         : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
   }
 

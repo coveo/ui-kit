@@ -1,4 +1,4 @@
-import {getProductsFromCartState} from './cart-state';
+import {getProductsFromCartState} from './cart-state.js';
 
 describe('cart-state', () => {
   it('should aggregate products with a different price', () => {

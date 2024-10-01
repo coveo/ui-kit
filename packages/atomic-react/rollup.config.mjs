@@ -52,9 +52,6 @@ const packageMappings = {
   '@coveo/headless/insight': {
     cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
   },
-  '@coveo/headless/product-recommendation': {
-    cdn: `/headless/${headlessVersion}/product-recommendation/headless.esm.js`,
-  },
   '@coveo/headless/recommendation': {
     cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
   },
@@ -97,7 +94,7 @@ const commonExternal = [
 
 /** @returns {import('rollup').OutputOptions} */
 const outputCJS = ({useCase}) => ({
-  file: `dist/cjs/${useCase}atomic-react.js`,
+  file: `dist/cjs/${useCase}atomic-react.cjs`,
   format: 'cjs',
 });
 

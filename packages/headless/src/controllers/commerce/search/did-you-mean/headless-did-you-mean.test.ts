@@ -1,11 +1,11 @@
-import {stateKey} from '../../../../app/state-key';
-import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {stateKey} from '../../../../app/state-key.js';
+import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
+} from '../../../../test/mock-engine-v2.js';
+import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
 
 describe('did you mean', () => {
   let didYouMean: DidYouMean;

@@ -1,18 +1,18 @@
-import {SearchAPIClient} from '../../../api/search/search-api-client';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {SearchAPIClient} from '../../../api/search/search-api-client.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import {logSearchboxSubmit} from '../../query/query-analytics-actions';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {logSearchboxSubmit} from '../../query/query-analytics-actions.js';
 import {
   executeSearch,
   fetchInstantResults,
   fetchFacetValues,
   fetchPage,
   fetchMoreResults,
-} from './search-actions';
+} from './search-actions.js';
 
 describe('search actions', () => {
   let e: MockedSearchEngine;
@@ -25,9 +25,9 @@ describe('search actions', () => {
     }) as unknown as ClientThunkExtraArguments<SearchAPIClient>;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     apiClient = {
-      search: jest.fn(),
+      search: vi.fn(),
     } as unknown as SearchAPIClient;
     e = buildMockSearchEngine(createMockState());
   });

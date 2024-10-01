@@ -1,15 +1,15 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions';
-import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
-import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state.js';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import {
   GeneratedAnswer,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
-} from '../core/generated-answer/headless-core-generated-answer';
-import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer';
-import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer';
+} from '../core/generated-answer/headless-core-generated-answer.js';
+import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer.js';
+import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer.js';
 
 export type {
   GeneratedAnswerCitation,

@@ -6,7 +6,7 @@ import {
 } from '@coveo/headless/commerce';
 import {useCallback} from 'react';
 import {useEffect} from 'react';
-import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface';
+import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
 
 interface IProductListingPageProps {
   engine: CommerceEngine;

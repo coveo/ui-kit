@@ -5,13 +5,13 @@ import {
   serializeSchemaValidationError,
   validatePayload,
   validatePayloadAndThrow,
-} from '../../../../utils/validate-payload';
+} from '../../../../utils/validate-payload.js';
 import {
   ToggleSelectDateFacetValueActionCreatorPayload,
   UpdateDateFacetValuesActionCreatorPayload,
   validateManualDateRanges,
-} from '../../../facets/range-facets/date-facet-set/date-facet-actions';
-import {dateFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload';
+} from '../../../facets/range-facets/date-facet-set/date-facet-actions.js';
+import {dateFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload.js';
 
 export type ToggleSelectDateFacetValuePayload =
   ToggleSelectDateFacetValueActionCreatorPayload;

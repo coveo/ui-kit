@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, setView} from './context-actions';
-import {getContextInitialState} from './context-state';
+import {setContext, setView} from './context-actions.js';
+import {getContextInitialState} from './context-state.js';
 
 export const contextReducer = createReducer(
   getContextInitialState(),

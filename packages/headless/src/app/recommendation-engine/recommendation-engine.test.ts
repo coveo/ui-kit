@@ -1,10 +1,10 @@
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
+import {getSampleRecommendationEngineConfiguration} from './recommendation-engine-configuration.js';
 import {
   buildRecommendationEngine,
   RecommendationEngine,
   RecommendationEngineOptions,
-} from './recommendation-engine';
-import {getSampleRecommendationEngineConfiguration} from './recommendation-engine-configuration';
+} from './recommendation-engine.js';
 
 describe('buildRecommendationEngine', () => {
   let options: RecommendationEngineOptions;

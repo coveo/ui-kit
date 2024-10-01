@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {TabSetState} from './tab-set-state';
+import {TabSetState} from './tab-set-state.js';
 
 export const selectActiveTab = createSelector(
   (state?: TabSetState) => state,

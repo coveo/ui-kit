@@ -1,9 +1,9 @@
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 import {
   QuestionAnsweringSection,
   SearchSection,
-} from '../../state/state-sections';
-import {resultFromFieldSelector} from '../search/search-selectors';
+} from '../../state/state-sections.js';
+import {resultFromFieldSelector} from '../search/search-selectors.js';
 
 export function answerSourceSelector(
   state: Partial<SearchSection & QuestionAnsweringSection>,

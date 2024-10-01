@@ -1,11 +1,11 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {getQueryInitialState} from '../query/query-state';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
 
 export const logFetchMoreResults = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.browseResults)(

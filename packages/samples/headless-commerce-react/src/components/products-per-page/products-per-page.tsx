@@ -16,32 +16,41 @@ export default function ProductsPerPage(props: IProductsPerPageProps) {
 
   const options = [5, 10, 20, 50];
   return (
-    <div className="ProductsPerPage">
-      <label className="ProductsPerPageLabel">Products per page:</label>
-      {options.map((pageSize) => (
-        <label key={pageSize} className="ProductsPerPageOption">
-          <input
-            type="radio"
-            name="page"
-            value={pageSize}
-            checked={state.pageSize === pageSize}
-            onChange={() => controller.setPageSize(pageSize)}
-          />
-          {pageSize}
-        </label>
-      ))}
-      <label key={0} className="ProductsPerPageOptionOther">
+    <span className="ProductsPerPage">
+      <span className="ProductsPerPageLabel">Products per page:</span>
+      {options.map((pageSize) => {
+        const id = `page-size-${pageSize}`;
+        return (
+          <span key={pageSize}>
+            <input
+              checked={state.pageSize === pageSize}
+              id={id}
+              name={`pageSize-${pageSize}`}
+              onChange={() => controller.setPageSize(pageSize)}
+              type="radio"
+              value={pageSize}
+            />
+            <label className="ProductsPerPageOption" htmlFor={id}>
+              {pageSize}
+            </label>
+          </span>
+        );
+      })}
+      <span className="ProductsPerPageOptionOther">
         <input
-          type="radio"
-          name="page"
-          value={state.pageSize}
           checked={state.pageSize === 0 || !options.includes(state.pageSize)}
+          id="page-size-other"
+          name="page"
           onChange={() => controller.setPageSize(0)}
+          type="radio"
+          value={state.pageSize}
         />
-        {state.pageSize !== 0 && !options.includes(state.pageSize)
-          ? `Other (${state.pageSize})`
-          : 'Default'}
-      </label>
-    </div>
+        <label htmlFor="page-size-other" key={0}>
+          {state.pageSize !== 0 && !options.includes(state.pageSize)
+            ? `Other (${state.pageSize})`
+            : 'Default'}
+        </label>
+      </span>
+    </span>
   );
 }

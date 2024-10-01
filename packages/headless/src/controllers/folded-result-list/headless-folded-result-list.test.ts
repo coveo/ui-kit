@@ -1,19 +1,19 @@
-import {loadCollection} from '../../features/folding/folding-actions';
-import {fetchMoreResults} from '../../features/search/search-actions';
-import {SearchAppState} from '../../state/search-app-state';
+import {loadCollection} from '../../features/folding/folding-actions.js';
+import {fetchMoreResults} from '../../features/search/search-actions.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   FoldedResultList,
   buildFoldedResultList,
-} from './headless-folded-result-list';
+} from './headless-folded-result-list.js';
 
-jest.mock('../../features/folding/folding-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/folding/folding-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('folded result list', () => {
   let state: SearchAppState;

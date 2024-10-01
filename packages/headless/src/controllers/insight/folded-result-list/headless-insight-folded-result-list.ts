@@ -1,7 +1,7 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {insightFoldedResultAnalyticsClient} from '../../../features/folding/folding-insight-analytics-actions';
-import {loadCollection} from '../../../features/folding/insight-folding-actions';
-import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {insightFoldedResultAnalyticsClient} from '../../../features/folding/folding-insight-analytics-actions.js';
+import {loadCollection} from '../../../features/folding/insight-folding-actions.js';
+import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreFoldedResultList,
   FoldingOptions,
@@ -10,7 +10,7 @@ import {
   FoldedResultList,
   FoldedResultListOptions,
   FoldedResultListState,
-} from '../../core/folded-result-list/headless-core-folded-result-list';
+} from '../../core/folded-result-list/headless-core-folded-result-list.js';
 
 export type {
   FoldedResultListOptions,

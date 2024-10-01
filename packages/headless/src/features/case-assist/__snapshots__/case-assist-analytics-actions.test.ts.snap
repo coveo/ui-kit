@@ -1,50 +1,46 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logAbandonCase with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAbandonCase with the right payload 1`] = `
 [
-  "caseAssist.cancel",
+  "CaseAssist.Cancel",
   {
     "reason": "quit",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logAutoSelectCaseField with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAutoSelectCaseField with the right payload 1`] = `
 [
-  "caseAssist.selectFieldClassification",
+  "CaseAssist.SelectFieldClassification",
   {
     "autoselected": true,
-    "fieldClassification": {
-      "id": "123",
-      "responseId": "baz",
-    },
+    "classificationId": "123",
+    "responseId": "baz",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logCaseStart with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCaseStart with the right payload 1`] = `
 [
-  "caseAssist.start",
+  "CaseAssist.Start",
   {},
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logClassificationClick with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logClassificationClick with the right payload 1`] = `
 [
-  "caseAssist.selectFieldClassification",
+  "CaseAssist.SelectFieldClassification",
   {
     "autoselected": false,
-    "fieldClassification": {
-      "id": "123",
-      "responseId": "baz",
-    },
+    "classificationId": "123",
+    "responseId": "baz",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logCreateCase with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCreateCase with the right payload 1`] = `
 [
-  "caseAssist.createTicket",
+  "CaseAssist.CreateTicket",
   {
     "ticket": {
       "category": "example category",
@@ -57,77 +53,82 @@ exports[`generated answer insight analytics actions when analyticsMode is \`next
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logDocumentSuggestionClick with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionClick with the right payload 1`] = `
 [
-  "caseAssist.documentSuggestionClick",
+  "CaseAssist.DocumentSuggestionClick",
   {
-    "documentSuggestion": {
-      "id": "exampleUniqueId",
-      "responseId": "qux",
-    },
-  },
-]
-`;
-
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logDocumentSuggestionOpen with the right payload 1`] = `
-[
-  "itemClick",
-  {
-    "actionCause": "open",
     "itemMetadata": {
       "title": "exampleTitle",
       "uniqueFieldName": "uniqueId",
       "uniqueFieldValue": "exampleUniqueId",
-      "url": "exampleClickUri",
+      "url": "exampleUri",
     },
     "position": 1,
-    "searchUid": "qux",
+    "responseId": "qux",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logDocumentSuggestionRating with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionOpen with the right payload 1`] = `
 [
-  "caseAssist.documentSuggestionFeedback",
+  "CaseAssist.DocumentSuggestionClick",
   {
-    "documentSuggestion": {
-      "id": "exampleUniqueId",
-      "responseId": "qux",
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleUri",
+    },
+    "position": 1,
+    "responseId": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionRating with the right payload 1`] = `
+[
+  "CaseAssist.DocumentSuggestionFeedback",
+  {
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleUri",
     },
     "liked": true,
+    "responseId": "qux",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
 [
-  "itemClick",
+  "CaseAssist.DocumentSuggestionClick",
   {
-    "actionCause": "preview",
     "itemMetadata": {
       "title": "exampleTitle",
       "uniqueFieldName": "uniqueId",
       "uniqueFieldValue": "exampleUniqueId",
-      "url": "exampleClickUri",
+      "url": "exampleUri",
     },
     "position": 1,
-    "searchUid": "qux",
+    "responseId": "qux",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logSolveCase with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logSolveCase with the right payload 1`] = `
 [
-  "caseAssist.cancel",
+  "CaseAssist.Cancel",
   {
     "reason": "solved",
   },
 ]
 `;
 
-exports[`generated answer insight analytics actions when analyticsMode is \`next\` should log #logUpdateCaseField with the right payload 1`] = `
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logUpdateCaseField with the right payload 1`] = `
 [
-  "caseAssist.updateField",
+  "CaseAssist.UpdateField",
   {
     "fieldName": "exampleField",
     "fieldValue": "bar",

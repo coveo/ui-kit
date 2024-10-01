@@ -1,18 +1,21 @@
-import {configuration} from '../../app/common-reducers';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
-import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
-import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
-import {InsightInterfaceState} from '../../features/insight-interface/insight-interface-state';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
+import {fetchInterface} from '../../features/insight-interface/insight-interface-actions.js';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
+import {InsightInterfaceState} from '../../features/insight-interface/insight-interface-state.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import {
   ConfigurationSection,
   InsightConfigurationSection,
   InsightInterfaceSection,
   SearchHubSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 /**
  * The `InsightInterface` controller is responsible for retrieving the Insight interface configuration.

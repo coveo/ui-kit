@@ -1,7 +1,7 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common';
-import {Cart, buildCart, CartProps, CartInitialState} from './headless-cart';
+import {UniversalControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common.js';
+import {Cart, buildCart, CartProps, CartInitialState} from './headless-cart.js';
 
-export type {CartState, CartItem, CartProps} from './headless-cart';
+export type {CartState, CartItem, CartProps} from './headless-cart.js';
 export type {Cart, CartInitialState};
 
 export interface CartDefinition

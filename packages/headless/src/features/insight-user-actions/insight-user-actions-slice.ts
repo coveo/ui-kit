@@ -2,9 +2,9 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   fetchUserActions,
   registerUserActions,
-} from './insight-user-actions-actions';
-import {preprocessUserActionsData} from './insight-user-actions-preprocessing';
-import {getInsightUserActionsInitialState} from './insight-user-actions-state';
+} from './insight-user-actions-actions.js';
+import {preprocessUserActionsData} from './insight-user-actions-preprocessing.js';
+import {getInsightUserActionsInitialState} from './insight-user-actions-state.js';
 
 export const insightUserActionsReducer = createReducer(
   getInsightUserActionsInitialState(),

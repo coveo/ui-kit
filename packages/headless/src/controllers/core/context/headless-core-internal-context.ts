@@ -1,17 +1,17 @@
-import {CoreEngine} from '../../../app/engine';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   addContext,
   removeContext,
-} from '../../../features/context/context-actions';
-import {contextReducer as context} from '../../../features/context/context-slice';
-import {ContextValue} from '../../../features/context/context-state';
-import {ContextSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../features/context/context-actions.js';
+import {contextReducer as context} from '../../../features/context/context-slice.js';
+import {ContextValue} from '../../../features/context/context-state.js';
+import {ContextSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   ReservedContextKey,
   UnreservedContextKeyError,
   isReservedContextKey,
-} from './headless-context-reserved-keys';
+} from './headless-context-reserved-keys.js';
 
 /**
  * The `InternalContext` controller injects reserved [custom contextual information](https://docs.coveo.com/en/3389/) key-values.

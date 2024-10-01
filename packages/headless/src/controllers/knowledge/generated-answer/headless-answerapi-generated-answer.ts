@@ -1,7 +1,7 @@
 import {
   answerEvaluation,
   AnswerEvaluationPOSTParams,
-} from '../../../api/knowledge/post-answer-evaluation';
+} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
   fetchAnswer,
@@ -9,26 +9,27 @@ import {
   selectAnswer,
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
-} from '../../../api/knowledge/stream-answer-api';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
+} from '../../../api/knowledge/stream-answer-api.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
-} from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {queryReducer as query} from '../../../features/query/query-slice';
+} from '../../../features/generated-answer/generated-answer-actions.js';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   GeneratedAnswerSection,
   QuerySection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-} from '../../core/generated-answer/headless-core-generated-answer';
+} from '../../core/generated-answer/headless-core-generated-answer.js';
 
 export interface AnswerApiGeneratedAnswer
   extends Omit<GeneratedAnswer, 'sendFeedback'> {
@@ -119,7 +120,7 @@ const subscribeToSearchRequest = (
  * @returns A `AnswerApiGeneratedAnswer` controller instance.
  */
 export function buildAnswerApiGeneratedAnswer(
-  engine: SearchEngine,
+  engine: SearchEngine | InsightEngine,
   analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient,
   props: AnswerApiGeneratedAnswerProps = {}
 ): AnswerApiGeneratedAnswer {
@@ -175,7 +176,7 @@ export function buildAnswerApiGeneratedAnswer(
 }
 
 function loadAnswerApiReducers(
-  engine: SearchEngine
+  engine: SearchEngine | InsightEngine
 ): engine is SearchEngine<
   GeneratedAnswerSection &
     QuerySection & {answer: ReturnType<typeof answerApi.reducer>}
