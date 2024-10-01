@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {setOutput} from '@actions/core';
 import {readdirSync, statSync} from 'fs';
+import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
 import {
   getBaseHeadSHAs,
@@ -107,7 +108,7 @@ function dependsOnCoveoPackage(file) {
 }
 
 const {base, head} = getBaseHeadSHAs();
-const changedFiles = getChangedFiles(base, head);
+const changedFiles = getChangedFiles(base, head).split(EOL);
 console.log('******** changed files *************');
 console.log(changedFiles);
 console.log('*********************');
