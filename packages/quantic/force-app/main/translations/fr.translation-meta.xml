@@ -836,4 +836,20 @@
     <label>Veuillez fournir un lien vers la bonne réponse</label>
     <name>quantic_FeedbackDocumentUrlExplanation</name>
   </customLabels>
+  <customLabels>
+    <label>Ticket créé</label>
+    <name>quantic_TicketCreated</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche vide</label>
+    <name>quantic_EmptySearch</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} action supplémentaire dans cette session</label>
+    <name>quantic_MoreActionsInThisSession</name>
+  </customLabels>
+    <customLabels>
+    <label>{{count}} autres actions dans cette session</label>
+    <name>quantic_MoreActionsInThisSession_plural</name>
+  </customLabels>
 </Translations>
