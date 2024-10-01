@@ -1,26 +1,26 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/common-reducers';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {Result} from '../../../api/search/search/result.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   attachResult,
   detachResult,
-} from '../../../features/attached-results/attached-results-actions';
+} from '../../../features/attached-results/attached-results-actions.js';
 import {
   logCaseAttach,
   logCaseDetach,
-} from '../../../features/attached-results/attached-results-analytics-actions';
-import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice';
-import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils';
+} from '../../../features/attached-results/attached-results-analytics-actions.js';
+import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
+import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
 import {
   AttachedResultsSection,
   ConfigurationSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface AttachToCaseProps {
   /**

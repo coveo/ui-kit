@@ -1,21 +1,21 @@
-import {CoreEngine} from '../../../../app/engine';
+import {CoreEngine} from '../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
-} from '../../../../features/facet-options/facet-options-actions';
-import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
-import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions';
-import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
-import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response';
+} from '../../../../features/facet-options/facet-options-actions.js';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
+import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
+import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
+import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response.js';
 import {
   CategoryFacetSection,
   DateFacetSection,
   FacetOptionsSection,
   FacetSection,
   NumericFacetSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
-import {getObjectHash} from '../../../../utils/utils';
+} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {getObjectHash} from '../../../../utils/utils.js';
 
 export interface AnyFacetValuesCondition<T extends AnyFacetValueRequest> {
   /**

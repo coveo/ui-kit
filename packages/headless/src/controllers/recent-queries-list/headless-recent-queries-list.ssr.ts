@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
   RecentQueriesList,
   RecentQueriesListProps,
   buildRecentQueriesList,
-} from './headless-recent-queries-list';
+} from './headless-recent-queries-list.js';
 
-export * from './headless-recent-queries-list';
+export * from './headless-recent-queries-list.js';
 
 export interface RecentQueriesListDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, RecentQueriesList> {}

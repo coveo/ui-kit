@@ -2,7 +2,7 @@ import {
   InstantItemsCache,
   InstantItemsState,
   hasExpired,
-} from './instant-items-state';
+} from './instant-items-state.js';
 
 type InstantItemsStateWithCache = InstantItemsState<
   Record<string, InstantItemsCache & {error: unknown}>

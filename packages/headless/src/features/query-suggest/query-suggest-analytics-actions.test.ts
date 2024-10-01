@@ -1,8 +1,8 @@
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
-import {createMockState} from '../../test/mock-state';
-import {buildOmniboxSuggestionMetadata} from './query-suggest-analytics-actions';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildOmniboxSuggestionMetadata} from './query-suggest-analytics-actions.js';
 
 describe('#buildOmniboxSuggestionMetadata', () => {
   const id = '1';

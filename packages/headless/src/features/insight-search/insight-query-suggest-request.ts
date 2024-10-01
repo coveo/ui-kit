@@ -1,15 +1,15 @@
 import {
   historyStore,
   getVisitorID,
-} from '../../api/analytics/coveo-analytics-utils';
-import {getOrganizationEndpoint} from '../../api/platform-client';
-import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request';
-import {InsightAppState} from '../../state/insight-app-state';
+} from '../../api/analytics/coveo-analytics-utils.js';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
 import {
   ConfigurationSection,
   InsightConfigurationSection,
-} from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
+} from '../../state/state-sections.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
 
 type StateNeededByQuerySuggest = ConfigurationSection &
   InsightConfigurationSection &

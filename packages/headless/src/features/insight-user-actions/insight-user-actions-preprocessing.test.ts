@@ -1,3 +1,4 @@
+import {MockInstance} from 'vitest';
 import {
   mapAndSortActionsByMostRecent,
   isActionWithinSessionThreshold,
@@ -5,12 +6,12 @@ import {
   splitActionsIntoTimelineSessions,
   shouldExcludeAction,
   insertSessionInTimeline,
-} from './insight-user-actions-preprocessing';
+} from './insight-user-actions-preprocessing.js';
 import {
   UserActionTimeline,
   UserActionType,
   UserSession,
-} from './insight-user-actions-state';
+} from './insight-user-actions-state.js';
 
 const createRelativeDate = (date: Date, minutes: number, seconds: number) => {
   const totalSeconds = seconds + minutes * 60;
@@ -225,10 +226,10 @@ describe('insight user actions preprocessing', () => {
     });
 
     describe('when a rawUserAction cannot be parsed', () => {
-      let consoleWarnSpy: jest.SpyInstance;
+      let consoleWarnSpy: MockInstance;
 
       beforeAll(() => {
-        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+        consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
       });
 
       afterAll(() => {

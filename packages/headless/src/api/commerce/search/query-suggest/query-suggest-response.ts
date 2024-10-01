@@ -1,7 +1,7 @@
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
-} from '../../../search/search-api-error-response';
+} from '../../../search/search-api-error-response.js';
 
 /**
  * A Coveo ML query suggestion.

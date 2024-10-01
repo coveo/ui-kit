@@ -1,5 +1,5 @@
-import {Part} from '../common/part';
-import {QueryExpression} from '../query-expression';
+import {Part} from '../common/part.js';
+import {QueryExpression} from '../query-expression.js';
 
 export interface QueryExtensionExpression {
   /**

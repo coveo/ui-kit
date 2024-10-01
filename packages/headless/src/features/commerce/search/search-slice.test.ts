@@ -1,21 +1,22 @@
-import {ChildProduct} from '../../../api/commerce/common/product';
-import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response';
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
+import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {
   buildMockChildProduct,
   buildMockProduct,
   buildMockBaseProduct,
-} from '../../../test/mock-product';
+} from '../../../test/mock-product.js';
+import {setContext, setView} from '../context/context-actions.js';
 import {
   executeSearch,
   fetchMoreProducts,
   promoteChildToParent,
-} from './search-actions';
-import {commerceSearchReducer} from './search-slice';
+} from './search-actions.js';
+import {commerceSearchReducer} from './search-slice.js';
 import {
   CommerceSearchState,
   getCommerceSearchInitialState,
-} from './search-state';
+} from './search-state.js';
 
 describe('search-slice', () => {
   let state: CommerceSearchState;
@@ -317,5 +318,49 @@ describe('search-slice', () => {
         }),
       ]);
     });
+  });
+  it('on #setView, restores the initial state', () => {
+    state = {
+      error: {message: 'message', statusCode: 500, type: 'type'},
+      isLoading: true,
+      requestId: 'request-id',
+      facets: [buildMockCommerceRegularFacetResponse()],
+      products: [
+        buildMockProduct({ec_name: 'product1'}),
+        buildMockProduct({ec_name: 'product2'}),
+      ],
+      queryExecuted: 'query',
+      responseId: 'response-id',
+    };
+
+    const finalState = commerceSearchReducer(state, setView({url: '/'}));
+
+    expect(finalState).toEqual(getCommerceSearchInitialState());
+  });
+
+  it('on #setContext, restores the initial state', () => {
+    state = {
+      error: {message: 'message', statusCode: 500, type: 'type'},
+      isLoading: true,
+      requestId: 'request-id',
+      facets: [buildMockCommerceRegularFacetResponse()],
+      products: [
+        buildMockProduct({ec_name: 'product1'}),
+        buildMockProduct({ec_name: 'product2'}),
+      ],
+      queryExecuted: 'query',
+      responseId: 'response-id',
+    };
+    const finalState = commerceSearchReducer(
+      state,
+      setContext({
+        country: 'CA',
+        currency: 'CAD',
+        language: 'fr',
+        view: {url: '/'},
+      })
+    );
+
+    expect(finalState).toEqual(getCommerceSearchInitialState());
   });
 });

@@ -1,4 +1,4 @@
-import {answerSlice} from './answer-slice';
+import {answerSlice} from './answer-slice.js';
 
 export interface AnswerEvaluationPOSTParams {
   question: string;

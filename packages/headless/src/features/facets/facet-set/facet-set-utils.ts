@@ -1,4 +1,5 @@
-import {SearchAction} from '../../search/search-actions';
+import {SearchAction} from '../../search/search-actions.js';
+import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils.js';
 import {
   facetDeselect,
   facetExclude,
@@ -8,9 +9,8 @@ import {
   logFacetExclude,
   logFacetSelect,
   logFacetUnexclude,
-} from './facet-set-analytics-actions';
-import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
-import {FacetValue} from './interfaces/response';
+} from './facet-set-analytics-actions.js';
+import {FacetValue} from './interfaces/response.js';
 
 export const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';

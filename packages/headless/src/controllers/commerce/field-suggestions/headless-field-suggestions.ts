@@ -1,31 +1,31 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response';
-import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
+import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
-import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice';
-import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
   CommerceFacetSetSection,
   FacetSearchSection,
   FieldSuggestionsOrderSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
-import {FacetControllerType} from '../core/facets/headless-core-commerce-facet';
-import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet';
+} from '../../controller/headless-controller.js';
+import {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
 import {
   buildRegularFacetSearch,
   RegularFacetSearchState,
-} from '../core/facets/regular/headless-commerce-regular-facet-search';
+} from '../core/facets/regular/headless-commerce-regular-facet-search.js';
+import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
 
 export type {SpecificFacetSearchResult};
 

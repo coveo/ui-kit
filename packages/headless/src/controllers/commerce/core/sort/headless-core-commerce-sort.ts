@@ -1,6 +1,8 @@
 import {Schema} from '@coveo/bueno';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
+import {applySort} from '../../../../features/commerce/sort/sort-actions.js';
+import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -11,16 +13,14 @@ import {
   SortCriterion,
   SortDirection,
   sortCriterionDefinition,
-} from '../../../../features/commerce/sort/sort';
-import {applySort} from '../../../../features/commerce/sort/sort-actions';
-import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice';
-import {loadReducerError} from '../../../../utils/errors';
-import {validateInitialState} from '../../../../utils/validate-payload';
+} from '../../../../features/commerce/sort/sort.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
   Controller,
   buildController,
-} from '../../../controller/headless-controller';
-import {FetchProductsActionCreator} from '../common';
+} from '../../../controller/headless-controller.js';
+import {FetchProductsActionCreator} from '../common.js';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {

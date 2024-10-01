@@ -1,11 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {change} from '../history/history-actions';
+import {change} from '../history/history-actions.js';
 import {
   addContext,
   removeContext,
   setContext,
-} from './dictionary-field-context-actions';
-import {getDictionaryFieldContextInitialState} from './dictionary-field-context-state';
+} from './dictionary-field-context-actions.js';
+import {getDictionaryFieldContextInitialState} from './dictionary-field-context-state.js';
 
 export const dictionaryFieldContextReducer = createReducer(
   getDictionaryFieldContextInitialState(),

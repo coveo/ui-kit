@@ -5,11 +5,11 @@ import {
   isErrorResponse,
   isSuccessResponse,
   SearchAPIClient,
-} from '../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {SearchOrigin} from '../../api/search/search-metadata';
-import {SearchRequest} from '../../api/search/search/search-request';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+} from '../../api/search/search-api-client.js';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {SearchOrigin} from '../../api/search/search-metadata.js';
+import {SearchRequest} from '../../api/search/search/search-request.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   AdvancedSearchQueriesSection,
   CategoryFacetSection,
@@ -32,25 +32,25 @@ import {
   SearchSection,
   SortSection,
   TriggerSection,
-} from '../../state/state-sections';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {didYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
-import {snapshot} from '../history/history-actions';
-import {extractHistory} from '../history/history-state';
-import {updateQuery} from '../query/query-actions';
+} from '../../state/state-sections.js';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
+import {didYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions.js';
+import {snapshot} from '../history/history-actions.js';
+import {extractHistory} from '../history/history-state.js';
+import {updateQuery} from '../query/query-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from '../triggers/triggers-actions';
-import {ExecuteSearchThunkReturn} from './search-actions';
-import {logQueryError} from './search-analytics-actions';
+} from '../triggers/triggers-actions.js';
+import {ExecuteSearchThunkReturn} from './search-actions.js';
+import {logQueryError} from './search-analytics-actions.js';
 import {
   ErrorResponse,
   MappedSearchRequest,
   mapSearchResponse,
   SuccessResponse,
-} from './search-mappings';
-import {buildSearchRequest} from './search-request';
+} from './search-mappings.js';
+import {buildSearchRequest} from './search-request.js';
 
 export interface AnalyticsAction {
   actionCause?: string;

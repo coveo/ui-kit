@@ -1,7 +1,7 @@
-import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockSearchEngine} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
-import {buildQueryError} from './headless-query-error';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
+import {buildQueryError} from './headless-query-error.js';
 
 describe('query error', () => {
   it('it adds the correct reducers to engine', () => {

@@ -1,8 +1,8 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
-import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger';
-import {buildRedirectionTrigger} from './headless-redirection-trigger';
+import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
+import {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
-export type {RedirectionTriggerState} from '../../core/triggers/headless-core-redirection-trigger';
+export type {RedirectionTriggerState} from '../../core/triggers/headless-core-redirection-trigger.js';
 export type {RedirectionTrigger};
 export interface RedirectionTriggerDefinition
   extends SearchOnlyControllerDefinitionWithoutProps<RedirectionTrigger> {}

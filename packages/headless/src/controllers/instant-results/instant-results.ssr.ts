@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
   InstantResultProps,
   InstantResults,
   buildInstantResults,
-} from './instant-results';
+} from './instant-results.js';
 
-export * from './instant-results';
+export * from './instant-results.js';
 
 export interface InstantResultsDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {}

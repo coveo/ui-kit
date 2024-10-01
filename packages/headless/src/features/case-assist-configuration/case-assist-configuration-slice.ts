@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setCaseAssistConfiguration} from './case-assist-configuration-actions';
-import {getCaseAssistConfigurationInitialState} from './case-assist-configuration-state';
+import {setCaseAssistConfiguration} from './case-assist-configuration-actions.js';
+import {getCaseAssistConfigurationInitialState} from './case-assist-configuration-state.js';
 
 export const caseAssistConfigurationReducer = createReducer(
   getCaseAssistConfigurationInitialState(),

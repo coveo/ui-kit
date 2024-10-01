@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
 import {
   UrlManager,
   UrlManagerInitialState,
   buildUrlManager,
-} from './headless-url-manager';
+} from './headless-url-manager.js';
 
-export * from './headless-url-manager';
+export * from './headless-url-manager.js';
 
 /**
  * @internal

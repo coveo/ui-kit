@@ -1,21 +1,21 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
-import pino from 'pino';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockQueryState} from '../../test/mock-query-state';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchState} from '../../test/mock-search-state';
+import {pino} from 'pino';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
+import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockQueryState} from '../../test/mock-query-state.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
-} from './insight-analytics';
+} from './insight-analytics.js';
 
 describe('insight analytics', () => {
   const logger = pino({level: 'silent'});

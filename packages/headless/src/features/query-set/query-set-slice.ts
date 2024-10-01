@@ -3,26 +3,26 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   registerQuerySetQuery as registerCommerceQuerySetQuery,
   updateQuerySetQuery as updateCommerceQuerySetQuery,
-} from '../commerce/query-set/query-set-actions';
-import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions';
+} from '../commerce/query-set/query-set-actions.js';
+import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions.js';
 import {
   CommerceSearchParameters,
   restoreSearchParameters as commerceRestoreSearchParameters,
-} from '../commerce/search-parameters/search-parameters-actions';
-import {executeSearch as commerceExecuteSearch} from '../commerce/search/search-actions';
-import {change} from '../history/history-actions';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
+} from '../commerce/search-parameters/search-parameters-actions.js';
+import {executeSearch as commerceExecuteSearch} from '../commerce/search/search-actions.js';
+import {change} from '../history/history-actions.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
 import {
   SearchParameters,
   restoreSearchParameters,
-} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
+} from '../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   RegisterQuerySetQueryActionCreatorPayload,
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from './query-set-actions';
-import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+} from './query-set-actions.js';
+import {getQuerySetInitialState, QuerySetState} from './query-set-state.js';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),

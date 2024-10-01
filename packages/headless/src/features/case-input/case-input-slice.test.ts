@@ -1,6 +1,6 @@
-import {updateCaseInput} from './case-input-actions';
-import {caseInputReducer} from './case-input-slice';
-import {getCaseInputInitialState, CaseInputState} from './case-input-state';
+import {updateCaseInput} from './case-input-actions.js';
+import {caseInputReducer} from './case-input-slice.js';
+import {getCaseInputInitialState, CaseInputState} from './case-input-state.js';
 
 describe('case input slice', () => {
   const testMapping = {fieldName: 'foo', fieldValue: 'fooValue'};

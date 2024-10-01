@@ -1,11 +1,11 @@
-import {searchReducer as search} from '../../../features/search/search-slice';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockResult} from '../../../test/mock-result';
-import {createMockState} from '../../../test/mock-state';
-import {buildCoreStatus} from './headless-core-status';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {buildCoreStatus} from './headless-core-status.js';
 
 describe('CoreStatus', () => {
   let engine: MockedSearchEngine;

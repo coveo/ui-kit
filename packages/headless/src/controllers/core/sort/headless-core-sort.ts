@@ -1,24 +1,27 @@
 import {ArrayValue, isArray, Schema} from '@coveo/bueno';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {updatePage} from '../../../features/pagination/pagination-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {updatePage} from '../../../features/pagination/pagination-actions.js';
 import {
   buildCriterionExpression,
   SortCriterion,
   criterionDefinition,
-} from '../../../features/sort-criteria/criteria';
+} from '../../../features/sort-criteria/criteria.js';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from '../../../features/sort-criteria/sort-criteria-actions';
-import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
-import {ConfigurationSection, SortSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {validateInitialState} from '../../../utils/validate-payload';
+} from '../../../features/sort-criteria/sort-criteria-actions.js';
+import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice.js';
+import {
+  ConfigurationSection,
+  SortSection,
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface SortProps {
   /**

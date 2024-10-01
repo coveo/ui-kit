@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`recommendation analytics actions #logRecommendationOpen when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
+exports[`recommendation analytics actions > #logRecommendationOpen > when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
 [
   {
     "collectionName": "example collectionName",
@@ -21,7 +21,7 @@ exports[`recommendation analytics actions #logRecommendationOpen when analyticsM
 ]
 `;
 
-exports[`recommendation analytics actions #logRecommendationOpen when analyticsMode is \`next\` 1`] = `
+exports[`recommendation analytics actions > #logRecommendationOpen > when analyticsMode is \`next\` 1`] = `
 [
   "itemClick",
   {
@@ -33,7 +33,7 @@ exports[`recommendation analytics actions #logRecommendationOpen when analyticsM
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "",
+    "searchUid": "example searchUid",
   },
 ]
 `;

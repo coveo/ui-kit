@@ -2,7 +2,7 @@ import {
   baseInsightRequest,
   InsightParam,
   pickNonInsightParams,
-} from './insight-params';
+} from './insight-params.js';
 
 describe('insight params', () => {
   const method = 'POST';

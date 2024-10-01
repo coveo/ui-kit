@@ -3,24 +3,24 @@ import {
   createAction,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
-import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
-import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response';
-import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request.js';
+import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response.js';
+import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request.js';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../../utils/validate-payload';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {buildCategoryFacetSearchRequest} from '../category/category-facet-search-request-builder';
-import {buildSpecificFacetSearchRequest} from '../specific/specific-facet-search-request-builder';
+} from '../../../../utils/validate-payload.js';
+import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
+import {buildCategoryFacetSearchRequest} from '../category/category-facet-search-request-builder.js';
+import {buildSpecificFacetSearchRequest} from '../specific/specific-facet-search-request-builder.js';
 import {
   StateNeededForCategoryFacetSearch,
   StateNeededForFacetSearch,
   StateNeededForSpecificFacetSearch,
-} from './generic-facet-search-state';
+} from './generic-facet-search-state.js';
 
 type ExecuteFacetSearchThunkReturn = {
   facetId: string;

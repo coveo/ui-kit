@@ -1,21 +1,24 @@
-import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
-import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {configuration} from '../../app/common-reducers';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
-import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
-import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
+import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
+import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import {configuration} from '../../app/common-reducers.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {
   ConfigurationSection,
   CaseAssistConfigurationSection,
   CaseInputSection,
   DocumentSuggestionSection,
   CaseFieldSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 /**
  * The `DocumentSuggestion` controller is responsible for getting document suggestions using case information present in the state.

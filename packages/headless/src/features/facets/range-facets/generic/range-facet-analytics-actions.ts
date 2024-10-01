@@ -1,8 +1,8 @@
-import type {FacetRangeMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../../../state/search-app-state';
-import {SearchPageEvents} from '../../../analytics/search-action-cause';
-import {SearchAction} from '../../../search/search-actions';
-import {RangeFacetSelectionPayload} from './range-facet-validate-payload';
+import type {FacetRangeMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
+import {SearchAppState} from '../../../../state/search-app-state.js';
+import {SearchPageEvents} from '../../../analytics/search-action-cause.js';
+import {SearchAction} from '../../../search/search-actions.js';
+import {RangeFacetSelectionPayload} from './range-facet-validate-payload.js';
 
 export const getRangeFacetMetadata = (
   state: Partial<SearchAppState>,
