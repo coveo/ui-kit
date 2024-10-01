@@ -4,6 +4,7 @@
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
 }
 
-.timeline__show-following-sessions-button, .timeline__show-preceding-sessions-button{
-    font-size: 12px;
+.timeline__show-following-sessions-button,
+.timeline__show-preceding-sessions-button {
+  font-size: 12px;
 }

@@ -1568,7 +1568,7 @@
     <protected>false</protected>
     <shortDescription>Hide following sessions</shortDescription>
   </labels>
-    <labels>
+  <labels>
     <fullName>quantic_ShowPrecedingSessions</fullName>
     <value>Show preceding sessions</value>
     <language>en_US</language>
