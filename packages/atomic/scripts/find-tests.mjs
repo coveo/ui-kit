@@ -79,20 +79,22 @@ function createTestFileMappings(testPaths, projectRoot) {
  */
 function determineTestFilesToRun(filesChanged, testMappings) {
   const testsToRun = new Set();
-  // TODO: make it more performant and reduce the number of iterations
+  // TODO: make it more performant and reduce the
   for (const file of filesChanged) {
     for (const [testFile, sourceFiles] of testMappings) {
       if (dependsOnCoveoPackage(file)) {
         throw new Error('Change detected in a Coveo package.');
       }
-      sourceFiles.forEach((value, key) => {
-        if (value.includes('atomic-commerce-pager.tsx')) {
-          console.log(value, value === file);
-        }
-      });
+      if (testFile.includes('atomic-commerce-pager')) {
+        console.log('');
+        console.log('changed file:' + file + ':');
+        console.log(sourceFiles.values());
+        console.log(new Set(sourceFiles).has(file));
+      }
       if (sourceFiles.has(file)) {
         console.log('Adding testFile', testFile);
         testsToRun.add(testFile);
+        testMappings.delete(testFile);
         break;
       }
     }
