@@ -7,7 +7,7 @@ test.describe('Home Page', () => {
     await expect(searchBox).toBeVisible();
   });
 
-  test('should perform a search and display results', async ({page}) => {
+  test('should perform a search and display products', async ({page}) => {
     await page.goto('/');
     const searchBox = page.getByLabel('Enter query');
     await searchBox.fill('blue pants');
@@ -16,8 +16,8 @@ test.describe('Home Page', () => {
     const productList = page.locator('css=.ProductList');
     await expect(productList).toBeVisible();
 
-    const resultItems = await productList.getByRole('listitem').all();
-    expect(resultItems.length).toBeGreaterThan(0);
+    const productItems = await productList.getByRole('listitem').all();
+    expect(productItems.length).toBeGreaterThan(0);
   });
 
   test('should display the facets', async ({page}) => {
