@@ -11,12 +11,12 @@ runs:
     - uses: ./.github/actions/setup
       with:
         load-cache: 'false'
-        cache-suffix: {{inputs.cache-suffix}}
+        cache-suffix: ${{ inputs.cache-suffix }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: nx-cache
       with:
         path: .nx/cache
-        key: nx-${{ github.sha }}-{{ inputs.cache-suffix }}
+        key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
     - if: steps.nx-cache.outputs.cache-hit != 'true'
       run: npm run build
       shell: bash
