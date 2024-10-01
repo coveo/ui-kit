@@ -43,32 +43,30 @@ function findAllTestFiles(dir) {
 /**
  * Creates a mapping of test file names to the set of files they import.
  *
- * @param testFiles - An array of E2E test file paths.
+ * @param testPaths - An array of E2E test file paths.
  * @returns A map where each key is a test file name and the value is a set of files it imports.
  */
-function createTestFileMappings(testFiles, projectRoot) {
-  const testFileMappings = testFiles.map((file) => {
+function createTestFileMappings(testPaths, projectRoot) {
+  const testFileMappings = testPaths.map((testPath) => {
     const imports = new Set();
-    const fileName = basename(file);
-    const sourceFile = join(
-      dirname(file).replace('/e2e', ''),
-      fileName.replace('.e2e.ts', '.tsx')
+    const testName = basename(testPath);
+    const sourceFilePath = join(
+      dirname(testPath).replace('/e2e', ''),
+      testName.replace('.e2e.ts', '.tsx')
     );
 
-    ensureFileExists(sourceFile);
+    ensureFileExists(sourceFilePath);
 
-    [resolve(sourceFile), ...listImports(sourceFile, projectRoot)].forEach(
-      (importedFile) => imports.add(importedFile)
-    );
-
-    // make sure the path relative to the project root
-    const filenameAbsolute = relative(projectRoot, fileName);
+    [
+      relative(projectRoot, sourceFilePath),
+      ...listImports(sourceFilePath, projectRoot),
+    ].forEach((importedFile) => imports.add(importedFile));
 
     console.log('*********************');
-    console.log(filenameAbsolute, [...imports]);
+    console.log(testName, [...imports]);
     console.log('*********************');
 
-    return [filenameAbsolute, imports];
+    return [testName, imports];
   });
 
   return new Map(testFileMappings);
