@@ -154,11 +154,10 @@ export class AtomicInsightResultActionQuickview
     );
   }
   private get shouldRenderQuickview() {
-    return this.isChildOfResultAction && this.quickviewState.resultHasPreview;
+    return !this.isChildOfResultAction && this.quickviewState.resultHasPreview;
   }
 
   public render() {
-    console.log('rendering quickview, updateModalContent');
     this.addQuickviewModalIfNeeded();
     this.updateModalContent();
     if (this.shouldRenderQuickview) {
