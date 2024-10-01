@@ -1526,4 +1526,32 @@
     <protected>false</protected>
     <shortDescription>Feedback Additional Notes Explanation</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_TicketCreated</fullName>
+    <value>Ticket created</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Ticket created</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_EmptySearch</fullName>
+    <value>Empty search</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Empty search</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreActionsInThisSession</fullName>
+    <value>{{0}} more action in this session</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>1 more action in this session</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreActionsInThisSession_plural</fullName>
+    <value>{{0}} more actions in this session</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>12 more actions in this session</shortDescription>
+  </labels>
 </CustomLabels>

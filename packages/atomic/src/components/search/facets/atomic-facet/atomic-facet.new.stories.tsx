@@ -44,3 +44,13 @@ export const LowFacetValues: Story = {
   },
   decorators: [facetDecorator],
 };
+
+export const monthFacet: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'month',
+    'attributes-label': 'Month',
+    'attributes-number-of-values': 2,
+  },
+  decorators: [facetDecorator],
+};
