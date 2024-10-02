@@ -96,7 +96,6 @@ function determineTestFilesToRun(filesChanged, testMappings) {
         console.log('Adding testFile', testFile);
         testsToRun.add(testFile);
         testMappings.delete(testFile);
-        break;
       }
     }
   }
