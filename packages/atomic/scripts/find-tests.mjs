@@ -97,25 +97,20 @@ function dependsOnCoveoPackage(file) {
 
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
-
 const outputName = getOutputName();
 const projectRoot = '/home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic (and/or pass it as an input)
-try {
-  const testFiles = findAllTestFiles(
-    join('src', 'components') // TODO: depends from where the script is running
-  ); // TODO: maybe should be an input
-  const testMappings = createTestFileMappings(testFiles, projectRoot);
+const sourceComponentDir = join('src', 'components'); // TODO: depends from where the script is running
 
-  // TODO: check what happens to the output if an error is thrown
+try {
+  const testFiles = findAllTestFiles(sourceComponentDir); // TODO: maybe should be an input
+  const testMappings = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testMappings);
-  if (testsToRun) {
-    console.log(testsToRun);
-    setOutput(outputName, testsToRun);
-  } else {
-    console.log('No relevant source file changes detected for E2E tests.');
-    setOutput(outputName, '--grep @no-test');
+  setOutput(outputName, testsToRun ? testsToRun : '--grep @no-test');
+
+  if(!testsToRun){
+    console.log('No relevant source file changes detected for E2E tests.')
   }
 } catch (error) {
   console.warn(error?.message || error);
-  console.log('Running all tests');
+  console.log('Running all E2E tests.');
 }
