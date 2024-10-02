@@ -215,7 +215,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
       this.validateUrl(this.fallback);
       return (
         <img
-          // class="aspect-square" KIT-3619
+          class="aspect-square"
           alt={this.bindings.i18n.t('image-not-found-alt')}
           src={this.fallback}
           loading="eager"
