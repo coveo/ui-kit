@@ -1,8 +1,129 @@
+import {PactV3, MatchersV3} from '@pact-foundation/pact';
+import {resolve} from 'node:path';
 import {test, expect} from './fixture';
 
+// Create a 'pact' between the two applications in the integration we are testing
+const provider = new PactV3({
+  dir: resolve(process.cwd(), 'pacts'),
+  consumer: 'Atomic',
+  provider: 'SearchUI',
+});
+
+const querySuggestModelFactory = (count: number) => ({
+  completions: MatchersV3.constrainedArrayLike(
+    {
+      expression: MatchersV3.string('suede'),
+      score: MatchersV3.number(),
+      highlighted: MatchersV3.string('[suede]'),
+      executableConfidence: 1.0,
+      objectId: MatchersV3.uuid(),
+    },
+    0,
+    count,
+    count
+  ),
+  responseId: MatchersV3.uuid(),
+});
+
+const iso8601Matcher = MatchersV3.timestamp(
+  "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+  '2021-01-01T00:00:00.000Z'
+);
+
+const actionHistoryQueryMatcher = {
+  name: 'Query',
+  time: iso8601Matcher,
+  value: MatchersV3.string(),
+};
+
+const actionHistoryPageViewMatcher = {
+  name: 'PageView',
+  time: iso8601Matcher,
+  value: MatchersV3.string(),
+};
+
+const actionsHistoryMatchers = MatchersV3.eachLike(
+  [actionHistoryQueryMatcher, actionHistoryPageViewMatcher],
+  0
+);
+
+const analyticsMatcher = {
+  clientId: MatchersV3.uuid('7e1ca7a0-b049-45cd-8f25-54bbb6722ea7'),
+  clientTimestamp: iso8601Matcher,
+  documentReferrer: MatchersV3.string(),
+  documentLocation: MatchersV3.url2(
+    'http://localhost:4400/iframe.html?args=&id=atomic-search-box--default&viewMode=story',
+    []
+  ),
+  originContext: 'Search',
+  capture: true,
+  source: MatchersV3.arrayContaining(
+    MatchersV3.regex(/@coveo\/atomic@\d+.\d+.\d+/, '@coveo/atomic@3.2.1'),
+    MatchersV3.regex(/@coveo\/headless@\d+.\d+.\d+/, '@coveo/headless@3.1.1')
+  ),
+};
+
+const querySuggestQueryBodyMatcher = {
+  actionsHistory: actionsHistoryMatchers,
+  analytics: analyticsMatcher,
+  q: '',
+  count: 8,
+  locale: MatchersV3.string('en'),
+  visitorId: MatchersV3.uuid(),
+  timezone: MatchersV3.string('America/Toronto'),
+  tab: MatchersV3.string('default'),
+  searchHub: MatchersV3.string('default'),
+};
+
 test.describe('default', () => {
+  let pactCloser: Promise<void>;
+  let pactProvider: Promise<void>;
+  let closeProvider: () => void;
   test.beforeEach(async ({searchBox}) => {
-    await searchBox.load({args: {suggestionTimeout: 5000}});
+    provider
+      .given('A healthy organization')
+      .uponReceiving(
+        'a request for 8 query suggestions without a specific query'
+      )
+      .withRequest({
+        method: 'OPTIONS',
+        path: '/querySuggest',
+        query: {
+          organizationId: MatchersV3.string(),
+        },
+      })
+      .willRespondWith({
+        status: 200,
+      })
+      .withRequest({
+        method: 'POST',
+        path: '/querySuggest',
+        query: {
+          organizationId: MatchersV3.string(),
+        },
+        body: querySuggestQueryBodyMatcher,
+      })
+      .willRespondWith({
+        status: 200,
+        headers: {'Content-Type': 'application/json'},
+        body: querySuggestModelFactory(8),
+      });
+    pactCloser = new Promise((resolve) => {
+      closeProvider = resolve;
+    });
+    pactProvider = provider.executeTest(async (mockServer) => {
+      console.log('mockServer.url', mockServer.url);
+      await searchBox.load({
+        args: {suggestionTimeout: 5000},
+        queryParams: {searchProxyUrl: encodeURIComponent(mockServer.url)},
+      });
+      await pactCloser;
+    });
+  });
+
+  test.afterEach(async () => {
+    closeProvider();
+    await pactProvider;
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -21,7 +142,7 @@ test.describe('default', () => {
       await searchBox.searchInput.click();
     });
 
-    test('should display suggested queries', async ({searchBox}) => {
+    test.only('should display suggested queries', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
     });
 

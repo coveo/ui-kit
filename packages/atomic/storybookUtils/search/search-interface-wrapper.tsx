@@ -26,11 +26,24 @@ export const wrapInSearchInterface = (
       await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(
         'root-interface'
       );
+
+    const searchProxyUrl = (() => {
+      const url = new URL('http://localhost');
+      url.search = canvasElement.ownerDocument.location.search;
+      return url.searchParams.get('searchProxyUrl');
+    })();
+
     await step('Render the Search Interface', async () => {
-      await searchInterface!.initialize({
+      const searchInterfaceOptions = {
         ...getSampleSearchEngineConfiguration(),
         ...config,
-      });
+      };
+      if (searchProxyUrl) {
+        searchInterfaceOptions.search = {
+          proxyBaseUrl: decodeURIComponent(searchProxyUrl),
+        };
+      }
+      await searchInterface!.initialize(searchInterfaceOptions);
     });
     if (skipFirstSearch) {
       return;

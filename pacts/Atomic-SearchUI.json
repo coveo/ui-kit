@@ -1,0 +1,437 @@
+{
+  "consumer": {
+    "name": "Atomic"
+  },
+  "interactions": [
+    {
+      "description": "a request for 8 query suggestions without a specific query",
+      "providerStates": [
+        {
+          "name": "A healthy organization"
+        }
+      ],
+      "request": {
+        "body": {
+          "actionsHistory": [],
+          "analytics": {
+            "capture": true,
+            "clientId": "7e1ca7a0-b049-45cd-8f25-54bbb6722ea7",
+            "clientTimestamp": "2021-01-01T00:00:00.000Z",
+            "documentLocation": "http://localhost:4400/iframe.html?args=&id=atomic-search-box--default&viewMode=story",
+            "documentReferrer": "some string",
+            "originContext": "Search",
+            "source": ["@coveo/atomic@3.2.1", "@coveo/headless@3.1.1"]
+          },
+          "count": 8,
+          "locale": "en",
+          "q": "",
+          "searchHub": "default",
+          "tab": "default",
+          "timezone": "America/Toronto",
+          "visitorId": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+        },
+        "generators": {
+          "body": {
+            "$.visitorId": {
+              "type": "Uuid"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.actionsHistory": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 0
+                }
+              ]
+            },
+            "$.analytics.clientId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            },
+            "$.analytics.clientTimestamp": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                  "match": "datetime"
+                }
+              ]
+            },
+            "$.analytics.documentLocation": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": ".*()$"
+                }
+              ]
+            },
+            "$.analytics.documentReferrer": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.analytics.source": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "arrayContains",
+                  "variants": [
+                    {
+                      "index": 0,
+                      "rules": {
+                        "$": {
+                          "combine": "AND",
+                          "matchers": [
+                            {
+                              "match": "regex",
+                              "regex": "@coveo\\/atomic@\\d+.\\d+.\\d+"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 1,
+                      "rules": {
+                        "$": {
+                          "combine": "AND",
+                          "matchers": [
+                            {
+                              "match": "regex",
+                              "regex": "@coveo\\/headless@\\d+.\\d+.\\d+"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "$.locale": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.searchHub": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.tab": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.timezone": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.visitorId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            }
+          },
+          "query": {
+            "organizationId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/querySuggest",
+        "query": {
+          "organizationId": ["some string"]
+        }
+      },
+      "response": {
+        "body": {
+          "completions": [
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            },
+            {
+              "executableConfidence": 1,
+              "expression": "suede",
+              "highlighted": "[suede]",
+              "objectId": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+              "score": 1234
+            }
+          ],
+          "responseId": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+        },
+        "generators": {
+          "body": {
+            "$.completions[*].objectId": {
+              "type": "Uuid"
+            },
+            "$.completions[*].score": {
+              "max": 10,
+              "min": 0,
+              "type": "RandomInt"
+            },
+            "$.responseId": {
+              "type": "Uuid"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.completions": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "max": 8,
+                  "min": 0
+                }
+              ]
+            },
+            "$.completions[*].expression": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.completions[*].highlighted": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                },
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.completions[*].objectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                },
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            },
+            "$.completions[*].score": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                },
+                {
+                  "match": "number"
+                }
+              ]
+            },
+            "$.responseId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            }
+          },
+          "header": {},
+          "status": {}
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "13.1.3"
+    },
+    "pactRust": {
+      "ffi": "0.4.22",
+      "models": "1.2.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "SearchUI"
+  }
+}
