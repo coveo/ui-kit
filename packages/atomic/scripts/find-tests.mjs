@@ -61,10 +61,6 @@ function createTestFileMappings(testPaths, projectRoot) {
       ...listImports(sourceFilePath, projectRoot),
     ].forEach((importedFile) => imports.add(importedFile));
 
-    console.log('*********************');
-    console.log(testName, [...imports]);
-    console.log('*********************');
-
     return [testName, imports];
   });
 
@@ -84,16 +80,9 @@ function determineTestFilesToRun(filesChanged, testMappings) {
   for (const file of filesChanged) {
     for (const [testFile, sourceFiles] of testMappings) {
       if (dependsOnCoveoPackage(file)) {
-        throw new Error('Change detected in a Coveo package.');
-      }
-      if (testFile.includes('atomic-commerce-pager')) {
-        console.log('');
-        console.log('changed file:' + file + ':');
-        console.log(sourceFiles.values());
-        console.log(new Set(sourceFiles).has(file));
+        throw new Error('Change detected in an different Coveo package.');
       }
       if (sourceFiles.has(file)) {
-        console.log('Adding testFile', testFile);
         testsToRun.add(testFile);
         testMappings.delete(testFile);
       }
@@ -103,16 +92,11 @@ function determineTestFilesToRun(filesChanged, testMappings) {
 }
 
 function dependsOnCoveoPackage(file) {
-  return file.includes('@coveo');
+  return file.includes('packages/headless'); // TODO: find a better way to detect Coveo packages;
 }
-
-function getShardLevel(testCount) {}
 
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
-console.log('******** changed files *************');
-console.log(changedFiles);
-console.log('*********************');
 
 const outputName = getOutputName();
 const projectRoot = '/home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic (and/or pass it as an input)
@@ -128,9 +112,10 @@ try {
     console.log(testsToRun);
     setOutput(outputName, testsToRun);
   } else {
-    console.log('No E2E tests to run');
+    console.log('No relevant source file changes detected for E2E tests.');
+    setOutput(outputName, '--grep @no-test');
   }
 } catch (error) {
-  console.log(error);
+  console.warn(error?.message || error);
   console.log('Running all tests');
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {existsSync, readFileSync} from 'fs';
-import {dirname, extname, isAbsolute, relative, resolve} from 'path';
+import {join, relative, resolve} from 'path';
 import ts from 'typescript';
 
 export function ensureFileExists(filePath) {
@@ -9,14 +9,38 @@ export function ensureFileExists(filePath) {
   }
 }
 
-function getImports(sourceFile) {
-  const imports = [];
+function getImports(sourceFile, containingFile, compilerOptions) {
+  const imports = new Set();
+
+  const moduleResolutionHost = {
+    fileExists: (filePath) => existsSync(filePath),
+    readFile: (filePath) => {
+      try {
+        return readFileSync(filePath, 'utf8');
+      } catch {
+        return undefined;
+      }
+    },
+  };
+
+  const resolveAndAddImport = (importPath) => {
+    const {resolvedModule} = ts.resolveModuleName(
+      importPath,
+      containingFile,
+      compilerOptions,
+      moduleResolutionHost
+    );
+
+    return resolvedModule && imports.add(resolvedModule.resolvedFileName)
+      ? true
+      : false;
+  };
 
   const visit = (node) => {
-    if (ts.isImportDeclaration(node)) {
-      const importPath = node.moduleSpecifier.text;
-      // TODO: should have the extension in the import path
-      imports.push(importPath);
+    if (ts.isImportDeclaration(node) && !node.importClause.isTypeOnly) {
+      const importPath = node.moduleSpecifier.getText().slice(1, -1); // Remove quotes
+      resolveAndAddImport(importPath) ||
+        resolveAndAddImport(join(importPath, 'index')); // Check if the import is from an index file
     }
 
     ts.forEachChild(node, visit);
@@ -24,41 +48,32 @@ function getImports(sourceFile) {
 
   ts.forEachChild(sourceFile, visit);
 
-  return imports;
+  return Array.from(imports);
 }
 
 /**
  * Function to extract all import statements from a TypeScript file.
- * @param filePath Path to the TypeScript file.
+ * @param containingFile Path to the TypeScript file.
  * @returns A list of files that are imported by the input file.
  */
-export function listImports(filePath, projectRoot) {
-  ensureFileExists(filePath);
-  const fileContent = readFileSync(filePath, 'utf-8');
+export function listImports(containingFile, projectRoot) {
+  ensureFileExists(containingFile);
+  const fileContent = readFileSync(containingFile, 'utf-8');
   const sourceFile = ts.createSourceFile(
-    filePath,
+    containingFile,
     fileContent,
-    ts.ScriptTarget.ES2015,
+    ts.ScriptTarget.ES2021,
     true // SetParentNodes - useful for AST transformations
   );
-  const imports = getImports(sourceFile);
+
+  const compilerOptions = {
+    target: ts.ScriptTarget.ES2021,
+  };
+
+  const imports = getImports(sourceFile, containingFile, compilerOptions);
 
   const resolvedImports = imports.map((importPath) => {
-    const absolutePath = isAbsolute(importPath)
-      ? importPath
-      : resolve(dirname(filePath), importPath);
-
-    // TODO: find a way to get rid of this and automatically have the extension in the path
-    if (!extname(absolutePath)) {
-      const extensions = ['.ts', '.tsx'];
-      for (const ext of extensions) {
-        const filePath = absolutePath.concat(ext);
-        if (existsSync(filePath)) {
-          return relative(projectRoot, filePath);
-        }
-        // TODO: handle the case where the file does not exist
-      }
-    }
+    const absolutePath = resolve(importPath);
     return relative(projectRoot, absolutePath);
   });
 
