@@ -470,47 +470,6 @@ describe('c-quantic-search-box-input', () => {
               expectedFirstSuggestionSelected
             );
           });
-
-          it('should display the clear input icon', async () => {
-            const element = createTestComponent({
-              ...defaultOptions,
-              suggestions: mockSuggestions,
-              textarea: textareaValue,
-            });
-            setupEventListeners(element);
-            await flushPromises();
-
-            const input = element.shadowRoot.querySelector(
-              textareaValue
-                ? selectors.searchBoxTextArea
-                : selectors.searchBoxInput
-            );
-            expect(input).not.toBeNull();
-
-            await input.focus();
-
-            const suggestionsList = element.shadowRoot.querySelector(
-              selectors.searchBoxSuggestionsList
-            );
-            expect(suggestionsList).not.toBeNull();
-
-            const querySuggestionIndex = 0;
-            const firstSuggestion = suggestionsList.shadowRoot.querySelectorAll(
-              selectors.suggestionOption
-            )[querySuggestionIndex];
-            expect(firstSuggestion).not.toBeNull();
-
-            firstSuggestion.dispatchEvent(new CustomEvent('mousedown'));
-
-            expect(
-              functionsMocks.exampleSelectSuggestion
-            ).toHaveBeenCalledTimes(1);
-
-            const clearIcon = element.shadowRoot.querySelector(
-              selectors.searchBoxClearIcon
-            );
-            expect(clearIcon).not.toBeNull();
-          });
         });
 
         describe('when selecting the clear recent query option from the suggestions list', () => {
@@ -841,6 +800,22 @@ describe('c-quantic-search-box-input', () => {
           expect(input.value).toEqual('');
           const expectedCollapsedInputHeight = textareaValue ? '0px' : '';
           expect(input.style.height).toEqual(expectedCollapsedInputHeight);
+        });
+      });
+
+      describe('when the component renders with a value in the input', () => {
+        it('should display the clear icon', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            inputValue: mockInputValue,
+            textarea: textareaValue,
+          });
+          await flushPromises();
+
+          const clearIcon = element.shadowRoot.querySelector(
+            selectors.searchBoxClearIcon
+          );
+          expect(clearIcon).not.toBeNull();
         });
       });
     });
