@@ -14,8 +14,13 @@ runs:
       run: npx playwright install --with-deps
       working-directory: packages/atomic
       shell: bash
+    - name: Determine e2e test files
+      id: determine-tests
+      run: node scripts/find-tests.mjs testsToRun
+      working-directory: packages/atomic
+      shell: bash
     - name: Run Playwright tests
-      run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      run: npx playwright test ${{ steps.determine-tests.outputs.testsToRun }} --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
       shell: bash
     - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4

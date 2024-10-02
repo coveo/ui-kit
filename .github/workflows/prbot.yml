@@ -89,6 +89,8 @@ jobs:
         shardTotal: [24]
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic

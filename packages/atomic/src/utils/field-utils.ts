@@ -15,6 +15,7 @@ export function getFieldValueCaption(
   facetValue: string,
   i18n: i18n
 ) {
+  // TODO: some changes
   return i18n.t(facetValue, {
     ns: getFieldCaptionNamespace(field),
   });
