@@ -4,6 +4,8 @@ import _default from './default.html';
 // @ts-ignore
 import noResults from './noResults.html';
 // @ts-ignore
+import noEvents from './noEvents.html';
+// @ts-ignore
 import pageNotFound from './pageNotFound.html';
 // @ts-ignore
 import success from './success.html';
@@ -20,6 +22,7 @@ export default class QuanticSvg extends LightningElement {
    * The options are:
    *   - `'pageNotFound'`
    *   - `'noResults'`
+   *   - `'noEvents'`
    *   - `'success'`
    *   - `undefined (default)`
    * @api
@@ -34,6 +37,8 @@ export default class QuanticSvg extends LightningElement {
         return pageNotFound;
       case 'noResults':
         return noResults;
+      case 'noEvents':
+        return noEvents;
       case 'success':
         return success;
       default:
