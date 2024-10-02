@@ -285,9 +285,6 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   handleSelection(event) {
     this.sendSelectSuggestionEvent(event.detail.selection);
-    if (event.detail.selection.value) {
-      this.input.value = event.detail.selection.value;
-    }
     this.inputIsFocused = false;
     this.input.blur();
   }
@@ -351,7 +348,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get isQueryEmpty() {
-    return !this.input?.value?.length;
+    return !this.input?.value && !this.inputValue;
   }
 
   /**

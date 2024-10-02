@@ -471,7 +471,7 @@ describe('c-quantic-search-box-input', () => {
             );
           });
 
-          it('should display the selected suggestion in the input and display the clear input icon', async () => {
+          it('should display the clear input icon', async () => {
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -505,10 +505,6 @@ describe('c-quantic-search-box-input', () => {
             expect(
               functionsMocks.exampleSelectSuggestion
             ).toHaveBeenCalledTimes(1);
-
-            expect(input.value).toEqual(
-              mockSuggestions[querySuggestionIndex].value
-            );
 
             const clearIcon = element.shadowRoot.querySelector(
               selectors.searchBoxClearIcon
