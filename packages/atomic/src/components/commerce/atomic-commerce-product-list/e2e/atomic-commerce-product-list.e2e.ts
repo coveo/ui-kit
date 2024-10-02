@@ -68,8 +68,7 @@ test.describe('after a query that yields products', () => {
 
 test.describe('after a query that yields no products', () => {
   test.beforeEach(async ({productList}) => {
-    await productList.withNoProducts();
-    await productList.load({story: 'default'});
+    await productList.load({story: 'no-products'});
   });
 
   test('should not have any placeholders', async ({productList}) => {
