@@ -52,6 +52,10 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 /**
  * @alpha
  * The `atomic-commerce-product-list` component is responsible for displaying products.
+ *
+ * @part result-list - The element containing the list of products.
+ *
+ * @slot default - The default slot where the product templates are defined.
  */
 @Component({
   tag: 'atomic-commerce-product-list',
