@@ -25,7 +25,6 @@ exports[`result preview analytics actions > #logDocumentQuickview > when analyti
 [
   "itemClick",
   {
-    "actionCause": "preview",
     "itemMetadata": {
       "author": "unknown",
       "title": "example documentTitle",
