@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {setOutput, getInput} from '@actions/core';
+import {setOutput} from '@actions/core';
 import {readdirSync, statSync} from 'fs';
 import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
@@ -59,6 +59,7 @@ function createTestFileMappings(testPaths, projectRoot) {
     [
       relative(projectRoot, sourceFilePath),
       ...listImports(sourceFilePath, projectRoot),
+      ...listImports(testPath, projectRoot),
     ].forEach((importedFile) => imports.add(importedFile));
 
     return [testName, imports];
@@ -70,17 +71,17 @@ function createTestFileMappings(testPaths, projectRoot) {
 /**
  * Determines which E2E test files to run based on the files that have changed.
  *
- * @param filesChanged - An array of files that have changed.
+ * @param changedFiles - An array of files that have changed.
  * @param testDependencies - A map of test file names to the set of files they import.
  * @returns A space-separated string of test files to run.
  */
-function determineTestFilesToRun(filesChanged, testDependencies) {
+function determineTestFilesToRun(changedFiles, testDependencies) {
   const testsToRun = new Set();
-  for (const file of filesChanged) {
+  for (const changedFile of changedFiles) {
     for (const [testFile, sourceFiles] of testDependencies) {
-      ensureIsNotCoveoPackage(file);
-      const isChangedTestFile = testDependencies.has(file);
-      const isAffectedSourceFile = sourceFiles.has(file);
+      ensureIsNotCoveoPackage(changedFile);
+      const isChangedTestFile = testFile === basename(changedFile);
+      const isAffectedSourceFile = sourceFiles.has(changedFile);
       if (isChangedTestFile || isAffectedSourceFile) {
         testsToRun.add(testFile);
         testDependencies.delete(testFile);
@@ -103,7 +104,7 @@ function dependsOnCoveoPackage(file) {
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
-const projectRoot = getInput('project-root');
+const projectRoot = process.env.projectRoot;
 console.log('********* projectRoot ************');
 console.log(projectRoot);
 console.log('*********************');
