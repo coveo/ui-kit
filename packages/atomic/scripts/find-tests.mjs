@@ -105,9 +105,6 @@ const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
 const projectRoot = process.env.projectRoot;
-console.log('********* projectRoot ************');
-console.log(projectRoot);
-console.log('*********************');
 const sourceComponentDir = join('src', 'components');
 
 try {
