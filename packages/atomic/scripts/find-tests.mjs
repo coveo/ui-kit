@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {setOutput} from '@actions/core';
+import {setOutput, getInput} from '@actions/core';
 import {readdirSync, statSync} from 'fs';
 import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
@@ -71,24 +71,29 @@ function createTestFileMappings(testPaths, projectRoot) {
  * Determines which E2E test files to run based on the files that have changed.
  *
  * @param filesChanged - An array of files that have changed.
- * @param testMappings - A map of test file names to the set of files they import.
+ * @param testDependencies - A map of test file names to the set of files they import.
  * @returns A space-separated string of test files to run.
  */
-function determineTestFilesToRun(filesChanged, testMappings) {
+function determineTestFilesToRun(filesChanged, testDependencies) {
   const testsToRun = new Set();
-  // TODO: make it more performant and reduce the
   for (const file of filesChanged) {
-    for (const [testFile, sourceFiles] of testMappings) {
-      if (dependsOnCoveoPackage(file)) {
-        throw new Error('Change detected in an different Coveo package.');
-      }
-      if (sourceFiles.has(file)) {
+    for (const [testFile, sourceFiles] of testDependencies) {
+      ensureIsNotCoveoPackage(file);
+      const isChangedTestFile = testDependencies.has(file);
+      const isAffectedSourceFile = sourceFiles.has(file);
+      if (isChangedTestFile || isAffectedSourceFile) {
         testsToRun.add(testFile);
-        testMappings.delete(testFile);
+        testDependencies.delete(testFile);
       }
     }
   }
   return [...testsToRun].join(' ');
+}
+
+function ensureIsNotCoveoPackage(file) {
+  if (dependsOnCoveoPackage(file)) {
+    throw new Error('Change detected in an different Coveo package.');
+  }
 }
 
 function dependsOnCoveoPackage(file) {
@@ -98,13 +103,16 @@ function dependsOnCoveoPackage(file) {
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
-const projectRoot = '/home/runner/work/ui-kit/ui-kit'; // TODO: make this dynamic (and/or pass it as an input)
-const sourceComponentDir = join('src', 'components'); // TODO: depends from where the script is running
+const projectRoot = getInput('project-root');
+console.log('********* projectRoot ************');
+console.log(projectRoot);
+console.log('*********************');
+const sourceComponentDir = join('src', 'components');
 
 try {
-  const testFiles = findAllTestFiles(sourceComponentDir); // TODO: maybe should be an input
-  const testMappings = createTestFileMappings(testFiles, projectRoot);
-  const testsToRun = determineTestFilesToRun(changedFiles, testMappings);
+  const testFiles = findAllTestFiles(sourceComponentDir);
+  const testDependencies = createTestFileMappings(testFiles, projectRoot);
+  const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
   setOutput(outputName, testsToRun ? testsToRun : '--grep @no-test');
 
   if (!testsToRun) {

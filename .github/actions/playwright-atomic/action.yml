@@ -18,6 +18,8 @@ runs:
       id: determine-tests
       if: ${{ always() && github.event_name == 'pull_request'}}
       run: node scripts/find-tests.mjs testsToRun
+      with:
+        project-root: ${{ github.workspace }}
       working-directory: packages/atomic
       shell: bash
     - name: Run Playwright tests
