@@ -1,6 +1,6 @@
 /* eslint-disable @cspell/spellchecker */
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {analyticsModeTest} from '../../../page-objects/analytics';
+import {AnalyticsModeEnum} from '../../../page-objects/analytics';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
@@ -349,7 +349,13 @@ describe('quantic-generated-answer', () => {
           });
         });
 
-        analyticsModeTest.forEach((analytics) => {
+        // TODO: (SFINT-5732)
+        [
+          {
+            mode: AnalyticsModeEnum.legacy,
+            label: 'when legacy analytics are sent',
+          },
+        ].forEach((analytics) => {
           describe(analytics.label, () => {
             before(() => {
               analyticsMode = analytics.mode;
