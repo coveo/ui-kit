@@ -371,25 +371,43 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
 
     logOpenGeneratedAnswerSource(
       streamId: string,
-      citation: {id: string; permanentid: string}
+      citation: {
+        id: string;
+        permanentid: string;
+        title: string;
+        uri: string;
+        clickUri: string;
+        source: string;
+      }
     ) {
       logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.OpenGeneratedAnswerSource,
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCitationClick,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(
             'eventType',
             'generatedAnswer'
           );
+          expect(analyticsBody).to.have.property(
+            'documentTitle',
+            citation.title
+          );
+          expect(analyticsBody).to.have.property('documentUri', citation.uri);
+          expect(analyticsBody).to.have.property(
+            'documentUrl',
+            citation.clickUri
+          );
+          expect(analyticsBody).to.have.property('documentPosition', 1);
+          expect(analyticsBody).to.have.property('sourceName', citation.source);
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId
           );
           expect(customData).to.have.property('citationId', citation.id);
-          expect(customData).to.have.property(
-            'permanentId',
-            citation.permanentid
-          );
+          expect(customData).to.have.property('documentId', {
+            contentIdKey: 'permanentid',
+            contentIdValue: citation.permanentid,
+          });
         }
       );
     },

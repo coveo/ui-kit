@@ -77,7 +77,7 @@ export const InterceptAliases = {
       LikeGeneratedAnswer: uaAlias('likeGeneratedAnswer'),
       DislikeGeneratedAnswer: uaAlias('dislikeGeneratedAnswer'),
       GeneratedAnswerStreamEnd: uaAlias('generatedAnswerStreamEnd'),
-      OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
+      GeneratedAnswerCitationClick: uaAlias('generatedAnswerCitationClick'),
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
       ShowGeneratedAnswer: uaAlias('generatedAnswerShowAnswers'),
       HideGeneratedAnswer: uaAlias('generatedAnswerHideAnswers'),
