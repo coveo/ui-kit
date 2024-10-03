@@ -1,7 +1,7 @@
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js b/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js
-index 68eb1e3..c71f2ea 100644
---- a/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js
-+++ b/node_modules/eslint-plugin-canonical/dist/src/bin/checkDocumentation.js
+diff --git a/dist/src/bin/checkDocumentation.js b/dist/src/bin/checkDocumentation.js
+index 68eb1e38b21d1b9e3ccac5744ff40154276011e7..b43f040a6fe6f6d0551a667540a146dbdf4b2fe6 100644
+--- a/dist/src/bin/checkDocumentation.js
++++ b/dist/src/bin/checkDocumentation.js
 @@ -15,20 +15,11 @@ const windows = (array, size) => {
      return output;
  };
@@ -26,10 +26,10 @@ index 68eb1e3..c71f2ea 100644
      if (rules.length === 0) {
          throw new Error('Docs checker is broken - it could not extract rules from docs index file.');
      }
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js b/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js
-index 33bbec6..b8f2e40 100644
---- a/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js
-+++ b/node_modules/eslint-plugin-canonical/dist/src/rules/noBarrelImport.js
+diff --git a/dist/src/rules/noBarrelImport.js b/dist/src/rules/noBarrelImport.js
+index 33bbec695d0145a4d6846af96a64623470db5473..34fc52feed347d946c3d738c66f00a343df513f9 100644
+--- a/dist/src/rules/noBarrelImport.js
++++ b/dist/src/rules/noBarrelImport.js
 @@ -74,7 +74,7 @@ exports.default = (0, utilities_1.createRule)({
          // can't cycle-check a non-file
          if (myPath === '<text>')
@@ -39,10 +39,10 @@ index 33bbec6..b8f2e40 100644
          if (!myModuleRoot) {
              throw new Error('cannot find package.json');
          }
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js b/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js
-index a76bc11..cabb49a 100644
---- a/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js
-+++ b/node_modules/eslint-plugin-canonical/dist/src/rules/preferImportAlias.js
+diff --git a/dist/src/rules/preferImportAlias.js b/dist/src/rules/preferImportAlias.js
+index a76bc114961cbfe62b52c76ac59382d57f5b70d2..d8420c78d365ae05ce3684b7632010d5929c57b8 100644
+--- a/dist/src/rules/preferImportAlias.js
++++ b/dist/src/rules/preferImportAlias.js
 @@ -9,6 +9,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
   * @see https://github.com/steelsojka/eslint-import-alias
   */
@@ -63,10 +63,10 @@ index a76bc11..cabb49a 100644
                  for (const item of aliases) {
                      const { alias, matchPath, matchParent, maxRelativeDepth = -1 } = item;
                      if (maxRelativeDepth < -1) {
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js b/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js
-index b5c5b61..f46b062 100644
---- a/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js
-+++ b/node_modules/eslint-plugin-canonical/dist/src/rules/requireExtension.js
+diff --git a/dist/src/rules/requireExtension.js b/dist/src/rules/requireExtension.js
+index b5c5b6185932178dfce4c7e32cd55f0107ed0d9c..e456306a5ed8bf7d58be26749f1b6559dfb1f4f6 100644
+--- a/dist/src/rules/requireExtension.js
++++ b/dist/src/rules/requireExtension.js
 @@ -50,7 +50,7 @@ const fixPathImport = (fixer, node, fileName, resolvedImportPath, overrideExtens
          }
      }
@@ -89,10 +89,10 @@ index b5c5b61..f46b062 100644
              if (currentPackageJsonPath &&
                  currentPackageJsonPath !== targetPackageJsonPath) {
                  return false;
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js b/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js
-index e643732..067aaf0 100644
---- a/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js
-+++ b/node_modules/eslint-plugin-canonical/dist/src/rules/virtualModule.js
+diff --git a/dist/src/rules/virtualModule.js b/dist/src/rules/virtualModule.js
+index e643732e4c0d82be9fc87896a1b90f39a56f3ed9..0662013c30984ea320d9387b0a78be1409fd8827 100644
+--- a/dist/src/rules/virtualModule.js
++++ b/dist/src/rules/virtualModule.js
 @@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
  Object.defineProperty(exports, "__esModule", { value: true });
  const node_fs_1 = require("node:fs");
@@ -146,11 +146,11 @@ index e643732..067aaf0 100644
                  },
                  fix: (fixer) => {
                      if (node.type === 'ImportDeclaration') {
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/utilities/findRootPath.js b/node_modules/eslint-plugin-canonical/dist/src/utilities/findRootPath.js
+diff --git a/dist/src/utilities/findRootPath.js b/dist/src/utilities/findRootPath.js
 new file mode 100644
-index 0000000..92abf2f
+index 0000000000000000000000000000000000000000..e7d93e660c500803dc555563f2145ddd78e5423d
 --- /dev/null
-+++ b/node_modules/eslint-plugin-canonical/dist/src/utilities/findRootPath.js
++++ b/dist/src/utilities/findRootPath.js
 @@ -0,0 +1,6 @@
 +"use strict";
 +Object.defineProperty(exports, "__esModule", { value: true });
@@ -158,10 +158,10 @@ index 0000000..92abf2f
 +const node_path_1 = require("node:path");
 +const findRootPath = (startPath) => process.platform === 'win32' ? `${startPath.split(node_path_1.sep)[0]}${node_path_1.sep}` : node_path_1.sep;
 +exports.findRootPath = findRootPath;
-diff --git a/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js b/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js
-index 267f696..edfd3ed 100644
---- a/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js
-+++ b/node_modules/eslint-plugin-canonical/dist/src/utilities/index.js
+diff --git a/dist/src/utilities/index.js b/dist/src/utilities/index.js
+index 267f69675da0e742134cc3b6959177aaeb0447b4..7d9a387e800a6da5948c327b08a99d31e0bc4af7 100644
+--- a/dist/src/utilities/index.js
++++ b/dist/src/utilities/index.js
 @@ -1,6 +1,6 @@
  "use strict";
  Object.defineProperty(exports, "__esModule", { value: true });

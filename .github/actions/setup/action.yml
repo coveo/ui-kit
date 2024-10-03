@@ -19,9 +19,11 @@ runs:
     - name: Ensure Nx cache can be shared between different CI environments # Source: https://nx.dev/recipes/troubleshooting/unknown-local-cache
       run: echo "NX_REJECT_UNKNOWN_LOCAL_CACHE=0" >> $GITHUB_ENV
       shell: bash
-    - name: Install npm
-      run: npm i -g npm@10
+    - name: Enable Corepack
       shell: bash
+      run:
+        corepack enable
+        # TODO: Is this needed now ? with setup node cache
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: npm-cache
       with:
@@ -44,9 +46,9 @@ runs:
         path: .nx/cache
         key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm ci
+      run: pnpm i
       shell: bash
     # TODO KIT-3483: Move to artifact
     # - if: steps.nx-cache.outputs.cache-hit != 'true'
-    - run: npm run build
+    - run: pnpm run build
       shell: bash

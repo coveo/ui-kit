@@ -12,9 +12,9 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: 'pnpm --filter @coveo/atomic exec cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         config-file: cypress-insight-panel.config.mjs
-        start: npm start -w @coveo/atomic
+        start: pnpm run start --filter @coveo/atomic
         wait-on: 'http://localhost:3333/ping'
         wait-on-timeout: 600000
         install: false

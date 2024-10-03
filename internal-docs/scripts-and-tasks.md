@@ -10,7 +10,7 @@ Some scripts may be nested under other scripts using the colon (`:`) symbol. Thi
   - E.g.:
     ```json
     {
-      "build": "npm run build:bundles && npm run build:definitions",
+      "build": "pnpm run build:bundles && pnpm run build:definitions",
       "build:bundles": "...",
       "build:definitions": "..."
     }
@@ -75,7 +75,7 @@ By default, when adding new packages, builds aren't cached. In order to make a p
    - Ensure it runs the correct command.
      - How:
        - A good place to start is by looking at the [`nx:run-commands` executor's documentation](https://nx.dev/packages/nx/executors/run-commands).
-       - Make sure to prefix commands that come from dependencies with "npx ".
+       - Make sure to prefix commands that come from dependencies with "pnpm exec".
    - Do not rename it.
      - Why:
        - The name of the task must be "cached:build" since Nx only caches tasks whose name is part of the [cacheable operations](https://nx.dev/nx-cloud/reference/config#cacheable-operations). We defined "cached:build" as a cacheable operation in [`nx.json`](/nx.json).

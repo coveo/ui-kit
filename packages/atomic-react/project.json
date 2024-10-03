@@ -8,9 +8,9 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npm run build:fixGeneratedImportPaths",
-          "npm run build:bundles",
-          "npm run build:assets"
+          "pnpm run build:fixGeneratedImportPaths",
+          "pnpm run build:bundles",
+          "pnpm run build:assets"
         ],
         "parallel": false,
         "cwd": "packages/atomic-react"

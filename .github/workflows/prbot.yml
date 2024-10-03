@@ -19,8 +19,8 @@ jobs:
       - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
         with:
           node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run pr:report
+      - run: pnpm i
+      - run: pnpm run pr:report
   build:
     name: 'Build'
     runs-on: ubuntu-latest
@@ -61,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm run lint:check
   unit-test:
     name: 'Run unit tests'
     needs: build
@@ -69,7 +69,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm test
+      - run: pnpm test
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
     needs: build
@@ -116,7 +116,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -131,7 +131,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/merge-playwright-reports
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
@@ -289,7 +289,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'

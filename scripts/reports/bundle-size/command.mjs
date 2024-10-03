@@ -4,12 +4,12 @@ import {execute} from '../../exec.mjs';
 
 async function setup() {
   console.log('setting up repositories');
-  await execute('npm', ['ci']);
+  await execute('pnpm', ['i --frozen-lockfile']);
 }
 
 async function buildFiles() {
   console.log('building files');
-  await execute('npx', ['nx', 'run', 'headless:build']);
+  await execute('pnpm', ['nx', 'run', 'headless:build']);
 }
 
 function readFileSizes() {

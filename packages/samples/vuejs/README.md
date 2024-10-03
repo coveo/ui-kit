@@ -7,8 +7,8 @@ This code sample was created to provide developers with a minimal working page t
 To test it, run it locally by following the steps below:
 
 ```sh
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ## Using Atomic

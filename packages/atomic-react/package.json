@@ -15,9 +15,9 @@
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
     "build:bundles:iife-cjs": "rollup --config rollup.config.mjs --bundleConfigAsCjs",
-    "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:iife-cjs\"",
-    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "build:bundles": "concurrently \"pnpm run build:bundles:esm\" \"pnpm run build:bundles:iife-cjs\"",
+    "publish:npm": "pnpm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "pnpm run-script -w=@coveo/release bump",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
@@ -30,11 +30,11 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.2.4"
+    "@coveo/atomic": "workspace:*"
   },
   "devDependencies": {
-    "@coveo/release": "1.0.0",
-    "@coveo/rollup-plugin-replace-with-ast": "1.0.0",
+    "@coveo/release": "workspace:*",
+    "@coveo/rollup-plugin-replace-with-ast": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
@@ -44,7 +44,7 @@
     "@types/node": "20.14.12",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "fix-esm-import-path": "1.10.0",
+    "fix-esm-import-path": "1.10.1",
     "ncp": "2.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -52,7 +52,7 @@
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.2.0",
+    "@coveo/headless": "workspace:*",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

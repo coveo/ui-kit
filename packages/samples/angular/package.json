@@ -5,7 +5,7 @@
     "ng": "ng",
     "build": "nx build",
     "build:angular": "ng build",
-    "dev": "npm run build:assets && npm run dev:angular",
+    "dev": "pnpm run build:assets && pnpm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0",
     "build:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang"
   },
@@ -19,7 +19,7 @@
     "@angular/platform-browser": "17.3.12",
     "@angular/platform-browser-dynamic": "17.3.12",
     "@angular/router": "17.3.12",
-    "@coveo/atomic-angular": "3.1.4",
+    "@coveo/atomic-angular": "workspace:*",
     "rxjs": "7.8.1",
     "tslib": "2.6.3",
     "zone.js": "0.14.8"
