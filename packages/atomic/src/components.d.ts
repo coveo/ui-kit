@@ -888,7 +888,7 @@ export namespace Components {
          */
         "resultsMustMatch": FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
         /**
@@ -7031,7 +7031,7 @@ declare namespace LocalJSX {
          */
         "resultsMustMatch"?: FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
