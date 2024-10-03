@@ -1,16 +1,16 @@
-import {configuration} from '../../app/common-reducers';
-import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
-import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
-import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
+import {fetchInterface} from '../../features/insight-interface/insight-interface-actions.js';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildInsightInterface, InsightInterface} from './insight-interface';
+} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildInsightInterface, InsightInterface} from './insight-interface.js';
 
-jest.mock('../../features/insight-interface/insight-interface-actions');
+vi.mock('../../features/insight-interface/insight-interface-actions');
 
 describe('Insight Interface', () => {
   let engine: MockedInsightEngine;

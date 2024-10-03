@@ -5,7 +5,7 @@ import {
   SchemaValidationError,
   Value,
 } from '@coveo/bueno';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 
 export type TemplateCondition<ItemType> = (item: ItemType) => boolean;
 

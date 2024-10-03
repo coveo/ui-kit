@@ -1,17 +1,17 @@
-import {SearchAppState} from '../../../../state/search-app-state';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
-import {createMockState} from '../../../../test/mock-state';
+import {SearchAppState} from '../../../../state/search-app-state.js';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request.js';
+import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../../../test/mock-facet-response.js';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
+import {createMockState} from '../../../../test/mock-state.js';
 import {
   dateFacetExcludedValuesSelector,
   dateFacetResponseSelector,
   dateFacetSelectedValuesSelector,
-} from './date-facet-selectors';
+} from './date-facet-selectors.js';
 
 describe('date facet selectors', () => {
   const facetId = 'abc123';

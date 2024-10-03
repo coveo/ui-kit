@@ -1,14 +1,14 @@
-import {CaseAssist, ItemClick} from '@coveo/relay-event-types';
+import {CaseAssist} from '@coveo/relay-event-types';
 import {
   CaseAssistAction,
   makeCaseAssistAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {NextStageOptions} from './case-assist-analytics-actions-loader';
+} from '../analytics/analytics-utils.js';
+import {NextStageOptions} from './case-assist-analytics-actions-loader.js';
 import {
   caseAssistCaseSelector,
   caseAssistCaseClassificationSelector,
   caseAssistDocumentSuggestionSelector,
-} from './case-assist-analytics-selectors';
+} from './case-assist-analytics-selectors.js';
 
 export const logCaseStart = (): CaseAssistAction =>
   makeCaseAssistAnalyticsAction({
@@ -18,7 +18,7 @@ export const logCaseStart = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.start',
+    analyticsType: 'CaseAssist.Start',
     analyticsPayloadBuilder: (): CaseAssist.Start => ({}),
   });
 
@@ -43,7 +43,7 @@ export const logCreateCase = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.createTicket',
+    analyticsType: 'CaseAssist.CreateTicket',
     analyticsPayloadBuilder: (state): CaseAssist.CreateTicket => {
       const {id, category, subject, description, productId} =
         caseAssistCaseSelector(state);
@@ -67,7 +67,7 @@ export const logSolveCase = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.cancel',
+    analyticsType: 'CaseAssist.Cancel',
     analyticsPayloadBuilder: (): CaseAssist.Cancel => ({
       reason: 'solved',
     }),
@@ -81,7 +81,7 @@ export const logAbandonCase = (): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.cancel',
+    analyticsType: 'CaseAssist.Cancel',
     analyticsPayloadBuilder: (): CaseAssist.Cancel => ({
       reason: 'quit',
     }),
@@ -96,7 +96,7 @@ export const logUpdateCaseField = (fieldName: string): CaseAssistAction =>
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.updateField',
+    analyticsType: 'CaseAssist.UpdateField',
     analyticsPayloadBuilder: (state): CaseAssist.UpdateField => {
       const fieldValue =
         state.caseField?.fields?.[fieldName]?.value ||
@@ -124,15 +124,18 @@ export const logAutoSelectCaseField = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.selectFieldClassification',
-    analyticsPayloadBuilder: (state): CaseAssist.SelectFieldClassification => {
-      return {
-        autoselected: true,
-        fieldClassification: {
-          id: classificationId,
-          responseId: state.caseField?.status?.lastResponseId || '',
-        },
-      };
+    analyticsType: 'CaseAssist.SelectFieldClassification',
+    analyticsPayloadBuilder: (
+      state
+    ): CaseAssist.SelectFieldClassification | undefined => {
+      const responseId = state.caseField?.status?.lastResponseId;
+      if (responseId) {
+        return {
+          autoselected: true,
+          classificationId,
+          responseId,
+        };
+      }
     },
   });
 
@@ -150,15 +153,18 @@ export const logClassificationClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.selectFieldClassification',
-    analyticsPayloadBuilder: (state): CaseAssist.SelectFieldClassification => {
-      return {
-        autoselected: false,
-        fieldClassification: {
-          id: classificationId,
-          responseId: state.caseField?.status?.lastResponseId || '',
-        },
-      };
+    analyticsType: 'CaseAssist.SelectFieldClassification',
+    analyticsPayloadBuilder: (
+      state
+    ): CaseAssist.SelectFieldClassification | undefined => {
+      const responseId = state.caseField?.status?.lastResponseId;
+      if (responseId) {
+        return {
+          autoselected: false,
+          classificationId,
+          responseId,
+        };
+      }
     },
   });
 
@@ -173,14 +179,27 @@ export const logDocumentSuggestionClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.documentSuggestionClick',
-    analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionClick => {
-      return {
-        documentSuggestion: {
-          id: suggestionId,
-          responseId: state.documentSuggestion?.status?.lastResponseId || '',
-        },
-      };
+    analyticsType: 'CaseAssist.DocumentSuggestionClick',
+    analyticsPayloadBuilder: (
+      state
+    ): CaseAssist.DocumentSuggestionClick | undefined => {
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(
+        state,
+        suggestionId
+      );
+      if (responseId) {
+        return {
+          responseId,
+          position: documentSuggestion.suggestion.documentPosition,
+          itemMetadata: {
+            uniqueFieldName: 'uniqueId',
+            uniqueFieldValue: documentSuggestion.suggestionId,
+            url: documentSuggestion.suggestion.documentUri,
+            title: documentSuggestion.suggestion.documentTitle,
+          },
+        };
+      }
     },
   });
 
@@ -199,24 +218,27 @@ export const logQuickviewDocumentSuggestionClick = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'itemClick',
-    analyticsPayloadBuilder: (state): ItemClick => {
-      const {
-        suggestion,
-        responseId,
-        suggestionId: uniqueId,
-      } = caseAssistDocumentSuggestionSelector(state, suggestionId, true);
-      return {
-        searchUid: responseId,
-        position: suggestion.documentPosition,
-        actionCause: 'preview',
-        itemMetadata: {
-          uniqueFieldName: 'uniqueId',
-          uniqueFieldValue: uniqueId,
-          title: suggestion.documentTitle,
-          url: suggestion.documentUrl,
-        },
-      };
+    analyticsType: 'CaseAssist.DocumentSuggestionClick',
+    analyticsPayloadBuilder: (
+      state
+    ): CaseAssist.DocumentSuggestionClick | undefined => {
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(
+        state,
+        suggestionId
+      );
+      if (responseId) {
+        return {
+          responseId,
+          position: documentSuggestion.suggestion.documentPosition,
+          itemMetadata: {
+            uniqueFieldName: 'uniqueId',
+            uniqueFieldValue: documentSuggestion.suggestionId,
+            url: documentSuggestion.suggestion.documentUri,
+            title: documentSuggestion.suggestion.documentTitle,
+          },
+        };
+      }
     },
   });
 
@@ -236,24 +258,27 @@ export const logDocumentSuggestionOpen = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'itemClick',
-    analyticsPayloadBuilder: (state): ItemClick => {
-      const {
-        suggestion,
-        responseId,
-        suggestionId: uniqueId,
-      } = caseAssistDocumentSuggestionSelector(state, suggestionId, true);
-      return {
-        searchUid: responseId,
-        position: suggestion.documentPosition,
-        actionCause: 'open',
-        itemMetadata: {
-          uniqueFieldName: 'uniqueId',
-          uniqueFieldValue: uniqueId,
-          title: suggestion.documentTitle,
-          url: suggestion.documentUrl,
-        },
-      };
+    analyticsType: 'CaseAssist.DocumentSuggestionClick',
+    analyticsPayloadBuilder: (
+      state
+    ): CaseAssist.DocumentSuggestionClick | undefined => {
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(
+        state,
+        suggestionId
+      );
+      if (responseId) {
+        return {
+          responseId,
+          position: documentSuggestion.suggestion.documentPosition,
+          itemMetadata: {
+            uniqueFieldName: 'uniqueId',
+            uniqueFieldValue: documentSuggestion.suggestionId,
+            url: documentSuggestion.suggestion.documentUri,
+            title: documentSuggestion.suggestion.documentTitle,
+          },
+        };
+      }
     },
   });
 
@@ -271,14 +296,26 @@ export const logDocumentSuggestionRating = (
         ticket: caseAssistCaseSelector(state),
       });
     },
-    analyticsType: 'caseAssist.documentSuggestionFeedback',
-    analyticsPayloadBuilder: (state): CaseAssist.DocumentSuggestionFeedback => {
-      return {
-        documentSuggestion: {
-          id: suggestionId,
-          responseId: state.documentSuggestion?.status?.lastResponseId || '',
-        },
-        liked: !!rating,
-      };
+    analyticsType: 'CaseAssist.DocumentSuggestionFeedback',
+    analyticsPayloadBuilder: (
+      state
+    ): CaseAssist.DocumentSuggestionFeedback | undefined => {
+      const responseId = state.documentSuggestion?.status?.lastResponseId;
+      const documentSuggestion = caseAssistDocumentSuggestionSelector(
+        state,
+        suggestionId
+      );
+      if (responseId) {
+        return {
+          responseId,
+          itemMetadata: {
+            uniqueFieldName: 'uniqueId',
+            uniqueFieldValue: documentSuggestion.suggestionId,
+            url: documentSuggestion.suggestion.documentUri,
+            title: documentSuggestion.suggestion.documentTitle,
+          },
+          liked: !!rating,
+        };
+      }
     },
   });

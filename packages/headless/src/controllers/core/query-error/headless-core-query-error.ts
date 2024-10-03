@@ -1,12 +1,12 @@
-import {CoreEngine} from '../../../app/engine';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {ErrorPayload} from '../../controller/error-payload';
+import {CoreEngine} from '../../../app/engine.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {ErrorPayload} from '../../controller/error-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 /**
  * The `QueryError` controller allows to retrieve information about the current error returned by the search API, if any.

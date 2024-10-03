@@ -1,17 +1,20 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader';
+import {Result} from '../../api/search/search/result.js';
+import {configuration} from '../../app/common-reducers.js';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
+import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader.js';
 import {
   getRecommendations,
   setRecommendationId,
-} from '../../features/recommendation/recommendation-actions';
-import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
-import {loadReducerError} from '../../utils/errors';
-import {validateOptions} from '../../utils/validate-payload';
-import {ErrorPayload} from '../controller/error-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../features/recommendation/recommendation-actions.js';
+import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {validateOptions} from '../../utils/validate-payload.js';
+import {ErrorPayload} from '../controller/error-payload.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 const optionsSchema = new Schema<RecommendationListOptions>({
   id: new StringValue<string>({

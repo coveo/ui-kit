@@ -54,6 +54,7 @@ import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
+ * @slot default - The default slot where to insert the template element.
  */
 @Component({
   tag: 'atomic-recs-list',

@@ -1,6 +1,6 @@
-import {SlotIdParam} from '../commerce-api-params';
-import {CommerceApiMethod} from '../commerce-metadata';
-import {BaseCommerceAPIRequest, baseRequest} from '../common/request';
+import {SlotIdParam} from '../commerce-api-params.js';
+import {CommerceApiMethod} from '../commerce-metadata.js';
+import {BaseCommerceAPIRequest, baseRequest} from '../common/request.js';
 
 export type CommerceRecommendationsRequest = BaseCommerceAPIRequest &
   SlotIdParam;

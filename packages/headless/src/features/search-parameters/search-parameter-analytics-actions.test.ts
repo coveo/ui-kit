@@ -1,8 +1,8 @@
 import {
   interfaceChange,
   logInterfaceChange,
-} from '../analytics/analytics-actions';
-import {LegacySearchAction} from '../analytics/analytics-utils';
+} from '../analytics/analytics-actions.js';
+import {LegacySearchAction} from '../analytics/analytics-utils.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -12,24 +12,24 @@ import {
   facetClearAll,
   facetExclude,
   logFacetUnexclude,
-} from '../facets/facet-set/facet-set-analytics-actions';
+} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {
   logPageNumber,
   logPagerResize,
-} from '../pagination/pagination-analytics-actions';
+} from '../pagination/pagination-analytics-actions.js';
 import {
   logSearchboxSubmit,
   searchboxSubmit,
-} from '../query/query-analytics-actions';
+} from '../query/query-analytics-actions.js';
 import {
   logResultsSort,
   resultsSort,
-} from '../sort-criteria/sort-criteria-analytics-actions';
+} from '../sort-criteria/sort-criteria-analytics-actions.js';
 import {
   legacyLogParametersChange,
   parametersChange,
-} from './search-parameter-analytics-actions';
-import {logParametersChange} from './search-parameter-insight-analytics-actions';
+} from './search-parameter-analytics-actions.js';
+import {logParametersChange} from './search-parameter-insight-analytics-actions.js';
 
 describe('legacyLogParametersChange', () => {
   function expectIdenticalActionType(

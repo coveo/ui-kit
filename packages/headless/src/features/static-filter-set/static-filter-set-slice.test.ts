@@ -1,17 +1,17 @@
-import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
-import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
-} from './static-filter-set-actions';
-import {staticFilterSetReducer} from './static-filter-set-slice';
+} from './static-filter-set-actions.js';
+import {staticFilterSetReducer} from './static-filter-set-slice.js';
 import {
   StaticFilterValue,
   StaticFilterValueState,
-} from './static-filter-set-state';
+} from './static-filter-set-state.js';
 
 describe('static-filter-set slice', () => {
   it('initializes correctly', () => {

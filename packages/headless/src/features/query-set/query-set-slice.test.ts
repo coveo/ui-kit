@@ -1,22 +1,25 @@
-import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response';
-import {buildMockSearch} from '../../test/mock-search';
-import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions';
-import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions';
+import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions.js';
 import {
   QuerySearchCommerceAPIThunkReturn,
   executeSearch as commerceExecuteSearch,
-} from '../commerce/search/search-actions';
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+} from '../commerce/search/search-actions.js';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
   ExecuteSearchThunkReturn,
   executeSearch,
-} from '../search/search-actions';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
-import {querySetReducer} from './query-set-slice';
-import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+} from '../search/search-actions.js';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from './query-set-actions.js';
+import {querySetReducer} from './query-set-slice.js';
+import {getQuerySetInitialState, QuerySetState} from './query-set-state.js';
 
 describe('querySet slice', () => {
   let state: QuerySetState;

@@ -1,4 +1,4 @@
-import {QuerySuggestState} from '../features/query-suggest/query-suggest-state';
+import {QuerySuggestState} from '../features/query-suggest/query-suggest-state.js';
 
 export function buildMockQuerySuggest(
   config: Partial<QuerySuggestState> = {}

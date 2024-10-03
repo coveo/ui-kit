@@ -1,12 +1,12 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {querySetReducer as querySet} from '../../features/query-set/query-set-slice';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {querySetReducer as querySet} from '../../features/query-set/query-set-slice.js';
 import {
   registerQuerySetQuery,
   RegisterQuerySetQueryActionCreatorPayload,
   updateQuerySetQuery,
   UpdateQuerySetQueryActionCreatorPayload,
-} from '../query-set/query-set-actions';
+} from '../query-set/query-set-actions.js';
 
 export type {
   RegisterQuerySetQueryActionCreatorPayload,

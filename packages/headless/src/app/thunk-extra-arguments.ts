@@ -1,12 +1,12 @@
 import {Relay} from '@coveo/relay';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client';
-import {PreprocessRequest} from '../api/preprocess-request';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
-import {validatePayloadAndThrow} from '../utils/validate-payload';
-import {EngineConfiguration} from './engine-configuration';
-import {NavigatorContext} from './navigatorContextProvider';
+import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
+import {PreprocessRequest} from '../api/preprocess-request.js';
+import {NoopPreprocessRequest} from '../api/preprocess-request.js';
+import {validatePayloadAndThrow} from '../utils/validate-payload.js';
+import {EngineConfiguration} from './engine-configuration.js';
+import {NavigatorContext} from './navigatorContextProvider.js';
 
 export interface ClientThunkExtraArguments<T, K = GeneratedAnswerAPIClient>
   extends ThunkExtraArguments {

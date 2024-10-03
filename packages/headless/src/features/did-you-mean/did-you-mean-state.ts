@@ -1,7 +1,7 @@
 import {
   Correction,
   QueryCorrection,
-} from '../../api/search/search/query-corrections';
+} from '../../api/search/search/query-corrections.js';
 
 /**
  * Define which query correction system to use

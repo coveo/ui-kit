@@ -2,8 +2,8 @@ import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {updateActiveTab} from '../tab-set/tab-set-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -15,11 +15,11 @@ import {
   UpdateBasicConfigurationActionCreatorPayload,
   UpdateSearchConfigurationActionCreatorPayload,
   UpdateAnalyticsConfigurationActionCreatorPayload,
-} from './configuration-actions';
+} from './configuration-actions.js';
 import {
   getConfigurationInitialState,
   ConfigurationState,
-} from './configuration-state';
+} from './configuration-state.js';
 
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),

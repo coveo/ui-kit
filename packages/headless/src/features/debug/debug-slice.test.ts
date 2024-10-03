@@ -1,7 +1,7 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {enableDebug, disableDebug} from './debug-actions';
-import {debugReducer} from './debug-slice';
-import {getDebugInitialState} from './debug-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {enableDebug, disableDebug} from './debug-actions.js';
+import {debugReducer} from './debug-slice.js';
+import {getDebugInitialState} from './debug-state.js';
 
 describe('debug slice', () => {
   it('should have initial state', () => {

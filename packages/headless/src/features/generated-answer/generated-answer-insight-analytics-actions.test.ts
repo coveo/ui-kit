@@ -1,14 +1,14 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {GeneratedAnswerFeedback} from './generated-answer-analytics-actions';
+} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {GeneratedAnswerFeedback} from './generated-answer-analytics-actions.js';
 import {
   logGeneratedAnswerFeedback,
   logRetryGeneratedAnswer,
@@ -22,38 +22,38 @@ import {
   logCopyGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
-} from './generated-answer-insight-analytics-actions';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+} from './generated-answer-insight-analytics-actions.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
-const mockLogGeneratedAnswerFeedbackSubmit = jest.fn();
-const mockLogRetryGeneratedAnswer = jest.fn();
-const mockLogOpenGeneratedAnswerSource = jest.fn();
-const mockLogHoverCitation = jest.fn();
-const mockLogLikeGeneratedAnswer = jest.fn();
-const mockLogDislikeGeneratedAnswer = jest.fn();
-const mockLogGeneratedAnswerStreamEnd = jest.fn();
-const mockLogGeneratedAnswerShowAnswers = jest.fn();
-const mockLogGeneratedAnswerHideAnswers = jest.fn();
-const mockLogCopyGeneratedAnswer = jest.fn();
-const mockLogGeneratedAnswerExpand = jest.fn();
-const mockLogGeneratedAnswerCollapse = jest.fn();
-const mockLogGeneratedAnswerFeedbackSubmitV2 = jest.fn();
-const emit = jest.fn();
+const mockLogGeneratedAnswerFeedbackSubmit = vi.fn();
+const mockLogRetryGeneratedAnswer = vi.fn();
+const mockLogOpenGeneratedAnswerSource = vi.fn();
+const mockLogHoverCitation = vi.fn();
+const mockLogLikeGeneratedAnswer = vi.fn();
+const mockLogDislikeGeneratedAnswer = vi.fn();
+const mockLogGeneratedAnswerStreamEnd = vi.fn();
+const mockLogGeneratedAnswerShowAnswers = vi.fn();
+const mockLogGeneratedAnswerHideAnswers = vi.fn();
+const mockLogCopyGeneratedAnswer = vi.fn();
+const mockLogGeneratedAnswerExpand = vi.fn();
+const mockLogGeneratedAnswerCollapse = vi.fn();
+const mockLogGeneratedAnswerFeedbackSubmitV2 = vi.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logGeneratedAnswerFeedbackSubmit: mockLogGeneratedAnswerFeedbackSubmit,
     logRetryGeneratedAnswer: mockLogRetryGeneratedAnswer,
     logOpenGeneratedAnswerSource: mockLogOpenGeneratedAnswerSource,
@@ -71,7 +71,7 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
@@ -131,7 +131,7 @@ describe('generated answer insight analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {
@@ -267,24 +267,27 @@ describe('generated answer insight analytics actions', () => {
       );
     });
 
-    it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
-      await logGeneratedAnswerStreamEnd(true)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+    [false, true].map((answerGenerated) => {
+      it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
+        await logGeneratedAnswerStreamEnd(answerGenerated)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
-      const mockToUse = mockLogGeneratedAnswerStreamEnd;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        answerGenerated: true,
-      };
+        const mockToUse = mockLogGeneratedAnswerStreamEnd;
+        const expectedMetadata = {
+          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+          answerGenerated,
+          answerTextIsEmpty: answerGenerated || undefined,
+        };
 
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+        expect(mockToUse).toHaveBeenCalledTimes(1);
+        expect(mockToUse).toHaveBeenCalledWith(
+          expectedMetadata,
+          expectedCaseContext
+        );
+      });
     });
 
     it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {

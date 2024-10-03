@@ -1,10 +1,10 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
-import {TriggerSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {buildController} from '../controller/headless-controller';
-import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
+import {TriggerSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {buildController} from '../controller/headless-controller.js';
+import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger.js';
 
 /**
  * Creates a `RedirectionTrigger` controller instance.

@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {isEmptyString} from './utils';
+import {isEmptyString} from './utils.js';
 
 export interface HighlightKeyword {
   /**

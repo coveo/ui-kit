@@ -1,25 +1,25 @@
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
+import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   AutomaticFacetSection,
   ConfigurationSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   Controller,
   buildController,
-} from '../../controller/headless-controller';
-import {buildAutomaticFacet} from '../automatic-facet/headless-automatic-facet';
-import {FacetValue} from '../facet/headless-facet';
+} from '../../controller/headless-controller.js';
+import {buildAutomaticFacet} from '../automatic-facet/headless-automatic-facet.js';
+import {FacetValue} from '../facet/headless-facet.js';
 import {
   AutomaticFacetGeneratorOptions,
   buildOptions,
-} from './headless-automatic-facet-generator-options';
+} from './headless-automatic-facet-generator-options.js';
 
 export type {AutomaticFacetGeneratorOptions};
 

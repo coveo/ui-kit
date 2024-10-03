@@ -1,3 +1,17 @@
+## 3.1.0 (2024-10-02)
+
+- feat(headless): analytics actions updated to send valid ep events (#4450) ([0a60d40](https://github.com/coveo/ui-kit/commits/0a60d40)), closes [#4450](https://github.com/coveo/ui-kit/issues/4450)
+- feat(quantic): quantic user action component created (#4472) ([7add130](https://github.com/coveo/ui-kit/commits/7add130)), closes [#4472](https://github.com/coveo/ui-kit/issues/4472)
+- feat(quantic): quantic user actions session component created (#4473) ([0882dbc](https://github.com/coveo/ui-kit/commits/0882dbc)), closes [#4473](https://github.com/coveo/ui-kit/issues/4473)
+
+## <small>3.0.4 (2024-09-25)</small>
+
+- test(quantic): added new apex class test to increase code coverage (#4464) ([b595d0d](https://github.com/coveo/ui-kit/commits/b595d0d)), closes [#4464](https://github.com/coveo/ui-kit/issues/4464)
+
+## <small>3.0.1 (2024-09-24)</small>
+
+- fix(quantic, searchbox): Issue with searchbox suggestions list flashing after selecting recent query ([6f75ad6](https://github.com/coveo/ui-kit/commits/6f75ad6)), closes [#4401](https://github.com/coveo/ui-kit/issues/4401)
+
 ## 3.0.0 (2024-09-18)
 
 - chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)

@@ -4,7 +4,7 @@ import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 export interface RegisterTabActionCreatorPayload {
   /**

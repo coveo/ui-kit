@@ -3,7 +3,7 @@ import {
   Product,
   BaseProduct,
   ChildProduct,
-} from '../../../api/commerce/common/product';
+} from '../../../api/commerce/common/product.js';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -11,15 +11,15 @@ import {
   fetchItemsRejected,
   registerInstantItem,
   updateInstantItemQuery,
-} from '../../instant-items/instant-items-slice';
-import {fetchInstantProducts} from '../search/search-actions';
+} from '../../instant-items/instant-items-slice.js';
+import {fetchInstantProducts} from '../search/search-actions.js';
 import {
   clearExpiredProducts,
   promoteChildToParent,
   registerInstantProducts,
   updateInstantProductsQuery,
-} from './instant-products-actions';
-import {getInstantProductsInitialState} from './instant-products-state';
+} from './instant-products-actions.js';
+import {getInstantProductsInitialState} from './instant-products-state.js';
 
 export const instantProductsReducer = createReducer(
   getInstantProductsInitialState(),

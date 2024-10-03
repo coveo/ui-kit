@@ -1,4 +1,4 @@
-import {isFacetIncludedOnTab} from './facet-options-utils';
+import {isFacetIncludedOnTab} from './facet-options-utils.js';
 
 describe('isFacetIncludedOnTab', () => {
   it('returns true when facetTabs or activeTab is undefined', () => {

@@ -1,4 +1,4 @@
-import {StaticFilterValue} from '../features/static-filter-set/static-filter-set-state';
+import {StaticFilterValue} from '../features/static-filter-set/static-filter-set-state.js';
 
 export function buildMockStaticFilterValue(
   config: Partial<StaticFilterValue> = {}

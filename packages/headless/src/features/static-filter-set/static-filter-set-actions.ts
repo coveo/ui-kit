@@ -1,17 +1,17 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {SearchAction} from '../search/search-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {SearchAction} from '../search/search-actions.js';
 import {
   staticFilterIdSchema,
   staticFilterValueSchema,
   staticFilterValuesSchema,
-} from './static-filter-set-schema';
-import {StaticFilterValue} from './static-filter-set-state';
+} from './static-filter-set-schema.js';
+import {StaticFilterValue} from './static-filter-set-state.js';
 
 export interface RegisterStaticFilterActionCreatorPayload {
   /**

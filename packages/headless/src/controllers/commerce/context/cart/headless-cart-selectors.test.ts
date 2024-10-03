@@ -1,15 +1,15 @@
-import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector';
+import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector.js';
 import {
   CartState,
   getCartInitialState,
-} from '../../../../features/commerce/context/cart/cart-state';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state';
-import {createCartKey} from './headless-cart';
+} from '../../../../features/commerce/context/cart/cart-state.js';
+import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
 import {
   itemSelector,
   totalQuantitySelector,
   totalPriceSelector,
-} from './headless-cart-selectors';
+} from './headless-cart-selectors.js';
+import {createCartKey} from './headless-cart.js';
 
 describe('headless-cart-selectors', () => {
   let cartOptions: CartState;
@@ -42,7 +42,7 @@ describe('headless-cart-selectors', () => {
   const item3Key = createCartKey(item3);
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     cartOptions = {
       cart: {

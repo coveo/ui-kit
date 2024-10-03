@@ -4,11 +4,11 @@ import {
   setAttachedResults,
   attachResult,
   detachResult,
-} from './attached-results-actions';
+} from './attached-results-actions.js';
 import {
   AttachedResult,
   getAttachedResultsInitialState,
-} from './attached-results-state';
+} from './attached-results-state.js';
 
 export const attachedResultsReducer = createReducer(
   getAttachedResultsInitialState(),

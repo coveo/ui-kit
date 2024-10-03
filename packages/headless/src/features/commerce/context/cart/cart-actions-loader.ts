@@ -1,9 +1,9 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client';
+import {AsyncThunkCommerceOptions} from '../../../../api/commerce/commerce-api-client.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../../app/commerce-engine/commerce-engine';
+} from '../../../../app/commerce-engine/commerce-engine.js';
 import {
   CartActionPayload,
   PurchasePayload,
@@ -14,8 +14,8 @@ import {
   purchase,
   setItems,
   updateItemQuantity,
-} from './cart-actions';
-import {cartReducer as cart} from './cart-slice';
+} from './cart-actions.js';
+import {cartReducer as cart} from './cart-slice.js';
 
 export type {
   CartActionPayload,

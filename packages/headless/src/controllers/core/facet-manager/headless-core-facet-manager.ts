@@ -1,13 +1,13 @@
-import {CoreEngine} from '../../../app/engine';
-import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {sortFacets} from '../../../utils/facet-utils';
+import {CoreEngine} from '../../../app/engine.js';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {sortFacets} from '../../../utils/facet-utils.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 /**
  * A facet payload object to be sorted by the manager.

@@ -41,12 +41,26 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return this.page.getByText('Creating an In-Product Experience (IPX)');
   }
 
+  get generatedAnswer() {
+    return this.page.getByText('Generated answer', {exact: true});
+  }
+
   get sortDropdown() {
     return this.page.getByRole('combobox', {name: 'Sort by'});
   }
 
   get sortDropdownOptions() {
     return this.page.getByLabel('Sort by').getByRole('option');
+  }
+
+  get refineModalSortDropdown() {
+    return this.page
+      .locator('atomic-modal [part="select-wrapper"]')
+      .getByRole('combobox');
+  }
+
+  get refineModalCloseButton() {
+    return this.page.getByRole('button', {name: 'Close'});
   }
 
   get refineModalSortDropdownOptions() {

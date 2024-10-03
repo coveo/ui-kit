@@ -1,7 +1,10 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {nonEmptyString, validatePayload} from '../../../utils/validate-payload';
-import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions';
+import {
+  nonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload.js';
+import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions.js';
 
 export type UpdateIgnoreQueryTriggerPayload = {
   /**

@@ -1,43 +1,43 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
-import pino from 'pino';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state';
-import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state';
-import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
-import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
-import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state';
-import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
-import {buildMockQueryState} from '../../test/mock-query-state';
-import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {createMockState} from '../../test/mock-state';
-import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response';
+import {pino} from 'pino';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state.js';
+import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state.js';
+import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request.js';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state.js';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
+import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state.js';
+import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
+import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockQueryState} from '../../test/mock-query-state.js';
+import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {createMockState} from '../../test/mock-state.js';
+import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response.js';
 import {
   configureLegacyAnalytics,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
-} from './search-analytics';
+} from './search-analytics.js';
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-const mockGetHistory = jest.fn();
+const mockGetHistory = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const originalModule = jest.requireActual('coveo.analytics');
+vi.mock('coveo.analytics', async () => {
+  const originalModule = await vi.importActual('coveo.analytics');
   return {
     ...originalModule,
     history: {
-      HistoryStore: jest.fn().mockImplementation(() => {
+      HistoryStore: vi.fn().mockImplementation(() => {
         return {
           getHistory: () => mockGetHistory(),
         };

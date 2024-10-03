@@ -1,27 +1,31 @@
-import {PlatformClient, PlatformClientCallError} from '../api/platform-client';
-import {getSampleEngineConfiguration} from '../app/engine-configuration';
+import {MockInstance} from 'vitest';
+import {
+  PlatformClient,
+  PlatformClientCallError,
+} from '../api/platform-client.js';
+import {getSampleEngineConfiguration} from '../app/engine-configuration.js';
 import {
   InsightEngineConfiguration,
   buildInsightEngine,
-} from '../app/insight-engine/insight-engine';
-import {NumericFacetValue} from '../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+} from '../app/insight-engine/insight-engine.js';
+import {NumericFacetValue} from '../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 import {
   interfaceChange,
   interfaceLoad,
-} from '../features/analytics/analytics-actions';
-import {didYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions';
-import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-insight-analytics-actions';
-import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions';
-import {categoryBreadcrumbFacet} from '../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
-import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
+} from '../features/analytics/analytics-actions.js';
+import {didYouMeanClick} from '../features/did-you-mean/did-you-mean-analytics-actions.js';
+import {logDidYouMeanClick} from '../features/did-you-mean/did-you-mean-insight-analytics-actions.js';
+import {registerCategoryFacet} from '../features/facets/category-facet-set/category-facet-set-actions.js';
+import {categoryBreadcrumbFacet} from '../features/facets/category-facet-set/category-facet-set-analytics-actions.js';
+import {logCategoryFacetBreadcrumb} from '../features/facets/category-facet-set/category-facet-set-insight-analytics-actions.js';
+import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
   breadcrumbFacet,
   facetClearAll,
   facetDeselect,
   facetSelect,
   facetUpdateSort,
-} from '../features/facets/facet-set/facet-set-analytics-actions';
+} from '../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
@@ -30,50 +34,50 @@ import {
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-} from '../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request';
-import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-insight-analytics-actions';
-import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {dateBreadcrumbFacet} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
-import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
-import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
-import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {numericBreadcrumbFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
-import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
-import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {retryGeneratedAnswer} from '../features/generated-answer/generated-answer-analytics-actions';
-import {logRetryGeneratedAnswer} from '../features/generated-answer/generated-answer-insight-analytics-actions';
+} from '../features/facets/facet-set/facet-set-insight-analytics-actions.js';
+import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request.js';
+import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-insight-analytics-actions.js';
+import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import {dateBreadcrumbFacet} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
+import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions.js';
+import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {numericBreadcrumbFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
+import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions.js';
+import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {retryGeneratedAnswer} from '../features/generated-answer/generated-answer-analytics-actions.js';
+import {logRetryGeneratedAnswer} from '../features/generated-answer/generated-answer-insight-analytics-actions.js';
 import {
   executeSearch,
   fetchFacetValues,
   fetchPage,
-} from '../features/insight-search/insight-search-actions';
+} from '../features/insight-search/insight-search-actions.js';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
-} from '../features/insight-search/insight-search-analytics-actions';
-import {browseResults} from '../features/pagination/pagination-analytics-actions';
+} from '../features/insight-search/insight-search-analytics-actions.js';
+import {browseResults} from '../features/pagination/pagination-analytics-actions.js';
 import {
   logPageNext,
   logPagePrevious,
   logPageNumber,
-} from '../features/pagination/pagination-insight-analytics-actions';
-import {searchboxSubmit} from '../features/query/query-analytics-actions';
-import {logSearchboxSubmit} from '../features/query/query-insight-analytics-actions';
-import {resultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions';
-import {logResultsSort} from '../features/sort-criteria/sort-criteria-insight-analytics-actions';
+} from '../features/pagination/pagination-insight-analytics-actions.js';
+import {searchboxSubmit} from '../features/query/query-analytics-actions.js';
+import {logSearchboxSubmit} from '../features/query/query-insight-analytics-actions.js';
+import {resultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions.js';
+import {logResultsSort} from '../features/sort-criteria/sort-criteria-insight-analytics-actions.js';
 import {
   StaticFilterValueMetadata,
   staticFilterDeselect,
-} from '../features/static-filter-set/static-filter-set-actions';
-import {logInsightStaticFilterDeselect} from '../features/static-filter-set/static-filter-set-insight-analytics-actions';
-import {clearMicrotaskQueue} from '../test/unit-test-utils';
+} from '../features/static-filter-set/static-filter-set-actions.js';
+import {logInsightStaticFilterDeselect} from '../features/static-filter-set/static-filter-set-insight-analytics-actions.js';
+import {clearMicrotaskQueue} from '../test/unit-test-utils.js';
 import {
   assertActionCause,
   assertNextEqualsLegacy,
   excludedBaseProperties,
-} from './analytics-migration.test';
+} from './analytics-migration.test.js';
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
@@ -118,10 +122,14 @@ const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
-  let callSpy: jest.SpyInstance<Promise<Response | PlatformClientCallError>>;
+  type Procedure = (
+    ...args: unknown[]
+  ) => Promise<Response | PlatformClientCallError>;
+
+  let callSpy: MockInstance<Procedure>;
 
   beforeEach(() => {
-    callSpy = jest.spyOn(PlatformClient, 'call');
+    callSpy = vi.spyOn(PlatformClient, 'call');
     callSpy.mockImplementation(() => Promise.resolve(new Response()));
   });
 

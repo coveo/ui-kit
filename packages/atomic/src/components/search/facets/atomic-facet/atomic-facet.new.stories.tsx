@@ -1,7 +1,7 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {facetDecorator} from '@coveo/atomic/storybookUtils/common/facets-decorator';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {facetDecorator} from '@coveo/atomic-storybook-utils/common/facets-decorator';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic-storybook-utils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator, play} = wrapInSearchInterface();
@@ -40,6 +40,16 @@ export const LowFacetValues: Story = {
   tags: ['test'],
   args: {
     'attributes-field': 'objecttype',
+    'attributes-number-of-values': 2,
+  },
+  decorators: [facetDecorator],
+};
+
+export const monthFacet: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'month',
+    'attributes-label': 'Month',
     'attributes-number-of-values': 2,
   },
   decorators: [facetDecorator],

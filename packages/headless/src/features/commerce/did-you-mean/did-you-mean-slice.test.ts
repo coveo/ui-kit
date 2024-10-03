@@ -1,7 +1,10 @@
-import {buildSearchResponse} from '../../../test/mock-commerce-search';
-import {executeSearch} from '../search/search-actions';
-import {didYouMeanReducer} from './did-you-mean-slice';
-import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
+import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {executeSearch} from '../search/search-actions.js';
+import {didYouMeanReducer} from './did-you-mean-slice.js';
+import {
+  getDidYouMeanInitialState,
+  DidYouMeanState,
+} from './did-you-mean-state.js';
 
 describe('did you mean slice', () => {
   let state: DidYouMeanState;
