@@ -394,7 +394,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-            class={shouldBeDimmed ? 'opacity-50' : undefined}
+            class={shouldBeDimmed ? 'opacity-80' : undefined}
           >
             {this.ratingContent(facetValue)}
           </FacetValueLink>
