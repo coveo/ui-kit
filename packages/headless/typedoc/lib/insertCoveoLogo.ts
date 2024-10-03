@@ -1,4 +1,4 @@
-export function insertCoveoLogo() {
+export function insertCoveoLogo(imagePath: string) {
   document.addEventListener('DOMContentLoaded', () => {
     const toolbarContents = document.getElementsByClassName(
       'tsd-toolbar-contents'
@@ -11,7 +11,7 @@ export function insertCoveoLogo() {
       const logoLink = document.createElement('a');
       logoLink.href = 'https://docs.coveo.com/en/0';
       const logoImg = document.createElement('img');
-      logoImg.src = 'assets/coveo-docs-logo.svg';
+      logoImg.src = imagePath;
       logoImg.alt = 'Coveo Docs Logo';
 
       logoLink.appendChild(logoImg);

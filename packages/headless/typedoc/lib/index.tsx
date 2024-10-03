@@ -22,11 +22,11 @@ export function load(app: Application) {
       />
       <link
         rel="stylesheet"
-        href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"
+        href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
       />
       <script
         type="module"
-        src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
+        src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
       ></script>
       <script>
         <JSX.Raw html={`(${insertAtomicSearchBox.toString()})();`} />
@@ -35,7 +35,9 @@ export function load(app: Application) {
         <JSX.Raw html={`(${insertSurveyLink.toString()})();`} />
       </script>
       <script>
-        <JSX.Raw html={`(${insertCoveoLogo.toString()})();`} />
+        <JSX.Raw
+          html={`(${insertCoveoLogo.toString()})('${event.relativeURL('assets/coveo-docs-logo.svg')}');`}
+        />
       </script>
     </>
   ));
