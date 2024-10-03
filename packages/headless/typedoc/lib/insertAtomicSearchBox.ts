@@ -1,21 +1,10 @@
 interface AtomicSearchInterfaceElement extends HTMLElement {
   initialize(config: {
     organizationId: string;
-    organizationEndpoints: OrganizationEndpoints;
     accessToken: string;
     search: {searchHub: string};
     analytics: {originLevel2: string};
   }): Promise<void>;
-  getOrganizationEndpoints(
-    organizationId: string
-  ): Promise<OrganizationEndpoints>;
-}
-
-interface OrganizationEndpoints {
-  platform: string;
-  analytics: string;
-  search: string;
-  admin: string;
 }
 
 declare global {
@@ -46,10 +35,6 @@ export function insertAtomicSearchBox() {
         if (searchInterfaceElement) {
           await searchInterfaceElement.initialize({
             organizationId: 'coveosearch',
-            organizationEndpoints:
-              await searchInterfaceElement.getOrganizationEndpoints(
-                'coveosearch'
-              ),
             accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
             search: {searchHub: 'Coveo Docs Unified Search'},
             analytics: {originLevel2: 'All'},
