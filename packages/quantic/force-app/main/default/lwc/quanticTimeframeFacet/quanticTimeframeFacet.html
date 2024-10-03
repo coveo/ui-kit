@@ -45,8 +45,8 @@
               <template if:true={withDatePicker}>
                 <div class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small">
                   <form onsubmit={handleApply}>
-                    <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center">
-                      <div class="slds-col slds-size_1-of-5">
+                    <div class="slds-col slds-grid slds-gutters">
+                      <div class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small">
                         <span class="timeframe-facet__input-label">{labels.startLabel}</span>
                       </div>
                       <div class="slds-col slds-size_4-of-5">
@@ -65,8 +65,8 @@
                         </lightning-input>
                       </div>
                     </div>
-                    <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center slds-p-top_x-small">
-                      <div class="slds-col slds-size_1-of-5">
+                    <div class="slds-col slds-grid slds-gutters slds-p-top_x-small">
+                      <div class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small">
                         <span class="timeframe-facet__input-label">{labels.endLabel}</span>
                       </div>
                       <div class="slds-col slds-size_4-of-5">
