@@ -107,8 +107,8 @@ try {
   const testsToRun = determineTestFilesToRun(changedFiles, testMappings);
   setOutput(outputName, testsToRun ? testsToRun : '--grep @no-test');
 
-  if(!testsToRun){
-    console.log('No relevant source file changes detected for E2E tests.')
+  if (!testsToRun) {
+    console.log('No relevant source file changes detected for E2E tests.');
   }
 } catch (error) {
   console.warn(error?.message || error);

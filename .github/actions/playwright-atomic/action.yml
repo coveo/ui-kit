@@ -16,6 +16,7 @@ runs:
       shell: bash
     - name: Determine e2e test files
       id: determine-tests
+      if: ${{ always() && github.event_name == 'pull_request'}}
       run: node scripts/find-tests.mjs testsToRun
       working-directory: packages/atomic
       shell: bash
