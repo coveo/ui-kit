@@ -9,6 +9,15 @@ export function ensureFileExists(filePath) {
   }
 }
 
+function getSourceFile(containingFile, fileContent) {
+  return ts.createSourceFile(
+    containingFile,
+    fileContent,
+    ts.ScriptTarget.ES2021,
+    true // SetParentNodes - useful for AST transformations
+  );
+}
+
 function getImports(sourceFile, containingFile, compilerOptions) {
   const imports = new Set();
 
@@ -31,19 +40,27 @@ function getImports(sourceFile, containingFile, compilerOptions) {
       moduleResolutionHost
     );
 
-    return resolvedModule && imports.add(resolvedModule.resolvedFileName)
-      ? true
-      : false;
+    if (!resolvedModule) {
+      return null;
+    }
+
+    imports.add(resolvedModule.resolvedFileName);
+    return resolvedModule.resolvedFileName;
   };
 
   const visit = (node) => {
-    if (ts.isImportDeclaration(node) && !node.importClause.isTypeOnly) {
+    if (ts.isImportDeclaration(node)) {
       const importPath = node.moduleSpecifier.getText().slice(1, -1); // Remove quotes
-      resolveAndAddImport(importPath) ||
+      const resolvedFileName =
+        resolveAndAddImport(importPath) ||
         resolveAndAddImport(join(importPath, 'index')); // Check if the import is from an index file
-    }
 
-    ts.forEachChild(node, visit);
+      if (resolvedFileName) {
+        const fileContent = readFileSync(resolvedFileName, 'utf-8');
+        const sourceFile = getSourceFile(resolvedFileName, fileContent);
+        ts.forEachChild(sourceFile, visit);
+      }
+    }
   };
 
   ts.forEachChild(sourceFile, visit);
@@ -59,12 +76,7 @@ function getImports(sourceFile, containingFile, compilerOptions) {
 export function listImports(containingFile, projectRoot) {
   ensureFileExists(containingFile);
   const fileContent = readFileSync(containingFile, 'utf-8');
-  const sourceFile = ts.createSourceFile(
-    containingFile,
-    fileContent,
-    ts.ScriptTarget.ES2021,
-    true // SetParentNodes - useful for AST transformations
-  );
+  const sourceFile = getSourceFile(containingFile, fileContent);
 
   const compilerOptions = {
     target: ts.ScriptTarget.ES2021,
