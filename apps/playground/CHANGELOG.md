@@ -1,3 +1,10 @@
+## 1.8.3 (2024-10-03)
+
+### Bug Fixes
+
+- **deps:** update dependency next to v14.2.10 [security] (#106) ([7f0ca74](/commits/7f0ca744304df06bc6b7c43fe6ba2ae028a7ffe2)), closes [#106](/issues/106)
+- update notifications to publish to channel on failure [UA-9176] (#109) ([0b2c37f](/commits/0b2c37f29092fd7e2f4fc7349b7c23607cf98b73)), closes [#109](/issues/109)
+
 ## 1.8.2 (2024-09-27)
 
 ## 1.8.1 (2024-09-11)
