@@ -7,7 +7,7 @@ The Quantic package provides a custom Cypress reporter that can produce a detail
 To use the detailed report, run:
 
 ```bash
-npm run e2e:detailed
+pnpm run e2e:detailed
 ```
 
 This command invokes Cypress with the `--reporter cypress/reporters/detailed-reporter.js` argument to output the results using the custom reporter.

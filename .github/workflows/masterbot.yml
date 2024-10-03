@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm run lint:check
   unit-test:
     name: 'Run unit tests'
     needs: build
@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - run: npm test
+      - run: pnpm test
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
     needs: build
@@ -199,16 +199,15 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
-      - name: Install npm
-        run: npm i -g npm@10
-        shell: bash
-      - run: npm ci
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - run: pnpm i
         shell: bash
       - name: Release
         run: |
-          npm run nx:graph
-          npm run release:phase1
-          npm run release:phase2
+          pnpm run nx:graph
+          pnpm run release:phase1
+          pnpm run release:phase2
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'true'

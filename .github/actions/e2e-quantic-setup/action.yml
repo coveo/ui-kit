@@ -10,11 +10,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx nx run quantic:build
+    - run: pnpm nx run quantic:build
       shell: bash
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key
-        npx --no-install ts-node scripts/build/deploy-community.ts --ci
+        pnpm exec --no-install ts-node scripts/build/deploy-community.ts --ci
         rm server.key
       shell: bash
       working-directory: ./packages/quantic

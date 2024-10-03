@@ -2,10 +2,10 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && patch-package && npx playwright install",
-    "reset:install": "git checkout origin/master package-lock.json && npm i",
-    "clean:install": "git clean -xfd && npm run reset:install",
-    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic start\"",
+    "postinstall": "husky install && pnpm dlx playwright install",
+    "reset:install": "git checkout origin/master package-lock.json && pnpm i",
+    "clean:install": "git clean -xfd && pnpm run reset:install",
+    "dev:atomic": "concurrently \"pnpm run --filter @coveo/headless dev\" \"pnpm run --filter @coveo/atomic start\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
@@ -17,12 +17,12 @@
     "pre-commit": "lint-staged",
     "promote:npm:latest": "nx run-many --target=promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3",
+    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3",
     "nx:graph": "nx graph --file=topology.json",
-    "release:phase0": "npm run-script -w=@coveo/release git-lock",
+    "release:phase0": "pnpm run-script --filter @coveo/release git-lock",
     "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
-    "release:phase2": "npm run-script -w=@coveo/release reify",
-    "release:phase3": "npm run-script -w=@coveo/release git-publish-all",
+    "release:phase2": "pnpm run-script --filter @coveo/release reify",
+    "release:phase3": "pnpm run-script --filter @coveo/release git-publish-all",
     "release:phase4": "nx run-many --targets=release:phase4 --all"
   },
   "devDependencies": {
@@ -31,7 +31,7 @@
     "@commitlint/config-conventional": "19.2.2",
     "@commitlint/lint": "19.2.2",
     "@commitlint/load": "19.2.0",
-    "@coveo/release": "1.0.0",
+    "@coveo/release": "workspace:*",
     "@cspell/dict-fr-fr": "2.2.2",
     "@cspell/eslint-plugin": "8.12.1",
     "@nx/js": "19.5.3",
@@ -80,7 +80,6 @@
     "lint-staged": "15.2.7",
     "lit": "^2.6.1",
     "nx": "19.0.4",
-    "patch-package": "8.0.0",
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "0.6.5",
     "react-syntax-highlighter": "15.5.0",
@@ -98,23 +97,6 @@
       }
     }
   },
-  "workspaces": [
-    "packages/bueno",
-    "packages/auth",
-    "packages/headless",
-    "packages/atomic",
-    "packages/quantic",
-    "packages/headless-react",
-    "packages/ssr",
-    "packages/atomic-hosted-page",
-    "packages/atomic-react",
-    "packages/atomic-angular",
-    "packages/atomic-angular/projects/*",
-    "packages/rollup-plugin-replace-with-ast",
-    "packages/samples/*",
-    "packages/samples/headless-ssr/*",
-    "utils/*"
-  ],
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog",
@@ -133,12 +115,21 @@
     ]
   },
   "engines": {
-    "node": "^20.9.0",
-    "npm": ">=8.6.0"
-  },
-  "dependencies": {
-    "upgrade": "1.1.0"
+    "node": "^20.9.0"
   },
   "version": "0.0.0",
-  "packageManager": "npm@10.8.2"
+  "packageManager": "pnpm@9.12.0",
+  "pnpm": {
+    "patchedDependencies": {
+      "@microsoft/fetch-event-source@2.0.1": "patches/@microsoft__fetch-event-source@2.0.1.patch",
+      "@stencil/angular-output-target@0.8.4": "patches/@stencil__angular-output-target@0.8.4.patch",
+      "@stencil/core@4.20.0": "patches/@stencil__core@4.20.0.patch",
+      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch",
+      "@storybook/blocks@8.1.11": "patches/@storybook__blocks@8.1.11.patch",
+      "@storybook/web-components@8.1.11": "patches/@storybook__web-components@8.1.11.patch",
+      "coveo.analytics@2.30.38": "patches/coveo.analytics@2.30.38.patch",
+      "eslint-plugin-canonical@4.18.0": "patches/eslint-plugin-canonical@4.18.0.patch",
+      "tailwindcss@3.4.7": "patches/tailwindcss@3.4.7.patch"
+    }
+  }
 }

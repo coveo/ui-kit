@@ -129,7 +129,7 @@
       "dependsOn": ["wait-on:stencil-ping"],
       "options": {
         "cwd": "{projectRoot}",
-        "command": "npx storybook dev -p 4400"
+        "command": "pnpm storybook dev -p 4400"
       }
     },
     "build-storybook": {
@@ -138,7 +138,7 @@
       "outputs": ["{projectRoot}/dist-storybook"],
       "options": {
         "cwd": "{projectRoot}",
-        "command": "npx storybook build -o dist-storybook"
+        "command": "pnpm storybook build -o dist-storybook"
       }
     },
     "test-storybook": {

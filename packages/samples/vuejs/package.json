@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "nx build",
-    "dev": "npm run build:assets && npm run dev:vue",
+    "dev": "pnpm run build:assets && pnpm run dev:vue",
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang",
     "dev:vue": "vite",
     "build:vue": "vite build",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "vue": "^3.4.15",
-    "@coveo/atomic": "3.2.4"
+    "@coveo/atomic": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",

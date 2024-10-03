@@ -24,7 +24,7 @@
     "types/"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
+    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
     "build": "nx build",
     "build:bundles": "rollup -c",
     "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",

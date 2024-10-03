@@ -9,13 +9,13 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 To build the library for production, run:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ## Run Cypress for Atomic components
@@ -29,11 +29,11 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run e2e:watch
+pnpm run e2e:watch
 ```
 
 To run all the test, run:
 
 ```sh
-npm run e2e
+pnpm run e2e
 ```

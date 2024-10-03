@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.2.4",
-    "@coveo/atomic-react": "3.1.4",
-    "@coveo/headless": "3.2.0",
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/headless": "workspace:*",
     "next": "14.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1"
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "nx build",
-    "dev": "npm run build:assets && npm run dev:nextjs",
+    "dev": "pnpm run build:assets && pnpm run dev:nextjs",
     "dev:nextjs": "next dev",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
     "e2e:watch": "cypress open --browser chrome --e2e",

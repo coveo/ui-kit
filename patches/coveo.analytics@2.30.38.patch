@@ -1,17 +1,16 @@
-diff --git a/node_modules/coveo.analytics/dist/browser.mjs b/node_modules/coveo.analytics/dist/browser.mjs
-index 78efccc..115b8d3 100644
---- a/node_modules/coveo.analytics/dist/browser.mjs
-+++ b/node_modules/coveo.analytics/dist/browser.mjs
-@@ -1135,8 +1135,6 @@ class NoopAnalyticsClient {
+diff --git a/dist/browser.mjs b/dist/browser.mjs
+index 78efccc872fb6fc1d85196d080f6e1de44d91043..5f0ba7d90bbdfa0e1d61a40f1bd268c82da42037 100644
+--- a/dist/browser.mjs
++++ b/dist/browser.mjs
+@@ -1135,7 +1135,6 @@ class NoopAnalyticsClient {
      }
  }
  
 -const fetch$1 = window.fetch;
--
+ 
  class AnalyticsFetchClient {
      constructor(opts) {
-         this.opts = opts;
-@@ -1156,7 +1154,7 @@ class AnalyticsFetchClient {
+@@ -1156,7 +1155,7 @@ class AnalyticsFetchClient {
              const _a = Object.assign(Object.assign({}, defaultOptions), (preprocessRequest ? yield preprocessRequest(defaultOptions, 'analyticsFetch') : {})), { url } = _a, fetchData = __rest(_a, ["url"]);
              let response;
              try {
@@ -20,7 +19,7 @@ index 78efccc..115b8d3 100644
              }
              catch (error) {
                  console.error('An error has occured when sending the event.', error);
-@@ -1184,7 +1182,7 @@ class AnalyticsFetchClient {
+@@ -1184,7 +1183,7 @@ class AnalyticsFetchClient {
          return __awaiter(this, void 0, void 0, function* () {
              const { baseUrl } = this.opts;
              const url = `${baseUrl}/analytics/visit`;
