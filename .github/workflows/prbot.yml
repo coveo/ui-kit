@@ -53,6 +53,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
   playwright-atomic:
+    # TODO: This is where we need to run the find-tests.mjs script to determine which tests to run
     name: 'Run Playwright tests for Atomic'
     needs: build
     runs-on: ubuntu-latest
