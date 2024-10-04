@@ -18,9 +18,9 @@ function getSourceFile(containingFile, fileContent) {
   );
 }
 
-function getImports(sourceFile, containingFile, compilerOptions) {
+function getImports(sourceFile, filePath, compilerOptions) {
   const imports = new Set();
-  const visitedFiles = new Set();
+  const alreadyResolved = new Set();
 
   const moduleResolutionHost = {
     fileExists: (filePath) => existsSync(filePath),
@@ -33,7 +33,7 @@ function getImports(sourceFile, containingFile, compilerOptions) {
     },
   };
 
-  const resolveAndAddImport = (importPath) => {
+  const resolveAndAddImport = (containingFile, importPath) => {
     const {resolvedModule} = ts.resolveModuleName(
       importPath,
       containingFile,
@@ -53,46 +53,40 @@ function getImports(sourceFile, containingFile, compilerOptions) {
     if (ts.isImportDeclaration(node)) {
       const importPath = node.moduleSpecifier.getText().slice(1, -1); // Remove quotes
       const resolvedFileName =
-        resolveAndAddImport(importPath) ||
-        resolveAndAddImport(join(importPath, 'index')); // Check if the import is from an index file
+        resolveAndAddImport(currentFile, importPath) ||
+        resolveAndAddImport(currentFile, join(importPath, 'index')); // Check if the import is from an index file
 
-      if (resolvedFileName) {
-        if (visitedFiles.has(resolvedFileName)) {
-          throw new Error(
-            `Circular dependency detected: ${currentFile} -> ${resolvedFileName}`
-          );
-        }
-        visitedFiles.add(resolvedFileName);
+      if (resolvedFileName && !alreadyResolved.has(resolvedFileName)) {
+        alreadyResolved.add(resolvedFileName);
         const fileContent = readFileSync(resolvedFileName, 'utf-8');
         const sourceFile = getSourceFile(resolvedFileName, fileContent);
         ts.forEachChild(sourceFile, (childNode) =>
           visit(childNode, resolvedFileName)
         );
-        visitedFiles.delete(resolvedFileName);
       }
     }
   };
 
-  ts.forEachChild(sourceFile, (node) => visit(node, containingFile));
+  ts.forEachChild(sourceFile, (node) => visit(node, filePath));
 
   return Array.from(imports);
 }
 
 /**
  * Function to extract all import statements from a TypeScript file.
- * @param containingFile Path to the TypeScript file.
+ * @param filePath Path to the TypeScript file.
  * @returns A list of files that are imported by the input file.
  */
-export function listImports(projectRoot, containingFile) {
-  ensureFileExists(containingFile);
-  const fileContent = readFileSync(containingFile, 'utf-8');
-  const sourceFile = getSourceFile(containingFile, fileContent);
+export function listImports(projectRoot, filePath) {
+  ensureFileExists(filePath);
+  const fileContent = readFileSync(filePath, 'utf-8');
+  const sourceFile = getSourceFile(filePath, fileContent);
 
   const compilerOptions = {
     target: ts.ScriptTarget.ES2021,
   };
 
-  const imports = getImports(sourceFile, containingFile, compilerOptions);
+  const imports = getImports(sourceFile, filePath, compilerOptions);
 
   const resolvedImports = imports.map((importPath) => {
     const absolutePath = resolve(importPath);

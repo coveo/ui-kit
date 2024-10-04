@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {setOutput} from '@actions/core';
+import {setOutput, getInput} from '@actions/core';
 import {readdirSync, statSync} from 'fs';
 import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
@@ -58,8 +58,8 @@ function createTestFileMappings(testPaths, projectRoot) {
 
     [
       relative(projectRoot, sourceFilePath),
-      ...listImports(sourceFilePath, projectRoot),
-      ...listImports(testPath, projectRoot),
+      ...listImports(projectRoot, sourceFilePath), // TODO: test circular dependency here
+      ...listImports(projectRoot, testPath),
     ].forEach((importedFile) => imports.add(importedFile));
 
     return [testName, imports];
@@ -98,13 +98,19 @@ function ensureIsNotCoveoPackage(file) {
 }
 
 function dependsOnCoveoPackage(file) {
-  return file.includes('packages/headless'); // TODO: find a better way to detect Coveo packages;
+  // TODO: find a better way to detect Coveo packages;
+  const externalPackages = ['packages/headless', 'packages/bueno'];
+  for (const pkg of externalPackages) {
+    if (file.includes(pkg)) {
+      return true;
+    }
+  }
 }
 
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
-const projectRoot = process.env.projectRoot;
+const projectRoot = getInput('project-root');
 const sourceComponentDir = join('src', 'components');
 
 try {
