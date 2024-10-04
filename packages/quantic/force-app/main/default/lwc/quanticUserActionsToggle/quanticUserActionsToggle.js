@@ -17,16 +17,10 @@ import userActions from '@salesforce/label/c.quantic_UserActions';
  */
 
 /**
- * @typedef {Object} QuanticModalContentElement
- * @property {boolean} hideSort
- */
-
-/**
- * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+ * The `QuanticUserActionsToggle` component displays a button that opens a modal containing the user actions timeline component.
  * @category Insight Panel
  * @example
- * <c-quantic-user-actions-toggle engine-id={engineId}>
- * </c-quantic-user-actions-toggle>
+ * <c-quantic-user-actions-toggle engine-id={engineId} user-id="someone@company.com" ticket-creation-date-time="2024-01-01T00:00:00Z"></c-quantic-user-actions-toggle>
  */
 export default class QuanticUserActionsToggle extends LightningElement {
   labels = {

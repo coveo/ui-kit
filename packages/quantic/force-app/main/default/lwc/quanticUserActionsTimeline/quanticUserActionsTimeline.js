@@ -29,7 +29,7 @@ import initializationErrorTemplate from './templates/initializationError.html';
  *
  * @category Internal
  * @example
- * <c-quantic-user-actions-timeline user-id="someone@company.com" ticket-creation-date-time="2024-01-01T00:00:00Z"></c-quantic-user-actions-timeline>
+ * <c-quantic-user-actions-timeline engine-id={engineId} user-id="someone@company.com" ticket-creation-date-time="2024-01-01T00:00:00Z"></c-quantic-user-actions-timeline>
  */
 export default class QuanticUserActionsTimeline extends LightningElement {
   /**
