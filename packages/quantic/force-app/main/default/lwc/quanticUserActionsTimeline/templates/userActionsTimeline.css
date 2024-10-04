@@ -1,0 +1,10 @@
+.timeline__separator {
+  height: 1px;
+  background-color: var(--lwc-brandDisabled, #c9c7c5);
+  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+}
+
+.timeline__show-following-sessions-button,
+.timeline__show-preceding-sessions-button {
+  font-size: 12px;
+}

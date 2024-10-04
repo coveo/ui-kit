@@ -848,8 +848,32 @@
     <label>{{count}} action supplémentaire dans cette session</label>
     <name>quantic_MoreActionsInThisSession</name>
   </customLabels>
-    <customLabels>
+  <customLabels>
     <label>{{count}} autres actions dans cette session</label>
     <name>quantic_MoreActionsInThisSession_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Afficher les sessions suivantes</label>
+    <name>quantic_ShowFollowingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Masquer les sessions suivantes</label>
+    <name>quantic_HideFollowingSessions</name>
+  </customLabels>
+    <customLabels>
+    <label>Afficher les sessions précédentes</label>
+    <name>quantic_ShowPrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Masquer les sessions précédentes</label>
+    <name>quantic_HidePrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Aucune action utilisateur disponible</label>
+    <name>quantic_NoUserActionsAvailable</name>
+  </customLabels>
+  <customLabels>
+    <label>Il n'y a pas d'actions utilisateur associées à l'identifiant utilisateur ou le cas est trop ancien pour détecter des actions liées.</label>
+    <name>quantic_NoUserActionsAssociatedWithParams</name>
   </customLabels>
 </Translations>
