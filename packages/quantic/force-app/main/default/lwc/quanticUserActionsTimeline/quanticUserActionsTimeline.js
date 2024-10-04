@@ -68,6 +68,8 @@ export default class QuanticUserActionsTimeline extends LightningElement {
   state;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {Array<string>} */
+  _excludedCustomActions;
 
   labels = {
     showFollowingSessions,
@@ -91,10 +93,16 @@ export default class QuanticUserActionsTimeline extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
+
+    if (this.excludedCustomActions?.length) {
+      this._excludedCustomActions = [...this.excludedCustomActions];
+    } else {
+      this._excludedCustomActions = [];
+    }
     this.userActions = this.headless.buildUserActions(engine, {
       options: {
         ticketCreationDate: this.ticketCreationDateTime,
-        excludedCustomActions: this.excludedCustomActions,
+        excludedCustomActions: this._excludedCustomActions,
       },
     });
 
