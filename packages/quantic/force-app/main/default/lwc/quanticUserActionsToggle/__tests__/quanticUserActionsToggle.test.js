@@ -7,6 +7,7 @@ import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 jest.mock('c/quanticHeadlessLoader');
 
+const userActionsIcon = 'utility:clock';
 const userActionsLabel = 'User actions';
 jest.mock(
   '@salesforce/label/c.quantic_UserActions',
@@ -25,6 +26,8 @@ const functionsMocks = {
 
 const selectors = {
   userActionsToggleButton: '[data-test="user-actions-toggle-button"]',
+  userActionsToggleButtonIcon:
+    '[data-test="user-actions-toggle-button"] lightning-icon',
   userActionsTimeline:
     'c-quantic-modal [slot="content"] c-quantic-user-actions-timeline',
   modalHeaderIcon: 'c-quantic-modal [slot="header"] lightning-icon',
@@ -123,8 +126,13 @@ describe('c-quantic-user-actions-toggle', () => {
     const userActionsToggleButton = element.shadowRoot.querySelector(
       selectors.userActionsToggleButton
     );
+    const userActionsToggleButtonIcon = element.shadowRoot.querySelector(
+      selectors.userActionsToggleButtonIcon
+    );
 
     expect(userActionsToggleButton).not.toBeNull();
+    expect(userActionsToggleButton.title).toBe(userActionsLabel);
+    expect(userActionsToggleButtonIcon.iconName).toBe(userActionsIcon);
   });
 
   it('should log analytics when the user action modal is opened', async () => {
@@ -156,7 +164,7 @@ describe('c-quantic-user-actions-toggle', () => {
     expect(modalHeaderIcon).not.toBeNull();
     expect(modalHeaderLabel).not.toBeNull();
 
-    expect(modalHeaderIcon.iconName).toBe('utility:clock');
+    expect(modalHeaderIcon.iconName).toBe(userActionsIcon);
     expect(modalHeaderIcon.title).toBe(userActionsLabel);
     expect(modalHeaderLabel.textContent).toBe(userActionsLabel);
   });

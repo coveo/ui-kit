@@ -6,9 +6,9 @@
   <template lwc:else>
     <button aria-hidden={modalIsOpen} data-test="user-actions-toggle-button"
       class="slds-button slds-button_neutral user-actions-toggle-button slds-is-relative" onclick={openModal}
-      title={buttonTitle}>
+      title={labels.userActions}>
       <slot name="button-content">
-        <lightning-icon size="x-small" icon-name="utility:clock" alternative-text={buttonTitle}>
+        <lightning-icon size="x-small" icon-name="utility:clock" alternative-text={labels.userActions}>
         </lightning-icon>
       </slot>
     </button>
