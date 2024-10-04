@@ -5,6 +5,12 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
+  "groupOrder": [
+    "Search controllers",
+    "Buildable controllers",
+    "Core controllers",
+    "*"
+  ],
   "entryPoints": [
     "./src/index.ts",
     "./src/case-assist.index.ts",
