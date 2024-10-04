@@ -20,6 +20,7 @@ function getSourceFile(containingFile, fileContent) {
 
 function getImports(sourceFile, containingFile, compilerOptions) {
   const imports = new Set();
+  const visitedFiles = new Set();
 
   const moduleResolutionHost = {
     fileExists: (filePath) => existsSync(filePath),
@@ -48,7 +49,7 @@ function getImports(sourceFile, containingFile, compilerOptions) {
     return resolvedModule.resolvedFileName;
   };
 
-  const visit = (node) => {
+  const visit = (node, currentFile) => {
     if (ts.isImportDeclaration(node)) {
       const importPath = node.moduleSpecifier.getText().slice(1, -1); // Remove quotes
       const resolvedFileName =
@@ -56,14 +57,23 @@ function getImports(sourceFile, containingFile, compilerOptions) {
         resolveAndAddImport(join(importPath, 'index')); // Check if the import is from an index file
 
       if (resolvedFileName) {
+        if (visitedFiles.has(resolvedFileName)) {
+          throw new Error(
+            `Circular dependency detected: ${currentFile} -> ${resolvedFileName}`
+          );
+        }
+        visitedFiles.add(resolvedFileName);
         const fileContent = readFileSync(resolvedFileName, 'utf-8');
         const sourceFile = getSourceFile(resolvedFileName, fileContent);
-        ts.forEachChild(sourceFile, visit);
+        ts.forEachChild(sourceFile, (childNode) =>
+          visit(childNode, resolvedFileName)
+        );
+        visitedFiles.delete(resolvedFileName);
       }
     }
   };
 
-  ts.forEachChild(sourceFile, visit);
+  ts.forEachChild(sourceFile, (node) => visit(node, containingFile));
 
   return Array.from(imports);
 }
@@ -73,7 +83,7 @@ function getImports(sourceFile, containingFile, compilerOptions) {
  * @param containingFile Path to the TypeScript file.
  * @returns A list of files that are imported by the input file.
  */
-export function listImports(containingFile, projectRoot) {
+export function listImports(projectRoot, containingFile) {
   ensureFileExists(containingFile);
   const fileContent = readFileSync(containingFile, 'utf-8');
   const sourceFile = getSourceFile(containingFile, fileContent);
