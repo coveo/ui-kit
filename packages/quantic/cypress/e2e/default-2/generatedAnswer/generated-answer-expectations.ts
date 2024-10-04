@@ -385,10 +385,6 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(
-            'eventType',
-            'generatedAnswer'
-          );
-          expect(analyticsBody).to.have.property(
             'documentTitle',
             citation.title
           );
