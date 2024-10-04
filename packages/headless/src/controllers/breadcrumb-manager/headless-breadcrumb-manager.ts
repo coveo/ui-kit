@@ -98,7 +98,7 @@ export type {
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
  *
- * @group Search controllers
+ * @group Controllers
  * @category BreadcrumbManager
  */
 export interface BreadcrumbManager extends CoreBreadcrumbManager {
@@ -111,7 +111,7 @@ export interface BreadcrumbManager extends CoreBreadcrumbManager {
 /**
  * A scoped and simplified part of the headless state that's relevant to the `BreadcrumbManager` controller.
  *
- * @group Search controllers
+ * @group Controllers
  * @category BreadcrumbManager
  */
 export interface BreadcrumbManagerState extends CoreBreadcrumbManagerState {
@@ -137,7 +137,7 @@ export interface AutomaticFacetBreadcrumb extends Breadcrumb<FacetValue> {
  * @param engine - The headless engine.
  * @returns A `BreadcrumbManager` controller instance.
  *
- * @group Search controllers
+ * @group Controllers
  * @category BreadcrumbManager
  */
 export function buildBreadcrumbManager(

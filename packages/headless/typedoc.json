@@ -8,6 +8,7 @@
   "groupOrder": [
     "Search controllers",
     "Buildable controllers",
+    "Sub-controllers",
     "Core controllers",
     "*"
   ],

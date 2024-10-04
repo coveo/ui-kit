@@ -51,6 +51,9 @@ export interface UpdateFetchOptions {
 
 /**
  * The `CaseInput` controller is responsible for setting and retrieving the value of a single field from the case creation form and optionally trigger Case Assist API requests.
+ *
+ * @group Controllers
+ * @category CaseInput
  */
 export interface CaseInput extends Controller {
   /**
@@ -66,6 +69,12 @@ export interface CaseInput extends Controller {
   state: CaseInputState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CaseInput` controller.
+ *
+ * @group Controllers
+ * @category CaseInput
+ */
 export interface CaseInputState {
   /**
    * The value of the case input.
@@ -79,6 +88,9 @@ export interface CaseInputState {
  * @param engine - The headless engine.
  * @param props - The configurable `CaseInput` controller properties.
  * @returns A `CaseInput` controller instance.
+ *
+ * @group Controllers
+ * @category CaseInput
  */
 export function buildCaseInput(
   engine: CaseAssistEngine,
