@@ -1,3 +1,7 @@
+## 3.2.0 (2024-10-02)
+
+- feat(headless): analytics actions updated to send valid ep events (#4450) ([0a60d40](https://github.com/coveo/ui-kit/commits/0a60d40)), closes [#4450](https://github.com/coveo/ui-kit/issues/4450)
+
 ## <small>3.1.3 (2024-09-25)</small>
 
 - chore: eliminate network calls in npm test (#4453) ([c6393a9](https://github.com/coveo/ui-kit/commits/c6393a9)), closes [#4453](https://github.com/coveo/ui-kit/issues/4453)
