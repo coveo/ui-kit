@@ -1,5 +1,6 @@
 import {Interception} from '../../../../../../node_modules/cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
+import {getAnalyticsBodyFromInterception} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {
   GeneratedAnswerSelector,
@@ -380,32 +381,25 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         source: string;
       }
     ) {
-      logGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCitationClick,
-        (analyticsBody: {customData: object; eventType: string}) => {
+      const {title, uri, clickUri, id, source, permanentid} = citation;
+      cy.wait(InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerCitationClick)
+        .then((interception) => {
+          const analyticsBody = getAnalyticsBodyFromInterception(interception);
           const customData = analyticsBody?.customData;
-          expect(analyticsBody).to.have.property(
-            'documentTitle',
-            citation.title
-          );
-          expect(analyticsBody).to.have.property('documentUri', citation.uri);
-          expect(analyticsBody).to.have.property(
-            'documentUrl',
-            citation.clickUri
-          );
+          expect(analyticsBody).to.have.property('documentTitle', title);
+          expect(analyticsBody).to.have.property('documentUri', uri);
+          expect(analyticsBody).to.have.property('documentUrl', clickUri);
           expect(analyticsBody).to.have.property('documentPosition', 1);
-          expect(analyticsBody).to.have.property('sourceName', citation.source);
+          expect(analyticsBody).to.have.property('sourceName', source);
+          expect(customData).to.have.property('citationId', id);
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId
           );
-          expect(customData).to.have.property('citationId', citation.id);
-          expect(customData).to.have.property('documentId', {
-            contentIdKey: 'permanentid',
-            contentIdValue: citation.permanentid,
-          });
-        }
-      );
+          expect(customData).to.have.property('contentIDKey', 'permanentid');
+          expect(customData).to.have.property('contentIDValue', permanentid);
+        })
+        .logDetail("should log the 'generatedAnswerCitationClick' UA event");
     },
 
     logHoverGeneratedAnswerSource(
