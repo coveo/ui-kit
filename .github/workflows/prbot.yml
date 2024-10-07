@@ -98,7 +98,7 @@ jobs:
 
       - name: Determine Shard Values
         id: set-matrix
-        run: node scripts/ci/determine-shard.mjs shardIndex shardTotal
+        run: node ./scripts/ci/determine-shard.mjs shardIndex shardTotal
         env:
           testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
           maximumShards: ${{ env.maximumShards }}
