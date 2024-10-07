@@ -88,6 +88,9 @@ export type {
  *
  * @param engine - The headless engine.
  * @returns A `BreadcrumbManager` controller instance.
+ *
+ * @group Controllers
+ * @category BreadcrumbManager
  */
 export function buildBreadcrumbManager(
   engine: InsightEngine

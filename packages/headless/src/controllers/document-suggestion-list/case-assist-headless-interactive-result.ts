@@ -31,6 +31,9 @@ export interface CaseAssistInteractiveResultProps
 
 /**
  * The `CaseAssistInteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ *
+ * @group Controllers
+ * @category CaseAssistInteractiveResult
  */
 export interface CaseAssistInteractiveResult extends InteractiveResultCore {}
 
@@ -40,6 +43,9 @@ export interface CaseAssistInteractiveResult extends InteractiveResultCore {}
  * @param engine - The headless engine.
  * @param props - The configurable `CaseAssistInteractiveResult` properties.
  * @returns A `CaseAssistInteractiveResult` controller instance.
+ *
+ * @group Controllers
+ * @category CaseAssistInteractiveResult
  */
 export function buildCaseAssistInteractiveResult(
   engine: CaseAssistEngine,

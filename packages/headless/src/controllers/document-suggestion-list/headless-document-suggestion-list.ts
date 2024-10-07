@@ -22,6 +22,9 @@ import {
 
 /**
  * The `DocumentSuggestion` controller is responsible for getting document suggestions using case information present in the state.
+ *
+ * @group Controllers
+ * @category DocumentSuggestionList
  */
 export interface DocumentSuggestionList extends Controller {
   /**
@@ -29,11 +32,17 @@ export interface DocumentSuggestionList extends Controller {
    */
   fetch(): void;
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `DocumentSuggestion` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `DocumentSuggestionList` controller.
    */
   state: DocumentSuggestionListState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `DocumentSuggestionList` controller.
+ *
+ * @group Controllers
+ * @category DocumentSuggestionList
+ */
 export interface DocumentSuggestionListState {
   /**
    * Whether document suggestions are being retrieved.
@@ -54,6 +63,9 @@ export interface DocumentSuggestionListState {
  *
  * @param engine - The headless engine.
  * @returns A `DocumentSuggestionList` controller instance.
+ *
+ * @group Controllers
+ * @category DocumentSuggestionList
  */
 export function buildDocumentSuggestionList(
   engine: CaseAssistEngine

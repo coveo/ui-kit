@@ -20,6 +20,9 @@ export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
  * automatically triggers a new query with the suggested term.
  *
  * @param engine - The insight engine.
+ *
+ * @group Controllers
+ * @category DidYouMean
  */
 export function buildDidYouMean(engine: InsightEngine): DidYouMean {
   const controller = buildCoreDidYouMean(engine);

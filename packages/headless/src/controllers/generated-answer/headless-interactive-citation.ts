@@ -19,6 +19,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `InteractiveCitation` properties.
  * @returns An `InteractiveCitation` controller instance.
+ *
+ * @group Controllers
+ * @category InteractiveCitation
  */
 export function buildInteractiveCitation(
   engine: SearchEngine,

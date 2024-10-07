@@ -56,6 +56,12 @@ export interface CategoryFieldSuggestionsValue {
   path: string[];
 }
 
+/**
+ * The state of the `CategoryFieldSuggestions` controller.
+ *
+ * @group Controllers
+ * @category CategoryFieldSuggestions
+ */
 export interface CategoryFieldSuggestionsState {
   /**
    * The field suggestions.
@@ -84,6 +90,9 @@ export interface CategoryFieldSuggestionsState {
  * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item category.
  *
  * This controller is a wrapper around the basic category facet controller search functionality, and thus exposes similar options and properties.
+ *
+ * @group Controllers
+ * @category CategoryFieldSuggestions
  */
 export interface CategoryFieldSuggestions extends Subscribable {
   /**
@@ -150,6 +159,9 @@ export interface CategoryFieldSuggestionsProps {
  * @param engine The headless engine.
  * @param props The configurable `CategoryFieldSuggestions` controller properties.
  * @returns A `CategoryFieldSuggestions` controller instance.
+ *
+ * @group Controllers
+ * @category CategoryFieldSuggestions
  */
 export function buildCategoryFieldSuggestions(
   engine: SearchEngine,

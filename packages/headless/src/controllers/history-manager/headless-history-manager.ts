@@ -27,6 +27,9 @@ import {
 
 /**
  * The `HistoryManager` controller is in charge of allowing navigating back and forward in the search interface history.
+ *
+ * @group Controllers
+ * @category HistoryManager
  */
 export interface HistoryManager extends Controller {
   /**
@@ -63,6 +66,9 @@ export type HistoryManagerState = StateWithHistory<HistoryState>;
  *
  * @param engine - The headless engine.
  * @returns A `HistoryManager` controller instance.
+ *
+ * @group Controllers
+ * @category HistoryManager
  */
 export function buildHistoryManager(engine: SearchEngine): HistoryManager {
   if (!loadHistoryManagerReducers(engine)) {

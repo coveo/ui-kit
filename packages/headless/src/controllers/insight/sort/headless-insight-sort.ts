@@ -19,6 +19,9 @@ export type {Sort, SortProps, SortState, SortInitialState};
  * @param engine - The insight engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
+ *
+ * @group Controllers
+ * @category Sort
  */
 export function buildSort(engine: InsightEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
