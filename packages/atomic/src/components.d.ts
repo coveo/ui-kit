@@ -1417,7 +1417,7 @@ export namespace Components {
     }
     interface AtomicInsightResultAttachToCase {
         /**
-          * Set to true so the AtomicInsightResultAttachToCase behaves only as a visual indicator when results are attached.
+          * Whether the component should only behave as a visual indicator that a result is attached to the current case. Defaults to `false`, meaning that the component is interactive by default.
          */
         "readOnly": boolean;
     }
@@ -7359,7 +7359,7 @@ declare namespace LocalJSX {
         "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseCustomEvent<InsightResultAttachToCaseEvent>) => void;
         "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseCustomEvent<InsightResultAttachToCaseEvent>) => void;
         /**
-          * Set to true so the AtomicInsightResultAttachToCase behaves only as a visual indicator when results are attached.
+          * Whether the component should only behave as a visual indicator that a result is attached to the current case. Defaults to `false`, meaning that the component is interactive by default.
          */
         "readOnly"?: boolean;
     }
