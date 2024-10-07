@@ -84,23 +84,25 @@ export class AtomicTabManager {
   public render() {
     return (
       <div class="mb-2 overflow-x-auto">
-        <ul
-          role="list"
-          aria-label="tab-area"
-          class="tab-area mb-2 flex w-full flex-row border-b"
-        >
-          {this.tabs.map((tab) => (
-            <TabButton
-              isActive={tab.tabController.state.isActive}
-              label={tab.label}
-              handleClick={() => {
-                if (!tab.tabController.state.isActive) {
-                  tab.tabController.select();
-                }
-              }}
-            ></TabButton>
-          ))}
-        </ul>
+        <atomic-segmented-facet-scrollable>
+          <ul
+            role="list"
+            aria-label="tab-area"
+            class="tab-area mb-2 flex w-full flex-row border-b"
+          >
+            {this.tabs.map((tab) => (
+              <TabButton
+                isActive={tab.tabController.state.isActive}
+                label={tab.label}
+                handleClick={() => {
+                  if (!tab.tabController.state.isActive) {
+                    tab.tabController.select();
+                  }
+                }}
+              ></TabButton>
+            ))}
+          </ul>
+        </atomic-segmented-facet-scrollable>
         <TabDropdown
           tabs={this.tabs}
           activeTab={this.tabManagerState.activeTab}
