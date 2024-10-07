@@ -7,7 +7,7 @@ import {setSearchHub} from './search-hub-actions.js';
  * The search hub action creators.
  *
  * @group Actions
- * @category Search hub
+ * @category SearchHub
  */
 export interface SearchHubActionCreators {
   /**
@@ -26,7 +26,7 @@ export interface SearchHubActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Search hub
+ * @category SearchHub
  */
 export function loadSearchHubActions(
   engine: CoreEngine

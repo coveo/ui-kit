@@ -7,7 +7,7 @@ import {logContextChanged} from './insight-search-analytics-actions.js';
  * The Insight Search analytics action creators.
  *
  * @group Actions
- * @category Insight search analytics
+ * @category InsightSearchAnalytics
  */
 export interface InsightSearchAnalyticsActionCreators {
   /**
@@ -42,7 +42,7 @@ export interface InsightSearchAnalyticsActionCreators {
  * @returns The available analytics actions.
  *
  * @group Actions
- * @category Insight search analytics
+ * @category InsightSearchAnalytics
  */
 export function loadInsightSearchAnalyticsActions(
   engine: InsightEngine

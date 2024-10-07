@@ -23,7 +23,7 @@ export type {
  * The date facet action creators.
  *
  * @group Actions
- * @category Date facet
+ * @category DateFacet
  */
 export interface DateFacetActionCreators {
   /**
@@ -64,7 +64,7 @@ export interface DateFacetActionCreators {
  * @returns An object holding the date facet action creators.
  *
  * @group Actions
- * @category Date facet
+ * @category DateFacet
  */
 export function loadDateFacetActions(
   engine: CommerceEngine

@@ -11,7 +11,7 @@ import {
  * The sort criteria action creators.
  *
  * @group Actions
- * @category Sort criteria
+ * @category SortCriteria
  */
 export interface SortCriteriaActionCreators {
   /**
@@ -42,7 +42,7 @@ export interface SortCriteriaActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Sort criteria
+ * @category SortCriteria
  */
 export function loadSortCriteriaActions(
   engine: SearchEngine

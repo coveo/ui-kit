@@ -24,7 +24,7 @@ export type {
  * The instant results action creators.
  *
  * @group Actions
- * @category Insight results
+ * @category InsightResults
  */
 export interface InstantResultsActionCreators {
   /**
@@ -65,7 +65,7 @@ export interface InstantResultsActionCreators {
  * @returns An object with the action creators.
  *
  * @group Actions
- * @category Insight results
+ * @category InsightResults
  */
 export function loadInstantResultsActions(
   engine: SearchEngine

@@ -12,7 +12,7 @@ import {
  * The Insight interface action creators.
  *
  * @group Actions
- * @category Insight interface
+ * @category InsightInterface
  */
 export interface InsightInterfaceActionCreators {
   /**
@@ -34,7 +34,7 @@ export interface InsightInterfaceActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Insight interface
+ * @category InsightInterface
  */
 export function loadInsightInterfaceActions(
   engine: InsightEngine

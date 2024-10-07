@@ -20,7 +20,7 @@ import {StateNeededByHtmlEndpoint} from './result-preview-request-builder.js';
  * The result preview action creators.
  *
  * @group Actions
- * @category Result preview
+ * @category ResultPreview
  */
 export interface ResultPreviewActionCreators {
   /**
@@ -73,7 +73,7 @@ export interface ResultPreviewActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Result preview
+ * @category ResultPreview
  */
 export function loadResultPreviewActions(
   engine: CoreEngine

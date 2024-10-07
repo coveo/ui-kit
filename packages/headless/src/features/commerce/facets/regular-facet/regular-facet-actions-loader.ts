@@ -14,7 +14,7 @@ export type {ToggleExcludeFacetValuePayload, ToggleSelectFacetValuePayload};
  * The regular facet action creators.
  *
  * @group Actions
- * @category Regular facet
+ * @category RegularFacet
  */
 export interface RegularFacetActionCreators {
   /**
@@ -45,7 +45,7 @@ export interface RegularFacetActionCreators {
  * @returns An object holding the regular facet action creators.
  *
  * @group Actions
- * @category Regular facet
+ * @category RegularFacet
  */
 export function loadRegularFacetActions(
   engine: CommerceEngine

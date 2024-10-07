@@ -13,7 +13,7 @@ export type {SetAttachedResultsActionCreatorPayload, AttachedResult};
  * The attached results action creators.
  *
  * @group Actions
- * @category Attached results
+ * @category AttachedResults
  */
 export interface AttachedResultsActionCreators {
   /**
@@ -44,7 +44,7 @@ export interface AttachedResultsActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Attached results
+ * @category AttachedResults
  */
 export function loadAttachedResultsActions(
   engine: InsightEngine

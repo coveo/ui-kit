@@ -16,7 +16,7 @@ export type {RegisterUserActionsPayload};
  * The Insight user actions action creators.
  *
  * @group Actions
- * @category Insight user actions
+ * @category InsightUserActions
  */
 export interface InsightUserActionsActionCreators {
   /**
@@ -50,7 +50,7 @@ export interface InsightUserActionsActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Insight user actions
+ * @category InsightUserActions
  */
 export function loadInsightUserActionsActions(
   engine: CoreEngine

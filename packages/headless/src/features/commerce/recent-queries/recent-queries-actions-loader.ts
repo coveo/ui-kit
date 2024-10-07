@@ -13,7 +13,7 @@ export type {RegisterRecentQueriesCreatorPayload};
  * The commerce recent queries action creators.
  *
  * @group Actions
- * @category Recent queries
+ * @category RecentQueries
  */
 export interface RecentQueriesActionCreators {
   /**
@@ -41,7 +41,7 @@ export interface RecentQueriesActionCreators {
  * @returns An object holding the commerce recent queries action creators.
  *
  * @group Actions
- * @category Recent queries
+ * @category RecentQueries
  */
 export function loadRecentQueriesActions(
   engine: CommerceEngine

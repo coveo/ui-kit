@@ -29,7 +29,7 @@ export type {
  * The standalone search box set action creators.
  *
  * @group Actions
- * @category Standalone search box set
+ * @category StandaloneSearchBoxSet
  */
 export interface StandaloneSearchBoxSetActionCreators {
   /**
@@ -103,7 +103,7 @@ export interface StandaloneSearchBoxSetActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Standalone search box set
+ * @category StandaloneSearchBoxSet
  */
 export function loadStandaloneSearchBoxSetActions(
   engine: SearchEngine

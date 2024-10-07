@@ -11,7 +11,7 @@ import {
  * The case context action creators.
  *
  * @group Actions
- * @category Case context
+ * @category CaseContext
  */
 export interface CaseContextActionCreators {
   /**
@@ -48,7 +48,7 @@ export interface CaseContextActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Case context
+ * @category CaseContext
  */
 export function loadCaseContextActions(
   engine: CoreEngine

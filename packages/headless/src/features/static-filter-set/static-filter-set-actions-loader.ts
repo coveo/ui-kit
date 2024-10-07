@@ -19,7 +19,7 @@ export type {
  * The static filter set action creators.
  *
  * @group Actions
- * @category Static filter set
+ * @category StaticFilterSet
  */
 export interface StaticFilterSetActionCreators {
   /**
@@ -68,7 +68,7 @@ export interface StaticFilterSetActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Static filter set
+ * @category StaticFilterSet
  */
 export function loadStaticFilterSetActions(
   engine: SearchEngine

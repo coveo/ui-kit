@@ -17,7 +17,7 @@ export type {
  * The category facet action creators.
  *
  * @group Actions
- * @category Category facet
+ * @category CategoryFacet
  */
 export interface CategoryFacetSetActionCreators {
   /**
@@ -48,7 +48,7 @@ export interface CategoryFacetSetActionCreators {
  * @returns An object holding the category facet action creators.
  *
  * @group Actions
- * @category Category facet
+ * @category CategoryFacet
  */
 export function loadCategoryFacetSetActions(
   engine: CommerceEngine

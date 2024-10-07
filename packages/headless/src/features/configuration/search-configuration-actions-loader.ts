@@ -15,7 +15,7 @@ export type {UpdateSearchConfigurationActionCreatorPayload};
  * The search configuration action creators.
  *
  * @group Actions
- * @category Search Configuration
+ * @category SearchConfiguration
  */
 export interface SearchConfigurationActionCreators {
   /**
@@ -36,7 +36,7 @@ export interface SearchConfigurationActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Search Configuration
+ * @category SearchConfiguration
  */
 export function loadSearchConfigurationActions(
   engine: RecommendationEngine | SearchEngine

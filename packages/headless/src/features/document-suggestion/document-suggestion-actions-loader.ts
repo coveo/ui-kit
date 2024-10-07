@@ -12,7 +12,7 @@ import {
  * The document suggestion action creators.
  *
  * @group Actions
- * @category Document suggestion
+ * @category DocumentSuggestion
  */
 export interface DocumentSuggestionActionCreators {
   /**
@@ -35,7 +35,7 @@ export interface DocumentSuggestionActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Document suggestion
+ * @category DocumentSuggestion
  */
 export function loadDocumentSuggestionActions(
   engine: CaseAssistEngine

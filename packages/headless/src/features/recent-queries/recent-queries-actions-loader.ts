@@ -11,7 +11,7 @@ import {
  * The RecentQueries action creators.
  *
  * @group Actions
- * @category Recent queries
+ * @category RecentQueries
  */
 export interface RecentQueriesActionCreators {
   /**
@@ -37,7 +37,7 @@ export interface RecentQueriesActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Recent queries
+ * @category RecentQueries
  */
 export function loadRecentQueriesActions(
   engine: SearchEngine

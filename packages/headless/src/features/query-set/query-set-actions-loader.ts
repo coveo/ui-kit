@@ -17,7 +17,7 @@ export type {
  * The query set action creators.
  *
  * @group Actions
- * @category Query set
+ * @category QuerySet
  */
 export interface QuerySetActionCreators {
   /**
@@ -48,7 +48,7 @@ export interface QuerySetActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Query set
+ * @category QuerySet
  */
 export function loadQuerySetActions(
   engine: SearchEngine

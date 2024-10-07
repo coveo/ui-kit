@@ -15,7 +15,7 @@ import {
  * The product listing action creators.
  *
  * @group Actions
- * @category Product listing
+ * @category ProductListing
  */
 export interface ProductListingActionCreators {
   /**
@@ -58,7 +58,7 @@ export interface ProductListingActionCreators {
  * @returns An object holding the product listing action creators.
  *
  * @group Actions
- * @category Product listing
+ * @category ProductListing
  */
 export function loadProductListingActions(
   engine: CommerceEngine

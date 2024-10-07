@@ -15,7 +15,7 @@ export type {AddDictionaryFieldContextActionCreatorPayload};
  * The dictionary field context action creators.
  *
  * @group Actions
- * @category Dictionary field context
+ * @category DictionaryFieldContext
  */
 export interface DictionaryFieldContextActionCreators {
   /**
@@ -54,7 +54,7 @@ export interface DictionaryFieldContextActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Dictionary field context
+ * @category DictionaryFieldContext
  */
 export function loadDictionaryFieldContextActions(
   engine: CoreEngine

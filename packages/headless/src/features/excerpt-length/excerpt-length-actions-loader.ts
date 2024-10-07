@@ -7,7 +7,7 @@ import {setExcerptLength} from './excerpt-length-actions.js';
  * The excerpt length action creators.
  *
  * @group Actions
- * @category Excerpt length
+ * @category ExcerptLength
  */
 export interface ExcerptLengthActionCreators {
   /**
@@ -27,7 +27,7 @@ export interface ExcerptLengthActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Excerpt length
+ * @category ExcerptLength
  */
 export function loadExcerptLengthActions(
   engine: SearchEngine

@@ -25,7 +25,7 @@ export type {
  * The date facet set action creators.
  *
  * @group Actions
- * @category Date facet set
+ * @category DateFacetSet
  */
 export interface DateFacetSetActionCreators {
   /**
@@ -94,7 +94,7 @@ export interface DateFacetSetActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Date facet set
+ * @category DateFacetSet
  */
 export function loadDateFacetSetActions(
   engine: CoreEngine

@@ -25,7 +25,7 @@ export type {
  * The instant products action creators.
  *
  * @group Actions
- * @category Instant products
+ * @category InstantProducts
  */
 export interface InstantProductsActionCreators {
   /**
@@ -76,7 +76,7 @@ export interface InstantProductsActionCreators {
  * @returns An object holding the instant products action creators.
  *
  * @group Actions
- * @category Instant products
+ * @category InstantProducts
  */
 export function loadInstantProductsActions(
   engine: CommerceEngine

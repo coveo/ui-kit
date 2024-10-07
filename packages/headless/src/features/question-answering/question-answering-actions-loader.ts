@@ -17,7 +17,7 @@ import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-
  * The question answering action creators.
  *
  * @group Actions
- * @category Question answering
+ * @category QuestionAnswering
  */
 export interface QuestionAnsweringActionCreators {
   /**
@@ -83,7 +83,7 @@ export interface QuestionAnsweringActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Question answering
+ * @category QuestionAnswering
  */
 export function loadQuestionAnsweringActions(
   engine: SearchEngine

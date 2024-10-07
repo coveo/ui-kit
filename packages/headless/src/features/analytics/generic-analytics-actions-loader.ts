@@ -23,7 +23,7 @@ export type {
  * The generic analytics action creators.
  *
  * @group Actions
- * @category Generic analytics
+ * @category GenericAnalytics
  */
 export interface GenericAnalyticsActionCreators {
   /**
@@ -60,7 +60,7 @@ export interface GenericAnalyticsActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Generic analytics
+ * @category GenericAnalytics
  */
 export function loadGenericAnalyticsActions(
   engine: SearchEngine

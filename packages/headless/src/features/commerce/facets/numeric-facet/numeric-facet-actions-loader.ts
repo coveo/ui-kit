@@ -20,7 +20,7 @@ export type {
  * The numeric facet action creators.
  *
  * @group Actions
- * @category Numeric facet
+ * @category NumericFacet
  */
 export interface NumericFacetActionCreators {
   /**
@@ -61,7 +61,7 @@ export interface NumericFacetActionCreators {
  * @returns An object holding the numeric facet action creators.
  *
  * @group Actions
- * @category Numeric facet
+ * @category NumericFacet
  */
 export function loadNumericFacetActions(
   engine: CommerceEngine

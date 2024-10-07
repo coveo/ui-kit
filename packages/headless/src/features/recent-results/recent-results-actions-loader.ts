@@ -14,7 +14,7 @@ export type {RegisterRecentResultsCreatorPayload};
  * The RecentResults action creators
  *
  * @group Actions
- * @category Recent results
+ * @category RecentResults
  */
 export interface RecentResultsActionCreators {
   /**
@@ -47,7 +47,7 @@ export interface RecentResultsActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Recent results
+ * @category RecentResults
  */
 export function loadRecentResultsActions(
   engine: SearchEngine

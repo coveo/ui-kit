@@ -25,7 +25,7 @@ export type {
  * The numeric facet action creators.
  *
  * @group Actions
- * @category Numeric facet set
+ * @category NumericFacetSet
  */
 export interface NumericFacetSetActionCreators {
   /**
@@ -94,7 +94,7 @@ export interface NumericFacetSetActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Numeric facet set
+ * @category NumericFacetSet
  */
 export function loadNumericFacetSetActions(
   engine: CoreEngine

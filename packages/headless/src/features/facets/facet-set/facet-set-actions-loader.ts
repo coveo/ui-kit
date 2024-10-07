@@ -36,7 +36,7 @@ export type {
  * The facet set action creators.
  *
  * @group Actions
- * @category Facet set
+ * @category FacetSet
  */
 export interface FacetSetActionCreators {
   /**
@@ -134,7 +134,7 @@ export interface FacetSetActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Facet set
+ * @category FacetSet
  */
 export function loadFacetSetActions(
   engine: SearchEngine

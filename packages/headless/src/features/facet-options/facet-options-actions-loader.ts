@@ -20,7 +20,7 @@ export type {
  * The facetOptions action creators.
  *
  * @group Actions
- * @category Facet options
+ * @category FacetOptions
  */
 export interface FacetOptionsActionCreators {
   /**
@@ -55,7 +55,7 @@ export interface FacetOptionsActionCreators {
  * @returns An object holding the action creators.
  *
  * @group Actions
- * @category Facet options
+ * @category FacetOptions
  */
 export function loadFacetOptionsActions(
   engine: SearchEngine
