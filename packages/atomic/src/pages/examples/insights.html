@@ -9,6 +9,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
+      import {loadCaseContextActions} from '/build/headless/insight/headless.esm.js';
       import {initializeBindings} from '/build/index.esm.js';
 
       async function main() {
@@ -20,6 +21,9 @@
           organizationId: 'searchuisamples',
         });
 
+        const engine = insightInterface.engine;
+        const {setCaseId} = loadCaseContextActions(engine);
+        engine.dispatch(setCaseId('1234'));
         insightInterface.executeFirstSearch();
 
         await customElements.whenDefined('atomic-insight-full-search-button');
@@ -123,6 +127,7 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case></atomic-insight-result-attach-to-case>
                   <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
@@ -130,6 +135,9 @@
                     <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
+                <atomic-result-section-actions
+                  ><atomic-insight-result-attach-to-case read-only="true"></atomic-insight-result-attach-to-case
+                ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-excerpt>
                   <atomic-result-text field="excerpt"></atomic-result-text>
@@ -196,6 +204,7 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case></atomic-insight-result-attach-to-case>
                   <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
@@ -216,6 +225,9 @@
                     <atomic-result-badge label="Top Result"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
+                <atomic-result-section-actions
+                  ><atomic-insight-result-attach-to-case read-only="true"></atomic-insight-result-attach-to-case
+                ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-excerpt
                   ><atomic-result-text field="excerpt"></atomic-result-text
@@ -335,6 +347,7 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case></atomic-insight-result-attach-to-case>
                   <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
@@ -355,6 +368,9 @@
                     <atomic-result-badge label="Top Result"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
+                <atomic-result-section-actions
+                  ><atomic-insight-result-attach-to-case read-only="true"></atomic-insight-result-attach-to-case
+                ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-title-metadata>
                   <atomic-field-condition class="field" if-defined="snrating">
@@ -440,6 +456,22 @@
 
       document.addEventListener('atomicInsightResultActionClicked', (event) => {
         console.log('Result action clicked', event.detail);
+      });
+
+      document.addEventListener('atomic/insight/attachToCase/attach', (event) => {
+        console.log('attach', event.detail);
+        const {controller, result} = event.detail;
+
+        new Promise(resolve => setTimeout(() => resolve(), 1000)).then(() => {
+          controller.attach();
+        });
+
+      });
+
+      document.addEventListener('atomic/insight/attachToCase/detach', (event) => {
+        console.log('detach', event.detail);
+        const {controller, result} = event.detail;
+        controller.detach();
       });
     </script>
   </body>

@@ -16,4 +16,18 @@ atomic-insight-result-action-bar {
       @apply rounded-bl-none rounded-tl-none;
     }
   }
+
+  > atomic-insight-result-attach-to-case:not(:last-child) {
+    button {
+      @apply rounded-r-none border-r-0;
+      &:hover {
+        @apply border-r;
+      }
+    }
+  }
+  > atomic-insight-result-attach-to-case:not(:first-child) {
+    button {
+      @apply rounded-bl-none rounded-tl-none;
+    }
+  }
 }
