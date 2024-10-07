@@ -129,12 +129,6 @@ export class AtomicProductMultiValueText {
   }
 
   private getNumberOfValuesToDisplay(values: string[]) {
-    if (values.length <= this.maxValuesToDisplay) {
-      return values.length;
-    }
-    if (this.maxValuesToDisplay < 2) {
-      return this.maxValuesToDisplay;
-    }
     return Math.min(values.length, this.maxValuesToDisplay);
   }
 
