@@ -1,20 +1,21 @@
 import {Action} from '@reduxjs/toolkit';
-import {SearchAPIClient} from '../../api/search/search-api-client';
-import {Result} from '../../api/search/search/result';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
+import {Result} from '../../api/search/search/result.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {createMockState} from '../../test/mock-state';
-import {executeSearch, fetchMoreResults} from '../search/search-actions';
-import {loadCollection} from './folding-actions';
-import {foldingReducer, ResultWithFolding} from './folding-slice';
-import {FoldedResult, FoldingFields, FoldingState} from './folding-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {createMockState} from '../../test/mock-state.js';
+import {executeSearch, fetchMoreResults} from '../search/search-actions.js';
+import {loadCollection} from './folding-actions.js';
+import {foldingReducer, ResultWithFolding} from './folding-slice.js';
+import {FoldedResult, FoldingFields, FoldingState} from './folding-state.js';
 
 interface MockFoldingHierarchy {
   name: string;
@@ -185,7 +186,7 @@ describe('folding slice', () => {
 
       beforeEach(() => {
         apiClient = {
-          search: jest.fn().mockResolvedValue({success: {results: []}}),
+          search: vi.fn().mockResolvedValue({success: {results: []}}),
         } as unknown as SearchAPIClient;
         mockEngine = buildMockSearchEngine(createMockState());
       });
@@ -201,6 +202,7 @@ describe('folding slice', () => {
           () => mockEngine.state as Required<typeof mockEngine.state>,
           {
             apiClient,
+            navigatorContext: buildMockNavigatorContextProvider()(),
           } as ClientThunkExtraArguments<SearchAPIClient>
         );
       };
@@ -257,7 +259,7 @@ describe('folding slice', () => {
         );
       });
 
-      it('does not uses facets to get the full collection', async () => {
+      it('does not use facets to get the full collection', async () => {
         await doLoadCollection();
         expect(apiClient.search).toHaveBeenCalledWith(
           expect.not.objectContaining({

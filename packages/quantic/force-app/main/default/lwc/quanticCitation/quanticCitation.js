@@ -9,10 +9,10 @@ const debounceDurationBeforeHoverMs = 200;
 
 /**
  * The `QuanticCitation` component renders an individual citation.
- * @fires CustomEvent#citationhover
+ * @fires CustomEvent#quantic__citationhover
  * @category Internal
  * @example
- * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onhover={handleHover}></c-quantic-citation>
+ * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
  */
 export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
@@ -84,7 +84,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
       if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
         this.dispatchEvent(
-          new CustomEvent('citationhover', {
+          new CustomEvent('quantic__citationhover', {
             detail: {
               citationHoverTimeMs: Date.now() - this.hoverStartTimestamp,
             },

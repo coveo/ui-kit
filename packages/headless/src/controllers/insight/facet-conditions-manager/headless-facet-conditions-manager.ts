@@ -1,10 +1,10 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   FacetConditionsManager,
   AnyFacetValuesCondition,
   FacetConditionsManagerProps,
   buildCoreFacetConditionsManager,
-} from '../../core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+} from '../../core/facets/facet-conditions-manager/headless-facet-conditions-manager.js';
 
 export type {
   FacetConditionsManager,

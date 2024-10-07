@@ -1,65 +1,64 @@
-import {StateWithHistory} from '../app/undoable';
-import {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state';
-import {AttachedResultsState} from '../features/attached-results/attached-results-state';
-import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
-import {CaseContextState} from '../features/case-context/case-context-state';
-import {CaseFieldState} from '../features/case-field/case-field-state';
-import {CaseInputState} from '../features/case-input/case-input-state';
-import {CartState} from '../features/commerce/context/cart/cart-state';
-import {CommerceContextState} from '../features/commerce/context/context-state';
-import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state';
-import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state';
-import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
-import {ManualNumericFacetSetState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state';
-import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state';
-import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
-import {ProductListingState} from '../features/commerce/product-listing/product-listing-state';
-import {CommerceQueryState} from '../features/commerce/query/query-state';
-import {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state';
-import {CommerceSearchState} from '../features/commerce/search/search-state';
-import {CommerceSortState} from '../features/commerce/sort/sort-state';
-import {CommerceStandaloneSearchBoxSetState} from '../features/commerce/standalone-search-box-set/standalone-search-box-set-state';
-import {ConfigurationState} from '../features/configuration/configuration-state';
-import {ContextState} from '../features/context/context-state';
-import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
-import {DidYouMeanState} from '../features/did-you-mean/did-you-mean-state';
-import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
-import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state';
-import {FacetOptionsState} from '../features/facet-options/facet-options-state';
-import {AutomaticFacetSetState} from '../features/facets/automatic-facet-set/automatic-facet-set-state';
-import {CategoryFacetSetState} from '../features/facets/category-facet-set/category-facet-set-state';
-import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
-import {CategoryFacetSearchSetState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
-import {SpecificFacetSearchSetState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
-import {FacetSetState} from '../features/facets/facet-set/facet-set-state';
-import {DateFacetSetState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
-import {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
-import {FieldsState} from '../features/fields/fields-state';
-import {FoldingState} from '../features/folding/folding-state';
-import {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state';
-import {HistoryState} from '../features/history/history-state';
-import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
-import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
-import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state';
-import {InstantResultsState} from '../features/instant-results/instant-results-state';
-import {PaginationState} from '../features/pagination/pagination-state';
-import {OldProductListingState} from '../features/product-listing/old-product-listing-state';
-import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
-import {QuerySetState} from '../features/query-set/query-set-state';
-import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
-import {QueryState} from '../features/query/query-state';
-import {QuestionAnsweringState} from '../features/question-answering/question-answering-state';
-import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
-import {RecentResultsState} from '../features/recent-results/recent-results-state';
-import {RecommendationState} from '../features/recommendation/recommendation-state';
-import {ResultPreviewState} from '../features/result-preview/result-preview-state';
-import {SearchState} from '../features/search/search-state';
-import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
-import {SortState} from '../features/sort/sort-state';
-import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
-import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
-import {TabSetState} from '../features/tab-set/tab-set-state';
-import {TriggerState} from '../features/triggers/triggers-state';
+import {StateWithHistory} from '../app/undoable.js';
+import {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state.js';
+import {AttachedResultsState} from '../features/attached-results/attached-results-state.js';
+import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state.js';
+import {CaseContextState} from '../features/case-context/case-context-state.js';
+import {CaseFieldState} from '../features/case-field/case-field-state.js';
+import {CaseInputState} from '../features/case-input/case-input-state.js';
+import {ConfigurationState as CommerceConfigurationState} from '../features/commerce/configuration/configuration-state.js';
+import {CartState} from '../features/commerce/context/cart/cart-state.js';
+import {CommerceContextState} from '../features/commerce/context/context-state.js';
+import {DidYouMeanState as CommerceDidYouMeanState} from '../features/commerce/did-you-mean/did-you-mean-state.js';
+import {CommerceFacetSetState} from '../features/commerce/facets/facet-set/facet-set-state.js';
+import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+import {ManualNumericFacetSetState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state.js';
+import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state.js';
+import {CommercePaginationState} from '../features/commerce/pagination/pagination-state.js';
+import {ProductListingState} from '../features/commerce/product-listing/product-listing-state.js';
+import {CommerceQueryState} from '../features/commerce/query/query-state.js';
+import {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state.js';
+import {CommerceSearchState} from '../features/commerce/search/search-state.js';
+import {CommerceSortState} from '../features/commerce/sort/sort-state.js';
+import {CommerceStandaloneSearchBoxSetState} from '../features/commerce/standalone-search-box-set/standalone-search-box-set-state.js';
+import {ConfigurationState} from '../features/configuration/configuration-state.js';
+import {ContextState} from '../features/context/context-state.js';
+import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state.js';
+import {DidYouMeanState} from '../features/did-you-mean/did-you-mean-state.js';
+import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state.js';
+import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state.js';
+import {FacetOptionsState} from '../features/facet-options/facet-options-state.js';
+import {AutomaticFacetSetState} from '../features/facets/automatic-facet-set/automatic-facet-set-state.js';
+import {CategoryFacetSetState} from '../features/facets/category-facet-set/category-facet-set-state.js';
+import {FacetOrderState} from '../features/facets/facet-order/facet-order-state.js';
+import {CategoryFacetSearchSetState} from '../features/facets/facet-search-set/category/category-facet-search-set-state.js';
+import {SpecificFacetSearchSetState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
+import {FacetSetState} from '../features/facets/facet-set/facet-set-state.js';
+import {DateFacetSetState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state.js';
+import {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
+import {FieldsState} from '../features/fields/fields-state.js';
+import {FoldingState} from '../features/folding/folding-state.js';
+import {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state.js';
+import {HistoryState} from '../features/history/history-state.js';
+import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state.js';
+import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state.js';
+import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state.js';
+import {InstantResultsState} from '../features/instant-results/instant-results-state.js';
+import {PaginationState} from '../features/pagination/pagination-state.js';
+import {QuerySetState} from '../features/query-set/query-set-state.js';
+import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state.js';
+import {QueryState} from '../features/query/query-state.js';
+import {QuestionAnsweringState} from '../features/question-answering/question-answering-state.js';
+import {RecentQueriesState} from '../features/recent-queries/recent-queries-state.js';
+import {RecentResultsState} from '../features/recent-results/recent-results-state.js';
+import {RecommendationState} from '../features/recommendation/recommendation-state.js';
+import {ResultPreviewState} from '../features/result-preview/result-preview-state.js';
+import {SearchState} from '../features/search/search-state.js';
+import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state.js';
+import {SortState} from '../features/sort/sort-state.js';
+import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state.js';
+import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state.js';
+import {TabSetState} from '../features/tab-set/tab-set-state.js';
+import {TriggerState} from '../features/triggers/triggers-state.js';
 
 export interface QuerySection {
   /**
@@ -210,6 +209,10 @@ export interface ConfigurationSection {
   configuration: ConfigurationState;
 }
 
+export interface CommerceConfigurationSection {
+  configuration: CommerceConfigurationState;
+}
+
 export interface FacetSearchSection {
   /**
    * The set of facet searches.
@@ -292,20 +295,6 @@ export interface RecommendationSection {
    * The information related to the recommendation endpoint.
    */
   recommendation: RecommendationState;
-}
-
-export interface ProductRecommendationsSection {
-  /**
-   * The information related to the product recommendations endpoint.
-   */
-  productRecommendations: ProductRecommendationsState;
-}
-
-export interface OldProductListingSection {
-  /**
-   * The information related to the product listing endpoint.
-   */
-  productListing: OldProductListingState;
 }
 
 export interface CommercePaginationSection {

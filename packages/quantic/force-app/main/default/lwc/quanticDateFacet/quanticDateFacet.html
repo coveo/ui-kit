@@ -9,7 +9,7 @@
     </template>
     <template if:true={hasValues}>
       <div class="slds-size_1-of-1">
-        <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
+        <c-quantic-card-container title={label} onquantic__headerclick={toggleFacetVisibility} onquantic__headerkeydown={toggleFacetVisibility}>
           <lightning-button-icon
             class="actionButtonCssClasses"
             slot="actions"
@@ -44,7 +44,7 @@
                 <template for:each={values} for:item="v">
                   <li class="slds-grid" key={v.value}>
                     <c-quantic-facet-value
-                      onselectvalue={onSelectValue}
+                      onquantic__selectvalue={onSelectValue}
                       key={v.start}
                       item={v}
                       is-checked={v.checked}

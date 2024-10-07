@@ -1,41 +1,41 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, setView} from '../context/context-actions';
-import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions';
+import {setContext, setView} from '../context/context-actions.js';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions.js';
 import {
   clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
-} from '../facets/core-facet/core-facet-actions';
+} from '../facets/core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from '../facets/date-facet/date-facet-actions';
+} from '../facets/date-facet/date-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../facets/numeric-facet/numeric-facet-actions';
+} from '../facets/numeric-facet/numeric-facet-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../facets/regular-facet/regular-facet-actions';
-import {Parameters} from '../parameters/parameters-actions';
-import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
-import {fetchRecommendations} from '../recommendations/recommendations-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
-import {executeSearch} from '../search/search-actions';
-import {applySort} from '../sort/sort-actions';
+} from '../facets/regular-facet/regular-facet-actions.js';
+import {Parameters} from '../parameters/parameters-actions.js';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
+import {fetchProductListing} from '../product-listing/product-listing-actions.js';
+import {fetchRecommendations} from '../recommendations/recommendations-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {applySort} from '../sort/sort-actions.js';
 import {
   nextPage,
   previousPage,
   registerRecommendationsSlotPagination,
   selectPage,
   setPageSize,
-} from './pagination-actions';
+} from './pagination-actions.js';
 import {
   CommercePaginationState,
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
-} from './pagination-state';
+} from './pagination-state.js';
 
 export const paginationReducer = createReducer(
   getCommercePaginationInitialState(),

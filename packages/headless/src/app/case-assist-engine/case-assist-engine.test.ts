@@ -1,10 +1,10 @@
-import {getSampleEngineConfiguration} from '../engine-configuration';
+import {getSampleEngineConfiguration} from '../engine-configuration.js';
+import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
 import {
   buildCaseAssistEngine,
   CaseAssistEngine,
   CaseAssistEngineOptions,
-} from './case-assist-engine';
-import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration';
+} from './case-assist-engine.js';
 
 function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
   return {

@@ -1,21 +1,20 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
-import {CoreEngine, CoreEngineNext} from '../../../../app/engine';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import {CoreEngine, CoreEngineNext} from '../../../../app/engine.js';
 import {
   ClientThunkExtraArguments,
   ThunkExtraArguments,
-} from '../../../../app/thunk-extra-arguments';
-import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
-import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
-import {clearFacetSearch} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+} from '../../../../app/thunk-extra-arguments.js';
+import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
+import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options.js';
+import {clearFacetSearch} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import {
   CategoryFacetSearchSection,
-  ConfigurationSection,
   FacetSearchSection,
-} from '../../../../state/state-sections';
+} from '../../../../state/state-sections.js';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 
@@ -45,13 +44,11 @@ export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
 export function buildGenericFacetSearch<T extends FacetSearchState>(
   engine:
     | CoreEngine<
-        ConfigurationSection &
-          (FacetSearchSection | CategoryFacetSearchSection),
+        FacetSearchSection | CategoryFacetSearchSection,
         ClientThunkExtraArguments<FacetSearchAPIClient>
       >
     | CoreEngineNext<
-        ConfigurationSection &
-          (FacetSearchSection | CategoryFacetSearchSection),
+        FacetSearchSection | CategoryFacetSearchSection,
         ClientThunkExtraArguments<FacetSearchAPIClient>
       >,
   props: GenericFacetSearchProps<T>

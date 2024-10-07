@@ -1,6 +1,7 @@
-import {InsightAppState} from '../../state/insight-app-state';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildFetchUserActionsRequest} from './insight-user-actions-request';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildFetchUserActionsRequest} from './insight-user-actions-request.js';
 
 describe('insight user actions request', () => {
   let state: InsightAppState;
@@ -24,11 +25,15 @@ describe('insight user actions request', () => {
     expect(params.organizationId).toBe(state.configuration.organizationId);
   });
 
-  it('#buildFetchUserActionsRequest returns the state #platformUrl', async () => {
-    state.configuration.platformUrl = 'https://platform.coveo.com';
+  it('#buildFetchUserActionsRequest returns the default organization endpoint base url', async () => {
     const params = await buildFetchUserActionsRequest(state, exampleUserId);
 
-    expect(params.url).toBe(state.configuration.platformUrl);
+    expect(params.url).toBe(
+      getOrganizationEndpoint(
+        state.configuration.organizationId,
+        state.configuration.environment
+      )
+    );
   });
 
   it('#buildFetchUserActionsRequest returns the state #userId', async () => {

@@ -2,23 +2,22 @@ import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../facet-options/facet-options-actions';
-import {change} from '../../history/history-actions';
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {executeSearch, fetchFacetValues} from '../../search/search-actions';
+} from '../../breadcrumb/breadcrumb-actions.js';
+import {disableFacet} from '../../facet-options/facet-options-actions.js';
+import {change} from '../../history/history-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
-} from '../facet-search-set/specific/specific-facet-search-actions';
-import {updateFacetAutoSelection} from '../generic/facet-actions';
+} from '../facet-search-set/specific/specific-facet-search-actions.js';
+import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
-} from '../generic/facet-reducer-helpers';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+} from '../generic/facet-reducer-helpers.js';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -29,14 +28,14 @@ import {
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
-} from './facet-set-actions';
+} from './facet-set-actions.js';
 import {
   getFacetSetInitialState,
   getFacetSetSliceInitialState,
-} from './facet-set-state';
-import {FacetOptionalParameters} from './interfaces/options';
-import {FacetRequest, FacetValueRequest} from './interfaces/request';
-import {FacetValue, FacetResponse} from './interfaces/response';
+} from './facet-set-state.js';
+import {FacetOptionalParameters} from './interfaces/options.js';
+import {FacetRequest, FacetValueRequest} from './interfaces/request.js';
+import {FacetValue, FacetResponse} from './interfaces/response.js';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -187,15 +186,6 @@ export const facetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
-        facets.forEach((facetResponse) =>
-          mutateStateFromFacetResponse(
-            state[facetResponse.facetId]?.request,
-            facetResponse
-          )
-        );
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const facets = action.payload.response?.facets?.results || [];
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,

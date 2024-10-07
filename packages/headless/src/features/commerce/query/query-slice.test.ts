@@ -1,7 +1,10 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions';
-import {updateQuery} from './query-actions';
-import {queryReducer} from './query-slice';
-import {CommerceQueryState, getCommerceQueryInitialState} from './query-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {updateQuery} from './query-actions.js';
+import {queryReducer} from './query-slice.js';
+import {
+  CommerceQueryState,
+  getCommerceQueryInitialState,
+} from './query-state.js';
 
 describe('query slice', () => {
   let state: CommerceQueryState;

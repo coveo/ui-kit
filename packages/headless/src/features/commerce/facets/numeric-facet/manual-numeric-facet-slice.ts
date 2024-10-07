@@ -1,17 +1,17 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions';
-import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions.js';
 import {
   getManualNumericFacetInitialState,
   ManualNumericFacetSetState,
-} from './manual-numeric-facet-state';
+} from './manual-numeric-facet-state.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
-} from './numeric-facet-actions';
+} from './numeric-facet-actions.js';
 
 export const manualNumericFacetReducer = createReducer(
   getManualNumericFacetInitialState(),

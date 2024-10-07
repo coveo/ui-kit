@@ -1,24 +1,26 @@
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import {MockInstance} from 'vitest';
+import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client.js';
 import {
   BaseCommerceAPIRequest,
   CommerceAPIRequest,
-} from '../../../api/commerce/common/request';
-import {NavigatorContext} from '../../../app/navigatorContextProvider';
-import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request';
-import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice';
-import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider';
-import {VERSION} from '../../../utils/version';
-import {CommerceFacetSlice} from '../facets/facet-set/facet-set-state';
-import {ManualNumericFacetSetSlice} from '../facets/numeric-facet/manual-numeric-facet-state';
+} from '../../../api/commerce/common/request.js';
+import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice.js';
+import {buildMockCommerceRegularFacetValue} from '../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {VERSION} from '../../../utils/version.js';
+import {CommerceFacetSlice} from '../facets/facet-set/facet-set-state.js';
+import {ManualNumericFacetSetSlice} from '../facets/numeric-facet/manual-numeric-facet-state.js';
 import {
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
-} from '../pagination/pagination-state';
-import {SortBy, SortCriterion, SortDirection} from '../sort/sort';
-import {getCommerceSortInitialState} from '../sort/sort-state';
-import * as Actions from './actions';
+} from '../pagination/pagination-state.js';
+import {getCommerceSortInitialState} from '../sort/sort-state.js';
+import {SortBy, SortCriterion, SortDirection} from '../sort/sort.js';
+import * as Actions from './actions.js';
 
 describe('commerce common actions', () => {
   let navigatorContext: NavigatorContext;
@@ -44,7 +46,7 @@ describe('commerce common actions', () => {
       };
 
       expected = {
-        url: 'https://platform.cloud.coveo.com',
+        url: getCommerceApiBaseUrl('org_id'),
         accessToken: 'access_token',
         organizationId: 'org_id',
         trackingId: 'tracking_id',
@@ -73,7 +75,6 @@ describe('commerce common actions', () => {
 
       state = buildMockCommerceState();
 
-      state.configuration.platformUrl = expected.url;
       state.configuration.accessToken = expected.accessToken;
       state.configuration.organizationId = expected.organizationId;
       state.configuration.analytics.trackingId = expected.trackingId;
@@ -158,13 +159,13 @@ describe('commerce common actions', () => {
 
   describe('#buildCommerceAPIRequest', () => {
     let state: Actions.ListingAndSearchStateNeededByQueryCommerceAPI;
-    let mockedBuildBaseCommerceAPIRequest: jest.SpyInstance;
+    let mockedBuildBaseCommerceAPIRequest: MockInstance;
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       state = buildMockCommerceState();
-      mockedBuildBaseCommerceAPIRequest = jest.spyOn(
+      mockedBuildBaseCommerceAPIRequest = vi.spyOn(
         Actions,
-        'buildBaseCommerceAPIRequest'
+        'buildCommerceAPIRequest'
       );
     });
 

@@ -97,14 +97,14 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   connectedCallback() {
     this.addEventListener(
-      'suggestionlistrender',
+      'quantic__suggestionlistrender',
       this.handleSuggestionListEvent
     );
   }
 
   disconnectedCallback() {
     this.removeEventListener(
-      'suggestionlistrender',
+      'quantic__suggestionlistrender',
       this.handleSuggestionListEvent
     );
   }
@@ -348,7 +348,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
   }
 
   get isQueryEmpty() {
-    return !this.input?.value?.length;
+    return !this.input?.value && !this.inputValue;
   }
 
   /**

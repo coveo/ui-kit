@@ -1,5 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {nonEmptyString} from '../../utils/validate-payload';
+import {nonEmptyString} from '../../utils/validate-payload.js';
 
 export interface InstantResultOptions {
   /**

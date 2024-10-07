@@ -1,61 +1,60 @@
-import {configuration} from '../../../../app/common-reducers';
-import {CoreEngine} from '../../../../app/engine';
-import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
+import {configuration} from '../../../../app/common-reducers.js';
+import {CoreEngine} from '../../../../app/engine.js';
+import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments.js';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
-} from '../../../../features/facet-options/facet-options-actions';
-import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+} from '../../../../features/facet-options/facet-options-actions.js';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors.js';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
+import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
   registerFacet,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
-} from '../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   executeToggleFacetExclude,
   executeToggleFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-controller-actions';
+} from '../../../../features/facets/facet-set/facet-set-controller-actions.js';
 import {
   facetRequestSelector,
   facetResponseSelector,
   isFacetLoadingResponseSelector,
-} from '../../../../features/facets/facet-set/facet-set-selectors';
-import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
-import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
+} from '../../../../features/facets/facet-set/facet-set-selectors.js';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice.js';
+import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice.js';
 import {
   isFacetValueExcluded,
   isFacetValueSelected,
-} from '../../../../features/facets/facet-set/facet-set-utils';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
-import {selectActiveTab} from '../../../../features/tab-set/tab-set-selectors';
+} from '../../../../features/facets/facet-set/facet-set-utils.js';
+import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request.js';
+import {selectActiveTab} from '../../../../features/tab-set/tab-set-selectors.js';
 import {
   ConfigurationSection,
   FacetOptionsSection,
   FacetSearchSection,
   FacetSection,
-  OldProductListingSection,
   SearchSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
-import {omit} from '../../../../utils/utils';
-import {validateOptions} from '../../../../utils/validate-payload';
+} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {omit} from '../../../../utils/utils.js';
+import {validateOptions} from '../../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
-import {determineFacetId} from '../_common/facet-id-determinor';
+} from '../../../controller/headless-controller.js';
+import {determineFacetId} from '../_common/facet-id-determinor.js';
 import {
   FacetOptions,
   facetOptionsSchema,
   FacetSearchOptions,
-} from './headless-core-facet-options';
+} from './headless-core-facet-options.js';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -522,7 +521,7 @@ function loadFacetReducers(
     FacetOptionsSection &
     ConfigurationSection &
     FacetSearchSection &
-    (SearchSection | OldProductListingSection),
+    SearchSection,
   SearchThunkExtraArguments
 > {
   engine.addReducers({facetSet, facetOptions, configuration, facetSearchSet});

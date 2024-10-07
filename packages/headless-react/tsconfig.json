@@ -20,7 +20,8 @@
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "target": "ES2022",
-    "lib": ["dom", "ES2022"]
+    "lib": ["dom", "ES2023"],
+    "types": ["vitest/globals"]
   },
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]

@@ -3,13 +3,13 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../../utils/validate-payload';
+} from '../../../../utils/validate-payload.js';
 import {
   UpdateFacetIsFieldExpandedActionCreatorPayload,
   UpdateFacetNumberOfValuesActionCreatorPayload,
   UpdateFreezeCurrentValuesActionCreatorPayload,
-} from '../../../facets/facet-set/facet-set-actions';
-import {UpdateFacetAutoSelectionActionCreatorPayload} from '../../../facets/generic/facet-actions';
+} from '../../../facets/facet-set/facet-set-actions.js';
+import {UpdateFacetAutoSelectionActionCreatorPayload} from '../../../facets/generic/facet-actions.js';
 
 export type UpdateCoreFacetNumberOfValuesPayload =
   UpdateFacetNumberOfValuesActionCreatorPayload;

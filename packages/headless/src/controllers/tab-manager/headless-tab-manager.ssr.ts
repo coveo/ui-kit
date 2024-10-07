@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
-import {TabManager, buildTabManager} from './headless-tab-manager';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {TabManager, buildTabManager} from './headless-tab-manager.js';
 
-export * from './headless-tab-manager';
+export * from './headless-tab-manager.js';
 
 export interface TabManagerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, TabManager> {}

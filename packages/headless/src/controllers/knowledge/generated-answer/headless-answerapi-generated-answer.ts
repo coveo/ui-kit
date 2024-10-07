@@ -1,7 +1,7 @@
 import {
   answerEvaluation,
   AnswerEvaluationPOSTParams,
-} from '../../../api/knowledge/post-answer-evaluation';
+} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
   fetchAnswer,
@@ -9,27 +9,27 @@ import {
   selectAnswer,
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
-} from '../../../api/knowledge/stream-answer-api';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
+} from '../../../api/knowledge/stream-answer-api.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
-} from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedAnswerFeedbackV2} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {queryReducer as query} from '../../../features/query/query-slice';
+} from '../../../features/generated-answer/generated-answer-actions.js';
+import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   GeneratedAnswerSection,
   QuerySection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-  GeneratedResponseFormat,
-} from '../../core/generated-answer/headless-core-generated-answer';
+} from '../../core/generated-answer/headless-core-generated-answer.js';
 
 export interface AnswerApiGeneratedAnswer
   extends Omit<GeneratedAnswer, 'sendFeedback'> {
@@ -41,7 +41,7 @@ export interface AnswerApiGeneratedAnswer
    * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
-  sendFeedback(feedback: GeneratedAnswerFeedbackV2): void;
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
 }
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
@@ -50,7 +50,7 @@ export interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
 
 interface ParseEvaluationArgumentsParams {
-  feedback: GeneratedAnswerFeedbackV2;
+  feedback: GeneratedAnswerFeedback;
   answerApiState: GeneratedAnswerStream;
   query: string;
 }
@@ -96,10 +96,10 @@ const subscribeToSearchRequest = (
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
-    if (triggerParams.requestId === undefined) {
+    if (triggerParams.q.length === 0 || triggerParams.requestId.length === 0) {
       return;
     }
-    if (JSON.stringify(triggerParams) === JSON.stringify(lastTriggerParams)) {
+    if (triggerParams?.requestId === lastTriggerParams?.requestId) {
       return;
     }
     lastTriggerParams = triggerParams;
@@ -120,7 +120,7 @@ const subscribeToSearchRequest = (
  * @returns A `AnswerApiGeneratedAnswer` controller instance.
  */
 export function buildAnswerApiGeneratedAnswer(
-  engine: SearchEngine,
+  engine: SearchEngine | InsightEngine,
   analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient,
   props: AnswerApiGeneratedAnswerProps = {}
 ): AnswerApiGeneratedAnswer {
@@ -128,7 +128,7 @@ export function buildAnswerApiGeneratedAnswer(
     throw loadReducerError;
   }
 
-  const {rephrase: coreRephrase, ...controller} = buildCoreGeneratedAnswer(
+  const {...controller} = buildCoreGeneratedAnswer(
     engine,
     analyticsClient,
     props
@@ -157,10 +157,6 @@ export function buildAnswerApiGeneratedAnswer(
         isAnswerGenerated: answerApiState?.generated ?? false,
       };
     },
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      coreRephrase(responseFormat);
-      engine.dispatch(fetchAnswer(getState()));
-    },
     retry() {
       engine.dispatch(fetchAnswer(getState()));
     },
@@ -180,7 +176,7 @@ export function buildAnswerApiGeneratedAnswer(
 }
 
 function loadAnswerApiReducers(
-  engine: SearchEngine
+  engine: SearchEngine | InsightEngine
 ): engine is SearchEngine<
   GeneratedAnswerSection &
     QuerySection & {answer: ReturnType<typeof answerApi.reducer>}

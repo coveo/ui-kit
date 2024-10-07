@@ -1,17 +1,17 @@
 import {
   DateRangeRequest,
   NumericRangeRequest,
-} from '../../../../../controllers/commerce/core/facets/headless-core-commerce-facet';
-import {BaseFacetValueRequest} from '../../../../facets/facet-api/request';
+} from '../../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
+import {BaseFacetValueRequest} from '../../../../facets/facet-api/request.js';
 import {
   FacetRequest,
   FacetValueRequest,
-} from '../../../../facets/facet-set/interfaces/request';
+} from '../../../../facets/facet-set/interfaces/request.js';
 import {
   CategoryFacetDelimitingCharacter,
   FacetType,
   NumericFacetExtraProperties,
-} from './common';
+} from './common.js';
 
 export type CategoryFacetRequest = BaseCommerceFacetRequest<
   CategoryFacetValueRequest,

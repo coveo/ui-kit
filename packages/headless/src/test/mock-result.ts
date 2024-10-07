@@ -1,5 +1,5 @@
-import {Result} from '../api/search/search/result';
-import {buildMockRaw} from './mock-raw';
+import {Result} from '../api/search/search/result.js';
+import {buildMockRaw} from './mock-raw.js';
 
 /**
  * For internal use only.
@@ -33,6 +33,7 @@ export function buildMockResult(config: Partial<Result> = {}): Result {
     absentTerms: [],
     raw: buildMockRaw(),
     isUserActionView: false,
+    searchUid: '',
     ...config,
   };
 }

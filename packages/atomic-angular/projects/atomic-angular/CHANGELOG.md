@@ -1,3 +1,33 @@
+## 3.1.0 (2024-09-24)
+
+- feat(atomic): add tab support for atomic-generated-answer (#4285) ([744fb61](https://github.com/coveo/ui-kit/commits/744fb61)), closes [#4285](https://github.com/coveo/ui-kit/issues/4285)
+- feat(atomic): atomic insight user actions toggle component created (#4298) ([bad4ff5](https://github.com/coveo/ui-kit/commits/bad4ff5)), closes [#4298](https://github.com/coveo/ui-kit/issues/4298)
+
+## 3.0.0 (2024-09-18)
+
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(atomic)!: remove i18n compatibilityJSON v3 option (#4403) ([d5f36cf](https://github.com/coveo/ui-kit/commits/d5f36cf)), closes [#4403](https://github.com/coveo/ui-kit/issues/4403)
+- chore(headless, atomic)!: remove deprecated product recommendations (#4349) ([475a217](https://github.com/coveo/ui-kit/commits/475a217)), closes [#4349](https://github.com/coveo/ui-kit/issues/4349)
+- feat!: remove the organizationEndpoints configuration option (#4339) ([d3e1041](https://github.com/coveo/ui-kit/commits/d3e1041)), closes [#4339](https://github.com/coveo/ui-kit/issues/4339)
+- feat(atomic)!: delete atomic-load-more-children-results and put functionality in atomic-result-child ([b12331f](https://github.com/coveo/ui-kit/commits/b12331f)), closes [#4341](https://github.com/coveo/ui-kit/issues/4341)
+- feat(atomic)!: make textarea search box the default and only behavior (#4332) ([5890858](https://github.com/coveo/ui-kit/commits/5890858)), closes [#4332](https://github.com/coveo/ui-kit/issues/4332)
+- feat(atomic)!: remove gridCellLinkTarget property (#4378) ([4861e7d](https://github.com/coveo/ui-kit/commits/4861e7d)), closes [#4378](https://github.com/coveo/ui-kit/issues/4378)
+- feat(headless)!: rga rephrase logic removed from headless (#4413) ([79d3bc2](https://github.com/coveo/ui-kit/commits/79d3bc2)), closes [#4413](https://github.com/coveo/ui-kit/issues/4413)
+- feat(atomic): add tab support for atomic-result-list and atomic-folded-result-list (#4281) ([8f484e0](https://github.com/coveo/ui-kit/commits/8f484e0)), closes [#4281](https://github.com/coveo/ui-kit/issues/4281)
+- feat(atomic): user actions timeline component created (#4272) ([7c110bc](https://github.com/coveo/ui-kit/commits/7c110bc)), closes [#4272](https://github.com/coveo/ui-kit/issues/4272)
+- chore(atomic): replace @internal tags with @alpha tags in commerce components JS doc annotations (#4 ([1060eb5](https://github.com/coveo/ui-kit/commits/1060eb5)), closes [#4382](https://github.com/coveo/ui-kit/issues/4382)
+
+### BREAKING CHANGE
+
+- delete atomic-load-more-children-results and put functionality in atomic-result-children (#4341)
+- make textarea search box the default and only behavior (#4332)
+- remove deprecated product recommendations (#4349)
+- remove gridCellLinkTarget property (#4378)
+- remove i18n compatibilityJSON v3 option (#4403)
+- remove the organizationEndpoints configuration option (#4339)
+- rga rephrase logic removed from headless (#4413)
+- update node engine definition in all exported packages (#4330)
+
 # 2.28.0 (2024-08-27)
 
 ### Features

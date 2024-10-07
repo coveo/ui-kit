@@ -1,6 +1,6 @@
 import {isArray, isNullOrUndefined} from '@coveo/bueno';
-import {ChildProduct, Product} from '../../../api/commerce/common/product';
-import {ProductTemplateCondition} from './product-templates-manager';
+import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
+import {ProductTemplateCondition} from './product-templates-manager.js';
 
 /**
  * Extracts a property from a product object.

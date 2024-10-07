@@ -12,7 +12,7 @@ const msgSelector = '#hydrated-msg';
 const timestampSelector = '#timestamp';
 const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
-const routes = ['generic', 'react'] as const;
+const routes = ['generic?tab=all', 'react?tab=all'] as const;
 
 const isPageDev =
   process.env.NODE_ENV === 'development' &&
@@ -20,7 +20,7 @@ const isPageDev =
 
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
 const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
-  generic: {
+  'generic?tab=all': {
     thresholds: {
       fcp: isPageDev ? 2000 : 200,
       lcp: isPageDev ? 2000 : 200,
@@ -30,7 +30,7 @@ const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
       inp: 400,
     },
   },
-  react: {
+  'react?tab=all': {
     thresholds: {
       fcp: isPageDev ? 2000 : 400,
       lcp: isPageDev ? 2000 : 400,

@@ -1,12 +1,12 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Result} from '../../api/search/search/result';
-import {InstantResultSection} from '../../state/state-sections';
+import {Result} from '../../api/search/search/result.js';
+import {InstantResultSection} from '../../state/state-sections.js';
 import {
   validatePayload,
   requiredEmptyAllowedString,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
-import {StateNeededByExecuteSearch} from '../search/search-actions-thunk-processor';
+} from '../../utils/validate-payload.js';
+import {StateNeededByExecuteSearch} from '../search/search-actions-thunk-processor.js';
 
 export interface RegisterInstantResultActionCreatorPayload {
   /**

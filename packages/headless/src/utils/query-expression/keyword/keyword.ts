@@ -1,5 +1,5 @@
-import {Negatable} from '../common/negatable';
-import {Part} from '../common/part';
+import {Negatable} from '../common/negatable.js';
+import {Part} from '../common/part.js';
 
 export interface KeywordExpression extends Negatable {
   /**

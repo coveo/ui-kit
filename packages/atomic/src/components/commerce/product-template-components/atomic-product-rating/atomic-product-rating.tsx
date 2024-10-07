@@ -16,6 +16,7 @@ import {ProductContext} from '../product-template-decorators';
  * The `atomic-product-rating` element renders a star rating.
  *
  * @part value-rating - The wrapper that contains the row of inactive stars and the row of active stars.
+ * @part value-rating-icon - The individual star icons used in the rating display.
  *
  * @alpha
  */
@@ -39,6 +40,7 @@ export class AtomicProductRating
 
   /**
    * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
+   * @type {string}
    */
   @Prop({reflect: true}) public ratingDetailsField?: string;
 

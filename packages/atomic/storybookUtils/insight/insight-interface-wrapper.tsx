@@ -13,6 +13,16 @@ export const wrapInInsightInterface = (
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
+    <style data-styles>
+      atomic-insight-interface:not([widget='false']),
+      atomic-insight-layout:not([widget='false']) {
+        width: 500px;
+        height: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0px 3px 24px 0px #0000001a;
+      }
+    </style>
     <atomic-insight-interface data-testid="root-interface">
       ${story()}
     </atomic-insight-interface>

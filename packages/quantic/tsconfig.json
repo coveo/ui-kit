@@ -34,7 +34,7 @@
       "c/quanticPlaceholder": ["quanticPlaceholder/quanticPlaceholder.js"],
       "c/quanticQueryError": ["quanticQueryError/quanticQueryError.js"],
       "c/quanticResult": ["quanticResult/quanticResult.js"],
-      "c/quanticResultBadge": ["quanticResultBadge/quanticResultBadge.js"],
+      "c/quanticResultTag": ["quanticResultTag/quanticResultTag.js"],
       "c/quanticResultLabel": ["quanticResultLabel/quanticResultLabel.js"],
       "c/quanticResultPrintableUri": [
         "quanticResultPrintableUri/quanticResultPrintableUri.js"

@@ -1,40 +1,37 @@
-import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions';
-import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
+import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildGeneratedAnswer,
-  GeneratedAnswer,
   GeneratedAnswerProps,
-} from './headless-generated-answer';
+  GeneratedResponseFormat,
+} from './headless-generated-answer.js';
 
-jest.mock('../../features/generated-answer/generated-answer-actions');
-jest.mock('../../features/search/search-actions');
+vi.mock('../../features/generated-answer/generated-answer-actions');
+vi.mock('../../features/search/search-actions');
 
 describe('generated answer', () => {
-  let generatedAnswer: GeneratedAnswer;
   let engine: MockedSearchEngine;
 
   function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
-    generatedAnswer = buildGeneratedAnswer(engine, props);
+    buildGeneratedAnswer(engine, props);
   }
 
   beforeEach(() => {
     engine = buildMockSearchEngine(createMockState());
-    initGeneratedAnswer();
   });
 
-  describe('#rephrase', () => {
+  it('initialize the format', () => {
     const responseFormat: GeneratedResponseFormat = {
-      answerStyle: 'concise',
+      contentFormat: ['text/markdown'],
     };
-
-    it('dispatches the update action', () => {
-      generatedAnswer.rephrase(responseFormat);
-      expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
+    initGeneratedAnswer({
+      initialState: {responseFormat},
     });
+
+    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
   });
 });

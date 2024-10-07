@@ -22,7 +22,6 @@
         await searchInterface.initialize({
           accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
           organizationId: 'fashioncoveodemocomgzh7iep8',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('fashioncoveodemocomgzh7iep8'),
         });
         setNumberOfResults(searchInterface.engine);
         searchInterface.executeFirstSearch();
@@ -34,7 +33,6 @@
       await recommendationInterface.initialize({
         accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
         organizationId: 'fashioncoveodemocomgzh7iep8',
-        organizationEndpoints: await recommendationInterface.getOrganizationEndpoints('fashioncoveodemocomgzh7iep8'),
       });
 
       const engine = recommendationInterface.engine;
@@ -89,7 +87,7 @@
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
-          <atomic-search-box textarea>
+          <atomic-search-box>
             <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
             <atomic-search-box-instant-results image-size="small">
               <atomic-result-template>

@@ -33,23 +33,25 @@ export default function Sort(props: ISortProps) {
 
   return (
     <div className="Sort">
-      <label htmlFor="sport-select">Sort by: </label>
-      <select
-        name="sorts"
-        id="sorts-select"
-        value={JSON.stringify(state.appliedSort)}
-        onChange={(e) => controller.sortBy(JSON.parse(e.target.value))}
-      >
-        {state.availableSorts.map((sort, index) => (
-          <option
-            key={index}
-            value={JSON.stringify(sort)}
-            onSelect={() => controller.sortBy(sort)}
-          >
-            {getSortLabel(sort)}
-          </option>
-        ))}
-      </select>
+      <label>
+        Sort by:{' '}
+        <select
+          name="sorts"
+          id="sorts-select"
+          value={JSON.stringify(state.appliedSort)}
+          onChange={(e) => controller.sortBy(JSON.parse(e.target.value))}
+        >
+          {state.availableSorts.map((sort, index) => (
+            <option
+              key={index}
+              value={JSON.stringify(sort)}
+              onSelect={() => controller.sortBy(sort)}
+            >
+              {getSortLabel(sort)}
+            </option>
+          ))}
+        </select>
+      </label>
     </div>
   );
 }

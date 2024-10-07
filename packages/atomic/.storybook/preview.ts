@@ -1,7 +1,7 @@
-import '@coveo/atomic/dist/atomic/atomic.esm.js';
-import '@coveo/atomic/dist/atomic/themes/coveo.css';
+import '@coveo/atomic/themes/coveo.css';
 import {setCustomElementsManifest} from '@storybook/web-components';
 import customElements from '../custom-elements.json';
+import '../dist/atomic/atomic.esm.js';
 
 setCustomElementsManifest(customElements);
 

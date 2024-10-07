@@ -1,29 +1,29 @@
-import {HtmlApiClient} from '../../../api/search/html/html-api-client';
+import {HtmlApiClient} from '../../../api/search/html/html-api-client.js';
 import {
   HtmlRequest,
   HtmlRequestOptions,
-} from '../../../api/search/html/html-request';
-import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+} from '../../../api/search/html/html-request.js';
+import {Result} from '../../../api/search/search/result.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {
   fetchResultContent,
   nextPreview,
   previousPreview,
   updateContentURL,
-} from '../../../features/result-preview/result-preview-actions';
-import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
+} from '../../../features/result-preview/result-preview-actions.js';
+import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
 import {
   ConfigurationSection,
   ResultPreviewSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface QuickviewProps {
   /**

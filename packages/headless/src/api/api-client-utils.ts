@@ -1,11 +1,11 @@
-import {PlatformResponse} from './platform-client';
-import {BaseParam} from './platform-service-params';
-import {AllSearchAPIResponse} from './search/search-api-client';
+import {PlatformResponse} from './platform-client.js';
+import {BaseParam} from './platform-service-params.js';
+import {AllSearchAPIResponse} from './search/search-api-client.js';
 import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
-} from './search/search-api-error-response';
-import {AuthenticationParam} from './search/search-api-params';
+} from './search/search-api-error-response.js';
+import {AuthenticationParam} from './search/search-api-params.js';
 
 export function pickNonBaseParams<
   Params extends BaseParam & AuthenticationParam,

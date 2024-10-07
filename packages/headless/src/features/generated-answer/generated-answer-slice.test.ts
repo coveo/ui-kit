@@ -1,5 +1,5 @@
-import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
-import {buildMockCitation} from '../../test/mock-citation';
+import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
@@ -19,15 +19,15 @@ import {
   setIsAnswerGenerated,
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
-} from './generated-answer-actions';
-import {generatedAnswerReducer} from './generated-answer-slice';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+  setIsEnabled,
+} from './generated-answer-actions.js';
+import {generatedAnswerReducer} from './generated-answer-slice.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {
-  GeneratedAnswerStyle,
   GeneratedContentFormat,
   GeneratedResponseFormat,
   generatedContentFormat,
-} from './generated-response-format';
+} from './generated-response-format.js';
 
 const baseState = getGeneratedAnswerInitialState();
 
@@ -219,11 +219,13 @@ describe('generated answer slice', () => {
 
   describe('#resetAnswer', () => {
     it('should reset the answer', () => {
+      const responseFormat: GeneratedResponseFormat = {
+        contentFormat: ['text/markdown'],
+      };
       const persistentGeneratedAnswerState = {
         isVisible: false,
-        responseFormat: {
-          answerStyle: 'step' as GeneratedAnswerStyle,
-        },
+        responseFormat,
+        isEnabled: true,
         fieldsToIncludeInCitations: ['foo'],
       };
       const state = {
@@ -249,7 +251,7 @@ describe('generated answer slice', () => {
 
     it('should not reset the response format', () => {
       const responseFormat: GeneratedResponseFormat = {
-        answerStyle: 'step',
+        contentFormat: ['text/markdown'],
       };
       const state = {
         ...baseState,
@@ -419,13 +421,13 @@ describe('generated answer slice', () => {
   describe('#updateResponseFormat', () => {
     it('should set the given response format', () => {
       const newResponseFormat: GeneratedResponseFormat = {
-        answerStyle: 'step',
+        contentFormat: ['text/markdown'],
       };
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
           responseFormat: {
-            answerStyle: 'default',
+            contentFormat: ['text/plain'],
           },
         },
         updateResponseFormat(newResponseFormat)
@@ -469,6 +471,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isVisible).toEqual(false);
+    });
+  });
+
+  describe('#setIsEnabled', () => {
+    it('should set isEnabled to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isEnabled: false},
+        setIsEnabled(true)
+      );
+
+      expect(finalState.isEnabled).toEqual(true);
+    });
+
+    it('should set isEnabled to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isEnabled: true},
+        setIsEnabled(false)
+      );
+
+      expect(finalState.isEnabled).toEqual(false);
     });
   });
 

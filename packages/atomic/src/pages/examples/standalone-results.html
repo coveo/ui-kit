@@ -19,7 +19,6 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         buildTab(searchInterface.engine, {
@@ -48,7 +47,7 @@
     <atomic-search-interface>
       <atomic-search-layout>
         <atomic-layout-section section="search">
-          <atomic-search-box textarea></atomic-search-box>
+          <atomic-search-box></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>

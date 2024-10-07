@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
   DeselectAllValuesInCoreFacetPayload,
   UpdateCoreFacetFreezeCurrentValuesPayload,
@@ -13,7 +13,7 @@ import {
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
   clearAllCoreFacets,
-} from './core-facet-actions';
+} from './core-facet-actions.js';
 
 export type {
   DeselectAllValuesInCoreFacetPayload,

@@ -10,31 +10,11 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
     'The QuanticGeneratedAnswer component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.';
   options = [
     {
-      attribute: 'answerStyle',
-      label: 'Answer style',
-      description: 'The answer style to apply when the component first loads.',
-      defaultValue: 'default',
-    },
-    {
       attribute: 'fieldsToIncludeInCitations',
       label: 'Fields to include in citations',
       description:
         'A list of fields to fetch with the citations used to generate the answer, separated by commas.',
       defaultValue: 'sfid,sfkbid,sfkavid',
-    },
-    {
-      attribute: 'multilineFooter',
-      label: 'Multiline footer',
-      description:
-        'Indicates whether footer sections should be displayed on multiple lines.',
-      defaultValue: false,
-    },
-    {
-      attribute: 'withToggle',
-      label: 'With Toggle',
-      description:
-        'Indicates whether the generated answer can be toggle on or off.',
-      defaultValue: false,
     },
     {
       attribute: 'collapsible',
@@ -43,10 +23,10 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
       defaultValue: false,
     },
     {
-      attribute: 'withRephraseButtons',
-      label: 'With Rephrase Buttons',
+      attribute: 'withToggle',
+      label: 'With Toggle',
       description:
-        'Indicates whether the rephrase buttons should be available.',
+        'Indicates whether the generated answer can be toggle on or off.',
       defaultValue: false,
     },
     {

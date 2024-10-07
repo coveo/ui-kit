@@ -4,12 +4,12 @@ import {
   CommerceEngine,
 } from '@coveo/headless/commerce';
 import {useEffect, useState, useTransition} from 'react';
-import Layout from '../layout/layout';
-import CartPage from '../pages/cart-page';
-import HomePage from '../pages/home-page';
-import ProductDescriptionPage from '../pages/product-description-page';
-import ProductListingPage from '../pages/product-listing-page';
-import SearchPage from '../pages/search-page';
+import Layout from '../layout/layout.js';
+import CartPage from '../pages/cart-page.js';
+import HomePage from '../pages/home-page.js';
+import ProductDescriptionPage from '../pages/product-description-page.js';
+import ProductListingPage from '../pages/product-listing-page.js';
+import SearchPage from '../pages/search-page.js';
 
 interface IRouterProps {
   engine: CommerceEngine;

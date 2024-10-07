@@ -1,18 +1,18 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {updateNumberOfResults} from '../../../features/pagination/pagination-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
+import {updateNumberOfResults} from '../../../features/pagination/pagination-actions.js';
 import {
   MockedInsightEngine,
   buildMockInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildResultsPerPage,
-} from './headless-insight-results-per-page';
+} from './headless-insight-results-per-page.js';
 
-jest.mock('../../../features/pagination/pagination-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/pagination/pagination-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('InsightResultsPerPage', () => {
   let engine: MockedInsightEngine;

@@ -1,4 +1,4 @@
-import pino, {LevelWithSilent, LogEvent} from 'pino';
+import {pino, LevelWithSilent} from 'pino';
 
 export type LogLevel = LevelWithSilent;
 
@@ -12,12 +12,6 @@ export interface LoggerOptions {
    * All arguments passed to the log method, except the message, will be pass to this function. By default it does not change the shape of the log object.
    */
   logFormatter?: (object: {}) => {};
-  /**
-   * Function which will be called after writing the log message in the browser.
-   *
-   * @deprecated This option is deprecated and will be removed in a future version.
-   */
-  browserPostLogHook?: (level: LogLevel, logEvent: LogEvent) => void;
 }
 
 export function buildLogger(options: LoggerOptions | undefined) {

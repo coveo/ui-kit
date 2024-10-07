@@ -2,13 +2,13 @@ import {RecordValue} from '@coveo/bueno';
 import {
   requiredEmptyAllowedString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   makeAnalyticsAction,
   LegacySearchAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {SearchAction} from '../search/search-actions';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {SearchAction} from '../search/search-actions.js';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**

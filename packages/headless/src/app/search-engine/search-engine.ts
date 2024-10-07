@@ -1,13 +1,14 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {SearchAPIClient} from '../../api/search/search-api-client';
+import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
+} from '../../api/search/search-api-client-middleware.js';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
 import {
   interfaceLoad,
   logInterfaceLoad,
@@ -15,36 +16,37 @@ import {
   logSearchFromLink,
   omniboxFromLink,
   searchFromLink,
-} from '../../features/analytics/analytics-actions';
-import {LegacySearchAction} from '../../features/analytics/analytics-utils';
+} from '../../features/analytics/analytics-actions.js';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
-} from '../../features/configuration/configuration-actions';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
-import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
-import {executeSearch} from '../../features/search/search-actions';
-import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
-import {SearchAppState} from '../../state/search-app-state';
+} from '../../features/configuration/configuration-actions.js';
+import {ConfigurationState} from '../../features/configuration/configuration-state.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
+import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {buildLogger} from '../logger';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
-import {jwtReducer} from './jwt-reducer';
+} from '../engine.js';
+import {buildLogger} from '../logger.js';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
+import {jwtReducer} from './jwt-reducer.js';
 import {
   SearchEngineConfiguration,
   SearchConfigurationOptions,
   searchEngineConfigurationSchema,
   getSampleSearchEngineConfiguration,
-} from './search-engine-configuration';
+} from './search-engine-configuration.js';
 
 export type {SearchEngineConfiguration, SearchConfigurationOptions};
 export {getSampleSearchEngineConfiguration};
@@ -55,11 +57,12 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
 function getUpdateSearchConfigurationPayload(
-  options: SearchEngineOptions
+  configuration: SearchEngineConfiguration
 ): UpdateSearchConfigurationActionCreatorPayload {
-  const search = options.configuration.search;
-  const apiBaseUrl =
-    options.configuration.organizationEndpoints?.search || undefined;
+  const {search, organizationId, environment} = configuration;
+  const apiBaseUrl = search?.proxyBaseUrl
+    ? search.proxyBaseUrl
+    : getSearchApiBaseUrl(organizationId, environment);
 
   const payloadWithURL = {
     ...search,
@@ -73,7 +76,11 @@ function getUpdateSearchConfigurationPayload(
  * The engine for powering search experiences.
  */
 export interface SearchEngine<State extends object = {}>
-  extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
+  extends CoreEngine<
+    State & SearchEngineState,
+    SearchThunkExtraArguments,
+    ConfigurationState
+  > {
   /**
    * Executes the first search.
    *
@@ -110,13 +117,14 @@ export interface SearchEngineOptions
  */
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
-  validateConfiguration(options.configuration, logger);
+  const {configuration} = options;
+  validateConfiguration(configuration, logger);
 
-  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
+  const searchAPIClient = createSearchAPIClient(configuration, logger);
   const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments = {
-    ...buildThunkExtraArguments(options.configuration, logger),
+    ...buildThunkExtraArguments(configuration, logger),
     apiClient: searchAPIClient,
     streamingClient: generatedAnswerClient,
   };
@@ -129,7 +137,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const search = getUpdateSearchConfigurationPayload(options);
+  const search = getUpdateSearchConfigurationPayload(configuration);
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));

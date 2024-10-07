@@ -1352,62 +1352,6 @@
     <shortDescription>Tell us why the generated answer was not helpful.</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_Rephrase</fullName>
-    <value>Rephrase</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Rephrase</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Auto</fullName>
-    <value>Auto</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Auto rephrase</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Automatic</fullName>
-    <value>Automatic</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Automatic rephrase tooltip</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_StepByStepInstructions</fullName>
-    <value>Step-by-step instructions</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Step-by-step instructions</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Steps</fullName>
-    <value>Steps</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Steps</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_BulletPointSummary</fullName>
-    <value>Bullet-point summary</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Bullet-point summary</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Bullets</fullName>
-    <value>Bullets</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Bullets</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Summary</fullName>
-    <value>Summary</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Summary</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_GeneratedAnswerIsHidden</fullName>
     <value>Generated answer is hidden</value>
     <language>en_US</language>
@@ -1581,5 +1525,75 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Feedback Additional Notes Explanation</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_TicketCreated</fullName>
+    <value>Ticket created</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Ticket created</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_EmptySearch</fullName>
+    <value>Empty search</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Empty search</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreActionsInThisSession</fullName>
+    <value>{{0}} more action in this session</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>1 more action in this session</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreActionsInThisSession_plural</fullName>
+    <value>{{0}} more actions in this session</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>12 more actions in this session</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowFollowingSessions</fullName>
+    <value>Show following sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show following sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_HideFollowingSessions</fullName>
+    <value>Hide following sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Hide following sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowPrecedingSessions</fullName>
+    <value>Show preceding sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show preceding sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_HidePrecedingSessions</fullName>
+    <value>Hide preceding sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Hide preceding sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoUserActionsAvailable</fullName>
+    <value>No user actions available</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No user actions available</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoUserActionsAssociatedWithParams</fullName>
+    <value>There are no user actions associated with the user id or the case is too old to detect related actions.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>There are no user actions associated.</shortDescription>
   </labels>
 </CustomLabels>

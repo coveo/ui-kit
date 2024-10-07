@@ -2,29 +2,30 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   getVisitorID,
   historyStore,
-} from '../../api/analytics/coveo-analytics-utils';
-import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
+} from '../../api/analytics/coveo-analytics-utils.js';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {Result} from '../../api/search/search/result';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
+} from '../../api/search/search-api-client.js';
+import {Result} from '../../api/search/search/result.js';
+import {RecommendationAppState} from '../../state/recommendation-app-state.js';
 import {
   ConfigurationSection,
   RecommendationSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   validatePayload,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
-import {AnalyticsAsyncThunk} from '../analytics/analytics-utils';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
-import {SearchAction} from '../search/search-actions';
+} from '../../utils/validate-payload.js';
+import {AnalyticsAsyncThunk} from '../analytics/analytics-utils.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
+import {SearchAction} from '../search/search-actions.js';
 import {
   logRecommendationUpdate,
   recommendationInterfaceLoad,
-} from './recommendation-analytics-actions';
+} from './recommendation-analytics-actions.js';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -85,7 +86,12 @@ export const buildRecommendationRequest = async (
 ): Promise<RecommendationRequest> => ({
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
-  url: s.configuration.search.apiBaseUrl,
+  url:
+    s.configuration.search.apiBaseUrl ??
+    getSearchApiBaseUrl(
+      s.configuration.organizationId,
+      s.configuration.environment
+    ),
   recommendation: s.recommendation.id,
   tab: s.configuration.analytics.originLevel2,
   referrer: s.configuration.analytics.originLevel3,
