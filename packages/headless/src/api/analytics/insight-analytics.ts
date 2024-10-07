@@ -20,6 +20,7 @@ import {
   QuerySection,
   SearchHubSection,
   SearchSection,
+  TriggerSection,
 } from '../../state/state-sections.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {PreprocessRequest} from '../preprocess-request.js';
@@ -36,6 +37,7 @@ export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
       SearchSection &
       PipelineSection &
       QuerySection &
+      TriggerSection &
       SectionNeededForFacetMetadata &
       GeneratedAnswerSection
   >;

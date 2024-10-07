@@ -267,24 +267,27 @@ describe('generated answer insight analytics actions', () => {
       );
     });
 
-    it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
-      await logGeneratedAnswerStreamEnd(true)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
+    [false, true].map((answerGenerated) => {
+      it('should log #logGeneratedAnswerStreamEnd with the right payload', async () => {
+        await logGeneratedAnswerStreamEnd(answerGenerated)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
-      const mockToUse = mockLogGeneratedAnswerStreamEnd;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        answerGenerated: true,
-      };
+        const mockToUse = mockLogGeneratedAnswerStreamEnd;
+        const expectedMetadata = {
+          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+          answerGenerated,
+          answerTextIsEmpty: answerGenerated || undefined,
+        };
 
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
-      );
+        expect(mockToUse).toHaveBeenCalledTimes(1);
+        expect(mockToUse).toHaveBeenCalledWith(
+          expectedMetadata,
+          expectedCaseContext
+        );
+      });
     });
 
     it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {

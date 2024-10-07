@@ -5,6 +5,10 @@ inputs:
     description: 'Whether to restore the Nx cache.'
     required: false
     default: 'true'
+  cache-suffix:
+    description: 'Suffix to add to the cache key for different environments'
+    required: false
+    default: 'default'
 runs:
   using: composite
   steps:
@@ -24,7 +28,7 @@ runs:
         path: |
           **/node_modules/
           !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}}}
+        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources
@@ -32,13 +36,13 @@ runs:
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('package-lock.json') }}}}
+        key: cy-${{ hashFiles('package-lock.json') }}
     - if: inputs.load-cache == 'true'
       uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: nx-cache
       with:
         path: .nx/cache
-        key: nx-${{ github.sha }}
+        key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash

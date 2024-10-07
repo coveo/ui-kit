@@ -802,6 +802,22 @@ describe('c-quantic-search-box-input', () => {
           expect(input.style.height).toEqual(expectedCollapsedInputHeight);
         });
       });
+
+      describe('when the component renders with a value in the input', () => {
+        it('should display the clear icon', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            inputValue: mockInputValue,
+            textarea: textareaValue,
+          });
+          await flushPromises();
+
+          const clearIcon = element.shadowRoot.querySelector(
+            selectors.searchBoxClearIcon
+          );
+          expect(clearIcon).not.toBeNull();
+        });
+      });
     });
   });
 });
