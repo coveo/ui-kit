@@ -1,11 +1,14 @@
 global with sharing class InsightTokenProvider implements ITokenProvider {
   public static final String TYPE_VIEW = 'VIEW';
   public static final String TYPE_EDIT = 'EDIT';
+  public static final String TYPE_ENABLE = 'ENABLE';
   public static final String OWNER_USAGE_ANALYTICS = 'USAGE_ANALYTICS';
   public static final String OWNER_CUSTOMER_SERVICE = 'CUSTOMER_SERVICE';
+  public static final String OWNER_SEARCH_API = 'SEARCH_API';
   public static final String DOMAIN_ANALYTICS_ANALYTICS_DATA = 'ANALYTICS_DATA';
   public static final String DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_INTERFACE = 'INSIGHT_PANEL_INTERFACE';
   public static final String DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_DOCUMENTS = 'INSIGHT_PANEL_DOCUMENTS';
+  public static final String DOMAIN_SEARCH_API_EXECUTE_QUERY = 'EXECUTE_QUERY';
 
   /**
    * Returns the privileges needed to put in a Platform token in order to use the Hosted Insight Panel feature.
@@ -36,6 +39,13 @@ global with sharing class InsightTokenProvider implements ITokenProvider {
         OWNER_CUSTOMER_SERVICE,
         DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_DOCUMENTS,
         TYPE_VIEW
+      )
+    );
+    privileges.add(
+      new CoveoV2.PlatformToken.TokenPrivilege(
+        OWNER_SEARCH_API,
+        DOMAIN_SEARCH_API_EXECUTE_QUERY,
+        TYPE_ENABLE
       )
     );
     return privileges;
