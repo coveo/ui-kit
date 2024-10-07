@@ -25,6 +25,9 @@ export interface InteractiveResultProps extends InteractiveResultCoreProps {
 
 /**
  * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ *
+ * @group Controllers
+ * @category InteractiveResult
  */
 export interface InteractiveResult extends InteractiveResultCore {}
 
@@ -34,6 +37,9 @@ export interface InteractiveResult extends InteractiveResultCore {}
  * @param engine - The headless engine.
  * @param props - The configurable `InteractiveResult` properties.
  * @returns An `InteractiveResult` controller instance.
+ *
+ * @group Controllers
+ * @category InteractiveResult
  */
 export function buildInteractiveResult(
   engine: SearchEngine,

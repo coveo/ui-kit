@@ -34,6 +34,9 @@ export const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
 
 /**
  * The `UrlManager` controller can parse an url fragment to extract search parameters which affect the search response.
+ *
+ * @group Controllers
+ * @category UrlManager
  * */
 export interface UrlManager extends Controller {
   /**
@@ -48,6 +51,12 @@ export interface UrlManager extends Controller {
   synchronize(fragment: string): void;
 }
 
+/**
+ * A scoped and simplified part of the Headless state that is relevant to the `UrlManager` controller.
+ *
+ * @group Controllers
+ * @category UrlManager
+ */
 export interface UrlManagerState {
   /**
    * The part of the url that contains search parameters.
@@ -62,6 +71,9 @@ export interface UrlManagerState {
  * @param engine - The headless engine.
  * @param props - The configurable `UrlManager` properties.
  * @returns A `UrlManager` controller instance.
+ *
+ * @group Controllers
+ * @category UrlManager
  */
 export function buildUrlManager(
   engine: SearchEngine,

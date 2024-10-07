@@ -23,6 +23,12 @@ export type {
   CoreQuickview,
 };
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Quickview` controller.
+ *
+ * @group Controllers
+ * @category Quickview
+ */
 export interface QuickviewState extends CoreQuickviewState {
   /**
    * The number of available results for the current result set.
@@ -38,6 +44,12 @@ export interface QuickviewState extends CoreQuickviewState {
   currentResult: number;
 }
 
+/**
+ * The `Quickview` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user interacts with a quickview.
+ *
+ * @group Controllers
+ * @category Quickview
+ */
 export interface Quickview extends CoreQuickview {
   state: QuickviewState;
 }
@@ -48,6 +60,9 @@ export interface Quickview extends CoreQuickview {
  * @param engine - The headless engine.
  * @param props - The configurable `Quickview` properties.
  * @returns A `Quickview` controller instance.
+ *
+ * @group Controllers
+ * @category Quickview
  */
 export function buildQuickview(
   engine: SearchEngine,

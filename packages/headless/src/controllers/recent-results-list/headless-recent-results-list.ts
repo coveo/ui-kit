@@ -64,6 +64,9 @@ const optionsSchema = new Schema<RecentResultsListOptions>({
 
 /**
  * The `RecentResultsList` controller manages a user's recently clicked results.
+ *
+ * @group Controllers
+ * @category RecentResultsList
  */
 export interface RecentResultsList extends Controller {
   /**
@@ -78,6 +81,9 @@ export interface RecentResultsList extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `RecentResultsList` controller.
+ *
+ * @group Controllers
+ * @category RecentResultsList
  * */
 export interface RecentResultsState {
   /**
@@ -114,6 +120,9 @@ export function validateRecentResultsProps(
  * @param engine - The headless engine.
  * @param props - The configuration `RecentResultsList` properties.
  * @returns A `RecentResultsList` controller instance.
+ *
+ * @group Controllers
+ * @category RecentResultsList
  * */
 export function buildRecentResultsList(
   engine: SearchEngine,

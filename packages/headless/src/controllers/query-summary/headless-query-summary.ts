@@ -11,6 +11,9 @@ export type {QuerySummary, QuerySummaryState};
  *
  * @param engine - The headless engine instance.
  * @returns A `QuerySummary` controller instance.
+ *
+ * @group Controllers
+ * @category QuerySummary
  */
 export function buildQuerySummary(engine: SearchEngine): QuerySummary {
   return buildCoreQuerySummary(engine);

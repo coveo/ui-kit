@@ -70,6 +70,9 @@ export interface StaticFilterOptions {
 
 /**
  * The `StaticFilter` controller manages a collection of filter values.
+ *
+ * @group Controllers
+ * @category StaticFilter
  * */
 export interface StaticFilter extends Controller {
   /**
@@ -129,6 +132,9 @@ export interface StaticFilter extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `StaticFilter` controller.
+ *
+ * @group Controllers
+ * @category StaticFilter
  */
 export interface StaticFilterState {
   /**
@@ -153,6 +159,9 @@ export interface StaticFilterState {
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
+ *
+ * @group Controllers
+ * @category StaticFilter
  */
 export function buildStaticFilter(
   engine: SearchEngine,

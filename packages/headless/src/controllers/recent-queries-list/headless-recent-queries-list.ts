@@ -85,6 +85,9 @@ const optionsSchema = new Schema<RecentQueriesListOptions>({
 
 /**
  * The `RecentQueriesList` controller manages the user's recent queries.
+ *
+ * @group Controllers
+ * @category RecentQueriesList
  */
 export interface RecentQueriesList extends Controller {
   /**
@@ -104,6 +107,9 @@ export interface RecentQueriesList extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `RecentQueriesList` controller.
+ *
+ * @group Controllers
+ * @category RecentQueriesList
  * */
 export interface RecentQueriesState {
   /**
@@ -145,6 +151,9 @@ export function validateRecentQueriesProps(
  * @param engine - The headless engine.
  * @param props - The configuration `RecentQueriesList` properties.
  * @returns A `RecentQueriesList` controller instance.
+ *
+ * @group Controllers
+ * @category RecentQueriesList
  * */
 export function buildRecentQueriesList(
   engine: SearchEngine,

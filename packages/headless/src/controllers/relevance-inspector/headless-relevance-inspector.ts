@@ -70,6 +70,9 @@ export interface RelevanceInspectorInitialState {
 
 /**
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
+ *
+ * @group Controllers
+ * @category RelevanceInspector
  */
 export interface RelevanceInspector extends Controller {
   /**
@@ -100,6 +103,12 @@ export interface RelevanceInspector extends Controller {
   state: RelevanceInspectorState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `RelevanceInspector` controller.
+ *
+ * @group Controllers
+ * @category RelevanceInspector
+ */
 export interface RelevanceInspectorState {
   /**
    * Whether debug mode is enabled.
@@ -177,6 +186,9 @@ export interface QueryExpressions {
  * @param engine - The headless engine.
  * @param props - The configurable `RelevanceInspector` properties.
  * @returns A `RelevanceInspector` controller instance.
+ *
+ * @group Controllers
+ * @category RelevanceInspector
  */
 export function buildRelevanceInspector(
   engine: SearchEngine,
