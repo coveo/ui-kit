@@ -37,6 +37,8 @@ type CaseAssistEngineState =
 
 /**
  * The engine for powering case assist experiences.
+ *
+ * @group Engine
  */
 export interface CaseAssistEngine<State extends object = {}>
   extends CoreEngine<
@@ -46,6 +48,8 @@ export interface CaseAssistEngine<State extends object = {}>
 
 /**
  * The case assist engine options.
+ *
+ * @group Engine
  */
 export interface CaseAssistEngineOptions
   extends ExternalEngineOptions<CaseAssistEngineState> {

@@ -29,6 +29,8 @@ import {
 
 /**
  * The SSR search engine.
+ *
+ * @group Engine
  */
 export interface SSRSearchEngine extends SearchEngine {
   /**
@@ -37,6 +39,11 @@ export interface SSRSearchEngine extends SearchEngine {
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
+/**
+ * The options to create a search engine definition in SSR.
+ *
+ * @group Engine
+ */
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;

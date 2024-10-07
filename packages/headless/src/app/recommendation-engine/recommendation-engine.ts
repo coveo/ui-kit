@@ -47,6 +47,8 @@ type RecommendationEngineState =
 
 /**
  * The engine for powering recommendation experiences.
+ *
+ * @group Engine
  */
 export interface RecommendationEngine<State extends object = {}>
   extends CoreEngine<
@@ -56,6 +58,8 @@ export interface RecommendationEngine<State extends object = {}>
 
 /**
  * The recommendation engine options.
+ *
+ * @group Engine
  */
 export interface RecommendationEngineOptions
   extends ExternalEngineOptions<RecommendationEngineState> {

@@ -74,6 +74,8 @@ function getUpdateSearchConfigurationPayload(
 
 /**
  * The engine for powering search experiences.
+ *
+ * @group Engine
  */
 export interface SearchEngine<State extends object = {}>
   extends CoreEngine<
@@ -100,6 +102,8 @@ export interface SearchEngine<State extends object = {}>
 
 /**
  * The search engine options.
+ *
+ * @group Engine
  */
 export interface SearchEngineOptions
   extends ExternalEngineOptions<SearchEngineState> {
