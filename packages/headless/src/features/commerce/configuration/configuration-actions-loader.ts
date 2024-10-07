@@ -1,14 +1,16 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {configurationReducer as configuration} from '../../configuration/configuration-slice';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {configurationReducer as configuration} from '../../configuration/configuration-slice.js';
 import {
   UpdateAnalyticsConfigurationPayload,
   UpdateBasicConfigurationPayload,
+  UpdateProxyBaseUrlPayload,
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
-} from './configuration-actions';
+  updateProxyBaseUrl,
+} from './configuration-actions.js';
 
 export type {
   UpdateAnalyticsConfigurationPayload,
@@ -52,6 +54,16 @@ export interface ConfigurationActionCreators {
   updateBasicConfiguration(
     payload: UpdateBasicConfigurationPayload
   ): PayloadAction<UpdateBasicConfigurationPayload>;
+
+  /**
+   * Updates the commerce configuration.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateProxyBaseUrl(
+    payload: UpdateProxyBaseUrlPayload
+  ): PayloadAction<UpdateProxyBaseUrlPayload>;
 }
 
 /**
@@ -65,9 +77,10 @@ export function loadConfigurationActions(
 ): ConfigurationActionCreators {
   engine.addReducers({configuration});
   return {
-    updateBasicConfiguration,
-    updateAnalyticsConfiguration,
     disableAnalytics,
     enableAnalytics,
+    updateAnalyticsConfiguration,
+    updateBasicConfiguration,
+    updateProxyBaseUrl,
   };
 }

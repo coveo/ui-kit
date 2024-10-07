@@ -1,56 +1,56 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
-import {InstantResultSection} from '../../state/state-sections';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
+import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {InstantResultSection} from '../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   LegacySearchAction,
   makeBasicNewSearchAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
-} from '../breadcrumb/breadcrumb-actions';
-import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
-import {searchboxAsYouType} from '../instant-results/instant-result-analytics-actions';
+} from '../breadcrumb/breadcrumb-actions.js';
+import {updateFacetAutoSelection} from '../facets/generic/facet-actions.js';
+import {searchboxAsYouType} from '../instant-results/instant-result-analytics-actions.js';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
   updateInstantResultsQuery,
-} from '../instant-results/instant-results-actions';
-import {updatePage} from '../pagination/pagination-actions';
+} from '../instant-results/instant-results-actions.js';
+import {updatePage} from '../pagination/pagination-actions.js';
 import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
-} from '../query/query-actions';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+} from '../query/query-actions.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
 import {
   legacyExecuteSearch,
   legacyFetchInstantResults,
   legacyFetchMoreResults,
   legacyFetchPage,
-} from './legacy/search-actions';
+} from './legacy/search-actions.js';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
-} from './search-actions-thunk-processor';
-import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
-import {buildSearchRequest} from './search-request';
+} from './search-actions-thunk-processor.js';
+import {MappedSearchRequest, mapSearchRequest} from './search-mappings.js';
+import {buildSearchRequest} from './search-request.js';
 
 export interface SearchAction {
   actionCause: string;
 }
 
-export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
+export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
 
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */

@@ -1,4 +1,4 @@
-import {buildFieldExists} from './field-exists';
+import {buildFieldExists} from './field-exists.js';
 
 describe('#buildFieldExists', () => {
   describe('#toQuerySyntax', () => {

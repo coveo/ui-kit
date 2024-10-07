@@ -1,11 +1,12 @@
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {
   HtmlRequest,
   HtmlRequestOptions,
-} from '../../api/search/html/html-request';
-import {baseInsightUrl} from '../../api/service/insight/insight-params';
-import {InsightConfigurationSection} from '../../state/state-sections';
-import {StateNeededByHtmlEndpoint} from '../result-preview/result-preview-request-builder';
+} from '../../api/search/html/html-request.js';
+import {baseInsightUrl} from '../../api/service/insight/insight-params.js';
+import {InsightConfigurationSection} from '../../state/state-sections.js';
+import {StateNeededByHtmlEndpoint} from '../result-preview/result-preview-request-builder.js';
 
 export type StateNeededByInsightHtmlEndpoint = StateNeededByHtmlEndpoint &
   InsightConfigurationSection;
@@ -14,13 +15,13 @@ export async function buildInsightResultPreviewRequest(
   state: StateNeededByInsightHtmlEndpoint,
   options: HtmlRequestOptions
 ): Promise<HtmlRequest> {
-  const {platformUrl, accessToken, organizationId, analytics} =
+  const {accessToken, organizationId, analytics, environment} =
     state.configuration;
   const {insightId} = state.insightConfiguration;
 
   const q = state.query?.q || '';
   const url = baseInsightUrl({
-    url: platformUrl,
+    url: getOrganizationEndpoint(organizationId, environment),
     accessToken,
     organizationId,
     insightId,

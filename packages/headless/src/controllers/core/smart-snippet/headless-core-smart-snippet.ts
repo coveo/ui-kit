@@ -1,10 +1,10 @@
-import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
-import {Result} from '../../../api/search/search/result';
-import {CoreEngine} from '../../../app/engine';
+import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
+import {Result} from '../../../api/search/search/result.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   ClickAction,
   CustomAction,
-} from '../../../features/analytics/analytics-utils';
+} from '../../../features/analytics/analytics-utils.js';
 import {
   closeFeedbackModal,
   collapseSmartSnippet,
@@ -12,29 +12,29 @@ import {
   expandSmartSnippet,
   likeSmartSnippet,
   openFeedbackModal,
-} from '../../../features/question-answering/question-answering-actions';
-import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions';
+} from '../../../features/question-answering/question-answering-actions.js';
+import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions.js';
 import {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-} from '../../../features/question-answering/question-answering-document-id';
-import {answerSourceSelector} from '../../../features/question-answering/question-answering-selectors';
-import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/question-answering/question-answering-document-id.js';
+import {answerSourceSelector} from '../../../features/question-answering/question-answering-selectors.js';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   QuestionAnsweringSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   Controller,
   buildController,
-} from '../../controller/headless-controller';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
-import {buildInteractiveResultCore} from '../interactive-result/headless-core-interactive-result';
+} from '../../controller/headless-controller.js';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import {buildInteractiveResultCore} from '../interactive-result/headless-core-interactive-result.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 
 export interface SmartSnippetOptions {
   /**

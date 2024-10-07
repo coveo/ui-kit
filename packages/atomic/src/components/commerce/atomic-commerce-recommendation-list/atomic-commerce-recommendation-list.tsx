@@ -26,6 +26,7 @@ import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
 import {Heading} from '../../common/heading';
+import {Hidden} from '../../common/hidden';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
@@ -37,7 +38,6 @@ import {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-  ItemTarget,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -57,6 +57,8 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
+ *
+ * @slot default - The default slot where the product templates are defined.
  */
 @Component({
   tag: 'atomic-commerce-recommendation-list',
@@ -103,13 +105,6 @@ export class AtomicCommerceRecommendationList
    * To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
    */
   @Prop({reflect: true}) public display: ItemDisplayBasicLayout = 'list';
-  /**
-   * The [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target) location to open the product link.
-   * This property is ignored unless the `display` property is set to `grid`.
-   * @defaultValue `_self`
-   * @deprecated - Instead of using this property, provide an `atomic-product-link` in the `link` slot of the `atomic-product-template` component.
-   */
-  @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
    * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
    */
@@ -180,23 +175,20 @@ export class AtomicCommerceRecommendationList
 
     this.recommendations.refresh();
 
-    this.productTemplateProvider = new ProductTemplateProvider(
-      {
-        includeDefaultTemplate: true,
-        templateElements: Array.from(
-          this.host.querySelectorAll('atomic-product-template')
-        ),
-        getResultTemplateRegistered: () => this.productTemplateRegistered,
-        getTemplateHasError: () => this.templateHasError,
-        setResultTemplateRegistered: (value: boolean) => {
-          this.productTemplateRegistered = value;
-        },
-        setTemplateHasError: (value: boolean) => {
-          this.templateHasError = value;
-        },
+    this.productTemplateProvider = new ProductTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-product-template')
+      ),
+      getResultTemplateRegistered: () => this.productTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.productTemplateRegistered = value;
       },
-      this.gridCellLinkTarget
-    );
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+    });
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -420,7 +412,7 @@ export class AtomicCommerceRecommendationList
   public render() {
     if (this.hasNoProducts) {
       this.bindings.store.unsetLoadingFlag(this.loadingFlag);
-      return;
+      return <Hidden></Hidden>;
     }
     return (
       <Fragment>

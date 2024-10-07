@@ -2,19 +2,19 @@ import {
   setContext,
   addContext,
   removeContext,
-} from '../../features/dictionary-field-context/dictionary-field-context-actions';
-import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice';
+} from '../../features/dictionary-field-context/dictionary-field-context-actions.js';
+import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine-v2.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   buildDictionaryFieldContext,
   DictionaryFieldContext,
-} from './headless-dictionary-field-context';
+} from './headless-dictionary-field-context.js';
 
-jest.mock(
+vi.mock(
   '../../features/dictionary-field-context/dictionary-field-context-actions'
 );
 

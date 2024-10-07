@@ -1,28 +1,32 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
-import {PlanRequest} from '../../api/search/plan/plan-request';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
+import {PlanRequest} from '../../api/search/plan/plan-request.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
+} from '../../api/search/search-api-client.js';
+import {NavigatorContext} from '../../app/navigatorContextProvider.js';
 import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
-import {CustomAction, makeAnalyticsAction} from '../analytics/analytics-utils';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+} from '../../utils/validate-payload.js';
+import {
+  CustomAction,
+  makeAnalyticsAction,
+} from '../analytics/analytics-utils.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
+import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**
@@ -172,7 +176,12 @@ export const buildPlanRequest = async (
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
     q: state.query.q,

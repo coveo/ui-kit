@@ -1,4 +1,4 @@
-import {buildKeyword} from './keyword';
+import {buildKeyword} from './keyword.js';
 
 describe('#buildKeyword', () => {
   describe('#toQuerySyntax', () => {

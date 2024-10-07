@@ -8,13 +8,14 @@ import {
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
+import {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   nonEmptyString,
   validatePayload,
   requiredNonEmptyString,
   optionalNonEmptyVersionString,
-} from '../../utils/validate-payload';
-import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version';
+} from '../../utils/validate-payload.js';
+import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version.js';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 
@@ -27,14 +28,16 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
   accessToken?: string;
 
   /**
+   * The environment in which the organization is hosted.
+   *
+   * The `dev` and `stg` environments are only available internally for Coveo employees (e.g., Professional Services).
+   */
+  environment?: PlatformEnvironment;
+
+  /**
    * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
    */
   organizationId?: string;
-
-  /**
-   * The Platform URL to use (e.g., `https://platform.cloud.coveo.com`).
-   */
-  platformUrl?: string;
 }
 
 export const updateBasicConfiguration = createAction(
@@ -42,16 +45,38 @@ export const updateBasicConfiguration = createAction(
   (payload: UpdateBasicConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
       accessToken: nonEmptyString,
+      environment: new StringValue<PlatformEnvironment>({
+        required: false,
+        constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+      }),
       organizationId: nonEmptyString,
-      platformUrl: nonEmptyString,
     })
 );
 
 export interface UpdateSearchConfigurationActionCreatorPayload {
   /**
-   * The Search API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/search/v2`).
+   * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
+   *
+   * This is an advanced option that you should only set if you need to proxy Coveo searchrequests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, no proxy is used and the Coveo Search API requests are sent directly to the Coveo platform through the
+   * search [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
+   * `environment` values provided in your engine configuration (i.e., `https://<organizationId>.org.coveo.com` or
+   * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and different from
+   * `prod`).
+   *
+   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the search
+   * engine will not work properly:
+   *
+   * - `POST` `/` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/searchUsingPost)
+   * - `POST` `/facet` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/facet`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/facetSearch)
+   * - `GET` `/fields` to proxy requests to [`GET` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/fields`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/fields)
+   * - `POST` `/html` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/html`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/htmlPost)
+   * - `POST` `/plan` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/plan`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/planSearchUsingPost)
+   * - `POST` `/querySuggest` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/querySuggest`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/querySuggestPost)
    */
-  apiBaseUrl?: string;
+  proxyBaseUrl?: string;
 
   /**
    * The name of the query pipeline to use for the query (e.g., `External Search`).
@@ -84,7 +109,7 @@ export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
   (payload: UpdateSearchConfigurationActionCreatorPayload) => {
     return validatePayload(payload, {
-      apiBaseUrl: nonEmptyString,
+      proxyBaseUrl: new StringValue({required: false, url: true}),
       pipeline: new StringValue({required: false, emptyAllowed: true}),
       searchHub: nonEmptyString,
       timezone: nonEmptyString,
@@ -122,14 +147,43 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   originLevel3?: string;
 
   /**
-   * The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/ua`).
+   * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
+   *
+   * This is an advanced option that you should only set if you need to proxy Coveo analytics requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, no proxy is used and the Coveo analytics requests are sent directly to the Coveo platform through the
+   * analytics [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
+   * `environment` values provided in your engine configuration (i.e.,
+   * `https://<organizationId>.analytics.org.coveo.com` or
+   * `https://<organizationId>.analytics.org<environment>.coveo.com`, if the `environment` values is specified and
+   * different from `prod`).
+   *
+   * If you set this option, you must also implement the correct proxy endpoints on your server, depending on the
+   * `analyticsMode` you are using.
+   *
+   * If you are using the `next` analytics mode, you must implement the following proxy endpoints:
+   *
+   * - `POST` `/` to proxy requests to [`POST https://<organizationId>.analytics.org<environment|>.coveo.com/rest/organizations/{organizationId}/events/v1`](https://platform.cloud.coveo.com/docs?urls.primaryName=Event#/Event%20API/rest_organizations_paramId_events_v1_post)
+   * - `POST` `/validate` to proxy requests to [`POST https://<organizationId>.analytics.org<environment|>.coveo.com/rest/organizations/{organizationId}/events/v1/validate`](https://platform.cloud.coveo.com/docs?urls.primaryName=Event#/Event%20API/rest_organizations_paramId_events_v1_validate_post)
+   *
+   * The [Event Protocol Reference](https://docs.coveo.com/en/n9da0377) provides documentation on the analytics event
+   * schemas that can be passed as request bodies to the above endpoints.
+   *
+   * If your are using the `legacy` analytics mode, your `proxyBaseUrl` must end with `/rest/v15/analytics`, and you must implement the following proxy endpoints:
+   *
+   * - `POST` `/click` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/click`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_click)
+   * - `POST` `/collect` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/collect`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_collect)
+   * - `POST` `/custom` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/custom`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_custom)
+   * - `GET` `/monitoring/health` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/monitoring/health`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_monitoring_health)
+   * - `POST` `/search` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/search`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_search)
+   * - `POST` `/searches` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/searches`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_searches)
+   * - `GET` `/status` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/status`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_status)
+   * - `POST` `/view` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/view`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_view)
+   * - `DELETE` `/visit` to proxy requests to [`DELETE` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/visit`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/delete__v15_analytics_visit)
+   * - `GET` `/visit` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/visit`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_visit)
    */
-  apiBaseUrl?: string;
-
-  /**
-   * The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/organizations/${organizationId}/events/v1`).
-   */
-  nextApiBaseUrl?: string;
+  proxyBaseUrl?: string;
 
   /**
    * The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
@@ -181,8 +235,7 @@ export const analyticsConfigurationSchema: SchemaDefinition<
   originContext: originSchemaOnConfigUpdate(),
   originLevel2: originSchemaOnConfigUpdate(),
   originLevel3: originSchemaOnConfigUpdate(),
-  apiBaseUrl: nonEmptyString,
-  nextApiBaseUrl: nonEmptyString,
+  proxyBaseUrl: new StringValue({required: false, url: true}),
   runtimeEnvironment: new Value(),
   anonymous: new BooleanValue({default: false}),
   deviceId: nonEmptyString,
@@ -192,7 +245,7 @@ export const analyticsConfigurationSchema: SchemaDefinition<
   analyticsMode: new StringValue<'legacy' | 'next'>({
     constrainTo: ['legacy', 'next'],
     required: false,
-    default: 'legacy',
+    default: 'next',
   }),
   source: new RecordValue({
     options: {required: false},

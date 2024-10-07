@@ -1,4 +1,4 @@
-import {FacetValueState} from './value';
+import {FacetValueState} from './value.js';
 
 export interface BaseFacetResponse<T> {
   facetId: string;

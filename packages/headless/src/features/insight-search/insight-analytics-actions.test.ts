@@ -1,26 +1,26 @@
 import {createRelay} from '@coveo/relay';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logExpandToFullUI,
   logInsightCreateArticle,
   logOpenUserActions,
-} from './insight-analytics-actions';
+} from './insight-analytics-actions.js';
 
-const mockLogCreateArticle = jest.fn();
-const mockLogExpandtoFullUI = jest.fn();
-const mockLogOpenUserActions = jest.fn();
-const emit = jest.fn();
+const mockLogCreateArticle = vi.fn();
+const mockLogExpandtoFullUI = vi.fn();
+const mockLogOpenUserActions = vi.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logExpandToFullUI: mockLogExpandtoFullUI,
     logCreateArticle: mockLogCreateArticle,
     logOpenUserActions: mockLogOpenUserActions,
@@ -28,16 +28,16 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
@@ -61,7 +61,7 @@ describe('insight analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {

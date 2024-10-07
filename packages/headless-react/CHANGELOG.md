@@ -1,3 +1,24 @@
+## <small>2.0.4 (2024-09-25)</small>
+
+- chore: eliminate network calls in npm test (#4453) ([c6393a9](https://github.com/coveo/ui-kit/commits/c6393a9)), closes [#4453](https://github.com/coveo/ui-kit/issues/4453)
+
+## <small>2.0.1 (2024-09-24)</small>
+
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+
+## 2.0.0 (2024-09-18)
+
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(headless)!: remove headless fetch & crypto polyfills (#4358) ([583e30a](https://github.com/coveo/ui-kit/commits/583e30a)), closes [#4358](https://github.com/coveo/ui-kit/issues/4358)
+- feat(headless)!: use next as default analyticsMode (#4394) ([3dd775e](https://github.com/coveo/ui-kit/commits/3dd775e)), closes [#4394](https://github.com/coveo/ui-kit/issues/4394)
+- chore: update tsconfigs to match node version (#4402) ([e5bf6b8](https://github.com/coveo/ui-kit/commits/e5bf6b8)), closes [#4402](https://github.com/coveo/ui-kit/issues/4402)
+
+### BREAKING CHANGE
+
+- remove headless fetch & crypto polyfills (#4358)
+- update node engine definition in all exported packages (#4330)
+- use next as default analyticsMode (#4394)
+
 # 1.1.0 (2024-08-07)
 
 ### Features

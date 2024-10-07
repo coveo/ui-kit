@@ -3,7 +3,6 @@
 @import './generated-text.pcss';
 @import '../generated-content/generated-markdown-content.pcss';
 @import './feedback-buttons.pcss';
-@import './rephrase-buttons.pcss';
 @import './typing-indicator.pcss';
 @import './copy-button.pcss';
 
@@ -15,31 +14,11 @@
   .source-citations {
     @apply mr-0;
   }
-
-  [part='rephrase-buttons'] {
-    @apply ml-0;
-  }
-
-  [part='rephrase-button'] {
-    @apply rephrase-with-text flex-auto justify-center;
-
-    .icon-container {
-      @apply mx-0;
-    }
-  }
-
-  [part='rephrase-button-label'] {
-    @apply block;
-  }
 }
 
 @define-mixin mobile-footer-xs-layout {
   & {
     @apply mt-4;
-  }
-
-  [part='rephrase-button-label'] {
-    @apply hidden;
   }
 
   .feedback-buttons {
@@ -61,6 +40,7 @@
 
 [part='container'] {
   container-type: inline-size;
+  contain: layout;
 }
 
 .footer {
@@ -68,10 +48,6 @@
 
   .source-citations {
     @apply mr-2;
-  }
-
-  [part='rephrase-buttons'] {
-    @apply ml-auto;
   }
 
   @container (max-width: 37.5rem) {

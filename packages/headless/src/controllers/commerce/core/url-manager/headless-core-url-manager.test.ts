@@ -1,19 +1,20 @@
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {Mock} from 'vitest';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager';
+} from '../../../../test/mock-engine-v2.js';
+import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager.js';
 
 describe('core url manager', () => {
   let engine: MockedCommerceEngine;
   let manager: UrlManager;
-  const mockRequestIdSelector = jest.fn();
-  const mockExecuteSearchAction = jest.fn();
-  const mockParameterManagerBuilder = jest.fn();
+  const mockRequestIdSelector = vi.fn();
+  const mockExecuteSearchAction = vi.fn();
+  const mockParameterManagerBuilder = vi.fn();
   const mockSerializer = {
-    serialize: jest.fn(),
-    deserialize: jest.fn(),
+    serialize: vi.fn(),
+    deserialize: vi.fn(),
   };
 
   function initEngine(preloadedState = buildMockCommerceState()) {
@@ -32,7 +33,7 @@ describe('core url manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initEngine();
     initUrlManager();
   });
@@ -81,7 +82,7 @@ describe('core url manager', () => {
 
   it('#synchronize calls #synchronize on parameter manager', () => {
     mockSerializer.deserialize.mockReturnValue({page: 0});
-    const mockSynchronize = jest.fn();
+    const mockSynchronize = vi.fn();
     mockParameterManagerBuilder.mockReturnValue({
       synchronize: mockSynchronize,
     });
@@ -94,9 +95,7 @@ describe('core url manager', () => {
 
   describe('#subscribe', () => {
     function callListener() {
-      return (engine.subscribe as jest.Mock).mock.calls.map(
-        (args) => args[0]
-      )[0]();
+      return (engine.subscribe as Mock).mock.calls.map((args) => args[0])[0]();
     }
 
     beforeEach(() => {
@@ -108,14 +107,14 @@ describe('core url manager', () => {
 
     describe('should not call listener', () => {
       it('when initially subscribing', () => {
-        const listener = jest.fn();
+        const listener = vi.fn();
         manager.subscribe(listener);
 
         expect(listener).not.toHaveBeenCalled();
       });
 
       it('when only the requestId changes', () => {
-        const listener = jest.fn();
+        const listener = vi.fn();
         manager.subscribe(listener);
 
         mockRequestIdSelector.mockReturnValue('abcde');
@@ -125,7 +124,7 @@ describe('core url manager', () => {
       });
 
       it('when only a fragment value is modified', () => {
-        const listener = jest.fn();
+        const listener = vi.fn();
         manager.subscribe(listener);
 
         mockSerializer.serialize.mockReturnValue('q=albums');
@@ -141,7 +140,7 @@ describe('core url manager', () => {
         mockSerializer.serialize.mockReturnValueOnce('q=new-fragment');
         mockSerializer.deserialize.mockImplementation((fragment) => fragment);
 
-        const listener = jest.fn();
+        const listener = vi.fn();
         initUrlManager('q=old-fragment');
         manager.subscribe(listener);
 
@@ -157,7 +156,7 @@ describe('core url manager', () => {
 
         initUrlManager('q=fragment-to-remove');
 
-        const listener = jest.fn();
+        const listener = vi.fn();
         manager.subscribe(listener);
 
         callListener();

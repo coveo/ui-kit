@@ -1,18 +1,18 @@
 import {UnknownAction} from '@reduxjs/toolkit';
-import type {Controller} from '../../../controllers/controller/headless-controller';
-import {CoreEngine, CoreEngineNext} from '../../engine';
-import {EngineConfiguration} from '../../engine-configuration';
-import {NavigatorContextProvider} from '../../navigatorContextProvider';
-import {Build} from '../../ssr-engine/types/build';
-import {InferControllerPropsMapFromDefinitions} from '../../ssr-engine/types/common';
-import {FetchStaticState} from '../../ssr-engine/types/fetch-static-state';
-import {HydrateStaticState} from '../../ssr-engine/types/hydrate-static-state';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {EngineConfiguration} from '../../engine-configuration.js';
+import {CoreEngine, CoreEngineNext} from '../../engine.js';
+import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
+import {Build} from '../../ssr-engine/types/build.js';
+import {InferControllerPropsMapFromDefinitions} from '../../ssr-engine/types/common.js';
+import {FetchStaticState} from '../../ssr-engine/types/fetch-static-state.js';
+import {HydrateStaticState} from '../../ssr-engine/types/hydrate-static-state.js';
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
   SolutionType,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-} from './common';
+} from './common.js';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},

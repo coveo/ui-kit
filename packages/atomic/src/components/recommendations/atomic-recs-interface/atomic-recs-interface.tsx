@@ -6,8 +6,6 @@ import {
   buildRecommendationEngine,
   loadRecommendationActions,
   loadSearchConfigurationActions,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-  PlatformEnvironment,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -22,7 +20,6 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {RecsLogLevel} from '..';
-import {i18nCompatibilityVersion} from '../../../components';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
@@ -44,6 +41,8 @@ export type RecsBindings = CommonBindings<
 
 /**
  * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
+ * @slot default - The default slot where you can add child components to the recommendation interface.
+ *
  */
 @Component({
   tag: 'atomic-recs-interface',
@@ -101,12 +100,6 @@ export class AtomicRecsInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: RecsLogLevel;
-
-  /**
-   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
-   */
-  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
-    'v3';
 
   /**
    * The recommendation interface language.
@@ -186,7 +179,7 @@ export class AtomicRecsInterface
   }
 
   /**
-   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
   @Method() public initialize(options: RecsInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -235,13 +228,6 @@ export class AtomicRecsInterface
     this.engine!.dispatch(
       loadRecommendationActions(this.engine!).getRecommendations()
     );
-  }
-
-  @Method() public async getOrganizationEndpoints(
-    organizationId: string,
-    env: PlatformEnvironment = 'prod'
-  ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
   @Watch('iconAssetsPath')

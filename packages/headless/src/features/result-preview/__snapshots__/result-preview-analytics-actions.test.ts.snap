@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`#logDocumentQuickview when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
+exports[`result preview analytics actions > #logDocumentQuickview > when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
 [
   {
     "collectionName": "example collectionName",
@@ -21,11 +21,10 @@ exports[`#logDocumentQuickview when analyticsMode is \`legacy\` should call cove
 ]
 `;
 
-exports[`#logDocumentQuickview when analyticsMode is \`next\` should call relay.emit properly 1`] = `
+exports[`result preview analytics actions > #logDocumentQuickview > when analyticsMode is \`next\` should call relay.emit properly 1`] = `
 [
   "itemClick",
   {
-    "actionCause": "preview",
     "itemMetadata": {
       "author": "unknown",
       "title": "example documentTitle",
@@ -34,7 +33,7 @@ exports[`#logDocumentQuickview when analyticsMode is \`next\` should call relay.
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "",
+    "searchUid": "someid",
   },
 ]
 `;

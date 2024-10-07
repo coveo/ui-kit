@@ -1,11 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../../facet-options/facet-options-actions';
-import {change} from '../../../history/history-actions';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../../search/search-actions';
-import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
+import {disableFacet} from '../../../facet-options/facet-options-actions.js';
+import {change} from '../../../history/history-actions.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
+import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers.js';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -15,9 +14,15 @@ import {
   handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
   toggleExcludeRangeValue,
-} from '../generic/range-facet-reducers';
-import {NumericFacetRequest, NumericRangeRequest} from './interfaces/request';
-import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
+} from '../generic/range-facet-reducers.js';
+import {
+  NumericFacetRequest,
+  NumericRangeRequest,
+} from './interfaces/request.js';
+import {
+  NumericFacetResponse,
+  NumericFacetValue,
+} from './interfaces/response.js';
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
@@ -26,11 +31,11 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
   toggleExcludeNumericFacetValue,
-} from './numeric-facet-actions';
+} from './numeric-facet-actions.js';
 import {
   getNumericFacetSetInitialState,
   getNumericFacetSetSliceInitialState,
-} from './numeric-facet-set-state';
+} from './numeric-facet-set-state.js';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),
@@ -74,15 +79,6 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled(
-          state,
-          facets,
-          convertToNumericRangeRequests
-        );
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const facets = (action.payload.response?.facets?.results ||
-          []) as NumericFacetResponse[];
         onRangeFacetRequestFulfilled(
           state,
           facets,

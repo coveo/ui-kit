@@ -1,31 +1,30 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client';
-import {CoreEngine} from '../../../app/engine';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import {ConfigurationState} from '../../../features/configuration/configuration-state.js';
 import {
   resetAnswer,
   setId,
   streamAnswer,
-} from '../../../features/generated-answer/generated-answer-actions';
-import {rephraseGeneratedAnswer} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice';
-import {executeSearch} from '../../../features/search/search-actions';
+} from '../../../features/generated-answer/generated-answer-actions.js';
+import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
+import {executeSearch} from '../../../features/search/search-actions.js';
 import {
   DebugSection,
   GeneratedAnswerSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {randomID} from '../../../utils/utils';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {randomID} from '../../../utils/utils.js';
 import {
   buildCoreGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
-  GeneratedResponseFormat,
-} from './headless-core-generated-answer';
+} from './headless-core-generated-answer.js';
 
 export interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
 export interface SearchAPIGeneratedAnswerProps extends GeneratedAnswerProps {}
@@ -44,12 +43,13 @@ interface SubscribeStateManager {
   subscribeToSearchRequests: (
     engine: CoreEngine<
       GeneratedAnswerSection & SearchSection & DebugSection,
-      ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+      ClientThunkExtraArguments<GeneratedAnswerAPIClient>,
+      ConfigurationState
     >
   ) => Unsubscribe;
 }
 
-const subscribeStateManager: SubscribeStateManager = {
+export const subscribeStateManager: SubscribeStateManager = {
   engines: {},
 
   setAbortControllerRef: (ref: AbortController, genQaEngineId: string) => {
@@ -82,6 +82,10 @@ const subscribeStateManager: SubscribeStateManager = {
       ) {
         subscribeStateManager.engines[genQaEngineId].lastRequestId = requestId;
         subscribeStateManager.engines[genQaEngineId].abortController?.abort();
+        if (state.generatedAnswer.isEnabled === false) {
+          return;
+        }
+
         engine.dispatch(resetAnswer());
       }
 
@@ -93,6 +97,9 @@ const subscribeStateManager: SubscribeStateManager = {
         streamId !== subscribeStateManager.engines[genQaEngineId].lastStreamId
       ) {
         subscribeStateManager.engines[genQaEngineId].lastStreamId = streamId;
+        if (state.generatedAnswer.isEnabled === false) {
+          return;
+        }
         engine.dispatch(
           streamAnswer({
             setAbortControllerRef: (ref: AbortController) =>
@@ -171,19 +178,6 @@ export function buildSearchAPIGeneratedAnswer(
       engine.dispatch(
         executeSearch({
           legacy: analyticsClient.logRetryGeneratedAnswer(),
-        })
-      );
-    },
-
-    rephrase(responseFormat: GeneratedResponseFormat) {
-      controller.rephrase(responseFormat);
-      if (!isSearchEngine(engine)) {
-        return;
-      }
-      engine.dispatch(
-        executeSearch({
-          legacy: analyticsClient.logRephraseGeneratedAnswer(responseFormat),
-          next: rephraseGeneratedAnswer(),
         })
       );
     },

@@ -1,28 +1,28 @@
-import {HtmlRequestOptions} from '../../../api/search/html/html-request';
-import {configuration} from '../../../app/common-reducers';
-import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
-import {buildInsightResultPreviewRequest} from '../../../features/insight-search/insight-result-preview-request-builder';
-import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {InsightAppState} from '../../../state/insight-app-state';
+import {HtmlRequestOptions} from '../../../api/search/html/html-request.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice.js';
+import {buildInsightResultPreviewRequest} from '../../../features/insight-search/insight-result-preview-request-builder.js';
+import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
+import {InsightAppState} from '../../../state/insight-app-state.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {buildMockResult} from '../../../test/mock-result';
-import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {buildMockResult} from '../../../test/mock-result.js';
+import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview.js';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-insight-quickview';
+} from './headless-insight-quickview.js';
 
-jest.mock('../../core/quickview/headless-core-quickview');
-jest.mock(
+vi.mock('../../core/quickview/headless-core-quickview');
+vi.mock(
   '../../../features/result-preview/result-preview-insight-analytics-actions'
 );
-jest.mock(
+vi.mock(
   '../../../features/insight-search/insight-result-preview-request-builder'
 );
 
@@ -31,7 +31,7 @@ describe('Insight Quickview', () => {
   let state: InsightAppState;
   let options: QuickviewOptions;
   let quickview: Quickview;
-  const mockedBuildCoreQuickview = jest.mocked(buildCoreQuickview);
+  const mockedBuildCoreQuickview = vi.mocked(buildCoreQuickview);
   function initEngine(preloadedState = buildMockInsightState()) {
     state = preloadedState;
     engine = buildMockInsightEngine(preloadedState);
@@ -42,7 +42,7 @@ describe('Insight Quickview', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
@@ -71,7 +71,7 @@ describe('Insight Quickview', () => {
   });
 
   it('#buildResultPreviewRequest calls #buildInsightResultPreviewRequest and returns its results', () => {
-    const mockedBuildInsightResultPreviewRequest = jest.mocked(
+    const mockedBuildInsightResultPreviewRequest = vi.mocked(
       buildInsightResultPreviewRequest
     );
 
@@ -92,7 +92,7 @@ describe('Insight Quickview', () => {
   });
 
   it('#fetchResultContentCallback logs a document quickview', () => {
-    const mockedLogDocumentQuickview = jest.mocked(logDocumentQuickview);
+    const mockedLogDocumentQuickview = vi.mocked(logDocumentQuickview);
     const coreQuickviewParamsFetchResultContentCallback =
       mockedBuildCoreQuickview.mock.calls[0][4];
 

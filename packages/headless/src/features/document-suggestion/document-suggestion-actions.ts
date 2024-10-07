@@ -1,10 +1,11 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {isErrorResponse} from '../../api/search/search-api-client';
-import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
-import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';
-import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request';
-import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
+import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
+import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params.js';
+import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request.js';
+import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
 import {
   CaseAssistConfigurationSection,
   DocumentSuggestionSection,
@@ -12,7 +13,7 @@ import {
   DebugSection,
   CaseInputSection,
   CaseFieldSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 
 export interface FetchDocumentSuggestionsThunkReturn {
   /** The successful document suggestions response. */
@@ -54,7 +55,12 @@ export const buildFetchDocumentSuggestionsRequest = async (
 ): Promise<GetDocumentSuggestionsRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: state.configuration.platformUrl,
+  url:
+    state.caseAssistConfiguration.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment
+    ),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
     clientId: await getVisitorID(state.configuration.analytics),

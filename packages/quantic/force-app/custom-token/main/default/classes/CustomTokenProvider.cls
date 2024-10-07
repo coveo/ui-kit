@@ -12,15 +12,6 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
   private static final String CONTENT_TYPE_APPLICATION_JSON = 'application/json; charset=UTF-8';
   private static final String TOKEN_PATH = '/rest/search/v2/token';
 
-  private static Boolean isValidURL(String candidateURL) {
-    try {
-      new Url(candidateURL);
-    } catch (Exception e) {
-      return false;
-    }
-    return true;
-  }
-
   private static Map<String, String> getCurrentUserIdentity() {
     Map<String, String> currentUserInfo = new Map<String, String>();
     currentUserInfo.put('name', UserInfo.getUserEmail());
@@ -45,8 +36,7 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
    * @return {Boolean} false if the settings are valid. True otherwise.
    */
   private static Boolean isTokenSettingValid(TokenSettings__c settings) {
-    return isValidURL(settings.PlatformUrl__c) &&
-      !String.isEmpty(settings.OrganizationId__c) &&
+    return !String.isEmpty(settings.OrganizationId__c) &&
       !String.isEmpty(settings.ApiKey__c);
   }
 
@@ -68,8 +58,11 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
    */
   private static HttpRequest buildHttpRequest(TokenSettings__c settings) {
     HttpRequest tokenRequest = new HttpRequest();
+    Map<String, String> organizationEndpoints = OrganizationEndpoints.getOrganizationEndpoints(
+      settings.OrganizationId__c
+    );
     tokenRequest.setEndpoint(
-      settings.PlatformUrl__c +
+      organizationEndpoints.get('platform') +
         TOKEN_PATH +
         '?organizationId=' +
         settings.OrganizationId__c
@@ -128,7 +121,6 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
       'accessToken',
       CustomTokenProvider.getToken(settings)
     );
-    headlessConfiguration.put('platformUrl', settings.PlatformUrl__c);
     return JSON.serialize(headlessConfiguration);
   }
 }

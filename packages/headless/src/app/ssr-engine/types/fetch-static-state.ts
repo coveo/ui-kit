@@ -1,5 +1,5 @@
 import {UnknownAction} from '@reduxjs/toolkit';
-import {CoreEngine, CoreEngineNext} from '../../engine';
+import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {
   ControllersMap,
   ControllersPropsMap,
@@ -7,8 +7,8 @@ import {
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
   OptionsTuple,
-} from './common';
-import {FromBuildResult} from './from-build-result';
+} from './common.js';
+import {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};
 

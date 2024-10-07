@@ -64,7 +64,8 @@ export class AtomicCommerceNoProducts
     this.ariaMessage = getSummary(
       i18n,
       'query' in this.summaryState ? this.summaryState.query : '',
-      this.summary.state.hasProducts
+      this.summary.state.hasProducts,
+      'no-products'
     );
 
     return (
@@ -78,6 +79,7 @@ export class AtomicCommerceNoProducts
           <NoItems
             query={'query' in this.summaryState ? this.summaryState.query : ''}
             i18n={i18n}
+            i18nKey="no-products"
           />
           <SearchTips i18n={i18n} />
         </NoItemsContainer>

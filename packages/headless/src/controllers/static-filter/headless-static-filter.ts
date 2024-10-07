@@ -1,9 +1,9 @@
 import {Schema} from '@coveo/bueno';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   SearchAction,
   executeSearch,
-} from '../../features/search/search-actions';
+} from '../../features/search/search-actions.js';
 import {
   deselectAllStaticFilterValues,
   logStaticFilterClearAll,
@@ -15,24 +15,27 @@ import {
   staticFilterSelect,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-actions';
+} from '../../features/static-filter-set/static-filter-set-actions.js';
 import {
   staticFilterIdSchema,
   staticFilterValuesSchema,
-} from '../../features/static-filter-set/static-filter-set-schema';
-import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
+} from '../../features/static-filter-set/static-filter-set-schema.js';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {
   StaticFilterValue,
   StaticFilterValueState,
-} from '../../features/static-filter-set/static-filter-set-state';
-import {StaticFilterSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {validateOptions} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../features/static-filter-set/static-filter-set-state.js';
+import {StaticFilterSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {validateOptions} from '../../utils/validate-payload.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 import {
   buildStaticFilterValue,
   StaticFilterValueOptions,
-} from './static-filter-value';
+} from './static-filter-value.js';
 
 export type {
   StaticFilterValue,

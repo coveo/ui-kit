@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {updateCaseInput} from './case-input-actions';
-import {getCaseInputInitialState} from './case-input-state';
+import {updateCaseInput} from './case-input-actions.js';
+import {getCaseInputInitialState} from './case-input-state.js';
 
 export const caseInputReducer = createReducer(
   getCaseInputInitialState(),

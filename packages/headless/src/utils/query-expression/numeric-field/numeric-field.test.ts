@@ -1,4 +1,4 @@
-import {buildNumericField} from './numeric-field';
+import {buildNumericField} from './numeric-field.js';
 
 describe('#buildNumericField', () => {
   describe('#toQuerySyntax', () => {

@@ -1,1 +1,1 @@
-export * from './components/commerce/index';
+export * from './components/commerce/index.js';

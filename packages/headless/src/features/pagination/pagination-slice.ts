@@ -1,35 +1,34 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
-import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions.js';
+import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions.js';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
-} from '../facets/category-facet-set/category-facet-set-actions';
-import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
+} from '../facets/category-facet-set/category-facet-set-actions.js';
+import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
-} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+} from '../facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
-} from '../facets/range-facets/date-facet-set/date-facet-actions';
+} from '../facets/range-facets/date-facet-set/date-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
-} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {change} from '../history/history-actions';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
-import {updateActiveTab} from '../tab-set/tab-set-actions';
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {change} from '../history/history-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   deselectAllFacetValues,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from './../facets/facet-set/facet-set-actions';
+} from './../facets/facet-set/facet-set-actions.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
@@ -37,12 +36,15 @@ import {
   registerPage,
   previousPage,
   nextPage,
-} from './pagination-actions';
+} from './pagination-actions.js';
 import {
   maximumNumberOfResultsFromIndex,
   minimumPage,
-} from './pagination-constants';
-import {getPaginationInitialState, PaginationState} from './pagination-state';
+} from './pagination-constants.js';
+import {
+  getPaginationInitialState,
+  PaginationState,
+} from './pagination-state.js';
 
 export const paginationReducer = createReducer(
   getPaginationInitialState(),
@@ -103,10 +105,6 @@ export const paginationReducer = createReducer(
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {response} = action.payload;
         state.totalCountFiltered = response.totalCountFiltered;
-      })
-      .addCase(fetchProductListing.fulfilled, (state, action) => {
-        const {response} = action.payload;
-        state.totalCountFiltered = response.pagination.totalCount;
       })
       .addCase(deselectAllFacetValues, (state) => {
         handlePaginationReset(state);

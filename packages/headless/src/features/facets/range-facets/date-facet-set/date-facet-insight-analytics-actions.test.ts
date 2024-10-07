@@ -1,37 +1,40 @@
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockInsightEngine} from '../../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
-import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions';
+import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockInsightEngine} from '../../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../../../configuration/configuration-state.js';
+import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions.js';
 
-const mockLogBreadcrumbFacet = jest.fn();
+const mockLogBreadcrumbFacet = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logBreadcrumbFacet: mockLogBreadcrumbFacet,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
-const exampleFacetId = 'exampleFacetId';
-const exampleField = 'exampleField';
-const exampleEndInclusiveValue = true;
-const exampleStartValue = 'start';
-const exampleEndValue = 'end';
+describe('date facet insight analytics actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
+  const exampleFacetId = 'exampleFacetId';
+  const exampleField = 'exampleField';
+  const exampleEndInclusiveValue = true;
+  const exampleStartValue = 'start';
+  const exampleEndValue = 'end';
 
-describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         dateFacetSet: {
@@ -50,6 +53,7 @@ describe('logBreadcrumbFacet', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
 

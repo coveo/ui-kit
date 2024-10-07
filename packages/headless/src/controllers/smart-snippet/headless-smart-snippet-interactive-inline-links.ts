@@ -1,17 +1,17 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetSuggestionInlineLink,
-} from '../../features/question-answering/question-answering-analytics-actions';
-import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {QuestionAnsweringSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {getObjectHash} from '../../utils/utils';
+} from '../../features/question-answering/question-answering-analytics-actions.js';
+import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {QuestionAnsweringSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {getObjectHash} from '../../utils/utils.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
-} from '../core/interactive-result/headless-core-interactive-result';
+} from '../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InlineLink {
   /**

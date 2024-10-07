@@ -1,63 +1,63 @@
-import {BaseFacetSearchResult} from '../../../../../api/search/facet-search/base/base-facet-search-response';
-import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {ensureAtLeastOneSolutionType} from '../../../../../app/commerce-ssr-engine/common';
+import {BaseFacetSearchResult} from '../../../../../api/search/facet-search/base/base-facet-search-response.js';
+import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import {ensureAtLeastOneSolutionType} from '../../../../../app/commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionOption,
   SolutionType,
   SubControllerDefinitionWithoutProps,
-} from '../../../../../app/commerce-ssr-engine/types/common';
-import {stateKey} from '../../../../../app/state-key';
-import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector';
+} from '../../../../../app/commerce-ssr-engine/types/common.js';
+import {stateKey} from '../../../../../app/state-key.js';
+import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
 import {
   AnyFacetResponse,
   RegularFacetValue,
-} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
-import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
-import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector';
-import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector';
-import {ManualRangeSection} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
+} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
+import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
+import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
+import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
+import {ManualRangeSection} from '../../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   isFacetLoadingResponseSelector as listingIsFacetLoadingResponseSelector,
   facetResponseSelector as listingFacetResponseSelector,
-} from '../../../product-listing/facets/headless-product-listing-facet-options';
-import {buildProductListing} from '../../../product-listing/headless-product-listing';
+} from '../../../product-listing/facets/headless-product-listing-facet-options.js';
+import {buildProductListing} from '../../../product-listing/headless-product-listing.js';
 import {
   isFacetLoadingResponseSelector as searchIsFacetLoadingResponseSelector,
   facetResponseSelector as searchFacetResponseSelector,
-} from '../../../search/facets/headless-search-facet-options';
-import {buildSearch} from '../../../search/headless-search';
+} from '../../../search/facets/headless-search-facet-options.js';
+import {buildSearch} from '../../../search/headless-search.js';
 import {
   CategoryFacet,
   CategoryFacetState,
   getCategoryFacetState,
-} from '../category/headless-commerce-category-facet';
+} from '../category/headless-commerce-category-facet.js';
 import {
   DateFacet,
   DateFacetState,
   getDateFacetState,
-} from '../date/headless-commerce-date-facet';
+} from '../date/headless-commerce-date-facet.js';
 import {
   CategoryFacetValue,
   FacetType,
   getCoreFacetState,
-} from '../headless-core-commerce-facet';
+} from '../headless-core-commerce-facet.js';
 import {
   getNumericFacetState,
   NumericFacet,
   NumericFacetState,
-} from '../numeric/headless-commerce-numeric-facet';
+} from '../numeric/headless-commerce-numeric-facet.js';
 import {
   getRegularFacetState,
   RegularFacet,
   RegularFacetState,
-} from '../regular/headless-commerce-regular-facet';
+} from '../regular/headless-commerce-regular-facet.js';
 import {
   FacetGenerator as CSRFacetGenerator,
   MappedGeneratedFacetController,
-} from './headless-commerce-facet-generator';
+} from './headless-commerce-facet-generator.js';
 
 export type {
   BaseFacetSearchResult,
@@ -177,6 +177,7 @@ export function buildFacetGenerator(
   const createFacetState = (facetResponseSelector: AnyFacetResponse) => {
     const facetId = facetResponseSelector.facetId;
     return getCoreFacetState(
+      facetId,
       facetRequestSelector(getEngineState(), facetId),
       facetResponseSelector,
       isFacetLoadingResponseSelector

@@ -1,15 +1,15 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../../app/state-key';
-import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response';
-import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors';
-import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice';
+import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../../app/state-key.js';
+import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
+import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
-} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
-import {ManualRangeSection} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
+} from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
+import {ManualRangeSection} from '../../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -18,7 +18,7 @@ import {
   NumericFacetValue,
   NumericRangeRequest,
   buildCoreCommerceFacet,
-} from '../headless-core-commerce-facet';
+} from '../headless-core-commerce-facet.js';
 
 export type NumericFacetOptions = Omit<
   CoreCommerceFacetOptions,

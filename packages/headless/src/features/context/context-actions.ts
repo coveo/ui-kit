@@ -3,8 +3,8 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
-import {ContextPayload, ContextValue} from './context-state';
+} from '../../utils/validate-payload.js';
+import {ContextPayload, ContextValue} from './context-state.js';
 
 const nonEmptyArray = new ArrayValue({
   each: requiredNonEmptyString,

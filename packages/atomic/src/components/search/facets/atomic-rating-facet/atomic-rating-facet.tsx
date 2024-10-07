@@ -18,7 +18,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element, Watch} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
@@ -33,7 +33,6 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
@@ -57,6 +56,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part values - The facet values container.
  * @part value-count - The facet value count, common for all displays.
  * @part value-rating - The facet value rating, common for all displays.
+ * @part value-rating-icon - The individual star icons used in the rating display.
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
@@ -243,6 +243,10 @@ export class AtomicRatingFacet implements InitializableComponent {
       generateAutomaticRanges: false,
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
+      tabs: {
+        included: [...this.tabsIncluded],
+        excluded: [...this.tabsExcluded],
+      },
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
@@ -270,22 +274,6 @@ export class AtomicRatingFacet implements InitializableComponent {
     }
     this.dependenciesManager?.stopWatching();
   }
-
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facet
-      );
-    }
-  }
-
   private get isHidden() {
     return (
       this.searchStatusState.hasError ||
@@ -371,6 +359,7 @@ export class AtomicRatingFacet implements InitializableComponent {
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
+    const shouldBeDimmed = this.facetState.hasActiveValues && !isSelected;
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
@@ -392,6 +381,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            class={shouldBeDimmed ? 'opacity-80' : undefined}
           >
             {this.ratingContent(facetValue)}
           </FacetValueLink>

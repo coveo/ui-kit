@@ -1,19 +1,17 @@
-import {updateResponseFormat} from '../../../features/generated-answer/generated-answer-actions';
-import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerProps,
-} from './headless-insight-generated-answer';
+} from './headless-insight-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('insight generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
@@ -31,22 +29,5 @@ describe('insight generated answer', () => {
   it('#retry dispatches #executeSearch', () => {
     generatedAnswer.retry();
     expect(executeSearch).toHaveBeenCalled();
-  });
-
-  describe('#rephrase', () => {
-    const responseFormat: GeneratedResponseFormat = {
-      answerStyle: 'concise',
-    };
-
-    it('dispatches the update action', () => {
-      generatedAnswer.rephrase(responseFormat);
-
-      expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-    });
-
-    it('dispatches #executeSearch', () => {
-      generatedAnswer.rephrase(responseFormat);
-      expect(executeSearch).toHaveBeenCalled();
-    });
   });
 });

@@ -7,7 +7,7 @@ import {
   LocaleParam,
   NumberOfResultsParam,
   VisitorIDParam,
-} from '../../platform-service-params';
+} from '../../platform-service-params.js';
 import {
   ActionsHistoryParam,
   AdvancedQueryParam,
@@ -33,7 +33,7 @@ import {
   TimezoneParam,
   QueryCorrectionParam,
   PipelineRuleParams,
-} from '../search-api-params';
+} from '../search-api-params.js';
 
 export type SearchRequest = BaseParam &
   QueryParam &

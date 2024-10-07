@@ -1,10 +1,10 @@
-import {buildMockCommerceState} from '../../../test/mock-commerce-state';
-import {buildMockProduct} from '../../../test/mock-product';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockProduct} from '../../../test/mock-product.js';
 import {
   isLoadingSelector,
   moreRecommendationsAvailableSelector,
   numberOfRecommendationsSelector,
-} from './recommendations-selectors';
+} from './recommendations-selectors.js';
 
 describe('commerce recommendations selectors', () => {
   it('#numberOfRecommendationsSelector should return the number of recommendations in the recommendations section', () => {

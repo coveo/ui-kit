@@ -1,33 +1,33 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
-import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
+import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../../features/commerce/recent-queries/recent-queries-actions';
-import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice';
+} from '../../../features/commerce/recent-queries/recent-queries-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice.js';
 import {
   PrepareForSearchWithQueryOptions,
   executeSearch,
   prepareForSearchWithQuery,
-} from '../../../features/commerce/search/search-actions';
-import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice';
-import {RecentQueriesSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../features/commerce/search/search-actions.js';
+import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
+import {RecentQueriesSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   validateInitialState,
   validateOptions,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import type {
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
   RecentQueriesListProps,
-} from '../../recent-queries-list/headless-recent-queries-list';
+} from '../../recent-queries-list/headless-recent-queries-list.js';
 
 export type {
   RecentQueriesListProps,

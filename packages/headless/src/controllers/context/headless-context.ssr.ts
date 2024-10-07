@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
-import {ContextProps} from '../core/context/headless-core-context';
-import {Context, buildContext} from './headless-context';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import {ContextProps} from '../core/context/headless-core-context.js';
+import {Context, buildContext} from './headless-context.js';
 
-export * from './headless-context';
+export * from './headless-context.js';
 
 export interface ContextDefinition
   extends ControllerDefinitionWithProps<SearchEngine, Context, ContextProps> {}

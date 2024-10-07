@@ -1,16 +1,16 @@
-import {FacetValueState} from '../../../facets/facet-api/value';
-import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request';
-import {Parameters} from '../../parameters/parameters-actions';
-import {CommerceFacetSetState} from './facet-set-state';
+import {FacetValueState} from '../../../facets/facet-api/value.js';
+import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request.js';
+import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {Parameters} from '../../parameters/parameters-actions.js';
+import {CommerceFacetSetState} from './facet-set-state.js';
 import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
   DateFacetRequest,
   NumericFacetRequest,
   RegularFacetRequest,
-} from './interfaces/request';
-import {RegularFacetValue} from './interfaces/response';
+} from './interfaces/request.js';
+import {RegularFacetValue} from './interfaces/response.js';
 
 export function restoreFromParameters(
   state: CommerceFacetSetState,

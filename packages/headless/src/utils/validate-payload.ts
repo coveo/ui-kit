@@ -8,7 +8,7 @@ import {
   ArrayValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
-import type {CoreEngine, CoreEngineNext} from '../app/engine';
+import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,

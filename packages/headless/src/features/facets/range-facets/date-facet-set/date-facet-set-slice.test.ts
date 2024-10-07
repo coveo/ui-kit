@@ -1,16 +1,14 @@
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildFetchProductListingResponse} from '../../../../test/mock-old-product-listing';
-import {buildMockSearch} from '../../../../test/mock-search';
-import {logSearchEvent} from '../../../analytics/analytics-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {change} from '../../../history/history-actions';
-import {getHistoryInitialState} from '../../../history/history-state';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../../search/search-actions';
-import * as FacetReducers from '../../generic/facet-reducer-helpers';
-import * as RangeFacetReducers from '../generic/range-facet-reducers';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockSearch} from '../../../../test/mock-search.js';
+import {logSearchEvent} from '../../../analytics/analytics-actions.js';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
+import {change} from '../../../history/history-actions.js';
+import {getHistoryInitialState} from '../../../history/history-state.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
+import * as FacetReducers from '../../generic/facet-reducer-helpers.js';
+import * as RangeFacetReducers from '../generic/range-facet-reducers.js';
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
@@ -18,12 +16,12 @@ import {
   deselectAllDateFacetValues,
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
-} from './date-facet-actions';
-import {dateFacetSetReducer} from './date-facet-set-slice';
+} from './date-facet-actions.js';
+import {dateFacetSetReducer} from './date-facet-set-slice.js';
 import {
   DateFacetSetState,
   getDateFacetSetInitialState,
-} from './date-facet-set-state';
+} from './date-facet-set-state.js';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
@@ -33,7 +31,7 @@ describe('date-facet-set slice', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('initializes the set to an empty object', () => {
@@ -82,7 +80,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#restoreSearchParameters restores the #nf payload correctly', () => {
-    const spy = jest.spyOn(
+    const spy = vi.spyOn(
       RangeFacetReducers,
       'handleRangeFacetSearchParameterRestoration'
     );
@@ -103,7 +101,7 @@ describe('date-facet-set slice', () => {
   it('#toggleSelectDateFacetValue calls #toggleSelectRangeValue', () => {
     const facetId = '1';
     const selection = buildMockDateFacetValue();
-    jest.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
+    vi.spyOn(RangeFacetReducers, 'toggleSelectRangeValue');
 
     dateFacetSetReducer(
       state,
@@ -114,7 +112,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#updateDateFacetValues calls #updateRangeValues', () => {
-    jest.spyOn(RangeFacetReducers, 'updateRangeValues');
+    vi.spyOn(RangeFacetReducers, 'updateRangeValues');
     const action = updateDateFacetValues({facetId: '1', values: []});
     dateFacetSetReducer(state, action);
 
@@ -122,7 +120,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#deselectAllDateFacetValues calls #handleRangeFacetDeselectAll', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
     const action = deselectAllDateFacetValues('1');
     dateFacetSetReducer(state, action);
 
@@ -132,7 +130,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every date facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+    vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
     state['1'] = buildMockDateFacetSlice();
     state['2'] = buildMockDateFacetSlice();
@@ -144,7 +142,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+    vi.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
     const action = updateDateFacetSortCriterion({
       facetId: '1',
@@ -158,7 +156,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
-    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
+    vi.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
 
     const search = buildMockSearch();
     dateFacetSetReducer(
@@ -166,20 +164,6 @@ describe('date-facet-set slice', () => {
       executeSearch.fulfilled(search, '', {
         legacy: logSearchEvent({evt: 'foo'}),
       })
-    );
-
-    expect(
-      RangeFacetReducers.onRangeFacetRequestFulfilled
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#fetchProductListing.fulfilled calls #onRangeFacetRequestFulfilled', () => {
-    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
-
-    const productListing = buildFetchProductListingResponse();
-    dateFacetSetReducer(
-      state,
-      fetchProductListing.fulfilled(productListing, '')
     );
 
     expect(

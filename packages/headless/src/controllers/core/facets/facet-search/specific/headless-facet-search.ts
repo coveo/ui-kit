@@ -1,21 +1,18 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
-import {AsyncThunkOptions} from '../../../../../app/async-thunk-options';
-import {CoreEngine, CoreEngineNext} from '../../../../../app/engine';
-import {stateKey} from '../../../../../app/state-key';
-import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments';
-import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
+import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {AsyncThunkOptions} from '../../../../../app/async-thunk-options.js';
+import {CoreEngine, CoreEngineNext} from '../../../../../app/engine.js';
+import {stateKey} from '../../../../../app/state-key.js';
+import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments.js';
+import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import {
   excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {
-  ConfigurationSection,
-  FacetSearchSection,
-} from '../../../../../state/state-sections';
-import {buildGenericFacetSearch} from '../facet-search';
+} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
+import {FacetSearchSection} from '../../../../../state/state-sections.js';
+import {buildGenericFacetSearch} from '../facet-search.js';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;
@@ -41,9 +38,7 @@ export interface FacetSearchProps {
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 
 export function buildFacetSearch(
-  engine:
-    | CoreEngine<FacetSearchSection & ConfigurationSection>
-    | CoreEngineNext<FacetSearchSection & ConfigurationSection>,
+  engine: CoreEngine<FacetSearchSection> | CoreEngineNext<FacetSearchSection>,
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;

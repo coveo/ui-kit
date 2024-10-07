@@ -1,15 +1,19 @@
 import {EventDescription} from 'coveo.analytics';
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
-import {InsightAppState} from '../../state/insight-app-state';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
 import {
   ConfigurationSection,
   InsightConfigurationSection,
-} from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params';
-import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
-import {CollectionId} from '../folding/folding-state';
-import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
-import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
+} from '../../state/state-sections.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
+import {CollectionId} from '../folding/folding-state.js';
+import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
+import {
+  MappedSearchRequest,
+  mapSearchRequest,
+} from '../search/search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
@@ -24,7 +28,12 @@ export const buildInsightBaseRequest = async (
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url: state.configuration.platformUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getOrganizationEndpoint(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     locale: state.configuration.search.locale,
     insightId: state.insightConfiguration.insightId,
     ...(state.configuration.analytics.enabled &&
