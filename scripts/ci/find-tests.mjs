@@ -43,7 +43,7 @@ function findAllTestFiles(dir) {
  * Creates a mapping of test file names to the set of files they import.
  *
  * @param testPaths - An array of E2E test file paths.
- * @returns A map where each key is a test file name and the value is a set of files it imports.
+ * @returns A map where each key is a test file name and the value is the set of files it imports.
  */
 function createTestFileMappings(testPaths, projectRoot) {
   const testFileMappings = testPaths.map((testPath) => {
