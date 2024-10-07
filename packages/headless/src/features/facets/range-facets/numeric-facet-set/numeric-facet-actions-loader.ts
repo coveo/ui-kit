@@ -23,6 +23,9 @@ export type {
 
 /**
  * The numeric facet action creators.
+ *
+ * @group Actions
+ * @category Numeric facet set
  */
 export interface NumericFacetSetActionCreators {
   /**
@@ -89,6 +92,9 @@ export interface NumericFacetSetActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Numeric facet set
  */
 export function loadNumericFacetSetActions(
   engine: CoreEngine

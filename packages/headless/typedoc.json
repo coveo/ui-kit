@@ -6,10 +6,12 @@
   },
   "categorizeByGroup": true,
   "groupOrder": [
+    "Controllers",
     "Search controllers",
     "Buildable controllers",
     "Sub-controllers",
     "Core controllers",
+    "Actions",
     "*"
   ],
   "entryPoints": [

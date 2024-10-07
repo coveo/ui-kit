@@ -11,6 +11,13 @@ import {
 } from './insight-user-actions-actions.js';
 
 export type {RegisterUserActionsPayload};
+
+/**
+ * The Insight user actions action creators.
+ *
+ * @group Actions
+ * @category Insight user actions
+ */
 export interface InsightUserActionsActionCreators {
   /**
    * Registers the user actions for a given user ID, ticket creation date, and excluded custom actions.
@@ -41,6 +48,9 @@ export interface InsightUserActionsActionCreators {
  * Loads the `InsightUserActions` reducer and returns possible action creators.
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Insight user actions
  */
 export function loadInsightUserActionsActions(
   engine: CoreEngine

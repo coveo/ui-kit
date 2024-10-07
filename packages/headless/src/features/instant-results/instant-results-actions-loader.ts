@@ -20,6 +20,12 @@ export type {
   FetchInstantResultsActionCreatorPayload,
 };
 
+/**
+ * The instant results action creators.
+ *
+ * @group Actions
+ * @category Insight results
+ */
 export interface InstantResultsActionCreators {
   /**
    * Initializes the `instantResults` state for a search box ID.
@@ -57,6 +63,9 @@ export interface InstantResultsActionCreators {
  *
  * @param engine - The Headless engine.
  * @returns An object with the action creators.
+ *
+ * @group Actions
+ * @category Insight results
  */
 export function loadInstantResultsActions(
   engine: SearchEngine

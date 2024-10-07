@@ -9,6 +9,9 @@ import {
 
 /**
  * The case context action creators.
+ *
+ * @group Actions
+ * @category Case context
  */
 export interface CaseContextActionCreators {
   /**
@@ -43,6 +46,9 @@ export interface CaseContextActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Case context
  */
 export function loadCaseContextActions(
   engine: CoreEngine

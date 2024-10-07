@@ -11,6 +11,9 @@ export type {AdvancedSearchQueryActionCreatorPayload};
 
 /**
  * The advanced search query action creators.
+ *
+ * @group Actions
+ * @category Advanced search queries
  */
 export interface AdvancedSearchQueryActionCreators {
   /**
@@ -39,6 +42,9 @@ export interface AdvancedSearchQueryActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Advanced search queries
  */
 export function loadAdvancedSearchQueryActions(
   engine: CoreEngine

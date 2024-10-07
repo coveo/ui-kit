@@ -12,6 +12,9 @@ export type {SetContextPayload, SetViewPayload};
 
 /**
  * The context action creators.
+ *
+ * @group Actions
+ * @category Context
  */
 export interface ContextActionCreators {
   /**
@@ -36,6 +39,9 @@ export interface ContextActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the context action creators.
+ *
+ * @group Actions
+ * @category Context
  */
 export function loadContextActions(
   engine: CommerceEngine

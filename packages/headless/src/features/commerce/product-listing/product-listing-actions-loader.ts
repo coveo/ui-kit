@@ -13,6 +13,9 @@ import {
 
 /**
  * The product listing action creators.
+ *
+ * @group Actions
+ * @category Product listing
  */
 export interface ProductListingActionCreators {
   /**
@@ -53,6 +56,9 @@ export interface ProductListingActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the product listing action creators.
+ *
+ * @group Actions
+ * @category Product listing
  */
 export function loadProductListingActions(
   engine: CommerceEngine

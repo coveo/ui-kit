@@ -12,6 +12,9 @@ export type {RegisterQuerySetQueryPayload, UpdateQuerySetQueryPayload};
 
 /**
  * The query set action creators.
+ *
+ * @group Actions
+ * @category Query set
  */
 export interface QuerySetActionCreators {
   /**
@@ -40,6 +43,9 @@ export interface QuerySetActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the query set action creators.
+ *
+ * @group Actions
+ * @category Query set
  */
 export function loadQuerySetActions(engine: CommerceEngine) {
   engine.addReducers({querySetReducer});

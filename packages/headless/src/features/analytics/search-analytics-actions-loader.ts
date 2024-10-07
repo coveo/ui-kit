@@ -111,6 +111,9 @@ export type {
 
 /**
  * The search analytics action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export interface SearchAnalyticsActionCreators {
   /**
@@ -496,6 +499,9 @@ export interface SearchAnalyticsActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export function loadSearchAnalyticsActions(
   engine: SearchEngine

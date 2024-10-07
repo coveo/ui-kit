@@ -15,6 +15,9 @@ export type {
 
 /**
  * The category facet action creators.
+ *
+ * @group Actions
+ * @category Category facet
  */
 export interface CategoryFacetSetActionCreators {
   /**
@@ -43,6 +46,9 @@ export interface CategoryFacetSetActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the category facet action creators.
+ *
+ * @group Actions
+ * @category Category facet
  */
 export function loadCategoryFacetSetActions(
   engine: CommerceEngine

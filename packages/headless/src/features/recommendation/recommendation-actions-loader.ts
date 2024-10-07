@@ -14,6 +14,9 @@ export type {SetRecommendationIdActionCreatorPayload};
 
 /**
  * The recommendation action creators.
+ *
+ * @group Actions
+ * @category Recommendation
  */
 export interface RecommendationActionCreators {
   /**
@@ -43,6 +46,9 @@ export interface RecommendationActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Recommendation
  */
 export function loadRecommendationActions(
   engine: RecommendationEngine

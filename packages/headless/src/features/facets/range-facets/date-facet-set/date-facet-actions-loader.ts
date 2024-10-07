@@ -23,6 +23,9 @@ export type {
 
 /**
  * The date facet set action creators.
+ *
+ * @group Actions
+ * @category Date facet set
  */
 export interface DateFacetSetActionCreators {
   /**
@@ -89,6 +92,9 @@ export interface DateFacetSetActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Date facet set
  */
 export function loadDateFacetSetActions(
   engine: CoreEngine

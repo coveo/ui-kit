@@ -10,6 +10,9 @@ import {
 
 /**
  * The Insight interface action creators.
+ *
+ * @group Actions
+ * @category Insight interface
  */
 export interface InsightInterfaceActionCreators {
   /**
@@ -29,6 +32,9 @@ export interface InsightInterfaceActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Insight interface
  */
 export function loadInsightInterfaceActions(
   engine: InsightEngine

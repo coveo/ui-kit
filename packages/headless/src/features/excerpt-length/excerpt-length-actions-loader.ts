@@ -5,6 +5,9 @@ import {setExcerptLength} from './excerpt-length-actions.js';
 
 /**
  * The excerpt length action creators.
+ *
+ * @group Actions
+ * @category Excerpt length
  */
 export interface ExcerptLengthActionCreators {
   /**
@@ -22,6 +25,9 @@ export interface ExcerptLengthActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Excerpt length
  */
 export function loadExcerptLengthActions(
   engine: SearchEngine

@@ -5,6 +5,9 @@ import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slic
 
 /**
  * The generated answer action creators.
+ *
+ * @group Actions
+ * @category Generated answer
  */
 export interface GeneratedAnswerActionCreators {
   /**
@@ -20,6 +23,9 @@ export interface GeneratedAnswerActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Generated answer
  */
 export function loadGeneratedAnswerActions(
   engine: CoreEngine

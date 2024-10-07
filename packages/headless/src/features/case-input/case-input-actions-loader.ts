@@ -10,6 +10,9 @@ export type {SetCaseInputActionCreatorPayload};
 
 /**
  * The case inputs action creators.
+ *
+ * @group Actions
+ * @category Case input
  */
 export interface CaseInputActionCreators {
   /**
@@ -28,6 +31,9 @@ export interface CaseInputActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Case input
  */
 export function loadCaseInputActions(
   engine: CaseAssistEngine

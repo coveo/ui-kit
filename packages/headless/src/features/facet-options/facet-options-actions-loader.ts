@@ -18,6 +18,9 @@ export type {
 
 /**
  * The facetOptions action creators.
+ *
+ * @group Actions
+ * @category Facet options
  */
 export interface FacetOptionsActionCreators {
   /**
@@ -50,6 +53,9 @@ export interface FacetOptionsActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Facet options
  */
 export function loadFacetOptionsActions(
   engine: SearchEngine

@@ -19,6 +19,12 @@ export type {
   UpdateDateFacetValuesPayload,
 };
 
+/**
+ * The date facet action creators.
+ *
+ * @group Actions
+ * @category Date facet
+ */
 export interface DateFacetActionCreators {
   /**
    * Toggles the selection state of a given date facet value.
@@ -56,6 +62,9 @@ export interface DateFacetActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the date facet action creators.
+ *
+ * @group Actions
+ * @category Date facet
  */
 export function loadDateFacetActions(
   engine: CommerceEngine

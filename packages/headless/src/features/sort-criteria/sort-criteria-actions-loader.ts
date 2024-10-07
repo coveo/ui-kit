@@ -9,6 +9,9 @@ import {
 
 /**
  * The sort criteria action creators.
+ *
+ * @group Actions
+ * @category Sort criteria
  */
 export interface SortCriteriaActionCreators {
   /**
@@ -37,6 +40,9 @@ export interface SortCriteriaActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Sort criteria
  */
 export function loadSortCriteriaActions(
   engine: SearchEngine
