@@ -49,7 +49,7 @@ export const DocumentSuggestionSelectors: DocumentSuggestionSelector &
     DocumentSuggestionSelectors.get().find('c-quantic-result-quickview'),
   quickviewCloseButton: () =>
     DocumentSuggestionSelectors.get().find(
-      'c-quantic-result-quickview section header button'
+      '[data-cy="quickview-modal__close-button"]'
     ),
   componentError: () =>
     DocumentSuggestionSelectors.get().find('c-quantic-component-error'),
