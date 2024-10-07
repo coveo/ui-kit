@@ -92,14 +92,14 @@ jobs:
         id: determine-tests
         if: ${{ always() && github.event_name == 'pull_request'}}
         run: node scripts/ci/find-tests.mjs testsToRun
-        with:
+        env:
           projectRoot: ${{ github.workspace }}
         shell: bash
 
       - name: Determine Shard Values
         id: set-matrix
         run: node scripts/ci/determine-shard.mjs shardIndex shardTotal
-        with:
+        env:
           testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
           maximumShards: ${{ env.maximumShards }}
         shell: bash

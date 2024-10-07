@@ -16,8 +16,10 @@ function allocateShards(testCount, maximumShards) {
   return [shardIndex, [shardTotal]];
 }
 
-const testsToRun = getInput('testsToRun').split(' ');
-const maximumShards = parseInt(getInput('maximumShards'), 10);
+const testsToRun = process.env.testsToRun.split(' ');
+console.log('-- testsToRun --', testsToRun);
+const maximumShards = parseInt(process.env.maximumShards, 10);
+console.log('-- maximumShards --', maximumShards);
 
 const [shardIndexOutputName, shardTotalOutputName] = getOutputName();
 const [shardIndex, shardTotal] = allocateShards(

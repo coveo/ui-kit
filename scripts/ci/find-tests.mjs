@@ -110,7 +110,7 @@ function dependsOnCoveoPackage(file) {
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
-const projectRoot = getInput('project-root');
+const projectRoot = process.env.projectRoot;
 console.log('-- projectRoot --', projectRoot);
 const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
