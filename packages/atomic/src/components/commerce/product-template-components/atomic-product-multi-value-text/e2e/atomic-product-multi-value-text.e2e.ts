@@ -5,15 +5,6 @@ test.describe('default', () => {
     await productMultiValueText.load();
   });
 
-  test('should be a11y compliant', async ({
-    productMultiValueText,
-    makeAxeBuilder,
-  }) => {
-    await productMultiValueText.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render 3 values and 3 separators', async ({
     productMultiValueText,
   }) => {
@@ -21,27 +12,57 @@ test.describe('default', () => {
     await expect(productMultiValueText.separators).toHaveCount(3);
   });
 
-  test('should render an indicator that 2 more values are available', async ({
+  test('should render an indicator that 3 more values are available', async ({
     productMultiValueText,
   }) => {
+    await expect(productMultiValueText.moreValuesIndicator(3)).toBeVisible();
+  });
+});
+
+test.describe('with a delimiter', () => {
+  test.beforeEach(async ({productMultiValueText}) => {
+    await productMultiValueText.load({
+      story: 'with-delimiter',
+    });
+  });
+  test('when field value does not include the specified delimiter, should render as a single value', async ({
+    productMultiValueText,
+  }) => {
+    await productMultiValueText.withCustomDelimiter({
+      delimiter: '/',
+      field: 'ec_product_id',
+      values: ['a', 'b', 'c', 'd', 'e'],
+    });
+
+    await expect(productMultiValueText.values).toHaveCount(1);
+    await expect(productMultiValueText.separators).toHaveCount(0);
+    await expect(productMultiValueText.values.first()).toHaveText('a/b/c/d/e');
+    await expect(productMultiValueText.moreValuesIndicator()).not.toBeVisible();
+  });
+
+  test('when field value includes the specified delimiter, should render as distinct values', async ({
+    productMultiValueText,
+  }) => {
+    await productMultiValueText.withCustomDelimiter({
+      delimiter: '_',
+      field: 'ec_product_id',
+      values: ['a', 'b', 'c', 'd', 'e'],
+    });
+
+    await expect(productMultiValueText.values).toHaveCount(3);
+    await expect(productMultiValueText.separators).toHaveCount(3);
+    await expect(productMultiValueText.values.first()).toHaveText('a');
+    await expect(productMultiValueText.values.nth(1)).toHaveText('b');
+    await expect(productMultiValueText.values.nth(2)).toHaveText('c');
     await expect(productMultiValueText.moreValuesIndicator(2)).toBeVisible();
   });
 });
 
-test.describe('with max-values-to-display set to 1', () => {
+test.describe('with max-values-to-display set to minimum (1)', () => {
   test.beforeEach(async ({productMultiValueText}) => {
     await productMultiValueText.load({
       story: 'with-max-values-to-display-set-to-minimum',
     });
-  });
-
-  test('should be a11y compliant', async ({
-    productMultiValueText,
-    makeAxeBuilder,
-  }) => {
-    await productMultiValueText.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render 1 value and 1 separator', async ({
@@ -51,14 +72,14 @@ test.describe('with max-values-to-display set to 1', () => {
     await expect(productMultiValueText.separators).toHaveCount(1);
   });
 
-  test('should render an indicator that 4 more values are available', async ({
+  test('should render an indicator that 5 more values are available', async ({
     productMultiValueText,
   }) => {
-    await expect(productMultiValueText.moreValuesIndicator(4)).toBeVisible();
+    await expect(productMultiValueText.moreValuesIndicator(5)).toBeVisible();
   });
 });
 
-test.describe('with max-values-to-display set to 5', () => {
+test.describe('with max-values-to-display set to total number of values (6)', () => {
   test.beforeEach(async ({productMultiValueText}) => {
     await productMultiValueText.load({
       story: 'with-max-values-to-display-set-to-total-number-of-values',
@@ -74,11 +95,11 @@ test.describe('with max-values-to-display set to 5', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test('should render 5 values and 4 separators', async ({
+  test('should render 6 values and 5 separators', async ({
     productMultiValueText,
   }) => {
-    await expect(productMultiValueText.values).toHaveCount(5);
-    await expect(productMultiValueText.separators).toHaveCount(4);
+    await expect(productMultiValueText.values).toHaveCount(6);
+    await expect(productMultiValueText.separators).toHaveCount(5);
   });
 
   test('should not render an indicator that more values are available', async ({
@@ -118,7 +139,7 @@ test.describe('in a page with corresponding facet', () => {
   }) => {
     await expect(productMultiValueText.values.first()).toHaveText('XS');
 
-    await page.getByLabel('Inclusion filter on L; 45 results').click();
+    await page.getByLabel('Inclusion filter on L').click();
 
     await expect(productMultiValueText.values.first()).toHaveText('L');
   });
@@ -127,11 +148,11 @@ test.describe('in a page with corresponding facet', () => {
     productMultiValueText,
     page,
   }) => {
-    await page.getByLabel('Inclusion filter on M; 45 results').click();
+    await page.getByLabel('Inclusion filter on M').click();
     await expect(page.getByText('Clear filter')).toBeVisible();
-    await page.getByLabel('Inclusion filter on L; 45 results').click();
+    await page.getByLabel('Inclusion filter on L').click();
     await expect(page.getByText('Clear 2 filters')).toBeVisible();
-    await page.getByLabel('Inclusion filter on XL; 45 results').click();
+    await page.getByLabel('Inclusion filter on XL').click();
     await expect(page.getByText('Clear 3 filters')).toBeVisible();
 
     await expect(productMultiValueText.values.first()).toHaveText('L');

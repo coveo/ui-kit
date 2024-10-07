@@ -23,4 +23,26 @@ export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-prod
         `${expectedNumber ? expectedNumber.toString() + ' ' : ''}more...`
       );
   }
+
+  async withCustomDelimiter({
+    delimiter,
+    values,
+    field,
+  }: {
+    delimiter: string;
+    values: string[];
+    field: string;
+  }) {
+    await this.page.route('**/commerce/v2/listing', async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body.products[0][field] = values.join(delimiter);
+      await route.fulfill({
+        response,
+        json: body,
+      });
+    });
+
+    return this;
+  }
 }

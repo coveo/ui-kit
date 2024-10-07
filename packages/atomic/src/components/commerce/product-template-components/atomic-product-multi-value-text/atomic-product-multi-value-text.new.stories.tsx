@@ -31,6 +31,9 @@ const meta: Meta = {
   render: renderComponent,
   parameters,
   play,
+  args: {
+    'attributes-field': 'cat_available_sizes',
+  },
 };
 
 export default meta;
@@ -42,8 +45,18 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
+};
+
+export const WithDelimiter: Story = {
+  name: 'With delimiter',
+  decorators: [
+    productDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
   args: {
-    'attributes-field': 'cat_available_sizes',
+    'attributes-field': 'ec_product_id',
+    'attributes-delimiter': '_',
   },
 };
 
@@ -55,7 +68,6 @@ export const WithMaxValuesToDisplaySetToMinimum: Story = {
     commerceInterfaceDecorator,
   ],
   args: {
-    'attributes-field': 'cat_available_sizes',
     'attributes-max-values-to-display': 1,
   },
 };
@@ -68,16 +80,12 @@ export const WithMaxValuesToDisplaySetToTotalNumberOfValues: Story = {
     commerceInterfaceDecorator,
   ],
   args: {
-    'attributes-field': 'cat_available_sizes',
-    'attributes-max-values-to-display': 5,
+    'attributes-max-values-to-display': 6,
   },
 };
 
 export const InAPageWithTheCorrespondingFacet: Story = {
   name: 'In a page with the corresponding facet',
-  args: {
-    'attributes-field': 'cat_available_sizes',
-  },
   decorators: [
     productDecorator,
     commerceProductListDecorator,
