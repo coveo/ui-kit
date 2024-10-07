@@ -17,7 +17,7 @@ export const TabDropdown: FunctionalComponent<TabDropdownProps> = (
     >
       <select
         aria-label="tab-dropdown"
-        class="btn-text-primary cursor-pointer py-2 text-xl font-bold"
+        class="btn-text-primary mobile-only:w-full cursor-pointer py-2 text-xl font-bold"
         onChange={(e) =>
           props.onTabChange((e.target as HTMLSelectElement).value)
         }
