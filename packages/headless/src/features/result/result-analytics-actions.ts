@@ -1,4 +1,5 @@
 import {ItemClick} from '@coveo/relay-event-types';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics.js';
 import {Result} from '../../api/search/search/result.js';
 import {
   partialDocumentInformation,
@@ -17,6 +18,11 @@ export const logDocumentOpen = (result: Result): ClickAction =>
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
+    },
+    __legacy__provider: (getState) => {
+      const customAnalyticsProvider = new SearchAnalyticsProvider(getState);
+      customAnalyticsProvider.getSearchUID = () => result.searchUid ?? '';
+      return customAnalyticsProvider;
     },
     analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {
