@@ -62,7 +62,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
                     analytics: {
                       analyticsMode: 'legacy',
                       ...(document.referrer && {
-                        originLevel3: document.referrer,
+                        originLevel3: document.referrer.substring(0, 256),
                       }),
                     },
                     ...rest,
