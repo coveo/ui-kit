@@ -26,6 +26,7 @@ import {getSearchInitialState} from '../features/search/search-state.js';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-state.js';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state.js';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state.js';
+import {getTriggerInitialState} from '../features/triggers/triggers-state.js';
 import {InsightAppState} from '../state/insight-app-state.js';
 
 export function buildMockInsightState(
@@ -61,6 +62,7 @@ export function buildMockInsightState(
     generatedAnswer: getGeneratedAnswerInitialState(),
     context: getContextInitialState(),
     insightUserActions: getInsightUserActionsInitialState(),
+    triggers: getTriggerInitialState(),
     ...config,
   };
 }
