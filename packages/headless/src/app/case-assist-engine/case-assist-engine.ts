@@ -60,6 +60,8 @@ export interface CaseAssistEngineOptions
  *
  * @param options - The case assist engine options.
  * @returns A case assist engine instance.
+ *
+ * @group Engine
  */
 export function buildCaseAssistEngine(
   options: CaseAssistEngineOptions

@@ -114,6 +114,8 @@ export interface SearchEngineOptions
  *
  * @param options - The search engine options.
  * @returns A search engine instance.
+ *
+ * @group Engine
  */
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);

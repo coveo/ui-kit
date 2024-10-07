@@ -6,6 +6,7 @@
   },
   "categorizeByGroup": true,
   "groupOrder": [
+    "Engine",
     "Controllers",
     "Search controllers",
     "Buildable controllers",

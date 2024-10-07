@@ -70,6 +70,8 @@ export interface RecommendationEngineOptions
  *
  * @param options - The recommendation engine options.
  * @returns A recommendation engine instance.
+ *
+ * @group Engine
  */
 export function buildRecommendationEngine(
   options: RecommendationEngineOptions

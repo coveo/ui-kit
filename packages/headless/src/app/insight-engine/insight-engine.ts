@@ -77,6 +77,8 @@ export interface InsightEngineOptions
  *
  * @param options - The insight engine options.
  * @returns An insight engine instance.
+ *
+ * @group Engine
  */
 export function buildInsightEngine(
   options: InsightEngineOptions

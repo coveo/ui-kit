@@ -97,6 +97,8 @@ export interface CommerceEngineOptions
  *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
+ *
+ * @group Engine
  */
 export function buildCommerceEngine(
   options: CommerceEngineOptions
