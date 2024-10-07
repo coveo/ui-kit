@@ -52,6 +52,40 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
+  playwright-determine-atomic-test:
+    name: 'Determine Playwright E2E tests to run'
+    runs-on: ubuntu-latest
+    env:
+      maximumShards: 24
+    outputs:
+      testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
+      shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
+      shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
+    steps:
+      - name: Identify E2E Test Files to run
+        id: determine-tests
+        if: ${{ always() && github.event_name == 'pull_request'}}
+        run: node scripts/ci/find-tests.mjs testsToRun
+        with:
+          projectRoot: ${{ github.workspace }}
+        shell: bash
+
+      - name: Determine Shard Values
+        id: set-matrix
+        run: node scripts/ci/determine-shard.mjs shardIndex shardTotal
+        with:
+          testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
+          maximumShards: ${{ env.maximumShards }}
+        shell: bash
+
+      # - name: Set default shard values
+      #   if: ${{ always() && github.event_name != 'pull_request'}}
+      #   run: |
+      #     number=${{ env.maximumShards }}
+      #     shardIndex=($(seq 1 $number))
+      #     echo "shardIndex=[$(echo ${shardIndex[*]} | sed 's/ /,/g')]" >> $GITHUB_OUTPUT
+      #     echo "shardTotal=$number" >> $GITHUB_OUTPUT
+      #     echo "testsToRun=" >> $GITHUB_OUTPUT
   playwright-atomic:
     # TODO: This is where we need to run the find-tests.mjs script to determine which tests to run
     name: 'Run Playwright tests for Atomic'
@@ -60,34 +94,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex:
-          [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-          ]
-        shardTotal: [24]
+        shardIndex: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardIndex)}}
+        shardTotal: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardTotal)}}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
@@ -98,6 +106,7 @@ jobs:
         with:
           shardIndex: ${{ matrix.shardIndex }}
           shardTotal: ${{ matrix.shardTotal }}
+          testsToRun: ${{ needs.playwright-determine-atomic-test.outputs.testsToRun }}
   merge-playwright-reports:
     name: 'Merge Playwright reports'
     environment: PR Artifacts

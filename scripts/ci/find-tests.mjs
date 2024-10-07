@@ -111,10 +111,11 @@ const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
 const projectRoot = getInput('project-root');
-const sourceComponentDir = join('src', 'components');
+console.log('-- projectRoot --', projectRoot);
+const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
 try {
-  const testFiles = findAllTestFiles(sourceComponentDir);
+  const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
   setOutput(outputName, testsToRun ? testsToRun : '--grep @no-test');
