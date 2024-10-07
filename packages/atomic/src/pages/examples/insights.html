@@ -461,11 +461,7 @@
       document.addEventListener('atomic/insight/attachToCase/attach', (event) => {
         console.log('attach', event.detail);
         const {controller, result} = event.detail;
-
-        new Promise(resolve => setTimeout(() => resolve(), 1000)).then(() => {
-          controller.attach();
-        });
-
+        controller.attach();
       });
 
       document.addEventListener('atomic/insight/attachToCase/detach', (event) => {

@@ -62,7 +62,7 @@ export class AtomicInsightResultAttachToCase
   private detach!: EventEmitter<InsightResultAttachToCaseEvent>;
 
   /**
-   * Set to true so the AtomicInsightResultAttachToCase behaves only as a visual indicator when results are attached.
+   * Whether the component should only behave as a visual indicator that a result is attached to the current case. Defaults to `false`, meaning that the component is interactive by default.
    */
   @Prop()
   public readOnly: boolean = false;
