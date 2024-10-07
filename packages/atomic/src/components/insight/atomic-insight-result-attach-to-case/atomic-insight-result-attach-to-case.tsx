@@ -95,11 +95,11 @@ export class AtomicInsightResultAttachToCase
 
   private getTooltip() {
     if (this.attachToCase.isAttached() && this.readOnly) {
-      return this.bindings.i18n.t('insight-result-is-attached');
+      return this.bindings.i18n.t('result-is-attached');
     }
     return this.attachToCase.isAttached()
-      ? this.bindings.i18n.t('insight-detach-from-case')
-      : this.bindings.i18n.t('insight-attach-to-case');
+      ? this.bindings.i18n.t('detach-from-case')
+      : this.bindings.i18n.t('attach-to-case');
   }
 
   public render() {
