@@ -16,7 +16,10 @@ describe('Did You Mean Test Suites', () => {
   const newQuery = 'shrimp';
 
   function commonSetup(env: TestFixture) {
-    env.with(addSearchBox()).with(addQuerySummary()).with(addDidYouMean());
+    env
+      .with(addSearchBox())
+      .with(addQuerySummary())
+      .with(addDidYouMean({queryCorrectionMode: 'legacy'}));
   }
 
   function search() {
