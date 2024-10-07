@@ -10,6 +10,10 @@ inputs:
   testsToRun:
     description: 'The tests to run'
     required: true
+  uploadArtifacts:
+    description: 'Whether to upload artifacts'
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -22,7 +26,7 @@ runs:
       working-directory: packages/atomic
       shell: bash
     - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
-      if: always()
+      if: ${{ inputs.uploadArtifacts == 'true' }}
       with:
         name: blob-report-${{ matrix.shardIndex }}
         path: packages/atomic/blob-report
