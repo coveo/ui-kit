@@ -88,6 +88,10 @@ jobs:
       shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
       shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
     steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
       - name: Identify E2E Test Files to run
         id: determine-tests
         if: ${{ always() && github.event_name == 'pull_request'}}
@@ -113,7 +117,6 @@ jobs:
       #     echo "shardTotal=$number" >> $GITHUB_OUTPUT
       #     echo "testsToRun=" >> $GITHUB_OUTPUT
   playwright-atomic:
-    # TODO: This is where we need to run the find-tests.mjs script to determine which tests to run
     name: 'Run Playwright tests for Atomic'
     needs: build
     runs-on: ubuntu-latest
@@ -124,8 +127,6 @@ jobs:
         shardTotal: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardTotal)}}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic
