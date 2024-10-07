@@ -25,6 +25,14 @@ export interface InsightResultAttachToCaseEvent {
 }
 /**
  * @internal
+ * The `atomic-insight-result-attach-to-case` component can be nested inside a `atomic-insight-result-actions` to render an interactive button that will emit an `atomic/insight/attachToCase/attach` or `atomic/insight/attachToCase/detach` JavaScript event, based on its current state, when clicked.
+ *
+ * The component can also be included inside a result template, typically with the `readOnly="true"` attribute, to indicate whether a result is attached to the current case.
+ *
+ * @part result-action-container - The result action container, when the `readOnly` prop is set to `false`.
+ * @part result-action-button - The result action button, when the `readOnly` prop is set to `false`.
+ * @part result-action-icon - The result action icon, when the `readOnly` prop is set to `false`.
+ * @part icon The icon, when the `readOnly` prop is set to `true`.
  */
 @Component({
   tag: 'atomic-insight-result-attach-to-case',
