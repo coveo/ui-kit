@@ -2235,12 +2235,11 @@ describe('commerceFacetSetReducer', () => {
         buildMockCommerceNumericFacetValue({start: 0, end: 5}),
         buildMockCommerceNumericFacetValue({start: 6, end: 10}),
       ];
-      const valuesRequest = convertToNumericRangeRequests(values);
 
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({
           type: 'numericalRange',
-          values: valuesRequest,
+          values,
         }),
       });
 
@@ -2257,7 +2256,7 @@ describe('commerceFacetSetReducer', () => {
       const finalState = commerceFacetSetReducer(state, action);
 
       const targetValues = finalState[facetId]?.request.values;
-      expect(targetValues).toEqual(convertToNumericRangeRequests(newValues));
+      expect(targetValues).toEqual(newValues);
     });
   });
 

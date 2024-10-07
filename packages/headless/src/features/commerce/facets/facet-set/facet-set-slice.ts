@@ -366,6 +366,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
+        request.values = values;
         request.numberOfValues = values.length;
       })
       .addCase(updateDateFacetValues, (state, action) => {
