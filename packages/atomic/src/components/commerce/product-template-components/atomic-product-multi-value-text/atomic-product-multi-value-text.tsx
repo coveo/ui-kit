@@ -41,7 +41,7 @@ export class AtomicProductMultiValueText {
 
   /**
    * The field that the component should use.
-   * The component will try to find this field in the `Product.raw` object unless it finds it in the `Product` object first.
+   * The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
    * Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
    */
   @Prop({reflect: true}) public field!: string;
@@ -135,7 +135,7 @@ export class AtomicProductMultiValueText {
     if (this.maxValuesToDisplay < 2) {
       return this.maxValuesToDisplay;
     }
-    return Math.min(values.length - 2, this.maxValuesToDisplay);
+    return Math.min(values.length, this.maxValuesToDisplay);
   }
 
   private renderValue(value: string) {
