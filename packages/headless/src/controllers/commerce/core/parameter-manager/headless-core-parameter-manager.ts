@@ -70,6 +70,9 @@ const initialStateSchema = <T extends Parameters>(
 
 /**
  * The `ParameterManager` sub-controller allows restoring parameters that affect the results (e.g., from the URL).
+ *
+ * @group Sub-controllers
+ * @category ParameterManager
  */
 export interface ParameterManager<T extends Parameters> extends Controller {
   /**
@@ -85,6 +88,12 @@ export interface ParameterManager<T extends Parameters> extends Controller {
   state: ParameterManagerState<T>;
 }
 
+/**
+ * The state of the `ParameterManager` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category ParameterManager
+ */
 export interface ParameterManagerState<T extends Parameters> {
   /**
    * The parameters affecting the response.

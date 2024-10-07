@@ -29,6 +29,12 @@ export type CategoryFacetOptions = Omit<
 > &
   SearchableFacetOptions;
 
+/**
+ * The state of the `CategoryFacet` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category CategoryFacet
+ * */
 export type CategoryFacetState = Omit<
   CoreCommerceFacetState<CategoryFacetValue>,
   'type'
@@ -45,6 +51,9 @@ export type CategoryFacetState = Omit<
 /**
  * The `CategoryFacet` sub-controller offers a high-level programming interface for implementing a commerce category
  * facet UI component.
+ *
+ * @group Sub-controllers
+ * @category CategoryFacet
  */
 export type CategoryFacet = Omit<
   CoreCommerceFacet<CategoryFacetValueRequest, CategoryFacetValue>,
