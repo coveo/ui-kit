@@ -2085,7 +2085,7 @@ export namespace Components {
          */
         "delimiter": string | null;
         /**
-          * The field that the component should use. The component will try to find this field in the `Product.raw` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
          */
         "field": string;
         /**
@@ -7983,7 +7983,7 @@ declare namespace LocalJSX {
          */
         "delimiter"?: string | null;
         /**
-          * The field that the component should use. The component will try to find this field in the `Product.raw` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
          */
         "field": string;
         /**
