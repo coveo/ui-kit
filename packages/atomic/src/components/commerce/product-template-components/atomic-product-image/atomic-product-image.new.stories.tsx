@@ -64,6 +64,6 @@ export const withAnAltTextField: Story = {
   tags: ['test'],
   name: 'With an alt text field',
   args: {
-    'attributes-image-alt-field': 'custom_alt_field',
+    'attributes-image-alt-field': 'ec_name',
   },
 };

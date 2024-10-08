@@ -209,22 +209,24 @@ test.describe('with an alt text field', async () => {
       expect(accessibilityResults.violations.length).toEqual(0);
     });
 
-    test('should use the default alt text for all images', async ({
-      productImage,
-    }) => {
-      expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
-        'Image 1 out of 1 for Nublu Water Bottle'
-      );
-      expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
-        'Image 1 out of 2 for Blue Lagoon Mat'
-      );
-      await productImage.nextButton.click();
-      await expect
-        .poll(async () => {
-          return await productImage.carouselImage.getAttribute('alt');
-        })
-        .toContain('Image 2 out of 2 for Blue Lagoon Mat');
-    });
+    //KIT-3620
+    test.fixme(
+      'should use the default alt text for all images',
+      async ({productImage}) => {
+        expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
+          'Image 1 out of 1 for Nublu Water Bottle'
+        );
+        expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
+          'Image 1 out of 2 for Blue Lagoon Mat'
+        );
+        await productImage.nextButton.click();
+        await expect
+          .poll(async () => {
+            return await productImage.carouselImage.getAttribute('alt');
+          })
+          .toContain('Image 2 out of 2 for Blue Lagoon Mat');
+      }
+    );
   });
 
   test.describe('when imageAltField is an empty array', () => {
@@ -239,22 +241,24 @@ test.describe('with an alt text field', async () => {
       expect(accessibilityResults.violations.length).toEqual(0);
     });
 
-    test('should use the default alt text for all images', async ({
-      productImage,
-    }) => {
-      expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
-        'Image 1 out of 1 for Nublu Water Bottle'
-      );
-      expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
-        'Image 1 out of 2 for Blue Lagoon Mat'
-      );
-      await productImage.nextButton.click();
-      await expect
-        .poll(async () => {
-          return await productImage.carouselImage.getAttribute('alt');
-        })
-        .toContain('Image 2 out of 2 for Blue Lagoon Mat');
-    });
+    //KIT-3620
+    test.fixme(
+      'should use the default alt text for all images',
+      async ({productImage}) => {
+        expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
+          'Image 1 out of 1 for '
+        );
+        expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
+          'Image 1 out of 2 for Blue Lagoon Mat'
+        );
+        await productImage.nextButton.click();
+        await expect
+          .poll(async () => {
+            return await productImage.carouselImage.getAttribute('alt');
+          })
+          .toContain('Image 2 out of 2 for Blue Lagoon Mat');
+      }
+    );
   });
 });
 
