@@ -117,6 +117,7 @@ jobs:
         shardIndex: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardIndex)}}
         shardTotal: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardTotal)}}
     steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
