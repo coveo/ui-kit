@@ -9,10 +9,19 @@ import {executeSearch} from '../../../features/insight-search/insight-search-act
 import {
   buildCoreDidYouMean,
   DidYouMean,
+  DidYouMeanProps,
   DidYouMeanState,
+  DidYouMeanOptions,
 } from '../../core/did-you-mean/headless-core-did-you-mean.js';
 
-export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
+export type {
+  QueryCorrection,
+  WordCorrection,
+  DidYouMean,
+  DidYouMeanState,
+  DidYouMeanProps,
+  DidYouMeanOptions,
+};
 
 /**
  * The insight DidYouMean controller is responsible for handling query corrections.
@@ -21,8 +30,11 @@ export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
  *
  * @param engine - The insight engine.
  */
-export function buildDidYouMean(engine: InsightEngine): DidYouMean {
-  const controller = buildCoreDidYouMean(engine);
+export function buildDidYouMean(
+  engine: InsightEngine,
+  props: DidYouMeanProps
+): DidYouMean {
+  const controller = buildCoreDidYouMean(engine, props);
   const {dispatch} = engine;
 
   return {
