@@ -28,7 +28,7 @@ test.describe('default', async () => {
   });
 });
 
-test.describe('with a fallback image', async () => {
+test.describe('with a custom fallback image', async () => {
   const FALLBACK = 'https://sports.barca.group/logos/barca.svg';
 
   test.describe('when the product image is missing', () => {
