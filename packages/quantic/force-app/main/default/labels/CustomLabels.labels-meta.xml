@@ -772,7 +772,7 @@
   </labels>
   <labels>
     <fullName>quantic_DatePatternMonth</fullName>
-    <value>M</value>
+    <value>m</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Month part of the date pattern</shortDescription>
