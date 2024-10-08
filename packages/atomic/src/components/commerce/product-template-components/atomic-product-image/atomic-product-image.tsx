@@ -47,6 +47,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
    * If the value of the field is an array of strings, the alt text will be used in the order of the images.
    *
    * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+   * @type {string}
    */
   @Prop({reflect: true}) imageAltField?: string;
 
@@ -170,6 +171,10 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
         this.product,
         this.imageAltField
       );
+      // KIT-3620
+      // if (isNullOrUndefined(value)) {
+      //   return null;
+      // }
 
       if (Array.isArray(value)) {
         return value.map((v) => `${v}`.trim());
@@ -208,9 +213,10 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
     });
     if (this.images.length === 0) {
       this.validateUrl(this.fallback);
-
       return (
         <img
+          // class="aspect-square" KIT-3619
+          //TODO - KIT-3641 use image-alt-field prior to image-not-found-alt
           alt={this.bindings.i18n.t('image-not-found-alt')}
           src={this.fallback}
           loading="eager"
@@ -222,7 +228,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
     }
 
     return (
-      // TODO: handle small/icon image sizes better on mobile
+      // TODO - KIT-3612 : handle small/icon image sizes better on mobile
       <ImageCarousel
         bindings={this.bindings}
         currentImage={this.currentImage}
