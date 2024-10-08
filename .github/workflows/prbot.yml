@@ -91,6 +91,7 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
+      - run: npm run build
       - uses: ./.github/actions/setup
       - name: Identify E2E Test Files to run
         id: determine-tests
@@ -99,7 +100,6 @@ jobs:
         env:
           projectRoot: ${{ github.workspace }}
         shell: bash
-
       - name: Determine Shard Values
         id: set-matrix
         run: node ./scripts/ci/determine-shard.mjs shardIndex shardTotal
@@ -107,18 +107,9 @@ jobs:
           testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
           maximumShards: ${{ env.maximumShards }}
         shell: bash
-
-      # - name: Set default shard values
-      #   if: ${{ always() && github.event_name != 'pull_request'}}
-      #   run: |
-      #     number=${{ env.maximumShards }}
-      #     shardIndex=($(seq 1 $number))
-      #     echo "shardIndex=[$(echo ${shardIndex[*]} | sed 's/ /,/g')]" >> $GITHUB_OUTPUT
-      #     echo "shardTotal=$number" >> $GITHUB_OUTPUT
-      #     echo "testsToRun=" >> $GITHUB_OUTPUT
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
-    needs: build
+    needs: playwright-determine-atomic-test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -126,9 +117,6 @@ jobs:
         shardIndex: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardIndex)}}
         shardTotal: ${{fromJson(needs.playwright-determine-atomic-test.outputs.shardTotal)}}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - uses: ./.github/actions/setup
-      - run: npm run build
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
