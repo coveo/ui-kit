@@ -44,8 +44,8 @@ export class ProductImageObject extends BasePageObject<'atomic-product-image'> {
     await this.page.route('**/commerce/v2/listing', async (route) => {
       const response = await route.fetch();
       const body = await response.json();
-      body.products[0].custom_alt_field = fieldNoCarousel;
-      body.products[1].custom_alt_field = fieldCarousel;
+      body.products[0].ec_name = fieldNoCarousel;
+      body.products[1].ec_name = fieldCarousel;
 
       await route.fulfill({
         response,
