@@ -6,31 +6,20 @@ function getOutputName() {
 }
 
 function allocateShards(testCount, maximumShards) {
-  const shardsPerTestSuite = 2;
   const shardTotal =
-    testCount === 0
-      ? maximumShards
-      : Math.min(testCount * shardsPerTestSuite, maximumShards);
-
+    testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
   const shardIndex = Array.from({length: shardTotal}, (_, i) => i + 1);
   return [shardIndex, [shardTotal]];
 }
 
 const testsToRun = process.env.testsToRun.split(' ');
-console.log('-- testsToRun --', testsToRun);
 const maximumShards = parseInt(process.env.maximumShards, 10);
-console.log('-- maximumShards --', maximumShards);
 
 const [shardIndexOutputName, shardTotalOutputName] = getOutputName();
 const [shardIndex, shardTotal] = allocateShards(
   testsToRun.length,
   maximumShards
 );
-
-console.log('*********************');
-console.log(shardIndexOutputName, shardTotalOutputName);
-console.log(shardIndex, shardTotal);
-console.log('*********************');
 
 setOutput(shardIndexOutputName, shardIndex);
 setOutput(shardTotalOutputName, shardTotal);
