@@ -1596,4 +1596,11 @@
     <protected>false</protected>
     <shortDescription>There are no user actions associated.</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_UserActions</fullName>
+    <value>User actions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>User actions</shortDescription>
+  </labels>
 </CustomLabels>
