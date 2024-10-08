@@ -104,7 +104,9 @@ export default class QuanticSearchInterface extends LightningElement {
                   },
                   analytics: {
                     analyticsMode: 'legacy',
-                    ...(document.referrer && {originLevel3: document.referrer}),
+                    ...(document.referrer && {
+                      originLevel3: document.referrer.substring(0, 256),
+                    }),
                   },
                   ...rest,
                 },
