@@ -172,10 +172,6 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
         this.product,
         this.imageAltField
       );
-      // KIT-3620
-      // if (isNullOrUndefined(value)) {
-      //   return null;
-      // }
 
       if (isNullOrUndefined(value)) {
         return null;
