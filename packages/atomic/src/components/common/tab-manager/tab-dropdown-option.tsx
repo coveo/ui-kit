@@ -11,7 +11,7 @@ export const TabDropdownOption: FunctionalComponent<TabDropdownOptionProps> = (
 ) => {
   return (
     <option
-      class='text-black'
+      class="text-black"
       key={props.value}
       value={props.value}
       selected={props.isSelected}
