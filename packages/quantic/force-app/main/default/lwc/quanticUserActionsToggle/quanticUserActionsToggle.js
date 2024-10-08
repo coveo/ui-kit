@@ -90,7 +90,8 @@ export default class QuanticUserActionsToggle extends LightningElement {
    */
   get modal() {
     /** @type {Object} */
-    return this.template.querySelector(`[data-id=${this.modalId}]`);
+    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
+    return modal;
   }
 
   /**
