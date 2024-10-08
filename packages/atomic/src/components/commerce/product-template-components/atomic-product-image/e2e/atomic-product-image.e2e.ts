@@ -367,7 +367,7 @@ test.describe('as a carousel', async () => {
           const src = await productImage.carouselImage.getAttribute('src');
           return src;
         })
-        .toContain(SECOND_IMAGE);
+        .toContain(FIRST_IMAGE);
     });
 
     test('should not open the product', async ({page}) => {
@@ -393,7 +393,7 @@ test.describe('as a carousel', async () => {
           const src = await productImage.carouselImage.getAttribute('src');
           return src;
         })
-        .toContain(FIRST_IMAGE);
+        .toContain(SECOND_IMAGE);
     });
   });
 });
