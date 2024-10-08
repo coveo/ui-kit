@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {setOutput, getInput} from '@actions/core';
+import {setOutput} from '@actions/core';
 
 function getOutputName() {
   return process.argv.slice(2, 4);

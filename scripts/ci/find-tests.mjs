@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {setOutput, getInput} from '@actions/core';
+import {setOutput} from '@actions/core';
 import {readdirSync, statSync} from 'fs';
 import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
@@ -8,7 +8,6 @@ import {
   getChangedFiles,
   getOutputName,
 } from './hasFileChanged.mjs';
-// TODO: there is already a file in the root dir
 import {listImports, ensureFileExists} from './list-imports.mjs';
 
 /**
