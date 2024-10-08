@@ -1,0 +1,38 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <button aria-hidden={modalIsOpen} data-test="user-actions-toggle-button"
+      class="slds-button slds-button_neutral user-actions-toggle-button slds-is-relative" onclick={openModal}
+      title={labels.userActions}>
+      <slot name="button-content">
+        <lightning-icon size="x-small" icon-name="utility:clock" alternative-text={labels.userActions}>
+        </lightning-icon>
+      </slot>
+    </button>
+
+    <c-quantic-modal data-id={modalId}>
+      <div class="slds-var-p-vertical_medium slds-is-relative slds-align_absolute-center slds-border_bottom"
+        slot="header">
+        <div class="slds-align_absolute-center">
+          <lightning-icon class="slds-var-p-right_xx-small" icon-name="utility:clock"
+            alternative-text={labels.userActions} size="x-small" title={labels.userActions}>
+          </lightning-icon><span data-test="user-actions-modal-label" class="slds-text-title_bold">{labels.userActions}</span>
+        </div>
+        <lightning-button-icon data-focusable="true"
+          class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large user-actions-modal__action"
+          onclick={closeModal} variant="bare" title="Close" icon-name="utility:close"></lightning-button-icon>
+      </div>
+
+      <div class="slds-align_absolute-center" slot="content">
+        <div class="user-actions-modal__content">
+          <c-quantic-user-actions-timeline engine-id={engineId} user-id={userId}
+            ticket-creation-date-time={ticketCreationDateTime}
+            excluded-custom-actions={excludedCustomActions}></c-quantic-user-actions-timeline>
+        </div>
+      </div>
+    </c-quantic-modal>
+  </template>
+</template>
