@@ -57,7 +57,7 @@ function createTestFileMappings(testPaths, projectRoot) {
 
     [
       relative(projectRoot, sourceFilePath),
-      ...listImports(projectRoot, sourceFilePath), // TODO: test circular dependency here
+      ...listImports(projectRoot, sourceFilePath),
       ...listImports(projectRoot, testPath),
     ].forEach((importedFile) => imports.add(importedFile));
 
@@ -97,7 +97,6 @@ function ensureIsNotCoveoPackage(file) {
 }
 
 function dependsOnCoveoPackage(file) {
-  // TODO: find a better way to detect Coveo packages;
   const externalPackages = ['packages/headless', 'packages/bueno'];
   for (const pkg of externalPackages) {
     if (file.includes(pkg)) {
@@ -110,7 +109,6 @@ const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputName = getOutputName();
 const projectRoot = process.env.projectRoot;
-console.log('-- projectRoot --', projectRoot);
 const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
 try {
@@ -124,5 +122,4 @@ try {
   }
 } catch (error) {
   console.warn(error?.message || error);
-  console.log('Running all E2E tests.');
 }
