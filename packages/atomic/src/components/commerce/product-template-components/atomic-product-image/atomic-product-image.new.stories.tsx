@@ -61,9 +61,10 @@ export const withAFallbackImage: Story = {
 };
 
 export const withAnAltTextField: Story = {
-  tags: ['test'],
   name: 'With an alt text field',
   args: {
+    'attributes-field': 'invalid',
+    'attributes-fallback': 'invalid',
     'attributes-image-alt-field': 'ec_name',
   },
 };
