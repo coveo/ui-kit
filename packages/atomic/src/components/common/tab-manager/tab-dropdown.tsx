@@ -14,7 +14,7 @@ export const TabDropdown: FunctionalComponent<TabDropdownProps> = (
 ) => {
   return (
     <div
-      class={`tab-dropdown-area relative ${props.class || ''}`}
+      class={`tab-dropdown-area relative p-1 ${props.class || ''}`}
       aria-label="tab-dropdown-area"
       part="dropdown-area"
     >
