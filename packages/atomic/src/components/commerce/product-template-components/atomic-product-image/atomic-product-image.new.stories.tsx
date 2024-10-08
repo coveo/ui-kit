@@ -55,6 +55,7 @@ export const Default: Story = {
 export const withAFallbackImage: Story = {
   name: 'With a fallback image',
   args: {
+    'attributes-field': 'invalid',
     'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
   },
 };

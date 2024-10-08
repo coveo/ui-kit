@@ -1,3 +1,12 @@
+## <small>3.2.4 (2024-10-02)</small>
+
+- test(atomic): add tests for atomic-commerce-recommendation-list (#4437) ([74dff0d](https://github.com/coveo/ui-kit/commits/74dff0d)), closes [#4437](https://github.com/coveo/ui-kit/issues/4437)
+- test(atomic): add tests for generated answer tab support (#4447) ([7ab3dae](https://github.com/coveo/ui-kit/commits/7ab3dae)), closes [#4447](https://github.com/coveo/ui-kit/issues/4447)
+- test(atomic): move recs-interface, recs-list and external to playwright (#4425) ([ef53640](https://github.com/coveo/ui-kit/commits/ef53640)), closes [#4425](https://github.com/coveo/ui-kit/issues/4425)
+- test(atomic): rewrite "show more" facet tests in playwright (#4465) ([025804a](https://github.com/coveo/ui-kit/commits/025804a)), closes [#4465](https://github.com/coveo/ui-kit/issues/4465)
+- fix(atomic): remove product currency glitch on render (#4408) ([ff39242](https://github.com/coveo/ui-kit/commits/ff39242)), closes [#4408](https://github.com/coveo/ui-kit/issues/4408)
+- chore(atomic): only build atomic-react generated file during build mode (#4463) ([ce63c06](https://github.com/coveo/ui-kit/commits/ce63c06)), closes [#4463](https://github.com/coveo/ui-kit/issues/4463)
+
 ## <small>3.2.3 (2024-09-25)</small>
 
 - chore(atomic): fix tsconfig resolution for the e2e folders (#4462) ([2a037ff](https://github.com/coveo/ui-kit/commits/2a037ff)), closes [#4462](https://github.com/coveo/ui-kit/issues/4462)
