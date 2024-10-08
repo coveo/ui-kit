@@ -85,8 +85,8 @@ jobs:
       maximumShards: 24
     outputs:
       testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
-      shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
-      shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
+      shardIndex: ${{ steps.set-matrix.outputs.shardIndex }}
+      shardTotal: ${{ steps.set-matrix.outputs.shardTotal }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
