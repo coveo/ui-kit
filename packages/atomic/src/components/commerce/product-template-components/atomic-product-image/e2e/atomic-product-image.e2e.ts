@@ -327,6 +327,17 @@ test.describe('as a carousel', async () => {
         .toContain(SECOND_IMAGE);
     });
 
+    test('should navigate to the first image if the last image is reached', async ({
+      productImage,
+    }) => {
+      await productImage.nextButton.click();
+      await expect
+        .poll(async () => {
+          return await productImage.carouselImage.getAttribute('src');
+        })
+        .toContain(FIRST_IMAGE);
+    });
+
     test('should not open the product', async ({page}) => {
       expect(page.url()).toEqual(URL);
     });
@@ -337,7 +348,20 @@ test.describe('as a carousel', async () => {
       await productImage.previousButton.click();
     });
 
+    test('should navigate to the last image if the first image is reached', async ({
+      productImage,
+    }) => {
+      await expect
+        .poll(async () => {
+          const src = await productImage.carouselImage.getAttribute('src');
+          return src;
+        })
+        .toContain(SECOND_IMAGE);
+    });
+
     test('should navigate to the previous image', async ({productImage}) => {
+      await productImage.previousButton.click();
+
       await expect
         .poll(async () => {
           const src = await productImage.carouselImage.getAttribute('src');
@@ -348,6 +372,28 @@ test.describe('as a carousel', async () => {
 
     test('should not open the product', async ({page}) => {
       expect(page.url()).toEqual(URL);
+    });
+  });
+
+  test.describe('when clicking the indicator dot', () => {
+    test('should navigate to the corresponding image', async ({
+      productImage,
+    }) => {
+      await expect
+        .poll(async () => {
+          const src = await productImage.carouselImage.getAttribute('src');
+          return src;
+        })
+        .toContain(FIRST_IMAGE);
+
+      await productImage.indicatorDot.click();
+
+      await expect
+        .poll(async () => {
+          const src = await productImage.carouselImage.getAttribute('src');
+          return src;
+        })
+        .toContain(FIRST_IMAGE);
     });
   });
 });
