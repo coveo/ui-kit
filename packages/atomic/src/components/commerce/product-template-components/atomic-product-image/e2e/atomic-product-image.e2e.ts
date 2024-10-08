@@ -97,7 +97,14 @@ test.describe('with an alt text field', async () => {
         'Nublu Water Bottle',
         'Blue Lagoon Mat'
       );
-      await productImage.load({story: 'with-an-alt-text-field'});
+      await productImage.load({
+        story: 'with-an-alt-text-field',
+        args: {
+          field: 'ec_thumbnails',
+          fallback: undefined,
+          imageAltField: 'custom_alt_field',
+        },
+      });
       await productImage.noCarouselImage.waitFor();
     });
 
@@ -133,7 +140,14 @@ test.describe('with an alt text field', async () => {
         NO_CAROUSEL_CUSTOM_FIELDS,
         CAROUSEL_CUSTOM_FIELDS
       );
-      await productImage.load({story: 'with-an-alt-text-field'});
+      await productImage.load({
+        story: 'with-an-alt-text-field',
+        args: {
+          field: 'ec_thumbnails',
+          fallback: undefined,
+          imageAltField: 'custom_alt_field',
+        },
+      });
       await productImage.noCarouselImage.waitFor();
     });
 
@@ -197,7 +211,14 @@ test.describe('with an alt text field', async () => {
 
   test.describe('when imageAltField is invalid', () => {
     test.beforeEach(async ({productImage}) => {
-      await productImage.load({story: 'with-an-alt-text-field'});
+      await productImage.load({
+        story: 'with-an-alt-text-field',
+        args: {
+          field: 'ec_thumbnails',
+          fallback: undefined,
+          imageAltField: 'custom_alt_field',
+        },
+      });
       await productImage.noCarouselImage.waitFor();
     });
 
@@ -206,10 +227,11 @@ test.describe('with an alt text field', async () => {
       expect(accessibilityResults.violations.length).toEqual(0);
     });
 
-    //KIT-3612
+    //TODO: KIT-3620
     test.fixme(
       'should use the default alt text for all images',
-      async ({productImage}) => {
+      async ({productImage, page}) => {
+        await page.waitForTimeout(10000);
         expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
           'Image 1 out of 1 for Nublu Water Bottle'
         );
@@ -229,7 +251,14 @@ test.describe('with an alt text field', async () => {
   test.describe('when imageAltField is an empty array', () => {
     test.beforeEach(async ({productImage}) => {
       await productImage.withCustomField([], []);
-      await productImage.load({story: 'with-an-alt-text-field'});
+      await productImage.load({
+        story: 'with-an-alt-text-field',
+        args: {
+          field: 'ec_thumbnails',
+          fallback: undefined,
+          imageAltField: 'custom_alt_field',
+        },
+      });
       await productImage.noCarouselImage.waitFor();
     });
 

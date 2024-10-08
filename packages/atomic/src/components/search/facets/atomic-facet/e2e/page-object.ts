@@ -10,15 +10,23 @@ export class AtomicFacetPageObject extends BasePageObject<'atomic-facet'> {
     return this.page.getByRole('button', {name: /Expand the \w* facet/});
   }
 
-  get getFacetSearch() {
+  get facetSearch() {
     return this.page.getByLabel('Search');
   }
 
-  get getFacetValue() {
-    return this.page.locator('[part="value-checkbox"]');
+  get facetValue() {
+    return this.page.locator('ul[part="values"] > li');
   }
 
   get facetSearchMoreMatchesFor() {
     return this.page.getByRole('button', {name: 'More matches for p'});
+  }
+
+  get showMoreButton() {
+    return this.page.getByRole('button', {name: 'Show more'});
+  }
+
+  get showLessButton() {
+    return this.page.getByRole('button', {name: 'Show less'});
   }
 }

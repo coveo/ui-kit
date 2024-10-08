@@ -55,14 +55,16 @@ export const Default: Story = {
 export const withAFallbackImage: Story = {
   name: 'With a fallback image',
   args: {
+    'attributes-field': 'invalid',
     'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
   },
 };
 
 export const withAnAltTextField: Story = {
-  tags: ['test'],
   name: 'With an alt text field',
   args: {
-    'attributes-image-alt-field': 'custom_alt_field',
+    'attributes-field': 'invalid',
+    'attributes-fallback': 'invalid',
+    'attributes-image-alt-field': 'ec_name',
   },
 };

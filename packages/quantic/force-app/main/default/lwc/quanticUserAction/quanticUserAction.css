@@ -1,0 +1,39 @@
+.user-action__icon-container {
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-action__separator {
+  width: 0.125rem;
+  height: 1.75rem;
+  background-color: var(--lwc-colorTextIconDefault, #747474);
+  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+}
+
+.user-action__title {
+  color: #1a1b1e;
+}
+
+.user-action__ticket-creation-title {
+  font-weight: var(--lwc-fontWeightBold, 700);
+}
+
+.user-action__custom-action-icon,
+.user-action__search-action-icon {
+  --slds-c-icon-color-foreground-default: #1a1b1e;
+}
+
+.user-action__click-action-icon,
+.user-action__view-action-icon {
+  --slds-c-icon-color-foreground-default: var(--lwc-colorBrandDark, #0176d3);
+}
+
+.user-action__ticket-creation-icon {
+  --slds-c-icon-color-foreground-default: #2e844a;
+}
+
+.user-action__details {
+  font-weight: var(--lwc-fontWeightRegular, 400);
+  color: var(--lwc-colorTextPlaceholder, #747474);
+  font-size: 10px;
+}

@@ -1,5 +1,5 @@
 import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
-import {analyticsModeTest} from '../../../page-objects/analytics';
+import {AnalyticsModeEnum} from '../../../page-objects/analytics';
 import {
   interceptCaseAssist,
   mockCaseClassification,
@@ -76,7 +76,13 @@ describe('quantic-case-classification', () => {
     configure(options);
   }
 
-  analyticsModeTest.forEach((analytics) => {
+  // TODO: (SFINT-5732)
+  [
+    {
+      mode: AnalyticsModeEnum.legacy,
+      label: 'when legacy analytics are sent',
+    },
+  ].forEach((analytics) => {
     describe(analytics.label, () => {
       before(() => {
         analyticsMode = analytics.mode;
