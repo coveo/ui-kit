@@ -84,7 +84,11 @@ export default class QuanticDidYouMean extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-    this.didYouMean = this.headless.buildDidYouMean(engine);
+    this.didYouMean = this.headless.buildDidYouMean(engine, {
+      options: {
+        queryCorrectionMode: 'legacy',
+      },
+    });
     this.queryTrigger = this.headless?.buildQueryTrigger?.(engine);
     this.unsubscribeDidYouMean = this.didYouMean.subscribe(() =>
       this.updateDidYouMeanState()
