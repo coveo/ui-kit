@@ -28,7 +28,7 @@ test.describe('default', async () => {
   });
 });
 
-test.describe('with a fallback image', async () => {
+test.describe('with a custom fallback image', async () => {
   const FALLBACK = 'https://sports.barca.group/logos/barca.svg';
 
   test.describe('when the product image is missing', () => {
@@ -227,25 +227,24 @@ test.describe('with an alt text field', async () => {
       expect(accessibilityResults.violations.length).toEqual(0);
     });
 
-    //TODO: KIT-3620
-    test.fixme(
-      'should use the default alt text for all images',
-      async ({productImage, page}) => {
-        await page.waitForTimeout(10000);
-        expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
-          'Image 1 out of 1 for Nublu Water Bottle'
-        );
-        expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
-          'Image 1 out of 2 for Blue Lagoon Mat'
-        );
-        await productImage.nextButton.click();
-        await expect
-          .poll(async () => {
-            return await productImage.carouselImage.getAttribute('alt');
-          })
-          .toContain('Image 2 out of 2 for Blue Lagoon Mat');
-      }
-    );
+    test('should use the default alt text for all images', async ({
+      productImage,
+      page,
+    }) => {
+      await page.waitForTimeout(10000);
+      expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
+        'Image 1 out of 1 for Nublu Water Bottle'
+      );
+      expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
+        'Image 1 out of 2 for Blue Lagoon Mat'
+      );
+      await productImage.nextButton.click();
+      await expect
+        .poll(async () => {
+          return await productImage.carouselImage.getAttribute('alt');
+        })
+        .toContain('Image 2 out of 2 for Blue Lagoon Mat');
+    });
   });
 
   test.describe('when imageAltField is an empty array', () => {
@@ -324,6 +323,17 @@ test.describe('as a carousel', async () => {
         .toContain(SECOND_IMAGE);
     });
 
+    test('should navigate to the first image if the last image is reached', async ({
+      productImage,
+    }) => {
+      await productImage.nextButton.click();
+      await expect
+        .poll(async () => {
+          return await productImage.carouselImage.getAttribute('src');
+        })
+        .toContain(FIRST_IMAGE);
+    });
+
     test('should not open the product', async ({page}) => {
       expect(page.url()).toEqual(URL);
     });
@@ -334,7 +344,9 @@ test.describe('as a carousel', async () => {
       await productImage.previousButton.click();
     });
 
-    test('should navigate to the previous image', async ({productImage}) => {
+    test('should navigate to the last image if the first image is reached', async ({
+      productImage,
+    }) => {
       await expect
         .poll(async () => {
           const src = await productImage.carouselImage.getAttribute('src');
@@ -343,8 +355,41 @@ test.describe('as a carousel', async () => {
         .toContain(SECOND_IMAGE);
     });
 
+    test('should navigate to the previous image', async ({productImage}) => {
+      await productImage.previousButton.click();
+
+      await expect
+        .poll(async () => {
+          const src = await productImage.carouselImage.getAttribute('src');
+          return src;
+        })
+        .toContain(FIRST_IMAGE);
+    });
+
     test('should not open the product', async ({page}) => {
       expect(page.url()).toEqual(URL);
+    });
+  });
+
+  test.describe('when clicking the indicator dot', () => {
+    test('should navigate to the corresponding image', async ({
+      productImage,
+    }) => {
+      await expect
+        .poll(async () => {
+          const src = await productImage.carouselImage.getAttribute('src');
+          return src;
+        })
+        .toContain(FIRST_IMAGE);
+
+      await productImage.indicatorDot.click();
+
+      await expect
+        .poll(async () => {
+          const src = await productImage.carouselImage.getAttribute('src');
+          return src;
+        })
+        .toContain(SECOND_IMAGE);
     });
   });
 });

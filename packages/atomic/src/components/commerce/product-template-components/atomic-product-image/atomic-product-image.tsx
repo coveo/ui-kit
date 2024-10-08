@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, State, Method} from '@stencil/core';
 import {
@@ -176,6 +177,10 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
       //   return null;
       // }
 
+      if (isNullOrUndefined(value)) {
+        return null;
+      }
+
       if (Array.isArray(value)) {
         return value.map((v) => `${v}`.trim());
       }
@@ -215,6 +220,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
       this.validateUrl(this.fallback);
       return (
         <img
+          //TODO - KIT-3641 use image-alt-field prior to image-not-found-alt
           class="aspect-square"
           alt={this.bindings.i18n.t('image-not-found-alt')}
           src={this.fallback}
