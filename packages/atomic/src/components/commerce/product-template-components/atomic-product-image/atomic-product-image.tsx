@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, State, Method} from '@stencil/core';
 import {
@@ -171,10 +172,10 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
         this.product,
         this.imageAltField
       );
-      // KIT-3620
-      // if (isNullOrUndefined(value)) {
-      //   return null;
-      // }
+
+      if (isNullOrUndefined(value)) {
+        return null;
+      }
 
       if (Array.isArray(value)) {
         return value.map((v) => `${v}`.trim());
