@@ -4,18 +4,19 @@ import {
   BooleanValue,
   RecordValue,
   Value,
+  ArrayValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   allowedValues,
   customSort,
-} from '../../../controllers/core/facets/_common/facet-option-definitions';
-import {validatePayload} from '../../../utils/validate-payload';
-import {FacetResultsMustMatch} from '../facet-api/request';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {facetValueDefinition} from './facet-set-validate-payload';
-import {FacetSortCriterion} from './interfaces/request';
-import {FacetValue} from './interfaces/response';
+} from '../../../controllers/core/facets/_common/facet-option-definitions.js';
+import {validatePayload} from '../../../utils/validate-payload.js';
+import {FacetResultsMustMatch} from '../facet-api/request.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
+import {facetValueDefinition} from './facet-set-validate-payload.js';
+import {FacetSortCriterion} from './interfaces/request.js';
+import {FacetValue} from './interfaces/response.js';
 
 export interface RegisterFacetActionCreatorPayload {
   /**
@@ -27,6 +28,16 @@ export interface RegisterFacetActionCreatorPayload {
    * The field whose values you want to display in the facet.
    * */
   field: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
+
+  /**
+   * The currently active tab.
+   */
+  activeTab?: string;
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
@@ -103,6 +114,16 @@ export interface RegisterFacetActionCreatorPayload {
 const facetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: new StringValue({required: true, emptyAllowed: true}),
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
+  activeTab: new StringValue({required: false}),
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),

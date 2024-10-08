@@ -1,41 +1,42 @@
-import {configuration} from '../../../../../app/common-reducers';
-import {CoreEngine} from '../../../../../app/engine';
-import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {configuration} from '../../../../../app/common-reducers.js';
+import {CoreEngine} from '../../../../../app/engine.js';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
+} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {
   NumericFacetResponse,
   NumericFacetValue,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
   RegisterNumericFacetActionCreatorPayload,
   registerNumericFacet,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {searchReducer as search} from '../../../../../features/search/search-slice';
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {searchReducer as search} from '../../../../../features/search/search-slice.js';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
 import {
   ConfigurationSection,
   FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
-import {Controller} from '../../../../controller/headless-controller';
-import {determineFacetId} from '../../_common/facet-id-determinor';
+} from '../../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../../utils/errors.js';
+import {Controller} from '../../../../controller/headless-controller.js';
+import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {
   assertRangeFacetOptions,
   buildCoreRangeFacet,
-} from '../headless-core-range-facet';
+} from '../headless-core-range-facet.js';
 import {
   NumericFacetOptions,
   validateNumericFacetOptions,
-} from './headless-numeric-facet-options';
-import {buildNumericRange, NumericRangeOptions} from './numeric-range';
+} from './headless-numeric-facet-options.js';
+import {buildNumericRange, NumericRangeOptions} from './numeric-range.js';
 
 export type {
   NumericRangeOptions,
@@ -168,10 +169,14 @@ export function buildCoreNumericFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterNumericFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateNumericFacetOptions(engine, options);

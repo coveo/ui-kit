@@ -1,3 +1,53 @@
+## 3.1.0 (2024-10-02)
+
+- feat(headless): analytics actions updated to send valid ep events (#4450) ([0a60d40](https://github.com/coveo/ui-kit/commits/0a60d40)), closes [#4450](https://github.com/coveo/ui-kit/issues/4450)
+- feat(quantic): quantic user action component created (#4472) ([7add130](https://github.com/coveo/ui-kit/commits/7add130)), closes [#4472](https://github.com/coveo/ui-kit/issues/4472)
+- feat(quantic): quantic user actions session component created (#4473) ([0882dbc](https://github.com/coveo/ui-kit/commits/0882dbc)), closes [#4473](https://github.com/coveo/ui-kit/issues/4473)
+
+## <small>3.0.4 (2024-09-25)</small>
+
+- test(quantic): added new apex class test to increase code coverage (#4464) ([b595d0d](https://github.com/coveo/ui-kit/commits/b595d0d)), closes [#4464](https://github.com/coveo/ui-kit/issues/4464)
+
+## <small>3.0.1 (2024-09-24)</small>
+
+- fix(quantic, searchbox): Issue with searchbox suggestions list flashing after selecting recent query ([6f75ad6](https://github.com/coveo/ui-kit/commits/6f75ad6)), closes [#4401](https://github.com/coveo/ui-kit/issues/4401)
+
+## 3.0.0 (2024-09-18)
+
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(headless, atomic, quantic)!: remove deprecated functions/properties (#4350) ([8de5406](https://github.com/coveo/ui-kit/commits/8de5406)), closes [#4350](https://github.com/coveo/ui-kit/issues/4350)
+- chore(headless)!: remove deprecated product listing (#4347) ([df967ba](https://github.com/coveo/ui-kit/commits/df967ba)), closes [#4347](https://github.com/coveo/ui-kit/issues/4347)
+- feat!: remove the organizationEndpoints configuration option (#4339) ([d3e1041](https://github.com/coveo/ui-kit/commits/d3e1041)), closes [#4339](https://github.com/coveo/ui-kit/issues/4339)
+- feat(quantic)!: logic to handle opening smart snippet source inside salesforce added (#4323) ([7dca4f5](https://github.com/coveo/ui-kit/commits/7dca4f5)), closes [#4323](https://github.com/coveo/ui-kit/issues/4323)
+- feat(quantic)!: Change names of DOM Events used, to add the 'quantic\_\_' prefix (#4383) ([86519d1](https://github.com/coveo/ui-kit/commits/86519d1)), closes [#4383](https://github.com/coveo/ui-kit/issues/4383)
+- feat(quantic)!: initial value for the originLevel3 updated to be a valid value (#4312) ([48f332e](https://github.com/coveo/ui-kit/commits/48f332e)), closes [#4312](https://github.com/coveo/ui-kit/issues/4312)
+- feat(quantic)!: property name of the Quantic Document Suggestions updated (#4334) ([65e58fd](https://github.com/coveo/ui-kit/commits/65e58fd)), closes [#4334](https://github.com/coveo/ui-kit/issues/4334)
+- feat(quantic)!: rephrase feature removed from quantic generated component (#4411) ([799751a](https://github.com/coveo/ui-kit/commits/799751a)), closes [#4411](https://github.com/coveo/ui-kit/issues/4411)
+- fix(quantic)!: deleted unnecessary properties, methods and labels (#4338) ([5dfc143](https://github.com/coveo/ui-kit/commits/5dfc143)), closes [#4338](https://github.com/coveo/ui-kit/issues/4338)
+- fix(quantic)!: examples component moved under the examples folder (#4356) ([fb1a93c](https://github.com/coveo/ui-kit/commits/fb1a93c)), closes [#4356](https://github.com/coveo/ui-kit/issues/4356)
+- fix(quantic)!: quantic result badge renamed to quantic result tag (#4414) ([a9bc33b](https://github.com/coveo/ui-kit/commits/a9bc33b)), closes [#4414](https://github.com/coveo/ui-kit/issues/4414)
+- feat(atomic): user actions timeline component created (#4272) ([7c110bc](https://github.com/coveo/ui-kit/commits/7c110bc)), closes [#4272](https://github.com/coveo/ui-kit/issues/4272)
+- feat(quantic): set analyticsMode: legacy on all Quantic Interfaces (#4385) ([cb20ded](https://github.com/coveo/ui-kit/commits/cb20ded)), closes [#4385](https://github.com/coveo/ui-kit/issues/4385)
+- fix(quantic): Tooltip missing on long recent queries/suggestions in quantic searchbox (#4320) ([a88f947](https://github.com/coveo/ui-kit/commits/a88f947)), closes [#4320](https://github.com/coveo/ui-kit/issues/4320)
+- fix(quantic): Dropdown alignment issue in quanticSort component (#4351) ([cd26983](https://github.com/coveo/ui-kit/commits/cd26983)), closes [#4351](https://github.com/coveo/ui-kit/issues/4351)
+- fix(quantic): expandable searchbox not collapsing back to normal height after clearing (#4379) ([6892957](https://github.com/coveo/ui-kit/commits/6892957)), closes [#4379](https://github.com/coveo/ui-kit/issues/4379)
+- fix(quantic): Standalone searchbox dropdown overlaps with integrated searchbox in HSP (#4359) ([4426e5e](https://github.com/coveo/ui-kit/commits/4426e5e)), closes [#4359](https://github.com/coveo/ui-kit/issues/4359)
+
+### BREAKING CHANGE
+
+- logic to handle opening smart snippet source inside salesforce added (#4323)
+- Change names of DOM Events used, to add the 'quantic\_\_' prefix (#4383)
+- deleted unnecessary properties, methods and labels (#4338)
+- examples component moved under the examples folder (#4356)
+- initial value for the originLevel3 updated to be a valid value (#4312)
+- property name of the Quantic Document Suggestions updated (#4334)
+- quantic result badge renamed to quantic result tag (#4414)
+- remove deprecated functions/properties (#4350)
+- remove deprecated product listing (#4347)
+- remove the organizationEndpoints configuration option (#4339)
+- rephrase feature removed from quantic generated component (#4411)
+- update node engine definition in all exported packages (#4330)
+
 # 2.57.0 (2024-08-21)
 
 ### Features

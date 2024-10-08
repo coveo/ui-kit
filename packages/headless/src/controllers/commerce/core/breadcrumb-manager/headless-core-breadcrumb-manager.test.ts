@@ -3,12 +3,12 @@ import {
   clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
   updateCoreFacetFreezeCurrentValues,
-} from '../../../../features/commerce/facets/core-facet/core-facet-actions';
+} from '../../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-} from '../../../../features/commerce/facets/date-facet/date-facet-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice';
+} from '../../../../features/commerce/facets/date-facet/date-facet-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
@@ -16,47 +16,47 @@ import {
   DateFacetValue,
   NumericFacetValue,
   RegularFacetValue,
-} from '../../../../features/commerce/facets/facet-set/interfaces/response';
+} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions';
+} from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice';
-import {CommerceAppState} from '../../../../state/commerce-app-state';
-import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request';
+} from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
+import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
+import {CommerceAppState} from '../../../../state/commerce-app-state.js';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
-} from '../../../../test/mock-commerce-facet-response';
+} from '../../../../test/mock-commerce-facet-response.js';
 import {
   buildMockCategoryFacetValue,
   buildMockCommerceRegularFacetValue,
-} from '../../../../test/mock-commerce-facet-value';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+} from '../../../../test/mock-commerce-facet-value.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
+} from '../../../../test/mock-engine-v2.js';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
   CoreBreadcrumbManagerOptions,
-} from './headless-core-breadcrumb-manager';
+} from './headless-core-breadcrumb-manager.js';
 
-jest.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
-jest.mock(
+vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
+vi.mock(
   '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
-jest.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
+vi.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
 
-jest.mock(
+vi.mock(
   '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
 );
 
@@ -67,8 +67,8 @@ describe('core breadcrumb manager', () => {
   let state: CommerceAppState;
 
   const facetId = 'some_facet_id';
-  const facetResponseSelector = jest.fn();
-  const fetchProductsActionCreator = jest.fn();
+  const facetResponseSelector = vi.fn();
+  const fetchProductsActionCreator = vi.fn();
 
   function initEngine() {
     engine = buildMockCommerceEngine(state);
@@ -87,7 +87,7 @@ describe('core breadcrumb manager', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       facetResponseSelector,
       fetchProductsActionCreator,

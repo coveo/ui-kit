@@ -1,10 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
   UpdateFacetAutoSelectionActionCreatorPayload,
   updateFacetAutoSelection,
-} from '../generic/facet-actions';
+} from '../generic/facet-actions.js';
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
@@ -17,7 +17,7 @@ import {
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
   UpdateCategoryFacetSortCriterionActionCreatorPayload,
   UpdateCategoryFacetBasePathActionCreatorPayload,
-} from './category-facet-set-actions';
+} from './category-facet-set-actions.js';
 
 export type {
   RegisterCategoryFacetActionCreatorPayload,

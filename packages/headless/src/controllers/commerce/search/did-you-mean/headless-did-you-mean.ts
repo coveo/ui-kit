@@ -1,18 +1,18 @@
 import {
   QueryCorrection,
   WordCorrection,
-} from '../../../../api/search/search/query-corrections';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../../app/state-key';
-import {didYouMeanReducer as didYouMean} from '../../../../features/commerce/did-you-mean/did-you-mean-slice';
-import {hasQueryCorrectionSelector} from '../../../../features/did-you-mean/did-you-mean-selectors';
-import {CommerceDidYouMeanSection} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
+} from '../../../../api/search/search/query-corrections.js';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../../app/state-key.js';
+import {didYouMeanReducer as didYouMean} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {hasQueryCorrectionSelector} from '../../../../features/did-you-mean/did-you-mean-selectors.js';
+import {CommerceDidYouMeanSection} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
-import {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean';
+} from '../../../controller/headless-controller.js';
+import {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean.js';
 
 export type {QueryCorrection, WordCorrection, DidYouMeanState};
 
@@ -50,7 +50,7 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
         wasCorrectedTo: state.wasCorrectedTo,
         queryCorrection: state.queryCorrection,
         hasQueryCorrection: hasQueryCorrection(),
-        wasAutomaticallyCorrected: hasQueryCorrection(),
+        wasAutomaticallyCorrected: state.wasCorrectedTo !== '',
       };
     },
   };

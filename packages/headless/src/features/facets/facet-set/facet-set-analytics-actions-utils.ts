@@ -1,33 +1,33 @@
-import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {
   AutomaticFacetSection,
   CategoryFacetSection,
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
-} from '../../../state/state-sections';
-import {getAutomaticFacetSetInitialState} from '../automatic-facet-set/automatic-facet-set-state';
-import {AutomaticFacetResponse} from '../automatic-facet-set/interfaces/response';
-import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
-import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
-import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
-import {FacetType} from '../facet-api/request';
+} from '../../../state/state-sections.js';
+import {getAutomaticFacetSetInitialState} from '../automatic-facet-set/automatic-facet-set-state.js';
+import {AutomaticFacetResponse} from '../automatic-facet-set/interfaces/response.js';
+import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors.js';
+import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state.js';
+import {CategoryFacetRequest} from '../category-facet-set/interfaces/request.js';
+import {FacetType} from '../facet-api/request.js';
 import {
   AnyFacetRequest,
   AnyFacetValueRequest,
-} from '../generic/interfaces/generic-facet-request';
-import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
+} from '../generic/interfaces/generic-facet-request.js';
+import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state.js';
 import {
   DateFacetRequest,
   DateRangeRequest,
-} from '../range-facets/date-facet-set/interfaces/request';
+} from '../range-facets/date-facet-set/interfaces/request.js';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
-} from '../range-facets/numeric-facet-set/interfaces/request';
-import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
-import {getFacetSetInitialState} from './facet-set-state';
-import {FacetRequest, FacetValueRequest} from './interfaces/request';
+} from '../range-facets/numeric-facet-set/interfaces/request.js';
+import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state.js';
+import {getFacetSetInitialState} from './facet-set-state.js';
+import {FacetRequest, FacetValueRequest} from './interfaces/request.js';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &

@@ -1,12 +1,12 @@
-import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common';
+import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionOption,
   SolutionType,
   SubControllerDefinitionWithoutProps,
-} from '../../../../app/commerce-ssr-engine/types/common';
-import {buildProductListing} from '../../product-listing/headless-product-listing';
-import {buildSearch} from '../../search/headless-search';
-import {Sort, SortProps, SortState} from './headless-core-commerce-sort';
+} from '../../../../app/commerce-ssr-engine/types/common.js';
+import {buildProductListing} from '../../product-listing/headless-product-listing.js';
+import {buildSearch} from '../../search/headless-search.js';
+import {Sort, SortProps, SortState} from './headless-core-commerce-sort.js';
 
 export type {Sort, SortProps, SortState};
 
@@ -20,10 +20,10 @@ export type {Sort, SortProps, SortState};
  */
 export function defineSort<
   TOptions extends ControllerDefinitionOption | undefined,
->(props?: SortProps, options?: TOptions) {
-  ensureAtLeastOneSolutionType(options);
+>(props?: SortProps & TOptions) {
+  ensureAtLeastOneSolutionType(props);
   return {
-    ...options,
+    ...props,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).sort(props)

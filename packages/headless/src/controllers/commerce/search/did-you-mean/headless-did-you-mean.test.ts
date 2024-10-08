@@ -1,11 +1,11 @@
-import {stateKey} from '../../../../app/state-key';
-import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+import {stateKey} from '../../../../app/state-key.js';
+import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
-} from '../../../../test/mock-engine-v2';
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
+} from '../../../../test/mock-engine-v2.js';
+import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
 
 describe('did you mean', () => {
   let didYouMean: DidYouMean;
@@ -20,35 +20,130 @@ describe('did you mean', () => {
     initDidYouMean();
   });
 
+  it('initializes', () => {
+    expect(didYouMean).toBeTruthy();
+  });
+
   it('exposes a #subscribe method', () => {
     expect(didYouMean.subscribe).toBeTruthy();
   });
 
-  it('adds the correct reducers to engine', () => {
+  it('adds the correct reducer to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       didYouMean: didYouMeanReducer,
     });
   });
 
-  it('state should reflect correction state', () => {
-    engine[stateKey].didYouMean = {
-      originalQuery: 'original query',
-      wasCorrectedTo: 'corrected query',
-      queryCorrection: {
-        correctedQuery: 'corrected query',
-        wordCorrections: [],
-      },
-    };
+  describe('#state', () => {
+    it('#originalQuery reflects originalQuery from engine state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: 'original query',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: '',
+          wordCorrections: [],
+        },
+      };
 
-    expect(didYouMean.state).toEqual({
-      originalQuery: 'original query',
-      wasCorrectedTo: 'corrected query',
-      queryCorrection: {
-        correctedQuery: 'corrected query',
-        wordCorrections: [],
-      },
-      hasQueryCorrection: true,
-      wasAutomaticallyCorrected: true,
+      expect(didYouMean.state.originalQuery).toEqual('original query');
+    });
+
+    it('#wasCorrectedTo reflects wasCorrectedTo from engine state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: 'corrected query',
+        queryCorrection: {
+          correctedQuery: '',
+          wordCorrections: [],
+        },
+      };
+
+      expect(didYouMean.state.wasCorrectedTo).toEqual('corrected query');
+    });
+
+    it('#queryCorrection reflects queryCorrection from engine state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: 'correctedQuery',
+          wordCorrections: [
+            {correctedWord: 'abc', originalWord: 'abd', length: 3, offset: 2},
+          ],
+        },
+      };
+
+      expect(didYouMean.state.queryCorrection).toEqual({
+        correctedQuery: 'correctedQuery',
+        wordCorrections: [
+          {correctedWord: 'abc', originalWord: 'abd', length: 3, offset: 2},
+        ],
+      });
+    });
+
+    it('#hasQueryCorrection is true if queryCorrection.correctedQuery is not an empty string and wasCorrectedTo is an empty string in the engine state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: 'correctedQuery',
+          wordCorrections: [],
+        },
+      };
+
+      expect(didYouMean.state.hasQueryCorrection).toEqual(true);
+    });
+
+    it('#hasQueryCorrection is true if queryCorrection.correctedQuery is an empty string and wasCorrectedTo is not an empty string in the engine state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: 'correctedQuery',
+          wordCorrections: [],
+        },
+      };
+
+      expect(didYouMean.state.hasQueryCorrection).toEqual(true);
+    });
+
+    it('#hasQueryCorrection is false if both queryCorrection.correctedQuery and wasCorrectedTo are empty strings in the engine state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: '',
+          wordCorrections: [],
+        },
+      };
+
+      expect(didYouMean.state.hasQueryCorrection).toEqual(false);
+    });
+
+    it('#wasAutomaticallyCorrected is true if wasCorrectedTo is not an empty string in the state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: 'corrected query',
+        queryCorrection: {
+          correctedQuery: '',
+          wordCorrections: [],
+        },
+      };
+
+      expect(didYouMean.state.wasAutomaticallyCorrected).toEqual(true);
+    });
+
+    it('#wasAutomaticallyCorrected is false if wasCorrectedTo is an empty string in the state', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: '',
+          wordCorrections: [],
+        },
+      };
+
+      expect(didYouMean.state.wasAutomaticallyCorrected).toEqual(false);
     });
   });
 });

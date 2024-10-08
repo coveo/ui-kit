@@ -20,7 +20,7 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, Element, h, Listen, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -30,7 +30,6 @@ import {
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {updateFacetVisibilityForActiveTab} from '../../../common/facets/facet-tabs/facet-tabs-utils';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -256,21 +255,6 @@ export class AtomicTimeframeFacet implements InitializableComponent {
     this.tabManager = buildTabManager(this.bindings.engine);
   }
 
-  @Watch('tabManagerState')
-  watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
-  ) {
-    if (newValue?.activeTab !== oldValue?.activeTab) {
-      updateFacetVisibilityForActiveTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab,
-        this.facetForDateRange
-      );
-    }
-  }
-
   public disconnectedCallback() {
     this.timeframeFacetCommon?.disconnectedCallback();
   }
@@ -284,6 +268,10 @@ export class AtomicTimeframeFacet implements InitializableComponent {
         field: this.field,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
     return this.facetForDatePicker;
@@ -299,6 +287,10 @@ export class AtomicTimeframeFacet implements InitializableComponent {
         sortCriteria: this.sortCriteria,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
     return this.facetForDateRange;

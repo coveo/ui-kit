@@ -26,7 +26,6 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         const engine = searchInterface.engine;
@@ -65,7 +64,7 @@
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
-          <atomic-search-box textarea></atomic-search-box>
+          <atomic-search-box></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
@@ -209,10 +208,6 @@
                       justify-content: space-between;
                     }
 
-                    atomic-load-more-children-results::part(button) {
-                      margin: 0.5rem 0 0 3.125rem;
-                    }
-
                     atomic-result-children::part(show-hide-button) {
                       margin: 0.5rem 0 0 3.125rem;
                     }
@@ -344,7 +339,6 @@
                   </atomic-field-condition>
                   <atomic-field-condition must-match-slackmessagetype="ThreadStart">
                     <atomic-result-section-children>
-                      <atomic-load-more-children-results label="Show thread"></atomic-load-more-children-results>
                       <atomic-result-children image-size="icon">
                         <atomic-result-children-template>
                           <template>

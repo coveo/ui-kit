@@ -1,29 +1,32 @@
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {logSearchboxSubmit} from './query-insight-analytics-actions';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {logSearchboxSubmit} from './query-insight-analytics-actions.js';
 
-const mockLogSearchboxSubmit = jest.fn();
+const mockLogSearchboxSubmit = vi.fn();
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
     disable: () => {},
     logSearchboxSubmit: mockLogSearchboxSubmit,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-const exampleSubject = 'example subject';
-const exampleDescription = 'example description';
-const exampleCaseId = '1234';
-const exampleCaseNumber = '5678';
+describe('query insight analytics actions', () => {
+  const exampleSubject = 'example subject';
+  const exampleDescription = 'example description';
+  const exampleCaseId = '1234';
+  const exampleCaseNumber = '5678';
 
-describe('logSearchboxSubmit', () => {
   it('should log #logSearchboxSubmit with the right payload', async () => {
+    const configuration = getConfigurationInitialState();
+    configuration.analytics.analyticsMode = 'legacy';
     const engine = buildMockInsightEngine(
       buildMockInsightState({
         insightCaseContext: {
@@ -34,6 +37,7 @@ describe('logSearchboxSubmit', () => {
           caseId: exampleCaseId,
           caseNumber: exampleCaseNumber,
         },
+        configuration,
       })
     );
 
@@ -52,7 +56,7 @@ describe('logSearchboxSubmit', () => {
       caseNumber: exampleCaseNumber,
     };
 
-    expect(mockLogSearchboxSubmit).toBeCalledTimes(1);
+    expect(mockLogSearchboxSubmit).toHaveBeenCalledTimes(1);
     expect(mockLogSearchboxSubmit.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );

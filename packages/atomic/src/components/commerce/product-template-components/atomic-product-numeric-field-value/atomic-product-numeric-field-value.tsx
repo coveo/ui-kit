@@ -1,4 +1,4 @@
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {Product} from '@coveo/headless/commerce';
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {Bindings} from '../../../../components';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
@@ -7,9 +7,10 @@ import {
   NumberFormatter,
 } from '../../../common/formats/format-common';
 import {ProductContext} from '../product-template-decorators';
+import {parseValue} from '../product-utils';
 
 /**
- * @internal
+ * @alpha
  * The `atomic-product-numeric-field-value` component renders the value of a number product field.
  *
  * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
@@ -43,24 +44,6 @@ export class AtomicProductNumber {
     this.formatter = event.detail;
   }
 
-  private parseValue() {
-    const value = ProductTemplatesHelpers.getProductProperty(
-      this.product,
-      this.field
-    );
-    if (value === null) {
-      return null;
-    }
-    const valueAsNumber = parseFloat(`${value}`);
-    if (Number.isNaN(valueAsNumber)) {
-      this.error = new Error(
-        `Could not parse "${value}" from field "${this.field}" as a number.`
-      );
-      return null;
-    }
-    return valueAsNumber;
-  }
-
   private formatValue(value: number) {
     try {
       return this.formatter(value, this.bindings.i18n.languages as string[]);
@@ -71,7 +54,7 @@ export class AtomicProductNumber {
   }
 
   private updateValueToDisplay() {
-    const value = this.parseValue();
+    const value = parseValue(this.product, this.field);
     if (value !== null) {
       this.valueToDisplay = this.formatValue(value);
     }

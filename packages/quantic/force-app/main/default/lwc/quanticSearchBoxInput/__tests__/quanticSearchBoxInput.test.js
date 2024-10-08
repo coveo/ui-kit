@@ -11,6 +11,8 @@ const functionsMocks = {
 
 const defaultPlaceholder = 'Search...';
 const mockInputValue = 'Test input value';
+const mockLongInputValue =
+  'Test input value that is longer than the default input value length to test the textarea expanding feature';
 const mockSuggestions = [
   {key: '1', value: 'suggestion1', rawValue: 'suggestion1'},
   {key: '2', value: 'suggestion2', rawValue: 'suggestion2'},
@@ -36,6 +38,7 @@ const selectors = {
   searchBoxComboBox: '.slds-combobox_container .slds-combobox',
   searchBoxSearchIcon: '.searchbox__search-icon',
   suggestionOption: '[data-cy="suggestions-option"]',
+  suggestionOptionText: '[data-cy="suggestions-option-text"]',
   clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
 };
 
@@ -193,6 +196,9 @@ describe('c-quantic-search-box-input', () => {
       describe('when the suggestions list is not empty', () => {
         describe('when only query suggestions are displayed', () => {
           it('should display the suggestions in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -219,11 +225,31 @@ describe('c-quantic-search-box-input', () => {
               );
             expect(suggestionsListItems).not.toBeNull();
             expect(suggestionsListItems.length).toEqual(mockSuggestions.length);
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsLength = mockSuggestions.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(suggestionsLength);
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
           });
         });
 
         describe('with both query suggestions and recent queries available', () => {
           it('should display the query suggestions and the recent queries in the suggestions list', async () => {
+            const expectedSuggestionsLabelValues = [
+              ...exampleRecentQueries,
+              ...mockSuggestions.map((suggestion) => suggestion.rawValue),
+            ];
+
             const element = createTestComponent({
               ...defaultOptions,
               suggestions: mockSuggestions,
@@ -259,6 +285,24 @@ describe('c-quantic-search-box-input', () => {
             expect(suggestionsListItems.length).toEqual(
               mockSuggestions.length + exampleRecentQueries.length
             );
+
+            const suggestionOptionLabels =
+              suggestionsList.shadowRoot.querySelectorAll(
+                selectors.suggestionOptionText
+              );
+            const suggestionsAndRecentQueriesLength =
+              mockSuggestions.length + exampleRecentQueries.length;
+
+            expect(suggestionOptionLabels).not.toBeNull();
+            expect(suggestionOptionLabels.length).toEqual(
+              suggestionsAndRecentQueriesLength
+            );
+
+            suggestionOptionLabels.forEach((suggestion, index) => {
+              expect(suggestion.title).toEqual(
+                expectedSuggestionsLabelValues[index]
+              );
+            });
           });
 
           describe('when pressing the DOWN to select a suggestion', () => {
@@ -726,6 +770,52 @@ describe('c-quantic-search-box-input', () => {
               );
             });
           });
+        });
+      });
+
+      describe('when clicking on the clear icon after typing something', () => {
+        it('should properly clear the input value', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            textarea: textareaValue,
+          });
+          await flushPromises();
+
+          element.inputValue = mockLongInputValue;
+          await flushPromises();
+
+          const clearIcon = element.shadowRoot.querySelector(
+            selectors.searchBoxClearIcon
+          );
+          const input = element.shadowRoot.querySelector(
+            textareaValue
+              ? selectors.searchBoxTextArea
+              : selectors.searchBoxInput
+          );
+
+          expect(input).not.toBeNull();
+          expect(input.value).toEqual(mockLongInputValue);
+
+          clearIcon.click();
+          expect(input.value).toEqual('');
+          const expectedCollapsedInputHeight = textareaValue ? '0px' : '';
+          expect(input.style.height).toEqual(expectedCollapsedInputHeight);
+        });
+      });
+
+      describe('when the component renders with a value in the input', () => {
+        it('should display the clear icon', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            inputValue: mockInputValue,
+            textarea: textareaValue,
+          });
+          await flushPromises();
+
+          const clearIcon = element.shadowRoot.querySelector(
+            selectors.searchBoxClearIcon
+          );
+          expect(clearIcon).not.toBeNull();
         });
       });
     });

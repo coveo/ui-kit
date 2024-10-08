@@ -1,18 +1,17 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../test/mock-engine-v2';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {createMockState} from '../../test/mock-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+} from '../../test/mock-engine-v2.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {createMockState} from '../../test/mock-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
-  logGeneratedAnswerDetailedFeedback,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
@@ -20,77 +19,71 @@ import {
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
-  logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
-  GeneratedAnswerFeedbackV2,
-} from './generated-answer-analytics-actions';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
-import {generatedAnswerStyle} from './generated-response-format';
+  GeneratedAnswerFeedback,
+} from './generated-answer-analytics-actions.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
-const mockLogFunction = jest.fn();
-const mockMakeGeneratedAnswerFeedbackSubmit = jest.fn(() => ({
+const mockLogFunction = vi.fn();
+const mockMakeGeneratedAnswerFeedbackSubmit = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeRetryGeneratedAnswer = jest.fn(() => ({
+const mockMakeRetryGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeRephraseGeneratedAnswer = jest.fn(() => ({
+const mockMakeOpenGeneratedAnswerSource = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenGeneratedAnswerSource = jest.fn(() => ({
+const mockMakeGeneratedAnswerSourceHover = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerSourceHover = jest.fn(() => ({
+const mockMakeLikeGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeLikeGeneratedAnswer = jest.fn(() => ({
+const mockMakeDislikeGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeDislikeGeneratedAnswer = jest.fn(() => ({
+const mockMakeGeneratedAnswerStreamEnd = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerStreamEnd = jest.fn(() => ({
+const mockMakeGeneratedAnswerShowAnswers = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerShowAnswers = jest.fn(() => ({
+const mockMakeGeneratedAnswerHideAnswers = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerHideAnswers = jest.fn(() => ({
+const mockMakeGeneratedAnswerCopyToClipboard = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerCopyToClipboard = jest.fn(() => ({
+const mockMakeGeneratedAnswerExpand = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerExpand = jest.fn(() => ({
+const mockMakeGeneratedAnswerCollapse = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerCollapse = jest.fn(() => ({
+const mockMakeGeneratedAnswerFeedbackSubmitV2 = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeGeneratedAnswerFeedbackSubmitV2 = jest.fn(() => ({
-  log: mockLogFunction,
-}));
-const emit = jest.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoSearchPageClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoSearchPageClient = vi.fn(() => ({
+    disable: vi.fn(),
     makeGeneratedAnswerFeedbackSubmit: mockMakeGeneratedAnswerFeedbackSubmit,
     makeRetryGeneratedAnswer: mockMakeRetryGeneratedAnswer,
-    makeRephraseGeneratedAnswer: mockMakeRephraseGeneratedAnswer,
     makeOpenGeneratedAnswerSource: mockMakeOpenGeneratedAnswerSource,
     makeGeneratedAnswerSourceHover: mockMakeGeneratedAnswerSourceHover,
     makeLikeGeneratedAnswer: mockMakeLikeGeneratedAnswer,
@@ -107,12 +100,11 @@ jest.mock('coveo.analytics', () => {
 
   return {
     CoveoSearchPageClient: mockCoveoSearchPageClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-const exampleFeedback = 'irrelevant';
-const exampleFeedbackV2: GeneratedAnswerFeedbackV2 = {
+const exampleFeedback: GeneratedAnswerFeedback = {
   helpful: true,
   documented: 'yes',
   correctTopic: 'no',
@@ -121,7 +113,6 @@ const exampleFeedbackV2: GeneratedAnswerFeedbackV2 = {
 };
 const exampleGenerativeQuestionAnsweringId = '123';
 const exampleSearchUid = '456';
-const exampleDetails = 'example details';
 
 const exampleCitation: GeneratedAnswerCitation = {
   id: 'some-citation-id',
@@ -146,7 +137,7 @@ describe('generated answer analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {
@@ -177,27 +168,6 @@ describe('generated answer analytics actions', () => {
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
-    });
-
-    generatedAnswerStyle.map((answerStyle) => {
-      it(`should log #logRephraseGeneratedAnswer with "${answerStyle}" answer style`, async () => {
-        const expectedFormat = {answerStyle};
-
-        await logRephraseGeneratedAnswer(expectedFormat)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
-
-        const mockToUse = mockMakeRephraseGeneratedAnswer;
-
-        expect(mockToUse).toHaveBeenCalledTimes(1);
-        expect(mockToUse).toHaveBeenCalledWith({
-          generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-          rephraseFormat: answerStyle,
-        });
-        expect(mockLogFunction).toHaveBeenCalledTimes(1);
-      });
     });
 
     it('should log #logOpenGeneratedAnswerSource with the right payload', async () => {
@@ -271,26 +241,8 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
-    it('should log #logGeneratedAnswerFeedback with V1 payload', async () => {
-      await logGeneratedAnswerFeedback(exampleFeedback)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        reason: exampleFeedback,
-      };
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
-      expect(mockLogFunction).toHaveBeenCalledTimes(1);
-    });
-
     it('should log #logGeneratedAnswerFeedback with V2 payload', async () => {
-      await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
+      await logGeneratedAnswerFeedback(exampleFeedback)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -299,26 +251,7 @@ describe('generated answer analytics actions', () => {
       const mockToUse = mockMakeGeneratedAnswerFeedbackSubmitV2;
       const expectedMetadata = {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        ...exampleFeedbackV2,
-      };
-
-      expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(expectedMetadata);
-      expect(mockLogFunction).toHaveBeenCalledTimes(1);
-    });
-
-    it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-      await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
-      const expectedMetadata = {
-        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        reason: 'other',
-        details: exampleDetails,
+        ...exampleFeedback,
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
@@ -524,19 +457,8 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
-    it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
-      await logGeneratedAnswerDetailedFeedback(exampleDetails)()(
-        engine.dispatch,
-        () => engine.state,
-        {} as ThunkExtraArguments
-      );
-
-      expect(emit).toHaveBeenCalledTimes(0);
-      expect(emit.mock.calls[0]).toMatchSnapshot();
-    });
-
     it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
-      await logGeneratedAnswerFeedback(exampleFeedbackV2)()(
+      await logGeneratedAnswerFeedback(exampleFeedback)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

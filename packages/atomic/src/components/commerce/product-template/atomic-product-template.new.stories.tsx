@@ -1,10 +1,10 @@
-import {wrapInCommerceProductList} from '@coveo/atomic/storybookUtils/commerce/atomic-commerce-product-list-wrapper';
-import {wrapInCommerceRecommendationList} from '@coveo/atomic/storybookUtils/commerce/atomic-commerce-recommendation-list-wrapper';
-import {wrapInCommerceSearchBoxInstantProducts} from '@coveo/atomic/storybookUtils/commerce/atomic-commerce-searchbox-instant-products-wrapper';
-import {wrapInCommerceInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-interface-wrapper';
-import {wrapInCommerceRecommendationInterface} from '@coveo/atomic/storybookUtils/commerce/commerce-recommendation-interface-wrapper';
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponentWithoutCodeRoot} from '@coveo/atomic/storybookUtils/common/render-component';
+import {wrapInCommerceInterface} from '@coveo/atomic-storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceProductList} from '@coveo/atomic-storybook-utils/commerce/commerce-product-list-wrapper';
+import {wrapInCommerceRecommendationInterface} from '@coveo/atomic-storybook-utils/commerce/commerce-recommendation-interface-wrapper';
+import {wrapInCommerceRecommendationList} from '@coveo/atomic-storybook-utils/commerce/commerce-recommendation-list-wrapper';
+import {wrapInCommerceSearchBoxInstantProducts} from '@coveo/atomic-storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponentWithoutCodeRoot} from '@coveo/atomic-storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {within} from 'shadow-dom-testing-library';
 
@@ -103,7 +103,7 @@ export const InASearchBoxInstantProducts: Story = {
           exact: false,
         })
       )
-        ?.find((el) => el.role === 'combobox')
+        ?.find((el) => el.getAttribute('part') === 'textarea')
         ?.focus();
     });
   },

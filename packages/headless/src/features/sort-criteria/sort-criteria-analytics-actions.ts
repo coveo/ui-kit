@@ -1,10 +1,10 @@
 import {
   makeAnalyticsAction,
   LegacySearchAction,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {SearchAction} from '../search/search-actions';
-import {getSortCriteriaInitialState} from './sort-criteria-state';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {SearchAction} from '../search/search-actions.js';
+import {getSortCriteriaInitialState} from './sort-criteria-state.js';
 
 //TODO: KIT-2859
 export const logResultsSort = (): LegacySearchAction =>

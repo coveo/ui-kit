@@ -1,0 +1,13 @@
+diff --git a/node_modules/fix-esm-import-path/fix-esm-import-path.js b/node_modules/fix-esm-import-path/fix-esm-import-path.js
+index aad682c..2c3a802 100755
+--- a/node_modules/fix-esm-import-path/fix-esm-import-path.js
++++ b/node_modules/fix-esm-import-path/fix-esm-import-path.js
+@@ -131,7 +131,7 @@ function resolveImportName({ srcFile, name }) {
+ }
+ 
+ let js_ext_list = ['.js', '.jsx']
+-let ts_ext_list = ['.ts', 'tsx']
++let ts_ext_list = ['.ts', '.tsx']
+ let ext_list = [...js_ext_list, ...ts_ext_list]
+ 
+ function scanImport({ srcFile, importCode, name }) {

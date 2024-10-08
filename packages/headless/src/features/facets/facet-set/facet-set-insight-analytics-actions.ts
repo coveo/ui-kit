@@ -2,22 +2,22 @@ import {Value} from '@coveo/bueno';
 import {
   validatePayload,
   requiredNonEmptyString,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
-} from '../../analytics/analytics-utils';
-import {SearchPageEvents} from '../../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
+} from '../../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
+import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request.js';
 import {
   buildFacetBaseMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
-} from './facet-set-analytics-actions-utils';
-import {FacetSortCriterion} from './interfaces/request';
+} from './facet-set-analytics-actions-utils.js';
+import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions.js';
+import {FacetSortCriterion} from './interfaces/request.js';
 
 export const logFacetShowMore = (facetId: string): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.facetShowMore)(

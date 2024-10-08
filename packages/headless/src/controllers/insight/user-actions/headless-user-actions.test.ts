@@ -1,23 +1,24 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
+import {logOpenUserActions} from '../../../features/insight-search/insight-analytics-actions.js';
 import {
   fetchUserActions,
   registerUserActions,
-} from '../../../features/insight-user-actions/insight-user-actions-actions';
-import {insightUserActionsReducer} from '../../../features/insight-user-actions/insight-user-actions-slice';
+} from '../../../features/insight-user-actions/insight-user-actions-actions.js';
+import {insightUserActionsReducer} from '../../../features/insight-user-actions/insight-user-actions-slice.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   UserActions,
   UserActionsOptions,
   buildUserActions,
-} from './headless-user-actions';
+} from './headless-user-actions.js';
 
-jest.mock(
-  '../../../features/insight-user-actions/insight-user-actions-actions'
-);
+vi.mock('../../../features/insight-user-actions/insight-user-actions-actions');
+
+vi.mock('../../../features/insight-search/insight-analytics-actions');
 
 describe('UserActions', () => {
   let engine: MockedInsightEngine;
@@ -70,5 +71,10 @@ describe('UserActions', () => {
     userActions.fetchUserActions(exampleUserId);
     expect(fetchUserActions).toHaveBeenCalled();
     expect(fetchUserActions).toHaveBeenCalledWith(exampleUserId);
+  });
+
+  it('#logOpenUserActions dispatches #logOpenUserActions', () => {
+    userActions.logOpenUserActions();
+    expect(logOpenUserActions).toHaveBeenCalled();
   });
 });

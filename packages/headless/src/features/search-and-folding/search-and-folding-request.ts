@@ -1,10 +1,11 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {EventDescription} from 'coveo.analytics';
-import {SearchRequest} from '../../api/search/search/search-request';
-import {NavigatorContext} from '../../app/navigatorContextProvider';
-import {SearchAppState} from '../../state/search-app-state';
-import {ConfigurationSection} from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {getSearchApiBaseUrl} from '../../api/platform-client.js';
+import {SearchRequest} from '../../api/search/search/search-request.js';
+import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {ConfigurationSection} from '../../state/state-sections.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
@@ -17,7 +18,12 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
+    url:
+      state.configuration.search.apiBaseUrl ??
+      getSearchApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
     locale: state.configuration.search.locale,
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,

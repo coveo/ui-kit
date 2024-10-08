@@ -1,13 +1,13 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
 import {
   ToggleSelectAutomaticFacetValueActionCreatorPayload,
   setOptions,
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
-} from './automatic-facet-set-actions';
-import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-set-slice';
+} from './automatic-facet-set-actions.js';
+import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-set-slice.js';
 
 /**
  * The action creators to manage automatic facets.

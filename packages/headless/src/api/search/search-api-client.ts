@@ -1,42 +1,41 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {emptyQuestionAnswer} from '../../features/search/search-state';
-import {SearchAppState} from '../../state/search-app-state';
-import {pickNonBaseParams, unwrapError} from '../api-client-utils';
-import {PlatformClient} from '../platform-client';
-import {BaseParam} from '../platform-service-params';
-import {APICallsQueue} from './api-calls-queue';
-import {FacetSearchRequest} from './facet-search/facet-search-request';
-import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {emptyQuestionAnswer} from '../../features/search/search-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {pickNonBaseParams, unwrapError} from '../api-client-utils.js';
+import {PlatformClient} from '../platform-client.js';
+import {BaseParam} from '../platform-service-params.js';
+import {APICallsQueue} from './api-calls-queue.js';
+import {FacetSearchRequest} from './facet-search/facet-search-request.js';
+import {FacetSearchResponse} from './facet-search/facet-search-response.js';
 import {
   FieldDescription,
   FieldDescriptionsResponseSuccess,
-} from './fields/fields-response';
-import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
-import {HtmlRequest} from './html/html-request';
-import {PlanRequest} from './plan/plan-request';
-import {PlanResponseSuccess, Plan} from './plan/plan-response';
-import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
-import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
+} from './fields/fields-response.js';
+import {getHtml, HtmlAPIClientOptions} from './html/html-api-client.js';
+import {HtmlRequest} from './html/html-request.js';
+import {PlanRequest} from './plan/plan-request.js';
+import {PlanResponseSuccess, Plan} from './plan/plan-response.js';
+import {QuerySuggestRequest} from './query-suggest/query-suggest-request.js';
 import {
   QuerySuggestSuccessResponse,
   QuerySuggest,
-} from './query-suggest/query-suggest-response';
-import {RecommendationRequest} from './recommendation/recommendation-request';
+} from './query-suggest/query-suggest-response.js';
+import {RecommendationRequest} from './recommendation/recommendation-request.js';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
-} from './search-api-client-middleware';
+} from './search-api-client-middleware.js';
 import {
   SearchAPIErrorWithStatusCode,
   buildAPIResponseFromErrorOrThrow,
-} from './search-api-error-response';
-import {baseSearchRequest} from './search-api-params';
-import {SearchOrigin} from './search-metadata';
-import {SearchRequest} from './search/search-request';
-import {Search, SearchResponseSuccess} from './search/search-response';
+} from './search-api-error-response.js';
+import {baseSearchRequest} from './search-api-params.js';
+import {SearchOrigin} from './search-metadata.js';
+import {SearchRequest} from './search/search-request.js';
+import {Search, SearchResponseSuccess} from './search/search-response.js';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
@@ -227,29 +226,6 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async html(req: HtmlRequest) {
     return getHtml(req, {...this.options});
-  }
-
-  async productRecommendations(req: ProductRecommendationsRequest) {
-    const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
-      requestParams: pickNonBaseParams(req),
-      requestMetadata: {method: 'productRecommendations'},
-      ...this.options,
-    });
-
-    if (response instanceof Error) {
-      throw response;
-    }
-
-    const body = await response.json();
-
-    if (isSuccessSearchResponse(body)) {
-      return {success: body};
-    }
-
-    return {
-      error: unwrapError({response, body}),
-    };
   }
 
   async fieldDescriptions(req: BaseParam) {

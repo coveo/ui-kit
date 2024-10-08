@@ -34,7 +34,6 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         const engine = searchInterface.engine;
@@ -48,7 +47,7 @@
   </head>
   <body>
     <atomic-search-interface>
-      <atomic-search-box textarea></atomic-search-box>
+      <atomic-search-box></atomic-search-box>
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list></atomic-result-list>
     </atomic-search-interface>

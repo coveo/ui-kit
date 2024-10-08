@@ -1,17 +1,17 @@
-import {fetchPage} from '../../../features/insight-search/insight-search-actions';
+import {fetchPage} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
   MockedInsightEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   Pager,
   PagerOptions,
   PagerInitialState,
   buildPager,
-} from './headless-insight-pager';
+} from './headless-insight-pager.js';
 
-jest.mock('../../../features/insight-search/insight-search-actions');
+vi.mock('../../../features/insight-search/insight-search-actions');
 
 describe('Pager', () => {
   let engine: MockedInsightEngine;

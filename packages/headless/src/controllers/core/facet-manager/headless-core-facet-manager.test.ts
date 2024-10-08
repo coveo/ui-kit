@@ -1,16 +1,16 @@
-import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreFacetManager,
   FacetManager,
   FacetManagerPayload,
-} from './headless-core-facet-manager';
+} from './headless-core-facet-manager.js';
 
 describe('facet manager', () => {
   let engine: MockedSearchEngine;

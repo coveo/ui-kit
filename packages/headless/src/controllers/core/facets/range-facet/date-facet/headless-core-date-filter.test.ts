@@ -1,36 +1,37 @@
-import {configuration} from '../../../../../app/common-reducers';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {Mock} from 'vitest';
+import {configuration} from '../../../../../app/common-reducers.js';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {
   registerDateFacet,
   updateDateFacetValues,
   validateManualDateRanges,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {searchReducer as search} from '../../../../../features/search/search-slice';
-import {SearchAppState} from '../../../../../state/search-app-state';
-import {buildMockDateFacetResponse} from '../../../../../test/mock-date-facet-response';
-import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
+} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {searchReducer as search} from '../../../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../../../state/search-app-state.js';
+import {buildMockDateFacetResponse} from '../../../../../test/mock-date-facet-response.js';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value.js';
 import {
   MockedSearchEngine,
   buildMockSearchEngine,
-} from '../../../../../test/mock-engine-v2';
-import {createMockState} from '../../../../../test/mock-state';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
-import {buildDateRange} from './date-range';
+} from '../../../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../../../test/mock-state.js';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor.js';
+import {buildDateRange} from './date-range.js';
 import {
   buildCoreDateFilter,
   DateFilter,
   DateFilterInitialState,
   DateFilterOptions,
-} from './headless-core-date-filter';
+} from './headless-core-date-filter.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions'
 );
 
-jest.mock('../../../../../features/facet-options/facet-options-actions');
+vi.mock('../../../../../features/facet-options/facet-options-actions');
 
 describe('date filter', () => {
   const facetId = '1';
@@ -46,7 +47,7 @@ describe('date filter', () => {
   }
 
   beforeEach(() => {
-    (updateDateFacetValues as unknown as jest.Mock).mockImplementation(
+    (updateDateFacetValues as unknown as Mock).mockImplementation(
       () => () => {}
     );
     initialState = undefined;
@@ -69,14 +70,12 @@ describe('date filter', () => {
     initDateFilter();
     expect(validateManualDateRanges).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentValues: [
-          {
-            end: '2021/03/24@22:16:31',
-            endInclusive: true,
+        currentValues: expect.arrayContaining([
+          expect.objectContaining({
             start: '2021/03/25@22:16:31',
-            state: 'selected',
-          },
-        ],
+            end: '2021/03/24@22:16:31',
+          }),
+        ]),
       })
     );
   });
@@ -91,7 +90,7 @@ describe('date filter', () => {
   });
 
   it('calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+    vi.spyOn(FacetIdDeterminor, 'determineFacetId');
 
     initDateFilter();
 
@@ -104,6 +103,8 @@ describe('date filter', () => {
   it('registers a date facet with the passed options', () => {
     expect(registerDateFacet).toHaveBeenCalledWith({
       facetId,
+      activeTab: '',
+      tabs: {},
       generateAutomaticRanges: false,
       currentValues: initialState?.range
         ? [{...initialState.range, endInclusive: true, state: 'selected'}]
@@ -145,13 +146,11 @@ describe('date filter', () => {
     });
 
     it('should return false when range start value is greater than range end value', () => {
-      (updateDateFacetValues as unknown as jest.Mock).mockImplementationOnce(
-        () => {
-          return {
-            error: 'oh no',
-          };
-        }
-      );
+      (updateDateFacetValues as unknown as Mock).mockImplementationOnce(() => {
+        return {
+          error: 'oh no',
+        };
+      });
       const value = buildMockDateFacetValue(
         buildDateRange({start: 1616679091000, end: 1616592691000})
       );

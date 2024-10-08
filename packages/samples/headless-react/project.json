@@ -5,7 +5,9 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:client", "npm run build:server"],
+        "commands": [
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:client; fi"
+        ],
         "parallel": true,
         "cwd": "packages/samples/headless-react"
       }

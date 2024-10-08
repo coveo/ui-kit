@@ -4,30 +4,31 @@ import {
   RecordValue,
   Value,
   ArrayValue,
+  StringValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {parseDate} from '../../../../api/search/date/date-format';
+import {parseDate} from '../../../../api/search/date/date-format.js';
 import {
   formatRelativeDateForSearchApi,
   isRelativeDateFormat,
-} from '../../../../api/search/date/relative-date';
-import {buildDateRange} from '../../../../controllers/core/facets/range-facet/date-facet/date-range';
+} from '../../../../api/search/date/relative-date.js';
+import {buildDateRange} from '../../../../controllers/core/facets/range-facet/date-facet/date-range.js';
 import {
   validatePayload,
   requiredNonEmptyString,
   validatePayloadAndThrow,
   serializeSchemaValidationError,
-} from '../../../../utils/validate-payload';
-import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
+} from '../../../../utils/validate-payload.js';
+import {deselectAllFacetValues} from '../../facet-set/facet-set-actions.js';
+import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {
   RangeFacetSortCriterion,
   RangeFacetRangeAlgorithm,
-} from '../generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
-import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {DateRangeRequest} from './interfaces/request';
-import {DateFacetValue} from './interfaces/response';
+} from '../generic/interfaces/request.js';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions.js';
+import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload.js';
+import {DateRangeRequest} from './interfaces/request.js';
+import {DateFacetValue} from './interfaces/response.js';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -39,6 +40,16 @@ export interface RegisterDateFacetActionCreatorPayload {
    * The field whose values you want to display in the facet.
    */
   field: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
+
+  /**
+   * The currently active tab.
+   */
+  activeTab?: string;
 
   /**
    * Whether the index should automatically create range values.
@@ -110,6 +121,16 @@ const dateRangeRequestDefinition = {
 const dateFacetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
+  activeTab: new StringValue({required: false}),
   currentValues: new ArrayValue({
     required: false,
     each: new RecordValue({values: dateRangeRequestDefinition}),

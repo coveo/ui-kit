@@ -1,6 +1,6 @@
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
-import {selectPath} from './category-facet-reducer-helpers';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request.js';
+import {selectPath} from './category-facet-reducer-helpers.js';
 
 describe('category facet reducer helpers', () => {
   describe('#selectPath', () => {

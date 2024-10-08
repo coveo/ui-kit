@@ -1,21 +1,24 @@
-import {InsightAppState} from '../../state/insight-app-state';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {CollectionId, getFoldingInitialState} from '../folding/folding-state';
-import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
+import {InsightAppState} from '../../state/insight-app-state.js';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request.js';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js';
+import {buildMockTabSlice} from '../../test/mock-tab-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {
+  CollectionId,
+  getFoldingInitialState,
+} from '../folding/folding-state.js';
+import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {
   buildInsightSearchRequest,
   buildInsightLoadCollectionRequest,
-} from './insight-search-request';
+} from './insight-search-request.js';
 
 describe('insight search request', () => {
   let state: InsightAppState;
@@ -32,13 +35,11 @@ describe('insight search request', () => {
         ...getConfigurationInitialState(),
         accessToken: '123',
         organizationId: 'foo',
-        platformUrl: 'bar',
       };
       const params = (await buildInsightSearchRequest(state)).request;
 
       expect(params.accessToken).toBe(state.configuration.accessToken);
       expect(params.organizationId).toBe(state.configuration.organizationId);
-      expect(params.url).toBe(state.configuration.platformUrl);
       expect(params.locale).toBe(state.configuration.search.locale);
     });
 
@@ -177,7 +178,7 @@ describe('insight search request', () => {
     });
 
     it('#buildInsightSearchRequest returns the state #generatedAnswer.responseFormat', async () => {
-      state.generatedAnswer.responseFormat = {answerStyle: 'concise'};
+      state.generatedAnswer.responseFormat = {contentFormat: ['text/markdown']};
       const params = (await buildInsightSearchRequest(state)).request;
 
       expect(
@@ -254,7 +255,6 @@ describe('insight search request', () => {
         ...getConfigurationInitialState(),
         accessToken: '123',
         organizationId: 'foo',
-        platformUrl: 'bar',
       };
       const params = (
         await buildInsightLoadCollectionRequest(state, collectionId)
@@ -262,7 +262,6 @@ describe('insight search request', () => {
 
       expect(params.accessToken).toBe(state.configuration.accessToken);
       expect(params.organizationId).toBe(state.configuration.organizationId);
-      expect(params.url).toBe(state.configuration.platformUrl);
     });
 
     it('#buildInsightLoadCollectionRequest returns the state #insightId', async () => {

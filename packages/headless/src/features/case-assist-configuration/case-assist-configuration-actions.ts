@@ -1,9 +1,10 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
   nonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 export interface SetCaseAssistConfigurationActionCreatorPayload {
   /**
@@ -14,6 +15,25 @@ export interface SetCaseAssistConfigurationActionCreatorPayload {
    * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    */
   locale?: string;
+  /**
+   * The base URL to use to proxy Coveo case assist requests (e.g., `https://example.com/search`).
+   *
+   * This is an advanced option that you should only set if you need to proxy Coveo case assist through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, no proxy is used and the Coveo case assist requests are sent directly to the Coveo platform through the
+   * [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
+   * `environment` values provided in your engine configuration (i.e., `https://<organizationId>.org.coveo.com` or
+   * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and different from
+   * `prod`).
+   *
+   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the case assist
+   * engine will not work properly:
+   *
+   * - `POST` `/classify` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/caseassists/<caseAssistId>/classify`](https://docs.coveo.com/en/3430/api-reference/customer-service-api#tag/Case-Assist/operation/postClassify)
+   * - `POST` `/documents/suggest` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/organizations/<organizationId>/caseassists/<caseAssistId>/documents/suggest`](https://docs.coveo.com/en/3430/api-reference/customer-service-api#tag/Case-Assist/operation/getSuggestDocument)
+   */
+  proxyBaseUrl?: string;
 }
 
 export const setCaseAssistConfiguration = createAction(
@@ -22,5 +42,6 @@ export const setCaseAssistConfiguration = createAction(
     validatePayload(payload, {
       caseAssistId: requiredNonEmptyString,
       locale: nonEmptyString,
+      proxyBaseUrl: new StringValue({required: false, url: true}),
     })
 );

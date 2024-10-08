@@ -2,7 +2,7 @@ import {
   ChildProduct,
   Product,
   BaseProduct,
-} from '../api/commerce/common/product';
+} from '../api/commerce/common/product.js';
 
 export function buildMockChildProduct(
   config: Partial<ChildProduct> = {}

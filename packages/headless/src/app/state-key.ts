@@ -1,4 +1,4 @@
-import type {CoreEngineNext} from './engine';
+import type {CoreEngineNext} from './engine.js';
 
 const stateKeyDescription = 'coveo-headless-internal-state';
 export const stateKey = Symbol.for(stateKeyDescription);

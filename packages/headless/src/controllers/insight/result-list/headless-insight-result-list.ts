@@ -1,12 +1,12 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreResultList,
   ResultList,
   ResultListOptions,
   ResultListProps,
   ResultListState,
-} from '../../core/result-list/headless-core-result-list';
+} from '../../core/result-list/headless-core-result-list.js';
 
 export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
 

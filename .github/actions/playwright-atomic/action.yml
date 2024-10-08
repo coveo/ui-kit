@@ -7,6 +7,10 @@ inputs:
   shardTotal:
     description: 'The total number of shards'
     required: true
+  uploadArtifacts:
+    description: 'Whether to upload artifacts'
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -18,8 +22,8 @@ runs:
       run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
       shell: bash
-    - uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4
-      if: always()
+    - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
+      if: ${{ inputs.uploadArtifacts == 'true' }}
       with:
         name: blob-report-${{ matrix.shardIndex }}
         path: packages/atomic/blob-report

@@ -1,9 +1,10 @@
-import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
+import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
   SearchSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -14,6 +15,9 @@ export const buildStreamingRequest = async (
 ): Promise<GeneratedAnswerStreamRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: state.configuration.platformUrl,
+  url: getOrganizationEndpoint(
+    state.configuration.organizationId,
+    state.configuration.environment
+  ),
   streamId: state.search.extendedResults?.generativeQuestionAnsweringId,
 });

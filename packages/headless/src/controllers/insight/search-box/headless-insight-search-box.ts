@@ -1,19 +1,19 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   executeSearch,
   fetchQuerySuggestions,
-} from '../../../features/insight-search/insight-search-actions';
-import {searchboxSubmit} from '../../../features/query/query-analytics-actions';
-import {logSearchboxSubmit} from '../../../features/query/query-insight-analytics-actions';
-import {Controller} from '../../controller/headless-controller';
+} from '../../../features/insight-search/insight-search-actions.js';
+import {searchboxSubmit} from '../../../features/query/query-analytics-actions.js';
+import {logSearchboxSubmit} from '../../../features/query/query-insight-analytics-actions.js';
+import {Controller} from '../../controller/headless-controller.js';
+import {SearchBoxOptions} from '../../core/search-box/headless-core-search-box-options.js';
 import {
   buildCoreSearchBox,
   Delimiters,
   SearchBoxState,
   Suggestion,
   SuggestionHighlightingOptions,
-} from '../../core/search-box/headless-core-search-box';
-import {SearchBoxOptions} from '../../core/search-box/headless-core-search-box-options';
+} from '../../core/search-box/headless-core-search-box.js';
 
 export type {
   SearchBoxOptions,

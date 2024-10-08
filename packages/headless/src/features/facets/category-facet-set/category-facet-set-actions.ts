@@ -4,6 +4,7 @@ import {
   ArrayValue,
   StringValue,
   NumberValue,
+  RecordValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
@@ -11,11 +12,11 @@ import {
   validatePayload,
   validatePayloadAndThrow,
   requiredNonEmptyString,
-} from '../../../utils/validate-payload';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {validateCategoryFacetValue} from './category-facet-validate-payload';
-import {CategoryFacetSortCriterion} from './interfaces/request';
-import {CategoryFacetValue} from './interfaces/response';
+} from '../../../utils/validate-payload.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
+import {validateCategoryFacetValue} from './category-facet-validate-payload.js';
+import {CategoryFacetSortCriterion} from './interfaces/request.js';
+import {CategoryFacetValue} from './interfaces/response.js';
 
 export interface RegisterCategoryFacetActionCreatorPayload {
   /**
@@ -27,6 +28,16 @@ export interface RegisterCategoryFacetActionCreatorPayload {
    * The field whose values you want to display in the facet.
    * */
   field: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
+
+  /**
+   * The currently active tab.
+   */
+  activeTab?: string;
 
   /**
    * The base path shared by all values for the facet.
@@ -87,6 +98,16 @@ export interface RegisterCategoryFacetActionCreatorPayload {
 const categoryFacetPayloadDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
+  activeTab: new StringValue({required: false}),
   delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),

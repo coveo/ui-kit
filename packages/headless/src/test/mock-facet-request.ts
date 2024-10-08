@@ -1,4 +1,4 @@
-import {FacetRequest} from '../features/facets/facet-set/interfaces/request';
+import {FacetRequest} from '../features/facets/facet-set/interfaces/request.js';
 
 export function buildMockFacetRequest(
   config: Partial<FacetRequest> = {}

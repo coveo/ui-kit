@@ -1,15 +1,16 @@
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
-import {buildMockSearch} from '../../test/mock-search';
-import {logSearchEvent} from '../analytics/analytics-actions';
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {executeSearch} from '../search/search-actions';
-import {updateFacetOptions} from './facet-options-actions';
-import {facetOptionsReducer} from './facet-options-slice';
+import {buildMockFacetOptions} from '../../test/mock-facet-options.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {logSearchEvent} from '../analytics/analytics-actions.js';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {executeSearch} from '../search/search-actions.js';
+import {updateActiveTab} from '../tab-set/tab-set-actions.js';
+import {updateFacetOptions} from './facet-options-actions.js';
+import {facetOptionsReducer} from './facet-options-slice.js';
 import {
   FacetOptionsState,
   getFacetOptionsInitialState,
-} from './facet-options-state';
+} from './facet-options-state.js';
 
 describe('facet options slice', () => {
   let state: FacetOptionsState;
@@ -39,6 +40,72 @@ describe('facet options slice', () => {
 
       expect(finalState.freezeFacetOrder).toBe(true);
     });
+  });
+
+  describe('update facet enabled state on updateActiveTab', () => {
+    const initialState = getFacetOptionsInitialState();
+    initialState.facets = {
+      notIncluded: {
+        enabled: true,
+        tabs: {
+          included: ['tab1'],
+          excluded: [],
+        },
+      },
+      included: {
+        enabled: false,
+        tabs: {
+          included: ['tab2'],
+          excluded: [],
+        },
+      },
+      notExcluded: {
+        enabled: true,
+        tabs: {
+          included: [],
+          excluded: ['tab1'],
+        },
+      },
+      excluded: {
+        enabled: true,
+        tabs: {
+          included: [],
+          excluded: ['tab2'],
+        },
+      },
+      notExcludedNotIncluded: {
+        enabled: true,
+        tabs: {
+          included: ['tab1'],
+          excluded: ['tab1'],
+        },
+      },
+      excludedAndIncluded: {
+        enabled: true,
+        tabs: {
+          included: ['tab2'],
+          excluded: ['tab2'],
+        },
+      },
+    };
+    const action = updateActiveTab('tab2');
+    const finalState = facetOptionsReducer(initialState, action);
+
+    const testCases: [string, boolean][] = [
+      ['notIncluded', false],
+      ['included', true],
+      ['notExcluded', true],
+      ['excluded', false],
+      ['notExcludedNotIncluded', false],
+      ['excludedAndIncluded', false],
+    ];
+
+    test.each(testCases)(
+      '%s facet should have enabled state %s',
+      (facet: string, expectedEnabled: boolean) => {
+        expect(finalState.facets[facet].enabled).toBe(expectedEnabled);
+      }
+    );
   });
 
   it('#executeSearch.fulfilled sets #freezeFacetOrder to false', () => {

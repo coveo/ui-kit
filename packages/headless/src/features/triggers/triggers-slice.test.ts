@@ -1,21 +1,24 @@
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
-import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
-import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
-import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
-import {TransitiveSearchAction, executeSearch} from '../search/search-actions';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute.js';
+import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify.js';
+import {buildMockQueryTrigger} from '../../test/mock-trigger-query.js';
+import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect.js';
+import {
+  TransitiveSearchAction,
+  executeSearch,
+} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
-} from './triggers-actions';
-import {triggerReducer} from './triggers-slice';
+} from './triggers-actions.js';
 import {
   handleApplyQueryTriggerModification,
   handleFetchItemsFulfilled,
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
-} from './triggers-slice-functions';
-import {TriggerState, getTriggerInitialState} from './triggers-state';
+} from './triggers-slice-functions.js';
+import {triggerReducer} from './triggers-slice.js';
+import {TriggerState, getTriggerInitialState} from './triggers-state.js';
 
 describe('triggers slice', () => {
   let initialState: TriggerState;

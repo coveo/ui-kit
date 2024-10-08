@@ -57,7 +57,7 @@ export default class ExampleQuanticFoldedResultList extends LightningElement {
       defaultValue: 'search',
     },
   ];
-  expectedEvents = ['registerresulttemplates'];
+  expectedEvents = ['quantic__registerresulttemplates'];
 
   handleResultTemplateRegistration(event) {
     const resultTemplatesManager = event.detail;

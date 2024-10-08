@@ -1,102 +1,122 @@
-//TODO V3: remove this import, global fetch is a requirement now.
-//@ts-expect-error package is just an alias.
-import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
-import pino from 'pino';
-import {allValidPlatformCombination} from '../test/platform-url';
-import {ExpiredTokenError} from '../utils/errors';
-import {PlatformEnvironment} from '../utils/url-utils';
+import {pino} from 'pino';
+import {Mock} from 'vitest';
+import {ExpiredTokenError} from '../utils/errors.js';
+import {PlatformEnvironment} from '../utils/url-utils.js';
 import {
-  platformUrl,
+  getAnalyticsNextApiBaseUrl,
+  getOrganizationEndpoint,
+  getSearchApiBaseUrl,
   PlatformClient,
   PlatformClientCallOptions,
-  analyticsUrl,
-  getOrganizationEndpoints,
-} from './platform-client';
+} from './platform-client.js';
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
   PreprocessRequest,
-} from './preprocess-request';
+} from './preprocess-request.js';
 
-jest.mock('@coveo/please-give-me-fetch');
+const {Response} = await vi.importActual('node-fetch');
+global.fetch = vi.fn();
+const mockFetch = global.fetch as Mock;
 
-const {Response} = jest.requireActual('node-fetch');
-const mockFetch = fetch as jest.Mock;
-
-describe('url helper', () => {
-  it('return the correct #platformUrl()', () => {
-    allValidPlatformCombination().forEach((expectation) => {
-      expect(platformUrl(expectation)).toEqual(expectation.platform);
-    });
-  });
-
-  it.each(
-    allValidPlatformCombination().filter(
-      (expectation) => !expectation.multiRegionSubDomain
-    )
-  )('$expectation return the correct #analyticsUrl()', (expectation) => {
-    expect(analyticsUrl(expectation)).toEqual(
-      expectation.analytics.split('/rest')[0]
+it.each([
+  {
+    orgId: 'foo',
+    env: undefined,
+    organizationEndpoints: {
+      admin: 'https://foo.admin.org.coveo.com',
+      analytics: 'https://foo.analytics.org.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.org.coveo.com',
+      search: 'https://foo.org.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'dev',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.orgdev.coveo.com',
+      analytics: 'https://foo.analytics.orgdev.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.orgdev.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.orgdev.coveo.com',
+      search: 'https://foo.orgdev.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'stg',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.orgstg.coveo.com',
+      analytics: 'https://foo.analytics.orgstg.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.orgstg.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.orgstg.coveo.com',
+      search: 'https://foo.orgstg.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'prod',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.org.coveo.com',
+      analytics: 'https://foo.analytics.org.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.org.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.org.coveo.com',
+      search: 'https://foo.org.coveo.com/rest/search/v2',
+    },
+  },
+  {
+    orgId: 'foo',
+    env: 'hipaa',
+    organizationEndpoints: {
+      admin: 'https://foo.admin.orghipaa.coveo.com',
+      analytics: 'https://foo.analytics.orghipaa.coveo.com',
+      analyticsNext:
+        'https://foo.analytics.orghipaa.coveo.com/rest/organizations/foo/events/v1',
+      platform: 'https://foo.orghipaa.coveo.com',
+      search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
+    },
+  },
+] as Array<{
+  orgId: string;
+  env: PlatformEnvironment;
+  organizationEndpoints: {
+    admin: string;
+    analytics: string;
+    analyticsNext: string;
+    platform: string;
+    search: string;
+  };
+}>)(
+  'return the correct #getOrganizationEndpoints()',
+  ({orgId, env, organizationEndpoints}) => {
+    expect(getOrganizationEndpoint(orgId, env, 'admin')).toEqual(
+      organizationEndpoints.admin
     );
-  });
-
-  it.each([
-    {
-      orgId: 'foo',
-      env: 'dev',
-      organizationEndpoints: {
-        platform: 'https://foo.orgdev.coveo.com',
-        search: 'https://foo.orgdev.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.orgdev.coveo.com',
-        admin: 'https://foo.admin.orgdev.coveo.com',
-      },
-    },
-    {
-      orgId: 'foo',
-      env: 'stg',
-      organizationEndpoints: {
-        platform: 'https://foo.orgstg.coveo.com',
-        search: 'https://foo.orgstg.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.orgstg.coveo.com',
-        admin: 'https://foo.admin.orgstg.coveo.com',
-      },
-    },
-    {
-      orgId: 'foo',
-      env: 'prod',
-      organizationEndpoints: {
-        platform: 'https://foo.org.coveo.com',
-        search: 'https://foo.org.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.org.coveo.com',
-        admin: 'https://foo.admin.org.coveo.com',
-      },
-    },
-    {
-      orgId: 'foo',
-      env: 'hipaa',
-      organizationEndpoints: {
-        platform: 'https://foo.orghipaa.coveo.com',
-        search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
-        analytics: 'https://foo.analytics.orghipaa.coveo.com',
-        admin: 'https://foo.admin.orghipaa.coveo.com',
-      },
-    },
-  ] as Array<{
-    orgId: string;
-    env: PlatformEnvironment;
-    organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
-  }>)(
-    'return the correct #getOrganizationEndpoints()',
-    ({orgId, env, organizationEndpoints}) => {
-      expect(getOrganizationEndpoints(orgId, env)).toEqual(
-        expect.objectContaining(organizationEndpoints)
-      );
-    }
-  );
-});
+    expect(getOrganizationEndpoint(orgId, env, 'analytics')).toEqual(
+      organizationEndpoints.analytics
+    );
+    expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(
+      organizationEndpoints.analyticsNext
+    );
+    expect(getOrganizationEndpoint(orgId, env, 'platform')).toEqual(
+      organizationEndpoints.platform
+    );
+    expect(getOrganizationEndpoint(orgId, env)).toEqual(
+      organizationEndpoints.platform
+    );
+    expect(getSearchApiBaseUrl(orgId, env)).toEqual(
+      organizationEndpoints.search
+    );
+  }
+);
 
 describe('PlatformClient call', () => {
+  let url: string;
   function platformCall(options: Partial<PlatformClientCallOptions> = {}) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
@@ -105,7 +125,7 @@ describe('PlatformClient call', () => {
       requestParams: {
         test: 123,
       },
-      url: platformUrl(),
+      url: getOrganizationEndpoint(''),
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
       origin: 'searchApiFetch',
@@ -114,6 +134,7 @@ describe('PlatformClient call', () => {
   }
 
   beforeEach(() => {
+    url = getOrganizationEndpoint('');
     mockFetch.mockClear();
   });
 
@@ -124,7 +145,7 @@ describe('PlatformClient call', () => {
 
     await platformCall();
 
-    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+    expect(mockFetch).toHaveBeenCalledWith(url, {
       body: JSON.stringify({
         test: 123,
       }),
@@ -151,7 +172,7 @@ describe('PlatformClient call', () => {
     };
     await platformCall({preprocessRequest: middleware});
 
-    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+    expect(mockFetch).toHaveBeenCalledWith(url, {
       body: JSON.stringify({
         test: 123,
       }),
@@ -176,7 +197,7 @@ describe('PlatformClient call', () => {
     };
     await platformCall({preprocessRequest});
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.objectContaining({
         headers: {
           Authorization: 'Bearer accessToken1',
@@ -194,7 +215,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -208,7 +229,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.objectContaining({body: ''})
     );
   });
@@ -218,7 +239,7 @@ describe('PlatformClient call', () => {
     await platformCall({contentType: undefined, requestParams});
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.objectContaining({body: JSON.stringify(requestParams)})
     );
   });
@@ -231,7 +252,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -244,7 +265,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.objectContaining({body: 'q=hello&page=5'})
     );
   });
@@ -257,7 +278,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.not.objectContaining({body: expect.anything()})
     );
   });
@@ -270,7 +291,7 @@ describe('PlatformClient call', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      platformUrl(),
+      url,
       expect.not.objectContaining({body: expect.anything()})
     );
   });
@@ -305,7 +326,7 @@ describe('PlatformClient call', () => {
   });
 
   it('should not throw when backOff rejects with a response', async () => {
-    const spy = jest.spyOn(BackOff, 'backOff');
+    const spy = vi.spyOn(BackOff, 'backOff');
     const expectedResponse = new Response(
       JSON.stringify({someProps: 'someValue'}),
       {

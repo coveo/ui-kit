@@ -1,6 +1,6 @@
-import {Schema, StringValue} from '@coveo/bueno';
-import {facetResultsMustMatch} from '../../../../features/facets/facet-api/request';
-import {facetSortCriteria} from '../../../../features/facets/facet-set/interfaces/request';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {facetResultsMustMatch} from '../../../../features/facets/facet-api/request.js';
+import {facetSortCriteria} from '../../../../features/facets/facet-set/interfaces/request.js';
 import {
   facetId,
   field,
@@ -10,11 +10,11 @@ import {
   facetSearch,
   allowedValues,
   customSort,
-} from '../../../core/facets/_common/facet-option-definitions';
+} from '../../../core/facets/_common/facet-option-definitions.js';
 import {
   FacetOptions as CoreFacetOptions,
   FacetSearchOptions,
-} from '../../../core/facets/facet/headless-core-facet-options';
+} from '../../../core/facets/facet/headless-core-facet-options.js';
 
 export type {FacetSearchOptions, CoreFacetOptions};
 
@@ -46,6 +46,15 @@ export interface FacetOptions extends CoreFacetOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
+  tabs: new RecordValue({
+    options: {
+      required: false,
+    },
+    values: {
+      included: new ArrayValue({each: new StringValue()}),
+      excluded: new ArrayValue({each: new StringValue()}),
+    },
+  }),
   filterFacetCount,
   injectionDepth,
   numberOfValues,

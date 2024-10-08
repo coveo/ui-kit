@@ -1,6 +1,6 @@
-import {parameters} from '@coveo/atomic/storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic/storybookUtils/common/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic/storybookUtils/search/search-interface-wrapper';
+import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@coveo/atomic-storybook-utils/search/search-interface-wrapper';
 import {userEvent} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
@@ -33,7 +33,7 @@ export const Default: Story = {
       await canvas.findAllByShadowTitle('Search field with suggestions.', {
         exact: false,
       })
-    )?.find((el) => el.role === 'combobox');
+    )?.find((el) => el.getAttribute('part') === 'textarea');
     await step('Search for test', async () => {
       await userEvent.click(searchBox!);
       await userEvent.type(searchBox!, 'test{enter}');

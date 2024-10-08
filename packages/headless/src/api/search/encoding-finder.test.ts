@@ -1,4 +1,4 @@
-import {findEncoding} from './encoding-finder';
+import {findEncoding} from './encoding-finder.js';
 
 describe('#findEncoding', () => {
   it('when the response has no content-type header, it returns UTF-8', () => {

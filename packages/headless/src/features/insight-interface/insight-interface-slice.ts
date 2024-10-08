@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchInterface} from './insight-interface-actions';
-import {getInsightInterfaceInitialState} from './insight-interface-state';
+import {fetchInterface} from './insight-interface-actions.js';
+import {getInsightInterfaceInitialState} from './insight-interface-state.js';
 
 export const insightInterfaceReducer = createReducer(
   getInsightInterfaceInitialState(),

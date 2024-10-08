@@ -1,12 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   ProductClickPayload,
   ProductViewPayload,
   productClick,
   productView,
-} from './product-actions';
+} from './product-actions.js';
 
 export type {ProductClickPayload, ProductViewPayload};
 

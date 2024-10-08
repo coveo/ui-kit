@@ -1,16 +1,16 @@
-import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/common-reducers';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
+import {Result} from '../../../api/search/search/result.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice.js';
 import {
   buildInsightResultPreviewRequest,
   StateNeededByInsightHtmlEndpoint,
-} from '../../../features/insight-search/insight-result-preview-request-builder';
-import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {loadReducerError} from '../../../utils/errors';
-import {Controller} from '../../controller/headless-controller';
-import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview';
+} from '../../../features/insight-search/insight-result-preview-request-builder.js';
+import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {Controller} from '../../controller/headless-controller.js';
+import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview.js';
 
 export interface QuickviewProps {
   /**
@@ -28,12 +28,6 @@ export interface QuickviewOptions {
    * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
    */
   maximumPreviewSize?: number;
-  /**
-   * Whether to only update the `contentURL` attribute when using `fetchResultContent` rather than updating `content`.
-   * Use this if you are using an iframe with `state.contentURL` as the source url.
-   * @deprecated This option is always set to `true` ad the Insight Quickview only supports `contentURL` mode.
-   */
-  onlyContentURL?: boolean;
 }
 
 export interface Quickview extends Controller {
@@ -49,14 +43,6 @@ export interface Quickview extends Controller {
 }
 
 export interface QuickviewState {
-  /**
-   * The result preview HTML content.
-   *
-   * @default ""
-   * @deprecated This value will always be empty as the InsightQuickview only supports usage of the `contentURL`.
-   */
-  content: string;
-
   /**
    * `true` if the configured result has a preview, and `false` otherwise.
    */

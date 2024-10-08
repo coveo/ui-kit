@@ -1,18 +1,17 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer, Reducer} from '@reduxjs/toolkit';
-import {atob as atobShim} from 'abab';
 import P, {Logger} from 'pino';
 import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
   updateSearchConfiguration,
-} from '../../features/configuration/configuration-actions';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {setPipeline} from '../../features/pipeline/pipeline-actions';
-import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
-import {SearchAppState} from '../../state/search-app-state';
+} from '../../features/configuration/configuration-actions.js';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {setPipeline} from '../../features/pipeline/pipeline-actions.js';
+import {getPipelineInitialState} from '../../features/pipeline/pipeline-state.js';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 
 export interface CoveoJSONWebToken {
   searchHub?: string;
@@ -70,10 +69,9 @@ const shouldReconcileValues = (
 
 const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
   try {
-    const atobImplementation = typeof atob !== 'undefined' ? atob : atobShim;
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const base64decoded = atobImplementation(base64);
+    const base64decoded = atob(base64);
     if (!base64decoded) {
       return false;
     }

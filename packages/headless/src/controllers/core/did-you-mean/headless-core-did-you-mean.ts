@@ -1,26 +1,26 @@
 import {
   QueryCorrection,
   WordCorrection,
-} from '../../../api/search/search/query-corrections';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
+} from '../../../api/search/search/query-corrections.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
   setCorrectionMode,
-} from '../../../features/did-you-mean/did-you-mean-actions';
-import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors';
-import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
+} from '../../../features/did-you-mean/did-you-mean-actions.js';
+import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors.js';
+import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
 import {
   ConfigurationSection,
   DidYouMeanSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export type {QueryCorrection, WordCorrection};
 

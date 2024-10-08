@@ -1,8 +1,8 @@
-import {Controller} from '../../controllers/controller/headless-controller';
-import {InvalidControllerDefinition} from '../../utils/errors';
-import {filterObject, mapObject} from '../../utils/utils';
-import {CoreEngine, CoreEngineNext} from '../engine';
-import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common';
+import {Controller} from '../../controllers/controller/headless-controller.js';
+import {InvalidControllerDefinition} from '../../utils/errors.js';
+import {filterObject, mapObject} from '../../utils/utils.js';
+import {CoreEngine, CoreEngineNext} from '../engine.js';
+import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common.js';
 import {
   ControllerDefinition,
   ControllerDefinitionOption,
@@ -11,7 +11,7 @@ import {
   InferControllerPropsFromDefinition,
   InferControllersMapFromDefinition,
   SolutionType,
-} from './types/common';
+} from './types/common.js';
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<TEngine, Controller>,
@@ -56,7 +56,6 @@ export function buildControllerDefinitions<
   TSolutionType
 > {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
-    // TODO: find a way to make it dynamic
     const unavailableInSearchSolutionType =
       'search' in definition &&
       definition['search'] === false &&
@@ -67,7 +66,16 @@ export function buildControllerDefinitions<
       definition['listing'] === false &&
       solutionType === SolutionType['listing'];
 
-    if (unavailableInSearchSolutionType || unavailableInListingSolutionType) {
+    const unavailableInStandaloneSolutionType =
+      solutionType === SolutionType['standalone'] && 'standalone' in definition
+        ? definition['standalone'] === false
+        : false;
+
+    if (
+      unavailableInSearchSolutionType ||
+      unavailableInListingSolutionType ||
+      unavailableInStandaloneSolutionType
+    ) {
       return null;
     }
 

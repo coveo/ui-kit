@@ -1,24 +1,24 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import {
   BaseProduct,
   ChildProduct,
   Product,
-} from '../../../api/commerce/common/product';
-import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response';
+} from '../../../api/commerce/common/product.js';
+import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
 import {
   fetchRecommendations,
   registerRecommendationsSlot,
   fetchMoreRecommendations,
   promoteChildToParent,
   QueryRecommendationsCommerceAPIThunkReturn,
-} from './recommendations-actions';
+} from './recommendations-actions.js';
 import {
   getRecommendationsInitialState,
   getRecommendationsSliceInitialState,
   RecommendationsSlice,
   RecommendationsState,
-} from './recommendations-state';
+} from './recommendations-state.js';
 
 export const recommendationsReducer = createReducer(
   getRecommendationsInitialState(),

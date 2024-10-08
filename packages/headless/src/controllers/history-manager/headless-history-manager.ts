@@ -1,9 +1,9 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {configuration} from '../../app/common-reducers';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {StateWithHistory} from '../../app/undoable';
-import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
-import {back, forward} from '../../features/history/history-actions';
+import {configuration} from '../../app/common-reducers.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {StateWithHistory} from '../../app/undoable.js';
+import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice.js';
+import {back, forward} from '../../features/history/history-actions.js';
 import {
   logNavigateBackward,
   logNavigateForward,
@@ -11,13 +11,19 @@ import {
   historyBackward,
   historyForward,
   noResultsBack,
-} from '../../features/history/history-analytics-actions';
-import {history} from '../../features/history/history-slice';
-import {HistoryState} from '../../features/history/history-state';
-import {executeSearch} from '../../features/search/search-actions';
-import {ConfigurationSection, HistorySection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../features/history/history-analytics-actions.js';
+import {history} from '../../features/history/history-slice.js';
+import {HistoryState} from '../../features/history/history-state.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {
+  ConfigurationSection,
+  HistorySection,
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {
+  buildController,
+  Controller,
+} from '../controller/headless-controller.js';
 
 /**
  * The `HistoryManager` controller is in charge of allowing navigating back and forward in the search interface history.

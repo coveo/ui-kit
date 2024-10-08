@@ -1,12 +1,12 @@
-import type {Controller} from '../../../controllers/controller/headless-controller';
-import type {InvalidControllerDefinition} from '../../../utils/errors';
-import type {CommerceEngine} from '../../commerce-engine/commerce-engine';
-import type {CoreEngine, CoreEngineNext} from '../../engine';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {InvalidControllerDefinition} from '../../../utils/errors.js';
+import type {CommerceEngine} from '../../commerce-engine/commerce-engine.js';
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
-} from '../../ssr-engine/types/common';
+} from '../../ssr-engine/types/common.js';
 
 export type {
   InferControllerStaticStateFromController,
@@ -16,7 +16,7 @@ export type {
 export enum SolutionType {
   search = 'search',
   listing = 'listing',
-  // Recommendation = 'recommendation',
+  standalone = 'standalone',
 }
 
 export interface ControllerDefinitionWithoutProps<
@@ -141,6 +141,21 @@ export interface ControllerDefinitionOption {
   search?: boolean;
 }
 
+interface UniversalController {
+  /**
+   * @internal
+   */
+  [SolutionType.search]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.listing]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
+}
+
 interface SearchOnlyController {
   /**
    * @internal
@@ -155,7 +170,7 @@ interface ListingOnlyController {
   [SolutionType.listing]: true;
 }
 
-interface SharedController {
+interface SearchAndListingController {
   /**
    * @internal
    */
@@ -188,22 +203,27 @@ export type ListingOnlyControllerDefinitionWithProps<
 > = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
   ListingOnlyController;
 
-export type SharedControllerDefinitionWithoutProps<
+export type UniversalControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
-  SharedController;
+  UniversalController;
 
-export type SharedControllerDefinitionWithProps<
+export type SearchAndListingControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  SearchAndListingController;
+
+export type SearchAndListingControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
-  SharedController;
+  SearchAndListingController;
 
 export type SubControllerDefinitionWithoutProps<
   TController extends Controller,
   TDefinition extends ControllerDefinitionOption | undefined,
 > = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SharedControllerDefinitionWithoutProps<TController>
+  ? SearchAndListingControllerDefinitionWithoutProps<TController>
   : TDefinition extends {listing?: true; search?: false}
     ? ListingOnlyControllerDefinitionWithoutProps<TController>
     : TDefinition extends {listing?: false; search?: true}
@@ -217,7 +237,7 @@ export type SubControllerDefinitionWithProps<
   TDefinition extends ControllerDefinitionOption | undefined,
   TProps,
 > = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SharedControllerDefinitionWithProps<TController, TProps>
+  ? SearchAndListingControllerDefinitionWithProps<TController, TProps>
   : TDefinition extends {listing?: true; search?: false}
     ? ListingOnlyControllerDefinitionWithProps<TController, TProps>
     : TDefinition extends {listing?: false; search?: true}

@@ -1,19 +1,19 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   RecentQueriesList,
   RecentQueriesListProps,
   buildRecentQueriesList,
-} from './headless-recent-queries-list';
+} from './headless-recent-queries-list.js';
 
 export type {
   RecentQueriesState,
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
-} from './headless-recent-queries-list';
+} from './headless-recent-queries-list.js';
 export type {RecentQueriesList, RecentQueriesListProps};
 
 export interface RecentQueriesListDefinition
-  extends SharedControllerDefinitionWithoutProps<RecentQueriesList> {}
+  extends SearchAndListingControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.

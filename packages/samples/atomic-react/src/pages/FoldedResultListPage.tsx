@@ -12,11 +12,11 @@ import {
   AtomicResultSectionVisual,
   AtomicResultText,
   AtomicText,
-  FoldedResult,
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
   AtomicResultImage,
 } from '@coveo/atomic-react';
+import {FoldedResult} from '@coveo/headless';
 import React, {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 

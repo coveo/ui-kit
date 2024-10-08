@@ -1,11 +1,11 @@
-import {HtmlRequestOptions} from '../../api/search/html/html-request';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {getQueryInitialState} from '../query/query-state';
-import {getResultPreviewInitialState} from '../result-preview/result-preview-state';
+import {HtmlRequestOptions} from '../../api/search/html/html-request.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
+import {getResultPreviewInitialState} from '../result-preview/result-preview-state.js';
 import {
   buildInsightResultPreviewRequest,
   StateNeededByInsightHtmlEndpoint,
-} from './insight-result-preview-request-builder';
+} from './insight-result-preview-request-builder.js';
 
 describe('ResultPreviewRequestBuilder', () => {
   let state: StateNeededByInsightHtmlEndpoint;
@@ -13,12 +13,14 @@ describe('ResultPreviewRequestBuilder', () => {
 
   const testOrgId = 'someOrgId';
   const testConfigId = 'some-insight-id-123';
-  const expectedUrl = `https://platform.cloud.coveo.com/rest/organizations/${testOrgId}/insight/v1/configs/${testConfigId}`;
+  const expectedUrl = `https://someOrgId.org.coveo.com/rest/organizations/${testOrgId}/insight/v1/configs/${testConfigId}`;
+
+  const configurationInitialState = getConfigurationInitialState();
 
   beforeEach(() => {
     state = {
       configuration: {
-        ...getConfigurationInitialState(),
+        ...configurationInitialState,
         organizationId: testOrgId,
       },
       resultPreview: getResultPreviewInitialState(),

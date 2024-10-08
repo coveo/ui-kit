@@ -1,16 +1,16 @@
 import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {isErrorResponse} from '../../api/search/search-api-client';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
-import {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response.js';
 import {
   ConfigurationSection,
   InsightUserActionsSection,
-} from '../../state/state-sections';
-import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
-import {buildFetchUserActionsRequest} from './insight-user-actions-request';
+} from '../../state/state-sections.js';
+import {nonEmptyString, validatePayload} from '../../utils/validate-payload.js';
+import {buildFetchUserActionsRequest} from './insight-user-actions-request.js';
 
-interface RegisterUserActionsPayload {
+export interface RegisterUserActionsPayload {
   ticketCreationDate: string;
   excludedCustomActions?: string[];
 }

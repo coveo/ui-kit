@@ -1,11 +1,10 @@
-import {AnalyticsState} from '../features/configuration/configuration-state';
+import {AnalyticsState} from '../features/configuration/configuration-state.js';
 
 export function buildMockAnalyticsState(
   config: Partial<AnalyticsState> = {}
 ): AnalyticsState {
   return {
     apiBaseUrl: '',
-    nextApiBaseUrl: '',
     enabled: false,
     originLevel2: '',
     originLevel3: '',
@@ -15,7 +14,7 @@ export function buildMockAnalyticsState(
     userDisplayName: '',
     documentLocation: '',
     trackingId: '',
-    analyticsMode: 'legacy',
+    analyticsMode: 'next',
     source: {},
     ...config,
   };

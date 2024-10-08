@@ -4,7 +4,7 @@ import {
   CaseAssistClientProvider,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
@@ -12,12 +12,13 @@ import {
   ConfigurationSection,
   DocumentSuggestionSection,
   SearchHubSection,
-} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
+} from '../../state/state-sections.js';
+import {getOrganizationEndpoint} from '../platform-client.js';
+import {PreprocessRequest} from '../preprocess-request.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &
@@ -58,7 +59,13 @@ export const configureCaseAssistAnalytics = ({
 }: ConfigureCaseAssistAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const endpoint =
+    state.configuration.analytics.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment,
+      'analytics'
+    );
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CaseAssistClient(

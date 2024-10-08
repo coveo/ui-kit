@@ -1,11 +1,11 @@
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
   BaseAnalyticsProvider,
   StateNeededByBaseAnalyticsProvider,
-} from './base-analytics';
+} from './base-analytics.js';
 
 class TestProvider extends BaseAnalyticsProvider<StateNeededByBaseAnalyticsProvider> {
   public getPipeline(): string {
@@ -29,8 +29,10 @@ class TestProvider extends BaseAnalyticsProvider<StateNeededByBaseAnalyticsProvi
 }
 
 describe('base analytics provider', () => {
+  const configuration = getConfigurationInitialState();
+  configuration.analytics.analyticsMode = 'legacy';
   const baseState: StateNeededByBaseAnalyticsProvider = {
-    configuration: getConfigurationInitialState(),
+    configuration,
   };
 
   it('when analyticMode=next, #getBaseMetadata returns an object without coveoHeadlessVersion', () => {

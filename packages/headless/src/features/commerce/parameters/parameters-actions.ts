@@ -1,6 +1,6 @@
-import {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request';
-import {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request';
-import {SortCriterion} from '../sort/sort';
+import {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request.js';
+import {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {SortCriterion} from '../sort/sort.js';
 
 export interface Parameters {
   /**

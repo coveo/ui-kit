@@ -1,24 +1,24 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response';
+import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {
   CommerceEngine,
   CommerceEngineState,
-} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
+} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
 import {
   CommercePaginationSection,
   CommerceQuerySection,
   CommerceSearchSection,
-} from '../../../state/state-sections';
-import {getQ} from '../../parameter-manager/parameter-manager-selectors';
-import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors';
+} from '../../../state/state-sections.js';
+import {getQ} from '../../parameter-manager/parameter-manager-selectors.js';
+import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors.js';
 import {
   activeParametersSelector as coreActiveParametersSelector,
   enrichedParametersSelector as coreEnrichedParametersSelector,
-} from '../parameters/parameters-selectors';
-import {getCommerceQueryInitialState} from '../query/query-state';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions';
+} from '../parameters/parameters-selectors.js';
+import {getCommerceQueryInitialState} from '../query/query-state.js';
+import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 
 /**
  * Duplicate selector since the state is no longer accessible externally

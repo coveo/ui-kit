@@ -1,11 +1,11 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   makeAnalyticsAction,
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
   CustomAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logRecentResultClick = (result: Result): CustomAction =>
   makeAnalyticsAction('analytics/recentResults/click', (client, state) => {

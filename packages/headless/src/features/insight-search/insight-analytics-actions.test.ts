@@ -1,40 +1,43 @@
 import {createRelay} from '@coveo/relay';
-import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {buildMockInsightEngine} from '../../test/mock-engine-v2';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {clearMicrotaskQueue} from '../../test/unit-test-utils';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logExpandToFullUI,
   logInsightCreateArticle,
-} from './insight-analytics-actions';
+  logOpenUserActions,
+} from './insight-analytics-actions.js';
 
-const mockLogCreateArticle = jest.fn();
-const mockLogExpandtoFullUI = jest.fn();
-const emit = jest.fn();
+const mockLogCreateArticle = vi.fn();
+const mockLogExpandtoFullUI = vi.fn();
+const mockLogOpenUserActions = vi.fn();
+const emit = vi.fn();
 
-jest.mock('@coveo/relay');
+vi.mock('@coveo/relay');
 
-jest.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = jest.fn(() => ({
-    disable: jest.fn(),
+vi.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = vi.fn(() => ({
+    disable: vi.fn(),
     logExpandToFullUI: mockLogExpandtoFullUI,
     logCreateArticle: mockLogCreateArticle,
+    logOpenUserActions: mockLogOpenUserActions,
   }));
 
   return {
     CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: jest.fn()},
+    history: {HistoryStore: vi.fn()},
   };
 });
 
-jest.mocked(createRelay).mockReturnValue({
+vi.mocked(createRelay).mockReturnValue({
   emit,
-  getMeta: jest.fn(),
-  on: jest.fn(),
-  off: jest.fn(),
-  updateConfig: jest.fn(),
+  getMeta: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
+  updateConfig: vi.fn(),
   version: 'foo',
 });
 
@@ -58,7 +61,7 @@ describe('insight analytics actions', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('when analyticsMode is `legacy`', () => {
@@ -104,14 +107,37 @@ describe('insight analytics actions', () => {
       });
     });
 
+    describe('logOpenUserActions', () => {
+      it('should call coveo.analytics.logOpenUserActions properly', async () => {
+        await logOpenUserActions()()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        const expectedPayload = {
+          caseContext: {
+            Case_Subject: exampleSubject,
+            Case_Description: exampleDescription,
+          },
+          caseId: exampleCaseId,
+          caseNumber: exampleCaseNumber,
+        };
+
+        expect(mockLogOpenUserActions).toHaveBeenCalledTimes(1);
+        expect(mockLogOpenUserActions.mock.calls[0][0]).toStrictEqual(
+          expectedPayload
+        );
+      });
+    });
+
     describe('logExpandToFullUI', () => {
       it('should call coveo.analytics.logExpandToFullUI properly', async () => {
-        await logExpandToFullUI(
-          exampleCaseId,
-          exampleCaseNumber,
-          'c__FullSearch',
-          'openFullSearchButton'
-        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+        await logExpandToFullUI('c__FullSearch', 'openFullSearchButton')()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         const expectedPayload = {
           caseContext: {
@@ -164,7 +190,7 @@ describe('insight analytics actions', () => {
 
     describe('logExpandToFullUI', () => {
       it('should call relay.emit properly', async () => {
-        await logExpandToFullUI(exampleCaseId, exampleCaseNumber, '', '')()(
+        await logExpandToFullUI('', '')()(
           engine.dispatch,
           () => engine.state,
           {} as ThunkExtraArguments

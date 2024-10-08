@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {QuestionAnswer} from '../../api/search/search/question-answering';
-import {getObjectHash} from '../../utils/utils';
-import {executeSearch} from '../search/search-actions';
+import {QuestionAnswer} from '../../api/search/search/question-answering.js';
+import {getObjectHash} from '../../utils/utils.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   collapseSmartSnippet,
   collapseSmartSnippetRelatedQuestion,
@@ -11,12 +11,12 @@ import {
   likeSmartSnippet,
   openFeedbackModal,
   closeFeedbackModal,
-} from './question-answering-actions';
-import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id';
+} from './question-answering-actions.js';
+import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id.js';
 import {
   getQuestionAnsweringInitialState,
   QuestionAnsweringRelatedQuestionState,
-} from './question-answering-state';
+} from './question-answering-state.js';
 
 const findRelatedQuestionIdx = (
   relatedQuestions: QuestionAnsweringRelatedQuestionState[],

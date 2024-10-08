@@ -5,7 +5,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npm run build:next",
+        "command": "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:next; fi",
         "cwd": "packages/samples/headless-ssr/pages-router"
       }
     },

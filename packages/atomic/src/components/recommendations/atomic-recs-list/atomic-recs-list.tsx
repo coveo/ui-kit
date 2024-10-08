@@ -38,7 +38,6 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayBasicLayout,
-  ItemTarget,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
@@ -55,6 +54,7 @@ import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
+ * @slot default - The default slot where to insert the template element.
  */
 @Component({
   tag: 'atomic-recs-list',
@@ -91,13 +91,6 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ItemDisplayBasicLayout = 'list';
-  /**
-   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
-   * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_self`
-   * @deprecated - Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
-   */
-  @Prop() gridCellLinkTarget: ItemTarget = '_self';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -176,24 +169,21 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       },
     });
 
-    this.itemTemplateProvider = new ItemTemplateProvider(
-      {
-        includeDefaultTemplate: true,
-        templateElements: Array.from(
-          this.host.querySelectorAll('atomic-recs-result-template')
-        ),
-        getResultTemplateRegistered: () => this.resultTemplateRegistered,
-        getTemplateHasError: () => this.templateHasError,
-        setResultTemplateRegistered: (value: boolean) => {
-          this.resultTemplateRegistered = value;
-        },
-        setTemplateHasError: (value: boolean) => {
-          this.templateHasError = value;
-        },
-        bindings: this.bindings,
+    this.itemTemplateProvider = new ItemTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-recs-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
       },
-      this.gridCellLinkTarget
-    );
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      bindings: this.bindings,
+    });
 
     this.itemListCommon = new ItemListCommon({
       engineSubscribe: this.bindings.engine.subscribe,
@@ -359,6 +349,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       this.getPropsForAtomicRecsResult(recommendation);
     return (
       <DisplayGrid
+        selectorForItem="atomic-recs-result"
         item={recommendation}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>

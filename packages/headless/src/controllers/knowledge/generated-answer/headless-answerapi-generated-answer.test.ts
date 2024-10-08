@@ -1,53 +1,53 @@
-import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation';
+import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
   fetchAnswer,
   StateNeededByAnswerAPI,
-} from '../../../api/knowledge/stream-answer-api';
+} from '../../../api/knowledge/stream-answer-api.js';
 import {
   resetAnswer,
   updateAnswerConfigurationId,
   updateResponseFormat,
-} from '../../../features/generated-answer/generated-answer-actions';
+} from '../../../features/generated-answer/generated-answer-actions.js';
 import {
   generatedAnswerAnalyticsClient,
-  GeneratedAnswerFeedbackV2,
-} from '../../../features/generated-answer/generated-answer-analytics-actions';
-import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state';
-import {queryReducer} from '../../../features/query/query-slice';
+  GeneratedAnswerFeedback,
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
+import {queryReducer} from '../../../features/query/query-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
-} from '../../generated-answer/headless-generated-answer';
-import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer';
+} from '../../generated-answer/headless-generated-answer.js';
+import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer.js';
 
-jest.mock('../../../features/generated-answer/generated-answer-actions');
-jest.mock(
+vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
-jest.mock('../../../features/search/search-actions');
-jest.mock('../../../api/knowledge/stream-answer-api', () => {
-  const originalStreamAnswerApi = jest.requireActual(
+vi.mock('../../../features/search/search-actions');
+vi.mock('../../../api/knowledge/stream-answer-api', async () => {
+  const originalStreamAnswerApi = await vi.importActual(
     '../../../api/knowledge/stream-answer-api'
   );
   return {
     ...originalStreamAnswerApi,
-    fetchAnswer: jest.fn(),
+    fetchAnswer: vi.fn(),
     selectAnswer: () => ({
       data: {answer: 'This est une answer', answerId: '12345_6'},
     }),
   };
 });
-jest.mock('../../../api/knowledge/post-answer-evaluation', () => ({
+vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
   answerEvaluation: {
     endpoints: {
       post: {
-        initiate: jest.fn(),
+        initiate: vi.fn(),
       },
     },
   },
@@ -80,7 +80,7 @@ describe('knowledge-generated-answer', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     engine = buildEngineWithGeneratedAnswer();
   });
 
@@ -116,15 +116,10 @@ describe('knowledge-generated-answer', () => {
     });
   });
 
-  it('dispatches a rephrase action', () => {
-    const generatedAnswer = createGeneratedAnswer();
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'step'};
-    generatedAnswer.rephrase(responseFormat);
-    expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
-  });
-
   it('initialize the format', () => {
-    const responseFormat: GeneratedResponseFormat = {answerStyle: 'concise'};
+    const responseFormat: GeneratedResponseFormat = {
+      contentFormat: ['text/markdown'],
+    };
     createGeneratedAnswer({
       initialState: {responseFormat},
     });
@@ -149,7 +144,7 @@ describe('knowledge-generated-answer', () => {
       query: {q: 'this est une question', enableQuerySyntax: false},
     });
     const generatedAnswer = createGeneratedAnswer();
-    const feedback: GeneratedAnswerFeedbackV2 = {
+    const feedback: GeneratedAnswerFeedback = {
       readable: 'unknown',
       correctTopic: 'unknown',
       documented: 'yes',

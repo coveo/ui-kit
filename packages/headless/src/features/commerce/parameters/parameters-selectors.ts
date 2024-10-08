@@ -1,26 +1,26 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {stateKey} from '../../../app/state-key';
-import {CommerceFacetSetSection} from '../../../state/state-sections';
-import {findActiveValueAncestry} from '../../facets/category-facet-set/category-facet-utils';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {stateKey} from '../../../app/state-key.js';
+import {CommerceFacetSetSection} from '../../../state/state-sections.js';
+import {findActiveValueAncestry} from '../../facets/category-facet-set/category-facet-utils.js';
 import {
   getFacets,
   getSortCriteria,
-} from '../../parameter-manager/parameter-manager-selectors';
-import {FacetType} from '../facets/facet-set/interfaces/common';
+} from '../../parameter-manager/parameter-manager-selectors.js';
+import {FacetType} from '../facets/facet-set/interfaces/common.js';
 import {
   AnyFacetRequest,
   CategoryFacetRequest,
   DateFacetRequest,
   NumericFacetRequest,
   RegularFacetRequest,
-} from '../facets/facet-set/interfaces/request';
-import {ManualNumericFacetSetState} from '../facets/numeric-facet/manual-numeric-facet-state';
+} from '../facets/facet-set/interfaces/request.js';
+import {ManualNumericFacetSetState} from '../facets/numeric-facet/manual-numeric-facet-state.js';
 import {
   CommercePaginationState,
   getCommercePaginationInitialSlice,
-} from '../pagination/pagination-state';
-import {getCommerceSortInitialState} from '../sort/sort-state';
-import {Parameters as ManagedParameters} from './parameters-actions';
+} from '../pagination/pagination-state.js';
+import {getCommerceSortInitialState} from '../sort/sort-state.js';
+import {Parameters as ManagedParameters} from './parameters-actions.js';
 
 export function initialParametersSelector(
   state: CommerceEngine[typeof stateKey]

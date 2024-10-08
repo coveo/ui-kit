@@ -86,35 +86,53 @@ export default class QuanticSearchInterface extends LightningElement {
   ariaLiveEventsBound = false;
 
   connectedCallback() {
-    loadDependencies(this).then(() => {
-      if (!getHeadlessBindings(this.engineId)?.engine) {
-        getHeadlessConfiguration().then((data) => {
-          if (data) {
-            this.engineOptions = {
-              configuration: {
-                ...JSON.parse(data),
-                search: {
-                  searchHub: this.searchHub,
-                  pipeline: this.pipeline,
-                  locale: LOCALE,
-                  timezone: TIMEZONE,
+    loadDependencies(this)
+      .then(() => {
+        if (!getHeadlessBindings(this.engineId)?.engine) {
+          getHeadlessConfiguration()
+            .then((data) => {
+              const {organizationId, accessToken, ...rest} = JSON.parse(data);
+              this.engineOptions = {
+                configuration: {
+                  organizationId,
+                  accessToken,
+                  search: {
+                    searchHub: this.searchHub,
+                    pipeline: this.pipeline,
+                    locale: LOCALE,
+                    timezone: TIMEZONE,
+                  },
+                  analytics: {
+                    analyticsMode: 'legacy',
+                    ...(document.referrer && {
+                      originLevel3: document.referrer.substring(0, 256),
+                    }),
+                  },
+                  ...rest,
                 },
-              },
-            };
-            setEngineOptions(
-              this.engineOptions,
-              CoveoHeadless.buildSearchEngine,
-              this.engineId,
-              this,
-              CoveoHeadless
-            );
-            setInitializedCallback(this.initialize, this.engineId);
-          }
-        });
-      } else {
-        setInitializedCallback(this.initialize, this.engineId);
-      }
-    });
+              };
+              setEngineOptions(
+                this.engineOptions,
+                CoveoHeadless.buildSearchEngine,
+                this.engineId,
+                this,
+                CoveoHeadless
+              );
+              setInitializedCallback(this.initialize, this.engineId);
+            })
+            .catch((error) => {
+              console.error(
+                'Error loading Headless endpoint configuration',
+                error
+              );
+            });
+        } else {
+          setInitializedCallback(this.initialize, this.engineId);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading Headless dependencies', error);
+      });
   }
 
   renderedCallback() {
@@ -129,9 +147,12 @@ export default class QuanticSearchInterface extends LightningElement {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
     if (this.ariaLiveEventsBound) {
-      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
       this.removeEventListener(
-        'registerregion',
+        'quantic__arialivemessage',
+        this.handleAriaLiveMessage
+      );
+      this.removeEventListener(
+        'quantic__registerregion',
         this.handleRegisterAriaLiveRegion
       );
     }
@@ -198,11 +219,11 @@ export default class QuanticSearchInterface extends LightningElement {
 
   bindAriaLiveEvents() {
     this.template.addEventListener(
-      'arialivemessage',
+      'quantic__arialivemessage',
       this.handleAriaLiveMessage.bind(this)
     );
     this.template.addEventListener(
-      'registerregion',
+      'quantic__registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
     this.ariaLiveEventsBound = true;

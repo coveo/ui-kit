@@ -1,4 +1,4 @@
-import {FacetIdConfig} from '../controllers/core/facets/_common/facet-id-generator';
+import {FacetIdConfig} from '../controllers/core/facets/_common/facet-id-generator.js';
 
 export function buildMockFacetIdConfig(
   config: Partial<FacetIdConfig>

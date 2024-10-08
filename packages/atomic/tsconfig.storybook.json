@@ -3,7 +3,8 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "composite": true,
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "declaration": true
   },
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": [
@@ -20,6 +21,7 @@
     ".storybook/*.tsx",
     ".storybook/*.jsx",
     ".storybook/register.tsx",
-    ".storybook/main.mts"
+    ".storybook/main.mts",
+    "scripts/externalPackageMappings.ts"
   ]
 }

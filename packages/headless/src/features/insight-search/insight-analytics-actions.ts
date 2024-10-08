@@ -2,21 +2,19 @@ import {InsightPanel} from '@coveo/relay-event-types';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
-} from '../analytics/analytics-utils';
-import {SearchPageEvents} from '../analytics/search-action-cause';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 export interface CreateArticleMetadata {
   articleType: string;
 }
 
 export const logExpandToFullUI = (
-  _caseId: string,
-  _caseNumber: string,
   fullSearchComponentName: string,
   triggeredBy: string
 ): InsightAction =>
@@ -77,5 +75,15 @@ export const logInsightCreateArticle = (
           caseNumber: metadata.caseNumber,
         } as InsightPanel.Context,
       };
+    },
+  });
+
+export const logOpenUserActions = (): InsightAction =>
+  makeInsightAnalyticsActionFactory('openUserActions')({
+    prefix: 'analytics/insight/openUserActions',
+    __legacy__getBuilder: (client, state) => {
+      return client.logOpenUserActions(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
     },
   });

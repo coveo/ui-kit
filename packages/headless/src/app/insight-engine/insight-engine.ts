@@ -1,41 +1,43 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
-import {interfaceLoad} from '../../features/analytics/analytics-actions';
-import {LegacySearchAction} from '../../features/analytics/analytics-utils';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
-import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
-import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
-import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
-import {executeSearch} from '../../features/insight-search/insight-search-actions';
-import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
-import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {InsightAppState} from '../../state/insight-app-state';
+import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
+import {InsightAPIClient} from '../../api/service/insight/insight-api-client.js';
+import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
+import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions.js';
+import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
+import {executeSearch} from '../../features/insight-search/insight-search-actions.js';
+import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments';
-import {buildLogger} from '../logger';
-import {AdditionalCoreExtraArguments} from '../store';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+} from '../engine.js';
+import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments.js';
+import {buildLogger} from '../logger.js';
+import {AdditionalCoreExtraArguments} from '../store.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   InsightEngineConfiguration,
   insightEngineConfigurationSchema,
   InsightEngineSearchConfigurationOptions,
-} from './insight-engine-configuration';
+  getSampleInsightEngineConfiguration,
+} from './insight-engine-configuration.js';
 
 export type {
   InsightEngineConfiguration,
   InsightEngineSearchConfigurationOptions,
 };
+export {getSampleInsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,

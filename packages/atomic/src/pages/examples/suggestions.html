@@ -68,7 +68,6 @@
         await searchInterface.initialize({
           accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
           organizationId: 'fashioncoveodemocomgzh7iep8',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('fashioncoveodemocomgzh7iep8'),
         });
 
         const engine = searchInterface.engine;
@@ -98,7 +97,7 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="search">
-          <atomic-search-box textarea suggestion-timeout="1000">
+          <atomic-search-box suggestion-timeout="1000">
             <custom-suggestions></custom-suggestions>
             <atomic-search-box-query-suggestions> </atomic-search-box-query-suggestions>
             <atomic-search-box-recent-queries icon="assets://xml.svg"> </atomic-search-box-recent-queries>

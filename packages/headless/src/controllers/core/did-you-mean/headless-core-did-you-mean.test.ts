@@ -1,34 +1,38 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
   setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions';
-import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
+} from '../../../features/did-you-mean/did-you-mean-actions.js';
+import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreDidYouMean,
   DidYouMean,
   DidYouMeanProps,
-} from './headless-core-did-you-mean';
+} from './headless-core-did-you-mean.js';
 
-jest.mock('pino', () => ({
-  ...jest.requireActual('pino'),
-  __esModule: true,
-  default: () => ({
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  }),
-}));
+vi.mock('pino', async () => {
+  const actual = await vi.importActual('pino');
+  return {
+    ...actual,
+    __esModule: true,
+    default: () => ({
+      info: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+    }),
+  };
+});
 
-jest.mock('../../../features/did-you-mean/did-you-mean-actions');
+vi.mock('../../../features/did-you-mean/did-you-mean-actions');
 
 describe('did you mean', () => {
   let dym: DidYouMean;
@@ -43,7 +47,7 @@ describe('did you mean', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     initDidYouMean();
   });
 

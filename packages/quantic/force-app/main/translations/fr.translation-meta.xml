@@ -609,10 +609,6 @@
     <name>quantic_NoRelatedItems</name>
   </customLabels>
   <customLabels>
-    <label>Ouvre dans un sous-onglet Salesforce</label>
-    <name>quantic_OpensInSalesforceSubTab</name>
-  </customLabels>
-  <customLabels>
     <label>Naviguer vers l'enregistrement</label>
     <name>quantic_NavigateToRecord</name>
   </customLabels>
@@ -749,30 +745,6 @@
     <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
   </customLabels>
   <customLabels>
-    <label>Reformuler</label>
-    <name>quantic_Rephrase</name>
-  </customLabels>
-  <customLabels>
-    <label>Instructions étape par étape</label>
-    <name>quantic_StepByStepInstructions</name>
-  </customLabels>
-  <customLabels>
-    <label>Étapes</label>
-    <name>quantic_Steps</name>
-  </customLabels>
-  <customLabels>
-    <label>Résumé avec des points</label>
-    <name>quantic_BulletPointSummary</name>
-  </customLabels>
-  <customLabels>
-    <label>Points</label>
-    <name>quantic_Bullets</name>
-  </customLabels>
-  <customLabels>
-    <label>Résumé</label>
-    <name>quantic_Summary</name>
-  </customLabels>
-  <customLabels>
     <label>La réponse générée est cachée</label>
     <name>quantic_GeneratedAnswerIsHidden</name>
   </customLabels>
@@ -795,14 +767,6 @@
   <customLabels>
     <label>Le contenu généré peut contenir des erreurs. Vérifiez les informations importantes.</label>
     <name>quantic_RGADisclaimer</name>
-  </customLabels>
-  <customLabels>
-    <label>Auto</label>
-    <name>quantic_Auto</name>
-  </customLabels>
-  <customLabels>
-    <label>Automatique</label>
-    <name>quantic_Automatic</name>
   </customLabels>
   <customLabels>
     <label>Voir plus</label>
@@ -871,5 +835,49 @@
   <customLabels>
     <label>Veuillez fournir un lien vers la bonne réponse</label>
     <name>quantic_FeedbackDocumentUrlExplanation</name>
+  </customLabels>
+  <customLabels>
+    <label>Ticket créé</label>
+    <name>quantic_TicketCreated</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche vide</label>
+    <name>quantic_EmptySearch</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} action supplémentaire dans cette session</label>
+    <name>quantic_MoreActionsInThisSession</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} autres actions dans cette session</label>
+    <name>quantic_MoreActionsInThisSession_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Afficher les sessions suivantes</label>
+    <name>quantic_ShowFollowingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Masquer les sessions suivantes</label>
+    <name>quantic_HideFollowingSessions</name>
+  </customLabels>
+    <customLabels>
+    <label>Afficher les sessions précédentes</label>
+    <name>quantic_ShowPrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Masquer les sessions précédentes</label>
+    <name>quantic_HidePrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Aucune action utilisateur disponible</label>
+    <name>quantic_NoUserActionsAvailable</name>
+  </customLabels>
+  <customLabels>
+    <label>Il n'y a pas d'actions utilisateur associées à l'identifiant utilisateur ou le cas est trop ancien pour détecter des actions liées.</label>
+    <name>quantic_NoUserActionsAssociatedWithParams</name>
+  </customLabels>
+  <customLabels>
+    <label>Actions de l'utilisateur</label>
+    <name>quantic_UserActions</name>
   </customLabels>
 </Translations>

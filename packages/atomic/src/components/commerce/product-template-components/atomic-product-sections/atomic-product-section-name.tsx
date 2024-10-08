@@ -2,7 +2,7 @@ import {Element, Component} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
 
 /**
- * @internal
+ * @alpha
  *
  * This section is intended to display the product's name, and its main use is to make the product list scannable.
  *

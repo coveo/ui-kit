@@ -1,13 +1,13 @@
-import {Result} from '../../../api/search/search/result';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
+import {Result} from '../../../api/search/search/result.js';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
+import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-} from '../../core/interactive-result/headless-core-interactive-result';
+} from '../../core/interactive-result/headless-core-interactive-result.js';
 
 export type {
   InteractiveResultCoreOptions,

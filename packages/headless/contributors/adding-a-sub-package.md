@@ -1,11 +1,13 @@
 # Adding a sub-package
 
-Headless provides exports through multiple sub packages. A sub-package groups together exports (i.e. controllers, actions, reducers, engines) that work together as a cohesive unit. By separating exports into sub-packages, it becomes clear to users of headless what exports are available to build a use-case.
+Headless provides exports through multiple sub-packages.
+
+A sub-package groups together exports (i.e. engine, controllers, action loaders, selectors, types, utilities) that work together as a cohesive unit. By separating exports into sub-packages, it becomes clear to users of Headless what exports are available to build a specific use-case.
 
 ## To add a new sub-package:
 
-1. Create an entry file for your sub-package inside the `src` directory (e.g. `case-assist.index.ts`).
-2. Configure nodejs and browser bundles inside `esbuild.mjs` for the entry file created in step #1. Add entries in `useCaseEntries` and `getUmdGlobalName` map for the global name (used to store exports for iife)
+1. In the `headless/src` directory, create an entry file for your new sub-package (e.g. `headless/src/case-assist.index.ts`). Everything you export from this file will be part of the public API of your sub-package.
+2. In `headless/esbuild.mjs`, Configure NodeJS add entries for your new sub-package in the `useCaseEntries` object and `getUmdGlobalName` function map.
 
    ```javascript
    // headless/esbuild.mjs
@@ -15,18 +17,16 @@ Headless provides exports through multiple sub packages. A sub-package groups to
    const useCaseEntries = {
      search: 'src/index.ts',
      recommendation: 'src/recommendation.index.ts',
-     'product-recommendation': 'src/product-recommendation.index.ts',
-     'product-listing': 'src/product-listing.index.ts',
      'case-assist': 'src/case-assist.index.ts',
      // ...
    };
+
+   // ...
 
    function getUmdGlobalName(useCase) {
      const map = {
        search: 'CoveoHeadless',
        recommendation: 'CoveoHeadlessRecommendation',
-       'product-recommendation': 'CoveoHeadlessProductRecommendation',
-       'product-listing': 'CoveoHeadlessProductListing',
        'case-assist': 'CoveoHeadlessCaseAssist',
        // ...
      };
@@ -35,23 +35,33 @@ Headless provides exports through multiple sub packages. A sub-package groups to
    }
    ```
 
-3. Create a new directory with the name of your sub-package at the `headless/` root.
-4. Inside the new directory, add a `package.json` file. Add the paths to your bundled files and type definitions. Make sure to mark the package as `private` so it doesn't get published individually.
+3. In `headless/package.json`, add an entry point for your sub-package in the `exports` object.
 
-   ```json
-   {
-     "private": true,
-     "name": "case-assist",
-     "description": "Headless Case Assist Module",
-     "main": "../dist/case-assist/headless.js",
-     "module": "../dist/case-assist/headless.esm.js",
-     "browser": "../dist/browser/case-assist/headless.esm.js",
-     "types": "../dist/definitions/case-assist.index.d.ts",
-     "license": "Apache-2.0"
+   ````json
+   // headless/package.json
+
+   // ...
+   "exports": {
+     // ...
+     "./case-assist": {
+       "types": "./dist/definitions/case-assist.index.d.ts",
+       "node": {
+         "types": "./dist/definitions/case-assist.index.d.ts",
+         "import": "./dist/case-assist/headless.esm.js",
+         "require": "./dist/case-assist/headless.cjs"
+       },
+       "browser": {
+         "types": "./dist/definitions/case-assist.index.d.ts",
+         "import": "./dist/browser/case-assist/headless.esm.js",
+         "require": "./dist/browser/case-assist/headless.js"
+       },
+       "import": "./dist/browser/case-assist/headless.esm.js",
+       "require": "./dist/browser/case-assist/headless.js"
+     },
+     // ...
    }
-   ```
-
-5. Add the directory name to the `files` array in the project root `package.json` file.
+   ``` 
+   ````
 
 ## Testing your sub-package:
 

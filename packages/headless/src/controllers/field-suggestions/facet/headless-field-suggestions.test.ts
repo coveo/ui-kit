@@ -1,28 +1,28 @@
-import {executeFieldSuggest} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
-import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {SearchAppState} from '../../../state/search-app-state';
+import {executeFieldSuggest} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions.js';
+import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice.js';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {createMockState} from '../../../test/mock-state';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
   buildFieldSuggestions,
   FieldSuggestions,
   FieldSuggestionsOptions,
-} from './headless-field-suggestions';
+} from './headless-field-suggestions.js';
 
-jest.mock('../../../features/facets/facet-set/facet-set-actions');
-jest.mock(
+vi.mock('../../../features/facets/facet-set/facet-set-actions');
+vi.mock(
   '../../../features/facets/facet-search-set/generic/generic-facet-search-actions'
 );
-jest.mock(
+vi.mock(
   '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
 
@@ -49,7 +49,7 @@ describe('fieldSuggestions', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     options = {
       facet: {
         facetId,

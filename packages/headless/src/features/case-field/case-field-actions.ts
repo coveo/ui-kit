@@ -1,22 +1,23 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {isErrorResponse} from '../../api/search/search-api-client';
-import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
-import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';
-import {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-request';
-import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
+import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
+import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params.js';
+import {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-request.js';
+import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response.js';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
   CaseInputSection,
   ConfigurationSection,
   DebugSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   validatePayload,
   requiredNonEmptyString,
   requiredEmptyAllowedString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 export interface SetCaseFieldActionCreatorPayload {
   /**
@@ -85,7 +86,12 @@ export const buildFetchClassificationRequest = async (
 ): Promise<GetCaseClassificationsRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: state.configuration.platformUrl,
+  url:
+    state.caseAssistConfiguration.apiBaseUrl ??
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment
+    ),
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
     clientId: await getVisitorID(state.configuration.analytics),

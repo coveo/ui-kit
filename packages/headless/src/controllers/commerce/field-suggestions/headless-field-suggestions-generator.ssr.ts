@@ -1,23 +1,23 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   FieldSuggestionsGenerator,
   buildFieldSuggestionsGenerator,
-} from './headless-field-suggestions-generator';
+} from './headless-field-suggestions-generator.js';
 
 export type {
   FieldSuggestions,
   FieldSuggestionsState,
-} from '../field-suggestions/headless-field-suggestions';
+} from '../field-suggestions/headless-field-suggestions.js';
 export type {
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsState,
-} from '../field-suggestions/headless-category-field-suggestions';
-export type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state';
-export type {GeneratedFieldSuggestionsControllers} from './headless-field-suggestions-generator';
+} from '../field-suggestions/headless-category-field-suggestions.js';
+export type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+export type {GeneratedFieldSuggestionsControllers} from './headless-field-suggestions-generator.js';
 export type {FieldSuggestionsGenerator};
 
 export interface FieldSuggestionsGeneratorDefinition
-  extends SharedControllerDefinitionWithoutProps<FieldSuggestionsGenerator> {}
+  extends UniversalControllerDefinitionWithoutProps<FieldSuggestionsGenerator> {}
 
 /**
  * Defines the `FieldSuggestionsGenerator` controller for the purpose of server-side rendering.
@@ -30,6 +30,7 @@ export function defineFieldSuggestionsGenerator(): FieldSuggestionsGeneratorDefi
   return {
     search: true,
     listing: true,
+    standalone: true,
     build: (engine) => buildFieldSuggestionsGenerator(engine),
   };
 }

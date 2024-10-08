@@ -2,33 +2,33 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 import {Action, UnknownAction} from '@reduxjs/toolkit';
-import {stateKey} from '../../app/state-key';
-import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing';
-import {buildSearch} from '../../controllers/commerce/search/headless-search';
-import type {Controller} from '../../controllers/controller/headless-controller';
-import {createWaitForActionMiddleware} from '../../utils/utils';
-import {buildControllerDefinitions} from '../commerce-ssr-engine/common';
+import {stateKey} from '../../app/state-key.js';
+import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
+import type {Controller} from '../../controllers/controller/headless-controller.js';
+import {createWaitForActionMiddleware} from '../../utils/utils.js';
+import {buildControllerDefinitions} from '../commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionsMap,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
-} from '../commerce-ssr-engine/types/common';
+} from '../commerce-ssr-engine/types/common.js';
 import {
   EngineDefinition,
   EngineDefinitionOptions,
-} from '../commerce-ssr-engine/types/core-engine';
-import {NavigatorContextProvider} from '../navigatorContextProvider';
-import {composeFunction} from '../ssr-engine/common';
-import {createStaticState} from '../ssr-engine/common';
+} from '../commerce-ssr-engine/types/core-engine.js';
+import {NavigatorContextProvider} from '../navigatorContextProvider.js';
+import {composeFunction} from '../ssr-engine/common.js';
+import {createStaticState} from '../ssr-engine/common.js';
 import {
   EngineStaticState,
   InferControllerPropsMapFromDefinitions,
-} from '../ssr-engine/types/common';
+} from '../ssr-engine/types/common.js';
 import {
   CommerceEngine,
   CommerceEngineOptions,
   buildCommerceEngine,
-} from './commerce-engine';
+} from './commerce-engine.js';
 
 /**
  * The SSR commerce engine.
@@ -56,19 +56,43 @@ function isSearchCompletedAction(action: unknown): action is Action {
   );
 }
 
+function noSearchActionRequired(_action: unknown): _action is Action {
+  return true;
+}
+
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
   options: CommerceEngineOptions
 ): SSRCommerceEngine {
-  const {middleware, promise} = createWaitForActionMiddleware(
-    solutionType === SolutionType.listing
-      ? isListingFetchCompletedAction
-      : isSearchCompletedAction
-  );
+  let actionCompletionMiddleware: ReturnType<
+    typeof createWaitForActionMiddleware
+  >;
+
+  switch (solutionType) {
+    case SolutionType.listing:
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        isListingFetchCompletedAction
+      );
+      break;
+    case SolutionType.search:
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        isSearchCompletedAction
+      );
+      break;
+    default:
+      actionCompletionMiddleware = createWaitForActionMiddleware(
+        noSearchActionRequired
+      );
+  }
+
   const commerceEngine = buildCommerceEngine({
     ...options,
-    middlewares: [...(options.middlewares ?? []), middleware],
+    middlewares: [
+      ...(options.middlewares ?? []),
+      actionCompletionMiddleware.middleware,
+    ],
   });
+
   return {
     ...commerceEngine,
 
@@ -77,7 +101,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return promise;
+      return actionCompletionMiddleware.promise;
     },
   };
 }
@@ -113,6 +137,10 @@ export function defineCommerceEngine<
   searchEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.search
+  >;
+  standaloneEngineDefinition: CommerceEngineDefinition<
+    TControllerDefinitions,
+    SolutionType.standalone
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
@@ -200,12 +228,14 @@ export function defineCommerceEngine<
 
           if (solutionType === SolutionType.listing) {
             buildProductListing(engine).executeFirstRequest();
-          } else {
+          } else if (solutionType === SolutionType.search) {
             buildSearch(engine).executeFirstSearch();
           }
 
+          const searchAction = await engine.waitForRequestCompletedAction();
+
           return createStaticState({
-            searchAction: await engine.waitForRequestCompletedAction(),
+            searchAction,
             controllers,
           }) as EngineStaticState<
             UnknownAction,
@@ -269,5 +299,14 @@ export function defineCommerceEngine<
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    standaloneEngineDefinition: {
+      build: buildFactory(SolutionType.standalone),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.standalone),
+      hydrateStaticState: hydrateStaticStateFactory(SolutionType.standalone),
+      setNavigatorContextProvider,
+    } as CommerceEngineDefinition<
+      TControllerDefinitions,
+      SolutionType.standalone
+    >,
   };
 }

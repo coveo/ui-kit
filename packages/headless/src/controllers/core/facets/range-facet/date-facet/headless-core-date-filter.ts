@@ -1,35 +1,36 @@
-import {configuration} from '../../../../../app/common-reducers';
-import {CoreEngine} from '../../../../../app/engine';
+import {configuration} from '../../../../../app/common-reducers.js';
+import {CoreEngine} from '../../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
-} from '../../../../../features/facet-options/facet-options-actions';
-import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
-import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
-import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
+} from '../../../../../features/facet-options/facet-options-actions.js';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors.js';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
+import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors.js';
 import {
   registerDateFacet,
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {searchReducer as search} from '../../../../../features/search/search-slice';
+} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors.js';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {searchReducer as search} from '../../../../../features/search/search-slice.js';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
 import {
   ConfigurationSection,
   DateFacetSection,
   FacetOptionsSection,
   SearchSection,
-} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
+} from '../../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../../../controller/headless-controller';
-import {determineFacetId} from '../../_common/facet-id-determinor';
-import {validateDateFacetOptions} from './headless-date-facet-options';
+} from '../../../../controller/headless-controller.js';
+import {determineFacetId} from '../../_common/facet-id-determinor.js';
+import {validateDateFacetOptions} from './headless-date-facet-options.js';
 
 /**
  * The options defining a `DateFilter`.
@@ -45,6 +46,11 @@ export interface DateFilterOptions {
    * By default, a unique random identifier is generated.
    */
   facetId?: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * Whether to exclude folded result parents when estimating the result count for each facet value.
@@ -164,6 +170,8 @@ export function buildCoreDateFilter(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterDateFacetActionCreatorPayload = {
     ...props.options,
     currentValues: props.initialState?.range
@@ -171,6 +179,8 @@ export function buildCoreDateFilter(
       : [],
     generateAutomaticRanges: false,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateDateFacetOptions(engine, options);

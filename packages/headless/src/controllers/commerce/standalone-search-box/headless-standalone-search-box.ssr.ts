@@ -1,16 +1,16 @@
-import {SharedControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common';
-import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box.js';
 import {
   StandaloneSearchBox,
   buildStandaloneSearchBox,
-} from './headless-standalone-search-box';
+} from './headless-standalone-search-box.js';
 
-export type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options';
-export type {StandaloneSearchBoxState} from './headless-standalone-search-box';
+export type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
+export type {StandaloneSearchBoxState} from './headless-standalone-search-box.js';
 export type {StandaloneSearchBox, StandaloneSearchBoxProps};
 
 export interface StandaloneSearchBoxDefinition
-  extends SharedControllerDefinitionWithoutProps<StandaloneSearchBox> {}
+  extends UniversalControllerDefinitionWithoutProps<StandaloneSearchBox> {}
 
 /**
  * Defines the `StandaloneSearchBox` controller for the purpose of server-side rendering.
@@ -26,6 +26,7 @@ export function defineStandaloneSearchBox(
   return {
     listing: true,
     search: true,
+    standalone: true,
     build: (engine) => buildStandaloneSearchBox(engine, props),
   };
 }

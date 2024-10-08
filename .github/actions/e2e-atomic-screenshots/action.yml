@@ -8,18 +8,20 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: npx cypress install
+      shell: bash
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
         browser: chrome
         command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        config-file: cypress-screenshots.config.ts
-        start: npx nx run atomic:prod
-        wait-on: 'http://localhost:3333'
+        config-file: cypress-screenshots.config.mjs
+        start: npm start -w @coveo/atomic
+        wait-on: 'http://localhost:3333/ping'
         wait-on-timeout: 600000
         install: false
         record: false
-    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+    - uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3
       if: cancelled() || failure() || success()
       with:
         name: result-lists-screenshots

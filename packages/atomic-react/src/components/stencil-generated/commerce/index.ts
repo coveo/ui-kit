@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
@@ -12,6 +12,7 @@ export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.Atom
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
 export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');
 export const AtomicCommerceFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacet, HTMLAtomicCommerceFacetElement>('atomic-commerce-facet');
+export const AtomicCommerceFacetNumberInput = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacetNumberInput, HTMLAtomicCommerceFacetNumberInputElement>('atomic-commerce-facet-number-input');
 export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceInterface, HTMLAtomicCommerceInterfaceElement>('atomic-commerce-interface');
 export const AtomicCommerceLayout = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceLayout, HTMLAtomicCommerceLayoutElement>('atomic-commerce-layout');
@@ -21,6 +22,7 @@ export const AtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.
 export const AtomicCommercePager = /*@__PURE__*/createReactComponent<JSX.AtomicCommercePager, HTMLAtomicCommercePagerElement>('atomic-commerce-pager');
 export const AtomicCommerceProductList = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductList, HTMLAtomicCommerceProductListElement>('atomic-commerce-product-list');
 export const AtomicCommerceProductsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductsPerPage, HTMLAtomicCommerceProductsPerPageElement>('atomic-commerce-products-per-page');
+export const AtomicCommerceQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceQueryError, HTMLAtomicCommerceQueryErrorElement>('atomic-commerce-query-error');
 export const AtomicCommerceQuerySummary = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceQuerySummary, HTMLAtomicCommerceQuerySummaryElement>('atomic-commerce-query-summary');
 export const AtomicCommerceRecommendationInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationInterface, HTMLAtomicCommerceRecommendationInterfaceElement>('atomic-commerce-recommendation-interface');
 export const AtomicCommerceRecommendationList = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationList, HTMLAtomicCommerceRecommendationListElement>('atomic-commerce-recommendation-list');
@@ -46,6 +48,7 @@ export const AtomicProductNumericFieldValue = /*@__PURE__*/createReactComponent<
 export const AtomicProductPrice = /*@__PURE__*/createReactComponent<JSX.AtomicProductPrice, HTMLAtomicProductPriceElement>('atomic-product-price');
 export const AtomicProductRating = /*@__PURE__*/createReactComponent<JSX.AtomicProductRating, HTMLAtomicProductRatingElement>('atomic-product-rating');
 export const AtomicProductSectionActions = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionActions, HTMLAtomicProductSectionActionsElement>('atomic-product-section-actions');
+export const AtomicProductSectionBadges = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBadges, HTMLAtomicProductSectionBadgesElement>('atomic-product-section-badges');
 export const AtomicProductSectionBottomMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBottomMetadata, HTMLAtomicProductSectionBottomMetadataElement>('atomic-product-section-bottom-metadata');
 export const AtomicProductSectionChildren = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionChildren, HTMLAtomicProductSectionChildrenElement>('atomic-product-section-children');
 export const AtomicProductSectionDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionDescription, HTMLAtomicProductSectionDescriptionElement>('atomic-product-section-description');

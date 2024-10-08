@@ -11,7 +11,7 @@ import {
   getSHA1fromRef,
 } from '@coveo/semantic-monorepo-tools';
 // @ts-ignore no dts is ok
-import angularChangelogConvention from 'conventional-changelog-angular';
+import changelogConvention from 'conventional-changelog-conventionalcommits';
 import {spawnSync} from 'node:child_process';
 import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import {resolve, join} from 'node:path';
@@ -81,7 +81,7 @@ await (async () => {
     readFileSync('package.json', {encoding: 'utf-8'})
   );
   const versionPrefix = `${packageJson.name}@`;
-  const convention = await angularChangelogConvention();
+  const convention = await changelogConvention();
   const lastTag = await getLastTag(versionPrefix);
   const commits = await getCommits(PATH, lastTag);
   if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
@@ -97,7 +97,7 @@ await (async () => {
   const isRedo = gt(currentNpmVersion, currentGitVersion);
   const bumpInfo = isRedo
     ? {type: 'patch'}
-    : convention.recommendedBumpOpts.whatBump(parsedCommits);
+    : convention.whatBump(parsedCommits);
   const nextGoldVersion = getNextVersion(
     isRedo ? currentNpmVersion : currentGitVersion,
     bumpInfo

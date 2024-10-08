@@ -2,7 +2,7 @@ import {Schema} from '@coveo/bueno';
 import {
   searchBoxOptionDefinitions as coreSearchBoxOptionDefinitions,
   SearchBoxOptions as CoreSearchBoxOptions,
-} from '../../core/search-box/headless-core-search-box-options';
+} from '../../core/search-box/headless-core-search-box-options.js';
 
 export type SearchBoxOptions = Pick<
   CoreSearchBoxOptions,

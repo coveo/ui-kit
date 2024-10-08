@@ -1,23 +1,23 @@
-import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions';
-import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common';
-import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice';
-import {CommerceAppState} from '../../../../../state/commerce-app-state';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state';
+import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions.js';
+import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice.js';
+import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice.js';
+import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../../test/mock-engine-v2';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
+} from '../../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {
   buildFacetGenerator,
   FacetGenerator,
   FacetGeneratorOptions,
-} from './headless-commerce-facet-generator';
+} from './headless-commerce-facet-generator.js';
 
-jest.mock(
+vi.mock(
   '../../../../../features/commerce/facets/core-facet/core-facet-actions'
 );
 
@@ -26,11 +26,11 @@ describe('CSR FacetGenerator', () => {
   let state: CommerceAppState;
   let options: FacetGeneratorOptions;
   let facetGenerator: FacetGenerator;
-  const mockBuildNumericFacet = jest.fn();
-  const mockBuildRegularFacet = jest.fn();
-  const mockBuildDateFacet = jest.fn();
-  const mockBuildCategoryFacet = jest.fn();
-  const mockFetchProductsActionCreator = jest.fn();
+  const mockBuildNumericFacet = vi.fn();
+  const mockBuildRegularFacet = vi.fn();
+  const mockBuildDateFacet = vi.fn();
+  const mockBuildCategoryFacet = vi.fn();
+  const mockFetchProductsActionCreator = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -56,7 +56,7 @@ describe('CSR FacetGenerator', () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
 
     options = {
       buildNumericFacet: mockBuildNumericFacet,

@@ -2,23 +2,23 @@ import {
   addContext,
   removeContext,
   setContext,
-} from '../../../features/context/context-actions';
-import {contextReducer} from '../../../features/context/context-slice';
+} from '../../../features/context/context-actions.js';
+import {contextReducer} from '../../../features/context/context-slice.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
-} from '../../../test/mock-engine-v2';
-import {createMockState} from '../../../test/mock-state';
-import {buildCoreContext, Context} from './headless-core-context';
+} from '../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../test/mock-state.js';
+import {buildCoreContext, Context} from './headless-core-context.js';
 
-jest.mock('../../../features/context/context-actions');
+vi.mock('../../../features/context/context-actions');
 
 describe('Context', () => {
   let context: Context;
   let engine: MockedSearchEngine;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     engine = buildMockSearchEngine(createMockState());
     context = buildCoreContext(engine);
   });

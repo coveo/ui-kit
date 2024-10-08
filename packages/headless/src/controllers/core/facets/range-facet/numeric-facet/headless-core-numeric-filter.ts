@@ -1,35 +1,36 @@
-import {configuration} from '../../../../../app/common-reducers';
-import {CoreEngine} from '../../../../../app/engine';
+import {configuration} from '../../../../../app/common-reducers.js';
+import {CoreEngine} from '../../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
-} from '../../../../../features/facet-options/facet-options-actions';
-import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
-import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
-import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
-import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+} from '../../../../../features/facet-options/facet-options-actions.js';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors.js';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
+import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors.js';
+import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
   registerNumericFacet,
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {searchReducer as search} from '../../../../../features/search/search-slice';
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {searchReducer as search} from '../../../../../features/search/search-slice.js';
+import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
 import {
   ConfigurationSection,
   FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
+} from '../../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../../../controller/headless-controller';
-import {determineFacetId} from '../../_common/facet-id-determinor';
-import {validateNumericFacetOptions} from './headless-numeric-facet-options';
+} from '../../../../controller/headless-controller.js';
+import {determineFacetId} from '../../_common/facet-id-determinor.js';
+import {validateNumericFacetOptions} from './headless-numeric-facet-options.js';
 
 /**
  * The options defining a `NumericFilter`.
@@ -39,6 +40,11 @@ export interface NumericFilterOptions {
    * The field whose values you want to display in the filter.
    */
   field: string;
+
+  /**
+   * The tabs on which the facet should be enabled or disabled.
+   */
+  tabs?: {included?: string[]; excluded?: string[]};
 
   /**
    * A unique identifier for the controller.
@@ -162,6 +168,8 @@ export function buildCoreNumericFilter(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const facetId = determineFacetId(engine, props.options);
+  const tabs = props.options.tabs ?? {};
+  const activeTab = selectActiveTab(engine.state.tabSet);
   const options: RegisterNumericFacetActionCreatorPayload = {
     ...props.options,
     currentValues: props.initialState?.range
@@ -169,6 +177,8 @@ export function buildCoreNumericFilter(
       : [],
     generateAutomaticRanges: false,
     facetId,
+    tabs,
+    activeTab,
   };
 
   validateNumericFacetOptions(engine, options);

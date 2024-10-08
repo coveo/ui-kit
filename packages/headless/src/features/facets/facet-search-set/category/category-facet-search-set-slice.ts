@@ -1,14 +1,14 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
+import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
-} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions';
-import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions';
-import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions';
-import {executeSearch} from '../../../search/search-actions';
+} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
+import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
+import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions.js';
+import {executeSearch} from '../../../search/search-actions.js';
 import {
   handleFacetSearchRegistration,
   handleFacetSearchUpdate,
@@ -20,14 +20,14 @@ import {
   handleCommerceFacetSearchFulfilled,
   handleCommerceFacetFieldSuggestionsFulfilled,
   handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet,
-} from '../facet-search-reducer-helpers';
+} from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../specific/specific-facet-search-actions';
-import {registerCategoryFacetSearch} from './category-facet-search-actions';
-import {getCategoryFacetSearchSetInitialState} from './category-facet-search-set-state';
+} from '../generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../specific/specific-facet-search-actions.js';
+import {registerCategoryFacetSearch} from './category-facet-search-actions.js';
+import {getCategoryFacetSearchSetInitialState} from './category-facet-search-set-state.js';
 
 export const categoryFacetSearchSetReducer = createReducer(
   getCategoryFacetSearchSetInitialState(),

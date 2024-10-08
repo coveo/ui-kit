@@ -1,30 +1,30 @@
-import {stateKey} from '../../../../app/state-key';
+import {stateKey} from '../../../../app/state-key.js';
 import {
   selectPage,
   nextPage,
   previousPage,
   setPageSize,
   registerRecommendationsSlotPagination,
-} from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
+} from '../../../../features/commerce/pagination/pagination-actions.js';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
-} from '../../../../test/mock-engine-v2';
+} from '../../../../test/mock-engine-v2.js';
 import {
   buildCorePagination,
   CorePaginationOptions,
   Pagination,
-} from './headless-core-commerce-pagination';
+} from './headless-core-commerce-pagination.js';
 
-jest.mock('../../../../features/commerce/pagination/pagination-actions');
+vi.mock('../../../../features/commerce/pagination/pagination-actions');
 
 describe('core pagination', () => {
   let engine: MockedCommerceEngine;
   let pagination: Pagination;
-  const fetchProductsActionCreator = jest.fn();
-  const fetchMoreProductsActionCreator = jest.fn();
+  const fetchProductsActionCreator = vi.fn();
+  const fetchMoreProductsActionCreator = vi.fn();
   const slotId = 'recommendations-slot-id';
 
   function initPagination(options: CorePaginationOptions = {}) {

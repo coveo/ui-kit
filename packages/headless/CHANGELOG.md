@@ -1,3 +1,82 @@
+## 3.2.0 (2024-10-02)
+
+- feat(headless): analytics actions updated to send valid ep events (#4450) ([0a60d40](https://github.com/coveo/ui-kit/commits/0a60d40)), closes [#4450](https://github.com/coveo/ui-kit/issues/4450)
+
+## <small>3.1.3 (2024-09-25)</small>
+
+- chore: eliminate network calls in npm test (#4453) ([c6393a9](https://github.com/coveo/ui-kit/commits/c6393a9)), closes [#4453](https://github.com/coveo/ui-kit/issues/4453)
+- docs(headless): update adding-a-sub-package (#4456) ([92c5404](https://github.com/coveo/ui-kit/commits/92c5404)), closes [#4456](https://github.com/coveo/ui-kit/issues/4456)
+
+## <small>3.1.2 (2024-09-25)</small>
+
+- chore(headless): ensure Bueno is loaded from the CDN, not from NPM specifier (#4459) ([ba823e2](https://github.com/coveo/ui-kit/commits/ba823e2)), closes [#4459](https://github.com/coveo/ui-kit/issues/4459)
+
+## <small>3.1.1 (2024-09-24)</small>
+
+- docs: document headless, atomic, and atomic-react entry points (#4455) ([3853bdc](https://github.com/coveo/ui-kit/commits/3853bdc)), closes [#4455](https://github.com/coveo/ui-kit/issues/4455)
+
+## 3.1.0 (2024-09-24)
+
+- chore(atomic, headless): make bueno external (#4433) ([e1f7f2d](https://github.com/coveo/ui-kit/commits/e1f7f2d)), closes [#4433](https://github.com/coveo/ui-kit/issues/4433)
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+- fix(headless, commerce): schema validation error when switching between search page and plp (#4448) ([5808edb](https://github.com/coveo/ui-kit/commits/5808edb)), closes [#4448](https://github.com/coveo/ui-kit/issues/4448)
+- fix(quantic, searchbox): Issue with searchbox suggestions list flashing after selecting recent query ([6f75ad6](https://github.com/coveo/ui-kit/commits/6f75ad6)), closes [#4401](https://github.com/coveo/ui-kit/issues/4401)
+- feat: add answer configuration id to atomic-insight-generated-answer (#4451) ([6b7c2bd](https://github.com/coveo/ui-kit/commits/6b7c2bd)), closes [#4451](https://github.com/coveo/ui-kit/issues/4451)
+- feat(headless): add a way to disable/enable the generated answer controller (#4288) ([a2f167b](https://github.com/coveo/ui-kit/commits/a2f167b)), closes [#4288](https://github.com/coveo/ui-kit/issues/4288)
+- fix(atomic): enable/disable facet based on tab with updateActiveTab action (#4313) ([08fe92a](https://github.com/coveo/ui-kit/commits/08fe92a)), closes [#4313](https://github.com/coveo/ui-kit/issues/4313) [#4311](https://github.com/coveo/ui-kit/issues/4311)
+- fix(headless): ensure each result keep a reference of its 'source' searchId (#4391) ([d0aa1fc](https://github.com/coveo/ui-kit/commits/d0aa1fc)), closes [#4391](https://github.com/coveo/ui-kit/issues/4391)
+
+## 3.0.0 (2024-09-18)
+
+- chore!: remove abab (#3908) ([e7b5682](https://github.com/coveo/ui-kit/commits/e7b5682)), closes [#3908](https://github.com/coveo/ui-kit/issues/3908) [#3897](https://github.com/coveo/ui-kit/issues/3897)
+- chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
+- chore(atomic)!: externalize dependencies (#4393) ([b599477](https://github.com/coveo/ui-kit/commits/b599477)), closes [#4393](https://github.com/coveo/ui-kit/issues/4393)
+- chore(headless, atomic, quantic)!: remove deprecated functions/properties (#4350) ([8de5406](https://github.com/coveo/ui-kit/commits/8de5406)), closes [#4350](https://github.com/coveo/ui-kit/issues/4350)
+- chore(headless, atomic)!: remove deprecated product recommendations (#4349) ([475a217](https://github.com/coveo/ui-kit/commits/475a217)), closes [#4349](https://github.com/coveo/ui-kit/issues/4349)
+- chore(headless)!: add export field in package.json (#4392) ([a834c2f](https://github.com/coveo/ui-kit/commits/a834c2f)), closes [#4392](https://github.com/coveo/ui-kit/issues/4392)
+- chore(headless)!: remove abort controller polyfill (#4380) ([cd5b8fc](https://github.com/coveo/ui-kit/commits/cd5b8fc)), closes [#4380](https://github.com/coveo/ui-kit/issues/4380)
+- chore(headless)!: remove deprecated product listing (#4347) ([df967ba](https://github.com/coveo/ui-kit/commits/df967ba)), closes [#4347](https://github.com/coveo/ui-kit/issues/4347)
+- chore(headless)!: remove headless fetch & crypto polyfills (#4358) ([583e30a](https://github.com/coveo/ui-kit/commits/583e30a)), closes [#4358](https://github.com/coveo/ui-kit/issues/4358)
+- chore(headless)!: Remove TestUtils export (#4329) ([310cf53](https://github.com/coveo/ui-kit/commits/310cf53)), closes [#4329](https://github.com/coveo/ui-kit/issues/4329)
+- chore(headless)!: remove unnecessary exports from reduxjs/toolkit (#4369) ([c23fcd6](https://github.com/coveo/ui-kit/commits/c23fcd6)), closes [#4369](https://github.com/coveo/ui-kit/issues/4369)
+- feat (headless SSR): support standalone solution type (#4314) ([4983313](https://github.com/coveo/ui-kit/commits/4983313)), closes [#4314](https://github.com/coveo/ui-kit/issues/4314)
+- feat!: remove the organizationEndpoints configuration option (#4339) ([d3e1041](https://github.com/coveo/ui-kit/commits/d3e1041)), closes [#4339](https://github.com/coveo/ui-kit/issues/4339)
+- feat(headless)!: rga rephrase logic removed from headless (#4413) ([79d3bc2](https://github.com/coveo/ui-kit/commits/79d3bc2)), closes [#4413](https://github.com/coveo/ui-kit/issues/4413)
+- feat(headless)!: use next as default analyticsMode (#4394) ([3dd775e](https://github.com/coveo/ui-kit/commits/3dd775e)), closes [#4394](https://github.com/coveo/ui-kit/issues/4394)
+- fix(headless)!: clean up deprecated feedback methods (#4404) ([45e9f2d](https://github.com/coveo/ui-kit/commits/45e9f2d)), closes [#4404](https://github.com/coveo/ui-kit/issues/4404)
+- fix(headless)!: remove doubled export in case-assist (#4322) ([f3c4c6f](https://github.com/coveo/ui-kit/commits/f3c4c6f)), closes [#4322](https://github.com/coveo/ui-kit/issues/4322)
+- fix(headless)!: removed unused parameters from logExpandToFullUI action (#4357) ([b9eb959](https://github.com/coveo/ui-kit/commits/b9eb959)), closes [#4357](https://github.com/coveo/ui-kit/issues/4357)
+- fix(Headless): enable/disable facet based on tab with updateActiveTab action (#4311) ([0c37dcd](https://github.com/coveo/ui-kit/commits/0c37dcd)), closes [#4311](https://github.com/coveo/ui-kit/issues/4311)
+- fix(headless): forward headless commerce category facet retrieve count (#4420) ([44b5871](https://github.com/coveo/ui-kit/commits/44b5871)), closes [#4420](https://github.com/coveo/ui-kit/issues/4420)
+- fix(headless): splitting actions in user session logic fixed (#4377) ([7163f6a](https://github.com/coveo/ui-kit/commits/7163f6a)), closes [#4377](https://github.com/coveo/ui-kit/issues/4377)
+- chore: update tsconfigs to match node version (#4402) ([e5bf6b8](https://github.com/coveo/ui-kit/commits/e5bf6b8)), closes [#4402](https://github.com/coveo/ui-kit/issues/4402)
+- chore(headless): esm build for node will look for "module" files instead of "main" (#4400) ([f83b610](https://github.com/coveo/ui-kit/commits/f83b610)), closes [#4400](https://github.com/coveo/ui-kit/issues/4400)
+- feat(atomic): user actions timeline component created (#4272) ([7c110bc](https://github.com/coveo/ui-kit/commits/7c110bc)), closes [#4272](https://github.com/coveo/ui-kit/issues/4272)
+- feat(generatedAnswerAnalyticsAction): stream id (#4405) ([fa19b5f](https://github.com/coveo/ui-kit/commits/fa19b5f)), closes [#4405](https://github.com/coveo/ui-kit/issues/4405)
+- feat(headless commerce ssr): merge controller props and ControllerDefinitionOption (#4316) ([951b1c7](https://github.com/coveo/ui-kit/commits/951b1c7)), closes [#4316](https://github.com/coveo/ui-kit/issues/4316)
+- feat(headless): add the logic organize the user actions and link it with the user action controller ([85e9d0e](https://github.com/coveo/ui-kit/commits/85e9d0e)), closes [#4223](https://github.com/coveo/ui-kit/issues/4223)
+- feat(headless): expose user action controller in insight bundle and add logOpenUser analytics action ([2299887](https://github.com/coveo/ui-kit/commits/2299887)), closes [#4296](https://github.com/coveo/ui-kit/issues/4296)
+
+### BREAKING CHANGE
+
+- add export field in package.json (#4392)
+- clean up deprecated feedback methods (#4404)
+- externalize dependencies (#4393)
+- remove abab (#3908)
+- remove abort controller polyfill (#4380)
+- remove deprecated functions/properties (#4350)
+- remove deprecated product listing (#4347)
+- remove deprecated product recommendations (#4349)
+- remove doubled export in case-assist (#4322)
+- remove headless fetch & crypto polyfills (#4358)
+- Remove TestUtils export (#4329)
+- remove the organizationEndpoints configuration option (#4339)
+- remove unnecessary exports from reduxjs/toolkit (#4369)
+- removed unused parameters from logExpandToFullUI action (#4357)
+- rga rephrase logic removed from headless (#4413)
+- update node engine definition in all exported packages (#4330)
+- use next as default analyticsMode (#4394)
+
 # 2.80.0 (2024-08-27)
 
 ### Bug Fixes
