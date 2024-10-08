@@ -98,7 +98,7 @@ export class AtomicCommerceProductList
   /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) display: ItemDisplayLayout = 'grid';
+  @Prop({reflect: true}) display: ItemDisplayLayout = 'grid'; // TODO KIT-3640 - Support 'table', or use ItemDisplayBasicLayout type.
 
   /**
    * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
