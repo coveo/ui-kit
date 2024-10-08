@@ -43,8 +43,7 @@ test.describe('with a custom fallback image', async () => {
       expect(src).toContain(FALLBACK);
     });
 
-    //KIT-3619
-    test.fixme('should have a 1:1 aspect ratio', async ({productImage}) => {
+    test('should have a 1:1 aspect ratio', async ({productImage}) => {
       const aspectRatio =
         await productImage.noCarouselImage.getAttribute('class');
       expect(aspectRatio).toEqual('aspect-square');
@@ -62,8 +61,7 @@ test.describe('with a custom fallback image', async () => {
       expect(src).toContain(FALLBACK);
     });
 
-    //KIT-3619
-    test.fixme('should have a 1:1 aspect ratio', async ({productImage}) => {
+    test('should have a 1:1 aspect ratio', async ({productImage}) => {
       const aspectRatio =
         await productImage.noCarouselImage.getAttribute('class');
       expect(aspectRatio).toEqual('aspect-square');
@@ -81,8 +79,7 @@ test.describe('with a custom fallback image', async () => {
       expect(src).toContain(FALLBACK);
     });
 
-    //KIT-3619
-    test.fixme('should have a 1:1 aspect ratio', async ({productImage}) => {
+    test('should have a 1:1 aspect ratio', async ({productImage}) => {
       const aspectRatio =
         await productImage.noCarouselImage.getAttribute('class');
       expect(aspectRatio).toEqual('aspect-square');
