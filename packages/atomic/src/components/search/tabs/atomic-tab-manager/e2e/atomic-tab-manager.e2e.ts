@@ -64,9 +64,9 @@ test.describe('AtomicTabManager', () => {
         await tabManager.sortDropdown.waitFor({state: 'visible'});
 
         await expect(tabManager.sortDropdownOptions).toHaveText([
+          'Relevance',
           'Name descending',
           'Name ascending',
-          'Relevance',
         ]);
       });
 
@@ -76,7 +76,7 @@ test.describe('AtomicTabManager', () => {
       });
 
       test('generated answer', async ({tabManager, searchBox}) => {
-        await tabManager.sortDropdown.selectOption('Relevance');
+        await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.fill(
           // eslint-disable-next-line @cspell/spellchecker
           'how to resolve netflix connection with tivo'
@@ -129,9 +129,9 @@ test.describe('AtomicTabManager', () => {
           await tabManager.sortDropdown.waitFor({state: 'visible'});
 
           await expect(tabManager.sortDropdownOptions).toHaveText([
+            'Relevance',
             'Most Recent',
             'Least Recent',
-            'Relevance',
           ]);
         });
 
@@ -141,7 +141,7 @@ test.describe('AtomicTabManager', () => {
         });
 
         test('generated answer', async ({tabManager, searchBox}) => {
-          await tabManager.sortDropdown.selectOption('Relevance');
+          await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
@@ -180,9 +180,9 @@ test.describe('AtomicTabManager', () => {
             await tabManager.sortDropdown.waitFor({state: 'visible'});
 
             await expect(tabManager.sortDropdownOptions).toHaveText([
+              'Relevance',
               'Name descending',
               'Name ascending',
-              'Relevance',
             ]);
           });
 
@@ -192,7 +192,7 @@ test.describe('AtomicTabManager', () => {
           });
 
           test('generated answer', async ({tabManager, searchBox}) => {
-            await tabManager.sortDropdown.selectOption('Relevance');
+            await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
@@ -287,9 +287,9 @@ test.describe('AtomicTabManager', () => {
           await tabManager.refineModalHeader.waitFor({state: 'visible'});
 
           await expect(tabManager.refineModalSortDropdownOptions).toHaveText([
+            'Relevance',
             'Most Recent',
             'Least Recent',
-            'Relevance',
           ]);
         });
 
@@ -299,19 +299,14 @@ test.describe('AtomicTabManager', () => {
         });
 
         test('generated answer', async ({tabManager, searchBox}) => {
-          await tabManager.refineModalButton.click();
-          await tabManager.refineModalHeader.waitFor({state: 'visible'});
-          await tabManager.refineModalSortDropdown.selectOption('Relevance');
-
-          await tabManager.refineModalCloseButton.click();
-
-          await tabManager.refineModalHeader.waitFor({state: 'hidden'});
+          await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
           );
 
           await searchBox.searchInput.press('Enter');
+
           await expect(tabManager.generatedAnswer).toBeVisible();
         });
       });
@@ -346,9 +341,9 @@ test.describe('AtomicTabManager', () => {
             await tabManager.refineModalHeader.waitFor({state: 'visible'});
 
             await expect(tabManager.refineModalSortDropdownOptions).toHaveText([
+              'Relevance',
               'Name descending',
               'Name ascending',
-              'Relevance',
             ]);
           });
 
@@ -358,11 +353,7 @@ test.describe('AtomicTabManager', () => {
           });
 
           test('generated answer', async ({tabManager, searchBox}) => {
-            await tabManager.refineModalButton.click();
-            await tabManager.refineModalHeader.waitFor({state: 'visible'});
-            await tabManager.refineModalSortDropdown.selectOption('Relevance');
-
-            await tabManager.refineModalCloseButton.click();
+            await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'

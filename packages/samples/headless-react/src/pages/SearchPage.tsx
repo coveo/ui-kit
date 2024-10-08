@@ -168,7 +168,7 @@ declare global {
   }
 }
 
-const isServerSideRendered = !!global.window?.HEADLESS_STATE;
+const isServerSideRendered = globalThis.window?.HEADLESS_STATE;
 
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
 
