@@ -1,0 +1,21 @@
+name: Pull request review balance tracker
+
+on: pull_request
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run pull request stats
+        uses: coveo/PR_stats@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repositories: coveo/ui-kit
+          organization: null
+          period: 31
+          charts: true
+          disable-links: false
+          sort-by: 'TIME'
+          limit: 6
+          telemetry: false
