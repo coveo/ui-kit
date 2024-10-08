@@ -58,6 +58,12 @@ export class AtomicTabManager {
     }
 
     tabElements.forEach((tabElement, index) => {
+      if (!tabElement.name) {
+        this.error = new Error(
+          'The "name" attribute must be defined on all "atomic-tab" children.'
+        );
+        return;
+      }
       const tabController = buildTab(this.bindings.engine, {
         options: {
           expression: tabElement.expression,
