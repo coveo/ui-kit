@@ -876,4 +876,8 @@
     <label>Il n'y a pas d'actions utilisateur associées à l'identifiant utilisateur ou le cas est trop ancien pour détecter des actions liées.</label>
     <name>quantic_NoUserActionsAssociatedWithParams</name>
   </customLabels>
+  <customLabels>
+    <label>Actions de l'utilisateur</label>
+    <name>quantic_UserActions</name>
+  </customLabels>
 </Translations>
