@@ -1,5 +1,4 @@
 /**
- * @packageDocumentation
  * @module Recommendation
  */
 import * as HighlightUtils from './utils/highlight.js';

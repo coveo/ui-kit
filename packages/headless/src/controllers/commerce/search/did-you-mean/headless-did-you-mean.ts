@@ -19,7 +19,7 @@ export type {QueryCorrection, WordCorrection, DidYouMeanState};
 /**
  * The `DidYouMean` controller is responsible for handling query corrections.
  *
- * @group Buildable controllers
+ * @group Sub-controllers
  * @category DidYouMean
  */
 export interface DidYouMean extends Controller {
@@ -35,7 +35,7 @@ export interface DidYouMean extends Controller {
  * @param engine - The commerce engine.
  * @returns A `DidYouMean` controller.
  *
- * @group Buildable controllers
+ * @group Sub-controllers
  * @category DidYouMean
  */
 export function buildDidYouMean(engine: CommerceEngine): DidYouMean {

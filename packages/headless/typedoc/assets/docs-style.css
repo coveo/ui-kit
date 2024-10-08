@@ -24,6 +24,11 @@ body {
   width: 27rem;
 }
 
+[data-theme='light'] .tsd-typography thead,
+[data-theme='light'] .tsd-typography tr:nth-child(even) {
+  background-color: var(--light-color-background);
+}
+
 .tsd-page-toolbar {
   height: var(--header-height);
   border-bottom: none;

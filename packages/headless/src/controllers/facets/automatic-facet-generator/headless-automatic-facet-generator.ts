@@ -41,6 +41,12 @@ export interface AutomaticFacetGenerator extends Controller {
   state: AutomaticFacetGeneratorState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `AutomaticFacetGenerator` controller.
+ *
+ * @group Controllers
+ * @category AutomaticFacetGenerator
+ */
 export interface AutomaticFacetGeneratorState {
   /**
    * The list of automatic facet controllers.

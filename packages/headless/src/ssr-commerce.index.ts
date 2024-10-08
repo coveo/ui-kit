@@ -1,5 +1,4 @@
 /**
- * @packageDocumentation
  * @module SSR Commerce
  */
 

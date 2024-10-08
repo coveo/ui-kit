@@ -13,7 +13,6 @@
  * search.executeFirstSearch();
  * ```
  *
- * @packageDocumentation
  * @module Commerce
  */
 import * as Selectors from './selectors/commerce-selectors.index.js';
