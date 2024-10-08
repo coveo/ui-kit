@@ -76,6 +76,7 @@ test.describe('AtomicTabManager', () => {
       });
 
       test('generated answer', async ({tabManager, searchBox}) => {
+        await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.fill(
           // eslint-disable-next-line @cspell/spellchecker
           'how to resolve netflix connection with tivo'
@@ -140,6 +141,7 @@ test.describe('AtomicTabManager', () => {
         });
 
         test('generated answer', async ({tabManager, searchBox}) => {
+          await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
@@ -190,6 +192,7 @@ test.describe('AtomicTabManager', () => {
           });
 
           test('generated answer', async ({tabManager, searchBox}) => {
+            await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
@@ -296,6 +299,7 @@ test.describe('AtomicTabManager', () => {
         });
 
         test('generated answer', async ({tabManager, searchBox}) => {
+          await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
             'how to resolve netflix connection with tivo'
@@ -349,6 +353,7 @@ test.describe('AtomicTabManager', () => {
           });
 
           test('generated answer', async ({tabManager, searchBox}) => {
+            await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
               'how to resolve netflix connection with tivo'
