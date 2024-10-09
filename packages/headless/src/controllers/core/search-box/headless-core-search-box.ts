@@ -117,7 +117,7 @@ interface SearchBoxPropsBase {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` controller.
  *
- * @group Controllers
+ * @group Core controllers
  * @category SearchBox
  */
 export interface SearchBoxState {

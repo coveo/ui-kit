@@ -55,6 +55,9 @@ export interface NumericFacetProps {
 
 /**
  * The `NumericFacet` controller makes it possible to create a facet with numeric ranges.
+ *
+ * @group Core controllers
+ * @category NumericFacet
  */
 export interface NumericFacet extends Controller {
   /**
@@ -116,6 +119,9 @@ export interface NumericFacet extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `NumericFacet` controller.
+ *
+ * @group Core controllers
+ * @category NumericFacet
  */
 export interface NumericFacetState {
   /**
@@ -155,6 +161,9 @@ export interface NumericFacetState {
  * @param engine - The headless engine.
  * @param props - The configurable `NumericFacet` properties.
  * @returns A `NumericFacet` controller instance.
+ *
+ * @group Core controllers
+ * @category NumericFacet
  */
 export function buildCoreNumericFacet(
   engine: CoreEngine,
