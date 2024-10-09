@@ -33,6 +33,7 @@ export function buildMockResult(config: Partial<Result> = {}): Result {
     absentTerms: [],
     raw: buildMockRaw(),
     isUserActionView: false,
+    searchUid: '',
     ...config,
   };
 }

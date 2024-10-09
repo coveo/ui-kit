@@ -1,4 +1,5 @@
 import {ItemClick} from '@coveo/relay-event-types';
+import {SearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   ClickAction,
@@ -16,6 +17,11 @@ export const logDocumentQuickview = (result: Result): ClickAction => {
       const info = partialDocumentInformation(result, state);
       const id = documentIdentifier(result);
       return client.makeDocumentQuickview(info, id);
+    },
+    __legacy__provider: (getState) => {
+      const customAnalyticsProvider = new SearchAnalyticsProvider(getState);
+      customAnalyticsProvider.getSearchUID = () => result.searchUid ?? '';
+      return customAnalyticsProvider;
     },
     analyticsType: 'itemClick',
     analyticsPayloadBuilder: (state): ItemClick => {

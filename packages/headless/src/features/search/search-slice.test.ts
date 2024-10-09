@@ -148,6 +148,22 @@ describe('search-slice', () => {
       expect(finalState.searchResponseId).toBe('a_new_id');
     });
 
+    it('when a executeSearch fulfilled is received, results should contain last #searchUid', () => {
+      state.searchResponseId = 'an_initial_id';
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        executeSearch.fulfilled(search, '', {legacy: logSearchboxSubmit()})
+      );
+
+      expect(finalState.results[0].searchUid).toBe('a_new_id');
+    });
+
     it('when a executeSearch fulfilled is received, it overwrites the #questionAnswer', () => {
       state.questionAnswer = buildMockQuestionsAnswers({
         question: 'When?',
@@ -198,6 +214,26 @@ describe('search-slice', () => {
       );
 
       expect(finalState.searchResponseId).toBe('an_initial_id');
+    });
+
+    it('when a fetchMoreResults fulfilled is received, previous results keep their #searchUiD', () => {
+      state.results = state.results.map((result) => ({
+        ...result,
+        searchUid: 'an_initial_id',
+      }));
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        fetchMoreResults.fulfilled(search, '')
+      );
+
+      expect(finalState.results[0].searchUid).toBe('an_initial_id');
+      expect(finalState.results[1].searchUid).toBe('a_new_id');
     });
 
     it('when a fetchMoreResults fulfilled is received, keeps the previous #questionAnswer', () => {
