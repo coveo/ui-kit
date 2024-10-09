@@ -5,6 +5,7 @@ test.describe('with an automatic query correction', () => {
   const ORIGINAL_QUERY = 'coveoo';
   const CORRECTED_QUERY = 'coveo';
   test.beforeEach(async ({didYouMean}) => {
+    await didYouMean.withAutomaticQueryCorrection();
     await didYouMean.load();
     await didYouMean.hydrated.waitFor();
   });
@@ -30,6 +31,7 @@ test.describe('with a manual query correction', () => {
   const ORIGINAL_QUERY = 'ceveo';
   const CORRECTED_QUERY = 'coveo';
   test.beforeEach(async ({didYouMean}) => {
+    await didYouMean.withManualQueryCorrection();
     await didYouMean.load({story: 'manual-correction'});
     await didYouMean.hydrated.waitFor();
   });
