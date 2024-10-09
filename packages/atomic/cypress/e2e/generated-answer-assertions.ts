@@ -2,7 +2,7 @@ import {should} from './common-assertions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
 export function assertLogOpenGeneratedAnswerSource() {
-  cy.expectCustomEvent('generatedAnswer', 'openGeneratedAnswerSource');
+  cy.expectClickEvent('generatedAnswerCitationClick');
 }
 
 export function assertLogGeneratedAnswerSourceHover() {

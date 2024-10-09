@@ -151,7 +151,7 @@
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.2.7",
     "abortcontroller-polyfill": "1.7.5",
-    "coveo.analytics": "2.30.38",
+    "coveo.analytics": "2.30.39",
     "dayjs": "1.11.12",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
