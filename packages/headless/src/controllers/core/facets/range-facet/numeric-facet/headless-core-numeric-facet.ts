@@ -56,6 +56,8 @@ export interface NumericFacetProps {
 /**
  * The `NumericFacet` controller makes it possible to create a facet with numeric ranges.
  *
+ * Example: [numeric-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx)
+ *
  * @group Core controllers
  * @category NumericFacet
  */

@@ -11,6 +11,8 @@ import {
 /**
  * The `QueryError` controller allows to retrieve information about the current error returned by the search API, if any.
  *
+ * Example: [query-error.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/query-error/query-error.fn.tsx)
+ *
  * @group Core controllers
  * @category QueryError
  */

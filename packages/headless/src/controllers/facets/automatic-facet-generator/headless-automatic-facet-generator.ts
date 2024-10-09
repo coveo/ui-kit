@@ -69,7 +69,7 @@ export interface AutomaticFacetGeneratorProps {
  * A scoped and simplified part of the headless state that is relevant to the `Automatic Facet` controller.
  *
  * @group Controllers
- * @category AutomaticFacet
+ * @category AutomaticFacetGenerator
  */
 export interface AutomaticFacetState {
   /**
@@ -94,7 +94,7 @@ export interface AutomaticFacetState {
  * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
  *
  * @group Controllers
- * @category AutomaticFacet
+ * @category AutomaticFacetGenerator
  */
 export interface AutomaticFacet extends Controller {
   /**

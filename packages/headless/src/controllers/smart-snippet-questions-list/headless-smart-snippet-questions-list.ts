@@ -33,6 +33,8 @@ export interface SmartSnippetQuestionsListState
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  *
+ * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
+ *
  * @group Controllers
  * @category SmartSnippetQuestionsList
  */

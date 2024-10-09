@@ -118,6 +118,8 @@ export interface SmartSnippetCore extends Controller {
 /**
  * The `SmartSnippet` controller lets you display the excerpt of a document that would be most likely to answer a particular query.
  *
+ * Example: [smart-snippet.fn.tsx](https://github.com/coveo/ui-kit/blob/c090c1bd676792027815c52507e2aef8ccfaab91/packages/samples/headless-react/src/components/smart-snippet/smart-snippet.fn.tsx)
+ *
  * @group Core controllers
  * @category SmartSnippet
  */

@@ -71,6 +71,8 @@ export interface RelevanceInspectorInitialState {
 /**
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  *
+ * Example: [relevance-inspector.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.fn.tsx)
+ *
  * @group Controllers
  * @category RelevanceInspector
  */
