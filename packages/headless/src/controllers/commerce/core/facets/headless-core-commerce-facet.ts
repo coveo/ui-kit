@@ -186,6 +186,9 @@ export function buildCoreCommerceFacet<
         props.options.toggleSelectActionCreator({
           selection,
           facetId,
+          ...('retrieveCount' in selection
+            ? {retrieveCount: selection.retrieveCount}
+            : {}),
         })
       );
       dispatch(props.options.fetchProductsActionCreator());
