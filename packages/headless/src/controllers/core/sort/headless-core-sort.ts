@@ -64,6 +64,9 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
 
 /**
  * The `Sort` controller manages how the results are sorted.
+ *
+ * @group Core controllers
+ * @category Sort
  */
 export interface Sort extends Controller {
   /**
@@ -87,6 +90,12 @@ export interface Sort extends Controller {
   state: SortState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Sort` controller.
+ *
+ * @group Core controllers
+ * @category Sort
+ */
 export interface SortState {
   /**
    * The current sort criteria.

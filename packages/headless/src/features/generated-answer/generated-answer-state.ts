@@ -4,6 +4,12 @@ import {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `GeneratedAnswer` component.
+ *
+ * @group Core controllers
+ * @category GeneratedAnswer
+ */
 export interface GeneratedAnswerState {
   id: string;
   /**

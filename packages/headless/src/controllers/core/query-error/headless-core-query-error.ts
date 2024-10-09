@@ -10,6 +10,9 @@ import {
 
 /**
  * The `QueryError` controller allows to retrieve information about the current error returned by the search API, if any.
+ *
+ * @group Core controllers
+ * @category QueryError
  */
 export interface QueryError extends Controller {
   /**
@@ -20,6 +23,9 @@ export interface QueryError extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `QueryError` controller.
+ *
+ * @group Core controllers
+ * @category QueryError
  */
 export interface QueryErrorState {
   /**

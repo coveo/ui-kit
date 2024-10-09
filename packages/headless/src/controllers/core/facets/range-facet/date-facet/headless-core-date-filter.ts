@@ -101,6 +101,12 @@ export interface DateFilterProps {
   initialState?: DateFilterInitialState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `DateFilter` controller.
+ *
+ * @group Core controllers
+ * @category DateFilter
+ */
 export interface DateFilterState {
   /**
    * The facet ID.
@@ -125,6 +131,11 @@ export interface DateFilterState {
 
 /**
  * The `DateFilter` controller makes it possible to create a date filter.
+ *
+ * Example: [date-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/date-filter/date-filter.fn.tsx)
+ *
+ * @group Core controllers
+ * @category DateFilter
  */
 export interface DateFilter extends Controller {
   /**

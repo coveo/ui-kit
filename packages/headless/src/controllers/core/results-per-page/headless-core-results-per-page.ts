@@ -37,6 +37,9 @@ export interface ResultsPerPageInitialState {
 
 /**
  * The `ResultsPerPage` controller allows the end user to choose how many results to display per page.
+ *
+ * @group Core controllers
+ * @category ResultsPerPage
  */
 export interface ResultsPerPage extends Controller {
   /**
@@ -61,6 +64,9 @@ export interface ResultsPerPage extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultsPerPage` controller.
+ *
+ * @group Core controllers
+ * @category ResultsPerPage
  * */
 export interface ResultsPerPageState {
   /**

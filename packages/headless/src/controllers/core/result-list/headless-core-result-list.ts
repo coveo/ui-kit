@@ -55,6 +55,9 @@ export interface ResultListProps {
 
 /**
  * The `ResultList` headless controller offers a high-level interface for designing a common result list UI controller.
+ *
+ * @group Core controllers
+ * @category ResultList
  */
 export interface ResultList extends Controller {
   /**
@@ -73,6 +76,9 @@ export interface ResultList extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultList` controller.
+ *
+ * @group Core controllers
+ * @category ResultList
  * */
 export interface ResultListState extends SearchStatusState {
   /**

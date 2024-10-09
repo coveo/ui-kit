@@ -70,6 +70,14 @@ export interface CoreFacetProps {
  * can use to refine a query by selecting filters based on item metadata (i.e., field values).
  * If you have enabled a [Dynamic Navigation Experience (DNE)](https://docs.coveo.com/en/m2na0333/)
  * model, the `Facet` controller automatically reorders facet values according to the user query.
+ *
+ * Examples:
+ * - [facet.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet/facet.fn.tsx)
+ * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet/facet-search.tsx)
+ * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet/facet.class.tsx)
+ *
+ * @group Core facets
+ * @category Facet
  */
 export interface Facet extends CoreFacet {
   /**
@@ -85,6 +93,9 @@ export interface Facet extends CoreFacet {
 
 /**
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
+ *
+ * @group Core facets
+ * @category Facet
  */
 export interface CoreFacet extends Controller {
   /**
@@ -177,6 +188,12 @@ export interface CoreFacet extends Controller {
   state: CoreFacetState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
+ *
+ * @group Core facets
+ * @category Facet
+ */
 export interface FacetState extends CoreFacetState {
   /** The state of the facet's searchbox. */
   facetSearch: FacetSearchState;
@@ -184,6 +201,9 @@ export interface FacetState extends CoreFacetState {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
+ *
+ * @group Core facets
+ * @category Facet
  */
 export interface CoreFacetState {
   /** The facet ID. */
@@ -340,6 +360,9 @@ export interface FacetValue {
  * @param props - The configurable `Facet` properties.
  * @param optionsSchema - The facet options schema to use when validating options upon facet initialization.
  * @returns A `Facet` controller instance.
+ *
+ * @group Core facets
+ * @category Facet
  * */
 export function buildCoreFacet(
   engine: CoreEngine,

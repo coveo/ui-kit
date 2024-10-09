@@ -92,6 +92,11 @@ export interface CoreFoldedResultListProps {
 
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
+ *
+ * Example: [folded-result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/folded-result-list/folded-result-list.fn.tsx)
+ *
+ * @group Core controllers
+ * @category FoldedResultList
  */
 export interface FoldedResultList extends Controller {
   /**
@@ -139,6 +144,9 @@ export interface FoldedResultList extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `FoldedResultList` controller.
+ *
+ * @group Core controllers
+ * @category FoldedResultList
  */
 export interface FoldedResultListState extends SearchStatusState {
   /**
@@ -169,6 +177,9 @@ export interface FoldedResultAnalyticsClient {
  * @param props - The configurable `FoldedResultList` properties.
  * @param analyticsClient - A FoldedResultAnalyticsClient to send the appropriate analytics calls.
  * @returns A `FoldedResultList` controller instance.
+ *
+ * @group Core controllers
+ * @category FoldedResultList
  */
 export function buildCoreFoldedResultList(
   engine: CoreEngine,

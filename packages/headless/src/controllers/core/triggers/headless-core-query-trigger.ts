@@ -2,6 +2,9 @@ import {Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `QueryTrigger` controller handles [query trigger](https://docs.coveo.com/en/3413#query) query pipeline rules, which let you define a search query to execute when a certain condition is met.
+ *
+ * @group Core controllers
+ * @category QueryTrigger
  */
 export interface QueryTrigger extends Controller {
   /**
@@ -16,6 +19,9 @@ export interface QueryTrigger extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `QueryTrigger` controller.
+ *
+ * @group Core controllers
+ * @category QueryTrigger
  */
 export interface QueryTriggerState {
   /**

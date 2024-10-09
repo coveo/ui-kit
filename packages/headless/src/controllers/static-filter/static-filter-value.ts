@@ -25,9 +25,6 @@ export interface StaticFilterValueOptions {
  *
  * @param config - The options with which to create a `StaticFilterValue`.
  * @returns A new `StaticFilterValue`.
- *
- * @group Controllers
- * @category StaticFilterValue
  */
 export function buildStaticFilterValue(
   config: StaticFilterValueOptions

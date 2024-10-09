@@ -65,6 +65,9 @@ const initialStateSchema = new Schema({
 
 /**
  * The `Pager` controller allows to navigate through the different result pages.
+ *
+ * @group Core controllers
+ * @category Pager
  */
 export interface Pager extends Controller {
   /**
@@ -100,6 +103,9 @@ export interface Pager extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Pager` controller.
+ *
+ * @group Core controllers
+ * @category Pager
  */
 export interface PagerState {
   /**

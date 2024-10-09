@@ -76,6 +76,9 @@ export interface TabProps {
 
 /**
  * The `Tab` headless controller offers a high-level interface for designing a common tab UI controller.
+ *
+ * @group Core controllers
+ * @category Tab
  */
 export interface Tab extends Controller {
   /**
@@ -90,6 +93,9 @@ export interface Tab extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Tab` controller.
+ *
+ * @group Core controllers
+ * @category Tab
  */
 export interface TabState {
   /**

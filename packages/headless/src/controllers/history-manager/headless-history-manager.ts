@@ -59,6 +59,12 @@ export interface HistoryManager extends Controller {
   state: HistoryManagerState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `HistoryManager` controller.
+ *
+ * @group Controllers
+ * @category HistoryManager
+ */
 export type HistoryManagerState = StateWithHistory<HistoryState>;
 
 /**

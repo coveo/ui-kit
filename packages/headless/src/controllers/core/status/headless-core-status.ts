@@ -8,6 +8,12 @@ import {
   Controller,
 } from '../../controller/headless-controller.js';
 
+/**
+ * The `SearchStatus` controller lets you access search status information.
+ *
+ * @group Core controllers
+ * @category SearchStatus
+ */
 export interface SearchStatus extends Controller {
   /**
    * The state of the `SearchStatus` controller.
@@ -17,6 +23,9 @@ export interface SearchStatus extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchStatus` controller.
+ *
+ * @group Core controllers
+ * @category SearchStatus
  */
 export interface SearchStatusState {
   /**

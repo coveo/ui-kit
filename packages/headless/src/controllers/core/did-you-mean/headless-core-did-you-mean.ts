@@ -49,6 +49,13 @@ export interface DidYouMeanOptions {
    */
   queryCorrectionMode?: 'legacy' | 'next';
 }
+
+/**
+ * The `DidYouMean` controller is responsible for handling query corrections.
+ *
+ * @group Core controllers
+ * @category DidYouMean
+ */
 export interface DidYouMean extends Controller {
   /**
    * Apply query correction using the query correction, if any, currently present in the state.
@@ -61,6 +68,12 @@ export interface DidYouMean extends Controller {
   state: DidYouMeanState;
 }
 
+/**
+ * A scoped and simplified part of the headless engine that is relevant to the `DidYouMean` controller.
+ *
+ * @group Core controllers
+ * @category DidYouMean
+ */
 export interface DidYouMeanState {
   /**
    * The correction that was applied to the query. If no correction was applied, will default to an empty string.
@@ -95,6 +108,9 @@ export interface DidYouMeanState {
  * @param engine - The headless engine.
  * @param props - The configurable `DidYouMean` controller properties.
  * @returns A `DidYouMean` controller instance.
+ *
+ * @group Core controllers
+ * @category DidYouMean
  */
 export function buildCoreDidYouMean(
   engine: CoreEngine,
