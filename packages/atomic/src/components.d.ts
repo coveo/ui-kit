@@ -1583,6 +1583,10 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     interface AtomicInsightUserActionsModal {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
         "isOpen": boolean;
         "openButton"?: HTMLElement;
         /**
@@ -1614,6 +1618,10 @@ export namespace Components {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
+        /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDateTime": string;
@@ -1623,6 +1631,10 @@ export namespace Components {
         "userId": string;
     }
     interface AtomicInsightUserActionsToggle {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
@@ -7479,6 +7491,10 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicInsightUserActionsModal {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
         /**
@@ -7510,6 +7526,10 @@ declare namespace LocalJSX {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
+        /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDateTime": string;
@@ -7519,6 +7539,10 @@ declare namespace LocalJSX {
         "userId": string;
     }
     interface AtomicInsightUserActionsToggle {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
