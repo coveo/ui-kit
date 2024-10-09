@@ -125,6 +125,54 @@ test.describe('with an alt text field', async () => {
     });
   });
 
+  test.describe('when imageAltField is a valid string, image is invalid and fallback is not specified', () => {
+    test.beforeEach(async ({productImage}) => {
+      await productImage.load({
+        story: 'with-an-alt-text-field',
+        args: {
+          field: 'invalid',
+          fallback: undefined,
+          imageAltField: 'ec_name',
+        },
+      });
+      await productImage.noCarouselImage.waitFor();
+    });
+
+    test('should have alt text as the image alt field', async ({
+      productImage,
+    }) => {
+      const alt = await productImage.noCarouselImage.getAttribute('alt');
+      expect(alt).toEqual('Nublu Water Bottle');
+
+      const carouselAlt = await productImage.carouselImage.getAttribute('alt');
+      expect(carouselAlt).toEqual('Blue Lagoon Mat');
+    });
+  });
+
+  test.describe('when imageAltField is invalid, image is invalid and fallback is not specified', () => {
+    test.beforeEach(async ({productImage}) => {
+      await productImage.load({
+        story: 'with-an-alt-text-field',
+        args: {
+          field: 'invalid',
+          fallback: undefined,
+          imageAltField: 'invalid',
+        },
+      });
+      await productImage.noCarouselImage.waitFor();
+    });
+
+    test('should have image-not-found-alt as the alt text', async ({
+      productImage,
+    }) => {
+      const alt = await productImage.noCarouselImage.getAttribute('alt');
+      expect(alt).toEqual('No image available for Nublu Water Bottle.');
+
+      const carouselAlt = await productImage.carouselImage.getAttribute('alt');
+      expect(carouselAlt).toEqual('No image available for Blue Lagoon Mat.');
+    });
+  });
+
   test.describe('when imageAltField is an array of valid strings', () => {
     const NO_CAROUSEL_CUSTOM_FIELDS = [
       'FIRST Nublu Water Bottle',
@@ -229,9 +277,7 @@ test.describe('with an alt text field', async () => {
 
     test('should use the default alt text for all images', async ({
       productImage,
-      page,
     }) => {
-      await page.waitForTimeout(10000);
       expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
         'Image 1 out of 1 for Nublu Water Bottle'
       );
