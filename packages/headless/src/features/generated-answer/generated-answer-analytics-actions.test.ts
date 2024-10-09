@@ -33,7 +33,7 @@ const mockMakeGeneratedAnswerFeedbackSubmit = vi.fn(() => ({
 const mockMakeRetryGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
-const mockMakeOpenGeneratedAnswerSource = vi.fn(() => ({
+const mockMakeGeneratedAnswerCitationClick = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
 const mockMakeGeneratedAnswerSourceHover = vi.fn(() => ({
@@ -84,7 +84,7 @@ vi.mock('coveo.analytics', () => {
     disable: vi.fn(),
     makeGeneratedAnswerFeedbackSubmit: mockMakeGeneratedAnswerFeedbackSubmit,
     makeRetryGeneratedAnswer: mockMakeRetryGeneratedAnswer,
-    makeOpenGeneratedAnswerSource: mockMakeOpenGeneratedAnswerSource,
+    makeGeneratedAnswerCitationClick: mockMakeGeneratedAnswerCitationClick,
     makeGeneratedAnswerSourceHover: mockMakeGeneratedAnswerSourceHover,
     makeLikeGeneratedAnswer: mockMakeLikeGeneratedAnswer,
     makeDislikeGeneratedAnswer: mockMakeDislikeGeneratedAnswer,
@@ -119,6 +119,22 @@ const exampleCitation: GeneratedAnswerCitation = {
   permanentid: 'citation-permanent-id',
   title: 'Sample citation',
   uri: 'http://localhost/citations/some-citation-id',
+  source: 'source-name',
+  clickUri: 'http://localhost/citations/some-citation-id',
+};
+
+const expectedCitationDocumentInfo = {
+  queryPipeline: '',
+  documentUri: exampleCitation.uri,
+  sourceName: exampleCitation.source,
+  documentPosition: 1,
+  documentTitle: exampleCitation.title,
+  documentUrl: exampleCitation.clickUri,
+};
+
+const exampleDocumentId = {
+  contentIdKey: 'permanentid',
+  contentIdValue: exampleCitation.permanentid,
 };
 
 describe('generated answer analytics actions', () => {
@@ -177,14 +193,20 @@ describe('generated answer analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockMakeOpenGeneratedAnswerSource;
+      const mockToUse = mockMakeGeneratedAnswerCitationClick;
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith({
+
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+        expectedCitationDocumentInfo
+      );
+
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual({
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
         citationId: exampleCitation.id,
-        permanentId: exampleCitation.permanentid,
+        documentId: exampleDocumentId,
       });
+
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
