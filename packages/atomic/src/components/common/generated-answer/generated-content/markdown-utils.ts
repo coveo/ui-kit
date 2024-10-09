@@ -1,5 +1,12 @@
 import {marked} from 'marked';
 
+const toTextOnly = (textWithHtml: string): string => {
+  const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
+  const withCollapsedWhitespaces = withoutHtmlTags.replace(/\s{2,}/g, ' ');
+
+  return withCollapsedWhitespaces.trim();
+};
+
 const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 
 const completeUnclosedElement = (text: string) => {
@@ -48,7 +55,9 @@ const customRenderer = {
   },
 
   heading(text: string, level: number) {
-    return `<div part="answer-heading-${level}" aria-label="${text}">${text}</div>`;
+    const textOnly = toTextOnly(text);
+
+    return `<div part="answer-heading-${level}" aria-label="${textOnly}">${text}</div>`;
   },
 
   html(text: string) {
