@@ -20,6 +20,7 @@ import {getAllIncludedResultsFrom} from './folding-utils.js';
 export interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
   childResults: ResultWithFolding[];
+  totalNumberOfChildResults: number;
 }
 
 function getCollectionField(result: ResultWithFolding, fields: FoldingFields) {
@@ -117,7 +118,8 @@ function createCollectionFromResult(
       resultsInCollection,
       fields
     ),
-    moreResultsAvailable: true,
+    // To understand why "1" instead of "0", see here : https://coveord.atlassian.net/browse/SEARCHAPI-11075. totalNumberOfChildResults is off by 1 by the index design.
+    moreResultsAvailable: relevantResult.totalNumberOfChildResults > 1,
     isLoadingMoreResults: false,
   };
 }
