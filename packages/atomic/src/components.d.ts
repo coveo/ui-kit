@@ -2078,6 +2078,23 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
+     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface AtomicProductMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter": string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay": number;
+    }
+    /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
      * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
@@ -4818,6 +4835,15 @@ declare global {
         new (): HTMLAtomicProductLinkElement;
     };
     /**
+     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
+    }
+    var HTMLAtomicProductMultiValueTextElement: {
+        prototype: HTMLAtomicProductMultiValueTextElement;
+        new (): HTMLAtomicProductMultiValueTextElement;
+    };
+    /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
      * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
@@ -5941,6 +5967,7 @@ declare global {
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
@@ -7950,6 +7977,23 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
+     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface AtomicProductMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter"?: string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay"?: number;
+    }
+    /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
      * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
@@ -9564,6 +9608,7 @@ declare namespace LocalJSX {
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
+        "atomic-product-multi-value-text": AtomicProductMultiValueText;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
@@ -10025,6 +10070,10 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            /**
+             * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+             */
+            "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
             /**
              * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
              * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
