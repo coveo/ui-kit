@@ -157,6 +157,27 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
     }) as Image[];
   }
 
+  private isImageAltFieldValid() {
+    if (typeof this.imageAlt !== 'string') {
+      return false;
+    }
+
+    if (!this.imageAltField) {
+      return false;
+    }
+
+    const value = ProductTemplatesHelpers.getProductProperty(
+      this.product,
+      this.imageAltField
+    );
+
+    if (isNullOrUndefined(value)) {
+      return false;
+    }
+
+    return true;
+  }
+
   private get imageUrls() {
     const value = ProductTemplatesHelpers.getProductProperty(
       this.product,
@@ -212,13 +233,18 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
         alt: image.alt,
       };
     });
+
     if (this.images.length === 0) {
       this.validateUrl(this.fallback);
+      const alt = this.isImageAltFieldValid()
+        ? (this.imageAlt as string)
+        : this.bindings.i18n.t('image-not-found-alt', {
+            itemName: this.product.ec_name,
+          });
       return (
         <img
-          //TODO - KIT-3641 use image-alt-field prior to image-not-found-alt
           class="aspect-square"
-          alt={this.bindings.i18n.t('image-not-found-alt')}
+          alt={alt}
           src={this.fallback}
           loading="eager"
         />
