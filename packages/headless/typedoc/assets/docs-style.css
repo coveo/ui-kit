@@ -20,6 +20,11 @@ body {
   font-weight: 400;
 }
 
+.tsd-accordion-summary h3 {
+  display: flex;
+  align-items: center;
+}
+
 #tsd-search {
   width: 27rem;
 }
