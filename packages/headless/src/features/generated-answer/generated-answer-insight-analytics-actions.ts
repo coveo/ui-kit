@@ -1,7 +1,9 @@
 import {Rga} from '@coveo/relay-event-types';
 import {
+  citationDocumentIdentifier,
   InsightAction,
   makeInsightAnalyticsActionFactory,
+  partialCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
@@ -38,13 +40,14 @@ export const logOpenGeneratedAnswerSource = (
         if (!rgaID || !citation) {
           return null;
         }
-        return client.logOpenGeneratedAnswerSource(
+        return client.logGeneratedAnswerCitationClick(
+          partialCitationInformation(citation, state),
           {
             ...(answerAPIEnabled
               ? {answerAPIStreamId: rgaID}
               : {generativeQuestionAnsweringId: rgaID}),
-            permanentId: citation.permanentid,
             citationId: citation.id,
+            documentId: citationDocumentIdentifier(citation),
           },
           getCaseContextAnalyticsMetadata(state.insightCaseContext)
         );
