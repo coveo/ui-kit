@@ -1,6 +1,6 @@
 import {marked} from 'marked';
 
-const toTextOnly = (textWithHtml: string): string => {
+const toInlinePlainText = (textWithHtml: string): string => {
   const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
   const withCollapsedWhitespaces = withoutHtmlTags.replace(/\s{2,}/g, ' ');
 
@@ -55,9 +55,9 @@ const customRenderer = {
   },
 
   heading(text: string, level: number) {
-    const textOnly = toTextOnly(text);
+    const plainText = toInlinePlainText(text);
 
-    return `<div part="answer-heading-${level}" aria-label="${textOnly}">${text}</div>`;
+    return `<div part="answer-heading-${level}" aria-label="${plainText}">${text}</div>`;
   },
 
   html(text: string) {
