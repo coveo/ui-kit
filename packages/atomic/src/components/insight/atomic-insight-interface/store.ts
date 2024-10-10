@@ -3,6 +3,7 @@ import {
   InsightEngine,
   InsightNumericFacetValue,
 } from '..';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   FacetInfo,
   FacetStore,
@@ -13,6 +14,7 @@ import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
 } from '../../common/interface/store';
+import {makeDesktopQuery} from '../atomic-insight-layout/insight-layout';
 
 export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];
@@ -22,10 +24,21 @@ export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   >;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<InsightDateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
+  mobileBreakpoint: string;
+}
+
+export interface FacetInfoMap {
+  [facetId: string]:
+    | FacetInfo
+    | (FacetInfo & FacetValueFormat<InsightNumericFacetValue>)
+    | (FacetInfo & FacetValueFormat<InsightDateFacetValue>);
 }
 
 export interface AtomicInsightStore
-  extends AtomicCommonStore<AtomicInsightStoreData> {}
+  extends AtomicCommonStore<AtomicInsightStoreData> {
+  getAllFacets(): FacetInfoMap;
+  isMobile(): boolean;
+}
 
 export function createAtomicInsightStore(): AtomicInsightStore {
   const commonStore = createAtomicCommonStore<AtomicInsightStoreData>({
@@ -37,9 +50,25 @@ export function createAtomicInsightStore(): AtomicInsightStore {
     iconAssetsPath: '',
     fieldsToInclude: [],
     facetElements: [],
+    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
   });
   return {
     ...commonStore,
+
+    getAllFacets() {
+      return {
+        ...commonStore.state.facets,
+        ...commonStore.state.dateFacets,
+        ...commonStore.state.categoryFacets,
+        ...commonStore.state.numericFacets,
+      };
+    },
+
+    isMobile() {
+      return !window.matchMedia(
+        makeDesktopQuery(commonStore.state.mobileBreakpoint)
+      ).matches;
+    },
 
     getUniqueIDFromEngine(engine: InsightEngine): string {
       return engine.state.search.searchResponseId;
