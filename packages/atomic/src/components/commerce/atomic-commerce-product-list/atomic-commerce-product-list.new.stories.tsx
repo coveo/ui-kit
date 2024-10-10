@@ -7,7 +7,13 @@ import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-compo
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit-html/static.js';
 
+// TODO KIT-3640 - Add stories for table display
+
 const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: false});
+
+const {play: playNoFirstQuery} = wrapInCommerceInterface({
+  skipFirstSearch: true,
+});
 
 const {play: playNoProducts} = wrapInCommerceInterface({
   skipFirstSearch: false,
@@ -54,35 +60,15 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-product-list',
+  name: 'Grid display',
   play: async (context) => {
     await play(context);
     await playExecuteFirstSearch(context);
   },
 };
 
-const {play: playNoFirstQuery} = wrapInCommerceInterface({
-  skipFirstSearch: true,
-});
-
-export const BeforeQuery: Story = {
-  name: 'Before a query',
-  play: async (context) => {
-    await playNoFirstQuery(context);
-  },
-};
-
-export const NoProducts: Story = {
-  name: 'With no products',
-  decorators: [(story) => story()],
-  play: async (context) => {
-    await playNoProducts(context);
-    await playExecuteFirstSearch(context);
-  },
-};
-
-export const WithProductTemplate: Story = {
-  name: 'With a product template',
+export const GridDisplayWithTemplate: Story = {
+  name: 'Grid display with template',
   args: {
     'slots-default': `<atomic-product-template>
   <template>
@@ -109,8 +95,74 @@ export const WithProductTemplate: Story = {
   },
 };
 
+export const GridDisplayBeforeQuery: Story = {
+  name: 'Grid display before query',
+  play: async (context) => {
+    await playNoFirstQuery(context);
+  },
+};
+
+export const ListDisplay: Story = {
+  name: 'List display',
+  play: async (context) => {
+    await play(context);
+    await playExecuteFirstSearch(context);
+  },
+  args: {
+    'attributes-display': 'list',
+  },
+};
+
+export const ListDisplayWithTemplate: Story = {
+  name: 'List display with template',
+  args: {
+    'attributes-display': 'list',
+    'slots-default': `<atomic-product-template>
+  <template>
+    <atomic-product-section-name>
+      <atomic-product-link class="font-bold"></atomic-product-link>
+    </atomic-product-section-name>
+    <atomic-product-section-visual>
+      <atomic-product-image></atomic-product-image>
+    </atomic-product-section-visual>
+    <atomic-product-section-metadata>
+      <atomic-product-field-condition if-defined="ec_brand">
+        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+      </atomic-product-field-condition>
+      <atomic-product-rating></atomic-product-rating>
+    </atomic-product-section-metadata>
+    <atomic-product-section-emphasized>
+      <atomic-product-price></atomic-product-price>
+    </atomic-product-section-emphasized>
+    <atomic-product-section-children>
+      <atomic-product-children></atomic-product-children>
+    </atomic-product-section-children>
+  </template>
+</atomic-product-template>`,
+  },
+};
+
+export const ListDisplayBeforeQuery: Story = {
+  name: 'List display before query',
+  args: {
+    'attributes-display': 'list',
+  },
+  play: async (context) => {
+    await playNoFirstQuery(context);
+  },
+};
+
+export const NoProducts: Story = {
+  name: 'No products',
+  decorators: [(story) => story()],
+  play: async (context) => {
+    await playNoProducts(context);
+    await playExecuteFirstSearch(context);
+  },
+};
+
 export const InPage: Story = {
-  name: 'In a page',
+  name: 'In page',
   decorators: [
     (story) =>
       html` <atomic-commerce-layout>
