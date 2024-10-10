@@ -28,6 +28,14 @@ describe('c/markdownUtils', () => {
       );
     });
 
+    it('should transform markdown heading with formatting to HTML <div>', () => {
+      const text = '# **bold** and *emphasized* title';
+      const result = transformMarkdownToHtml(text, marked);
+      expect(removeLineBreaks(result)).toEqual(
+        '<div data-level="answer-heading-1" aria-label="bold and emphasized title"><strong>bold</strong> and <em>emphasized</em> title</div>'
+      );
+    });
+
     it('should transform markdown list item to HTML <li>', () => {
       const text = '- Hello, world!';
       const result = transformMarkdownToHtml(text, marked);
