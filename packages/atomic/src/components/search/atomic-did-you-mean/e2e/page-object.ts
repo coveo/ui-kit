@@ -28,7 +28,7 @@ export class DidYouMeanPageObject extends BasePageObject<'atomic-did-you-mean'> 
     return this;
   }
 
-  async withManualQueryCorrection() {
+  async withoutAutomaticQueryCorrection() {
     await this.page.route(
       '**/search/v2?organizationId=searchuisamples',
       async (route) => {
