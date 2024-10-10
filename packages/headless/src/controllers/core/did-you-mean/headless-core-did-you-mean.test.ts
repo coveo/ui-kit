@@ -71,6 +71,15 @@ describe('did you mean', () => {
     expect(applyDidYouMeanCorrection).toHaveBeenCalledWith('bar');
   });
 
+  it('should allow to update the query correction mode', () => {
+    const initialState = createMockState();
+    initialState.didYouMean.queryCorrectionMode = 'legacy';
+    initDidYouMean({}, initialState);
+    dym.updateQueryCorrectionMode('next');
+
+    expect(engine.dispatch).toHaveBeenCalledWith(setCorrectionMode('next'));
+  });
+
   it('should dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
     initDidYouMean({options: {automaticallyCorrectQuery: false}});
     expect(disableAutomaticQueryCorrection).toHaveBeenCalledTimes(1);
