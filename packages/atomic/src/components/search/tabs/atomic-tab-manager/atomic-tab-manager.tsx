@@ -20,6 +20,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  *
  * @part button-container - The container for the tab button.
  * @part button - The tab button.
+ * @part dropdown-area - The dropdown area.
+ * @part tab-area - The tab area.
  * @slot default
  */
 @Component({
@@ -44,6 +46,9 @@ export class AtomicTabManager {
   @Prop() clearFiltersOnTabChange?: boolean = false;
 
   @State() public error!: Error;
+
+  private tabAreaRef: HTMLUListElement | undefined;
+  private tabDropdownRef: HTMLDivElement | undefined;
 
   public initialize() {
     this.tabManager = buildTabManager(this.bindings.engine);
@@ -81,12 +86,40 @@ export class AtomicTabManager {
     });
   }
 
-  public render() {
+  componentDidLoad() {
+    const tabArea = this.tabAreaRef;
+    const tabDropdown = this.tabDropdownRef;
+    if (tabArea && tabDropdown) {
+      const resizeObserver = new ResizeObserver(() => {
+        const tabAreaWidth = tabArea.offsetWidth;
+        const tabsWidth = Array.from(tabArea.children).reduce(
+          (totalWidth, tab) => totalWidth + (tab as HTMLElement).offsetWidth,
+          0
+        );
+
+        if (tabAreaWidth < tabsWidth) {
+          tabArea.classList.add('hide-tabs');
+          tabDropdown.classList.remove('hidden');
+        } else {
+          tabArea.classList.remove('hide-tabs');
+          tabDropdown.classList.add('hidden');
+        }
+      });
+
+      resizeObserver.observe(tabArea);
+
+      return () => resizeObserver.disconnect();
+    }
+  }
+
+  render() {
     return (
       <div class="mb-2 overflow-x-auto">
         <ul
+          ref={(el) => (this.tabAreaRef = el as HTMLUListElement)}
           role="list"
           aria-label="tab-area"
+          part="tab-area"
           class="tab-area mb-2 flex w-full flex-row border-b"
         >
           {this.tabs.map((tab) => (
@@ -101,26 +134,28 @@ export class AtomicTabManager {
             ></TabButton>
           ))}
         </ul>
-        <TabDropdown
-          tabs={this.tabs}
-          activeTab={this.tabManagerState.activeTab}
-          onTabChange={(e) => {
-            const selectedTab = this.tabs.find(
-              (tab) => tab.name === (e as string)
-            );
-            if (selectedTab) {
-              selectedTab.tabController.select();
-            }
-          }}
-        >
-          {this.tabs.map((tab) => (
-            <TabDropdownOption
-              value={tab.name}
-              label={tab.label}
-              isSelected={tab.name === this.tabManagerState.activeTab}
-            />
-          ))}
-        </TabDropdown>
+        <div ref={(el) => (this.tabDropdownRef = el as HTMLDivElement)}>
+          <TabDropdown
+            tabs={this.tabs}
+            activeTab={this.tabManagerState.activeTab}
+            onTabChange={(e) => {
+              const selectedTab = this.tabs.find(
+                (tab) => tab.name === (e as string)
+              );
+              if (selectedTab) {
+                selectedTab.tabController.select();
+              }
+            }}
+          >
+            {this.tabs.map((tab) => (
+              <TabDropdownOption
+                value={tab.name}
+                label={tab.label}
+                isSelected={tab.name === this.tabManagerState.activeTab}
+              />
+            ))}
+          </TabDropdown>
+        </div>
       </div>
     );
   }
