@@ -1356,6 +1356,12 @@ export namespace Components {
     }
     interface AtomicInsightQuerySummary {
     }
+    interface AtomicInsightQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
+    }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
@@ -4394,6 +4400,12 @@ declare global {
         prototype: HTMLAtomicInsightQuerySummaryElement;
         new (): HTMLAtomicInsightQuerySummaryElement;
     };
+    interface HTMLAtomicInsightQuickviewElement extends Components.AtomicInsightQuickview, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightQuickviewElement: {
+        prototype: HTMLAtomicInsightQuickviewElement;
+        new (): HTMLAtomicInsightQuickviewElement;
+    };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicInsightRefineModalElement: {
@@ -5896,6 +5908,7 @@ declare global {
         "atomic-insight-pager": HTMLAtomicInsightPagerElement;
         "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
         "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
+        "atomic-insight-quickview": HTMLAtomicInsightQuickviewElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -7266,6 +7279,12 @@ declare namespace LocalJSX {
     interface AtomicInsightQueryError {
     }
     interface AtomicInsightQuerySummary {
+    }
+    interface AtomicInsightQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
@@ -9519,6 +9538,7 @@ declare namespace LocalJSX {
         "atomic-insight-pager": AtomicInsightPager;
         "atomic-insight-query-error": AtomicInsightQueryError;
         "atomic-insight-query-summary": AtomicInsightQuerySummary;
+        "atomic-insight-quickview": AtomicInsightQuickview;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -9915,6 +9935,7 @@ declare module "@stencil/core" {
             "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
             "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
             "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
+            "atomic-insight-quickview": LocalJSX.AtomicInsightQuickview & JSXBase.HTMLAttributes<HTMLAtomicInsightQuickviewElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
