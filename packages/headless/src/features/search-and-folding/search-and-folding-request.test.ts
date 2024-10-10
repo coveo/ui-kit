@@ -140,12 +140,12 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       state.configuration.analytics.enabled = true;
     });
 
-    it('#visitorId is included in the request', async () => {
+    it('#analytics is included in the request', async () => {
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         buildMockNavigatorContextProvider()()
       );
-      expect(request.visitorId).toBeDefined();
+      expect(request.analytics).toBeDefined();
     });
   });
 
@@ -156,12 +156,12 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       state.configuration.analytics.enabled = false;
     });
 
-    it('#visitorId is not included in the request', async () => {
+    it('#analytics is not included in the request', async () => {
       const request = buildSearchAndFoldingLoadCollectionRequest(
         state,
         buildMockNavigatorContextProvider()()
       );
-      expect(request.visitorId).toBeUndefined();
+      expect(request.analytics).not.toBeDefined();
     });
 
     it('#actionsHistory is not included in the request', async () => {
