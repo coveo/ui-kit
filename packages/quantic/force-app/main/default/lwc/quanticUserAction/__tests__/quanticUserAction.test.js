@@ -91,11 +91,13 @@ describe('c-quantic-user-action', () => {
     cleanup();
   });
 
+  let exampleDate = new Date('2024-09-25T04:06');
+  let exampleDateInUTC = new Date(exampleDate.toUTCString());
   describe('ticket creation action', () => {
     const exampleAction = {
       actionType: 'TICKET_CREATION',
       searchHub: expectedSearchHub,
-      timestamp: new Date('2024-09-25T04:06Z'),
+      timestamp: exampleDateInUTC,
     };
 
     it('should properly display the action icon', async () => {
@@ -140,10 +142,12 @@ describe('c-quantic-user-action', () => {
   });
 
   describe('custom action', () => {
+    exampleDate = new Date('2024-09-25T04:07');
+    exampleDateInUTC = new Date(exampleDate.toUTCString());
     const exampleAction = {
       actionType: 'CUSTOM',
       searchHub: expectedSearchHub,
-      timestamp: new Date('2024-09-25T04:07Z'),
+      timestamp: exampleDateInUTC,
       eventData: {
         value: expectedEventDataValue,
       },
@@ -214,10 +218,12 @@ describe('c-quantic-user-action', () => {
   });
 
   describe('click action', () => {
+    exampleDate = new Date('2024-09-25T05:07');
+    exampleDateInUTC = new Date(exampleDate.toUTCString());
     const exampleAction = {
       actionType: 'CLICK',
       searchHub: expectedSearchHub,
-      timestamp: new Date('2024-09-25T05:07Z'),
+      timestamp: exampleDateInUTC,
       document: {
         title: expectedTitle,
       },
@@ -265,10 +271,12 @@ describe('c-quantic-user-action', () => {
   });
 
   describe('search action', () => {
+    exampleDate = new Date('2024-09-25T06:08');
+    exampleDateInUTC = new Date(exampleDate.toUTCString());
     const exampleAction = {
       actionType: 'SEARCH',
       searchHub: expectedSearchHub,
-      timestamp: new Date('2024-09-25T06:08Z'),
+      timestamp: exampleDateInUTC,
       query: expectedQuery,
     };
 
@@ -331,6 +339,8 @@ describe('c-quantic-user-action', () => {
   });
 
   describe('view action', () => {
+    exampleDate = new Date('2024-09-25T04:07');
+    exampleDateInUTC = new Date(exampleDate.toUTCString());
     const exampleAction = {
       actionType: 'VIEW',
       document: {
@@ -338,7 +348,7 @@ describe('c-quantic-user-action', () => {
         contentIdValue: expectedUrl,
       },
       searchHub: expectedSearchHub,
-      timestamp: new Date('2024-09-25T04:07Z'),
+      timestamp: exampleDateInUTC,
     };
 
     it('should properly display the action icon', async () => {
