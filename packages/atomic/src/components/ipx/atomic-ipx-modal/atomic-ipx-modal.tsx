@@ -92,6 +92,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
       <atomic-ipx-body
         isOpen={this.isOpen}
         displayFooterSlot={this.hasFooterSlotElements}
+        exportparts="container"
       >
         <slot name="header" slot="header" />
         <slot name="body" slot="body" />
