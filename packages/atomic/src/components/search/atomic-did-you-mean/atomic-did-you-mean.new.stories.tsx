@@ -56,8 +56,6 @@ const searchPlay: (
   )?.find((el) => el.getAttribute('part') === 'submit-button');
 
   await step(`Search "${query}"`, async () => {
-    searchBox!.value = '';
-
     await userEvent.type(searchBox!, query);
     await userEvent.click(submitButton!);
   });
