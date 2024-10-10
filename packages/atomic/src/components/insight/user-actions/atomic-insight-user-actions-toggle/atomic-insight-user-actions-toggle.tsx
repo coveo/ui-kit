@@ -1,6 +1,15 @@
 import {Component, h, Prop, Element, State} from '@stencil/core';
+import {
+  buildInsightUserActions,
+  InsightUserActions,
+  InsightUserActionsState,
+} from '../..';
 import Clockicon from '../../../../images/clock.svg';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {IconButton} from '../../../common/iconButton';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
@@ -13,9 +22,15 @@ import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-int
   styleUrl: 'atomic-insight-user-actions-toggle.pcss',
   shadow: true,
 })
-export class AtomicInsightUserActionsToggle {
+export class AtomicInsightUserActionsToggle
+  implements InitializableComponent<InsightBindings>
+{
   @Element() public host!: HTMLElement;
   @InitializeBindings() public bindings!: InsightBindings;
+  public userActions!: InsightUserActions;
+  @BindStateToController('userActions')
+  @State()
+  public userActionsState!: InsightUserActionsState;
   @State() public error!: Error;
 
   /**
@@ -26,12 +41,26 @@ export class AtomicInsightUserActionsToggle {
    * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
   @Prop() public ticketCreationDateTime!: string;
+  /**
+   * The names of custom events to exclude.
+   */
+  @Prop() public excludedCustomActions: string[] = [];
+
+  public initialize() {
+    this.userActions = buildInsightUserActions(this.bindings.engine, {
+      options: {
+        ticketCreationDate: this.ticketCreationDateTime,
+        excludedCustomActions: this.excludedCustomActions,
+      },
+    });
+  }
 
   private buttonRef?: HTMLButtonElement;
   private modalRef?: HTMLAtomicInsightUserActionsModalElement;
 
   private enableModal() {
     this.modalRef && (this.modalRef.isOpen = true);
+    this.userActions.logOpenUserActions();
   }
 
   private loadModal() {
@@ -45,6 +74,7 @@ export class AtomicInsightUserActionsToggle {
     this.modalRef.openButton = this.buttonRef;
     this.modalRef.userId = this.userId;
     this.modalRef.ticketCreationDateTime = this.ticketCreationDateTime;
+    this.modalRef.excludedCustomActions = this.excludedCustomActions;
   }
 
   public render() {

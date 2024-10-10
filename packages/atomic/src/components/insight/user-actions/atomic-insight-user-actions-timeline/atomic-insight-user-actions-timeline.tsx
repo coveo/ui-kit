@@ -52,10 +52,17 @@ export class AtomicInsightUserActionsTimeline
    * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
   @Prop() public ticketCreationDateTime!: string;
+  /**
+   * The names of custom events to exclude.
+   */
+  @Prop() public excludedCustomActions: string[] = [];
 
   public initialize() {
     this.userActions = buildInsightUserActions(this.bindings.engine, {
-      options: {ticketCreationDate: this.ticketCreationDateTime},
+      options: {
+        ticketCreationDate: this.ticketCreationDateTime,
+        excludedCustomActions: this.excludedCustomActions,
+      },
     });
 
     this.userActions.fetchUserActions(this.userId);
