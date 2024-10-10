@@ -22,7 +22,7 @@ test.describe('with facet values as link', () => {
     test('should dim unselected facet values', async ({facet}) => {
       const facetValues = await facet.facetValues.all();
       for (let i = 1; i < facetValues.length; i++) {
-        await expect(facetValues[i]).toHaveCSS('opacity', '1');
+        await expect(facetValues[i]).toHaveCSS('opacity', '0.8');
       }
     });
 

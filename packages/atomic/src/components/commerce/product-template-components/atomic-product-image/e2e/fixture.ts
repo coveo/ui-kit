@@ -15,4 +15,5 @@ export const test = base.extend<TestFixture & AxeFixture>({
     await use(new ProductImageObject(page));
   },
 });
+
 export {expect} from '@playwright/test';

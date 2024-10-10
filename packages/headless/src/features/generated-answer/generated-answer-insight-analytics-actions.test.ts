@@ -27,7 +27,7 @@ import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
 const mockLogGeneratedAnswerFeedbackSubmit = vi.fn();
 const mockLogRetryGeneratedAnswer = vi.fn();
-const mockLogOpenGeneratedAnswerSource = vi.fn();
+const mockLogGeneratedAnswerCitationClick = vi.fn();
 const mockLogHoverCitation = vi.fn();
 const mockLogLikeGeneratedAnswer = vi.fn();
 const mockLogDislikeGeneratedAnswer = vi.fn();
@@ -56,7 +56,7 @@ vi.mock('coveo.analytics', () => {
     disable: vi.fn(),
     logGeneratedAnswerFeedbackSubmit: mockLogGeneratedAnswerFeedbackSubmit,
     logRetryGeneratedAnswer: mockLogRetryGeneratedAnswer,
-    logOpenGeneratedAnswerSource: mockLogOpenGeneratedAnswerSource,
+    logGeneratedAnswerCitationClick: mockLogGeneratedAnswerCitationClick,
     logGeneratedAnswerSourceHover: mockLogHoverCitation,
     logLikeGeneratedAnswer: mockLogLikeGeneratedAnswer,
     logDislikeGeneratedAnswer: mockLogDislikeGeneratedAnswer,
@@ -90,6 +90,10 @@ const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
 const exampleCaseId = '1234';
 const exampleCaseNumber = '5678';
+const exampleCitationTitle = 'example title';
+const exampleCitationUri = 'example: uri';
+const exampleCitationSource = 'example source name';
+const exampleCitationClickUri = 'example: click uri';
 
 const expectedCaseContext = {
   caseContext: {
@@ -98,6 +102,20 @@ const expectedCaseContext = {
   },
   caseId: exampleCaseId,
   caseNumber: exampleCaseNumber,
+};
+
+const expectedCitationDocumentInfo = {
+  queryPipeline: '',
+  documentUri: exampleCitationUri,
+  sourceName: exampleCitationSource,
+  documentPosition: 1,
+  documentTitle: exampleCitationTitle,
+  documentUrl: exampleCitationClickUri,
+};
+
+const exampleDocumentId = {
+  contentIdKey: 'permanentid',
+  contentIdValue: exampleCitationPermanentid,
 };
 
 describe('generated answer insight analytics actions', () => {
@@ -116,8 +134,10 @@ describe('generated answer insight analytics actions', () => {
       {
         id: exampleCitationId,
         permanentid: exampleCitationPermanentid,
-        title: 'example title',
-        uri: 'example: uri',
+        title: exampleCitationTitle,
+        uri: exampleCitationUri,
+        source: exampleCitationSource,
+        clickUri: exampleCitationClickUri,
       },
     ],
   };
@@ -172,18 +192,22 @@ describe('generated answer insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogOpenGeneratedAnswerSource;
+      const mockToUse = mockLogGeneratedAnswerCitationClick;
       const expectedMetadata = {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
-        permanentId: exampleCitationPermanentid,
         citationId: exampleCitationId,
+        documentId: exampleDocumentId,
       };
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
-      expect(mockToUse).toHaveBeenCalledWith(
-        expectedMetadata,
-        expectedCaseContext
+
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+        expectedCitationDocumentInfo
       );
+
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual(expectedMetadata);
+
+      expect(mockToUse.mock.calls[0][2]).toStrictEqual(expectedCaseContext);
     });
 
     it('should log #logHoverCitation with the right payload', async () => {

@@ -772,6 +772,7 @@ describe('quantic-generated-answer', () => {
                 permanentid: 'some-permanent-id-1',
                 clickUri: exampleLinkUrl,
                 text: 'example text 1',
+                source: 'Some source 1',
               };
               const secondTestCitation = {
                 id: 'some-id-2',
@@ -780,6 +781,7 @@ describe('quantic-generated-answer', () => {
                 permanentid: 'some-permanent-id-2',
                 clickUri: exampleLinkUrl,
                 text: 'example text 2',
+                source: 'Some source 2',
               };
               const testCitations = [firstTestCitation, secondTestCitation];
               const testMessagePayload = {
