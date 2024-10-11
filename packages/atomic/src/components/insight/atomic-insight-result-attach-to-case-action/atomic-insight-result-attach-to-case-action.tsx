@@ -1,13 +1,5 @@
 import {AttachToCase, buildAttachToCase, Result} from '@coveo/headless/insight';
-import {
-  Component,
-  Event,
-  Prop,
-  State,
-  h,
-  Element,
-  EventEmitter,
-} from '@stencil/core';
+import {Component, Event, State, h, Element, EventEmitter} from '@stencil/core';
 import AttachIcon from '../../../images/attach.svg';
 import DetachIcon from '../../../images/detach.svg';
 import {
@@ -25,20 +17,17 @@ export interface InsightResultAttachToCaseEvent {
 }
 /**
  * @internal
- * The `atomic-insight-result-attach-to-case` component can be nested inside a `atomic-insight-result-actions` to render an interactive button that will emit an `atomic/insight/attachToCase/attach` or `atomic/insight/attachToCase/detach` JavaScript event, based on its current state, when clicked.
+ * The `atomic-insight-result-attach-to-case-action` component can be nested inside a `atomic-insight-result-actions` to render an interactive button that will emit an `atomic/insight/attachToCase/attach` or `atomic/insight/attachToCase/detach` JavaScript event, based on its current state, when clicked.
  *
- * The component can also be included inside a result template, typically with the `readOnly="true"` attribute, to indicate whether a result is attached to the current case.
- *
- * @part result-action-container - The result action container, when the `readOnly` prop is set to `false`.
- * @part result-action-button - The result action button, when the `readOnly` prop is set to `false`.
- * @part result-action-icon - The result action icon, when the `readOnly` prop is set to `false`.
- * @part icon The icon, when the `readOnly` prop is set to `true`.
+ * @part result-action-container - The result action container
+ * @part result-action-button - The result action button
+ * @part result-action-icon - The result action icon
  */
 @Component({
-  tag: 'atomic-insight-result-attach-to-case',
-  styleUrl: 'atomic-insight-result-attach-to-case.pcss',
+  tag: 'atomic-insight-result-attach-to-case-action',
+  styleUrl: 'atomic-insight-result-attach-to-case-action.pcss',
 })
-export class AtomicInsightResultAttachToCase
+export class AtomicInsightResultAttachToCaseAction
   implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;
@@ -69,12 +58,6 @@ export class AtomicInsightResultAttachToCase
   })
   private detach!: EventEmitter<InsightResultAttachToCaseEvent>;
 
-  /**
-   * Whether the component should only behave as a visual indicator that a result is attached to the current case. Defaults to `false`, meaning that the component is interactive by default.
-   */
-  @Prop()
-  public readOnly: boolean = false;
-
   public initialize() {
     const caseId: string =
       this.bindings.engine.state.insightCaseContext?.caseId || '';
@@ -95,41 +78,24 @@ export class AtomicInsightResultAttachToCase
   }
 
   private getIcon() {
-    if (this.attachToCase.isAttached() && this.readOnly) {
-      return AttachIcon;
-    }
     return this.attachToCase.isAttached() ? DetachIcon : AttachIcon;
   }
 
   private getTooltip() {
-    if (this.attachToCase.isAttached() && this.readOnly) {
-      return this.bindings.i18n.t('result-is-attached');
-    }
     return this.attachToCase.isAttached()
       ? this.bindings.i18n.t('detach-from-case')
       : this.bindings.i18n.t('attach-to-case');
   }
 
   public render() {
-    if (!this.readOnly) {
-      return (
-        <IconButton
-          partPrefix="result-action"
-          style="outline-neutral"
-          icon={this.getIcon()}
-          title={this.getTooltip()}
-          onClick={() => this.onClick()}
-        />
-      );
-    } else if (this.attachToCase.isAttached() && this.readOnly) {
-      return (
-        <atomic-icon
-          part="icon"
-          class="flex w-5 justify-center"
-          icon={this.getIcon()}
-          title={this.getTooltip()}
-        ></atomic-icon>
-      );
-    }
+    return (
+      <IconButton
+        partPrefix="result-action"
+        style="outline-neutral"
+        icon={this.getIcon()}
+        title={this.getTooltip()}
+        onClick={() => this.onClick()}
+      />
+    );
   }
 }

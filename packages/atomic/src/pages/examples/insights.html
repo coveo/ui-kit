@@ -127,7 +127,7 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
-                  <atomic-insight-result-attach-to-case></atomic-insight-result-attach-to-case>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
                   <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
@@ -136,7 +136,7 @@
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-actions
-                  ><atomic-insight-result-attach-to-case read-only="true"></atomic-insight-result-attach-to-case
+                  ><atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator
                 ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-excerpt>
@@ -204,7 +204,7 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
-                  <atomic-insight-result-attach-to-case></atomic-insight-result-attach-to-case>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
                   <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
@@ -226,7 +226,7 @@
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-actions
-                  ><atomic-insight-result-attach-to-case read-only="true"></atomic-insight-result-attach-to-case
+                  ><atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator
                 ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-excerpt
@@ -347,7 +347,7 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
-                  <atomic-insight-result-attach-to-case></atomic-insight-result-attach-to-case>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
                   <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
@@ -369,7 +369,7 @@
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-actions
-                  ><atomic-insight-result-attach-to-case read-only="true"></atomic-insight-result-attach-to-case
+                  ><atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator
                 ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-title-metadata>
@@ -443,10 +443,10 @@
       updateWrapper(widgetView);
 
       async function updateWrapper(widgetView) {
-        const interface = 'atomic-insight-interface';
+        const insightInterface = 'atomic-insight-interface';
         const layout = 'atomic-insight-layout';
-        await Promise.all([customElements.whenDefined(interface), customElements.whenDefined(layout)]);
-        const insightElements = [document.querySelector(interface), document.querySelector(layout)];
+        await Promise.all([customElements.whenDefined(insightInterface), customElements.whenDefined(layout)]);
+        const insightElements = [document.querySelector(insightInterface), document.querySelector(layout)];
         if (widgetView) {
           insightElements.forEach((el) => el.setAttribute('widget', true));
         } else {
