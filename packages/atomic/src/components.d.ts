@@ -25,7 +25,7 @@ import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedR
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case/atomic-insight-result-attach-to-case";
+import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -56,7 +56,7 @@ export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedR
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case/atomic-insight-result-attach-to-case";
+export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -1415,11 +1415,9 @@ export namespace Components {
     }
     interface AtomicInsightResultActionBar {
     }
-    interface AtomicInsightResultAttachToCase {
-        /**
-          * Whether the component should only behave as a visual indicator that a result is attached to the current case. Defaults to `false`, meaning that the component is interactive by default.
-         */
-        "readOnly": boolean;
+    interface AtomicInsightResultAttachToCaseAction {
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -3671,9 +3669,9 @@ export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> 
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
 }
-export interface AtomicInsightResultAttachToCaseCustomEvent<T> extends CustomEvent<T> {
+export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLAtomicInsightResultAttachToCaseElement;
+    target: HTMLAtomicInsightResultAttachToCaseActionElement;
 }
 export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -4446,23 +4444,29 @@ declare global {
         prototype: HTMLAtomicInsightResultActionBarElement;
         new (): HTMLAtomicInsightResultActionBarElement;
     };
-    interface HTMLAtomicInsightResultAttachToCaseElementEventMap {
+    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
         "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
         "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
     }
-    interface HTMLAtomicInsightResultAttachToCaseElement extends Components.AtomicInsightResultAttachToCase, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseElement, ev: AtomicInsightResultAttachToCaseCustomEvent<HTMLAtomicInsightResultAttachToCaseElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseElement, ev: AtomicInsightResultAttachToCaseCustomEvent<HTMLAtomicInsightResultAttachToCaseElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLAtomicInsightResultAttachToCaseElement: {
-        prototype: HTMLAtomicInsightResultAttachToCaseElement;
-        new (): HTMLAtomicInsightResultAttachToCaseElement;
+    var HTMLAtomicInsightResultAttachToCaseActionElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
+        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
+    };
+    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
+        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
     };
     interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
     }
@@ -5930,7 +5934,8 @@ declare global {
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
-        "atomic-insight-result-attach-to-case": HTMLAtomicInsightResultAttachToCaseElement;
+        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
+        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
@@ -7355,13 +7360,11 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultActionBar {
     }
-    interface AtomicInsightResultAttachToCase {
-        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseCustomEvent<InsightResultAttachToCaseEvent>) => void;
-        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseCustomEvent<InsightResultAttachToCaseEvent>) => void;
-        /**
-          * Whether the component should only behave as a visual indicator that a result is attached to the current case. Defaults to `false`, meaning that the component is interactive by default.
-         */
-        "readOnly"?: boolean;
+    interface AtomicInsightResultAttachToCaseAction {
+        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -9561,7 +9564,8 @@ declare namespace LocalJSX {
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
-        "atomic-insight-result-attach-to-case": AtomicInsightResultAttachToCase;
+        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
+        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
@@ -9958,7 +9962,8 @@ declare module "@stencil/core" {
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
-            "atomic-insight-result-attach-to-case": LocalJSX.AtomicInsightResultAttachToCase & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseElement>;
+            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
+            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
