@@ -14,7 +14,7 @@ import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../atomic-insight-layout/insight-layout';
+import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
 
 export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];

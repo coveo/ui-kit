@@ -17,10 +17,6 @@ const smartSnippetSelectors = [
 ];
 const generatedAnswerSelector = 'atomic-insight-generated-answer';
 
-export function makeDesktopQuery(mobileBreakpoint: string) {
-  return `only screen and (min-width: ${mobileBreakpoint})`;
-}
-
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
   const layoutSelector = `atomic-insight-layout#${id}`;
