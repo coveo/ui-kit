@@ -24,12 +24,14 @@ const functionsMocks = {
     state: notificationsState,
     subscribe: functionsMocks.subscribe,
   })),
+  AriaLiveRegion: jest.fn(() => ({
+    dispatchMessage: jest.fn(),
+  })),
   subscribe: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
   }),
   unsubscribe: jest.fn(() => {}),
-  dispatchMessage: jest.fn(),
 };
 
 const selectors = {
@@ -60,7 +62,7 @@ function prepareHeadlessState() {
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
       buildNotifyTrigger: functionsMocks.buildNotifyTrigger,
-      dispatchMessage: functionsMocks.dispatchMessage,
+      AriaLiveRegion: functionsMocks.AriaLiveRegion,
     };
   };
 }
